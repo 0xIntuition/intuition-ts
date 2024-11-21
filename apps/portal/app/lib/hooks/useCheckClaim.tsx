@@ -22,10 +22,9 @@ export function useCheckClaim(
       const response = await fetch(
         `/resources/tag?subjectId=${subjectId}&predicateId=${predicateId}&objectId=${objectId}`,
       )
-      if (!response.ok) {
-        throw new Error('Failed to check claim')
-      }
-      return response.json()
+      const data = await response.json()
+
+      return data
     },
     enabled: Boolean(subjectId && predicateId && objectId),
     ...options,

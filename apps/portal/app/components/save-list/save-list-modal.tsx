@@ -10,10 +10,11 @@ import {
 import { IdentityPresenter } from '@0xintuition/api'
 
 import { multivaultAbi } from '@lib/abis/multivault'
-import { useStakeMutation } from '@lib/hooks/mutations/useStakeMutation'
+import { useSaveListMutation } from '@lib/hooks/mutations/useSaveListMutation'
 import { useGetVaultDetails } from '@lib/hooks/useGetVaultDetails'
 import { useGetWalletBalance } from '@lib/hooks/useGetWalletBalance'
 import { transactionReducer } from '@lib/hooks/useTransactionReducer'
+import { saveListModalAtom } from '@lib/state/store'
 import { useGenericTxState } from '@lib/utils/use-tx-reducer'
 import { useLocation } from '@remix-run/react'
 import { useQueryClient } from '@tanstack/react-query'
@@ -22,6 +23,7 @@ import {
   TransactionActionType,
   TransactionStateType,
 } from 'app/types/transaction'
+import { useAtomValue } from 'jotai'
 import { Address, decodeEventLog, formatUnits } from 'viem'
 import { useAccount, usePublicClient } from 'wagmi'
 
@@ -40,7 +42,6 @@ interface SaveListModalProps {
   userWallet: string
   open: boolean
   tag: IdentityPresenter
-  vaultId: string
   identity: IdentityPresenter
   contract: string
   onClose?: () => void
@@ -51,7 +52,6 @@ export default function SaveListModal({
   userWallet,
   open = false,
   tag,
-  vaultId,
   identity,
   contract,
   onClose = () => {},
@@ -73,10 +73,12 @@ export default function SaveListModal({
 
   const [isLoading, setIsLoading] = useState(true)
 
+  const { id: vaultId } = useAtomValue(saveListModalAtom)
+
   const queryClient = useQueryClient()
   const { data: vaultDetails } = useGetVaultDetails(
     contract,
-    vaultId,
+    vaultId ?? '',
     undefined,
     {
       queryKey: ['get-vault-details', contract, vaultId],
@@ -97,17 +99,18 @@ export default function SaveListModal({
     awaitingOnChainConfirmation,
     isError,
     reset,
-  } = useStakeMutation(contract, mode as 'deposit' | 'redeem')
+  } = useSaveListMutation(
+    contract,
+    vaultDetails?.user_conviction ?? '0',
+    mode as 'deposit' | 'redeem',
+  )
 
   const handleAction = async () => {
     try {
       const txHash = await stake({
         val,
         userWallet,
-        vaultId,
-        identity,
-        mode,
-        contract,
+        vaultId: vaultId ?? '',
       })
 
       if (publicClient && txHash) {
@@ -127,6 +130,7 @@ export default function SaveListModal({
         })
       }
     } catch (error) {
+      console.error('Stake error:', error) // Add error logging
       dispatch({
         type: 'TRANSACTION_ERROR',
         error: 'Error processing transaction',
@@ -226,8 +230,6 @@ export default function SaveListModal({
   const walletBalance = useGetWalletBalance(
     address ?? (userWallet as `0x${string}`),
   )
-
-  console.log('vaultDetails', vaultDetails)
 
   const handleSaveButtonClick = async () => {
     if (!vaultDetails) {

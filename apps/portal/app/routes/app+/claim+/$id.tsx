@@ -199,6 +199,8 @@ export default function ClaimDetails() {
               mode: 'redeem',
               modalType: 'claim',
               claim,
+              vaultId:
+                direction === 'for' ? claim.vault_id : claim.counter_vault_id,
               direction,
               isOpen: true,
             }))
@@ -257,6 +259,7 @@ export default function ClaimDetails() {
             mode: 'deposit',
             modalType: 'claim',
             claim,
+            vaultId: claim.counter_vault_id,
             direction: 'against',
             isOpen: true,
           }))
@@ -267,6 +270,7 @@ export default function ClaimDetails() {
             mode: 'deposit',
             modalType: 'claim',
             claim,
+            vaultId: claim.vault_id,
             direction: 'for',
             isOpen: true,
           }))

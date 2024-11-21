@@ -37,6 +37,7 @@ function useInvalidItems<T>({
       }
 
       const itemToAdd = selectedItems.find((item) => item[idKey] === itemId)
+
       if (!itemToAdd || prev.some((item) => item[idKey] === itemId)) {
         return prev
       }
@@ -44,7 +45,13 @@ function useInvalidItems<T>({
       if (onRemoveItem) {
         onRemoveItem(itemId)
       }
-      return [...prev, itemToAdd]
+
+      const itemWithClaimId = {
+        ...itemToAdd,
+        tagClaimId: result,
+      }
+
+      return [...prev, itemWithClaimId]
     })
   }, [
     data?.result,
