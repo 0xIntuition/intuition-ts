@@ -68,6 +68,9 @@ import {
 import TwoPanelLayout from 'app/layouts/two-panel-layout'
 import { VaultDetailsType } from 'app/types/vault'
 import { useAtom } from 'jotai'
+import { GetAccountQuery, fetcher, GetAccountQueryVariables, GetAccountDocument, GetTagsQuery, GetTagsQueryVariables, GetTagsDocument, GetAtomDocument, GetAtomQuery, GetAtomQueryVariables, GetAtomQuery, useGetAtomQuery, useGetTagsQuery } from '@0xintuition/graphql'
+import { dehydrate, QueryClient } from '@tanstack/react-query'
+import { string } from 'zod'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const user = await requireUser(request)
@@ -80,6 +83,8 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   if (!params.id) {
     return
   }
+
+  const queryClient = new QueryClient()
 
   const { identity, isPending } = await getIdentityOrPending(request, params.id)
 
@@ -126,14 +131,71 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     searchParams,
   })
 
+
+
+  let atomResult: GetAtomQuery | null = null
+
+  try {
+    logger('Fetching Account Data...')
+    atomResult = await fetcher<GetAtomQuery, GetAtomQueryVariables>(
+      GetAtomDocument,
+      { id: params.id },
+    )()
+
+    if (!atomResult) {
+      throw new Error('No atom data found for id')
+    }
+
+    logger('Atom Result:', atomResult)
+
+    await queryClient.prefetchQuery({
+      queryKey: ['get-atom', { id: params.id }],
+      queryFn: () => atomResult,
+    })
+
+
+    const atomTagsResult = await fetcher<
+      GetTagsQuery,
+      GetTagsQueryVariables
+    >(GetTagsDocument, {
+      subjectId: params.id,
+      predicateId: getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId,
+    })()
+
+    logger('Atom Tags Result:', atomTagsResult)
+
+    await queryClient.prefetchQuery({
+      queryKey: [
+        'get-tags',
+        {
+          subjectId: params.id,
+          predicateId: getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId,
+        },
+      ],
+      queryFn: () => atomTagsResult,
+    })
+  } catch (error) {
+    logger('Query Error:', {
+      message: (error as Error).message,
+      stack: (error as Error).stack,
+      atomId: params.id,
+    })
+    throw error
+  }
+
   logger('[$ID] -- END')
   return json({
+
     identity,
     list,
     isPending,
     vaultDetails,
     userWallet,
     tagClaims,
+    dehydratedState: dehydrate(queryClient),
+    initialParams: {
+      atomId: params.id
+    }
   })
 }
 
@@ -144,10 +206,13 @@ export interface IdentityLoaderData {
   userWallet: string
   isPending: boolean
   tagClaims: ClaimPresenter[]
+  initialParams: {
+    atomId: string
+  }
 }
 
 export default function IdentityDetails() {
-  const { identity, list, vaultDetails, userWallet, isPending, tagClaims } =
+  const { identity, list, vaultDetails, userWallet, isPending, tagClaims, initialParams } =
     useLiveLoader<IdentityLoaderData>(['attest', 'create'])
   const navigate = useNavigate()
 
@@ -167,6 +232,36 @@ export default function IdentityDetails() {
       setSelectedTag(saveListModalActive.tag)
     }
   }, [saveListModalActive])
+
+  const { data: atomResult } = useGetAtomQuery(
+    {
+      id: initialParams.atomId
+    },
+    {
+      queryKey: ['get-atom', { id: initialParams.atomId }],
+    },
+  )
+
+  logger('Atom Result (Client):', atomResult)
+
+  const { data: atomTagsResult } = useGetTagsQuery(
+    {
+      subjectId: initialParams.atomId,
+      predicateId: getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId,
+    },
+    {
+      queryKey: [
+        'get-tags',
+        {
+          subjectId: initialParams?.atomId,
+          predicateId: getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId,
+        },
+      ],
+      enabled: !!initialParams?.atomId,
+    },
+  )
+
+  logger('Atom Tags Result (Client):', atomTagsResult)
 
   const leftPanel = (
     <div className="flex-col justify-start items-start inline-flex gap-6 max-lg:w-full">
