@@ -100,9 +100,7 @@ function ActivityItem({
 }) {
   let messageKey: keyof EventMessages | undefined
 
-  // Determine if it's an atom or triple action by checking which field exists
   const isAtomAction = activity.atom !== null
-  const isTripleAction = activity.triple !== null
 
   if (activity.type === 'Deposited') {
     messageKey = isAtomAction ? 'depositAtom' : 'depositTriple'
@@ -127,10 +125,11 @@ function ActivityItem({
     : ''
 
   logger('activity', activity)
-  console.log('activity.type:', activity.type)
-  console.log('eventMessage:', eventMessage)
-  console.log('value:', value)
-  console.log('final message:', message)
+  logger(
+    'user shares on triple',
+    activity?.triple?.vault?.positions?.[0]?.shares ?? '0',
+  )
+
   const setStakeModalActive = useSetAtom(stakeModalAtom)
 
   // Basic required fields with fallbacks
@@ -265,9 +264,13 @@ function ActivityItem({
           numPositionsAgainst={
             activity.triple.counterVault?.allPositions?.aggregate?.count ?? 0
           }
-          tvlFor={formatBalance(activity.triple.vault?.totalShares ?? '0', 18)}
+          tvlFor={formatBalance(
+            activity.triple.vault?.allPositions?.aggregate?.sum?.shares ?? '0',
+            18,
+          )}
           tvlAgainst={formatBalance(
-            activity.triple.counterVault?.totalShares ?? '0',
+            activity.triple.counterVault?.allPositions?.aggregate?.sum
+              ?.shares ?? '0',
             18,
           )}
           totalTVL={formatBalance(
@@ -322,10 +325,11 @@ function ActivityItem({
                   activity.triple.subject?.type === 'user'
                     ? Identity.user
                     : Identity.nonUser,
-                label: getAtomLabel(activity.triple.subject),
+                // label: getAtomLabel(activity.triple.subject), // TODO: rework this util function once settled
+                label: activity.triple.subject?.label ?? '',
                 imgSrc: activity.triple.subject?.image ?? '',
                 id: activity.triple.subject?.id,
-                description: activity.triple.subject?.data?.description ?? '',
+                // description: activity.triple.subject?.data?.description ?? '', // TODO: we need to determine best way to surface this field
                 ipfsLink: getAtomIpfsLink(activity.triple.subject),
                 link: getAtomLink(activity.triple.subject),
                 linkComponent: RemixLink,
@@ -335,10 +339,11 @@ function ActivityItem({
                   activity.triple.predicate?.type === 'user'
                     ? Identity.user
                     : Identity.nonUser,
-                label: getAtomLabel(activity.triple.predicate),
+                // label: getAtomLabel(activity.triple.predicate),
+                label: activity.triple.predicate?.label ?? '', // TODO: rework this util function once settled
                 imgSrc: activity.triple.predicate?.image ?? '',
                 id: activity.triple.predicate?.id,
-                description: activity.triple.predicate?.data?.description ?? '',
+                // description: activity.triple.predicate?.data?.description ?? '', // TODO: we need to determine best way to surface this field
                 ipfsLink: getAtomIpfsLink(activity.triple.predicate),
                 link: getAtomLink(activity.triple.predicate),
                 linkComponent: RemixLink,
@@ -348,10 +353,11 @@ function ActivityItem({
                   activity.triple.object?.type === 'user'
                     ? Identity.user
                     : Identity.nonUser,
-                label: getAtomLabel(activity.triple.object),
+                // label: getAtomLabel(activity.triple.object),
+                label: activity.triple.object?.label ?? '', // TODO: rework this util function once settled
                 imgSrc: activity.triple.object?.image ?? '',
                 id: activity.triple.object?.id,
-                description: activity.triple.object?.data?.description ?? '',
+                // description: activity.triple.object?.data?.description ?? '', // TODO: we need to determine best way to surface this field
                 ipfsLink: getAtomIpfsLink(activity.triple.object),
                 link: getAtomLink(activity.triple.object),
                 linkComponent: RemixLink,

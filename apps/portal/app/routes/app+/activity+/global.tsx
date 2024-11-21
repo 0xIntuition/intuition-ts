@@ -43,7 +43,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
         orderBy: [{ blockTimestamp: 'desc' }],
         where: {
           type: {
-            _neq: 'FeesTransfered',
+            // _neq: 'FeesTransfered',
+            _eq: 'TripleCreated',
           },
         },
       })(),
@@ -75,7 +76,8 @@ export default function GlobalActivityFeed() {
       orderBy: [{ blockTimestamp: 'desc' }],
       where: {
         type: {
-          _neq: 'FeesTransfered',
+          // _neq: 'FeesTransfered',
+          _eq: 'TripleCreated',
         },
       },
     },

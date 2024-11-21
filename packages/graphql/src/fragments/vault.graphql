@@ -1,4 +1,4 @@
-fragment VaultDetails on vaults {
+fragment VaultBasicDetails on vaults {
   id
   atom {
     id
@@ -23,52 +23,36 @@ fragment VaultDetails on vaults {
   totalShares
 }
 
+fragment VaultPositionsAggregate on vaults {
+  positions_aggregate {
+    ...PositionAggregateFields
+  }
+}
+
+fragment VaultFilteredPositions on vaults {
+  positions(where: { accountId: { _in: $addresses } }) {
+    ...PositionFields
+  }
+}
+
+fragment VaultUnfilteredPositions on vaults {
+  positions {
+    ...PositionFields
+  }
+}
+
+fragment VaultDetails on vaults {
+  ...VaultBasicDetails
+}
+
 fragment VaultDetailsWithFilteredPositions on vaults {
-  id
-  atom {
-    id
-    label
-  }
-  triple {
-    id
-    subject {
-      id
-      label
-    }
-    predicate {
-      id
-      label
-    }
-    object {
-      id
-      label
-    }
-  }
-  positions_aggregate(where: { accountId: { _in: $addresses } }) {
-    aggregate {
-      sum {
-        shares
-      }
-    }
-    nodes {
-      account {
-        id
-        label
-      }
-      shares
-    }
-  }
-  currentSharePrice
-  totalShares
+  ...VaultBasicDetails
+  ...VaultFilteredPositions
 }
 
 fragment VaultFieldsForTriple on vaults {
   totalShares
   currentSharePrice
-  positions_aggregate {
-    ...PositionAggregateFields
-  }
-  positions {
-    ...PositionFields
-  }
+  ...VaultPositionsAggregate
+  ...VaultFilteredPositions
 }
