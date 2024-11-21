@@ -41,6 +41,7 @@ import {
 } from '@0xintuition/graphql'
 
 import { ErrorPage } from '@components/error-page'
+import FollowModal from '@components/follow/follow-modal'
 import NavigationButton from '@components/navigation-link'
 import ImageModal from '@components/profile/image-modal'
 import SaveListModal from '@components/save-list/save-list-modal'
@@ -54,6 +55,7 @@ import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getIdentityOrPending } from '@lib/services/identities'
 import { getPurchaseIntentsByAddress } from '@lib/services/phosphor'
 import {
+  followModalAtom,
   imageModalAtom,
   saveListModalAtom,
   shareModalAtom,
@@ -355,7 +357,7 @@ export default function Profile() {
     useAtom(saveListModalAtom)
   const [imageModalActive, setImageModalActive] = useAtom(imageModalAtom)
   const [shareModalActive, setShareModalActive] = useAtom(shareModalAtom)
-  // const [followModalActive, setFollowModalActive] = useAtom(followModalAtom)
+  const [followModalActive, setFollowModalActive] = useAtom(followModalAtom)
 
   const [selectedTag, setSelectedTag] = useState<
     IdentityPresenter | null | undefined
@@ -423,12 +425,12 @@ export default function Profile() {
           <Button
             variant="secondary"
             className="w-full text-warning"
-            // onClick={() =>
-            //   setFollowModalActive((prevState) => ({
-            //     ...prevState,
-            //     isOpen: true,
-            //   }))
-            // }
+            onClick={() =>
+              setFollowModalActive((prevState) => ({
+                ...prevState,
+                isOpen: true,
+              }))
+            }
           >
             <>
               <Icon name={IconName.peopleAdd} className="h-4 w-4" />
@@ -679,6 +681,20 @@ export default function Profile() {
             vaultDetailsProp={vaultDetails}
             onClose={() => {
               setStakeModalActive((prevState) => ({
+                ...prevState,
+                isOpen: false,
+              }))
+            }}
+          />
+          <FollowModal
+            userWallet={userWallet}
+            contract={userIdentity.contract}
+            open={followModalActive.isOpen}
+            identityLabel={accountResult?.account?.label ?? ''}
+            identityAvatar={accountResult?.account?.image ?? ''}
+            identityVaultId={accountResult?.account?.atomId}
+            onClose={() => {
+              setFollowModalActive((prevState) => ({
                 ...prevState,
                 isOpen: false,
               }))

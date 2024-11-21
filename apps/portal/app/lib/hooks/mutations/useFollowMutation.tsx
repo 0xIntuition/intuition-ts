@@ -1,5 +1,3 @@
-import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
-
 import { multivaultAbi } from '@lib/abis/multivault'
 import { useCreateTriple } from '@lib/hooks/useCreateTriple'
 import { useDepositTriple } from '@lib/hooks/useDepositTriple'
@@ -13,24 +11,23 @@ interface FollowMutationParams {
   val: string
   userWallet: string
   vaultId: string
-  claim?: ClaimPresenter
-  identity?: IdentityPresenter
+  claimId?: string
   userVaultId?: string
   tripleCost?: bigint
 }
 
 export function useFollowMutation(
   contract: string,
-  claim: ClaimPresenter,
   user_conviction: string,
   mode: 'follow' | 'unfollow',
+  claimId?: string,
 ) {
   const queryClient = useQueryClient()
   const depositHook = useDepositTriple(contract)
   const redeemHook = useRedeemTriple(contract)
   const createHook = useCreateTriple()
 
-  const activeHook = !claim
+  const activeHook = !claimId
     ? createHook
     : mode === 'follow'
       ? depositHook
@@ -47,29 +44,28 @@ export function useFollowMutation(
   return {
     ...useMutation({
       mutationFn: async (params: FollowMutationParams) => {
-        const { val, userWallet, vaultId, claim, userVaultId, tripleCost } =
-          params
+        const { val, userWallet, userVaultId, tripleCost } = params
         const parsedValue = parseUnits(val === '' ? '0' : val, 18)
 
         return writeContractAsync({
           address: contract as `0x${string}`,
           abi: multivaultAbi as Abi,
-          functionName: !claim
+          functionName: !claimId
             ? 'createTriple'
             : mode === 'follow'
               ? 'depositTriple'
               : 'redeemTriple',
-          args: !claim
+          args: !claimId
             ? [
                 getSpecialPredicate(CURRENT_ENV).iPredicate.vaultId,
                 getSpecialPredicate(CURRENT_ENV).amFollowingPredicate.vaultId,
                 userVaultId,
               ]
             : mode === 'follow'
-              ? [userWallet as `0x${string}`, vaultId]
-              : [user_conviction, userWallet as `0x${string}`, vaultId],
+              ? [userWallet as `0x${string}`, claimId]
+              : [user_conviction, userWallet as `0x${string}`, claimId],
           value:
-            !claim && tripleCost
+            !claimId && tripleCost
               ? tripleCost + parsedValue
               : mode === 'follow'
                 ? parsedValue

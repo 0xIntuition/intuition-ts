@@ -10,19 +10,11 @@ import {
   Identity,
   Text,
 } from '@0xintuition/1ui'
-import { IdentityPresenter } from '@0xintuition/api'
 
 import { InfoTooltip } from '@components/info-tooltip'
 import StakingRadioGroup from '@components/staking-radio-group'
 import { TransactionState } from '@components/transaction-state'
-import {
-  formatBalance,
-  getAtomDescription,
-  getAtomImage,
-  getAtomIpfsLink,
-  getAtomLabel,
-  getAtomLink,
-} from '@lib/utils/misc'
+import { formatBalance } from '@lib/utils/misc'
 import {
   TransactionActionType,
   TransactionStateType,
@@ -32,7 +24,8 @@ import FollowReview from './follow-review'
 
 interface FollowFormProps {
   walletBalance: string
-  identity: IdentityPresenter
+  identityLabel: string
+  identityAvatar: string
   user_assets: string
   entry_fee: string
   exit_fee: string
@@ -50,7 +43,8 @@ interface FollowFormProps {
 
 export default function FollowForm({
   walletBalance,
-  identity,
+  identityLabel,
+  identityAvatar,
   user_assets,
   entry_fee,
   exit_fee,
@@ -122,12 +116,12 @@ export default function FollowForm({
                   }}
                   object={{
                     variant: Identity.user,
-                    label: getAtomLabel(identity),
-                    imgSrc: getAtomImage(identity),
-                    id: identity.identity_id,
-                    description: getAtomDescription(identity),
-                    ipfsLink: getAtomIpfsLink(identity),
-                    link: getAtomLink(identity),
+                    label: identityLabel,
+                    imgSrc: identityAvatar,
+                    id: '',
+                    description: '',
+                    ipfsLink: '',
+                    link: '',
                     shouldHover: false,
                   }}
                   maxIdentityLength={16}
@@ -163,7 +157,8 @@ export default function FollowForm({
             val={val}
             dispatch={dispatch}
             state={state}
-            identity={identity}
+            identityLabel={identityLabel}
+            identityAvatar={identityAvatar}
             user_assets={user_assets}
             entry_fee={entry_fee}
             exit_fee={exit_fee}

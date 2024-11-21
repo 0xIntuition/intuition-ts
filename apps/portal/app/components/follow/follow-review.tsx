@@ -9,7 +9,6 @@ import {
   Identity,
   Text,
 } from '@0xintuition/1ui'
-import { IdentityPresenter } from '@0xintuition/api'
 
 import { getSpecialPredicate } from '@lib/utils/app'
 import { formatBalance, formatDisplayBalance } from '@lib/utils/misc'
@@ -25,7 +24,8 @@ interface FollowReviewProps {
   dispatch: (action: TransactionActionType) => void
   state: TransactionStateType
   isError?: boolean
-  identity: IdentityPresenter
+  identityLabel: string
+  identityAvatar: string
   user_assets: string
   entry_fee: string
   exit_fee: string
@@ -37,7 +37,8 @@ export default function FollowReview({
   dispatch,
   state,
   isError,
-  identity,
+  identityLabel,
+  identityAvatar,
   user_assets,
   entry_fee,
   exit_fee,
@@ -113,8 +114,8 @@ export default function FollowReview({
               }}
               object={{
                 variant: Identity.user,
-                imgSrc: identity.user?.image ?? identity.image,
-                label: identity.user?.display_name ?? identity.display_name,
+                imgSrc: identityAvatar,
+                label: identityLabel,
                 shouldHover: false,
               }}
             />

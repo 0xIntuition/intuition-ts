@@ -1,21 +1,23 @@
 import { useEffect, useState } from 'react'
 
 import { Dialog, DialogContent, DialogFooter, toast } from '@0xintuition/1ui'
-import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
+import { useGetTripleQuery } from '@0xintuition/graphql'
 
 import { multivaultAbi } from '@lib/abis/multivault'
 import { useFollowMutation } from '@lib/hooks/mutations/useFollowMutation'
+import { useCheckClaim } from '@lib/hooks/useCheckClaim'
 import { useCreateClaimConfig } from '@lib/hooks/useCreateClaimConfig'
+import { useGetVaultDetails } from '@lib/hooks/useGetVaultDetails'
 import { useGetWalletBalance } from '@lib/hooks/useGetWalletBalance'
 import { transactionReducer } from '@lib/hooks/useTransactionReducer'
+import { getSpecialPredicate } from '@lib/utils/app'
 import { useGenericTxState } from '@lib/utils/use-tx-reducer'
 import { useLocation } from '@remix-run/react'
-import { MIN_DEPOSIT } from 'app/consts'
+import { CURRENT_ENV, MIN_DEPOSIT } from 'app/consts'
 import {
   TransactionActionType,
   TransactionStateType,
 } from 'app/types/transaction'
-import { VaultDetailsType } from 'app/types/vault'
 import { Address, decodeEventLog } from 'viem'
 import { useAccount, usePublicClient } from 'wagmi'
 
@@ -34,9 +36,9 @@ interface FollowModalProps {
   userWallet: string
   contract: string
   open: boolean
-  identity: IdentityPresenter
-  claim: ClaimPresenter
-  vaultDetails: VaultDetailsType
+  identityVaultId: string
+  identityLabel: string
+  identityAvatar: string
   onClose?: () => void
 }
 
@@ -44,20 +46,11 @@ export default function FollowModal({
   userWallet,
   contract,
   open = false,
-  identity,
-  claim,
-  vaultDetails,
+  identityVaultId,
+  identityLabel,
+  identityAvatar,
   onClose = () => {},
 }: FollowModalProps) {
-  const {
-    conviction_price = '0',
-    user_conviction = '0',
-    user_assets = '0',
-    min_deposit = '0',
-    formatted_entry_fee = '0',
-    formatted_exit_fee = '0',
-  } = vaultDetails ? vaultDetails : {}
-
   const [val, setVal] = useState(MIN_DEPOSIT)
   const [mode, setMode] = useState<'follow' | 'unfollow'>('follow')
   const [showErrors, setShowErrors] = useState(false)
@@ -68,12 +61,46 @@ export default function FollowModal({
     TransactionActionType
   >(transactionReducer, initialTxState)
   const publicClient = usePublicClient()
-  const userVaultId = identity.vault_id
-
-  let vault_id: string = '0'
-  vault_id = claim ? claim.vault_id : '0'
 
   const { address } = useAccount()
+
+  const { data: claimCheckData } = useCheckClaim({
+    subjectId: getSpecialPredicate(CURRENT_ENV).iPredicate.vaultId.toString(),
+    predicateId:
+      getSpecialPredicate(CURRENT_ENV).amFollowingPredicate.vaultId.toString(),
+    objectId: identityVaultId,
+  })
+
+  const { data: claimData } = useGetTripleQuery(
+    { tripleId: claimCheckData?.result },
+    {
+      enabled: Boolean(claimCheckData?.result !== '0'),
+      retry: 1,
+      retryDelay: 2000,
+      refetchInterval: (query) => {
+        if (query.state.status === 'success') {
+          return false
+        }
+        return 2000
+      },
+      queryKey: ['GetTriple', { id: claimCheckData?.result }],
+    },
+  )
+
+  const vaultDetails = useGetVaultDetails(
+    contract,
+    claimData?.triple?.vaultId,
+    claimData?.triple?.counterVaultId,
+    {
+      queryKey: [
+        'get-vault-details',
+        contract,
+        claimData?.triple?.vaultId,
+        claimData?.triple?.counterVaultId,
+      ],
+      enabled: open,
+    },
+  )
 
   const { data: configData, isLoading: isLoadingConfig } =
     useCreateClaimConfig()
@@ -85,18 +112,21 @@ export default function FollowModal({
     awaitingOnChainConfirmation,
     isError,
     reset,
-  } = useFollowMutation(contract, claim, user_conviction, mode)
+  } = useFollowMutation(
+    contract,
+    vaultDetails?.data?.user_conviction ?? '0',
+    mode,
+    claimData?.triple?.vaultId,
+  )
 
   const handleAction = async () => {
     try {
       const txHash = await follow({
         val,
         userWallet,
-        vaultId: vault_id,
-        claim,
-        identity,
+        vaultId: claimData?.triple?.vaultId,
         tripleCost: BigInt(configData?.fees.tripleCost ?? '0'),
-        userVaultId,
+        userVaultId: identityVaultId,
       })
 
       if (publicClient && txHash) {
@@ -229,7 +259,7 @@ export default function FollowModal({
   }
 
   const handleUnfollowButtonClick = async () => {
-    if (+val > +(user_conviction ?? '0')) {
+    if (+val > +(vaultDetails?.data?.user_conviction ?? '0')) {
       setShowErrors(true)
       return
     }
@@ -273,11 +303,12 @@ export default function FollowModal({
         <div className="flex-grow">
           <FollowForm
             walletBalance={walletBalance}
-            identity={identity}
-            min_deposit={min_deposit}
-            user_assets={user_assets ?? '0'}
-            entry_fee={formatted_entry_fee ?? '0'}
-            exit_fee={formatted_exit_fee ?? '0'}
+            identityLabel={identityLabel}
+            identityAvatar={identityAvatar}
+            min_deposit={vaultDetails?.data?.min_deposit ?? MIN_DEPOSIT}
+            user_assets={vaultDetails?.data?.user_assets ?? '0'}
+            entry_fee={vaultDetails?.data?.formatted_entry_fee ?? '0'}
+            exit_fee={vaultDetails?.data?.formatted_exit_fee ?? '0'}
             val={val}
             setVal={setVal}
             mode={mode}
@@ -298,9 +329,9 @@ export default function FollowModal({
                 handleClose={handleClose}
                 dispatch={dispatch}
                 state={state}
-                user_conviction={user_conviction ?? '0'}
+                user_conviction={vaultDetails?.data?.user_conviction ?? '0'}
                 isLoadingConfig={isLoadingConfig}
-                className={`${(user_conviction && user_conviction > '0' && state.status === 'idle') || mode !== 'follow' ? '' : 'hidden'}`}
+                className={`${(vaultDetails?.data?.user_conviction && vaultDetails?.data?.user_conviction > '0' && state.status === 'idle') || mode !== 'follow' ? '' : 'hidden'}`}
               />
               <FollowButton
                 val={val}
@@ -309,10 +340,10 @@ export default function FollowModal({
                 handleClose={handleClose}
                 dispatch={dispatch}
                 state={state}
-                min_deposit={min_deposit}
+                min_deposit={vaultDetails?.data?.min_deposit ?? MIN_DEPOSIT}
                 walletBalance={walletBalance}
-                conviction_price={conviction_price ?? '0'}
-                user_assets={user_assets ?? '0'}
+                conviction_price={vaultDetails?.data?.conviction_price ?? '0'}
+                user_assets={vaultDetails?.data?.user_assets ?? '0'}
                 setValidationErrors={setValidationErrors}
                 setShowErrors={setShowErrors}
                 isLoadingConfig={isLoadingConfig}
