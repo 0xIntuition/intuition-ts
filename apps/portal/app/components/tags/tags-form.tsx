@@ -37,7 +37,7 @@ import { TagSearchCombobox } from './tags-search-combo-box'
 interface TagsFormProps {
   identity: IdentityPresenter | undefined // TODO: (ENG-4782) temporary type fix until we lock in final types
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  tags: any[] // TODO: (ENG-4782) temporary type fix until we lock in final types
+  tagClaims: any[] // TODO: (ENG-4782) temporary type fix until we lock in final types
   userWallet: string
   mode: 'view' | 'add'
   readOnly?: boolean
@@ -47,7 +47,7 @@ interface TagsFormProps {
 
 export function TagsForm({
   identity,
-  tags,
+  tagClaims,
   userWallet,
   mode,
   readOnly = false,
@@ -57,9 +57,9 @@ export function TagsForm({
   const navigate = useNavigate()
   const [currentTab, setCurrentTab] = useState(mode)
 
-  logger('tags in tag form', tags)
+  logger('tags in tag form', tagClaims)
   logger('identity in tags-form', identity)
-  const existingTagIds = tags ? tags.map((tag) => tag.id) : []
+  const existingTagIds = tagClaims ? tagClaims.map((tag) => tag.id) : []
 
   const { state, dispatch } = useTransactionState<
     TransactionStateType,
@@ -175,7 +175,7 @@ export function TagsForm({
                   )}
                   <TabsContent value="view" className="h-full">
                     <TagSearchCombobox
-                      tagClaims={tags || []}
+                      tagClaims={tagClaims || []}
                       shouldFilter={true}
                       onTagClick={handleTagClick}
                     />

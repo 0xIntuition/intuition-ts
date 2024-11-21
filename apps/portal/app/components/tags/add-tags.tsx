@@ -23,9 +23,11 @@ import { useAtom } from 'jotai'
 import { TagsListInputPortal } from './tags-list-input-portal'
 
 interface AddTagsProps {
-  selectedTags: IdentityPresenter[]
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  selectedTags: any // TODO: (ENG-4782) temporary type fix until we lock in final types
   existingTagIds: string[]
-  identity: IdentityPresenter
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  identity: any // TODO: (ENG-4782) temporary type fix until we lock in final types
   userWallet: string
   onAddTag: (newTag: IdentityPresenter) => void
   onRemoveTag: (id: string) => void
@@ -47,7 +49,8 @@ export function AddTags({
   invalidTags,
   setInvalidTags,
 }: AddTagsProps) {
-  const formattedTags = selectedTags?.map((tag) => ({
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const formattedTags = selectedTags?.map((tag: any) => ({
     name: tag.display_name,
     id: tag.vault_id,
     tagCount: tag.tag_count,

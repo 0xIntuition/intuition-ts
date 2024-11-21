@@ -495,7 +495,7 @@ export default function Profile() {
                 className="w-fit border-dashed"
                 onClick={() => {
                   setTagsModalActive({ isOpen: true, mode: 'add' })
-                }}
+                }} // TODO: The View All Tags modal is currently not working -- there are issues that we will fix in another ticket
               >
                 <Icon name="plus-small" className="w-5 h-5" />
                 Add tags
@@ -751,7 +751,7 @@ export default function Profile() {
                   } as unknown as IdentityPresenter)
                 : undefined
             } // TODO: (ENG-4782) temporary type fix until we lock in final types
-            tags={accountTagsResult?.triples ?? []} // TODO: (ENG-4782) temporary type fix until we lock in final types
+            tagClaims={accountTagsResult?.triples ?? []} // TODO: (ENG-4782) temporary type fix until we lock in final types
             userWallet={userWallet}
             open={tagsModalActive.isOpen}
             mode={tagsModalActive.mode}
