@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
-import logger from '@lib/utils/logger'
+
 import LoadingLogo from '@components/loading-logo'
+import logger from '@lib/utils/logger'
 import { usePrivy } from '@privy-io/react-auth'
 
 export default function PrivyRefresh({
