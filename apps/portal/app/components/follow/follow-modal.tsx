@@ -340,7 +340,9 @@ export default function FollowModal({
                 handleClose={handleClose}
                 dispatch={dispatch}
                 state={state}
-                min_deposit={vaultDetails?.data?.min_deposit ?? MIN_DEPOSIT}
+                min_deposit={
+                  vaultDetails?.data?.formatted_min_deposit ?? MIN_DEPOSIT
+                }
                 walletBalance={walletBalance}
                 conviction_price={vaultDetails?.data?.conviction_price ?? '0'}
                 user_assets={vaultDetails?.data?.user_assets ?? '0'}

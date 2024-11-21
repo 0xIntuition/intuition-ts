@@ -4,7 +4,6 @@ import { Button, cn } from '@0xintuition/1ui'
 
 import { stakeModalAtom } from '@lib/state/store'
 import { getChainEnvConfig } from '@lib/utils/environment'
-import { formatBalance } from '@lib/utils/misc'
 import { useNavigation } from '@remix-run/react'
 import { CURRENT_ENV } from 'app/consts'
 import {
@@ -120,10 +119,8 @@ const FollowButton: React.FC<FollowButtonProps> = ({
           handleSwitch()
         } else if (val !== '') {
           const errors = []
-          if (+val < +formatUnits(BigInt(min_deposit), 18)) {
-            errors.push(
-              `Minimum deposit is ${formatBalance(min_deposit, 18)} ETH`,
-            )
+          if (+val < +min_deposit) {
+            errors.push(`Minimum deposit is ${min_deposit} ETH`)
           }
           if (+val * +formattedConvictionPrice > +walletBalance) {
             errors.push('Insufficient funds')
