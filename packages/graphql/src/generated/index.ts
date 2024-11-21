@@ -7537,7 +7537,23 @@ export type AtomVaultDetailsFragment = {
     __typename?: 'vaults'
     positionCount: number
     totalShares: any
-    currentSharePrice: any
+    positions_aggregate: {
+      __typename?: 'positions_aggregate'
+      aggregate?: {
+        __typename?: 'positions_aggregate_fields'
+        count: number
+        sum?: {
+          __typename?: 'positions_sum_fields'
+          shares?: any | null
+        } | null
+      } | null
+    }
+    positions: Array<{
+      __typename?: 'positions'
+      id: string
+      shares: any
+      account?: { __typename?: 'accounts'; label: string; id: string } | null
+    }>
   } | null
 }
 
@@ -9431,7 +9447,23 @@ export type GetAtomsQuery = {
       __typename?: 'vaults'
       positionCount: number
       totalShares: any
-      currentSharePrice: any
+      positions_aggregate: {
+        __typename?: 'positions_aggregate'
+        aggregate?: {
+          __typename?: 'positions_aggregate_fields'
+          count: number
+          sum?: {
+            __typename?: 'positions_sum_fields'
+            shares?: any | null
+          } | null
+        } | null
+      }
+      positions: Array<{
+        __typename?: 'positions'
+        id: string
+        shares: any
+        account?: { __typename?: 'accounts'; label: string; id: string } | null
+      }>
     } | null
     value?: {
       __typename?: 'atomValues'
@@ -9525,7 +9557,27 @@ export type GetAtomsWithAggregatesQuery = {
         __typename?: 'vaults'
         positionCount: number
         totalShares: any
-        currentSharePrice: any
+        positions_aggregate: {
+          __typename?: 'positions_aggregate'
+          aggregate?: {
+            __typename?: 'positions_aggregate_fields'
+            count: number
+            sum?: {
+              __typename?: 'positions_sum_fields'
+              shares?: any | null
+            } | null
+          } | null
+        }
+        positions: Array<{
+          __typename?: 'positions'
+          id: string
+          shares: any
+          account?: {
+            __typename?: 'accounts'
+            label: string
+            id: string
+          } | null
+        }>
       } | null
       value?: {
         __typename?: 'atomValues'
@@ -9626,7 +9678,23 @@ export type GetAtomQuery = {
       __typename?: 'vaults'
       positionCount: number
       totalShares: any
-      currentSharePrice: any
+      positions_aggregate: {
+        __typename?: 'positions_aggregate'
+        aggregate?: {
+          __typename?: 'positions_aggregate_fields'
+          count: number
+          sum?: {
+            __typename?: 'positions_sum_fields'
+            shares?: any | null
+          } | null
+        } | null
+      }
+      positions: Array<{
+        __typename?: 'positions'
+        id: string
+        shares: any
+        account?: { __typename?: 'accounts'; label: string; id: string } | null
+      }>
     } | null
     asSubject: Array<{
       __typename?: 'triples'
@@ -13423,7 +13491,22 @@ export const AtomVaultDetailsFragmentDoc = `
   vault {
     positionCount
     totalShares
-    currentSharePrice
+    positions_aggregate {
+      aggregate {
+        count
+        sum {
+          shares
+        }
+      }
+    }
+    positions {
+      id
+      account {
+        label
+        id
+      }
+      shares
+    }
   }
 }
     `
@@ -18297,7 +18380,69 @@ export const AtomVaultDetails = {
                 { kind: 'Field', name: { kind: 'Name', value: 'totalShares' } },
                 {
                   kind: 'Field',
-                  name: { kind: 'Name', value: 'currentSharePrice' },
+                  name: { kind: 'Name', value: 'positions_aggregate' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'aggregate' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'count' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'sum' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'shares' },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'positions' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'account' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'label' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'shares' },
+                      },
+                    ],
+                  },
                 },
               ],
             },
@@ -25229,7 +25374,69 @@ export const GetAtoms = {
                 { kind: 'Field', name: { kind: 'Name', value: 'totalShares' } },
                 {
                   kind: 'Field',
-                  name: { kind: 'Name', value: 'currentSharePrice' },
+                  name: { kind: 'Name', value: 'positions_aggregate' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'aggregate' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'count' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'sum' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'shares' },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'positions' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'account' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'label' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'shares' },
+                      },
+                    ],
+                  },
                 },
               ],
             },
@@ -25552,7 +25759,69 @@ export const GetAtomsWithAggregates = {
                 { kind: 'Field', name: { kind: 'Name', value: 'totalShares' } },
                 {
                   kind: 'Field',
-                  name: { kind: 'Name', value: 'currentSharePrice' },
+                  name: { kind: 'Name', value: 'positions_aggregate' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'aggregate' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'count' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'sum' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'shares' },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'positions' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'account' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'label' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'shares' },
+                      },
+                    ],
+                  },
                 },
               ],
             },
@@ -25860,7 +26129,69 @@ export const GetAtom = {
                 { kind: 'Field', name: { kind: 'Name', value: 'totalShares' } },
                 {
                   kind: 'Field',
-                  name: { kind: 'Name', value: 'currentSharePrice' },
+                  name: { kind: 'Name', value: 'positions_aggregate' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'aggregate' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'count' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'sum' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'shares' },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'positions' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'account' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'label' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'shares' },
+                      },
+                    ],
+                  },
                 },
               ],
             },
