@@ -2,7 +2,7 @@ import PrivyRefresh from '@client/privy-refresh'
 import logger from '@lib/utils/logger'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
 import { ShouldRevalidateFunctionArgs, useLoaderData } from '@remix-run/react'
-import { getUser } from '@server/auth'
+import { getUser, logout } from '@server/auth'
 import {
   getPrivyAccessToken,
   getPrivyClient,
@@ -51,7 +51,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   // If there's no session token at all, user needs to login
   if (!sessionToken) {
     logger('[Refresh Loader] No session token, redirecting to login')
-    throw redirect('/login')
+    await logout({})
   }
 
   // Return the redirect destination for client-side handling

@@ -1,8 +1,13 @@
 import logger from '@lib/utils/logger'
 import { getMaintenanceMode } from '@lib/utils/maintenance'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
+import { logout } from '@server/auth'
 import { onboardingModalCookie } from '@server/onboarding'
-import { getPrivyTokens, verifyPrivyAccessToken } from '@server/privy'
+import {
+  getPrivyClient,
+  getPrivyTokens,
+  verifyPrivyAccessToken,
+} from '@server/privy'
 import { PATHS } from 'app/consts'
 
 export async function loader({ request }: LoaderFunctionArgs) {

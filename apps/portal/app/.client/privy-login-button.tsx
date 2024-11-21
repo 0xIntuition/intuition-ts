@@ -1,9 +1,9 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { Button, Icon } from '@0xintuition/1ui'
 
 import logger from '@lib/utils/logger'
-import { useLogin, User } from '@privy-io/react-auth'
+import { useLogin, useLogout, User } from '@privy-io/react-auth'
 
 interface PrivyLoginButtonProps {
   handleLogin: (
@@ -16,6 +16,7 @@ interface PrivyLoginButtonProps {
 export default function PrivyLoginButton({
   handleLogin,
 }: PrivyLoginButtonProps) {
+  const { logout } = useLogout()
   const [loading, setLoading] = useState(false)
   const { login } = useLogin({
     onComplete: (user, isNewUser, wasAlreadyAuthenticated) => {
@@ -31,6 +32,10 @@ export default function PrivyLoginButton({
     setLoading(true)
     login()
   }
+  useEffect(() => {
+    // ensure privy knows user is logged out
+    logout()
+  }, [])
 
   return (
     <Button
