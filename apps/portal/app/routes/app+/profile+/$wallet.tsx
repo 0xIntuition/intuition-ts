@@ -5,6 +5,7 @@ import {
   Button,
   Icon,
   IconName,
+  IconName,
   Identity,
   IdentityStakeCard,
   PieChartVariant,
@@ -40,15 +41,13 @@ import {
   useGetTagsQuery,
 } from '@0xintuition/graphql'
 
-import PrivyRevalidate from '@client/privy-revalidate'
-import EditProfileModal from '@components/edit-profile/modal'
-import EditSocialLinksModal from '@components/edit-social-links-modal'
 import { ErrorPage } from '@components/error-page'
 import NavigationButton from '@components/navigation-link'
-import { ProfileSocialAccounts } from '@components/profile-social-accounts'
 import ImageModal from '@components/profile/image-modal'
 import SaveListModal from '@components/save-list/save-list-modal'
 import { SegmentedNav } from '@components/segmented-nav'
+import ShareCta from '@components/share-cta'
+import ShareModal from '@components/share-modal'
 import StakeModal from '@components/stake/stake-modal'
 import TagsModal from '@components/tags/tags-modal'
 import { useGetVaultDetails } from '@lib/hooks/useGetVaultDetails'
@@ -56,10 +55,10 @@ import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getIdentityOrPending } from '@lib/services/identities'
 import { getPurchaseIntentsByAddress } from '@lib/services/phosphor'
 import {
-  editProfileModalAtom,
-  editSocialLinksModalAtom,
+  followModalAtom,
   imageModalAtom,
   saveListModalAtom,
+  shareModalAtom,
   stakeModalAtom,
   tagsModalAtom,
 } from '@lib/state/store'
@@ -73,14 +72,9 @@ import {
 } from '@lib/utils/misc'
 import { User } from '@privy-io/react-auth'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
-import {
-  Outlet,
-  useMatches,
-  useNavigate,
-  useRevalidator,
-} from '@remix-run/react'
+import { Outlet, useMatches, useNavigate } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
-import { requireUser, requireUserWallet } from '@server/auth'
+import { requireUser } from '@server/auth'
 import { getRelicCount } from '@server/relics'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
 import {
@@ -277,7 +271,6 @@ export interface ProfileLoaderData {
 
 export default function Profile() {
   const {
-    privyUser,
     userWallet,
     userIdentity,
     userTotals,
@@ -363,6 +356,8 @@ export default function Profile() {
   const [saveListModalActive, setSaveListModalActive] =
     useAtom(saveListModalAtom)
   const [imageModalActive, setImageModalActive] = useAtom(imageModalAtom)
+  const [shareModalActive, setShareModalActive] = useAtom(shareModalAtom)
+  // const [followModalActive, setFollowModalActive] = useAtom(followModalAtom)
 
   const [selectedTag, setSelectedTag] = useState<
     IdentityPresenter | null | undefined
@@ -374,20 +369,7 @@ export default function Profile() {
     }
   }, [saveListModalActive])
 
-  const revalidator = useRevalidator()
   const navigate = useNavigate()
-
-  useEffect(() => {
-    setEditProfileModalActive(false)
-    setEditSocialLinksModalActive(false)
-  }, [])
-
-  useEffect(() => {
-    if (!editProfileModalActive) {
-      revalidator.revalidate()
-    }
-  }, [editProfileModalActive])
-
   const matches = useMatches()
   const currentPath = matches[matches.length - 1].pathname
 
@@ -438,13 +420,25 @@ export default function Profile() {
             identity: userIdentity,
           })
         }}
-      ></ProfileCard>
-      <ProfileSocialAccounts
-        privyUser={JSON.parse(JSON.stringify(privyUser))}
-        handleOpenEditSocialLinksModal={() =>
-          setEditSocialLinksModalActive(true)
-        }
-      />
+      >
+        {!isPending && (
+          <Button
+            variant="secondary"
+            className="w-full text-warning"
+            // onClick={() =>
+            //   setFollowModalActive((prevState) => ({
+            //     ...prevState,
+            //     isOpen: true,
+            //   }))
+            // }
+          >
+              <>
+                <Icon name={IconName.peopleAdd} className="h-4 w-4" />
+                Follow
+              </>
+          </Button>
+        )}
+      </ProfileCard>
       {!isPending && (
         <>
           <Tags>
@@ -484,6 +478,7 @@ export default function Profile() {
             </div>
 
             <TagsButton
+            className='text-warning'
               onClick={() => {
                 setTagsModalActive({ isOpen: true, mode: 'view' })
               }}
@@ -602,6 +597,14 @@ export default function Profile() {
           />
         </>
       )}
+      <ShareCta
+        onShareClick={() =>
+          setShareModalActive({
+            isOpen: true,
+            currentPath: location.pathname,
+          })
+        }
+      />
     </div>
   )
 
@@ -633,17 +636,6 @@ export default function Profile() {
     <TwoPanelLayout leftPanel={leftPanel} rightPanel={rightPanel}>
       {!isPending && (
         <>
-          <EditProfileModal
-            userObject={accountResult?.account}
-            setUserObject={setUserObject}
-            open={editProfileModalActive}
-            onClose={() => setEditProfileModalActive(false)}
-          />
-          <EditSocialLinksModal
-            privyUser={JSON.parse(JSON.stringify(privyUser))}
-            open={editSocialLinksModalActive}
-            onClose={() => setEditSocialLinksModalActive(false)}
-          />
           <StakeModal
             userWallet={userWallet}
             contract={MULTIVAULT_CONTRACT_ADDRESS}
@@ -771,8 +763,16 @@ export default function Profile() {
           })
         }
       />
-
-      <PrivyRevalidate />
+      <ShareModal
+        currentPath={location.pathname}
+        open={shareModalActive.isOpen}
+        onClose={() =>
+          setShareModalActive({
+            ...shareModalActive,
+            isOpen: false,
+          })
+        }
+      />
     </TwoPanelLayout>
   )
 }
