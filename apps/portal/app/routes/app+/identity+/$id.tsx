@@ -22,6 +22,17 @@ import {
   ClaimsService,
   IdentityPresenter,
 } from '@0xintuition/api'
+import {
+  fetcher,
+  GetAtomDocument,
+  GetAtomQuery,
+  GetAtomQueryVariables,
+  GetTagsDocument,
+  GetTagsQuery,
+  GetTagsQueryVariables,
+  useGetAtomQuery,
+  useGetTagsQuery,
+} from '@0xintuition/graphql'
 
 import { DetailInfoCard } from '@components/detail-info-card'
 import { ErrorPage } from '@components/error-page'
@@ -32,6 +43,7 @@ import ShareCta from '@components/share-cta'
 import ShareModal from '@components/share-modal'
 import StakeModal from '@components/stake/stake-modal'
 import TagsModal from '@components/tags/tags-modal'
+import { useGetVaultDetails } from '@lib/hooks/useGetVaultDetails'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getIdentityOrPending } from '@lib/services/identities'
 import { getTags } from '@lib/services/tags'
@@ -57,7 +69,7 @@ import {
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { Outlet, useNavigate } from '@remix-run/react'
 import { requireUser, requireUserWallet } from '@server/auth'
-import { getVaultDetails } from '@server/multivault'
+import { dehydrate, QueryClient } from '@tanstack/react-query'
 import {
   BLOCK_EXPLORER_URL,
   CURRENT_ENV,
@@ -66,11 +78,7 @@ import {
   PATHS,
 } from 'app/consts'
 import TwoPanelLayout from 'app/layouts/two-panel-layout'
-import { VaultDetailsType } from 'app/types/vault'
 import { useAtom } from 'jotai'
-import { GetAccountQuery, fetcher, GetAccountQueryVariables, GetAccountDocument, GetTagsQuery, GetTagsQueryVariables, GetTagsDocument, GetAtomDocument, GetAtomQuery, GetAtomQueryVariables, GetAtomQuery, useGetAtomQuery, useGetTagsQuery } from '@0xintuition/graphql'
-import { dehydrate, QueryClient } from '@tanstack/react-query'
-import { string } from 'zod'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const user = await requireUser(request)
@@ -107,21 +115,6 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     logger('Failed to fetch list:', error)
   }
 
-  let vaultDetails: VaultDetailsType | null = null
-
-  if (!!identity && identity.vault_id) {
-    try {
-      vaultDetails = await getVaultDetails(
-        identity.contract,
-        identity.vault_id,
-        userWallet as `0x${string}`,
-      )
-    } catch (error) {
-      logger('Failed to fetch vaultDetails:', error)
-      vaultDetails = null
-    }
-  }
-
   const url = new URL(request.url)
   const searchParams = new URLSearchParams(url.search)
 
@@ -130,8 +123,6 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     subjectId: identity.id,
     searchParams,
   })
-
-
 
   let atomResult: GetAtomQuery | null = null
 
@@ -153,14 +144,13 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
       queryFn: () => atomResult,
     })
 
-
-    const atomTagsResult = await fetcher<
-      GetTagsQuery,
-      GetTagsQueryVariables
-    >(GetTagsDocument, {
-      subjectId: params.id,
-      predicateId: getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId,
-    })()
+    const atomTagsResult = await fetcher<GetTagsQuery, GetTagsQueryVariables>(
+      GetTagsDocument,
+      {
+        subjectId: params.id,
+        predicateId: getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId,
+      },
+    )()
 
     logger('Atom Tags Result:', atomTagsResult)
 
@@ -185,26 +175,22 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
   logger('[$ID] -- END')
   return json({
-
     identity,
     list,
     isPending,
-    vaultDetails,
     userWallet,
     tagClaims,
     dehydratedState: dehydrate(queryClient),
     initialParams: {
-      atomId: params.id
-    }
+      atomId: params.id,
+    },
   })
 }
 
 export interface IdentityLoaderData {
   identity: IdentityPresenter
   list: ClaimPresenter
-  vaultDetails: VaultDetailsType
   userWallet: string
-  isPending: boolean
   tagClaims: ClaimPresenter[]
   initialParams: {
     atomId: string
@@ -212,11 +198,13 @@ export interface IdentityLoaderData {
 }
 
 export default function IdentityDetails() {
-  const { identity, list, vaultDetails, userWallet, isPending, tagClaims, initialParams } =
+  const { identity, list, userWallet, tagClaims, initialParams } =
     useLiveLoader<IdentityLoaderData>(['attest', 'create'])
   const navigate = useNavigate()
 
-  const { user_assets, assets_sum } = vaultDetails ? vaultDetails : identity
+  // TODO: Remove this once the `status is added to atoms -- that will be what we check if something is pending. For now setting this to false and removing the legacy isPending check
+  const isPending = false
+
   const [stakeModalActive, setStakeModalActive] = useAtom(stakeModalAtom)
   const [tagsModalActive, setTagsModalActive] = useAtom(tagsModalAtom)
   const [saveListModalActive, setSaveListModalActive] =
@@ -235,7 +223,7 @@ export default function IdentityDetails() {
 
   const { data: atomResult } = useGetAtomQuery(
     {
-      id: initialParams.atomId
+      id: initialParams.atomId,
     },
     {
       queryKey: ['get-atom', { id: initialParams.atomId }],
@@ -263,17 +251,34 @@ export default function IdentityDetails() {
 
   logger('Atom Tags Result (Client):', atomTagsResult)
 
+  const { data: vaultDetails } = useGetVaultDetails(
+    MULTIVAULT_CONTRACT_ADDRESS,
+    initialParams.atomId,
+    undefined, // no counterVaultId
+    {
+      queryKey: [
+        'get-vault-details',
+        MULTIVAULT_CONTRACT_ADDRESS,
+        initialParams.atomId,
+      ],
+    },
+  )
+
+  logger('Vault Details:', vaultDetails)
+  const { user_assets, assets_sum } = vaultDetails ? vaultDetails : identity
+
   const leftPanel = (
     <div className="flex-col justify-start items-start inline-flex gap-6 max-lg:w-full">
       <ProfileCard
         variant={Identity.nonUser}
-        avatarSrc={getAtomImage(identity)}
-        name={getAtomLabel(identity)}
-        id={getAtomId(identity)}
-        vaultId={identity?.vault_id}
-        bio={getAtomDescription(identity)}
-        ipfsLink={getAtomIpfsLink(identity)}
-        externalLink={identity.external_reference ?? ''}
+        // avatarSrc={getAtomImage(identity)} // TODO: Bring back our utils once we're ready!
+        avatarSrc={atomResult?.atom?.value?.thing?.image ?? ''}
+        name={atomResult?.atom?.value?.thing?.name ?? ''}
+        id={atomResult?.atom?.id ?? ''}
+        vaultId={atomResult?.atom?.id ?? 0}
+        bio={atomResult?.atom?.value?.thing?.description ?? ''}
+        ipfsLink={atomResult?.atom?.data ?? ''}
+        externalLink={atomResult?.atom?.value?.thing?.url ?? ''}
         onAvatarClick={() => {
           setImageModalActive({
             isOpen: true,
@@ -286,19 +291,21 @@ export default function IdentityDetails() {
         <>
           <Tags>
             <div className="flex flex-row gap-2 md:flex-col">
-              {Array.isArray(tagClaims) && tagClaims.length > 0 ? (
-                <TagsContent numberOfTags={tagClaims?.length ?? 0}>
-                  {tagClaims.slice(0, 5).map((tagClaim) => (
+              {atomTagsResult && atomTagsResult.triples.length > 0 ? (
+                <TagsContent numberOfTags={atomTagsResult.triples?.length ?? 0}>
+                  {atomTagsResult.triples.slice(0, 5).map((tag) => (
                     <TagWithValue
-                      key={tagClaim.claim_id}
-                      label={tagClaim.object?.display_name}
-                      value={tagClaim.num_positions}
+                      key={tag.id}
+                      label={tag.object?.label ?? ''}
+                      value={tag.vault?.allPositions?.aggregate?.count ?? 0}
                       onStake={() => {
-                        setSelectedTag(tagClaim.object)
+                        setSelectedTag(
+                          tag?.object as unknown as IdentityPresenter,
+                        ) // TODO: (ENG-4782) temporary type fix until we lock in final types
                         setSaveListModalActive({
                           isOpen: true,
-                          id: tagClaim.vault_id,
-                          tag: tagClaim.object,
+                          id: tag.id,
+                          tag: tag.object as unknown as IdentityPresenter, // TODO: (ENG-4782) temporary type fix until we lock in final types
                         })
                       }}
                     />
@@ -329,7 +336,40 @@ export default function IdentityDetails() {
                   ...prevState,
                   mode: 'redeem',
                   modalType: 'identity',
-                  identity,
+                  identity: {
+                    // TODO: (ENG-4782) temporary type fix until we lock in final types
+                    id: atomResult?.atom?.id ?? '',
+                    label: atomResult?.atom?.value?.thing?.name ?? '',
+                    image: atomResult?.atom?.value?.thing?.image ?? '',
+                    vault_id: atomResult?.atom?.id,
+                    assets_sum: '0',
+                    user_assets: '0',
+                    contract: MULTIVAULT_CONTRACT_ADDRESS,
+                    asset_delta: '0',
+                    conviction_price: '0',
+                    conviction_price_delta: '0',
+                    conviction_sum: '0',
+                    num_positions: 0,
+                    price: '0',
+                    price_delta: '0',
+                    status: 'active',
+                    total_conviction: '0',
+                    type: 'user',
+                    updated_at: new Date().toISOString(),
+                    created_at: new Date().toISOString(),
+                    creator_address: '',
+                    display_name: atomResult?.atom?.value?.thing?.name ?? '',
+                    follow_vault_id: '',
+                    user: null,
+                    creator: null,
+                    identity_hash: '',
+                    identity_id: '',
+                    is_contract: false,
+                    is_user: true,
+                    pending: false,
+                    pending_type: null,
+                    pending_vault_id: null,
+                  } as unknown as IdentityPresenter,
                   isOpen: true,
                 }))
               }
@@ -350,16 +390,51 @@ export default function IdentityDetails() {
           ) : null}
           <IdentityStakeCard
             tvl={+formatBalance(assets_sum, 18)}
-            holders={identity?.num_positions}
-            variant={identity.is_user ? Identity.user : Identity.nonUser}
-            identityImgSrc={getAtomImage(identity)}
-            identityDisplayName={getAtomLabel(identity)}
+            holders={atomResult?.atom?.vault?.positionCount ?? 0}
+            variant={Identity.nonUser} // TODO: Use the atom type to determine this once we have these
+            // identityImgSrc={getAtomImage(identity)}
+            // identityDisplayName={getAtomLabel(identity)}
+            identityImgSrc={atomResult?.atom?.value?.thing?.image ?? ''}
+            identityDisplayName={atomResult?.atom?.value?.thing?.name ?? ''}
             onBuyClick={() =>
               setStakeModalActive((prevState) => ({
                 ...prevState,
                 mode: 'deposit',
                 modalType: 'identity',
-                identity,
+                identity: {
+                  // TODO: (ENG-4782) temporary type fix until we lock in final types
+                  id: atomResult?.atom?.id ?? '',
+                  label: atomResult?.atom?.value?.thing?.name ?? '',
+                  image: atomResult?.atom?.value?.thing?.image ?? '',
+                  vault_id: atomResult?.atom?.id,
+                  assets_sum: '0',
+                  user_assets: '0',
+                  contract: MULTIVAULT_CONTRACT_ADDRESS,
+                  asset_delta: '0',
+                  conviction_price: '0',
+                  conviction_price_delta: '0',
+                  conviction_sum: '0',
+                  num_positions: 0,
+                  price: '0',
+                  price_delta: '0',
+                  status: 'active',
+                  total_conviction: '0',
+                  type: 'user',
+                  updated_at: new Date().toISOString(),
+                  created_at: new Date().toISOString(),
+                  creator_address: '',
+                  display_name: atomResult?.atom?.value?.thing?.name ?? '',
+                  follow_vault_id: '',
+                  user: null,
+                  creator: null,
+                  identity_hash: '',
+                  identity_id: '',
+                  is_contract: false,
+                  is_user: true,
+                  pending: false,
+                  pending_type: null,
+                  pending_vault_id: null,
+                } as unknown as IdentityPresenter,
                 isOpen: true,
               }))
             }
@@ -371,18 +446,18 @@ export default function IdentityDetails() {
       )}
       <DetailInfoCard
         variant={Identity.user}
-        list={list}
-        username={identity.creator?.display_name ?? '?'}
-        avatarImgSrc={identity.creator?.image ?? ''}
-        id={identity.creator?.wallet ?? ''}
+        username={atomResult?.atom?.creator?.label ?? '?'}
+        avatarImgSrc={atomResult?.atom?.creator?.image ?? ''}
+        id={atomResult?.atom?.creator?.id ?? ''}
         description={identity.creator?.description ?? ''}
         link={
-          identity.creator?.id
-            ? `${PATHS.PROFILE}/${identity.creator?.wallet}`
+          atomResult?.atom?.creator?.id
+            ? `${PATHS.PROFILE}/${atomResult?.atom?.creator?.id}`
             : ''
         }
-        ipfsLink={`${BLOCK_EXPLORER_URL}/address/${identity.creator?.wallet}`}
-        timestamp={identity.created_at}
+        ipfsLink={`${BLOCK_EXPLORER_URL}/address/${atomResult?.atom?.creator?.id}`}
+        // timestamp={atomResult?.atom?.blockTimestamp ?? new Date().toISOString()} // TODO: Add this once we have it on the atom
+        timestamp={new Date().toISOString()}
         className="w-full"
       />
       <ShareCta
