@@ -9,7 +9,6 @@ import {
   IdentityStakeCard,
   PieChartVariant,
   PositionCard,
-  PositionCardLastUpdated,
   PositionCardOwnership,
   PositionCardStaked,
   ProfileCard,
@@ -73,8 +72,6 @@ import {
   calculatePercentageOfTvl,
   calculatePointsFromFees,
   formatBalance,
-  getAtomImage,
-  getAtomLabel,
   invariant,
 } from '@lib/utils/misc'
 import { User } from '@privy-io/react-auth'
@@ -376,19 +373,18 @@ export default function Profile() {
     },
   )
 
-  const { data: vaultDetails, isLoading: isLoadingVaultDetails } =
-    useGetVaultDetails(
-      MULTIVAULT_CONTRACT_ADDRESS,
-      accountResult?.account?.atomId,
-      undefined, // no counterVaultId
-      {
-        queryKey: [
-          'get-vault-details',
-          MULTIVAULT_CONTRACT_ADDRESS,
-          accountResult?.account?.atomId,
-        ],
-      },
-    )
+  const { data: vaultDetails } = useGetVaultDetails(
+    MULTIVAULT_CONTRACT_ADDRESS,
+    accountResult?.account?.atomId,
+    undefined, // no counterVaultId
+    {
+      queryKey: [
+        'get-vault-details',
+        MULTIVAULT_CONTRACT_ADDRESS,
+        accountResult?.account?.atomId,
+      ],
+    },
+  )
 
   logger('Account Result:', accountResult)
   logger('Account Tags Result:', accountTagsResult)
@@ -398,9 +394,9 @@ export default function Profile() {
 
   const { user_assets, assets_sum } = vaultDetails ? vaultDetails : userIdentity
 
-  const [userObject, setUserObject] = useState<
-    UserPresenter | null | undefined
-  >(userIdentity.user ?? user)
+  const [, setUserObject] = useState<UserPresenter | null | undefined>(
+    userIdentity.user ?? user,
+  )
   const [editProfileModalActive, setEditProfileModalActive] =
     useAtom(editProfileModalAtom)
   const [editSocialLinksModalActive, setEditSocialLinksModalActive] = useAtom(
@@ -553,7 +549,40 @@ export default function Profile() {
                   ...prevState,
                   mode: 'redeem',
                   modalType: 'identity',
-                  identity: userIdentity,
+                  identity: {
+                    // TODO: (ENG-4782) temporary type fix until we lock in final types
+                    id: accountResult?.account?.id ?? '',
+                    label: accountResult?.account?.label ?? '',
+                    image: accountResult?.account?.image ?? '',
+                    vault_id: accountResult?.account?.atomId,
+                    assets_sum: '0',
+                    user_assets: '0',
+                    contract: MULTIVAULT_CONTRACT_ADDRESS,
+                    asset_delta: '0',
+                    conviction_price: '0',
+                    conviction_price_delta: '0',
+                    conviction_sum: '0',
+                    num_positions: 0,
+                    price: '0',
+                    price_delta: '0',
+                    status: 'active',
+                    total_conviction: '0',
+                    type: 'user',
+                    updated_at: new Date().toISOString(),
+                    created_at: new Date().toISOString(),
+                    creator_address: '',
+                    display_name: accountResult?.account?.label ?? '',
+                    follow_vault_id: '',
+                    user: null,
+                    creator: null,
+                    identity_hash: '',
+                    identity_id: '',
+                    is_contract: false,
+                    is_user: true,
+                    pending: false,
+                    pending_type: null,
+                    pending_vault_id: null,
+                  } as unknown as IdentityPresenter,
                   isOpen: true,
                 }))
               }
@@ -569,12 +598,12 @@ export default function Profile() {
                 }
                 variant={PieChartVariant.default}
               />
-              <PositionCardLastUpdated timestamp={userIdentity.updated_at} />
-            </PositionCard>
+              {/* <PositionCardLastUpdated timestamp={userIdentity.updated_at} /> */}
+            </PositionCard> // TODO: Add last updated when we have it available
           ) : null}
           <IdentityStakeCard
             tvl={+formatBalance(assets_sum)}
-            holders={userIdentity.num_positions}
+            holders={accountResult?.account?.atom?.vault?.positionCount ?? 0}
             variant={Identity.user} // TODO: Use the atom type to determine this once we have these
             // identityImgSrc={getAtomImage(accountResult?.account)} // TODO: Modify our utils and then re-add this
             identityImgSrc={accountResult?.account?.image ?? ''}

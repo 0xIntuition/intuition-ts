@@ -8652,8 +8652,14 @@ export type GetAccountQuery = {
     type: string
     atom?: {
       __typename?: 'atoms'
-      vaultId: any
+      id: any
+      data: string
+      image?: string | null
+      label?: string | null
+      emoji?: string | null
+      type: string
       walletId: string
+      vaultId: any
       vault?: {
         __typename?: 'vaults'
         positionCount: number
@@ -8679,6 +8685,30 @@ export type GetAccountQuery = {
             id: string
           } | null
         }>
+      } | null
+      value?: {
+        __typename?: 'atomValues'
+        person?: {
+          __typename?: 'persons'
+          name?: string | null
+          image?: string | null
+          description?: string | null
+          url?: string | null
+        } | null
+        thing?: {
+          __typename?: 'things'
+          name?: string | null
+          image?: string | null
+          description?: string | null
+          url?: string | null
+        } | null
+        organization?: {
+          __typename?: 'organizations'
+          name?: string | null
+          image?: string | null
+          description?: string | null
+          url?: string | null
+        } | null
       } | null
     } | null
     claims: Array<{
@@ -13002,6 +13032,7 @@ export const GetAccountDocument = `
   account(id: $address) {
     ...AccountMetadata
     atom {
+      ...AtomMetadata
       ...AtomVaultDetails
     }
     ...AccountClaims
@@ -13014,6 +13045,8 @@ export const GetAccountDocument = `
   }
 }
     ${AccountMetadataFragmentDoc}
+${AtomMetadataFragmentDoc}
+${AtomValueFragmentDoc}
 ${AtomVaultDetailsFragmentDoc}
 ${AccountClaimsFragmentDoc}
 ${AccountPositionsFragmentDoc}
@@ -21315,6 +21348,10 @@ export const GetAccount = {
                     selections: [
                       {
                         kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AtomMetadata' },
+                      },
+                      {
+                        kind: 'FragmentSpread',
                         name: { kind: 'Name', value: 'AtomVaultDetails' },
                       },
                     ],
@@ -21838,6 +21875,100 @@ export const GetAccount = {
                 },
               ],
             },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'AtomValue' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'atoms' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'value' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'person' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'description' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'thing' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'description' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'organization' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'description' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'AtomMetadata' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'atoms' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'data' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'emoji' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'walletId' } },
+          {
+            kind: 'FragmentSpread',
+            name: { kind: 'Name', value: 'AtomValue' },
           },
         ],
       },

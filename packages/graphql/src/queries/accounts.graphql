@@ -108,6 +108,7 @@ query GetAccount(
   account(id: $address) {
     ...AccountMetadata
     atom {
+      ...AtomMetadata
       ...AtomVaultDetails
     }
     ...AccountClaims
