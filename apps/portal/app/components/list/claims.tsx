@@ -5,30 +5,33 @@ import {
   IconName,
   Identity,
 } from '@0xintuition/1ui'
-import {
-  ClaimPresenter,
-  ClaimSortColumn,
-  IdentityPresenter,
-} from '@0xintuition/api'
+import { ClaimSortColumn } from '@0xintuition/api'
+import { GetTriplesWithPositionsQuery } from '@0xintuition/graphql'
 
 import { ListHeader } from '@components/list/list-header'
 import RemixLink from '@components/remix-link'
 import { stakeModalAtom } from '@lib/state/store'
-import {
-  formatBalance,
-  getAtomDescription,
-  getAtomImage,
-  getAtomIpfsLink,
-  getAtomLabel,
-  getAtomLink,
-  getClaimUrl,
-} from '@lib/utils/misc'
+import { getClaimUrl } from '@lib/utils/misc'
 import { Link } from '@remix-run/react'
-import { PaginationType } from 'app/types/pagination'
 import { useSetAtom } from 'jotai'
 
 import { SortOption } from '../sort-select'
 import { List } from './list'
+
+type Triple = NonNullable<
+  NonNullable<GetTriplesWithPositionsQuery['triples']>[number]
+>
+
+// TODO: (ENG-4830) Add ReadOnly support back in and update our util functions that use it
+interface ClaimsListProps {
+  claims: Triple[]
+  pagination: { aggregate?: { count: number } } | number
+  paramPrefix?: string
+  enableHeader?: boolean
+  enableSearch?: boolean
+  enableSort?: boolean
+  // readOnly?: boolean
+}
 
 export function ClaimsList({
   claims,
@@ -37,17 +40,14 @@ export function ClaimsList({
   enableHeader = true,
   enableSearch = true,
   enableSort = true,
-  readOnly = false,
-}: {
-  claims: ClaimPresenter[]
-  pagination?: PaginationType
-  paramPrefix?: string
-  enableHeader?: boolean
-  enableSearch?: boolean
-  enableSort?: boolean
-  readOnly?: boolean
-}) {
+  // readOnly = false,
+}: ClaimsListProps) {
   const setStakeModalActive = useSetAtom(stakeModalAtom)
+
+  const paginationCount =
+    typeof pagination === 'number'
+      ? pagination
+      : pagination?.aggregate?.count ?? 0
 
   const options: SortOption<ClaimSortColumn>[] = [
     { value: 'Total ETH', sortBy: 'AssetsSum' },
@@ -62,7 +62,12 @@ export function ClaimsList({
 
   return (
     <List<ClaimSortColumn>
-      pagination={pagination}
+      pagination={{
+        currentPage: 1,
+        limit: 10,
+        totalEntries: paginationCount,
+        totalPages: Math.ceil(paginationCount / 10),
+      }}
       paginationLabel="claims"
       options={options}
       paramPrefix={paramPrefix}
@@ -77,25 +82,19 @@ export function ClaimsList({
           ]}
         />
       )}
-      {claims.map((claim, index) => (
+      {claims.map((triple, index) => (
         <div
-          key={claim.claim_id}
+          key={triple.id}
           className="grow shrink basis-0 self-stretch bg-background first:border-t-px first:rounded-t-xl last:rounded-b-xl theme-border border-t-0 flex-col justify-start gap-5 inline-flex"
         >
           <ClaimRow
-            numPositionsFor={claim.for_num_positions}
-            numPositionsAgainst={claim.against_num_positions}
-            tvlFor={formatBalance(claim.for_assets_sum, 18)}
-            tvlAgainst={formatBalance(claim.against_assets_sum, 18)}
-            totalTVL={formatBalance(claim.assets_sum, 18)}
-            userPosition={formatBalance(claim.user_assets, 18)}
-            positionDirection={
-              +claim.user_assets_for > 0
-                ? ClaimPosition.claimFor
-                : +claim.user_assets_against > 0
-                  ? ClaimPosition.claimAgainst
-                  : undefined
-            }
+            numPositionsFor={0}
+            numPositionsAgainst={0}
+            tvlFor="0"
+            tvlAgainst="0"
+            totalTVL="0"
+            userPosition="0"
+            positionDirection={undefined}
             onStakeForClick={() =>
               setStakeModalActive((prevState) => ({
                 ...prevState,
@@ -103,8 +102,8 @@ export function ClaimsList({
                 modalType: 'claim',
                 direction: ClaimPosition.claimFor,
                 isOpen: true,
-                claim,
-                vaultId: claim.vault_id,
+                claim: triple,
+                vaultId: triple.vault?.id,
               }))
             }
             onStakeAgainstClick={() =>
@@ -114,68 +113,45 @@ export function ClaimsList({
                 modalType: 'claim',
                 direction: ClaimPosition.claimAgainst,
                 isOpen: true,
-                claim,
-                vaultId: claim.counter_vault_id,
+                claim: triple,
+                vaultId: triple.vault?.id,
               }))
             }
             isFirst={!enableHeader && index === 0}
             isLast={index === claims.length - 1}
             className="border-none rounded-none"
           >
-            <Link to={getClaimUrl(claim.vault_id)} prefetch="intent">
+            <Link to={getClaimUrl(triple.vault?.id ?? '')} prefetch="intent">
               <Claim
                 size="md"
                 subject={{
-                  variant: claim.subject?.is_user
-                    ? Identity.user
-                    : Identity.nonUser,
-                  label: getAtomLabel(claim.subject as IdentityPresenter),
-                  imgSrc: getAtomImage(claim.subject as IdentityPresenter),
-                  id: claim.subject?.identity_id,
-                  description: getAtomDescription(
-                    claim.subject as IdentityPresenter,
-                  ),
-                  ipfsLink: getAtomIpfsLink(claim.subject as IdentityPresenter),
-                  link: getAtomLink(
-                    claim.subject as IdentityPresenter,
-                    readOnly,
-                  ),
+                  variant: Identity.nonUser,
+                  label: triple.subject?.label ?? '',
+                  imgSrc: triple.subject?.image ?? '',
+                  id: triple.subject?.id,
+                  description: '',
+                  ipfsLink: '',
+                  link: '',
                   linkComponent: RemixLink,
                 }}
                 predicate={{
-                  variant: claim.predicate?.is_user
-                    ? Identity.user
-                    : Identity.nonUser,
-                  label: getAtomLabel(claim.predicate as IdentityPresenter),
-                  imgSrc: getAtomImage(claim.predicate as IdentityPresenter),
-                  id: claim.predicate?.identity_id,
-                  description: getAtomDescription(
-                    claim.predicate as IdentityPresenter,
-                  ),
-                  ipfsLink: getAtomIpfsLink(
-                    claim.predicate as IdentityPresenter,
-                  ),
-                  link: getAtomLink(
-                    claim.predicate as IdentityPresenter,
-                    readOnly,
-                  ),
+                  variant: Identity.nonUser,
+                  label: triple.predicate?.label ?? '',
+                  imgSrc: triple.predicate?.image ?? '',
+                  id: triple.predicate?.id,
+                  description: '',
+                  ipfsLink: '',
+                  link: '',
                   linkComponent: RemixLink,
                 }}
                 object={{
-                  variant: claim.object?.is_user
-                    ? Identity.user
-                    : Identity.nonUser,
-                  label: getAtomLabel(claim.object as IdentityPresenter),
-                  imgSrc: getAtomImage(claim.object as IdentityPresenter),
-                  id: claim.object?.identity_id,
-                  description: getAtomDescription(
-                    claim.object as IdentityPresenter,
-                  ),
-                  ipfsLink: getAtomIpfsLink(claim.object as IdentityPresenter),
-                  link: getAtomLink(
-                    claim.object as IdentityPresenter,
-                    readOnly,
-                  ),
+                  variant: Identity.nonUser,
+                  label: triple.object?.label ?? '',
+                  imgSrc: triple.object?.image ?? '',
+                  id: triple.object?.id,
+                  description: '',
+                  ipfsLink: '',
+                  link: '',
                   linkComponent: RemixLink,
                 }}
                 isClickable={true}

@@ -11935,6 +11935,75 @@ export type GetTripleQuery = {
   } | null
 }
 
+export type GetAtomTriplesWithPositionsQueryVariables = Exact<{
+  where?: InputMaybe<Triples_Bool_Exp>
+}>
+
+export type GetAtomTriplesWithPositionsQuery = {
+  __typename?: 'query_root'
+  triples_aggregate: {
+    __typename?: 'triples_aggregate'
+    aggregate?: {
+      __typename?: 'triples_aggregate_fields'
+      count: number
+    } | null
+  }
+}
+
+export type GetTriplesWithPositionsQueryVariables = Exact<{
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  orderBy?: InputMaybe<Array<Triples_Order_By> | Triples_Order_By>
+  where?: InputMaybe<Triples_Bool_Exp>
+  address?: InputMaybe<Scalars['String']['input']>
+}>
+
+export type GetTriplesWithPositionsQuery = {
+  __typename?: 'query_root'
+  total: {
+    __typename?: 'triples_aggregate'
+    aggregate?: {
+      __typename?: 'triples_aggregate_fields'
+      count: number
+    } | null
+  }
+  triples: Array<{
+    __typename?: 'triples'
+    id: any
+    subject?: {
+      __typename?: 'atoms'
+      id: any
+      label?: string | null
+      image?: string | null
+    } | null
+    predicate?: {
+      __typename?: 'atoms'
+      id: any
+      label?: string | null
+      image?: string | null
+    } | null
+    object?: {
+      __typename?: 'atoms'
+      id: any
+      label?: string | null
+      image?: string | null
+    } | null
+    vault?: {
+      __typename?: 'vaults'
+      positions: Array<{
+        __typename?: 'positions'
+        shares: any
+        account?: {
+          __typename?: 'accounts'
+          id: string
+          label: string
+          image?: string | null
+        } | null
+      }>
+    } | null
+  }>
+}
+
 export type GetVaultsQueryVariables = Exact<{
   limit?: InputMaybe<Scalars['Int']['input']>
   offset?: InputMaybe<Scalars['Int']['input']>
@@ -15886,6 +15955,240 @@ useGetTripleQuery.fetcher = (
 ) =>
   fetcher<GetTripleQuery, GetTripleQueryVariables>(
     GetTripleDocument,
+    variables,
+    options,
+  )
+
+export const GetAtomTriplesWithPositionsDocument = `
+    query GetAtomTriplesWithPositions($where: triples_bool_exp) {
+  triples_aggregate(where: $where) {
+    aggregate {
+      count
+    }
+  }
+}
+    `
+
+export const useGetAtomTriplesWithPositionsQuery = <
+  TData = GetAtomTriplesWithPositionsQuery,
+  TError = unknown,
+>(
+  variables?: GetAtomTriplesWithPositionsQueryVariables,
+  options?: Omit<
+    UseQueryOptions<GetAtomTriplesWithPositionsQuery, TError, TData>,
+    'queryKey'
+  > & {
+    queryKey?: UseQueryOptions<
+      GetAtomTriplesWithPositionsQuery,
+      TError,
+      TData
+    >['queryKey']
+  },
+) => {
+  return useQuery<GetAtomTriplesWithPositionsQuery, TError, TData>({
+    queryKey:
+      variables === undefined
+        ? ['GetAtomTriplesWithPositions']
+        : ['GetAtomTriplesWithPositions', variables],
+    queryFn: fetcher<
+      GetAtomTriplesWithPositionsQuery,
+      GetAtomTriplesWithPositionsQueryVariables
+    >(GetAtomTriplesWithPositionsDocument, variables),
+    ...options,
+  })
+}
+
+useGetAtomTriplesWithPositionsQuery.document =
+  GetAtomTriplesWithPositionsDocument
+
+useGetAtomTriplesWithPositionsQuery.getKey = (
+  variables?: GetAtomTriplesWithPositionsQueryVariables,
+) =>
+  variables === undefined
+    ? ['GetAtomTriplesWithPositions']
+    : ['GetAtomTriplesWithPositions', variables]
+
+export const useInfiniteGetAtomTriplesWithPositionsQuery = <
+  TData = InfiniteData<GetAtomTriplesWithPositionsQuery>,
+  TError = unknown,
+>(
+  variables: GetAtomTriplesWithPositionsQueryVariables,
+  options: Omit<
+    UseInfiniteQueryOptions<GetAtomTriplesWithPositionsQuery, TError, TData>,
+    'queryKey'
+  > & {
+    queryKey?: UseInfiniteQueryOptions<
+      GetAtomTriplesWithPositionsQuery,
+      TError,
+      TData
+    >['queryKey']
+  },
+) => {
+  return useInfiniteQuery<GetAtomTriplesWithPositionsQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey:
+          optionsQueryKey ?? variables === undefined
+            ? ['GetAtomTriplesWithPositions.infinite']
+            : ['GetAtomTriplesWithPositions.infinite', variables],
+        queryFn: (metaData) =>
+          fetcher<
+            GetAtomTriplesWithPositionsQuery,
+            GetAtomTriplesWithPositionsQueryVariables
+          >(GetAtomTriplesWithPositionsDocument, {
+            ...variables,
+            ...(metaData.pageParam ?? {}),
+          })(),
+        ...restOptions,
+      }
+    })(),
+  )
+}
+
+useInfiniteGetAtomTriplesWithPositionsQuery.getKey = (
+  variables?: GetAtomTriplesWithPositionsQueryVariables,
+) =>
+  variables === undefined
+    ? ['GetAtomTriplesWithPositions.infinite']
+    : ['GetAtomTriplesWithPositions.infinite', variables]
+
+useGetAtomTriplesWithPositionsQuery.fetcher = (
+  variables?: GetAtomTriplesWithPositionsQueryVariables,
+  options?: RequestInit['headers'],
+) =>
+  fetcher<
+    GetAtomTriplesWithPositionsQuery,
+    GetAtomTriplesWithPositionsQueryVariables
+  >(GetAtomTriplesWithPositionsDocument, variables, options)
+
+export const GetTriplesWithPositionsDocument = `
+    query GetTriplesWithPositions($limit: Int, $offset: Int, $orderBy: [triples_order_by!], $where: triples_bool_exp, $address: String) {
+  total: triples_aggregate(where: $where) {
+    aggregate {
+      count
+    }
+  }
+  triples(limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
+    id
+    subject {
+      id
+      label
+      image
+    }
+    predicate {
+      id
+      label
+      image
+    }
+    object {
+      id
+      label
+      image
+    }
+    vault {
+      positions(where: {accountId: {_eq: $address}}) {
+        account {
+          id
+          label
+          image
+        }
+        shares
+      }
+    }
+  }
+}
+    `
+
+export const useGetTriplesWithPositionsQuery = <
+  TData = GetTriplesWithPositionsQuery,
+  TError = unknown,
+>(
+  variables?: GetTriplesWithPositionsQueryVariables,
+  options?: Omit<
+    UseQueryOptions<GetTriplesWithPositionsQuery, TError, TData>,
+    'queryKey'
+  > & {
+    queryKey?: UseQueryOptions<
+      GetTriplesWithPositionsQuery,
+      TError,
+      TData
+    >['queryKey']
+  },
+) => {
+  return useQuery<GetTriplesWithPositionsQuery, TError, TData>({
+    queryKey:
+      variables === undefined
+        ? ['GetTriplesWithPositions']
+        : ['GetTriplesWithPositions', variables],
+    queryFn: fetcher<
+      GetTriplesWithPositionsQuery,
+      GetTriplesWithPositionsQueryVariables
+    >(GetTriplesWithPositionsDocument, variables),
+    ...options,
+  })
+}
+
+useGetTriplesWithPositionsQuery.document = GetTriplesWithPositionsDocument
+
+useGetTriplesWithPositionsQuery.getKey = (
+  variables?: GetTriplesWithPositionsQueryVariables,
+) =>
+  variables === undefined
+    ? ['GetTriplesWithPositions']
+    : ['GetTriplesWithPositions', variables]
+
+export const useInfiniteGetTriplesWithPositionsQuery = <
+  TData = InfiniteData<GetTriplesWithPositionsQuery>,
+  TError = unknown,
+>(
+  variables: GetTriplesWithPositionsQueryVariables,
+  options: Omit<
+    UseInfiniteQueryOptions<GetTriplesWithPositionsQuery, TError, TData>,
+    'queryKey'
+  > & {
+    queryKey?: UseInfiniteQueryOptions<
+      GetTriplesWithPositionsQuery,
+      TError,
+      TData
+    >['queryKey']
+  },
+) => {
+  return useInfiniteQuery<GetTriplesWithPositionsQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey:
+          optionsQueryKey ?? variables === undefined
+            ? ['GetTriplesWithPositions.infinite']
+            : ['GetTriplesWithPositions.infinite', variables],
+        queryFn: (metaData) =>
+          fetcher<
+            GetTriplesWithPositionsQuery,
+            GetTriplesWithPositionsQueryVariables
+          >(GetTriplesWithPositionsDocument, {
+            ...variables,
+            ...(metaData.pageParam ?? {}),
+          })(),
+        ...restOptions,
+      }
+    })(),
+  )
+}
+
+useInfiniteGetTriplesWithPositionsQuery.getKey = (
+  variables?: GetTriplesWithPositionsQueryVariables,
+) =>
+  variables === undefined
+    ? ['GetTriplesWithPositions.infinite']
+    : ['GetTriplesWithPositions.infinite', variables]
+
+useGetTriplesWithPositionsQuery.fetcher = (
+  variables?: GetTriplesWithPositionsQueryVariables,
+  options?: RequestInit['headers'],
+) =>
+  fetcher<GetTriplesWithPositionsQuery, GetTriplesWithPositionsQueryVariables>(
+    GetTriplesWithPositionsDocument,
     variables,
     options,
   )
@@ -33242,6 +33545,316 @@ export const GetTriple = {
           },
           { kind: 'Field', name: { kind: 'Name', value: 'currentSharePrice' } },
           { kind: 'Field', name: { kind: 'Name', value: 'totalShares' } },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export const GetAtomTriplesWithPositions = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'GetAtomTriplesWithPositions' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'where' },
+          },
+          type: {
+            kind: 'NamedType',
+            name: { kind: 'Name', value: 'triples_bool_exp' },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'triples_aggregate' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'where' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'aggregate' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'count' } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export const GetTriplesWithPositions = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'GetTriplesWithPositions' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'limit' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'offset' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'orderBy' },
+          },
+          type: {
+            kind: 'ListType',
+            type: {
+              kind: 'NonNullType',
+              type: {
+                kind: 'NamedType',
+                name: { kind: 'Name', value: 'triples_order_by' },
+              },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'where' },
+          },
+          type: {
+            kind: 'NamedType',
+            name: { kind: 'Name', value: 'triples_bool_exp' },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'address' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'total' },
+            name: { kind: 'Name', value: 'triples_aggregate' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'where' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'aggregate' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'count' } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'triples' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'limit' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'offset' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'offset' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'order_by' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'orderBy' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'where' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'subject' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'predicate' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'object' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'vault' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'positions' },
+                        arguments: [
+                          {
+                            kind: 'Argument',
+                            name: { kind: 'Name', value: 'where' },
+                            value: {
+                              kind: 'ObjectValue',
+                              fields: [
+                                {
+                                  kind: 'ObjectField',
+                                  name: { kind: 'Name', value: 'accountId' },
+                                  value: {
+                                    kind: 'ObjectValue',
+                                    fields: [
+                                      {
+                                        kind: 'ObjectField',
+                                        name: { kind: 'Name', value: '_eq' },
+                                        value: {
+                                          kind: 'Variable',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'address',
+                                          },
+                                        },
+                                      },
+                                    ],
+                                  },
+                                },
+                              ],
+                            },
+                          },
+                        ],
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'account' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'label' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'image' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'shares' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
         ],
       },
     },
