@@ -3,18 +3,12 @@ import { useEffect } from 'react'
 import { ApiError, UserPresenter, UsersService } from '@0xintuition/api'
 
 import PrivyLogout from '@client/privy-logout'
-import usePageVisibility from '@lib/hooks/usePageVisibility'
 import { getIdentityOrPending } from '@lib/services/identities'
 import logger from '@lib/utils/logger'
 import { getMaintenanceMode } from '@lib/utils/maintenance'
 import { invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
-import {
-  Outlet,
-  useLoaderData,
-  useLocation,
-  useRevalidator,
-} from '@remix-run/react'
+import { Outlet, useLoaderData, useLocation } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
 import { FeatureFlags, getFeatureFlags } from '@server/env'
@@ -88,16 +82,7 @@ export default function App() {
     userObject: UserPresenter
     featureFlags: FeatureFlags
   }>()
-  const { revalidate } = useRevalidator()
   const { pathname } = useLocation()
-  const isVisible = usePageVisibility()
-
-  useEffect(() => {
-    if (isVisible) {
-      logger('User has returned to the page')
-      revalidate()
-    }
-  }, [isVisible])
 
   useEffect(() => {
     window.scrollTo(0, 0)
