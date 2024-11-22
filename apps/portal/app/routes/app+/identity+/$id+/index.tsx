@@ -19,8 +19,8 @@ import {
 
 import CreateClaimModal from '@components/create-claim/create-claim-modal'
 import { ErrorPage } from '@components/error-page'
-import { ClaimsList as ClaimsAboutIdentity } from '@components/list/claims'
-import { PositionsOnIdentity } from '@components/list/positions-on-identity'
+import { ClaimsListNew as ClaimsAboutIdentity } from '@components/list/claims'
+import { PositionsOnIdentityNew } from '@components/list/positions-on-identity'
 import DataAboutHeader from '@components/profile/data-about-header'
 import { RevalidateButton } from '@components/revalidate-button'
 import { DataHeaderSkeleton, PaginatedListSkeleton } from '@components/skeleton'
@@ -347,7 +347,7 @@ export default function ProfileDataAbout() {
                 <RevalidateButton />
               </ErrorStateCard>
             ) : (
-              <PositionsOnIdentity
+              <PositionsOnIdentityNew
                 positions={positionsResult?.positions ?? []}
                 pagination={positionsResult?.total?.aggregate?.count ?? {}}
               />

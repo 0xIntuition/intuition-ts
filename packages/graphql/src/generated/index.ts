@@ -11990,6 +11990,23 @@ export type GetTriplesWithPositionsQuery = {
     } | null
     vault?: {
       __typename?: 'vaults'
+      totalShares: any
+      positionCount: number
+      positions: Array<{
+        __typename?: 'positions'
+        shares: any
+        account?: {
+          __typename?: 'accounts'
+          id: string
+          label: string
+          image?: string | null
+        } | null
+      }>
+    } | null
+    counterVault?: {
+      __typename?: 'vaults'
+      totalShares: any
+      positionCount: number
       positions: Array<{
         __typename?: 'positions'
         shares: any
@@ -16087,6 +16104,20 @@ export const GetTriplesWithPositionsDocument = `
       image
     }
     vault {
+      totalShares
+      positionCount
+      positions(where: {accountId: {_eq: $address}}) {
+        account {
+          id
+          label
+          image
+        }
+        shares
+      }
+    }
+    counterVault {
+      totalShares
+      positionCount
       positions(where: {accountId: {_eq: $address}}) {
         account {
           id
@@ -33784,6 +33815,96 @@ export const GetTriplesWithPositions = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'totalShares' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'positionCount' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'positions' },
+                        arguments: [
+                          {
+                            kind: 'Argument',
+                            name: { kind: 'Name', value: 'where' },
+                            value: {
+                              kind: 'ObjectValue',
+                              fields: [
+                                {
+                                  kind: 'ObjectField',
+                                  name: { kind: 'Name', value: 'accountId' },
+                                  value: {
+                                    kind: 'ObjectValue',
+                                    fields: [
+                                      {
+                                        kind: 'ObjectField',
+                                        name: { kind: 'Name', value: '_eq' },
+                                        value: {
+                                          kind: 'Variable',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'address',
+                                          },
+                                        },
+                                      },
+                                    ],
+                                  },
+                                },
+                              ],
+                            },
+                          },
+                        ],
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'account' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'label' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'image' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'shares' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'counterVault' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'totalShares' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'positionCount' },
+                      },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'positions' },

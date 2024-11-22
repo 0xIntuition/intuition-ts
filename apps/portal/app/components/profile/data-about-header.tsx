@@ -8,6 +8,7 @@ import {
   TextWeight,
   Trunctacular,
 } from '@0xintuition/1ui'
+import { IdentityPresenter } from '@0xintuition/api'
 
 export const DataAboutHeaderVariants = {
   positions: 'positions',
@@ -18,10 +19,11 @@ export type DataAboutHeaderVariantType =
   (typeof DataAboutHeaderVariants)[keyof typeof DataAboutHeaderVariants]
 
 interface DataAboutHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
+  userIdentity?: IdentityPresenter
   variant: DataAboutHeaderVariantType
-  atomImage: string
-  atomLabel: string
-  atomVariant: 'user' | 'non-user'
+  atomImage?: string
+  atomLabel?: string
+  atomVariant?: 'user' | 'non-user'
   totalClaims?: number
   totalPositions?: number
   totalStake: number
@@ -51,7 +53,7 @@ const DataAboutHeader: React.FC<DataAboutHeaderProps> = ({
           {variant === 'claims' ? 'Claims about' : 'Conviction in'}
         </Text>
         <IdentityTag imgSrc={atomImage} variant={atomVariant}>
-          <Trunctacular value={atomLabel} maxStringLength={40} />
+          <Trunctacular value={atomLabel ?? ''} maxStringLength={40} />
         </IdentityTag>
       </div>
       <div className="flex justify-between w-full">
