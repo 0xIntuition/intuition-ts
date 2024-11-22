@@ -8054,7 +8054,12 @@ export type PositionDetailsFragment = {
   id: string
   shares: any
   vaultId: any
-  account?: { __typename?: 'accounts'; id: string; label: string } | null
+  account?: {
+    __typename?: 'accounts'
+    id: string
+    label: string
+    image?: string | null
+  } | null
   vault?: {
     __typename?: 'vaults'
     id: any
@@ -10680,7 +10685,12 @@ export type GetPositionsQuery = {
     id: string
     shares: any
     vaultId: any
-    account?: { __typename?: 'accounts'; id: string; label: string } | null
+    account?: {
+      __typename?: 'accounts'
+      id: string
+      label: string
+      image?: string | null
+    } | null
     vault?: {
       __typename?: 'vaults'
       id: any
@@ -10724,7 +10734,12 @@ export type GetPositionsWithAggregatesQuery = {
       id: string
       shares: any
       vaultId: any
-      account?: { __typename?: 'accounts'; id: string; label: string } | null
+      account?: {
+        __typename?: 'accounts'
+        id: string
+        label: string
+        image?: string | null
+      } | null
       vault?: {
         __typename?: 'vaults'
         id: any
@@ -10779,7 +10794,12 @@ export type GetPositionQuery = {
     id: string
     shares: any
     vaultId: any
-    account?: { __typename?: 'accounts'; id: string; label: string } | null
+    account?: {
+      __typename?: 'accounts'
+      id: string
+      label: string
+      image?: string | null
+    } | null
     vault?: {
       __typename?: 'vaults'
       id: any
@@ -12611,6 +12631,7 @@ export const PositionDetailsFragmentDoc = `
   account {
     id
     label
+    image
   }
   vault {
     id
@@ -19720,6 +19741,7 @@ export const PositionDetails = {
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'image' } },
               ],
             },
           },
@@ -29874,6 +29896,7 @@ export const GetPositions = {
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'image' } },
               ],
             },
           },
@@ -30110,6 +30133,7 @@ export const GetPositionsWithAggregates = {
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'image' } },
               ],
             },
           },
@@ -30330,6 +30354,7 @@ export const GetPosition = {
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'image' } },
               ],
             },
           },

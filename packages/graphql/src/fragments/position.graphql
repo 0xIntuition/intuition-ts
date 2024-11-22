@@ -3,6 +3,7 @@ fragment PositionDetails on positions {
   account {
     id
     label
+    image
   }
   vault {
     id
