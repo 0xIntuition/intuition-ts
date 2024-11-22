@@ -11,8 +11,8 @@ import {
   Text,
   toast,
 } from '@0xintuition/1ui'
-import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
-import { useGetTripleQuery } from '@0xintuition/graphql'
+import { ClaimPresenter } from '@0xintuition/api'
+import { GetAtomQuery, useGetTripleQuery } from '@0xintuition/graphql'
 
 import { IdentityPopover } from '@components/create-claim/create-claim-popovers'
 import CreateClaimReview from '@components/create-claim/create-claim-review'
@@ -23,7 +23,6 @@ import { useCheckClaim } from '@lib/hooks/useCheckClaim'
 import { useCreateClaimConfig } from '@lib/hooks/useCreateClaimConfig'
 import { useCreateTriple } from '@lib/hooks/useCreateTriple'
 import { useGetWalletBalance } from '@lib/hooks/useGetWalletBalance'
-import { useIdentityServerSearch } from '@lib/hooks/useIdentityServerSearch'
 import {
   initialTransactionState,
   transactionReducer,
@@ -139,11 +138,10 @@ function CreateClaimForm({
   const [lastTxHash, setLastTxHash] = useState<string | undefined>(undefined)
   const [initialDeposit, setInitialDeposit] = useState<string>('0')
   const [vaultId, setVaultId] = useState<string | undefined>(undefined)
-  // const [searchQuery, setSearchQuery] = useState('')
   const [selectedIdentities, setSelectedIdentities] = useState<{
-    subject: IdentityPresenter | null
-    predicate: IdentityPresenter | null
-    object: IdentityPresenter | null
+    subject: GetAtomQuery['atom'] | null
+    predicate: GetAtomQuery['atom'] | null
+    object: GetAtomQuery['atom'] | null
   }>({
     subject: subject ?? null,
     predicate: predicate ?? null,
@@ -156,9 +154,9 @@ function CreateClaimForm({
   const { fees } = configData ?? {}
 
   const { data: claimCheckData, refetch: refetchClaimCheck } = useCheckClaim({
-    subjectId: selectedIdentities.subject?.vault_id,
-    predicateId: selectedIdentities.predicate?.vault_id,
-    objectId: selectedIdentities.object?.vault_id,
+    subjectId: selectedIdentities.subject?.vaultId,
+    predicateId: selectedIdentities.predicate?.vaultId,
+    objectId: selectedIdentities.object?.vaultId,
   })
 
   const { data: claimData, refetch: refetchClaim } = useGetTripleQuery(
@@ -178,8 +176,6 @@ function CreateClaimForm({
   )
 
   const navigate = useNavigate()
-
-  const { setSearchQuery, identities, handleInput } = useIdentityServerSearch()
 
   const publicClient = usePublicClient()
   const { address, chain } = useAccount()
@@ -303,9 +299,9 @@ function CreateClaimForm({
         selectedIdentities.object !== null
       ) {
         handleOnChainCreateTriple({
-          subjectVaultId: selectedIdentities.subject.vault_id,
-          predicateVaultId: selectedIdentities.predicate.vault_id,
-          objectVaultId: selectedIdentities.object.vault_id,
+          subjectVaultId: selectedIdentities.subject?.vaultId ?? '',
+          predicateVaultId: selectedIdentities.predicate?.vaultId ?? '',
+          objectVaultId: selectedIdentities.object?.vaultId ?? '',
         })
       }
     } catch (error: unknown) {
@@ -314,34 +310,22 @@ function CreateClaimForm({
   }
 
   const handleIdentitySelection = (
-    identityType: ClaimElementType,
-    identity: IdentityPresenter,
+    type: ClaimElementType,
+    identity: GetAtomQuery['atom'],
   ) => {
-    setSelectedIdentities((prevState) => ({
-      ...prevState,
-      [identityType]: identity,
+    setSelectedIdentities((prev) => ({
+      ...prev,
+      [type]: identity,
     }))
-    setSearchQuery('')
-    // setIdentities([])
-    if (identityType === ClaimElement.Subject) {
+
+    if (type === 'subject') {
       setIsSubjectPopoverOpen(false)
-    } else if (identityType === ClaimElement.Predicate) {
+    } else if (type === 'predicate') {
       setIsPredicatePopoverOpen(false)
-    } else if (identityType === ClaimElement.Object) {
+    } else if (type === 'object') {
       setIsObjectPopoverOpen(false)
     }
   }
-
-  useEffect(() => {
-    if (
-      !isSubjectPopoverOpen &&
-      !isPredicatePopoverOpen &&
-      !isObjectPopoverOpen
-    ) {
-      setSearchQuery('')
-      // setIdentities([])
-    }
-  }, [isSubjectPopoverOpen, isPredicatePopoverOpen, isObjectPopoverOpen])
 
   const walletBalance = useGetWalletBalance(
     address ?? (wallet as `0x${string}`),
@@ -386,13 +370,10 @@ function CreateClaimForm({
                     isObjectPopoverOpen={isSubjectPopoverOpen}
                     setIsObjectPopoverOpen={setIsSubjectPopoverOpen}
                     selectedIdentity={selectedIdentities.subject}
-                    identities={identities}
                     handleIdentitySelection={(
                       identityType: ClaimElementType,
-                      identity: IdentityPresenter,
+                      identity: GetAtomQuery['atom'],
                     ) => handleIdentitySelection(identityType, identity)}
-                    setSearchQuery={setSearchQuery}
-                    handleInput={handleInput}
                   />
                   <Divider />
                   <IdentityPopover
@@ -400,13 +381,10 @@ function CreateClaimForm({
                     isObjectPopoverOpen={isPredicatePopoverOpen}
                     setIsObjectPopoverOpen={setIsPredicatePopoverOpen}
                     selectedIdentity={selectedIdentities.predicate}
-                    identities={identities}
                     handleIdentitySelection={(
                       identityType: ClaimElementType,
-                      identity: IdentityPresenter,
+                      identity: GetAtomQuery['atom'],
                     ) => handleIdentitySelection(identityType, identity)}
-                    setSearchQuery={setSearchQuery}
-                    handleInput={handleInput}
                   />
                   <Divider />
                   <IdentityPopover
@@ -414,13 +392,10 @@ function CreateClaimForm({
                     isObjectPopoverOpen={isObjectPopoverOpen}
                     setIsObjectPopoverOpen={setIsObjectPopoverOpen}
                     selectedIdentity={selectedIdentities.object}
-                    identities={identities}
                     handleIdentitySelection={(
                       identityType: ClaimElementType,
-                      identity: IdentityPresenter,
+                      identity: GetAtomQuery['atom'],
                     ) => handleIdentitySelection(identityType, identity)}
-                    setSearchQuery={setSearchQuery}
-                    handleInput={handleInput}
                   />
                 </div>
                 <div className="flex flex-row items-center justify-center">

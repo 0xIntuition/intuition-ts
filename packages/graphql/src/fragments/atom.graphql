@@ -45,6 +45,7 @@ fragment AtomVaultDetails on atoms {
   vault {
     positionCount
     totalShares
+    currentSharePrice
     positions_aggregate {
       aggregate {
         count

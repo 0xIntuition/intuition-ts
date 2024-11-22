@@ -1,4 +1,5 @@
 import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
+import { GetAtomQuery } from '@0xintuition/graphql'
 
 import { VaultDetailsType } from 'app/types'
 import type { WritableAtom } from 'jotai'
@@ -100,9 +101,9 @@ export const imageModalAtom = atom<{
 
 export const createClaimModalAtom = atom<{
   isOpen: boolean
-  subject?: IdentityPresenter | null
-  predicate?: IdentityPresenter | null
-  object?: IdentityPresenter | null
+  subject?: GetAtomQuery['atom'] | null
+  predicate?: GetAtomQuery['atom'] | null
+  object?: GetAtomQuery['atom'] | null
 }>({
   isOpen: false,
   subject: null,

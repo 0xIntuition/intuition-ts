@@ -12,33 +12,28 @@ import {
   Trunctacular,
   useSidebarLayoutContext,
 } from '@0xintuition/1ui'
-import { IdentityPresenter } from '@0xintuition/api'
+import { GetAtomQuery } from '@0xintuition/graphql'
 
-import { IdentitySearchCombobox } from '@components/identity/identity-search-combo-box'
+import { AtomSearchComboboxExtended } from '@components/atom-search-combobox-extended'
 import { InfoTooltip } from '@components/info-tooltip'
-import { globalCreateIdentityModalAtom } from '@lib/state/store'
 import {
-  getAtomDescription,
-  getAtomImage,
-  getAtomIpfsLink,
-  getAtomLabel,
-  sliceString,
+  getAtomDescriptionGQL,
+  getAtomIdGQL,
+  getAtomImageGQL,
+  getAtomIpfsLinkGQL,
+  getAtomLabelGQL,
 } from '@lib/utils/misc'
 import { ClaimElementType } from 'app/types'
-import { useSetAtom } from 'jotai'
 
 interface IdentityPopoverProps {
   type: ClaimElementType
   isObjectPopoverOpen: boolean
-  setIsObjectPopoverOpen: (isOpen: boolean) => void
-  selectedIdentity?: IdentityPresenter | null
-  identities: IdentityPresenter[]
+  setIsObjectPopoverOpen: (open: boolean) => void
+  selectedIdentity: GetAtomQuery['atom'] | null
   handleIdentitySelection: (
-    identityType: ClaimElementType,
-    identity: IdentityPresenter,
+    type: ClaimElementType,
+    identity: GetAtomQuery['atom'],
   ) => void
-  setSearchQuery: (query: string) => void
-  handleInput: (event: React.FormEvent<HTMLInputElement>) => Promise<void>
 }
 
 export const IdentityPopover: React.FC<IdentityPopoverProps> = ({
@@ -46,12 +41,8 @@ export const IdentityPopover: React.FC<IdentityPopoverProps> = ({
   isObjectPopoverOpen,
   setIsObjectPopoverOpen,
   selectedIdentity,
-  identities,
   handleIdentitySelection,
-  setSearchQuery,
-  handleInput,
 }) => {
-  const setCreateIdentityModalActive = useSetAtom(globalCreateIdentityModalAtom)
   const { isMobileView } = useSidebarLayoutContext()
 
   return (
@@ -88,20 +79,18 @@ export const IdentityPopover: React.FC<IdentityPopoverProps> = ({
               <IdentityTag
                 size="lg"
                 variant={
-                  selectedIdentity?.is_user ? Identity.user : Identity.nonUser
+                  selectedIdentity?.type ===
+                  ('Account' || 'Person' || 'Default')
+                    ? Identity.user
+                    : Identity.nonUser
                 }
-                imgSrc={getAtomImage(selectedIdentity)}
+                imgSrc={getAtomImageGQL(selectedIdentity)}
                 className="w-full"
               >
                 <Trunctacular
                   maxStringLength={20}
                   variant="bodyLarge"
-                  value={
-                    (selectedIdentity?.user?.display_name ??
-                      selectedIdentity?.display_name ??
-                      '') ||
-                    type
-                  }
+                  value={(selectedIdentity?.label ?? '') || type}
                   disableTooltip
                 />
               </IdentityTag>
@@ -111,30 +100,17 @@ export const IdentityPopover: React.FC<IdentityPopoverProps> = ({
                 <div className="w-80 max-md:w-[80%]">
                   <ProfileCard
                     variant={
-                      selectedIdentity.is_user === true
+                      selectedIdentity?.type ===
+                      ('Account' || 'Person' || 'Default')
                         ? Identity.user
                         : Identity.nonUser
                     }
-                    avatarSrc={getAtomImage(selectedIdentity)}
-                    name={getAtomLabel(selectedIdentity)}
-                    id={
-                      selectedIdentity.is_user === true
-                        ? selectedIdentity.user?.ens_name ??
-                          sliceString(selectedIdentity.user?.wallet, 6, 4)
-                        : selectedIdentity.identity_id
-                    }
-                    stats={
-                      selectedIdentity.is_user === true
-                        ? {
-                            numberOfFollowers:
-                              selectedIdentity.follower_count ?? 0,
-                            numberOfFollowing:
-                              selectedIdentity.followed_count ?? 0,
-                          }
-                        : undefined
-                    }
-                    bio={getAtomDescription(selectedIdentity)}
-                    ipfsLink={getAtomIpfsLink(selectedIdentity)}
+                    avatarSrc={getAtomImageGQL(selectedIdentity)}
+                    name={getAtomLabelGQL(selectedIdentity)}
+                    id={getAtomIdGQL(selectedIdentity)}
+                    stats={undefined} // TODO: add stats when available
+                    bio={getAtomDescriptionGQL(selectedIdentity)}
+                    ipfsLink={getAtomIpfsLinkGQL(selectedIdentity)}
                   />
                 </div>
               </HoverCardContent>
@@ -148,15 +124,11 @@ export const IdentityPopover: React.FC<IdentityPopoverProps> = ({
         align="center"
         sideOffset={5}
       >
-        <IdentitySearchCombobox
-          identities={identities}
-          onCreateIdentityClick={() => setCreateIdentityModalActive(true)}
-          onIdentitySelect={(identity) =>
-            handleIdentitySelection(type, identity)
-          }
-          onValueChange={setSearchQuery}
-          onInput={handleInput}
-          shouldFilter={false}
+        <AtomSearchComboboxExtended
+          onAtomSelect={(atom) => handleIdentitySelection(type, atom)}
+          placeholder={`Search for ${type}...`}
+          initialValue=""
+          className="w-[600px]"
         />
       </PopoverContent>
     </Popover>

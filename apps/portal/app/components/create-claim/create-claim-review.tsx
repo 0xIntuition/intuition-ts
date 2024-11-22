@@ -9,16 +9,16 @@ import {
   Separator,
   Text,
 } from '@0xintuition/1ui'
-import { IdentityPresenter } from '@0xintuition/api'
+import { GetAtomQuery } from '@0xintuition/graphql'
 
 import { InfoTooltip } from '@components/info-tooltip'
 import { StandardFees } from '@components/stake/stake-fee-breakdown'
 import {
-  getAtomDescription,
-  getAtomImage,
-  getAtomIpfsLink,
-  getAtomLabel,
-  getAtomLink,
+  getAtomDescriptionGQL,
+  getAtomImageGQL,
+  getAtomIpfsLinkGQL,
+  getAtomLabelGQL,
+  getAtomLinkGQL,
 } from '@lib/utils/misc'
 import { CreateClaimFeesType } from '@routes/resources+/create-claim'
 import { TransactionActionType } from 'app/types/transaction'
@@ -27,9 +27,9 @@ import { formatUnits } from 'viem'
 interface CreateClaimReviewProps {
   dispatch: (action: TransactionActionType) => void
   selectedIdentities: {
-    subject?: IdentityPresenter | null
-    predicate?: IdentityPresenter | null
-    object?: IdentityPresenter | null
+    subject?: GetAtomQuery['atom'] | null
+    predicate?: GetAtomQuery['atom'] | null
+    object?: GetAtomQuery['atom'] | null
   }
   initialDeposit: string
   fees: CreateClaimFeesType
@@ -203,67 +203,45 @@ const CreateClaimReview: React.FC<CreateClaimReviewProps> = ({
           <Claim
             size="md"
             subject={{
-              variant: selectedIdentities.subject?.is_user
-                ? Identity.user
-                : Identity.nonUser,
-              label: getAtomLabel(
-                selectedIdentities.subject as IdentityPresenter,
-              ),
-              imgSrc: getAtomImage(
-                selectedIdentities.subject as IdentityPresenter,
-              ),
-              id: selectedIdentities.subject?.identity_id,
-              description: getAtomDescription(
-                selectedIdentities.subject as IdentityPresenter,
-              ),
-              ipfsLink: getAtomIpfsLink(
-                selectedIdentities.subject as IdentityPresenter,
-              ),
-              link: getAtomLink(
-                selectedIdentities.subject as IdentityPresenter,
-              ),
+              variant:
+                selectedIdentities.subject?.type ===
+                ('Account' || 'Person' || 'Default')
+                  ? Identity.user
+                  : Identity.nonUser,
+              label: getAtomLabelGQL(selectedIdentities.subject),
+              imgSrc: getAtomImageGQL(selectedIdentities.subject),
+              id: selectedIdentities.subject?.vaultId,
+              description: getAtomDescriptionGQL(selectedIdentities.subject),
+              ipfsLink: getAtomIpfsLinkGQL(selectedIdentities.subject),
+              link: getAtomLinkGQL(selectedIdentities.subject),
               shouldHover: false,
             }}
             predicate={{
-              variant: selectedIdentities.predicate?.is_user
-                ? Identity.user
-                : Identity.nonUser,
-              label: getAtomLabel(
-                selectedIdentities.predicate as IdentityPresenter,
-              ),
-              imgSrc: getAtomImage(
-                selectedIdentities.predicate as IdentityPresenter,
-              ),
-              id: selectedIdentities.predicate?.identity_id,
-              description: getAtomDescription(
-                selectedIdentities.predicate as IdentityPresenter,
-              ),
-              ipfsLink: getAtomIpfsLink(
-                selectedIdentities.predicate as IdentityPresenter,
-              ),
-              link: getAtomLink(
-                selectedIdentities.predicate as IdentityPresenter,
-              ),
+              variant:
+                selectedIdentities.predicate?.type ===
+                ('Account' || 'Person' || 'Default')
+                  ? Identity.user
+                  : Identity.nonUser,
+              label: getAtomLabelGQL(selectedIdentities.predicate),
+              imgSrc: getAtomImageGQL(selectedIdentities.predicate),
+              id: selectedIdentities.predicate?.vaultId,
+              description: getAtomDescriptionGQL(selectedIdentities.predicate),
+              ipfsLink: getAtomIpfsLinkGQL(selectedIdentities.predicate),
+              link: getAtomLinkGQL(selectedIdentities.predicate),
               shouldHover: false,
             }}
             object={{
-              variant: selectedIdentities.object?.is_user
-                ? Identity.user
-                : Identity.nonUser,
-              label: getAtomLabel(
-                selectedIdentities.object as IdentityPresenter,
-              ),
-              imgSrc: getAtomImage(
-                selectedIdentities.object as IdentityPresenter,
-              ),
-              id: selectedIdentities.object?.identity_id,
-              description: getAtomDescription(
-                selectedIdentities.object as IdentityPresenter,
-              ),
-              ipfsLink: getAtomIpfsLink(
-                selectedIdentities.object as IdentityPresenter,
-              ),
-              link: getAtomLink(selectedIdentities.object as IdentityPresenter),
+              variant:
+                selectedIdentities.object?.type ===
+                ('Account' || 'Person' || 'Default')
+                  ? Identity.user
+                  : Identity.nonUser,
+              label: getAtomLabelGQL(selectedIdentities.object),
+              imgSrc: getAtomImageGQL(selectedIdentities.object),
+              id: selectedIdentities.object?.vaultId,
+              description: getAtomDescriptionGQL(selectedIdentities.object),
+              ipfsLink: getAtomIpfsLinkGQL(selectedIdentities.object),
+              link: getAtomLinkGQL(selectedIdentities.object),
               shouldHover: false,
             }}
             maxIdentityLength={16}

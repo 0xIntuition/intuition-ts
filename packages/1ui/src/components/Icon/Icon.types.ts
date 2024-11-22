@@ -141,4 +141,5 @@ export const IconName = {
   mirror: 'mirror',
   warpcast: 'warpcast',
   galxe: 'galxe',
+  eth: 'eth',
 } as const

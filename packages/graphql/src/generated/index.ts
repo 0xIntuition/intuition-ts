@@ -7510,6 +7510,7 @@ export type AtomVaultDetailsFragment = {
     __typename?: 'vaults'
     positionCount: number
     totalShares: any
+    currentSharePrice: any
     positions_aggregate: {
       __typename?: 'positions_aggregate'
       aggregate?: {
@@ -8669,6 +8670,7 @@ export type GetAccountQuery = {
         __typename?: 'vaults'
         positionCount: number
         totalShares: any
+        currentSharePrice: any
         positions_aggregate: {
           __typename?: 'positions_aggregate'
           aggregate?: {
@@ -9031,6 +9033,7 @@ export type GetAtomsQuery = {
       __typename?: 'vaults'
       positionCount: number
       totalShares: any
+      currentSharePrice: any
       positions_aggregate: {
         __typename?: 'positions_aggregate'
         aggregate?: {
@@ -9114,6 +9117,7 @@ export type GetAtomsWithAggregatesQuery = {
         __typename?: 'vaults'
         positionCount: number
         totalShares: any
+        currentSharePrice: any
         positions_aggregate: {
           __typename?: 'positions_aggregate'
           aggregate?: {
@@ -9208,6 +9212,7 @@ export type GetAtomQuery = {
       __typename?: 'vaults'
       positionCount: number
       totalShares: any
+      currentSharePrice: any
       positions_aggregate: {
         __typename?: 'positions_aggregate'
         aggregate?: {
@@ -12313,6 +12318,7 @@ export const AtomVaultDetailsFragmentDoc = `
   vault {
     positionCount
     totalShares
+    currentSharePrice
     positions_aggregate {
       aggregate {
         count
@@ -17477,6 +17483,10 @@ export const AtomVaultDetails = {
                 { kind: 'Field', name: { kind: 'Name', value: 'totalShares' } },
                 {
                   kind: 'Field',
+                  name: { kind: 'Name', value: 'currentSharePrice' },
+                },
+                {
+                  kind: 'Field',
                   name: { kind: 'Name', value: 'positions_aggregate' },
                   selectionSet: {
                     kind: 'SelectionSet',
@@ -22358,6 +22368,10 @@ export const GetAccount = {
                 { kind: 'Field', name: { kind: 'Name', value: 'totalShares' } },
                 {
                   kind: 'Field',
+                  name: { kind: 'Name', value: 'currentSharePrice' },
+                },
+                {
+                  kind: 'Field',
                   name: { kind: 'Name', value: 'positions_aggregate' },
                   selectionSet: {
                     kind: 'SelectionSet',
@@ -24173,6 +24187,10 @@ export const GetAtoms = {
                 { kind: 'Field', name: { kind: 'Name', value: 'totalShares' } },
                 {
                   kind: 'Field',
+                  name: { kind: 'Name', value: 'currentSharePrice' },
+                },
+                {
+                  kind: 'Field',
                   name: { kind: 'Name', value: 'positions_aggregate' },
                   selectionSet: {
                     kind: 'SelectionSet',
@@ -24545,6 +24563,10 @@ export const GetAtomsWithAggregates = {
                 { kind: 'Field', name: { kind: 'Name', value: 'totalShares' } },
                 {
                   kind: 'Field',
+                  name: { kind: 'Name', value: 'currentSharePrice' },
+                },
+                {
+                  kind: 'Field',
                   name: { kind: 'Name', value: 'positions_aggregate' },
                   selectionSet: {
                     kind: 'SelectionSet',
@@ -24900,6 +24922,10 @@ export const GetAtom = {
                   name: { kind: 'Name', value: 'positionCount' },
                 },
                 { kind: 'Field', name: { kind: 'Name', value: 'totalShares' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'currentSharePrice' },
+                },
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'positions_aggregate' },
