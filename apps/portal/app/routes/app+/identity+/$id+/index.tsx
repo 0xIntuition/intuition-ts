@@ -145,28 +145,32 @@ export default function ProfileDataAbout() {
 
   logger('Atom Result (Client):', atomResult)
 
-  const { data: positionsResult, isLoading: isLoadingPositions } =
-    useGetPositionsQuery(
-      {
-        where: initialParams.positionsWhere,
-        limit: initialParams.positionsLimit,
-        offset: initialParams.positionsOffset,
-        orderBy: initialParams.positionsOrderBy
-          ? [{ [initialParams.positionsOrderBy]: 'desc' }]
-          : undefined,
-      },
-      {
-        queryKey: [
-          'get-atom-positions',
-          {
-            where: initialParams.positionsWhere,
-            limit: initialParams.positionsLimit,
-            offset: initialParams.positionsOffset,
-            orderBy: initialParams.positionsOrderBy,
-          },
-        ],
-      },
-    )
+  const { 
+    data: positionsResult, 
+    isLoading: isLoadingPositions, 
+    isError: isErrorPositions, 
+    error: errorPositions 
+  } = useGetPositionsQuery(
+    {
+      where: initialParams.positionsWhere,
+      limit: initialParams.positionsLimit,
+      offset: initialParams.positionsOffset,
+      orderBy: initialParams.positionsOrderBy
+        ? [{ [initialParams.positionsOrderBy]: 'desc' }]
+        : undefined,
+    },
+    {
+      queryKey: [
+        'get-atom-positions',
+        {
+          where: initialParams.positionsWhere,
+          limit: initialParams.positionsLimit,
+          offset: initialParams.positionsOffset,
+          orderBy: initialParams.positionsOrderBy,
+        },
+      ],
+    },
+  )
 
   logger('Positions Result (Client):', positionsResult)
 
@@ -253,7 +257,7 @@ export default function ProfileDataAbout() {
                 variant="positions"
                 atomImage={atomResult?.atom?.image ?? ''}
                 atomLabel={atomResult?.atom?.label ?? ''}
-                atomVariant={atomResult?.atom?.user ? 'user' : 'non-user'}
+                atomVariant='user' // TODO: Determine based on atom type
                 totalPositions={positionsResult?.total?.aggregate?.count ?? 0}
                 totalStake={
                   +formatBalance(
@@ -265,21 +269,21 @@ export default function ProfileDataAbout() {
             )}
           </Suspense>
           <Suspense fallback={<PaginatedListSkeleton />}>
-            <Await
-              resolve={positions}
-              errorElement={
-                <ErrorStateCard>
-                  <RevalidateButton />
-                </ErrorStateCard>
-              }
-            >
-              {(resolvedPositions) => (
-                <PositionsOnIdentity
-                  positions={resolvedPositions.data}
-                  pagination={resolvedPositions.pagination}
-                />
-              )}
-            </Await>
+            {isLoadingPositions ? (
+              <PaginatedListSkeleton />
+            ) : isErrorPositions ? (
+              <ErrorStateCard
+                title="Failed to load positions"
+                message={(errorPositions as Error)?.message ?? 'An unexpected error occurred'}
+              >
+                <RevalidateButton />
+              </ErrorStateCard>
+            ) : (
+              <PositionsOnIdentity
+                positions={positionsResult?.positions ?? []}
+                pagination={positionsResult?.total?.aggregate?.count ?? {}}
+              />
+            )}
           </Suspense>
         </div>
       </div>
