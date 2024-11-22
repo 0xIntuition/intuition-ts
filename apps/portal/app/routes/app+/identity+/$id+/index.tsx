@@ -1,7 +1,20 @@
+import { URLSearchParams } from 'url'
 import { Suspense } from 'react'
 
 import { Button, ErrorStateCard, Icon, IconName, Text } from '@0xintuition/1ui'
 import { ClaimsService } from '@0xintuition/api'
+import {
+  fetcher,
+  GetAtomDocument,
+  GetAtomQuery,
+  GetAtomQueryVariables,
+  GetPositionsDocument,
+  GetPositionsQuery,
+  GetPositionsQueryVariables,
+  useGetAtomQuery,
+  useGetAtomQuery,
+  useGetPositionsQuery,
+} from '@0xintuition/graphql'
 
 import CreateClaimModal from '@components/create-claim/create-claim-modal'
 import { ErrorPage } from '@components/error-page'
@@ -14,11 +27,13 @@ import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getClaimsAboutIdentity } from '@lib/services/claims'
 import { getPositionsOnIdentity } from '@lib/services/positions'
 import { detailCreateClaimModalAtom } from '@lib/state/store'
+import logger from '@lib/utils/logger'
 import { formatBalance, invariant } from '@lib/utils/misc'
 import { defer, LoaderFunctionArgs } from '@remix-run/node'
 import { Await, useRouteLoaderData } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
+import { QueryClient } from '@tanstack/react-query'
 import {
   NO_IDENTITY_ERROR,
   NO_PARAM_ID_ERROR,
@@ -38,6 +53,46 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
   const url = new URL(request.url)
   const searchParams = new URLSearchParams(url.search)
+  const positionsLimit = parseInt(
+    url.searchParams.get('positionsLimit') || '10',
+  )
+  const positionsOffset = parseInt(
+    url.searchParams.get('positionsOffset') || '0',
+  )
+  const positionsOrderBy = url.searchParams.get('positionsOrderBy')
+
+  const queryClient = new QueryClient()
+
+  const positionsWhere = {
+    vaultId: { _eq: id },
+  }
+
+  await queryClient.prefetchQuery({
+    queryKey: ['get-atom', { id: params.id }],
+    queryFn: () =>
+      fetcher<GetAtomQuery, GetAtomQueryVariables>(GetAtomDocument, {
+        id: params.id,
+      })(),
+  })
+
+  await queryClient.prefetchQuery({
+    queryKey: [
+      'get-atom-positions',
+      { positionsWhere, positionsLimit, positionsOffset, positionsOrderBy },
+    ],
+    queryFn: () =>
+      fetcher<GetPositionsQuery, GetPositionsQueryVariables>(
+        GetPositionsDocument,
+        {
+          where: positionsWhere,
+          limit: positionsLimit,
+          offset: positionsOffset,
+          orderBy: positionsOrderBy
+            ? [{ [positionsOrderBy]: 'desc' }]
+            : undefined,
+        },
+      )(),
+  })
 
   return defer({
     positions: getPositionsOnIdentity({
@@ -57,13 +112,19 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
       },
     }),
     wallet,
+    initialParams: {
+      positionsLimit,
+      positionsOffset,
+      positionsOrderBy,
+      positionsWhere,
+      atomId: params.id,
+    },
   })
 }
 
 export default function ProfileDataAbout() {
-  const { positions, claims, claimsSummary, wallet } = useLiveLoader<
-    typeof loader
-  >(['attest'])
+  const { initialParams, positions, claims, claimsSummary, wallet } =
+    useLiveLoader<typeof loader>(['attest'])
 
   const { identity } =
     useRouteLoaderData<IdentityLoaderData>('routes/app+/identity+/$id') ?? {}
@@ -72,6 +133,42 @@ export default function ProfileDataAbout() {
   const [createClaimModalActive, setCreateClaimModalActive] = useAtom(
     detailCreateClaimModalAtom,
   )
+
+  const { data: atomResult, isLoading: isLoadingAtom } = useGetAtomQuery(
+    {
+      id: initialParams.atomId,
+    },
+    {
+      queryKey: ['get-atom', { id: initialParams.atomId }],
+    },
+  )
+
+  logger('Atom Result (Client):', atomResult)
+
+  const { data: positionsResult, isLoading: isLoadingPositions } =
+    useGetPositionsQuery(
+      {
+        where: initialParams.positionsWhere,
+        limit: initialParams.positionsLimit,
+        offset: initialParams.positionsOffset,
+        orderBy: initialParams.positionsOrderBy
+          ? [{ [initialParams.positionsOrderBy]: 'desc' }]
+          : undefined,
+      },
+      {
+        queryKey: [
+          'get-atom-positions',
+          {
+            where: initialParams.positionsWhere,
+            limit: initialParams.positionsLimit,
+            offset: initialParams.positionsOffset,
+            orderBy: initialParams.positionsOrderBy,
+          },
+        ],
+      },
+    )
+
+  logger('Positions Result (Client):', positionsResult)
 
   return (
     <>
@@ -149,16 +246,23 @@ export default function ProfileDataAbout() {
             </Text>
           </div>
           <Suspense fallback={<DataHeaderSkeleton />}>
-            <Await resolve={positions} errorElement={<></>}>
-              {(resolvedPositions) => (
-                <DataAboutHeader
-                  variant="positions"
-                  userIdentity={identity}
-                  totalPositions={resolvedPositions.pagination.totalEntries}
-                  totalStake={+formatBalance(identity.assets_sum, 18)}
-                />
-              )}
-            </Await>
+            {isLoadingPositions && isLoadingAtom ? (
+              <DataHeaderSkeleton />
+            ) : (
+              <DataAboutHeader
+                variant="positions"
+                atomImage={atomResult?.atom?.image ?? ''}
+                atomLabel={atomResult?.atom?.label ?? ''}
+                atomVariant={atomResult?.atom?.user ? 'user' : 'non-user'}
+                totalPositions={positionsResult?.total?.aggregate?.count ?? 0}
+                totalStake={
+                  +formatBalance(
+                    positionsResult?.total?.aggregate?.sum?.shares ?? 0,
+                    18,
+                  )
+                }
+              />
+            )}
           </Suspense>
           <Suspense fallback={<PaginatedListSkeleton />}>
             <Await

@@ -59,11 +59,6 @@ import logger from '@lib/utils/logger'
 import {
   calculatePercentageOfTvl,
   formatBalance,
-  getAtomDescription,
-  getAtomId,
-  getAtomImage,
-  getAtomIpfsLink,
-  getAtomLabel,
   invariant,
 } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
@@ -198,7 +193,7 @@ export interface IdentityLoaderData {
 }
 
 export default function IdentityDetails() {
-  const { identity, list, userWallet, tagClaims, initialParams } =
+  const { identity, userWallet, tagClaims, initialParams } =
     useLiveLoader<IdentityLoaderData>(['attest', 'create'])
   const navigate = useNavigate()
 

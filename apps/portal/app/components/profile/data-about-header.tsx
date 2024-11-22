@@ -8,9 +8,6 @@ import {
   TextWeight,
   Trunctacular,
 } from '@0xintuition/1ui'
-import { IdentityPresenter } from '@0xintuition/api'
-
-import { getAtomLabel } from '@lib/utils/misc'
 
 export const DataAboutHeaderVariants = {
   positions: 'positions',
@@ -22,7 +19,9 @@ export type DataAboutHeaderVariantType =
 
 interface DataAboutHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
   variant: DataAboutHeaderVariantType
-  userIdentity: IdentityPresenter
+  atomImage: string
+  atomLabel: string
+  atomVariant: 'user' | 'non-user'
   totalClaims?: number
   totalPositions?: number
   totalStake: number
@@ -30,7 +29,9 @@ interface DataAboutHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
 
 const DataAboutHeader: React.FC<DataAboutHeaderProps> = ({
   variant,
-  userIdentity,
+  atomImage,
+  atomLabel,
+  atomVariant,
   totalClaims,
   totalPositions,
   totalStake,
@@ -49,14 +50,8 @@ const DataAboutHeader: React.FC<DataAboutHeaderProps> = ({
         >
           {variant === 'claims' ? 'Claims about' : 'Conviction in'}
         </Text>
-        <IdentityTag
-          imgSrc={userIdentity?.user?.image ?? userIdentity?.image}
-          variant={userIdentity?.user ? 'user' : 'non-user'}
-        >
-          <Trunctacular
-            value={getAtomLabel(userIdentity)}
-            maxStringLength={40}
-          />
+        <IdentityTag imgSrc={atomImage} variant={atomVariant}>
+          <Trunctacular value={atomLabel} maxStringLength={40} />
         </IdentityTag>
       </div>
       <div className="flex justify-between w-full">
