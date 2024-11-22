@@ -10672,6 +10672,7 @@ export type GetPositionsQuery = {
     aggregate?: {
       __typename?: 'positions_aggregate_fields'
       count: number
+      sum?: { __typename?: 'positions_sum_fields'; shares?: any | null } | null
     } | null
   }
   positions: Array<{
@@ -14833,6 +14834,9 @@ export const GetPositionsDocument = `
   total: positions_aggregate(where: $where) {
     aggregate {
       count
+      sum {
+        shares
+      }
     }
   }
   positions(limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
@@ -29782,6 +29786,19 @@ export const GetPositions = {
                     kind: 'SelectionSet',
                     selections: [
                       { kind: 'Field', name: { kind: 'Name', value: 'count' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'sum' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'shares' },
+                            },
+                          ],
+                        },
+                      },
                     ],
                   },
                 },

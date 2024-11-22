@@ -8,6 +8,9 @@ query GetPositions(
   total: positions_aggregate(where: $where) {
     aggregate {
       count
+      sum {
+        shares
+      }
     }
   }
   positions(limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
