@@ -29,6 +29,11 @@ fragment AtomMetadata on atoms {
   emoji
   type
   walletId
+  creator {
+    id
+    label
+    image
+  }
   ...AtomValue
 }
 

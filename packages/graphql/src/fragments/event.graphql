@@ -11,10 +11,10 @@ fragment EventDetails on events {
   ...RedemptionEventFragment
   atom {
     ...AtomMetadata
-    ...AtomVaultDetailsWithPositions
+    # ...AtomVaultDetailsWithPositions
   }
   triple {
     ...TripleMetadata
-    ...TripleVaultCouterVaultDetailsWithPositions
+    # ...TripleVaultCouterVaultDetailsWithPositions
   }
 }

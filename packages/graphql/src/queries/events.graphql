@@ -13,6 +13,49 @@ query GetEvents(
   }
   events(limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
     ...EventDetails
+    atom {
+      vault {
+        totalShares
+        positionCount
+        positions(where: { accountId: { _in: $addresses } }) {
+          accountId
+          shares
+          account {
+            id
+            label
+            image
+          }
+        }
+        triple {
+          vault {
+            totalShares
+            positionCount
+            positions(where: { accountId: { _in: $addresses } }) {
+              accountId
+              shares
+              account {
+                id
+                label
+                image
+              }
+            }
+          }
+          counterVault {
+            totalShares
+            positionCount
+            positions(where: { accountId: { _in: $addresses } }) {
+              accountId
+              shares
+              account {
+                id
+                label
+                image
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }
 
@@ -69,6 +112,21 @@ query GetEventsData($where: events_bool_exp) {
       }
       avg {
         blockNumber
+      }
+    }
+  }
+}
+
+# Debug query with explicit address and position filtering
+query GetDebugEvents($addresses: [String!]) {
+  debug_events: events {
+    id
+    atom {
+      vault {
+        positions(where: { accountId: { _in: $addresses } }) {
+          accountId
+          shares
+        }
       }
     }
   }

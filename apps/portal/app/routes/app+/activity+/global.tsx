@@ -1,3 +1,4 @@
+import { type } from 'os'
 import { Suspense } from 'react'
 
 import { ErrorStateCard, IconName } from '@0xintuition/1ui'
@@ -6,7 +7,11 @@ import {
   GetEventsDocument,
   GetEventsQuery,
   GetEventsQueryVariables,
+  GetTestDocument,
+  GetTestQuery,
+  GetTestQueryVariables,
   useGetEventsQuery,
+  useGetTestQuery,
 } from '@0xintuition/graphql'
 
 import { ErrorPage } from '@components/error-page'
@@ -29,30 +34,34 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url)
   const limit = parseInt(url.searchParams.get('limit') || '10')
   const offset = parseInt(url.searchParams.get('offset') || '0')
-  const addresses = [wallet.toLowerCase()]
+  const queryAddresses = [wallet.toLowerCase()]
 
   const queryClient = new QueryClient()
+  logger('addresses', queryAddresses)
 
+  console.log('Addresses being passed to query:', queryAddresses)
   await queryClient.prefetchQuery({
-    queryKey: ['get-events-global', { limit, offset, addresses }],
+    queryKey: [
+      'get-events-global',
+      { limit, offset, addresses: queryAddresses },
+    ],
     queryFn: () =>
       fetcher<GetEventsQuery, GetEventsQueryVariables>(GetEventsDocument, {
         limit,
         offset,
-        addresses,
+        addresses: queryAddresses,
         orderBy: [{ blockTimestamp: 'desc' }],
         where: {
           type: {
-            _neq: 'FeesTransfered',
-            // _eq: 'TripleCreated',
+            _eq: 'TripleCreated',
           },
         },
-      })(),
+      }),
   })
 
   return json({
     dehydratedState: dehydrate(queryClient),
-    initialParams: { limit, offset, addresses },
+    initialParams: { limit, offset, queryAddresses },
   })
 }
 
@@ -66,23 +75,33 @@ export default function GlobalActivityFeed() {
   const offset = parseInt(
     searchParams.get('offset') || String(initialParams.offset),
   )
-  const addresses = initialParams.addresses
 
   const { data: eventsData, isLoading } = useGetEventsQuery(
     {
       limit,
       offset,
-      addresses,
+      addresses: initialParams.queryAddresses,
       orderBy: [{ blockTimestamp: 'desc' }],
       where: {
         type: {
-          _neq: 'FeesTransfered',
-          // _eq: 'TripleCreated',
+          _eq: 'TripleCreated',
         },
       },
     },
     {
-      queryKey: ['get-events-global', { limit, offset, addresses }],
+      queryKey: [
+        'get-events-global',
+        {
+          limit,
+          offset,
+          addresses: initialParams.queryAddresses,
+          where: {
+            type: {
+              _eq: 'TripleCreated',
+            },
+          },
+        },
+      ],
     },
   )
 

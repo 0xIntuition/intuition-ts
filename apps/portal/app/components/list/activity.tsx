@@ -183,7 +183,7 @@ function ActivityItem({
                   <ProfileCard
                     variant={Identity.user}
                     avatarSrc={creator.image ?? ''}
-                    name={creator.label ?? ''}
+                    name={creator.label || creator.id || ''}
                     id={creator.id}
                     // bio={creator.description ?? ''} // TODO: we need to determine best way to surface this field
                     ipfsLink={`${BLOCK_EXPLORER_URL}/address/${creator.id}`}
@@ -244,6 +244,7 @@ function ActivityItem({
           link={getAtomLink(activity.atom)}
           ipfsLink={getAtomIpfsLink(activity.atom)}
           onStakeClick={() =>
+            // @ts-ignore // TODO: Fix the staking actions to use correct types
             setStakeModalActive((prevState) => ({
               ...prevState,
               mode: 'deposit',
@@ -258,19 +259,11 @@ function ActivityItem({
       )}
       {activity.triple && (
         <ClaimRow
-          numPositionsFor={
-            activity.triple.vault?.allPositions?.aggregate?.count ?? 0
-          }
-          numPositionsAgainst={
-            activity.triple.counterVault?.allPositions?.aggregate?.count ?? 0
-          }
-          tvlFor={formatBalance(
-            activity.triple.vault?.allPositions?.aggregate?.sum?.shares ?? '0',
-            18,
-          )}
+          numPositionsFor={activity.triple.vault?.positionCount ?? 0}
+          numPositionsAgainst={activity.triple.counterVault?.positionCount ?? 0}
+          tvlFor={formatBalance(activity.triple.vault?.totalShares ?? '0', 18)}
           tvlAgainst={formatBalance(
-            activity.triple.counterVault?.allPositions?.aggregate?.sum
-              ?.shares ?? '0',
+            activity.triple.counterVault?.totalShares ?? '0',
             18,
           )}
           totalTVL={formatBalance(
@@ -279,18 +272,20 @@ function ActivityItem({
             18,
           )}
           userPosition={formatBalance(
-            activity.triple.vault?.positions?.[0]?.shares ?? '0',
+            activity.triple.vault?.positions?.[0]?.shares ??
+              activity.triple.counterVault?.positions?.[0]?.shares ??
+              '0',
             18,
           )}
           positionDirection={
-            +(activity.triple.vault?.positions?.[0]?.shares ?? '0') > 0
+            activity.triple.vault?.positions?.[0]?.shares
               ? ClaimPosition.claimFor
-              : +(activity.triple.counterVault?.positions?.[0]?.shares ?? '0') >
-                  0
+              : activity.triple.counterVault?.positions?.[0]?.shares
                 ? ClaimPosition.claimAgainst
                 : undefined
           }
           onStakeForClick={() =>
+            // @ts-ignore // TODO: Fix the staking actions to use correct types
             setStakeModalActive((prevState) => ({
               ...prevState,
               mode: 'deposit',
@@ -302,6 +297,7 @@ function ActivityItem({
             }))
           }
           onStakeAgainstClick={() =>
+            // @ts-ignore // TODO: Fix the staking actions to use correct types
             setStakeModalActive((prevState) => ({
               ...prevState,
               mode: 'deposit',
