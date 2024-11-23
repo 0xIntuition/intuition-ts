@@ -1,22 +1,18 @@
-import { type } from 'os'
 import { Suspense } from 'react'
 
 import { ErrorStateCard, IconName } from '@0xintuition/1ui'
 import {
+  Events,
   fetcher,
   GetEventsDocument,
   GetEventsQuery,
   GetEventsQueryVariables,
-  GetTestDocument,
-  GetTestQuery,
-  GetTestQueryVariables,
   useGetEventsQuery,
-  useGetTestQuery,
 } from '@0xintuition/graphql'
 
 import { ErrorPage } from '@components/error-page'
 import ExploreHeader from '@components/explore/ExploreHeader'
-import { ActivityList } from '@components/list/activity'
+import { ActivityListNew } from '@components/list/activity'
 import { RevalidateButton } from '@components/revalidate-button'
 import { ActivitySkeleton } from '@components/skeleton'
 import logger from '@lib/utils/logger'
@@ -76,7 +72,12 @@ export default function GlobalActivityFeed() {
     searchParams.get('offset') || String(initialParams.offset),
   )
 
-  const { data: eventsData, isLoading } = useGetEventsQuery(
+  const {
+    data: eventsData,
+    isLoading,
+    isError,
+    error,
+  } = useGetEventsQuery(
     {
       limit,
       offset,
@@ -129,10 +130,19 @@ export default function GlobalActivityFeed() {
       <Suspense fallback={<ActivitySkeleton />}>
         {isLoading ? (
           <ActivitySkeleton />
-        ) : eventsData?.events && eventsData?.events?.length > 0 ? (
+        ) : isError ? (
+          <ErrorStateCard
+            title="Failed to load activity"
+            message={
+              (error as Error)?.message ?? 'An unexpected error occurred'
+            }
+          >
+            <RevalidateButton />
+          </ErrorStateCard>
+        ) : eventsData?.events ? (
           <>
-            <ActivityList
-              activities={eventsData.events}
+            <ActivityListNew
+              activities={eventsData.events as Events[]}
               pagination={{
                 currentPage: offset / limit + 1,
                 limit,
