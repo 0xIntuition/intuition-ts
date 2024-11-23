@@ -19,6 +19,7 @@ import { Address } from 'viem'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   getMaintenanceMode()
+  logger('checking access token in app.tsx')
 
   const wallet = await requireUserWallet(request)
   invariant(wallet, 'Unauthorized')

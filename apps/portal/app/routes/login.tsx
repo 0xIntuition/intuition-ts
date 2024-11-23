@@ -81,6 +81,7 @@ export default function Login() {
 
   const fetcher = useFetcher()
   const navigate = useNavigate()
+
   const handleBackNavigation = () => {
     fetcher.submit(
       { action: 'clearOnboardingCookie' },
