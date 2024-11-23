@@ -39,7 +39,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const queryClient = new QueryClient()
   logger('addresses', queryAddresses)
 
-  console.log('Addresses being passed to query:', queryAddresses)
+  logger('Addresses being passed to query:', queryAddresses)
   await queryClient.prefetchQuery({
     queryKey: [
       'get-events-global',
@@ -53,7 +53,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
         orderBy: [{ blockTimestamp: 'desc' }],
         where: {
           type: {
-            _eq: 'TripleCreated',
+            _neq: 'FeesTransfered',
           },
         },
       }),
@@ -84,7 +84,7 @@ export default function GlobalActivityFeed() {
       orderBy: [{ blockTimestamp: 'desc' }],
       where: {
         type: {
-          _eq: 'TripleCreated',
+          _neq: 'FeesTransfered',
         },
       },
     },
@@ -97,7 +97,7 @@ export default function GlobalActivityFeed() {
           addresses: initialParams.queryAddresses,
           where: {
             type: {
-              _eq: 'TripleCreated',
+              _neq: 'FeesTransfered',
             },
           },
         },
@@ -105,7 +105,8 @@ export default function GlobalActivityFeed() {
     },
   )
 
-  console.log('Full events response:', eventsData)
+  logger('Full events response:', eventsData)
+  logger('Addresses being passed to query:', initialParams.queryAddresses)
 
   const totalCount = eventsData?.total?.aggregate?.count ?? 0
   logger('totalCount', totalCount)

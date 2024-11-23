@@ -2,14 +2,17 @@ import React from 'react'
 
 import { Icon, IconName, Text, Theme } from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
-import { GetAtomQuery } from '@0xintuition/graphql'
+import { GetAtomQuery, GetAtomsQuery } from '@0xintuition/graphql'
 
 import { SubmitFunction } from '@remix-run/react'
 import { BLOCK_EXPLORER_URL, IPFS_GATEWAY_URL, PATHS } from 'app/consts'
 import { clsx, type ClassValue } from 'clsx'
+import { Atom } from 'jotai'
 import { twMerge } from 'tailwind-merge'
 import { extractChain, formatUnits } from 'viem'
 import * as chains from 'viem/chains'
+
+type Atom = NonNullable<NonNullable<GetAtomsQuery['atoms']>[number]>
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -374,6 +377,33 @@ export const getAtomDescription = (
   return atom?.user?.description ?? atom?.description ?? ''
 }
 
+export const getAtomIpfsLinkNew = (atom: Atom) => {
+  if (!atom) {
+    return ''
+  }
+  if (atom.type === 'Person') {
+    return `${BLOCK_EXPLORER_URL}/address/${atom.data}`
+  }
+  if (atom.data?.startsWith('https')) {
+    return atom.data
+  }
+  if (atom.data?.startsWith('caip10')) {
+    const parts = atom.data.split(':')
+    const chainId = Number(parts[2])
+    const address = parts[3]
+    const chain = extractChain({
+      chains: Object.values(chains),
+      // @ts-ignore Ignoring type since viem doesn't provide proper typings for chain IDs
+      id: chainId,
+    })
+    return chain?.blockExplorers?.default
+      ? `${chain.blockExplorers.default.url}/address/${address}`
+      : ''
+  }
+  return `${IPFS_GATEWAY_URL}/${atom.data.replace('ipfs://', '')}`
+}
+
+// LEGACY IMPLEMENTATION -- CAN REMOVE ONCE ALL ATOMS ARE CONVERTED TO NEW IMPLEMENTATION
 export const getAtomIpfsLink = (atom: IdentityPresenter | null | undefined) => {
   if (!atom) {
     return ''
@@ -401,6 +431,21 @@ export const getAtomIpfsLink = (atom: IdentityPresenter | null | undefined) => {
   return ''
 }
 
+export const getAtomLinkNew = (atom: Atom, readOnly: boolean = false) => {
+  if (!atom) {
+    return ''
+  }
+  if (atom.type === 'Person') {
+    return readOnly
+      ? `${PATHS.READONLY_PROFILE}/${atom.creator?.id}`
+      : `${PATHS.PROFILE}/${atom.creator?.id}`
+  }
+  return readOnly
+    ? `${PATHS.READONLY_IDENTITY}/${atom.id}`
+    : `${PATHS.IDENTITY}/${atom.id}`
+}
+
+// LEGACY IMPLEMENTATION -- CAN REMOVE ONCE ALL ATOMS ARE CONVERTED TO NEW IMPLEMENTATION
 export const getAtomLink = (
   atom: IdentityPresenter | null | undefined,
   readOnly: boolean = false,

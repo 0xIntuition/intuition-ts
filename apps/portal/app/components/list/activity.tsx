@@ -28,8 +28,10 @@ import {
   getAtomDescription,
   getAtomImage,
   getAtomIpfsLink,
+  getAtomIpfsLinkNew,
   getAtomLabel,
   getAtomLink,
+  getAtomLinkNew,
   getClaimUrl,
 } from '@lib/utils/misc'
 import { Link } from '@remix-run/react'
@@ -238,11 +240,14 @@ function ActivityItem({
             BigInt(activity.atom.vault?.totalShares ?? '0'),
             18,
           )}
-          numPositions={
-            activity.atom.vault?.positions_aggregate.nodes.length ?? 0
-          }
-          link={getAtomLink(activity.atom)}
-          ipfsLink={getAtomIpfsLink(activity.atom)}
+          userPosition={formatBalance(
+            activity.atom.vault?.positions?.[0]?.shares ?? '0',
+            18,
+          )}
+          numPositions={activity.atom.vault?.positionCount ?? 0}
+          link={getAtomLinkNew(activity.atom)}
+          // link={activity.atom.id}
+          ipfsLink={getAtomIpfsLinkNew(activity.atom)}
           onStakeClick={() =>
             // @ts-ignore // TODO: Fix the staking actions to use correct types
             setStakeModalActive((prevState) => ({
@@ -326,8 +331,12 @@ function ActivityItem({
                 imgSrc: activity.triple.subject?.image ?? '',
                 id: activity.triple.subject?.id,
                 // description: activity.triple.subject?.data?.description ?? '', // TODO: we need to determine best way to surface this field
-                ipfsLink: getAtomIpfsLink(activity.triple.subject),
-                link: getAtomLink(activity.triple.subject),
+                ipfsLink: activity.triple.subject
+                  ? getAtomIpfsLinkNew(activity.triple.subject)
+                  : '',
+                link: activity.triple.subject
+                  ? getAtomLinkNew(activity.triple.subject)
+                  : '',
                 linkComponent: RemixLink,
               }}
               predicate={{
@@ -340,8 +349,12 @@ function ActivityItem({
                 imgSrc: activity.triple.predicate?.image ?? '',
                 id: activity.triple.predicate?.id,
                 // description: activity.triple.predicate?.data?.description ?? '', // TODO: we need to determine best way to surface this field
-                ipfsLink: getAtomIpfsLink(activity.triple.predicate),
-                link: getAtomLink(activity.triple.predicate),
+                ipfsLink: activity.triple.predicate
+                  ? getAtomIpfsLinkNew(activity.triple.predicate)
+                  : '',
+                link: activity.triple.predicate
+                  ? getAtomLinkNew(activity.triple.predicate)
+                  : '',
                 linkComponent: RemixLink,
               }}
               object={{
@@ -354,8 +367,12 @@ function ActivityItem({
                 imgSrc: activity.triple.object?.image ?? '',
                 id: activity.triple.object?.id,
                 // description: activity.triple.object?.data?.description ?? '', // TODO: we need to determine best way to surface this field
-                ipfsLink: getAtomIpfsLink(activity.triple.object),
-                link: getAtomLink(activity.triple.object),
+                ipfsLink: activity.triple.object
+                  ? getAtomIpfsLinkNew(activity.triple.object)
+                  : '',
+                link: activity.triple.object
+                  ? getAtomLinkNew(activity.triple.object)
+                  : '',
                 linkComponent: RemixLink,
               }}
               isClickable={true}

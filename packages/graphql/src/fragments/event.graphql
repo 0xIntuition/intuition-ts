@@ -11,10 +11,47 @@ fragment EventDetails on events {
   ...RedemptionEventFragment
   atom {
     ...AtomMetadata
-    # ...AtomVaultDetailsWithPositions
+    vault {
+      totalShares
+      positionCount
+      positions {
+        accountId
+        shares
+        account {
+          id
+          label
+          image
+        }
+      }
+    }
   }
   triple {
     ...TripleMetadata
-    # ...TripleVaultCouterVaultDetailsWithPositions
+    vault {
+      totalShares
+      positionCount
+      positions {
+        accountId
+        shares
+        account {
+          id
+          label
+          image
+        }
+      }
+    }
+    counterVault {
+      totalShares
+      positionCount
+      positions {
+        accountId
+        shares
+        account {
+          id
+          label
+          image
+        }
+      }
+    }
   }
 }
