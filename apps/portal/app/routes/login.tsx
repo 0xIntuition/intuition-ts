@@ -120,7 +120,7 @@ export default function Login() {
           <PrivyLoginButton handleLogin={handleLogin} />
         </div>
         <div className="flex items-center justify-center max-sm:flex-col max-sm:gap-2 max-sm:items-center max-sm:text-center gap-1">
-          <div className="justify-center">
+          <div className="justify-center md:hidden">
             <BuiltOnBase />
           </div>
           <Text variant="body" className="text-secondary-foreground/60">
