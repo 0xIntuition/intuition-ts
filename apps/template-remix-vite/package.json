@@ -1,7 +1,7 @@
 {
-  "name": "@0xintuition/template",
-  "version": "0.1.0",
-  "description": "Auth Ready Remix Template",
+  "name": "@0xintuition/template-remix-vite",
+  "version": "0.1.1",
+  "description": "Auth Ready Remix/Vite Template",
   "sideEffects": false,
   "type": "module",
   "scripts": {
@@ -13,7 +13,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/0xIntuition/intuition-ts",
-    "directory": "apps/template"
+    "directory": "apps/template-remix-vite"
   },
   "dependencies": {
     "@0xintuition/1ui": "workspace:^",
