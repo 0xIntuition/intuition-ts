@@ -12,7 +12,7 @@ export interface GetClaimLoaderData {
   error?: string
 }
 
-const MAX_RETRIES = 1
+const MAX_RETRIES = 10
 const RETRY_DELAY = 2000 // 2 seconds
 
 export async function loader({ request }: LoaderFunctionArgs) {

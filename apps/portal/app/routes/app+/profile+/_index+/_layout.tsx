@@ -70,14 +70,13 @@ import {
   useRevalidator,
 } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
-import { requireUser, requireUserWallet } from '@server/auth'
+import { requireUser } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
 import { getRelicCount } from '@server/relics'
 import {
   BLOCK_EXPLORER_URL,
   CURRENT_ENV,
   MULTIVAULT_CONTRACT_ADDRESS,
-  NO_WALLET_ERROR,
   PATHS,
   userIdentityRouteOptions,
 } from 'app/consts'
@@ -90,9 +89,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
   invariant(user, 'User not found')
   invariant(user.wallet?.address, 'User wallet not found')
   const userWallet = user.wallet?.address
-
-  const wallet = await requireUserWallet(request)
-  invariant(wallet, NO_WALLET_ERROR)
 
   // TODO: Remove this relic hold/mint count and points calculation when it is stored in BE.
   const relicHoldCount = await getRelicCount(userWallet as `0x${string}`)
@@ -114,7 +110,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   const { identity: userIdentity, isPending } = await getIdentityOrPending(
     request,
-    wallet,
+    userWallet,
   )
 
   invariant(userIdentity, 'No user identity found')
