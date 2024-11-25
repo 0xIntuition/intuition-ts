@@ -8,13 +8,13 @@ import {
   Text,
   Trunctacular,
 } from '@0xintuition/1ui'
-import { IdentityPresenter } from '@0xintuition/api'
+import { GetAtomQuery } from '@0xintuition/graphql'
 
 import { truncateString } from '@lib/utils/misc'
 
 interface AddListAlertCtaProps {
   variant: 'identity' | 'tag'
-  identity: IdentityPresenter
+  identity: GetAtomQuery['atom']
   onSaveClick: () => void
   onClose: () => void
 }
@@ -44,12 +44,12 @@ export function AddListExistingCta({
             <IdentityTag
               size={IdentityTagSize.md}
               variant={Identity.nonUser}
-              imgSrc={identity.image ?? ''}
+              imgSrc={identity?.image ?? ''}
             >
-              <Trunctacular value={identity.display_name} />
+              <Trunctacular value={identity?.label ?? ''} />
             </IdentityTag>
           ) : (
-            <TagWithValue label={truncateString(identity.display_name, 20)} />
+            <TagWithValue label={truncateString(identity?.label ?? '', 20)} />
           )}
           <div className="flex items-center gap-4">
             <Button onClick={onSaveClick} variant="secondary">

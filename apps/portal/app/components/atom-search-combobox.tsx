@@ -28,7 +28,7 @@ interface AtomSearchComboboxItemProps {
   attestors?: number
 }
 
-const AtomSearchComboboxItem = ({
+export const AtomSearchComboboxItem = ({
   id,
   name,
   avatarSrc,

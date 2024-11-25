@@ -14,17 +14,14 @@ import {
 } from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
 
-import { AtomSearchComboboxExtended } from '@components/atom-search-combobox-extended'
+import { TagSearchCombobox } from '@components/tags/tags-search-combobox'
 import { TransactionState } from '@components/transaction-state'
 import {
   initialTransactionState,
   transactionReducer,
   useTransactionState,
 } from '@lib/hooks/useTransactionReducer'
-import {
-  globalCreateIdentityModalAtom,
-  saveListModalAtom,
-} from '@lib/state/store'
+import { saveListModalAtom } from '@lib/state/store'
 import logger from '@lib/utils/logger'
 import { useNavigate } from '@remix-run/react'
 import { PATHS } from 'app/consts'
@@ -32,7 +29,7 @@ import {
   TransactionActionType,
   TransactionStateType,
 } from 'app/types/transaction'
-import { useAtom, useSetAtom } from 'jotai'
+import { useSetAtom } from 'jotai'
 
 import { AddTags } from './add-tags'
 import TagsReview from './tags-review'
@@ -59,10 +56,6 @@ export function TagsForm({
 }: TagsFormProps) {
   const navigate = useNavigate()
   const [currentTab, setCurrentTab] = useState(mode)
-
-  const [, setCreateIdentityModalActive] = useAtom(
-    globalCreateIdentityModalAtom,
-  )
 
   logger('tags in tag form', tagClaims)
   logger('identity in tags-form', identity)
@@ -181,20 +174,10 @@ export function TagsForm({
                     </TabsContent>
                   )}
                   <TabsContent value="view" className="h-full">
-                    <AtomSearchComboboxExtended
-                      onAtomSelect={(atom) => {
-                        const selectedClaim = tagClaims.find(
-                          (claim) => claim.claim_id === atom?.id,
-                        )
-                        if (selectedClaim) {
-                          handleTagClick(selectedClaim)
-                        }
-                      }}
-                      onCreateAtomClick={() =>
-                        setCreateIdentityModalActive(true)
-                      }
-                      placeholder="Search for tags..."
-                      className="w-full"
+                    <TagSearchCombobox
+                      tagClaims={tagClaims || []}
+                      shouldFilter={true}
+                      onTagClick={handleTagClick}
                     />
                   </TabsContent>
                 </div>

@@ -2,6 +2,7 @@ import { useState } from 'react'
 
 import { Popover, PopoverContent, PopoverTrigger, Text } from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
+import { GetAtomQuery } from '@0xintuition/graphql'
 
 import { AtomSearchComboboxExtended } from '@components/atom-search-combobox-extended'
 import { InfoTooltip } from '@components/info-tooltip'
@@ -16,26 +17,26 @@ import {
 } from '@lib/state/store'
 import { getSpecialPredicate } from '@lib/utils/app'
 import { TagLoaderData } from '@routes/resources+/tag'
-import { CURRENT_ENV } from 'app/consts'
+import { CURRENT_ENV, MULTIVAULT_CONTRACT_ADDRESS } from 'app/consts'
 import { TransactionActionType } from 'app/types/transaction'
 import { useAtom } from 'jotai'
 
 import { TagsListInputPortal } from './tags-list-input-portal'
 
 interface AddTagsProps {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  selectedTags: any // TODO: (ENG-4782) temporary type fix until we lock in final types
+  selectedTags: GetAtomQuery['atom'][]
   existingTagIds: string[]
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   identity: any // TODO: (ENG-4782) temporary type fix until we lock in final types
   userWallet: string
-  onAddTag: (newTag: IdentityPresenter) => void
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  onAddTag: (newTag: any) => void // TODO: (ENG-4782) temporary type fix until we lock in final types
   onRemoveTag: (id: string) => void
   onRemoveInvalidTag: (id: string) => void
   dispatch: (action: TransactionActionType) => void
   subjectVaultId: string
-  invalidTags: IdentityPresenter[]
-  setInvalidTags: React.Dispatch<React.SetStateAction<IdentityPresenter[]>>
+  invalidTags: GetAtomQuery['atom'][]
+  setInvalidTags: React.Dispatch<React.SetStateAction<GetAtomQuery['atom'][]>>
 }
 
 export function AddTags({
@@ -50,10 +51,10 @@ export function AddTags({
   setInvalidTags,
 }: AddTagsProps) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const formattedTags = selectedTags?.map((tag: any) => ({
-    name: tag.display_name,
-    id: tag.vault_id,
-    tagCount: tag.tag_count,
+  const formattedTags = selectedTags?.map((tag) => ({
+    name: tag?.label ?? '',
+    id: tag?.vaultId ?? '',
+    tagCount: tag?.vault?.positionCount ?? 0,
   }))
 
   const [, setCreateIdentityModalActive] = useAtom(
@@ -63,13 +64,15 @@ export function AddTags({
   const [saveListModalActive, setSaveListModalActive] =
     useAtom(saveListModalAtom)
 
-  const [selectedInvalidTag, setSelectedInvalidTag] =
-    useState<IdentityPresenter | null>(null)
+  const [selectedInvalidTag, setSelectedInvalidTag] = useState<
+    GetAtomQuery['atom'] | null
+  >(null)
 
   const [isPopoverOpen, setIsPopoverOpen] = useState(false)
 
   const { setSearchQuery } = useFilteredIdentitySearch({
-    selectedItems: selectedTags,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    selectedItems: selectedTags as any[], // TODO: (ENG-4782) temporary type fix until we lock in final types
   })
 
   const { data: claimCheckData = { result: '0' } } = useCheckClaim(
@@ -77,24 +80,24 @@ export function AddTags({
       subjectId: subjectVaultId,
       predicateId:
         getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId?.toString(),
-      objectId: selectedTags[selectedTags.length - 1]?.vault_id,
+      objectId: selectedTags[selectedTags.length - 1]?.vaultId,
     },
     {
       refetchOnWindowFocus: false,
       refetchOnMount: false,
       refetchOnReconnect: false,
-      enabled: Boolean(selectedTags[selectedTags.length - 1]?.vault_id),
+      enabled: Boolean(selectedTags[selectedTags.length - 1]?.vaultId),
     },
   )
 
-  const handleIdentitySelect = (identity: IdentityPresenter) => {
-    onAddTag(identity)
+  const handleIdentitySelect = (atom: GetAtomQuery['atom']) => {
+    onAddTag(atom)
     setSearchQuery('')
     setIsPopoverOpen(false)
   }
 
   const handleSaveClick = (
-    invalidTag: IdentityPresenter & { tagClaimId: string },
+    invalidTag: GetAtomQuery['atom'] & { tagClaimId: string },
   ) => {
     setSelectedInvalidTag(invalidTag)
     setSaveListModalActive({
@@ -104,12 +107,12 @@ export function AddTags({
     })
   }
 
-  useInvalidItems({
+  useInvalidItems<GetAtomQuery['atom']>({
     data: claimCheckData as TagLoaderData,
     selectedItems: selectedTags,
     setInvalidItems: setInvalidTags,
     onRemoveItem: onRemoveTag,
-    idKey: 'vault_id',
+    idKey: 'vaultId' as keyof GetAtomQuery['atom'],
     dataIdKey: 'objectId',
   })
 
@@ -139,14 +142,7 @@ export function AddTags({
         >
           <PopoverContent className="bg-transparent border-none">
             <AtomSearchComboboxExtended
-              onAtomSelect={(atom) => {
-                handleIdentitySelect({
-                  ...atom,
-                  vault_id: atom?.id ?? '',
-                  display_name: atom?.label ?? '',
-                  image: atom?.image ?? '',
-                } as IdentityPresenter)
-              }}
+              onAtomSelect={handleIdentitySelect}
               onCreateAtomClick={() => setCreateIdentityModalActive(true)}
               placeholder="Search for tags..."
               initialValue=""
@@ -164,19 +160,19 @@ export function AddTags({
             />
           </div>
         </Popover>
-        {invalidTags.map((invalidTag) => (
+        {invalidTags.filter(Boolean).map((invalidTag) => (
           <AddListExistingCta
-            key={invalidTag.vault_id}
+            key={invalidTag?.vaultId ?? ''}
             identity={invalidTag}
             variant="tag"
             onSaveClick={() => {
-              if ('tagClaimId' in invalidTag) {
+              if (invalidTag && 'tagClaimId' in invalidTag) {
                 handleSaveClick(
-                  invalidTag as IdentityPresenter & { tagClaimId: string },
+                  invalidTag as GetAtomQuery['atom'] & { tagClaimId: string },
                 )
               }
             }}
-            onClose={() => onRemoveInvalidTag(invalidTag.vault_id)}
+            onClose={() => onRemoveInvalidTag(invalidTag?.vaultId ?? '')}
           />
         ))}
       </div>
