@@ -1,29 +1,21 @@
 import * as React from 'react'
 
 import { Separator, Text } from '@0xintuition/1ui'
-import { IdentityPresenter } from '@0xintuition/api'
+import { GetAtomQuery } from '@0xintuition/graphql'
 
-import { pascalCaseString } from '@lib/utils/misc'
-import { useFetcher, useLocation, useNavigate } from '@remix-run/react'
-import { GET_IDENTITIES_BY_IDS_RESOURCE_ROUTE } from 'app/consts'
+import { IdentityPopover } from '@components/create-claim/create-claim-popovers'
+import { useNavigate } from '@remix-run/react'
 import { ClaimElement, ClaimElementType } from 'app/types'
 
-import { IdentityInput, IdentityInputButtonProps } from '../identity-input'
-
 export interface ExploreSearchClaimInputProps
-  extends React.HTMLAttributes<HTMLDivElement> {
-  identities?: IdentityPresenter[]
-}
+  extends React.HTMLAttributes<HTMLDivElement> {}
 
-const ExploreSearchClaimInput = ({
-  identities = [],
-}: ExploreSearchClaimInputProps) => {
+const ExploreSearchClaimInput = () => {
   const navigate = useNavigate()
-  const location = useLocation()
   const [selectedIdentities, setSelectedIdentities] = React.useState<{
-    subject: IdentityPresenter | null
-    predicate: IdentityPresenter | null
-    object: IdentityPresenter | null
+    subject: GetAtomQuery['atom'] | null
+    predicate: GetAtomQuery['atom'] | null
+    object: GetAtomQuery['atom'] | null
   }>({
     subject: null,
     predicate: null,
@@ -39,50 +31,9 @@ const ExploreSearchClaimInput = ({
     object: false,
   })
 
-  const subjectFetcher = useFetcher<IdentityPresenter[]>()
-  const predicateFetcher = useFetcher<IdentityPresenter[]>()
-  const objectFetcher = useFetcher<IdentityPresenter[]>()
-
-  const fetchIdentityById = (
-    id: string | null,
-    fetcher: ReturnType<typeof useFetcher>,
-  ) => {
-    if (id) {
-      const searchParam = `?id=${encodeURIComponent(id)}`
-      fetcher.load(`${GET_IDENTITIES_BY_IDS_RESOURCE_ROUTE}${searchParam}`)
-    }
-  }
-
-  React.useEffect(() => {
-    const params = new URLSearchParams(location.search)
-    fetchIdentityById(params.get(ClaimElement.Subject), subjectFetcher)
-    fetchIdentityById(params.get(ClaimElement.Predicate), predicateFetcher)
-    fetchIdentityById(params.get(ClaimElement.Object), objectFetcher)
-    // omits the fetchers from the exhaustive deps
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location.search])
-
-  React.useEffect(() => {
-    const newSelectedIdentities = { ...selectedIdentities }
-
-    if (subjectFetcher.data) {
-      newSelectedIdentities.subject = subjectFetcher.data[0] ?? null
-    }
-    if (predicateFetcher.data) {
-      newSelectedIdentities.predicate = predicateFetcher.data[0] ?? null
-    }
-    if (objectFetcher.data) {
-      newSelectedIdentities.object = objectFetcher.data[0] ?? null
-    }
-
-    setSelectedIdentities(newSelectedIdentities)
-    // omits the fetchers data from the exhaustive deps
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [subjectFetcher.data, predicateFetcher.data, objectFetcher.data])
-
   const handleIdentitySelection = (
     type: ClaimElementType,
-    identity: IdentityPresenter,
+    identity: GetAtomQuery['atom'],
   ) => {
     const updatedIdentities = { ...selectedIdentities, [type]: identity }
     setSelectedIdentities(updatedIdentities)
@@ -91,9 +42,9 @@ const ExploreSearchClaimInput = ({
   }
 
   const updateQueryParams = (identities: {
-    subject: IdentityPresenter | null
-    predicate: IdentityPresenter | null
-    object: IdentityPresenter | null
+    subject: GetAtomQuery['atom'] | null
+    predicate: GetAtomQuery['atom'] | null
+    object: GetAtomQuery['atom'] | null
   }) => {
     const params = new URLSearchParams(window.location.search)
     if (identities.subject) {
@@ -115,34 +66,9 @@ const ExploreSearchClaimInput = ({
     navigate(newUrl, { replace: true })
   }
 
-  const handleOpenChange = (type: ClaimElementType, isOpen: boolean) => {
-    setPopoverOpen({ ...popoverOpen, [type]: isOpen })
-  }
-
-  const identityInputProps = (
-    type: ClaimElementType,
-  ): IdentityInputButtonProps => ({
-    label: pascalCaseString(type),
-    placeholder: `Select an identity`,
-    selectedValue: selectedIdentities[type]
-      ? {
-          variant: selectedIdentities[type]?.is_user ? 'user' : 'non-user',
-          imgSrc:
-            selectedIdentities[type]?.user?.image ??
-            selectedIdentities[type]?.image ??
-            null,
-          name:
-            selectedIdentities[type]?.user?.display_name ??
-            selectedIdentities[type]?.display_name ??
-            '?',
-        }
-      : { name: '?' },
-    onClick: () => handleOpenChange(type, !popoverOpen[type]),
-    isPopoverOpen: popoverOpen[type],
-    identities,
-    onIdentitySelect: (identity: IdentityPresenter) =>
-      handleIdentitySelection(type, identity),
-  })
+  const Divider = () => (
+    <span className="h-px w-2.5 flex bg-border/30 self-end mb-[1.2rem] max-md:hidden" />
+  )
 
   return (
     <div className="flex flex-col w-full gap-2 p-4 theme-border rounded-lg">
@@ -168,12 +94,37 @@ const ExploreSearchClaimInput = ({
       </Text>
 
       <Separator className="mb-6" />
-      <IdentityInput
-        showLabels
-        subject={identityInputProps(ClaimElement.Subject)}
-        predicate={identityInputProps(ClaimElement.Predicate)}
-        object={identityInputProps(ClaimElement.Object)}
-      />
+      <div className="flex items-center justify-center max-sm:flex-col max-sm:gap-3">
+        <IdentityPopover
+          type={ClaimElement.Subject}
+          isObjectPopoverOpen={popoverOpen.subject}
+          setIsObjectPopoverOpen={(open) =>
+            setPopoverOpen((prev) => ({ ...prev, subject: open }))
+          }
+          selectedIdentity={selectedIdentities.subject}
+          handleIdentitySelection={handleIdentitySelection}
+        />
+        <Divider />
+        <IdentityPopover
+          type={ClaimElement.Predicate}
+          isObjectPopoverOpen={popoverOpen.predicate}
+          setIsObjectPopoverOpen={(open) =>
+            setPopoverOpen((prev) => ({ ...prev, predicate: open }))
+          }
+          selectedIdentity={selectedIdentities.predicate}
+          handleIdentitySelection={handleIdentitySelection}
+        />
+        <Divider />
+        <IdentityPopover
+          type={ClaimElement.Object}
+          isObjectPopoverOpen={popoverOpen.object}
+          setIsObjectPopoverOpen={(open) =>
+            setPopoverOpen((prev) => ({ ...prev, object: open }))
+          }
+          selectedIdentity={selectedIdentities.object}
+          handleIdentitySelection={handleIdentitySelection}
+        />
+      </div>
     </div>
   )
 }

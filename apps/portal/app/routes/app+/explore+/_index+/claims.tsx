@@ -69,9 +69,10 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export default function ExploreClaims() {
-  const { claims, identities, claimsPagination } = useLiveLoader<typeof loader>(
-    ['create', 'attest'],
-  )
+  const { claims, claimsPagination } = useLiveLoader<typeof loader>([
+    'create',
+    'attest',
+  ])
   return (
     <>
       <ExploreHeader
@@ -80,7 +81,7 @@ export default function ExploreClaims() {
         icon={IconName.claim}
         bgImage={HEADER_BANNER_CLAIMS}
       />
-      <ExploreSearch variant="claim" identities={identities} />
+      <ExploreSearch variant="claim" />
       <ClaimsList
         claims={claims}
         pagination={claimsPagination}
