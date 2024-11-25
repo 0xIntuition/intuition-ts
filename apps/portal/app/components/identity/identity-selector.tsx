@@ -25,31 +25,37 @@ import {
 } from '@lib/utils/misc'
 import { ClaimElementType } from 'app/types'
 
-interface IdentityPopoverProps {
+interface IdentitySelectorProps {
   type: ClaimElementType
-  isObjectPopoverOpen: boolean
-  setIsObjectPopoverOpen: (open: boolean) => void
+  isOpen: boolean
+  onOpenChange: (open: boolean) => void
   selectedIdentity: GetAtomQuery['atom'] | null
-  handleIdentitySelection: (
-    type: ClaimElementType,
-    identity: GetAtomQuery['atom'],
-  ) => void
+  onSelect: (identity: GetAtomQuery['atom']) => void
 }
 
-export const IdentityPopover: React.FC<IdentityPopoverProps> = ({
+export const IdentitySelector = ({
   type,
-  isObjectPopoverOpen,
-  setIsObjectPopoverOpen,
+  isOpen,
+  onOpenChange,
   selectedIdentity,
-  handleIdentitySelection,
-}) => {
+  onSelect,
+}: IdentitySelectorProps) => {
   const { isMobileView } = useSidebarLayoutContext()
+
+  const tooltipContent = {
+    subject:
+      'Represents the entity or concept being described. For example, in the statement {[Alice] [is] [trustworthy]}, [Alice] is the subject.',
+    predicate:
+      'Describes the relationship or attribute of the subject. For example, in the statement {[Alice] [is] [trustworthy]}, [Alice], [is] serves as the predicate, akin to the key in a key-value pair.',
+    object:
+      'Denotes the value or characteristic attributed to the subject. For example, in the statement {[Alice] [is] [trustworthy]}, [Alice], [trustworthy] is the object, akin to the value in a key-value pair.',
+  }
 
   return (
     <Popover
-      open={isObjectPopoverOpen}
-      onOpenChange={setIsObjectPopoverOpen}
-      modal={isMobileView ? false : isObjectPopoverOpen}
+      open={isOpen}
+      onOpenChange={onOpenChange}
+      modal={isMobileView ? false : isOpen}
     >
       <PopoverTrigger asChild>
         <div className="flex flex-col gap-2 w-45">
@@ -57,22 +63,7 @@ export const IdentityPopover: React.FC<IdentityPopoverProps> = ({
             <Text variant="caption" className="text-secondary-foreground">
               {type}
             </Text>
-            <InfoTooltip
-              title={
-                type === 'subject'
-                  ? 'Subject'
-                  : type === 'predicate'
-                    ? 'Predicate'
-                    : 'Object'
-              }
-              content={
-                type === 'subject'
-                  ? 'Represents the entity or concept being described. For example, in the statement {[Alice] [is] [trustworthy]}, [Alice] is the subject.'
-                  : type === 'predicate'
-                    ? 'Describes the relationship or attribute of the subject. For example, in the statement {[Alice] [is] [trustworthy]}, [Alice], [is] serves as the predicate, akin to the key in a key-value pair.'
-                    : 'Denotes the value or characteristic attributed to the subject. For example, in the statement {[Alice] [is] [trustworthy]}, [Alice], [trustworthy] is the object, akin to the value in a key-value pair.'
-              }
-            />
+            <InfoTooltip title={type} content={tooltipContent[type]} />
           </div>
           <HoverCard openDelay={150} closeDelay={100}>
             <HoverCardTrigger className="w-full">
@@ -108,7 +99,7 @@ export const IdentityPopover: React.FC<IdentityPopoverProps> = ({
                     avatarSrc={getAtomImageGQL(selectedIdentity)}
                     name={getAtomLabelGQL(selectedIdentity)}
                     id={getAtomIdGQL(selectedIdentity)}
-                    stats={undefined} // TODO: add stats when available
+                    stats={undefined}
                     bio={getAtomDescriptionGQL(selectedIdentity)}
                     ipfsLink={getAtomIpfsLinkGQL(selectedIdentity)}
                   />
@@ -125,7 +116,7 @@ export const IdentityPopover: React.FC<IdentityPopoverProps> = ({
         sideOffset={5}
       >
         <AtomSearchComboboxExtended
-          onAtomSelect={(atom) => handleIdentitySelection(type, atom)}
+          onAtomSelect={onSelect}
           placeholder={`Search for ${type}...`}
           initialValue=""
           className="w-[600px]"

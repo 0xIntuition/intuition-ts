@@ -15,7 +15,7 @@ import {
 } from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
 
-import { IdentitySearchCombobox } from '@components/identity/identity-search-combo-box'
+import { AtomSearchComboboxExtended } from '@components/atom-search-combobox-extended'
 import { InfoTooltip } from '@components/info-tooltip'
 import SaveListModal from '@components/save-list/save-list-modal'
 import { useCheckClaim } from '@lib/hooks/useCheckClaim'
@@ -65,10 +65,9 @@ export function AddIdentities({
   const [saveListModalActive, setSaveListModalActive] =
     useAtom(saveListModalAtom)
 
-  const { setSearchQuery, filteredIdentities, handleInput } =
-    useFilteredIdentitySearch({
-      selectedItems: selectedIdentities,
-    })
+  const { setSearchQuery } = useFilteredIdentitySearch({
+    selectedItems: selectedIdentities,
+  })
 
   const [isPopoverOpen, setIsPopoverOpen] = useState(false)
 
@@ -187,15 +186,19 @@ export function AddIdentities({
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="bg-transparent border-0 w-max p-0">
-                <IdentitySearchCombobox
-                  onCreateIdentityClick={() =>
-                    setCreateIdentityModalActive(true)
-                  }
-                  identities={filteredIdentities}
-                  onIdentitySelect={handleIdentitySelect}
-                  onValueChange={setSearchQuery}
-                  onInput={handleInput}
-                  shouldFilter={false}
+                <AtomSearchComboboxExtended
+                  onAtomSelect={(atom) => {
+                    handleIdentitySelect({
+                      ...atom,
+                      vault_id: atom?.id ?? '',
+                      display_name: atom?.label ?? '',
+                      image: atom?.image ?? '',
+                    } as IdentityPresenter)
+                  }}
+                  onCreateAtomClick={() => setCreateIdentityModalActive(true)}
+                  placeholder="Search for identities..."
+                  initialValue=""
+                  className="w-[600px]"
                 />
               </PopoverContent>
             </Popover>

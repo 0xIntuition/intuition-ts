@@ -3,7 +3,7 @@ import * as React from 'react'
 import { Separator, Text } from '@0xintuition/1ui'
 import { GetAtomQuery } from '@0xintuition/graphql'
 
-import { IdentityPopover } from '@components/create-claim/create-claim-popovers'
+import { IdentitySelector } from '@components/identity/identity-selector'
 import { useNavigate } from '@remix-run/react'
 import { ClaimElement, ClaimElementType } from 'app/types'
 
@@ -95,34 +95,40 @@ const ExploreSearchClaimInput = () => {
 
       <Separator className="mb-6" />
       <div className="flex items-center justify-center max-sm:flex-col max-sm:gap-3">
-        <IdentityPopover
+        <IdentitySelector
           type={ClaimElement.Subject}
-          isObjectPopoverOpen={popoverOpen.subject}
-          setIsObjectPopoverOpen={(open) =>
+          isOpen={popoverOpen.subject}
+          onOpenChange={(open) =>
             setPopoverOpen((prev) => ({ ...prev, subject: open }))
           }
           selectedIdentity={selectedIdentities.subject}
-          handleIdentitySelection={handleIdentitySelection}
+          onSelect={(identity) =>
+            handleIdentitySelection(ClaimElement.Subject, identity)
+          }
         />
         <Divider />
-        <IdentityPopover
+        <IdentitySelector
           type={ClaimElement.Predicate}
-          isObjectPopoverOpen={popoverOpen.predicate}
-          setIsObjectPopoverOpen={(open) =>
+          isOpen={popoverOpen.predicate}
+          onOpenChange={(open) =>
             setPopoverOpen((prev) => ({ ...prev, predicate: open }))
           }
           selectedIdentity={selectedIdentities.predicate}
-          handleIdentitySelection={handleIdentitySelection}
+          onSelect={(identity) =>
+            handleIdentitySelection(ClaimElement.Predicate, identity)
+          }
         />
         <Divider />
-        <IdentityPopover
+        <IdentitySelector
           type={ClaimElement.Object}
-          isObjectPopoverOpen={popoverOpen.object}
-          setIsObjectPopoverOpen={(open) =>
+          isOpen={popoverOpen.object}
+          onOpenChange={(open) =>
             setPopoverOpen((prev) => ({ ...prev, object: open }))
           }
           selectedIdentity={selectedIdentities.object}
-          handleIdentitySelection={handleIdentitySelection}
+          onSelect={(identity) =>
+            handleIdentitySelection(ClaimElement.Object, identity)
+          }
         />
       </div>
     </div>

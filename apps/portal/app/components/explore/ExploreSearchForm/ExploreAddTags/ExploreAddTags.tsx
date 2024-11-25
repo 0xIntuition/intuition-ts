@@ -7,70 +7,29 @@ import {
   PopoverTrigger,
   TagsListInput,
 } from '@0xintuition/1ui'
-import { IdentityPresenter } from '@0xintuition/api'
+import { GetAtomQuery } from '@0xintuition/graphql'
 
-import { IdentitySearchCombobox } from '@components/identity/identity-search-combo-box'
-import { useIdentityServerSearch } from '@lib/hooks/useIdentityServerSearch'
-import logger from '@lib/utils/logger'
-import { useFetcher } from '@remix-run/react'
-import { SEARCH_IDENTITIES_BY_TAGS_RESOURCE_ROUTE } from 'app/consts'
-import { TagType } from 'app/types/tags'
+import { AtomSearchComboboxExtended } from '@components/atom-search-combobox-extended'
+import { globalCreateIdentityModalAtom } from '@lib/state/store'
+import { useAtom } from 'jotai'
 
-import {
-  isClickOutsideOfTagsInteractionZone,
-  isTagAlreadySelected,
-} from './ExploreAddTags.utils'
+import { isClickOutsideOfTagsInteractionZone } from './ExploreAddTags.utils'
 
-const ExploreAddTags = ({
-  inputId,
-  initialValue,
-}: {
-  inputId: string
-  initialValue?: string | null
-}) => {
-  const { setSearchQuery, identities, handleInput } = useIdentityServerSearch()
-  const identityTagFetcher = useFetcher<IdentityPresenter[]>()
+interface TagType {
+  name: string
+  id: string
+}
+
+const ExploreAddTags = ({ inputId }: { inputId: string }) => {
   const tagsContainerRef = React.useRef<HTMLDivElement>(null)
   const popoverContentRef = React.useRef<HTMLDivElement>(null)
   const inputElementRef = React.useRef<HTMLInputElement>(null)
   const [isPopoverOpen, setIsPopoverOpen] = React.useState(false)
   const [selectedTags, setSelectedTags] = React.useState<TagType[]>([])
 
-  logger('initialValue', initialValue)
-  React.useEffect(() => {
-    if (initialValue) {
-      const searchParam = `?tagIds=${encodeURIComponent(initialValue)}`
-      identityTagFetcher.load(
-        `${SEARCH_IDENTITIES_BY_TAGS_RESOURCE_ROUTE}${searchParam}`,
-      )
-    }
-    // Only run this block once on load
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  React.useEffect(() => {
-    if (identityTagFetcher.data && initialValue) {
-      const initialTagNames = initialValue.split(',')
-      const tagSet = new Set<string>() // Set to store unique tag IDs
-      const initialSelectedTags: TagType[] = identityTagFetcher.data.flatMap(
-        (identity) =>
-          identity.tags
-            ?.filter((tag) => initialTagNames.includes(tag.display_name))
-            .map((tag) => ({
-              name: tag.display_name,
-              id: tag.identity_id,
-            }))
-            .filter((tag) => {
-              if (tagSet.has(tag.id)) {
-                return false // Skip if we've already added this tag
-              }
-              tagSet.add(tag.id)
-              return true
-            }) ?? [],
-      )
-      setSelectedTags(initialSelectedTags)
-    }
-  }, [identityTagFetcher.data, initialValue])
+  const [, setCreateIdentityModalActive] = useAtom(
+    globalCreateIdentityModalAtom,
+  )
 
   React.useEffect(() => {
     const handleClickEvent = (event: MouseEvent) => {
@@ -90,17 +49,25 @@ const ExploreAddTags = ({
   })
 
   React.useEffect(() => {
-    const selectedTagIds: string[] = []
-    selectedTags.forEach((tag) => selectedTagIds.push(tag.name))
-    // trigger input value change and onChange event to update parent form
-    inputElementRef.current?.setAttribute('value', selectedTagIds.toString())
+    const selectedTagNames = selectedTags.map((tag) => tag.name)
+    inputElementRef.current?.setAttribute('value', selectedTagNames.toString())
     const event = new Event('input', { bubbles: true })
     inputElementRef.current?.dispatchEvent(event)
   }, [selectedTags])
 
+  const handleTagSelection = (atom: GetAtomQuery['atom']) => {
+    const newTag = {
+      name: atom?.label ?? '',
+      id: atom?.id ?? '',
+    }
+    if (!selectedTags.some((tag) => tag.name === newTag.name)) {
+      setSelectedTags((prev) => [...prev, newTag])
+    }
+    setIsPopoverOpen(false)
+  }
+
   return (
     <div ref={tagsContainerRef}>
-      {/* Add hidden input element to feed parent form */}
       <Input
         ref={inputElementRef}
         className="hidden"
@@ -122,25 +89,12 @@ const ExploreAddTags = ({
           className="w-max border-none bg-transparent pt-1 max-md:w-[50%]"
           ref={popoverContentRef}
         >
-          <IdentitySearchCombobox
-            placeholder="Search for a tag..."
-            identities={identities.filter(
-              (identity) => !selectedTags.some((tag) => tag.id === identity.id),
-            )}
-            onIdentitySelect={(selection: IdentityPresenter) => {
-              if (!isTagAlreadySelected(selection, selectedTags)) {
-                setSelectedTags([
-                  ...selectedTags,
-                  {
-                    name: selection.display_name,
-                    id: selection.id,
-                  },
-                ])
-              }
-            }}
-            onValueChange={setSearchQuery}
-            onInput={handleInput}
-            shouldFilter={false}
+          <AtomSearchComboboxExtended
+            onAtomSelect={handleTagSelection}
+            onCreateAtomClick={() => setCreateIdentityModalActive(true)}
+            placeholder="Search for tags..."
+            initialValue=""
+            className="w-[600px]"
           />
         </PopoverContent>
       </Popover>

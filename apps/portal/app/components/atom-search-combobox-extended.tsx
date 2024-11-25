@@ -218,12 +218,14 @@ AtomSearchComboboxItem.displayName = 'AtomSearchComboboxItem'
 export interface AtomSearchComboboxExtendedProps
   extends React.HTMLAttributes<HTMLDivElement> {
   onAtomSelect?: (atom: GetAtomQuery['atom']) => void
+  onCreateAtomClick?: () => void
   initialValue?: string
   placeholder?: string
 }
 
 export function AtomSearchComboboxExtended({
   onAtomSelect = () => {},
+  onCreateAtomClick = () => {},
   initialValue = '',
   placeholder = 'Search for an atom...',
   ...props
@@ -336,6 +338,7 @@ export function AtomSearchComboboxExtended({
               variant={ButtonVariant.text}
               size={ButtonSize.default}
               className="tracking-normal border-border/10 rounded-md gap-1"
+              onClick={onCreateAtomClick}
             >
               <Icon name={IconName.plusSmall} />
               Create Atom

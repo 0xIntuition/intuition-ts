@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { Popover, PopoverContent, PopoverTrigger, Text } from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
 
-import { IdentitySearchCombobox } from '@components/identity/identity-search-combo-box'
+import { AtomSearchComboboxExtended } from '@components/atom-search-combobox-extended'
 import { InfoTooltip } from '@components/info-tooltip'
 import { AddListExistingCta } from '@components/lists/add-list-existing-cta'
 import SaveListModal from '@components/save-list/save-list-modal'
@@ -68,10 +68,9 @@ export function AddTags({
 
   const [isPopoverOpen, setIsPopoverOpen] = useState(false)
 
-  const { setSearchQuery, filteredIdentities, handleInput } =
-    useFilteredIdentitySearch({
-      selectedItems: selectedTags,
-    })
+  const { setSearchQuery } = useFilteredIdentitySearch({
+    selectedItems: selectedTags,
+  })
 
   const { data: claimCheckData = { result: '0' } } = useCheckClaim(
     {
@@ -139,13 +138,19 @@ export function AddTags({
           modal={true}
         >
           <PopoverContent className="bg-transparent border-none">
-            <IdentitySearchCombobox
-              onCreateIdentityClick={() => setCreateIdentityModalActive(true)}
-              identities={filteredIdentities}
-              onIdentitySelect={handleIdentitySelect}
-              onValueChange={setSearchQuery}
-              onInput={handleInput}
-              shouldFilter={false}
+            <AtomSearchComboboxExtended
+              onAtomSelect={(atom) => {
+                handleIdentitySelect({
+                  ...atom,
+                  vault_id: atom?.id ?? '',
+                  display_name: atom?.label ?? '',
+                  image: atom?.image ?? '',
+                } as IdentityPresenter)
+              }}
+              onCreateAtomClick={() => setCreateIdentityModalActive(true)}
+              placeholder="Search for tags..."
+              initialValue=""
+              className="w-[600px]"
             />
           </PopoverContent>
           <div className="mb-8">
