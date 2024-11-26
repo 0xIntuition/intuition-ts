@@ -5,6 +5,12 @@ import {
   QuestNarrative,
   SortDirection,
 } from '@0xintuition/api'
+import {
+  fetcher,
+  GetAccountDocument,
+  GetAccountQuery,
+  GetAccountQueryVariables,
+} from '@0xintuition/graphql'
 
 import { ErrorPage } from '@components/error-page'
 import { ListClaimsList } from '@components/list/list-claims'
@@ -25,6 +31,7 @@ import { ProfileLoaderData } from '@routes/app+/profile+/_index+/_layout'
 import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
 import { getQuestsProgress } from '@server/quest'
+import { QueryClient } from '@tanstack/react-query'
 import {
   NO_USER_IDENTITY_ERROR,
   NO_WALLET_ERROR,
@@ -35,6 +42,7 @@ import {
 export async function loader({ request }: LoaderFunctionArgs) {
   const userWallet = await requireUserWallet(request)
   invariant(userWallet, NO_WALLET_ERROR)
+  const queryAddress = userWallet.toLowerCase()
 
   const { identity: userIdentity, isPending } = await getIdentityOrPending(
     request,
@@ -49,6 +57,27 @@ export async function loader({ request }: LoaderFunctionArgs) {
   listSearchParams.set('direction', SortDirection.DESC)
   listSearchParams.set('limit', '6')
   logger('wallet', userWallet.toLowerCase())
+
+  const queryClient = new QueryClient()
+
+  logger('Fetching Account Data...')
+  const accountResult = await fetcher<
+    GetAccountQuery,
+    GetAccountQueryVariables
+  >(GetAccountDocument, { address: queryAddress })()
+
+  if (!accountResult) {
+    throw new Error('No account data found for address')
+  }
+
+  if (!accountResult.account?.atomId) {
+    throw new Error('No atom ID found for account')
+  }
+
+  await queryClient.prefetchQuery({
+    queryKey: ['get-account', { address: queryAddress }],
+    queryFn: () => accountResult,
+  })
 
   return json({
     ...(!isPending &&

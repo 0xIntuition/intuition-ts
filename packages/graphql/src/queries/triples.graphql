@@ -49,7 +49,7 @@ query GetTriplesWithAggregates(
 
 query GetTriplesCount($where: triples_bool_exp) {
   triples_aggregate(where: $where) {
-    aggregate {
+    total: aggregate {
       count
     }
   }

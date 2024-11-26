@@ -42,8 +42,11 @@ query GetPositionsWithAggregates(
 
 query GetPositionsCount($where: positions_bool_exp) {
   positions_aggregate(where: $where) {
-    aggregate {
+    total: aggregate {
       count
+      sum {
+        shares
+      }
     }
   }
 }
@@ -51,5 +54,22 @@ query GetPositionsCount($where: positions_bool_exp) {
 query GetPosition($positionId: String!) {
   position(id: $positionId) {
     ...PositionDetails
+  }
+}
+
+query GetPositionsCountByType($where: positions_bool_exp) {
+  positions_aggregate(where: $where) {
+    total: aggregate {
+      count
+      sum {
+        shares
+      }
+    }
+  }
+  positions {
+    vault {
+      atomId
+      tripleId
+    }
   }
 }
