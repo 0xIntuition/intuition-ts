@@ -9,9 +9,6 @@ query GetTriples(
     aggregate {
       count
     }
-    sum {
-      shares
-    }
   }
   triples(limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
     ...TripleMetadata
