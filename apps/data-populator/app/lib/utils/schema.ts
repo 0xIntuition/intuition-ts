@@ -9,7 +9,7 @@ export function convertCsvToSchemaObjects<T extends Thing>(
 
   return rows.map((row) => {
     const obj: WithContext<T> = {
-      '@context': 'https://schema.org',
+      // '@context': 'https://schema.org',
     } as WithContext<T>
 
     headers.forEach((header, index) => {

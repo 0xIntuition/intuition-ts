@@ -11,3 +11,4 @@ packages/1ui/storybook-static
 !.env.example
 .secrets
 act.sh
+.cursorrules
