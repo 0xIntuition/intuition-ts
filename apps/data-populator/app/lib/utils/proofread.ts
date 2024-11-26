@@ -270,11 +270,12 @@ export function fixCAIP10(text: string): {
         isValidCAIP10: false,
         fixedText,
         reason:
-          'Invalid CAIP-10 format - must be caip10:eip155:chainId:address',
+          'Invalid CAIP-10 format - must be caip10:namespace:chainId:address',
       }
     }
 
     let [prefix, namespace, chainId, address] = parts
+    namespace = `${namespace}` // silence warning
 
     // Fix 2: Fix prefix if needed
     if (prefix !== 'caip10') {
@@ -282,36 +283,33 @@ export function fixCAIP10(text: string): {
       reasons.push('Fixed prefix')
     }
 
-    // Fix 3: Fix namespace if needed
-    if (namespace !== 'eip155') {
-      namespace = 'eip155'
-      reasons.push('Fixed namespace')
+    // Fix 3: Only clean chainId if namespace is eip155
+    if (namespace === 'eip155') {
+      if (!/^\d+$/.test(chainId)) {
+        // Try to extract numbers only
+        const cleanedChainId = chainId.replace(/[^\d]/g, '')
+        if (cleanedChainId) {
+          chainId = cleanedChainId
+          reasons.push('Fixed chainId format')
+        } else {
+          isValid = false
+          reasons.push('Invalid chainId')
+        }
+      }
     }
 
-    // Fix 4: Attempt to clean chainId
-    if (!/^\d+$/.test(chainId)) {
-      // Try to extract numbers only
-      const cleanedChainId = chainId.replace(/[^\d]/g, '')
-      if (cleanedChainId) {
-        chainId = cleanedChainId
-        reasons.push('Fixed chainId format')
-      } else {
+    // Fix 4: Only checksum the address if namespace is eip155
+    if (namespace === 'eip155') {
+      try {
+        const checksummedAddress = getAddress(address)
+        if (address !== checksummedAddress) {
+          address = checksummedAddress
+          reasons.push('Address checksummed')
+        }
+      } catch {
         isValid = false
-        reasons.push('Invalid chainId')
+        reasons.push('Invalid Ethereum address')
       }
-    }
-
-    // Fix 5: Try to fix and checksum the address
-    try {
-      const checksummedAddress = getAddress(address)
-      if (address !== checksummedAddress) {
-        address = checksummedAddress
-        reasons.push('Address checksummed')
-      }
-    } catch {
-      // If we can't checksum it, mark as invalid but keep going
-      isValid = false
-      reasons.push('Invalid Ethereum address')
     }
 
     // Reconstruct the CAIP10 string with all attempted fixes
