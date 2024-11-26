@@ -56,11 +56,15 @@ export const action: ActionFunction = async ({ request }) => {
       const constructor = artifact.abi.find((item: any) => item.type === 'constructor')
       console.log('Found constructor:', constructor)
 
+      // If no constructor found, return empty inputs array
+      const constructorInputs = constructor?.inputs || []
+      const needsConstructorArgs = constructorInputs.length > 0
+
       return json({
         abi: artifact.abi,
         bytecode: artifact.bytecode.object,
-        constructorInputs: constructor?.inputs || [],
-        needsConstructorArgs: constructor?.inputs?.length > 0
+        constructorInputs,
+        needsConstructorArgs
       })
 
     } catch (error) {

@@ -24,12 +24,18 @@ const localFoundry = {
 
 export const action: ActionFunction = async ({ request }) => {
   try {
+    console.log('deploying contract, request:', JSON.stringify(request))
     const formData = await request.formData()
     const abi = JSON.parse(formData.get('abi') as string)
     const bytecode = formData.get('bytecode') as `0x${string}`
     const constructorArgs = formData.get('constructorArgs') ?
       JSON.parse(formData.get('constructorArgs') as string) :
       []
+
+    console.log('formData:', JSON.stringify(formData))
+    console.log('abi:', abi)
+    console.log('bytecode:', bytecode)
+    console.log('constructorArgs:', constructorArgs)
 
     const transport = http(ANVIL_URL, {
       timeout: 60000,

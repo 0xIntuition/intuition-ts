@@ -3,20 +3,12 @@
 import { useCallback, useEffect, useState } from 'react'
 
 import { useFetcher } from '@remix-run/react'
-import {
-  createPublicClient,
-  http,
-  parseEther,
-  parseGwei,
-  parseUnits,
-  toHex,
-} from 'viem'
+import { createPublicClient, http, parseEther, toHex } from 'viem'
 import { foundry } from 'viem/chains'
 
 import {
   formatConstructorValues,
   parseConstructorArgs,
-  prepareConstructorArgs,
   type ConstructorArg,
 } from '../lib/contract-utils'
 import { parseNumberInput } from '../utils/units'
@@ -40,6 +32,14 @@ interface Point {
   y: number
 }
 
+interface DeployedCurve {
+  id: string
+  name: string
+  address: `0x${string}`
+  abi: any[]
+  constructorValues?: string
+}
+
 interface CurveData {
   id: string
   name: string
@@ -53,6 +53,7 @@ interface FileData {
   abi: any[]
   bytecode: string
   constructorArgs: ConstructorArg[]
+  address?: string
 }
 
 interface AbiResponse {
@@ -73,9 +74,21 @@ const CURVE_COLORS = [
   'hsl(var(--success))',
 ]
 
+interface DeployedContract {
+  id: string
+  name: string
+  address: `0x${string}`
+  abi: any[]
+  constructorValues?: string
+  points: Point[]
+  color: string
+}
+
 export function CurveVisualizer() {
   const [files, setFiles] = useState<Map<string, FileData>>(new Map())
-  const [curves, setCurves] = useState<CurveData[]>([])
+  const [deployedContracts, setDeployedContracts] = useState<
+    DeployedContract[]
+  >([])
   const [error, setError] = useState<string | null>(null)
   const [minValue, setMinValue] = useState<number>(0)
   const [maxValue, setMaxValue] = useState<number>(10)
@@ -133,14 +146,8 @@ export function CurveVisualizer() {
         return newFiles
       })
 
-      // If constructor args are needed, show the form
-      if (compileData.needsConstructorArgs) {
-        setSelectedFileId(newId)
-      } else {
-        // No constructor args needed, deploy immediately
-        await deployContract(newId, {})
-      }
-
+      // Always show form for confirmation, even with no args
+      setSelectedFileId(newId)
       setError(null)
     } catch (err) {
       console.error('Error processing file:', err)
@@ -154,19 +161,20 @@ export function CurveVisualizer() {
 
   const deployContract = async (
     fileId: string,
-    constructorValues: Record<string, string>,
+    values: Record<string, string>,
   ) => {
     const fileData = files.get(fileId)
     if (!fileData) return
 
     try {
       setPendingDeployment(fileId)
+      setConstructorValues(values)
 
       // Parse constructor values and convert BigInts to hex strings
       const parsedArgs = fileData.constructorArgs.map((arg) => {
-        const value = constructorValues[arg.name]
-        if (!value)
-          throw new Error(`Missing value for constructor argument: ${arg.name}`)
+        const value = values[arg.name]
+        if (!value && arg.type.startsWith('uint')) return toHex(0n) // Default to 0 for numbers
+        if (!value) return value // Keep as is for non-numeric types
 
         if (arg.type.startsWith('uint') || arg.type.startsWith('int')) {
           const parsedValue = parseNumberInput(value)
@@ -180,6 +188,7 @@ export function CurveVisualizer() {
       deployFormData.append('bytecode', fileData.bytecode)
       deployFormData.append('constructorArgs', JSON.stringify(parsedArgs))
 
+      console.log('Deploying contract with args:', parsedArgs)
       fetcher.submit(deployFormData, {
         method: 'post',
         action: '/api/deploy',
@@ -191,25 +200,21 @@ export function CurveVisualizer() {
     }
   }
 
-  const handleConstructorSubmit = async (values: Record<string, string>) => {
-    if (!selectedFileId) return
-    setConstructorValues(values)
-    setSelectedFileId(null)
-    await deployContract(selectedFileId, values)
-  }
+  const handleConstructorSubmit = async (
+    values: Record<string, string>,
+    fileId?: string,
+  ) => {
+    const targetId = fileId || selectedFileId
+    if (!targetId) return
 
-  const removeCurve = (id: string) => {
-    setFiles((prevFiles) => {
-      const newFiles = new Map(prevFiles)
-      newFiles.delete(id)
-      return newFiles
-    })
-    setCurves((prevCurves) => prevCurves.filter((curve) => curve.id !== id))
+    setSelectedFileId(null)
+    await deployContract(targetId, values)
   }
 
   // Generate curve points when contract is deployed
   const generateCurvePoints = useCallback(
-    async (address: string, fileId: string) => {
+    async (address: string, abi: any[]) => {
+      console.log('generating curve points for', address)
       const points: Point[] = []
       const numPoints = 100
       const maxValueWei = parseEther(maxValue.toString())
@@ -221,19 +226,7 @@ export function CurveVisualizer() {
         try {
           const shares = await publicClient.readContract({
             address: address as `0x${string}`,
-            abi: [
-              {
-                inputs: [
-                  { name: 'assets', type: 'uint256' },
-                  { name: 'totalShares', type: 'uint256' },
-                  { name: 'totalAssets', type: 'uint256' },
-                ],
-                name: 'assetsToShares',
-                outputs: [{ name: 'shares', type: 'uint256' }],
-                stateMutability: 'view',
-                type: 'function',
-              },
-            ],
+            abi,
             functionName: 'assetsToShares',
             args: [assets, 0n, 0n], // Initial state
           })
@@ -281,22 +274,22 @@ export function CurveVisualizer() {
       const fileData = files.get(pendingDeployment)
       if (!fileData) return
 
-      generateCurvePoints(data.address, pendingDeployment).then((points) => {
-        setCurves((prevCurves) => {
-          // Check for duplicates and remove old version if it exists
-          const filteredCurves = prevCurves.filter(
-            (curve) => curve.id !== pendingDeployment,
-          )
-          return [
-            ...filteredCurves,
-            {
-              id: pendingDeployment,
-              name: fileData.file.name.replace('.sol', ''),
-              points,
-              color: CURVE_COLORS[filteredCurves.length % CURVE_COLORS.length],
-              constructorValues: formatConstructorValues(constructorValues),
-            },
-          ]
+      const contractAddress = data.address as `0x${string}`
+      console.log('New contract deployed at:', contractAddress)
+
+      generateCurvePoints(contractAddress, fileData.abi).then((points) => {
+        setDeployedContracts((prev) => {
+          // Add new curve while keeping existing ones
+          const newContract: DeployedContract = {
+            id: pendingDeployment,
+            name: fileData.file.name.replace('.sol', ''),
+            address: contractAddress,
+            abi: fileData.abi,
+            constructorValues: formatConstructorValues(constructorValues),
+            points,
+            color: CURVE_COLORS[prev.length % CURVE_COLORS.length],
+          }
+          return [...prev, newContract]
         })
         setPendingDeployment(null)
       })
@@ -315,6 +308,15 @@ export function CurveVisualizer() {
     constructorValues,
     generateCurvePoints,
   ])
+
+  const removeCurve = (id: string) => {
+    setFiles((prev) => {
+      const newMap = new Map(prev)
+      newMap.delete(id)
+      return newMap
+    })
+    setDeployedContracts((prev) => prev.filter((c) => c.id !== id))
+  }
 
   return (
     <Card className="w-full">
@@ -368,30 +370,30 @@ export function CurveVisualizer() {
           </Alert>
         )}
 
-        {curves.length > 0 && (
+        {deployedContracts.length > 0 && (
           <div className="space-y-4">
             <div className="flex flex-wrap gap-2">
-              {curves.map((curve) => (
+              {deployedContracts.map((contract) => (
                 <div
-                  key={curve.id}
+                  key={contract.id}
                   className="flex items-center gap-2 rounded-md border border-border bg-card p-2"
                 >
                   <div
                     className="h-3 w-3 rounded-full"
-                    style={{ backgroundColor: curve.color }}
+                    style={{ backgroundColor: contract.color }}
                   />
                   <span>
-                    {curve.name}
-                    {curve.constructorValues && (
+                    {contract.name}
+                    {contract.constructorValues && (
                       <span className="text-sm text-muted-foreground">
                         {' '}
-                        ({curve.constructorValues})
+                        ({contract.constructorValues})
                       </span>
                     )}
                   </span>
                   <Button
                     className="h-6 w-6 p-0"
-                    onClick={() => removeCurve(curve.id)}
+                    onClick={() => removeCurve(contract.id)}
                   >
                     ×
                   </Button>
@@ -400,7 +402,7 @@ export function CurveVisualizer() {
             </div>
             <div className="h-[400px] w-full">
               <LineChart
-                data={curves}
+                data={deployedContracts}
                 xLabel="Assets (ETH)"
                 yLabel="Shares (ETH)"
                 title="Bonding Curves Comparison"
