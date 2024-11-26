@@ -18,6 +18,22 @@ import {
   IdentityPresenter,
   SortDirection,
 } from '@0xintuition/api'
+import {
+  fetcher,
+  GetListItemsDocument,
+  GetListItemsQuery,
+  GetListItemsQuery,
+  GetListItemsQueryVariables,
+  GetTagsDocument,
+  GetTripleDocument,
+  GetTripleQuery,
+  GetTripleQueryVariables,
+  GetTriplesDocument,
+  GetTriplesQuery,
+  GetTriplesQueryVariables,
+  useGetEventsQuery,
+  useGetTripleQuery,
+} from '@0xintuition/graphql'
 
 import { DetailInfoCard } from '@components/detail-info-card'
 import { ErrorPage } from '@components/error-page'
@@ -31,6 +47,7 @@ import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getClaim } from '@lib/services/claims'
 import { shareModalAtom, stakeModalAtom } from '@lib/state/store'
 import { getSpecialPredicate } from '@lib/utils/app'
+import logger from '@lib/utils/logger'
 import {
   calculatePercentageOfTvl,
   formatBalance,
@@ -45,6 +62,7 @@ import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { Outlet } from '@remix-run/react'
 import { requireUserWallet } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
+import { dehydrate, QueryClient } from '@tanstack/react-query'
 import {
   BLOCK_EXPLORER_URL,
   CURRENT_ENV,
@@ -61,8 +79,10 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
   const id = params.id
   if (!id) {
-    throw new Error('vault_id is undefined.')
+    throw new Error('Claim ID not found in the URL.')
   }
+
+  const queryClient = new QueryClient()
 
   const url = new URL(request.url)
   const searchParams = new URLSearchParams(url.search)
@@ -75,6 +95,32 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   if (!claim) {
     throw new Response('Not Found', { status: 404 })
   }
+
+  const tripleResult = await fetcher<GetTripleQuery, GetTripleQueryVariables>(
+    GetTripleDocument,
+    {
+      tripleId: id,
+    },
+  )()
+
+  logger('tripleResult', tripleResult)
+
+  await queryClient.prefetchQuery({
+    queryKey: ['get-triple', { id: params.id }],
+    queryFn:() => tripleResult
+  })
+
+  const tripleListResult = await queryClient.prefetchQuery({
+    queryKey: ['get-triple-list', { id: params.id }],
+    queryFn: () =>
+      fetcher<GetListItemsQuery, GetListItemsQueryVariables>(
+        GetListItemsDocument,
+        {
+          predicateId: getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId,
+          objectId: tripleResult.triple.id,
+        },
+      ),
+  })
 
   let vaultDetails: VaultDetailsType | null = null
 
@@ -98,6 +144,12 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     sortBy,
     direction,
     vaultDetails,
+    dehydratedState: dehydrate(queryClient),
+    initialParams: {
+      id,
+      predicateId: getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId,
+      subjectId: id,
+    },
   })
 }
 
@@ -108,10 +160,13 @@ export interface ClaimDetailsLoaderData {
 }
 
 export default function ClaimDetails() {
-  const { wallet, claim, vaultDetails } = useLiveLoader<{
+  const { wallet, claim, vaultDetails, initialParams } = useLiveLoader<{
     wallet: string
     claim: ClaimPresenter
     vaultDetails: VaultDetailsType
+    initialParams: {
+      id: string
+    }
   }>(['create', 'attest'])
   const [stakeModalActive, setStakeModalActive] = useAtom(stakeModalAtom)
   const [shareModalActive, setShareModalActive] = useAtom(shareModalAtom)
@@ -141,6 +196,27 @@ export default function ClaimDetails() {
   const directionTagText = +userConviction > 0 ? 'FOR' : 'AGAINST'
 
   const handleGoBack = useGoBack({ fallbackRoute: PATHS.EXPLORE_CLAIMS })
+
+  const {
+    data: tripleData,
+    isLoading,
+    isError,
+    error,
+  } = useGetTripleQuery(
+    {
+      tripleId: initialParams.id,
+    },
+    {
+      queryKey: [
+        'get-triple',
+        {
+          id: initialParams.id,
+        },
+      ],
+    },
+  )
+
+  logger('tripleData', tripleData)
 
   const leftPanel = (
     <div className="flex-col justify-start items-start gap-6 inline-flex w-full">
