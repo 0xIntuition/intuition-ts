@@ -13,6 +13,7 @@ import {
   Trunctacular,
 } from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
+import { GetAtomQuery } from '@0xintuition/graphql'
 
 import { TagSearchCombobox } from '@components/tags/tags-search-combobox'
 import { TransactionState } from '@components/transaction-state'
@@ -57,8 +58,6 @@ export function TagsForm({
   const navigate = useNavigate()
   const [currentTab, setCurrentTab] = useState(mode)
 
-  logger('tags in tag form', tagClaims)
-  logger('identity in tags-form', identity)
   const existingTagIds = tagClaims ? tagClaims.map((tag) => tag.id) : []
 
   const { state, dispatch } = useTransactionState<
@@ -76,21 +75,21 @@ export function TagsForm({
     'error',
   ].includes(state.status)
 
-  const [selectedTags, setSelectedTags] = useState<IdentityPresenter[]>([])
-  const [invalidTags, setInvalidTags] = useState<IdentityPresenter[]>([])
+  const [selectedTags, setSelectedTags] = useState<GetAtomQuery['atom'][]>([])
+  const [invalidTags, setInvalidTags] = useState<GetAtomQuery['atom'][]>([])
 
-  const handleAddTag = (newTag: IdentityPresenter) => {
+  const handleAddTag = (newTag: GetAtomQuery['atom']) => {
     setSelectedTags((prevTags) => [...prevTags, newTag])
     logger('selectedTags', selectedTags)
   }
 
-  const handleRemoveTag = (id: string) => {
-    setSelectedTags((prevTags) => prevTags.filter((tag) => tag.vault_id !== id))
+  const handleRemoveTag = (vaultId: string) => {
+    setSelectedTags((prevTags) => prevTags.filter((tag) => tag?.id !== vaultId))
   }
 
   const handleRemoveInvalidTag = (vaultId: string) => {
-    setInvalidTags((prev) => prev.filter((tag) => tag.vault_id !== vaultId))
-    setSelectedTags((prev) => prev.filter((tag) => tag.vault_id !== vaultId))
+    setInvalidTags((prev) => prev.filter((tag) => tag?.id !== vaultId))
+    setSelectedTags((prev) => prev.filter((tag) => tag?.id !== vaultId))
   }
 
   const setSaveListModalActive = useSetAtom(saveListModalAtom)
@@ -167,7 +166,7 @@ export function TagsForm({
                         dispatch={dispatch}
                         onRemoveTag={handleRemoveTag}
                         onRemoveInvalidTag={handleRemoveInvalidTag}
-                        subjectVaultId={identity?.id ?? ''}
+                        subjectVaultId={identity?.vault_id ?? ''}
                         invalidTags={invalidTags}
                         setInvalidTags={setInvalidTags}
                       />

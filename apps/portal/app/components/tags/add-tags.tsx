@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 
 import { Popover, PopoverContent, PopoverTrigger, Text } from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
@@ -54,7 +54,7 @@ export function AddTags({
   const formattedTags = selectedTags?.map((tag) => ({
     name: tag?.label ?? '',
     id: tag?.vaultId ?? '',
-    tagCount: tag?.vault?.positionCount ?? 0,
+    tagCount: 0, // TODO: (ENG-4782) temporary until we have tag count
   }))
 
   const [, setCreateIdentityModalActive] = useAtom(
@@ -75,24 +75,30 @@ export function AddTags({
     selectedItems: selectedTags as any[], // TODO: (ENG-4782) temporary type fix until we lock in final types
   })
 
-  const { data: claimCheckData = { result: '0' } } = useCheckClaim(
-    {
-      subjectId: subjectVaultId,
-      predicateId:
-        getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId?.toString(),
-      objectId: selectedTags[selectedTags.length - 1]?.vaultId,
-    },
-    {
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
-      refetchOnReconnect: false,
-      enabled: Boolean(selectedTags[selectedTags.length - 1]?.vaultId),
-    },
-  )
+  const { data: claimCheckData = { result: '0' }, refetch: refetchClaimCheck } =
+    useCheckClaim(
+      {
+        subjectId: subjectVaultId,
+        predicateId:
+          getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId?.toString(),
+        objectId: selectedTags[selectedTags.length - 1]?.vaultId,
+      },
+      {
+        refetchOnWindowFocus: false,
+        refetchOnMount: false,
+        refetchOnReconnect: false,
+        enabled: Boolean(selectedTags[selectedTags.length - 1]?.vaultId),
+        staleTime: Infinity,
+        cacheTime: Infinity,
+      },
+    )
+
+  console.log('claimCheckData', claimCheckData)
 
   const handleIdentitySelect = (atom: GetAtomQuery['atom']) => {
     onAddTag(atom)
     setSearchQuery('')
+    refetchClaimCheck()
     setIsPopoverOpen(false)
   }
 
@@ -102,14 +108,53 @@ export function AddTags({
     setSelectedInvalidTag(invalidTag)
     setSaveListModalActive({
       isOpen: true,
-      identity: invalidTag,
+      identity: invalidTag
+        ? ({
+            id: invalidTag?.id ?? '',
+            label: invalidTag?.label ?? '',
+            image: invalidTag?.image ?? '',
+            vault_id: invalidTag?.vaultId,
+            assets_sum: '0',
+            user_assets: '0',
+            contract: MULTIVAULT_CONTRACT_ADDRESS,
+            asset_delta: '0',
+            conviction_price: '0',
+            conviction_price_delta: '0',
+            conviction_sum: '0',
+            num_positions: 0,
+            price: '0',
+            price_delta: '0',
+            status: 'active',
+            total_conviction: '0',
+            type: 'user',
+            updated_at: new Date().toISOString(),
+            created_at: new Date().toISOString(),
+            creator_address: '',
+            display_name: invalidTag.label ?? '',
+            follow_vault_id: '',
+            user: null,
+            creator: null,
+            identity_hash: '',
+            identity_id: '',
+            is_contract: false,
+            is_user: true,
+            pending: false,
+            pending_type: null,
+            pending_vault_id: null,
+          } as unknown as IdentityPresenter)
+        : undefined,
       id: invalidTag.tagClaimId,
     })
   }
 
+  const memoizedSelectedTags = useMemo(
+    () => selectedTags,
+    [JSON.stringify(selectedTags)],
+  )
+
   useInvalidItems<GetAtomQuery['atom']>({
     data: claimCheckData as TagLoaderData,
-    selectedItems: selectedTags,
+    selectedItems: memoizedSelectedTags,
     setInvalidItems: setInvalidTags,
     onRemoveItem: onRemoveTag,
     idKey: 'vaultId' as keyof GetAtomQuery['atom'],
@@ -179,7 +224,41 @@ export function AddTags({
       {selectedInvalidTag && (
         <SaveListModal
           contract={identity.contract}
-          tag={selectedInvalidTag}
+          tag={
+            {
+              id: selectedInvalidTag?.id ?? '',
+              label: selectedInvalidTag?.label ?? '',
+              image: selectedInvalidTag?.image ?? '',
+              vault_id: selectedInvalidTag?.vaultId,
+              assets_sum: '0',
+              user_assets: '0',
+              contract: MULTIVAULT_CONTRACT_ADDRESS,
+              asset_delta: '0',
+              conviction_price: '0',
+              conviction_price_delta: '0',
+              conviction_sum: '0',
+              num_positions: 0,
+              price: '0',
+              price_delta: '0',
+              status: 'active',
+              total_conviction: '0',
+              type: 'user',
+              updated_at: new Date().toISOString(),
+              created_at: new Date().toISOString(),
+              creator_address: '',
+              display_name: selectedInvalidTag.label ?? '',
+              follow_vault_id: '',
+              user: null,
+              creator: null,
+              identity_hash: '',
+              identity_id: '',
+              is_contract: false,
+              is_user: true,
+              pending: false,
+              pending_type: null,
+              pending_vault_id: null,
+            } as unknown as IdentityPresenter
+          }
           identity={identity}
           userWallet={userWallet}
           open={saveListModalActive.isOpen}

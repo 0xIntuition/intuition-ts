@@ -348,6 +348,12 @@ export default function Profile() {
     },
   )
 
+  // logger('Account Result:', accountResult)
+  // logger('Account Tags Result:', accountTagsResult)
+  // logger('Account Connections Count Result:', accountConnectionsCountResult)
+  // logger('tags', accountTagsResult && accountTagsResult?.triples)
+  // logger('Vault Details:', vaultDetails)
+
   const { user_assets, assets_sum } = vaultDetails ? vaultDetails : userIdentity
 
   const [, setUserObject] = useState<UserPresenter | null | undefined>(

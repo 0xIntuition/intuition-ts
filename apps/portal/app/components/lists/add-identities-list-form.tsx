@@ -9,6 +9,7 @@ import {
   Trunctacular,
 } from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
+import { GetAtomQuery } from '@0xintuition/graphql'
 
 import { TransactionState } from '@components/transaction-state'
 import {
@@ -55,7 +56,7 @@ export function AddIdentitiesListForm({
   ].includes(state.status)
 
   const [selectedIdentities, setSelectedIdentities] = useState<
-    IdentityPresenter[]
+    GetAtomQuery['atom'][]
   >([])
 
   const MAX_IDENTITIES_TO_ADD = 5
@@ -65,10 +66,10 @@ export function AddIdentitiesListForm({
   //   : []
 
   const [invalidIdentities, setInvalidIdentities] = useState<
-    IdentityPresenter[]
+    GetAtomQuery['atom'][]
   >([])
 
-  const handleAddIdentity = (selectedIdentity: IdentityPresenter) => {
+  const handleAddIdentity = (selectedIdentity: GetAtomQuery['atom']) => {
     if (selectedIdentities.length < MAX_IDENTITIES_TO_ADD) {
       setSelectedIdentities((prev) => [...prev, selectedIdentity])
     }
@@ -76,15 +77,15 @@ export function AddIdentitiesListForm({
 
   const handleRemoveIdentity = (vaultId: string) => {
     setSelectedIdentities((prev) =>
-      prev.filter((identity) => identity.vault_id !== vaultId),
+      prev.filter((identity) => identity?.vaultId !== vaultId),
     )
   }
   const handleRemoveInvalidIdentity = (vaultId: string) => {
     setInvalidIdentities((prev) =>
-      prev.filter((identity) => identity.vault_id !== vaultId),
+      prev.filter((identity) => identity?.vaultId !== vaultId),
     )
     setSelectedIdentities((prev) =>
-      prev.filter((identity) => identity.vault_id !== vaultId),
+      prev.filter((identity) => identity?.vaultId !== vaultId),
     )
   }
 

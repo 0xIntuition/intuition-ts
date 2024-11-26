@@ -9,7 +9,7 @@ import {
   Text,
   toast,
 } from '@0xintuition/1ui'
-import { IdentityPresenter } from '@0xintuition/api'
+import { GetAtomQuery } from '@0xintuition/graphql'
 
 import { multivaultAbi } from '@lib/abis/multivault'
 import { useBatchCreateTriple } from '@lib/hooks/useBatchCreateTriple'
@@ -29,7 +29,7 @@ import { createTagArrays } from './tag-utils'
 interface TagsReviewProps {
   dispatch: (action: TransactionActionType) => void
   subjectVaultId: string
-  tags: IdentityPresenter[]
+  tags: GetAtomQuery['atom'][]
 }
 
 export default function TagsReview({
@@ -157,8 +157,8 @@ export default function TagsReview({
               {tags.map((tag, index) => (
                 <TagWithValue
                   key={index}
-                  label={tag.display_name}
-                  value={tag.tag_count ?? 0}
+                  label={tag?.label ?? ''}
+                  value={0} // TODO: (ENG-4782) temporary until we have tag count
                 />
               ))}
             </div>

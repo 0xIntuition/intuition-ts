@@ -26,8 +26,9 @@ function useInvalidItems<T>({
 
     const result = data.result
     const itemId = data[dataIdKey]
+    console.log('Processing invalid item', { result, itemId, selectedItems })
 
-    setInvalidItems((prev) => {
+    const update = (prev: T[]) => {
       if (result === '0') {
         return prev.filter((item) => item[idKey] !== itemId)
       }
@@ -37,6 +38,7 @@ function useInvalidItems<T>({
       }
 
       const itemToAdd = selectedItems.find((item) => item[idKey] === itemId)
+      console.log('Found item to add', { itemToAdd, itemId })
 
       if (!itemToAdd || prev.some((item) => item[idKey] === itemId)) {
         return prev
@@ -52,15 +54,14 @@ function useInvalidItems<T>({
       }
 
       return [...prev, itemWithClaimId]
+    }
+
+    setInvalidItems((prev) => {
+      const newState = update(prev)
+      console.log('Setting invalid items', { prev, newState })
+      return JSON.stringify(newState) !== JSON.stringify(prev) ? newState : prev
     })
-  }, [
-    data?.result,
-    data?.[dataIdKey],
-    selectedItems,
-    idKey,
-    dataIdKey,
-    onRemoveItem,
-  ])
+  }, [data?.result, data?.[dataIdKey], idKey, dataIdKey, onRemoveItem])
 }
 
 export default useInvalidItems
