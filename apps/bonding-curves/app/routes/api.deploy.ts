@@ -32,10 +32,10 @@ export const action: ActionFunction = async ({ request }) => {
       JSON.parse(formData.get('constructorArgs') as string) :
       []
 
-    console.log('formData:', JSON.stringify(formData))
-    console.log('abi:', abi)
-    console.log('bytecode:', bytecode)
-    console.log('constructorArgs:', constructorArgs)
+    // console.log('formData:', JSON.stringify(formData))
+    // console.log('abi:', abi)
+    // console.log('bytecode:', bytecode)
+    // console.log('constructorArgs:', constructorArgs)
 
     const transport = http(ANVIL_URL, {
       timeout: 60000,
@@ -62,7 +62,12 @@ export const action: ActionFunction = async ({ request }) => {
       args: constructorArgs,
     })
 
+    console.log('Deployment hash:', hash)
+
     const receipt = await publicClient.waitForTransactionReceipt({ hash })
+
+    console.log('Receipt:', receipt)
+    console.log('Contract address:', receipt.contractAddress)
 
     if (!receipt.contractAddress) {
       throw new Error('No contract address in receipt')

@@ -96,6 +96,7 @@ export function CurveVisualizer() {
   const [pendingDeployment, setPendingDeployment] = useState<string | null>(
     null,
   )
+  const [isDeploying, setIsDeploying] = useState(false)
   const [constructorValues, setConstructorValues] = useState<
     Record<string, string>
   >({})
@@ -163,18 +164,19 @@ export function CurveVisualizer() {
     fileId: string,
     values: Record<string, string>,
   ) => {
+    if (isDeploying) return
     const fileData = files.get(fileId)
     if (!fileData) return
 
     try {
+      setIsDeploying(true)
       setPendingDeployment(fileId)
       setConstructorValues(values)
 
-      // Parse constructor values and convert BigInts to hex strings
       const parsedArgs = fileData.constructorArgs.map((arg) => {
         const value = values[arg.name]
-        if (!value && arg.type.startsWith('uint')) return toHex(0n) // Default to 0 for numbers
-        if (!value) return value // Keep as is for non-numeric types
+        if (!value && arg.type.startsWith('uint')) return toHex(0n)
+        if (!value) return value
 
         if (arg.type.startsWith('uint') || arg.type.startsWith('int')) {
           const parsedValue = parseNumberInput(value)
@@ -197,6 +199,7 @@ export function CurveVisualizer() {
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to deploy contract')
       setPendingDeployment(null)
+      setIsDeploying(false)
     }
   }
 
@@ -247,30 +250,11 @@ export function CurveVisualizer() {
 
   // Handle ABI response and deployment response
   useEffect(() => {
-    if (!fetcher.data) return
+    if (!fetcher.data || !pendingDeployment || fetcher.state !== 'idle') return
 
     const data = fetcher.data as AbiResponse | DeployResponse
 
-    // Handle ABI response
-    if ('abi' in data && selectedFileId) {
-      console.log('Received ABI:', data.abi)
-      const constructorArgs = parseConstructorArgs(data.abi)
-
-      setFiles((prev) => {
-        const fileData = prev.get(selectedFileId)
-        if (!fileData) return prev
-
-        const newMap = new Map(prev)
-        newMap.set(selectedFileId, {
-          ...fileData,
-          constructorArgs,
-        })
-        return newMap
-      })
-    }
-
-    // Handle deployment response
-    if ('address' in data && pendingDeployment && data.address) {
+    if ('address' in data && data.address) {
       const fileData = files.get(pendingDeployment)
       if (!fileData) return
 
@@ -279,9 +263,14 @@ export function CurveVisualizer() {
 
       generateCurvePoints(contractAddress, fileData.abi).then((points) => {
         setDeployedContracts((prev) => {
-          // Add new curve while keeping existing ones
+          // Skip if we already have this contract
+          // Fetchers are really good at creating bugs because of how they present stale data
+          if (prev.some((c) => c.address === contractAddress)) {
+            return prev
+          }
+
           const newContract: DeployedContract = {
-            id: pendingDeployment,
+            id: contractAddress,
             name: fileData.file.name.replace('.sol', ''),
             address: contractAddress,
             abi: fileData.abi,
@@ -292,17 +281,18 @@ export function CurveVisualizer() {
           return [...prev, newContract]
         })
         setPendingDeployment(null)
+        setIsDeploying(false)
       })
     }
 
     if ('error' in data && data.error) {
       setError(data.error)
       setPendingDeployment(null)
-      setSelectedFileId(null)
+      setIsDeploying(false)
     }
   }, [
     fetcher.data,
-    selectedFileId,
+    fetcher.state,
     pendingDeployment,
     files,
     constructorValues,
