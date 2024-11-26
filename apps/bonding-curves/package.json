@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "build": "remix vite:build --emptyOutDir",
-    "dev": "remix vite:dev",
+    "dev": "docker-compose down && docker-compose up -d anvil && remix vite:dev",
     "start": "PORT=8080 remix-serve ./build/server/index.js",
     "lint:fix": "pnpm lint --fix"
   },

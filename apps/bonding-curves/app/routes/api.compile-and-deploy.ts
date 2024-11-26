@@ -34,12 +34,12 @@ const localFoundry = {
 export const action: ActionFunction = async ({ request }) => {
   try {
     const formData = await request.formData()
-    const file = formData.get('file') as File
+    const fileName = (formData.get('file') as File).name
     let content = formData.get('content') as string
 
-    if (!file || !content) {
+    if (!fileName || !content) {
       return json(
-        { error: 'File and content are required' },
+        { error: 'File name and content are required' },
         { status: 400 }
       )
     }
@@ -52,50 +52,48 @@ export const action: ActionFunction = async ({ request }) => {
           /import\s*{BaseCurve}\s*from\s*([^"']\S+);/g,
           'import {BaseCurve} from \\"./BaseCurve.sol\\";'
         )
-      await execAsync(`docker exec bonding-curves-anvil-1 bash -c "echo '${escapedContent}' > /app/contracts/${file.name}"`)
 
-      // Compile the contract with verbose output
-      const { stdout, stderr } = await execAsync('docker exec bonding-curves-anvil-1 forge build --force --sizes')
-      console.log('Compilation output:', stdout)
-      if (stderr) console.error('Compilation errors:', stderr)
+      await execAsync(`docker exec bonding-curves-anvil-1 bash -c "echo '${escapedContent}' > /app/contracts/${fileName}"`)
 
-      // Get the contract artifacts from the container
-      const contractName = path.parse(file.name).name
-      const { stdout: artifactContent } = await execAsync(
-        `docker exec bonding-curves-anvil-1 cat /app/out/${file.name}/${contractName}.json`
-      )
-
-      let artifact
       try {
-        artifact = JSON.parse(artifactContent)
-      } catch (error) {
-        console.error('Failed to parse artifact:', error)
-        return json(
-          { error: 'Failed to read contract artifact' },
-          { status: 500 }
+        // Compile the contract with verbose output
+        let { stdout, stderr } = await execAsync('docker exec bonding-curves-anvil-1 forge build --force --sizes')
+        console.log('Compilation output:', stdout)
+        if (stderr) console.error('Compilation errors:', stderr)
+
+        // Get the contract artifacts from the container
+        const contractName = path.parse(fileName).name
+        const { stdout: artifactContent } = await execAsync(
+          `docker exec bonding-curves-anvil-1 cat /app/out/${fileName}/${contractName}.json`
         )
-      }
 
-      // Configure transport with more lenient settings
-      const transport = http(ANVIL_URL, {
-        timeout: 60000,
-        retryCount: 5,
-        retryDelay: 2000,
-        batch: false,
-      })
+        let artifact
+        try {
+          artifact = JSON.parse(artifactContent)
+        } catch (error) {
+          console.error('Failed to parse artifact:', error)
+          throw new Error('Failed to read contract artifact')
+        }
 
-      const publicClient = createPublicClient({
-        chain: localFoundry,
-        transport,
-      })
+        // Configure transport with more lenient settings
+        const transport = http(ANVIL_URL, {
+          timeout: 60000,
+          retryCount: 5,
+          retryDelay: 2000,
+          batch: false,
+        })
 
-      const walletClient = createWalletClient({
-        chain: localFoundry,
-        transport,
-        account: ANVIL_ACCOUNT,
-      })
+        const publicClient = createPublicClient({
+          chain: localFoundry,
+          transport,
+        })
 
-      try {
+        const walletClient = createWalletClient({
+          chain: localFoundry,
+          transport,
+          account: ANVIL_ACCOUNT,
+        })
+
         // Test connection to Anvil
         console.log('Testing Anvil connection...')
         const chainId = await publicClient.getChainId()
@@ -119,22 +117,22 @@ export const action: ActionFunction = async ({ request }) => {
         }
 
         console.log('Contract deployed at:', receipt.contractAddress)
-
-        // Clean up temporary files in container
-        await execAsync(`docker exec bonding-curves-anvil-1 rm /app/contracts/${file.name}`)
-
         return json({ address: receipt.contractAddress })
       } catch (error) {
         console.error('Deployment failed:', error)
-        return json(
-          { error: error instanceof Error ? error.message : 'Contract deployment failed' },
-          { status: 500 }
-        )
+        throw error
+      } finally {
+        // Clean up temporary files in container regardless of success/failure
+        try {
+          await execAsync(`docker exec bonding-curves-anvil-1 rm /app/contracts/${fileName}`)
+        } catch (cleanupError) {
+          console.error('Failed to clean up temporary file:', cleanupError)
+        }
       }
     } catch (error) {
       console.error('Compilation failed:', error)
       return json(
-        { error: 'Contract compilation failed' },
+        { error: error instanceof Error ? error.message : 'Contract compilation failed' },
         { status: 500 }
       )
     }
