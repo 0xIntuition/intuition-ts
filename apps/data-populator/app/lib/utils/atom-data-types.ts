@@ -40,7 +40,6 @@ export type AtomDataTypeKey = keyof typeof atomDataTypes
 export function detectAtomDataType(headers: string[]): AtomDataTypeKey {
   console.log(`Headers: ${headers}`)
   if (headers.length === 0) {
-    console.log('No headers found, defaulting to CSV')
     return 'CSV'
   }
 
@@ -48,19 +47,13 @@ export function detectAtomDataType(headers: string[]): AtomDataTypeKey {
   for (const [key, type] of Object.entries(atomDataTypes)) {
     // Get the headers from the default data
     const typeHeaders = type.defaultData[0]
-    console.log(`Key: ${key}, Type: ${type}`)
-
-    console.log(`headers: ${JSON.stringify(headers)}`)
-    console.log(`typeHeaders: ${JSON.stringify(typeHeaders)}`)
 
     // If headers match exactly, return this type
     if (JSON.stringify(headers) === JSON.stringify(typeHeaders)) {
-      console.log(`Detected type: ${key}`)
       return key as AtomDataTypeKey
     }
   }
 
   // Default to CSV if no exact match found
-  console.log('No match found, defaulting to CSV')
   return 'CSV'
 }
