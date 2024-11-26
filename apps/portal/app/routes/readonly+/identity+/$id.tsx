@@ -236,7 +236,9 @@ export default function ReadOnlyIdentityDetails() {
   return (
     <TwoPanelLayout leftPanel={leftPanel} rightPanel={rightPanel}>
       <ImageModal
-        identity={identity}
+        displayName={identity?.display_name ?? ''}
+        imageSrc={identity?.image ?? ''}
+        isUser={identity?.is_user}
         open={imageModalActive.isOpen}
         onClose={() =>
           setImageModalActive({

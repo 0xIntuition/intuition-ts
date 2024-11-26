@@ -185,7 +185,9 @@ export default function ListDetails() {
       />
       {claim.object && (
         <ImageModal
-          identity={claim.object}
+          displayName={claim.object?.display_name ?? ''}
+          imageSrc={claim.object?.image ?? ''}
+          isUser={claim.object?.is_user}
           open={imageModalActive.isOpen}
           onClose={() =>
             setImageModalActive({

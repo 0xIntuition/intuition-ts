@@ -8,22 +8,22 @@ import {
   IdentityTag,
   Trunctacular,
 } from '@0xintuition/1ui'
-import { IdentityPresenter } from '@0xintuition/api'
 
 export interface ImageModalProps {
-  identity: IdentityPresenter
+  displayName: string
+  imageSrc: string
+  isUser?: boolean
   open?: boolean
   onClose: () => void
 }
 
 export default function ImageModal({
-  identity,
+  displayName,
+  imageSrc,
+  isUser,
   open,
   onClose,
 }: ImageModalProps) {
-  const imageSrc = identity?.user?.image ?? identity?.image ?? ''
-  const isUser = !!identity?.user
-
   return (
     <Dialog
       open={open}
@@ -38,14 +38,7 @@ export default function ImageModal({
               imgSrc={imageSrc}
               variant={isUser ? 'user' : 'non-user'}
             >
-              <Trunctacular
-                value={
-                  identity?.user?.display_name ??
-                  identity?.display_name ??
-                  'Identity'
-                }
-                maxStringLength={42}
-              />
+              <Trunctacular value={displayName} maxStringLength={42} />
             </IdentityTag>
           </DialogTitle>
         </DialogHeader>

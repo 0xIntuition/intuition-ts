@@ -536,7 +536,9 @@ export default function IdentityDetails() {
         </>
       )}
       <ImageModal
-        identity={identity}
+        displayName={atomResult?.atom?.value?.thing?.name ?? ''}
+        imageSrc={atomResult?.atom?.value?.thing?.image ?? ''}
+        isUser={atomResult?.atom?.type === ('Account' || 'Person' || 'Default')}
         open={imageModalActive.isOpen}
         onClose={() =>
           setImageModalActive({

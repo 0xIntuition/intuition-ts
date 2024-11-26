@@ -771,7 +771,11 @@ export default function Profile() {
         </>
       )}
       <ImageModal
-        identity={userIdentity}
+        displayName={accountResult?.account?.label ?? ''}
+        imageSrc={accountResult?.account?.image ?? ''}
+        isUser={
+          accountResult?.account?.type === ('Account' || 'Person' || 'Default')
+        }
         open={imageModalActive.isOpen}
         onClose={() =>
           setImageModalActive({

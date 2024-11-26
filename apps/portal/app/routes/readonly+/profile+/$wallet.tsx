@@ -324,7 +324,9 @@ export default function ReadOnlyProfile() {
         </>
       )}
       <ImageModal
-        identity={userIdentity}
+        displayName={userIdentity?.user?.display_name ?? ''}
+        imageSrc={userIdentity?.user?.image ?? ''}
+        isUser={true}
         open={imageModalActive.isOpen}
         onClose={() =>
           setImageModalActive({
