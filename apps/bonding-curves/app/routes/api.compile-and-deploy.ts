@@ -33,6 +33,7 @@ const localFoundry = {
 
 export const action: ActionFunction = async ({ request }) => {
   try {
+    console.log("COMPIEL AND DEPLOY!!")
     const formData = await request.formData()
     const fileName = (formData.get('file') as File).name
     let content = formData.get('content') as string
@@ -101,7 +102,7 @@ export const action: ActionFunction = async ({ request }) => {
 
         // Deploy the contract
         console.log('Deploying contract...')
-        console.log('Contract ABI:', JSON.stringify(artifact.abi, null, 2))
+        // console.log('Contract ABI:', JSON.stringify(artifact.abi, null, 2))
 
         const hash = await walletClient.deployContract({
           abi: artifact.abi,

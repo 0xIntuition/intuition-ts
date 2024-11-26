@@ -3,7 +3,14 @@
 import { useCallback, useEffect, useState } from 'react'
 
 import { useFetcher } from '@remix-run/react'
-import { createPublicClient, http, parseEther } from 'viem'
+import {
+  createPublicClient,
+  http,
+  parseEther,
+  parseGwei,
+  parseUnits,
+  toHex,
+} from 'viem'
 import { foundry } from 'viem/chains'
 
 import {
@@ -12,6 +19,7 @@ import {
   prepareConstructorArgs,
   type ConstructorArg,
 } from '../lib/contract-utils'
+import { parseNumberInput } from '../utils/units'
 import { ConstructorForm } from './constructor-form'
 import { LineChart } from './ui/line-chart'
 import {
@@ -42,6 +50,8 @@ interface CurveData {
 
 interface FileData {
   file: File
+  abi: any[]
+  bytecode: string
   constructorArgs: ConstructorArg[]
 }
 
@@ -93,39 +103,99 @@ export function CurveVisualizer() {
     }
 
     try {
-      // Read file content to get ABI
       const content = await file.text()
       const formData = new FormData()
       formData.append('file', file)
       formData.append('content', content)
-      formData.append('getAbiOnly', 'true')
 
-      // Get ABI from server using Remix fetcher
-      fetcher.submit(formData, {
-        method: 'post',
-        action: '/api/compile-and-deploy',
-        encType: 'multipart/form-data',
+      // First compile the contract
+      const compileResponse = await fetch('/api/compile', {
+        method: 'POST',
+        body: formData,
       })
+      const compileData = await compileResponse.json()
 
-      // Store file info for later use
+      if (compileData.error) {
+        setError(compileData.error)
+        return
+      }
+
+      // Store compilation results and file info
       const newId = crypto.randomUUID()
       setFiles((prevFiles) => {
         const newFiles = new Map(prevFiles)
         newFiles.set(newId, {
           file,
-          constructorArgs: [],
+          abi: compileData.abi,
+          bytecode: compileData.bytecode,
+          constructorArgs: compileData.constructorInputs || [],
         })
         return newFiles
       })
-      setSelectedFileId(newId)
+
+      // If constructor args are needed, show the form
+      if (compileData.needsConstructorArgs) {
+        setSelectedFileId(newId)
+      } else {
+        // No constructor args needed, deploy immediately
+        await deployContract(newId, {})
+      }
+
       setError(null)
     } catch (err) {
       console.error('Error processing file:', err)
-      setError(err instanceof Error ? err.message : 'Failed to parse contract')
+      setError(
+        err instanceof Error ? err.message : 'Failed to process contract',
+      )
     }
 
-    // Clear the input to allow reloading the same file
     event.target.value = ''
+  }
+
+  const deployContract = async (
+    fileId: string,
+    constructorValues: Record<string, string>,
+  ) => {
+    const fileData = files.get(fileId)
+    if (!fileData) return
+
+    try {
+      setPendingDeployment(fileId)
+
+      // Parse constructor values and convert BigInts to hex strings
+      const parsedArgs = fileData.constructorArgs.map((arg) => {
+        const value = constructorValues[arg.name]
+        if (!value)
+          throw new Error(`Missing value for constructor argument: ${arg.name}`)
+
+        if (arg.type.startsWith('uint') || arg.type.startsWith('int')) {
+          const parsedValue = parseNumberInput(value)
+          return toHex(parsedValue)
+        }
+        return value
+      })
+
+      const deployFormData = new FormData()
+      deployFormData.append('abi', JSON.stringify(fileData.abi))
+      deployFormData.append('bytecode', fileData.bytecode)
+      deployFormData.append('constructorArgs', JSON.stringify(parsedArgs))
+
+      fetcher.submit(deployFormData, {
+        method: 'post',
+        action: '/api/deploy',
+        encType: 'multipart/form-data',
+      })
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to deploy contract')
+      setPendingDeployment(null)
+    }
+  }
+
+  const handleConstructorSubmit = async (values: Record<string, string>) => {
+    if (!selectedFileId) return
+    setConstructorValues(values)
+    setSelectedFileId(null)
+    await deployContract(selectedFileId, values)
   }
 
   const removeCurve = (id: string) => {
@@ -136,45 +206,6 @@ export function CurveVisualizer() {
     })
     setCurves((prevCurves) => prevCurves.filter((curve) => curve.id !== id))
   }
-
-  const handleConstructorSubmit = async (values: Record<string, string>) => {
-    if (!selectedFileId) return
-    setConstructorValues(values)
-    setPendingDeployment(selectedFileId)
-    setSelectedFileId(null)
-    await compileAndDeploy(selectedFileId, values)
-  }
-
-  const compileAndDeploy = useCallback(
-    async (fileId: string, constructorValues: Record<string, string>) => {
-      const fileData = files.get(fileId)
-      if (!fileData) return
-
-      try {
-        const content = await fileData.file.text()
-        const formData = new FormData()
-        formData.append('file', fileData.file)
-        formData.append('content', content)
-        formData.append(
-          'constructorArgs',
-          JSON.stringify({
-            args: fileData.constructorArgs,
-            values: constructorValues,
-          }),
-        )
-
-        fetcher.submit(formData, {
-          method: 'post',
-          action: '/api/compile-and-deploy',
-          encType: 'multipart/form-data',
-        })
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'An error occurred')
-        setPendingDeployment(null)
-      }
-    },
-    [files, fetcher],
-  )
 
   // Generate curve points when contract is deployed
   const generateCurvePoints = useCallback(
@@ -282,7 +313,6 @@ export function CurveVisualizer() {
     pendingDeployment,
     files,
     constructorValues,
-    compileAndDeploy,
     generateCurvePoints,
   ])
 
