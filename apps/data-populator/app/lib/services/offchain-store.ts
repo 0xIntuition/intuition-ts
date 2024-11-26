@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
+  bulkEVMRead,
   getAtomIdFromURI as getAtomIDFromEVM,
   getAtomURIFromID as getAtomURIFromEVM,
   getTripleByHash as getTripleByHashFromEVM,
@@ -8,10 +9,12 @@ import {
 import { getDataFromCID } from './cid'
 import {
   getAtomID as getAtomIDFromSupabase,
+  getAtomIDs as getAtomIDsFromSupabase,
   getAtomURI as getAtomURIFromSupabase,
   getTripleID as getTripleIdFromSupabase,
   getURIData as getURIDataFromSupabase,
   storeAtomURI,
+  storeAtomURIs,
   storeTriple,
   storeURIData,
 } from './supabase'
@@ -38,6 +41,56 @@ export async function getAtomID(uri: string): Promise<string> {
     await storeAtomURI(evmID, uri)
   }
   return evmID
+}
+
+export async function getAtomIDs(uris: string[]): Promise<string[]> {
+  const storedIDs = await getAtomIDsFromSupabase(uris)
+  console.log('Stored IDs:', storedIDs)
+
+  // Identify URIs that need to be fetched from EVM
+  const urisToFetchFromEVM: string[] = []
+  const uriIndices: number[] = [] // Track indices of missing IDs
+
+  for (let i = 0; i < storedIDs.length; i++) {
+    if (storedIDs[i] === null) {
+      urisToFetchFromEVM.push(uris[i])
+      uriIndices.push(i)
+    }
+  }
+
+  console.log('URIs to fetch from EVM:', urisToFetchFromEVM)
+
+  // Fetch missing IDs in bulk from EVM
+  const fetchedEVMIDs = await bulkEVMRead(
+    getAtomIDFromEVM,
+    urisToFetchFromEVM,
+    {
+      chunkSize: 1000,
+      delayBetweenReads: 0,
+      delayBetweenChunks: 0,
+    },
+  )
+
+  console.log('Fetched EVM IDs:', fetchedEVMIDs)
+
+  // Map fetched EVM IDs back to their indices in the original array
+  const returnedIDs = [...storedIDs] // Start with stored IDs
+  const atomIDsToStore: Map<string, string> = new Map()
+
+  uriIndices.forEach((index, i) => {
+    const evmID = fetchedEVMIDs[i]
+    if (evmID !== '0') {
+      atomIDsToStore.set(evmID, uris[index])
+    }
+    returnedIDs[index] = evmID
+  })
+
+  // Store fetched IDs in Supabase if needed
+  if (atomIDsToStore.size > 0) {
+    await storeAtomURIs(atomIDsToStore)
+  }
+
+  return returnedIDs as string[]
 }
 
 export async function getTripleID(

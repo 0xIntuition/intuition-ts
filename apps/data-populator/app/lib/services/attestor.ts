@@ -40,10 +40,10 @@ if (
 const atomCostStr = await getAtomCost()
 const tripleCostStr = await getTripleCost()
 
-const atomValue = (
+export const atomValue = (
   BigInt(additionalStakeAtom as string) + BigInt(atomCostStr)
 ).toString()
-const tripleValue = (
+export const tripleValue = (
   BigInt(additionalStakeTriple as string) + BigInt(tripleCostStr)
 ).toString()
 
@@ -315,4 +315,56 @@ export async function getTripleId(
   const tripleHash = hashTriple(subjectId, predicateId, objectId)
   const tripleId = await getTripleByHash(tripleHash)
   return tripleId
+}
+
+// To call this:
+// const atomIds = await bulkEVMRead(getAtomIdFromURI, cids, {chunkSize: 3, delayBetweenReads: 100, delayBetweenChunks: 1000})
+export async function bulkEVMRead<T, P>(
+  evmReadFn: (param: P) => Promise<T>, // EVM read method
+  params: P[], // Array of parameters, each representing one read
+  options: {
+    chunkSize?: number // Maximum number of parallel reads per chunk
+    delayBetweenReads?: number // Delay (ms) between individual reads within a chunk
+    delayBetweenChunks?: number // Delay (ms) between chunks
+  } = {},
+): Promise<T[]> {
+  const {
+    chunkSize = 100,
+    delayBetweenReads = 0,
+    delayBetweenChunks = 0,
+  } = options
+
+  const results: T[] = []
+
+  // Helper to process a single chunk in parallel
+  const processChunk = async (chunkParams: P[]): Promise<T[]> => {
+    const chunkResults = await Promise.all(
+      chunkParams.map(async (param, index) => {
+        // Delay between individual reads within the chunk
+        if (delayBetweenReads > 0 && index > 0) {
+          await new Promise((resolve) => setTimeout(resolve, delayBetweenReads))
+        }
+        const result = await evmReadFn(param)
+        console.log('Bulk EVM Read Result: ', result)
+        return result
+      }),
+    )
+    return chunkResults
+  }
+
+  // Divide params into chunks
+  for (let i = 0; i < params.length; i += chunkSize) {
+    const chunk = params.slice(i, i + chunkSize)
+
+    // Process the chunk in parallel
+    const chunkResults = await processChunk(chunk)
+    results.push(...chunkResults)
+
+    // Delay between chunks
+    if (delayBetweenChunks > 0 && i + chunkSize < params.length) {
+      await new Promise((resolve) => setTimeout(resolve, delayBetweenChunks))
+    }
+  }
+
+  return results
 }

@@ -8,11 +8,14 @@ import {
 
 import { toast } from '@0xintuition/1ui'
 
-import type { BatchAtomsRequest, PinDataResult } from '@lib/services/populate'
+import type {
+  BatchTriplesRequest,
+  LogAndVerifyTriplesResponse,
+  Triple,
+} from '@lib/services/populate'
 import { AtomDataTypeKey } from '@lib/utils/atom-data-types'
 import logger from '@lib/utils/logger'
 import { useFetcher } from '@remix-run/react'
-import { LogTxActionData } from '@routes/app+'
 import { Thing, WithContext } from 'schema-dts'
 import { useSendTransaction } from 'wagmi'
 
@@ -22,13 +25,11 @@ type State = {
   requestHash: string
   selectedAtoms: WithContext<Thing>[]
   selectedRows: number[]
-  csvData: string[][]
-  calls: BatchAtomsRequest[]
-  existingCIDs: string[]
-  newCIDs: string[]
-  filteredData: PinDataResult[]
+  tag: WithContext<Thing>
+  calls: BatchTriplesRequest[]
+  newTriples: Triple[]
+  existingTriples: Triple[]
   txHash: string
-  setNewAtoms: WithContext<Thing>[]
   selectedType: AtomDataTypeKey
   error?: string
   step:
@@ -44,42 +45,35 @@ type State = {
 type Action =
   | { type: 'SET_REQUEST_HASH'; payload: string }
   | { type: 'SET_SELECTED_ATOMS'; payload: WithContext<Thing>[] }
+  | { type: 'SET_TAG'; payload: WithContext<Thing> }
   | {
       type: 'SET_CALLS'
       payload: {
-        calls: BatchAtomsRequest[]
-        newCIDs: string[]
-        existingCIDs: string[]
-        filteredData: PinDataResult[]
+        calls: BatchTriplesRequest[]
+        newTriples: Triple[]
+        existingTriples: Triple[]
       }
     }
   | { type: 'SET_TX_HASH'; payload: string }
   | { type: 'SET_STEP'; payload: State['step'] }
   | { type: 'SET_SELECTED_ROWS'; payload: number[] }
-  | { type: 'SET_CSV_DATA'; payload: string[][] }
-  | {
-      type: 'SET_TX_COMPLETE'
-      txHash?: string
-    }
+  | { type: 'SET_TX_COMPLETE'; txHash?: string }
   | { type: 'SET_ERROR'; error: string }
   | { type: 'RESET' }
   | { type: 'FORCE_UPDATE' }
   | { type: 'SET_SELECTED_TYPE'; payload: AtomDataTypeKey }
-
 const initialState: State = {
   requestHash: '',
   selectedAtoms: [],
   selectedRows: [],
-  csvData: [],
+  tag: {} as WithContext<Thing>,
   calls: [],
+  newTriples: [],
+  existingTriples: [],
   txHash: '',
   step: 'idle',
-  setNewAtoms: [],
-  error: '',
-  newCIDs: [],
-  existingCIDs: [],
-  filteredData: [],
   selectedType: 'CSV',
+  error: '',
 }
 
 function reducer(state: State, action: Action): State {
@@ -88,13 +82,14 @@ function reducer(state: State, action: Action): State {
       return { ...state, requestHash: action.payload }
     case 'SET_SELECTED_ATOMS':
       return { ...state, selectedAtoms: action.payload }
+    case 'SET_TAG':
+      return { ...state, tag: action.payload }
     case 'SET_CALLS':
       return {
         ...state,
         calls: action.payload.calls,
-        newCIDs: action.payload.newCIDs,
-        existingCIDs: action.payload.existingCIDs,
-        filteredData: action.payload.filteredData,
+        newTriples: action.payload.newTriples,
+        existingTriples: action.payload.existingTriples,
       }
     case 'SET_TX_HASH':
       return { ...state, txHash: action.payload }
@@ -102,8 +97,6 @@ function reducer(state: State, action: Action): State {
       return { ...state, step: action.payload }
     case 'SET_SELECTED_ROWS':
       return { ...state, selectedRows: action.payload }
-    case 'SET_CSV_DATA':
-      return { ...state, csvData: action.payload }
     case 'SET_ERROR':
       return { ...state, step: 'error', error: action.error }
     case 'SET_TX_COMPLETE':
@@ -112,57 +105,73 @@ function reducer(state: State, action: Action): State {
         step: 'complete',
         txHash: action.txHash ?? '',
       }
+    case 'SET_SELECTED_TYPE':
+      return { ...state, selectedType: action.payload }
     case 'RESET':
       return { ...initialState }
     case 'FORCE_UPDATE':
       return { ...state }
-    case 'SET_SELECTED_TYPE':
-      return { ...state, selectedType: action.payload }
     default:
       return state
   }
 }
 
-type InitiateActionResponse = {
+type InitiateTagResponse = {
   success: boolean
   requestHash: string
   selectedRows: number[]
   selectedAtoms: WithContext<Thing>[]
-  csvData: string[][]
-  selectedType: AtomDataTypeKey
+  tag: WithContext<Thing>
   error?: string
 }
 
-type PublishAtomsResponse = {
+type PublishTriplesResponse = {
   success: boolean
-  calls: BatchAtomsRequest[]
-  newCIDs: string[]
-  existingCIDs: string[]
-  filteredData: PinDataResult[]
+  calls: BatchTriplesRequest[]
+  newTriples: Triple[]
+  existingTriples: Triple[]
   error?: string
 }
 
-export const BatchCreateContext = createContext<{
+export const BatchCreateTripleContext = createContext<{
   state: typeof initialState
   dispatch: React.Dispatch<Action>
 }>({ state: initialState, dispatch: () => null })
 
-export function useBatchCreateAtom(onSuccess?: () => void) {
+export function useBatchCreateTriple() {
   const [state, dispatch] = useReducer(reducer, initialState)
   const [isProcessing, setIsProcessing] = useState(false)
-  const initiateFetcher = useFetcher({ key: 'initiate-batch' })
-  const publishFetcher = useFetcher({ key: 'publish-atoms' })
-  const logTxFetcher = useFetcher({ key: 'log-tx-hash-and-verify-atoms' })
+  const initiateFetcher = useFetcher({ key: 'initiate-tag' })
+  const publishFetcher = useFetcher({ key: 'publish-triples' })
+  const logTxFetcher = useFetcher({ key: 'log-tx-hash-and-verify-triples' })
 
   const { smartWalletClient, publicClient, address, isSmartWalletUser, ready } =
     useUserClient()
 
   const { sendTransaction } = useSendTransaction()
 
-  const initiateBatchRequest = useCallback(
+  const resetState = useCallback(() => {
+    // Reset fetcher states
+    initiateFetcher.submit({}, { method: 'get' })
+    publishFetcher.submit({}, { method: 'get' })
+    logTxFetcher.submit({}, { method: 'get' })
+
+    setIsProcessing(false)
+    dispatch({ type: 'RESET' })
+    dispatch({ type: 'FORCE_UPDATE' })
+  }, [initiateFetcher, publishFetcher, logTxFetcher])
+
+  const handleClose = useCallback(() => {
+    if (state.step === 'error' || state.step === 'complete') {
+      resetState()
+    }
+  }, [state.step, resetState])
+
+  const initiateTagRequest = useCallback(
     (
       selectedRows: number[],
-      csvData: string[][],
+      selectedAtoms: WithContext<Thing>[] | string[],
+      tag: WithContext<Thing>,
       selectedType: AtomDataTypeKey,
     ) => {
       if (isProcessing) {
@@ -172,18 +181,17 @@ export function useBatchCreateAtom(onSuccess?: () => void) {
         console.error('Invalid or empty selectedRows')
         return
       }
-      if (!Array.isArray(csvData) || csvData.length === 0) {
-        console.error('Invalid or empty csvData')
-        return
-      }
 
       setIsProcessing(true)
       dispatch({ type: 'SET_STEP', payload: 'initiating' })
+      dispatch({ type: 'SET_TAG', payload: tag })
+      dispatch({ type: 'SET_SELECTED_TYPE', payload: selectedType })
 
       const formData = new FormData()
-      formData.append('action', 'initiateBatchAtomRequest')
+      formData.append('action', 'initiateBatchTripleRequest')
       formData.append('selectedRows', JSON.stringify(selectedRows))
-      formData.append('csvData', JSON.stringify(csvData))
+      formData.append('selectedAtoms', JSON.stringify(selectedAtoms))
+      formData.append('tag', JSON.stringify(tag))
       formData.append('selectedType', selectedType)
 
       initiateFetcher.submit(formData, { method: 'post' })
@@ -191,17 +199,17 @@ export function useBatchCreateAtom(onSuccess?: () => void) {
     [initiateFetcher, isProcessing],
   )
 
-  const publishAtoms = useCallback(() => {
+  const publishTriples = useCallback(() => {
     if (!state.requestHash || isProcessing || publishFetcher.state !== 'idle') {
       return
     }
-
     setIsProcessing(true)
 
     const formData = new FormData()
-    formData.append('action', 'publishAtoms')
+    formData.append('action', 'publishTriples')
     formData.append('requestHash', state.requestHash)
     formData.append('selectedAtoms', JSON.stringify(state.selectedAtoms))
+    formData.append('tag', JSON.stringify(state.tag))
     formData.append('selectedType', state.selectedType)
 
     publishFetcher.submit(formData, { method: 'post' })
@@ -209,6 +217,7 @@ export function useBatchCreateAtom(onSuccess?: () => void) {
     publishFetcher,
     state.requestHash,
     state.selectedAtoms,
+    state.tag,
     state.selectedType,
     isProcessing,
   ])
@@ -225,17 +234,7 @@ export function useBatchCreateAtom(onSuccess?: () => void) {
     try {
       let txHash
       if (isSmartWalletUser) {
-        // Bundling isn't working anymore for some reason - something weird is going on with Privy
         logger('[start] smart wallet sending batch tx')
-        console.log('account: ', smartWalletClient.account)
-        console.log(
-          'calls mapped: ',
-          state.calls.map((call) => ({
-            to: call.to as `0x${string}`,
-            data: call.data as `0x${string}`,
-            value: BigInt(call.value),
-          })),
-        )
         txHash = await smartWalletClient.sendTransaction({
           account: smartWalletClient.account,
           calls: state.calls.map((call) => ({
@@ -247,13 +246,12 @@ export function useBatchCreateAtom(onSuccess?: () => void) {
         logger('[end] smart wallet batch txHash', txHash)
       } else {
         logger('isSmartWalletUser', isSmartWalletUser)
-        logger('[start] non-smart wallet atom tx calls', state.calls)
+        logger('[start] non-smart wallet triple tx calls', state.calls)
 
         const confirmedHashes: `0x${string}`[] = []
 
         for (const tx of state.calls) {
           await new Promise<void>((resolve, reject) => {
-            console.log('sending transaction: ', tx)
             sendTransaction(
               {
                 to: tx.to as `0x${string}`,
@@ -262,7 +260,6 @@ export function useBatchCreateAtom(onSuccess?: () => void) {
               },
               {
                 onSuccess: async (hash) => {
-                  console.log('transaction sent: ', hash)
                   try {
                     const receipt =
                       await publicClient?.waitForTransactionReceipt({ hash })
@@ -285,12 +282,6 @@ export function useBatchCreateAtom(onSuccess?: () => void) {
           })
         }
         // Use the last transaction hash as the overall txHash
-        console.log('confirmedHashes: ', confirmedHashes)
-        console.log('confirmedHashes length: ', confirmedHashes.length)
-        console.log(
-          'confirmedHashes last: ',
-          confirmedHashes[confirmedHashes.length - 1],
-        )
         txHash = confirmedHashes[confirmedHashes.length - 1]
       }
 
@@ -310,7 +301,6 @@ export function useBatchCreateAtom(onSuccess?: () => void) {
         type: 'SET_ERROR',
         error: errorMessage,
       })
-      dispatch({ type: 'SET_STEP', payload: 'error' })
       toast.error(errorMessage)
     } finally {
       setIsProcessing(false)
@@ -333,51 +323,28 @@ export function useBatchCreateAtom(onSuccess?: () => void) {
     dispatch({ type: 'SET_STEP', payload: 'logging' })
 
     const formData = new FormData()
-    formData.append('action', 'logTxHashAndVerifyAtoms')
+    formData.append('action', 'logTxHashAndVerifyTriples')
     formData.append('txHash', state.txHash)
     formData.append('requestHash', state.requestHash)
-    formData.append('filteredCIDs', JSON.stringify(state.newCIDs))
-    formData.append('filteredData', JSON.stringify(state.filteredData))
+    formData.append('newTriples', JSON.stringify(state.newTriples))
+    formData.append('existingTriples', JSON.stringify(state.existingTriples))
     formData.append(
       'msgSender',
       isSmartWalletUser ? smartWalletClient?.account.address : address,
     )
-    formData.append('oldAtomCIDs', JSON.stringify(state.existingCIDs))
 
     logTxFetcher.submit(formData, { method: 'post' })
   }, [
     logTxFetcher,
     state.txHash,
     state.requestHash,
-    state.newCIDs,
-    state.filteredData,
-    state.existingCIDs,
+    state.newTriples,
+    state.existingTriples,
     isSmartWalletUser,
     smartWalletClient,
     address,
     isProcessing,
   ])
-
-  const resetState = useCallback(() => {
-    // Reset fetcher states
-    initiateFetcher.submit({}, { method: 'get' })
-    publishFetcher.submit({}, { method: 'get' })
-    logTxFetcher.submit({}, { method: 'get' })
-
-    setIsProcessing(false)
-
-    // Force context update
-    dispatch({ type: 'RESET' })
-
-    // Force rerender of context consumers
-    dispatch({ type: 'FORCE_UPDATE' })
-  }, [initiateFetcher, publishFetcher, logTxFetcher])
-
-  const handleClose = useCallback(() => {
-    if (state.step === 'error' || state.step === 'complete') {
-      resetState()
-    }
-  }, [state.step, resetState])
 
   useEffect(() => {
     if (
@@ -385,17 +352,16 @@ export function useBatchCreateAtom(onSuccess?: () => void) {
       initiateFetcher.data &&
       state.step === 'initiating'
     ) {
-      const data = initiateFetcher.data as InitiateActionResponse
-      if (data.success && data.requestHash) {
+      const data = initiateFetcher.data as InitiateTagResponse
+
+      if (data.success) {
         dispatch({ type: 'SET_REQUEST_HASH', payload: data.requestHash })
         dispatch({ type: 'SET_SELECTED_ATOMS', payload: data.selectedAtoms })
-        dispatch({ type: 'SET_SELECTED_ROWS', payload: data.selectedRows })
-        dispatch({ type: 'SET_CSV_DATA', payload: data.csvData })
-        dispatch({ type: 'SET_SELECTED_TYPE', payload: data.selectedType })
+        dispatch({ type: 'SET_TAG', payload: data.tag })
         dispatch({ type: 'SET_STEP', payload: 'publishing' })
       } else {
-        console.error('Failed to initiate batch request:', data.error)
-        toast.error('Failed to initiate batch request. Please try again.', {
+        console.error('Failed to initiate tag request:', data.error)
+        toast.error('Failed to initiate tag request. Please try again.', {
           duration: 5000,
         })
         dispatch({ type: 'SET_STEP', payload: 'idle' })
@@ -410,21 +376,20 @@ export function useBatchCreateAtom(onSuccess?: () => void) {
       publishFetcher.data &&
       state.step === 'publishing'
     ) {
-      const data = publishFetcher.data as PublishAtomsResponse
+      const data = publishFetcher.data as PublishTriplesResponse
       if (data.success && data.calls) {
         dispatch({
           type: 'SET_CALLS',
           payload: {
             calls: data.calls,
-            newCIDs: data.newCIDs || [],
-            existingCIDs: data.existingCIDs || [],
-            filteredData: data.filteredData || [],
+            newTriples: data.newTriples || [],
+            existingTriples: data.existingTriples || [],
           },
         })
         dispatch({ type: 'SET_STEP', payload: 'sending' })
       } else {
-        console.error('Failed to publish atoms:', data.error)
-        toast.error('Failed to publish atoms. Please try again.', {
+        console.error('Failed to publish triples:', data.error)
+        toast.error('Failed to publish triples. Please try again.', {
           duration: 5000,
         })
         dispatch({ type: 'SET_STEP', payload: 'idle' })
@@ -446,24 +411,27 @@ export function useBatchCreateAtom(onSuccess?: () => void) {
       logTxFetcher.data &&
       state.step === 'logging'
     ) {
-      const data = logTxFetcher.data as LogTxActionData
+      const data = logTxFetcher.data as LogAndVerifyTriplesResponse & {
+        success: boolean
+        error?: string
+      }
 
       if (data.success) {
-        toast.success('Atom(s) created successfully', {
+        toast.success('Triple(s) created successfully', {
           duration: 5000,
         })
-        onSuccess?.()
       } else {
-        console.error('Failed to create atom(s):', data.error)
-        toast.error('Failed to create atom(s). Please try again.', {
+        console.error('Failed to create triple(s):', data.error)
+        toast.error('Failed to create triple(s). Please try again.', {
           duration: 5000,
         })
       }
       // Reset state in either case
       resetState()
     }
-  }, [logTxFetcher.state, logTxFetcher.data, state.step, resetState, onSuccess])
+  }, [logTxFetcher.state, logTxFetcher.data, state.step, resetState])
 
+  // Effect to handle async operations based on state
   useEffect(() => {
     const handleAsyncOperations = async () => {
       if (isProcessing) {
@@ -490,7 +458,7 @@ export function useBatchCreateAtom(onSuccess?: () => void) {
               !publishFetcher.data &&
               publishFetcher.state === 'idle'
             ) {
-              publishAtoms()
+              publishTriples()
             }
             break
         }
@@ -509,7 +477,7 @@ export function useBatchCreateAtom(onSuccess?: () => void) {
     state.requestHash,
     state.calls,
     state.txHash,
-    publishAtoms,
+    publishTriples,
     sendBatchTx,
     logTxHash,
     isProcessing,
@@ -517,17 +485,12 @@ export function useBatchCreateAtom(onSuccess?: () => void) {
     publishFetcher.data,
   ])
 
-  const setSelectedType = useCallback((type: AtomDataTypeKey) => {
-    dispatch({ type: 'SET_SELECTED_TYPE', payload: type })
-  }, [])
-
   return {
     ...state,
-    setSelectedType,
     resetState,
     handleClose,
-    initiateBatchRequest,
-    publishAtoms,
+    initiateTagRequest,
+    publishTriples,
     sendBatchTx,
     logTxHash,
     isLoading:
