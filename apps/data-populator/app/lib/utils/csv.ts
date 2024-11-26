@@ -45,7 +45,7 @@ function parseCsvToThings(text: string): Thing[] {
     for (let j = 0; j < headers.length; j++) {
       const key = headers[j]
       const value = row[j]
-      ;(thing as any)[key] = value
+        ; (thing as any)[key] = value
     }
     things.push(thing)
   }
@@ -71,7 +71,7 @@ function thingsToStringArrays(things: Thing[]): string[][] {
   return rows
 }
 
-function parseCsvText(text: string): string[][] {
+export function parseCsvText(text: string): string[][] {
   const rows: string[][] = []
   let currentRow: string[] = []
   let currentCell = ''
@@ -98,6 +98,7 @@ function parseCsvText(text: string): string[][] {
       currentRow.push(currentCell)
       currentCell = ''
     } else if (c === '\r') {
+      console.log('Found /r')
       // Ignore \r
     } else if (c === '\n') {
       currentRow.push(currentCell)

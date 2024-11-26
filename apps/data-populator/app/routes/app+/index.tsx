@@ -55,7 +55,7 @@ import {
   detectAtomDataType,
   type AtomDataTypeKey,
 } from '@lib/utils/atom-data-types'
-import { generateCsvContent, parseCsv } from '@lib/utils/csv'
+import { generateCsvContent, parseCsv, parseCsvText } from '@lib/utils/csv'
 import { loadThumbnail, loadThumbnails } from '@lib/utils/image'
 import logger from '@lib/utils/logger'
 import {
@@ -590,7 +590,8 @@ export default function CSVEditor() {
   // Update loadCSV to take a File directly
   const loadCSV = async (file: File) => {
     const text = await file.text()
-    const headers = text.split('\n')[0].split(',')
+    const data = parseCsvText(text)
+    const headers = data[0]
     const detectedType = detectAtomDataType(headers)
     const rows = await parseCsv(file, detectedType)
 
