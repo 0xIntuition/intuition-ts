@@ -196,8 +196,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
       predicateId: getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId,
     })()
 
-    logger('Account Tags Result:', accountTagsResult)
-
     await queryClient.prefetchQuery({
       queryKey: [
         'get-tags',
@@ -219,8 +217,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
       objectId: accountResult.account.atomId,
       address: queryAddress,
     })()
-
-    logger('Account Connections Count Result:', accountConnectionsCountResult)
 
     await queryClient.prefetchQuery({
       queryKey: [
@@ -351,12 +347,6 @@ export default function Profile() {
       ],
     },
   )
-
-  logger('Account Result:', accountResult)
-  logger('Account Tags Result:', accountTagsResult)
-  logger('Account Connections Count Result:', accountConnectionsCountResult)
-  logger('tags', accountTagsResult && accountTagsResult?.triples)
-  logger('Vault Details:', vaultDetails)
 
   const { user_assets, assets_sum } = vaultDetails ? vaultDetails : userIdentity
 
