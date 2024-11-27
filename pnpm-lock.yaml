@@ -564,17 +564,17 @@ importers:
         version: 3.23.8
     devDependencies:
       '@content-collections/cli':
-        specifier: ^0.1.2
-        version: 0.1.6(@content-collections/core@0.6.4(typescript@5.4.5))
+        specifier: ^0.1.6
+        version: 0.1.6(@content-collections/core@0.7.3(typescript@5.4.5))
       '@content-collections/core':
-        specifier: ^0.6.2
-        version: 0.6.4(typescript@5.4.5)
+        specifier: ^0.7.3
+        version: 0.7.3(typescript@5.4.5)
       '@content-collections/mdx':
-        specifier: ^0.1.3
-        version: 0.1.6(@content-collections/core@0.6.4(typescript@5.4.5))(acorn@8.14.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: ^0.2.0
+        version: 0.2.0(@content-collections/core@0.7.3(typescript@5.4.5))(acorn@8.14.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@content-collections/remix-vite':
-        specifier: ^0.1.1
-        version: 0.1.2(@content-collections/core@0.6.4(typescript@5.4.5))(vite@5.4.11(@types/node@20.17.8)(terser@5.36.0))
+        specifier: ^0.1.2
+        version: 0.1.2(@content-collections/core@0.7.3(typescript@5.4.5))(vite@5.4.11(@types/node@20.17.8)(terser@5.36.0))
       '@remix-run/dev':
         specifier: ^2.9.2
         version: 2.15.0(@remix-run/react@2.15.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.4.5))(@remix-run/serve@2.15.0(typescript@5.4.5))(@types/node@20.17.8)(babel-plugin-macros@2.8.0)(bufferutil@4.0.8)(terser@5.36.0)(ts-node@10.9.1(@swc/core@1.3.107(@swc/helpers@0.5.15))(@types/node@20.17.8)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10)(vite@5.4.11(@types/node@20.17.8)(terser@5.36.0))
@@ -1965,6 +1965,11 @@ packages:
     peerDependencies:
       typescript: ^5.0.2
 
+  '@content-collections/core@0.7.3':
+    resolution: {integrity: sha512-eqrQ/59BdorWQFFLF1sGPtIKzsn1OPSomok8e6MevYAaZ2knkhI3ddTQqo8OMrW/zA5H71Pbg0cgxbCN0pOVsg==}
+    peerDependencies:
+      typescript: ^5.0.2
+
   '@content-collections/integrations@0.2.1':
     resolution: {integrity: sha512-AyEcS2MmcOXSYt6vNmJsAiu6EBYjtNiwYGUVUmpG3llm8Gt8uiNrhIhlHyv3cuk+N8KJ2PWemLcMqtQJ+sW3bA==}
     peerDependencies:
@@ -1976,6 +1981,13 @@ packages:
       '@content-collections/core': 0.x
       react: ^18.0.0
       react-dom: ^18.2.0
+
+  '@content-collections/mdx@0.2.0':
+    resolution: {integrity: sha512-Up42WaoZN+iYLO7rI59hy4ivw+Q7xXoezmoyjFFQjE0P9Mi3p5jGDdpsuXYmUiQOMZubPLClZHAbntk/27PxSQ==}
+    peerDependencies:
+      '@content-collections/core': 0.x
+      react: '>= 18'
+      react-dom: '>= 18'
 
   '@content-collections/remix-vite@0.1.2':
     resolution: {integrity: sha512-s/rVs7EffrmvQBDP/mG0vO+Ye9OZZ0RL9BCJUA5xefigxMCK59QJhxQ/vsNHWjDDQ0wWlWCH406zMoi7yDIFcg==}
@@ -9067,6 +9079,14 @@ packages:
   fbjs@3.0.5:
     resolution: {integrity: sha512-ztsSx77JBtkuMrEypfhgc3cI0+0h+svqeie7xHbh1k/IKdcydnvadp/mUaGgjAOXQmQSxsqgaRhS3q9fy+1kxg==}
 
+  fdir@6.4.2:
+    resolution: {integrity: sha512-KnhMXsKSPZlAhp7+IjUkRZKPb4fUyccpDrdFXbi4QL1qkmFh9kVY09Yox+n4MaOb3lHZ1Tv829C3oaaXoMYPDQ==}
+    peerDependencies:
+      picomatch: ^3 || ^4
+    peerDependenciesMeta:
+      picomatch:
+        optional: true
+
   fetch-retry@5.0.6:
     resolution: {integrity: sha512-3yurQZ2hD9VISAhJJP9bpYFNQrHHBXE2JxxjY5aLEcDi46RmAzJE2OC9FAde0yis5ElW0jTTzs0zfg/Cca4XqQ==}
 
@@ -11683,6 +11703,10 @@ packages:
     resolution: {integrity: sha512-/Eaoq+QyLSiXQ4lyYV23f14mZRQcXnxfHrN0vCai+ak9G0pp9iEQukIIZq5NccEvwRB8PUnZT0KsOoDCINS1qQ==}
     engines: {node: '>=18'}
 
+  p-limit@6.1.0:
+    resolution: {integrity: sha512-H0jc0q1vOzlEk0TqAKXKZxdl7kX3OFUzCnNVUnq5Pc3DGo0kpeaMuPqxQn235HibwBEb0/pm9dgKTjXy66fBkg==}
+    engines: {node: '>=18'}
+
   p-locate@3.0.0:
     resolution: {integrity: sha512-x+12w/To+4GFfgJhBEpiDcLozRJGegY+Ei7/z0tSLkMmxGZNybVMSfWj9aJn8Z5Fc7dBUNJOOVgPv2H7IwulSQ==}
     engines: {node: '>=6'}
@@ -13482,6 +13506,10 @@ packages:
 
   tinycolor2@1.6.0:
     resolution: {integrity: sha512-XPaBkWQJdsf3pLKJV9p4qN/S+fm2Oj8AIPo1BTUhg5oxkvm9+SVEGFdhyOz7tTdUTfvxMiAs4sp6/eZO2Ew+pw==}
+
+  tinyglobby@0.2.10:
+    resolution: {integrity: sha512-Zc+8eJlFMvgatPZTl6A9L/yht8QqdmUNtURHaKZLmKBE12hNPSrqNkUp2cs3M/UKmNVVAMFQYSjYIVHDjW5zew==}
+    engines: {node: '>=12.0.0'}
 
   tinypool@0.8.4:
     resolution: {integrity: sha512-i11VH5gS6IFeLY3gMBQ00/MmLncVP7JLXOw1vlgkytLmJK7QnEr7NXf0LBdxfmNPAeyetukOk0bOYrJrFGjYJQ==}
@@ -15831,6 +15859,15 @@ snapshots:
       '@content-collections/core': 0.6.4(typescript@5.4.5)
       '@content-collections/integrations': 0.2.1(@content-collections/core@0.6.4(typescript@5.4.5))
 
+  '@content-collections/cli@0.1.6(@content-collections/core@0.7.3(typescript@5.4.5))':
+    dependencies:
+      '@clerc/core': 0.44.0
+      '@clerc/plugin-completions': 0.44.0(@clerc/core@0.44.0)
+      '@clerc/plugin-help': 0.44.0(@clerc/core@0.44.0)
+      '@clerc/plugin-version': 0.44.0(@clerc/core@0.44.0)
+      '@content-collections/core': 0.7.3(typescript@5.4.5)
+      '@content-collections/integrations': 0.2.1(@content-collections/core@0.7.3(typescript@5.4.5))
+
   '@content-collections/core@0.6.4(typescript@5.4.5)':
     dependencies:
       '@parcel/watcher': 2.5.0
@@ -15845,9 +15882,28 @@ snapshots:
       yaml: 2.6.1
       zod: 3.23.8
 
+  '@content-collections/core@0.7.3(typescript@5.4.5)':
+    dependencies:
+      '@parcel/watcher': 2.5.0
+      camelcase: 8.0.0
+      esbuild: 0.21.5
+      gray-matter: 4.0.3
+      p-limit: 6.1.0
+      picomatch: 4.0.2
+      pluralize: 8.0.0
+      serialize-javascript: 6.0.2
+      tinyglobby: 0.2.10
+      typescript: 5.4.5
+      yaml: 2.6.1
+      zod: 3.23.8
+
   '@content-collections/integrations@0.2.1(@content-collections/core@0.6.4(typescript@5.4.5))':
     dependencies:
       '@content-collections/core': 0.6.4(typescript@5.4.5)
+
+  '@content-collections/integrations@0.2.1(@content-collections/core@0.7.3(typescript@5.4.5))':
+    dependencies:
+      '@content-collections/core': 0.7.3(typescript@5.4.5)
 
   '@content-collections/mdx@0.1.6(@content-collections/core@0.6.4(typescript@5.4.5))(acorn@8.14.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
@@ -15861,9 +15917,26 @@ snapshots:
       - acorn
       - supports-color
 
+  '@content-collections/mdx@0.2.0(@content-collections/core@0.7.3(typescript@5.4.5))(acorn@8.14.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      '@content-collections/core': 0.7.3(typescript@5.4.5)
+      esbuild: 0.21.5
+      mdx-bundler: 10.0.3(acorn@8.14.0)(esbuild@0.21.5)
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+      unified: 11.0.5
+    transitivePeerDependencies:
+      - acorn
+      - supports-color
+
   '@content-collections/remix-vite@0.1.2(@content-collections/core@0.6.4(typescript@5.4.5))(vite@5.4.11(@types/node@20.17.8)(terser@5.36.0))':
     dependencies:
       '@content-collections/core': 0.6.4(typescript@5.4.5)
+      vite: 5.4.11(@types/node@20.17.8)(terser@5.36.0)
+
+  '@content-collections/remix-vite@0.1.2(@content-collections/core@0.7.3(typescript@5.4.5))(vite@5.4.11(@types/node@20.17.8)(terser@5.36.0))':
+    dependencies:
+      '@content-collections/core': 0.7.3(typescript@5.4.5)
       vite: 5.4.11(@types/node@20.17.8)(terser@5.36.0)
 
   '@cspotcode/source-map-support@0.8.1':
@@ -22201,7 +22274,7 @@ snapshots:
       '@babel/plugin-syntax-typescript': 7.25.9(@babel/core@7.26.0)
       '@vanilla-extract/babel-plugin-debug-ids': 1.1.0
       '@vanilla-extract/css': 1.16.1(babel-plugin-macros@2.8.0)
-      esbuild: 0.17.6
+      esbuild: 0.19.12
       eval: 0.1.8
       find-up: 5.0.0
       javascript-stringify: 2.1.0
@@ -22228,7 +22301,7 @@ snapshots:
       '@babel/plugin-syntax-typescript': 7.25.9(@babel/core@7.26.0)
       '@vanilla-extract/babel-plugin-debug-ids': 1.1.0
       '@vanilla-extract/css': 1.16.1(babel-plugin-macros@2.8.0)
-      esbuild: 0.17.6
+      esbuild: 0.19.12
       eval: 0.1.8
       find-up: 5.0.0
       javascript-stringify: 2.1.0
@@ -22504,7 +22577,7 @@ snapshots:
       pathe: 1.1.2
       picocolors: 1.1.1
       sirv: 2.0.4
-      vitest: 1.6.0(@types/node@20.17.8)(@vitest/ui@1.6.0)(jsdom@22.1.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(terser@5.36.0)
+      vitest: 1.6.0(@types/node@18.16.9)(@vitest/ui@1.6.0)(jsdom@22.1.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(terser@5.36.0)
 
   '@vitest/utils@1.6.0':
     dependencies:
@@ -26091,6 +26164,10 @@ snapshots:
       ua-parser-js: 1.0.39
     transitivePeerDependencies:
       - encoding
+
+  fdir@6.4.2(picomatch@4.0.2):
+    optionalDependencies:
+      picomatch: 4.0.2
 
   fetch-retry@5.0.6: {}
 
@@ -29691,6 +29768,10 @@ snapshots:
     dependencies:
       yocto-queue: 1.1.1
 
+  p-limit@6.1.0:
+    dependencies:
+      yocto-queue: 1.1.1
+
   p-locate@3.0.0:
     dependencies:
       p-limit: 2.3.0
@@ -31713,6 +31794,11 @@ snapshots:
   tinybench@2.9.0: {}
 
   tinycolor2@1.6.0: {}
+
+  tinyglobby@0.2.10:
+    dependencies:
+      fdir: 6.4.2(picomatch@4.0.2)
+      picomatch: 4.0.2
 
   tinypool@0.8.4: {}
 
