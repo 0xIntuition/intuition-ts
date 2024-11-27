@@ -40,6 +40,9 @@ query GetEvents(
     triple {
       id
       label
+      creator {
+        ...AccountMetadata
+      }
       subject {
         data
         id
@@ -101,6 +104,33 @@ query GetEvents(
             image
           }
         }
+      }
+    }
+    deposit {
+      senderId
+      sender {
+        id
+      }
+      sharesForReceiver
+      senderAssetsAfterTotalFees
+      vault {
+        totalShares
+        positionCount
+        positions(where: { account: { id: { _in: $addresses } } }) {
+          accountId
+          shares
+          account {
+            id
+            label
+            image
+          }
+        }
+      }
+    }
+    redemption {
+      senderId
+      sender {
+        id
       }
     }
   }

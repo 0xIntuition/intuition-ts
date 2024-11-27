@@ -145,14 +145,18 @@ function ActivityItemNew({
     ? new Date(parseInt(activity.blockTimestamp.toString()) * 1000)
     : new Date()
 
-  const creator = activity.atom?.creator
+  // Get creator from either atom or triple
+  const creator = activity.atom?.creator || activity.triple?.creator
   logger('creator', creator)
-  const creatorAddress = activity?.atom?.creator?.id || '0x'
+  const creatorAddress =
+    activity?.atom?.creator?.id || activity?.triple?.creator?.id || '0x'
   const atomId = activity.atom?.id || ''
 
   function formatTransactionHash(txHash: string): string {
     return `0x${txHash.replace('\\x', '')}`
   }
+
+  logger('format balance test', formatBalance('3726450001000000', 18))
 
   return (
     <div
