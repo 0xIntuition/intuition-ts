@@ -72,21 +72,39 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   const queryClient = new QueryClient()
 
+  const accountResult = await fetcher<
+    GetAccountQuery,
+    GetAccountQueryVariables
+  >(GetAccountDocument, { address: queryAddress })()
+
+  if (!accountResult) {
+    throw new Error('No account data found for address')
+  }
+
+  if (!accountResult.account?.atomId) {
+    throw new Error('No atom ID found for account')
+  }
+
+  await queryClient.prefetchQuery({
+    queryKey: ['get-account', { address: queryAddress }],
+    queryFn: () => accountResult,
+  })
+
   const triplesCountWhere = {
     _or: [
       {
         subjectId: {
-          _eq: 14,
+          _eq: accountResult.account?.atomId,
         },
       },
       {
         predicateId: {
-          _eq: 14,
+          _eq: accountResult.account?.atomId,
         },
       },
       {
         objectId: {
-          _eq: 14,
+          _eq: accountResult.account?.atomId,
         },
       },
     ],
@@ -94,7 +112,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   const positionsCountWhere = {
     vaultId: {
-      _eq: 14,
+      _eq: accountResult.account?.atomId,
     },
   }
 
@@ -147,24 +165,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
       },
     },
   }
-
-  const accountResult = await fetcher<
-    GetAccountQuery,
-    GetAccountQueryVariables
-  >(GetAccountDocument, { address: queryAddress })()
-
-  if (!accountResult) {
-    throw new Error('No account data found for address')
-  }
-
-  if (!accountResult.account?.atomId) {
-    throw new Error('No atom ID found for account')
-  }
-
-  await queryClient.prefetchQuery({
-    queryKey: ['get-account', { address: queryAddress }],
-    queryFn: () => accountResult,
-  })
 
   await queryClient.prefetchQuery({
     queryKey: ['get-triples-count', { where: triplesCountWhere }],
