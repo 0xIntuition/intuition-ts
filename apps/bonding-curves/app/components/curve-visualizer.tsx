@@ -217,7 +217,6 @@ export function CurveVisualizer() {
   // Generate curve points when contract is deployed
   const generateCurvePoints = useCallback(
     async (address: string, abi: any[]) => {
-      console.log('generating curve points for', address)
       const points: Point[] = []
       const numPoints = 100
       const maxValueWei = parseEther(maxValue.toString())
@@ -354,18 +353,25 @@ export function CurveVisualizer() {
         publicClient,
       )
 
-      // Re-generate curve points
+      // Force a small delay to ensure the storage update has propagated
+      await new Promise((resolve) => setTimeout(resolve, 100))
+
+      // Re-generate curve points with fresh data
+      console.log('Regenerating curve points...')
       const points = await generateCurvePoints(
         selectedContract.address,
         selectedContract.abi,
       )
 
-      // Update the curve
-      setDeployedContracts((prev) =>
-        prev.map((c) =>
-          c.address === selectedContract.address ? { ...c, points } : c,
-        ),
-      )
+      // Update the curve with new points and trigger re-render
+      setDeployedContracts((prev) => {
+        const updated = prev.map((c) =>
+          c.address === selectedContract.address
+            ? { ...c, points: [...points] } // Create new array to force re-render
+            : c,
+        )
+        return updated
+      })
 
       // Update the layout
       const newLayout = await getContractLayout(

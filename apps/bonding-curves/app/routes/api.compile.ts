@@ -20,6 +20,9 @@ export const action: ActionFunction = async ({ request }) => {
     }
 
     try {
+      // Remove immutable keywords from contract code
+      content = content.replace(/\bimmutable\b/g, '')
+
       // Save to container and compile
       const escapedContent = content
         .replace(/"/g, '\\"')
