@@ -22,16 +22,11 @@ import {
   fetcher,
   GetListItemsDocument,
   GetListItemsQuery,
-  GetListItemsQuery,
   GetListItemsQueryVariables,
-  GetTagsDocument,
   GetTripleDocument,
   GetTripleQuery,
   GetTripleQueryVariables,
-  GetTriplesDocument,
-  GetTriplesQuery,
-  GetTriplesQueryVariables,
-  useGetEventsQuery,
+  useGetListItemsQuery,
   useGetTripleQuery,
 } from '@0xintuition/graphql'
 
@@ -42,6 +37,7 @@ import RemixLink from '@components/remix-link'
 import ShareCta from '@components/share-cta'
 import ShareModal from '@components/share-modal'
 import StakeModal from '@components/stake/stake-modal'
+import { useGetVaultDetails } from '@lib/hooks/useGetVaultDetails'
 import { useGoBack } from '@lib/hooks/useGoBack'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getClaim } from '@lib/services/claims'
@@ -66,6 +62,7 @@ import { dehydrate, QueryClient } from '@tanstack/react-query'
 import {
   BLOCK_EXPLORER_URL,
   CURRENT_ENV,
+  MULTIVAULT_CONTRACT_ADDRESS,
   NO_WALLET_ERROR,
   PATHS,
 } from 'app/consts'
@@ -107,48 +104,39 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
   await queryClient.prefetchQuery({
     queryKey: ['get-triple', { id: params.id }],
-    queryFn:() => tripleResult
+    queryFn: () => tripleResult,
   })
 
-  const tripleListResult = await queryClient.prefetchQuery({
-    queryKey: ['get-triple-list', { id: params.id }],
-    queryFn: () =>
-      fetcher<GetListItemsQuery, GetListItemsQueryVariables>(
-        GetListItemsDocument,
-        {
-          predicateId: getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId,
-          objectId: tripleResult.triple.id,
-        },
-      ),
-  })
-
-  let vaultDetails: VaultDetailsType | null = null
-
-  if (claim && claim.vault_id) {
-    try {
-      vaultDetails = await getVaultDetails(
-        claim.contract,
-        claim.vault_id,
-        wallet as `0x${string}`,
-        claim.counter_vault_id,
-      )
-    } catch (error) {
-      console.error('Failed to fetch vaultDetails', error)
-      vaultDetails = null
-    }
-  }
+  // if (tripleResult?.triple?.id) {
+  //   await queryClient.prefetchQuery({
+  //     queryKey: [
+  //       'get-triple-list',
+  //       {
+  //         predicateId: getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId,
+  //         objectId: id,
+  //       },
+  //     ],
+  //     queryFn: () =>
+  //       fetcher<GetListItemsQuery, GetListItemsQueryVariables>(
+  //         GetListItemsDocument,
+  //         {
+  //           predicateId: getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId,
+  //           objectId: id,
+  //         },
+  //       ),
+  //   })
+  // }
 
   return json({
     wallet,
     claim,
     sortBy,
     direction,
-    vaultDetails,
     dehydratedState: dehydrate(queryClient),
     initialParams: {
       id,
       predicateId: getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId,
-      subjectId: id,
+      objectId: tripleResult?.triple?.id,
     },
   })
 }
@@ -156,20 +144,62 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 export interface ClaimDetailsLoaderData {
   wallet: string
   claim: ClaimPresenter
-  vaultDetails: VaultDetailsType
 }
 
 export default function ClaimDetails() {
-  const { wallet, claim, vaultDetails, initialParams } = useLiveLoader<{
+  const { wallet, claim, initialParams } = useLiveLoader<{
     wallet: string
     claim: ClaimPresenter
     vaultDetails: VaultDetailsType
     initialParams: {
       id: string
+      predicateId: string
+      objectId: string
     }
   }>(['create', 'attest'])
   const [stakeModalActive, setStakeModalActive] = useAtom(stakeModalAtom)
   const [shareModalActive, setShareModalActive] = useAtom(shareModalAtom)
+
+  const {
+    data: tripleData,
+    isLoading,
+    isError,
+    error,
+  } = useGetTripleQuery(
+    {
+      tripleId: initialParams.id,
+    },
+    {
+      queryKey: [
+        'get-triple',
+        {
+          id: initialParams.id,
+        },
+      ],
+    },
+  )
+
+  logger('tripleData', tripleData)
+
+  const { data: vaultDetails, isLoading: isLoadingVaultDetails } =
+    useGetVaultDetails(
+      MULTIVAULT_CONTRACT_ADDRESS,
+      tripleData?.triple?.vaultId,
+      tripleData?.triple?.counterVaultId,
+      {
+        queryKey: [
+          'get-vault-details',
+          MULTIVAULT_CONTRACT_ADDRESS,
+          tripleData?.triple?.vaultId,
+          tripleData?.triple?.counterVaultId,
+        ],
+        enabled:
+          !!tripleData?.triple?.vaultId && !!tripleData?.triple?.counterVaultId,
+      },
+    )
+
+  logger('Vault Details:', vaultDetails)
+  // const { user_assets, assets_sum } = vaultDetails ? vaultDetails : identity
 
   const direction: 'for' | 'against' =
     (vaultDetails?.user_conviction_against ?? claim.user_conviction_against) ===
@@ -197,26 +227,28 @@ export default function ClaimDetails() {
 
   const handleGoBack = useGoBack({ fallbackRoute: PATHS.EXPLORE_CLAIMS })
 
-  const {
-    data: tripleData,
-    isLoading,
-    isError,
-    error,
-  } = useGetTripleQuery(
-    {
-      tripleId: initialParams.id,
-    },
-    {
-      queryKey: [
-        'get-triple',
-        {
-          id: initialParams.id,
-        },
-      ],
-    },
-  )
+  // const {
+  //   data: tripleListData,
+  //   // isLoading,
+  //   // isError,
+  //   // error,
+  // } = useGetListItemsQuery(
+  //   {
+  //     predicateId: initialParams.predicateId,
+  //     objectId: initialParams.objectId,
+  //   },
+  //   {
+  //     queryKey: [
+  //       'get-triple-list',
+  //       {
+  //         prediateId: initialParams.predicateId,
+  //         objectId: initialParams.id,
+  //       },
+  //     ],
+  //   },
+  // )
 
-  logger('tripleData', tripleData)
+  // logger('tripleListData', tripleListData)
 
   const leftPanel = (
     <div className="flex-col justify-start items-start gap-6 inline-flex w-full">
@@ -267,7 +299,7 @@ export default function ClaimDetails() {
           }}
         />
       </div>
-      {vaultDetails !== null && user_assets !== '0' ? (
+      {!!vaultDetails && !isLoadingVaultDetails && user_assets !== '0' ? (
         <PositionCard
           onButtonClick={() =>
             setStakeModalActive((prevState) => ({
@@ -296,8 +328,8 @@ export default function ClaimDetails() {
                 ? +calculatePercentageOfTvl(
                     user_assets,
                     (
-                      +vaultDetails.assets_sum +
-                      +(vaultDetails.against_assets_sum ?? '0')
+                      +vaultDetails?.assets_sum +
+                      +(vaultDetails?.against_assets_sum ?? '0')
                     ).toString(),
                   )
                 : 0
@@ -315,18 +347,18 @@ export default function ClaimDetails() {
         currency="ETH"
         totalTVL={
           +formatBalance(
-            +vaultDetails.assets_sum +
-              +(vaultDetails.against_assets_sum
-                ? vaultDetails.against_assets_sum
-                : '0'),
+            +(vaultDetails?.assets_sum ?? '0') +
+              +(vaultDetails?.against_assets_sum ?? '0'),
           )
         }
         tvlAgainst={
           +formatBalance(
-            vaultDetails.against_assets_sum ?? claim.against_assets_sum,
+            vaultDetails?.against_assets_sum ?? claim.against_assets_sum,
           )
         }
-        tvlFor={+formatBalance(vaultDetails.assets_sum ?? claim.for_assets_sum)}
+        tvlFor={
+          +formatBalance(vaultDetails?.assets_sum ?? claim.for_assets_sum)
+        }
         numPositionsAgainst={claim.against_num_positions}
         numPositionsFor={claim.for_num_positions}
         onAgainstBtnClick={() =>
@@ -352,11 +384,11 @@ export default function ClaimDetails() {
           }))
         }
         disableForBtn={
-          (vaultDetails.user_conviction_against ??
+          (vaultDetails?.user_conviction_against ??
             claim.user_conviction_against) > '0'
         }
         disableAgainstBtn={
-          (vaultDetails.user_conviction ?? claim.user_conviction_for) > '0'
+          (vaultDetails?.user_conviction ?? claim.user_conviction_for) > '0'
         }
       />
       <DetailInfoCard
