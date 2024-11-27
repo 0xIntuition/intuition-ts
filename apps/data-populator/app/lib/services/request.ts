@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import crypto from 'crypto'
 
-import { getSender } from './evm'
+import { getSender } from './requestSender'
 import { supabase } from './supabase'
 
 const environment = import.meta.env.VITE_DEPLOY_ENV
@@ -68,7 +68,7 @@ export async function createRequest(
  * @param updates - An object containing the fields to update.
  */
 export async function updateRequest(
-  hash: string,
+  hash: string | undefined,
   updates: Partial<
     Omit<
       RequestData,
@@ -125,8 +125,7 @@ export async function getRequest(
 
   if (error || !data) {
     throw new Error(
-      `Request not found or access denied: ${
-        error ? error.message : 'No data returned'
+      `Request not found or access denied: ${error ? error.message : 'No data returned'
       }`,
     )
   }
@@ -144,10 +143,11 @@ export async function getRequest(
 }
 
 export async function getMyRequests(
+  nodeRequest?: Request,
   limit: number = 100,
   offset: number = 0,
 ): Promise<RequestData[]> {
-  const sender = await getSender()
+  const sender = await getSender(nodeRequest)
 
   const { data, error } = await supabase
     .from(requestsTable)

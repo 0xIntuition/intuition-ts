@@ -16,21 +16,33 @@ import {
   TableHeader,
   TableRow,
   Textarea,
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
 } from '@0xintuition/1ui'
 
 import { useBatchCreateAtom } from '@client/useBatchCreateAtom'
+import { useBatchCreateTriple } from '@client/useBatchCreateTriple'
 import { ProgressModal } from '@components/progress-modal'
 import { ProofreadModal } from '@components/proofread-modal'
 import { Progress } from '@components/ui/progress'
 import {
   BatchAtomsRequest,
   createPopulateAtomsRequest,
+  createTagAtomsRequest,
   generateBatchAtomsCalldata,
+  generateTagAtomsCallData,
   logTransactionHashAndVerifyAtoms,
+  logTransactionHashAndVerifyTriples,
   pinAtoms,
   PinDataResult,
 } from '@lib/services/populate'
 import { generateCsvContent, parseCsv } from '@lib/utils/csv'
+import {
+  defaultCSVData,
+  defaultCSVDescriptions,
+  defaultCSVValues,
+} from '@lib/utils/default-data'
 import { loadThumbnail, loadThumbnails } from '@lib/utils/image'
 import logger from '@lib/utils/logger'
 import {
@@ -44,6 +56,7 @@ import {
 import { convertCsvToSchemaObjects } from '@lib/utils/schema'
 import type { SortDirection } from '@lib/utils/sort'
 import { getNextSortDirection, sortData } from '@lib/utils/sort'
+import { getTooltip, TooltipKey } from '@lib/utils/tooltips'
 import { json, type ActionFunctionArgs } from '@remix-run/node'
 import {
   useActionData,
@@ -115,24 +128,62 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         const schemaObjects = convertCsvToSchemaObjects<Thing>(csvData)
         const selectedAtoms = selectedRows.map((index) => schemaObjects[index])
 
-        const requestHash = await createPopulateAtomsRequest(selectedAtoms)
+        const requestHash = await createPopulateAtomsRequest(
+          selectedAtoms,
+          request,
+        )
         logger(`Initiated batch atom request with hash: ${requestHash}`)
         logger(`Selected rows: ${selectedRows}`)
-        return json({ success: true, requestHash, selectedRows, selectedAtoms })
+        return json({
+          success: true,
+          requestHash,
+          selectedRows,
+          selectedAtoms,
+          csvData,
+        })
       }
+
+      case 'initiateBatchTripleRequest': {
+        const selectedRows = JSON.parse(
+          formData.get('selectedRows') as string,
+        ) as number[]
+        const selectedAtoms = JSON.parse(
+          formData.get('selectedAtoms') as string,
+        ) as WithContext<Thing>[]
+        const tag = JSON.parse(
+          formData.get('tag') as string,
+        ) as WithContext<Thing>
+
+        console.log('Initiating tag request from app+/index.tsx')
+
+        const requestHash = await createTagAtomsRequest(
+          selectedAtoms,
+          tag,
+          request,
+        )
+        logger(`Initiated batch triple request with hash: ${requestHash}`)
+        logger(`Selected rows: ${selectedRows}`)
+        return json({
+          success: true,
+          requestHash,
+          selectedRows,
+          selectedAtoms,
+          tag,
+        })
+      }
+
       case 'publishAtoms': {
         const requestHash = formData.get('requestHash') as string
         const selectedAtoms = JSON.parse(
           formData.get('selectedAtoms') as string,
         ) as WithContext<Thing>[]
+        console.log('Pinning atoms from app+/index.tsx')
         const { existingCIDs, newCIDs, filteredData, existingData } =
           await pinAtoms(selectedAtoms, requestHash)
         const { chunks, chunkSize, calls } = await generateBatchAtomsCalldata(
           newCIDs,
           requestHash,
         )
-        // return this on the payload in the same way we're setting the calls
-        // use in the final step for verifying the atoms
         return json({
           success: true,
           calls,
@@ -144,34 +195,77 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           existingData,
         })
       }
+
+      case 'publishTriples': {
+        const requestHash = formData.get('requestHash') as string
+        const selectedAtoms = JSON.parse(
+          formData.get('selectedAtoms') as string,
+        ) as WithContext<Thing>[]
+        const tag = JSON.parse(
+          formData.get('tag') as string,
+        ) as WithContext<Thing>
+        const { calls, chunks, chunkSize } = await generateTagAtomsCallData(
+          selectedAtoms,
+          tag,
+          requestHash,
+        )
+        return json({
+          success: true,
+          calls,
+          chunks,
+          chunkSize,
+        })
+      }
+
       case 'logTxHashAndVerifyAtoms': {
         const txHash = formData.get('txHash') as string
         const requestHash = formData.get('requestHash') as string
         const filteredCIDs = JSON.parse(formData.get('filteredCIDs') as string)
         const filteredData = JSON.parse(formData.get('filteredData') as string)
-        const msgSender = formData.get('msgSender') as `0x${string}`
         const oldAtomCIDs = JSON.parse(formData.get('oldAtomCIDs') as string)
-        logger(
-          `Logging transaction hash: ${txHash} for request hash: ${requestHash}`,
-        )
-        logger('[index] we are now at this step: logTxHash')
         const { newAtomIDs, existingAtomIDs } =
           await logTransactionHashAndVerifyAtoms(
             txHash,
             filteredCIDs,
             filteredData,
-            msgSender,
             oldAtomCIDs,
             requestHash,
+            request,
           )
-        return json({ success: true, newAtomIDs, existingAtomIDs, txHash })
+        return json({ success: true, newAtomIDs, existingAtomIDs })
       }
-      // ... (keep other action cases)
+
+      case 'logTxHashAndVerifyTriples': {
+        const txHash = formData.get('txHash') as string
+        const requestHash = formData.get('requestHash') as string
+        const newTriples = JSON.parse(formData.get('newTriples') as string)
+        const existingTriples = JSON.parse(
+          formData.get('existingTriples') as string,
+        )
+        const { newTripleIds, existingTripleIds } =
+          await logTransactionHashAndVerifyTriples(
+            txHash,
+            newTriples,
+            existingTriples,
+            requestHash,
+            request,
+          )
+        return json({ success: true, newTripleIds, existingTripleIds })
+      }
+
+      default:
+        return json({ error: 'Invalid action' }, { status: 400 })
     }
   } catch (error) {
     console.error('Action error:', error)
     return json({ error: 'An error occurred' })
   }
+}
+
+// Revert useCSVData to its original simple form
+const useCSVData = (initialData: string[][]) => {
+  const [csvData, setCsvData] = useState<string[][]>(initialData)
+  return [csvData, setCsvData] as const
 }
 
 export default function CSVEditor() {
@@ -182,7 +276,8 @@ export default function CSVEditor() {
   const navigation = useNavigation()
   const fetcher = useFetcher()
 
-  const [csvData, setCsvData] = useState<string[][]>([])
+  // Ensure we always have a deep copy of the CSV data
+  const [csvData, setCsvData] = useCSVData([])
   const [selectedRows, setSelectedRows] = useState<number[]>([])
   // const [tags, setTags] = useState<string[][]>([])
   const [newTag, setNewTag] = useState<Record<string, string>>({
@@ -199,7 +294,6 @@ export default function CSVEditor() {
   const [modalCallback, setModalCallback] = useState<
     (confirm: boolean) => void
   >(() => {})
-  const [searchQuery, setSearchQuery] = useState('')
   const [thumbnails, setThumbnails] = useState<Record<number, string>>({})
   // const [imageCache, setImageCache] = useState<Record<string, string>>({})
   const [existingAtoms, setExistingAtoms] = useState<Set<number>>(new Set())
@@ -232,6 +326,60 @@ export default function CSVEditor() {
 
   const { step, requestHash, isLoading, initiateBatchRequest } =
     useBatchCreateAtom()
+
+  const {
+    step: tagStep,
+    requestHash: tagRequestHash,
+    isLoading: isTagLoading,
+    initiateTagRequest,
+  } = useBatchCreateTriple()
+
+  // Add this state near other state declarations
+  const [tagExists, setTagExists] = useState(false)
+  const [isCheckingTag, setIsCheckingTag] = useState(false)
+
+  const [tooltipsEnabled] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('tooltipsEnabled')
+      return saved ? JSON.parse(saved) : true
+    }
+    return true
+  })
+
+  const useLoadedCSVData = () => {
+    const [loadedCSVData, setLoadedCSVDataRaw] = useState<string[][]>([])
+
+    // Wrap the setter to enforce deep copying
+    const setLoadedCSVData = useCallback((data: string[][]) => {
+      setLoadedCSVDataRaw(JSON.parse(JSON.stringify(data)))
+    }, [])
+
+    return [loadedCSVData, setLoadedCSVData] as const
+  }
+
+  const [isCSVDataModified, setIsCSVDataModified] = useState(false)
+  const [loadedCSVData, setLoadedCSVData] = useLoadedCSVData() // enforces deep copy
+
+  // Effect to check if the CSV data is worth saving
+  useEffect(() => {
+    if (csvData.length === 0) {
+      setIsCSVDataModified(false)
+      return
+    }
+
+    // Check against both default and loaded data
+    const matchesDefault =
+      JSON.stringify(csvData) === JSON.stringify(defaultCSVData)
+    const matchesLoaded =
+      JSON.stringify(csvData) === JSON.stringify(loadedCSVData)
+
+    console.log('matchesDefault', matchesDefault)
+    console.log('defaultCSVData', JSON.stringify(defaultCSVData))
+    console.log('csvData', JSON.stringify(csvData))
+
+    // Data is modified if it matches neither the default nor the loaded data
+    setIsCSVDataModified(!matchesDefault && !matchesLoaded)
+  }, [csvData, loadedCSVData])
 
   // Function to load thumbnails for image URLs in the CSV data
   const loadThumbnailsForCSV = useCallback(async (data: string[][]) => {
@@ -274,13 +422,55 @@ export default function CSVEditor() {
     modalCallback(confirm)
   }
 
+  // Move checkExistingAtoms before loadCSV and handleApplyFixes
+  const checkExistingAtoms = async (data: string[][]) => {
+    const formData = new FormData()
+    formData.append('action', 'checkAtomsExist')
+    formData.append('csvData', JSON.stringify(data))
+
+    try {
+      setLoadingRows(new Set(data.slice(1).map((_, index) => index)))
+
+      const response = await fetch('/api/csv-editor', {
+        method: 'POST',
+        body: formData,
+      })
+
+      if (response.ok) {
+        const result = await response.json()
+        if (result.success && result.atomExistsResults) {
+          const existingIndexes = new Set(
+            result.atomExistsResults
+              .filter((result: AtomExistsResult) => result.alreadyExists)
+              .map((result: AtomExistsResult) => result.originalIndex),
+          )
+          console.log('Existing atom indexes:', existingIndexes)
+          setExistingAtoms(
+            new Set(
+              Array.from(existingIndexes).filter(
+                (index): index is number => typeof index === 'number',
+              ),
+            ),
+          )
+        }
+      } else {
+        console.error('Failed to check existing atoms')
+      }
+    } catch (error) {
+      console.error('Error checking existing atoms:', error)
+    } finally {
+      setLoadingRows(new Set())
+    }
+  }
+
   // Function to load and process a CSV file
   const loadCSV = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
     if (file) {
       const rows = await parseCsv(file)
       console.log('Parsed CSV rows:', rows.length)
-      setCsvData(rows) // Set the CSV data immediately
+      setCsvData(rows)
+      setLoadedCSVData(rows)
 
       const proofreadResult = proofreadAll(rows)
       console.log('Proofread result:', proofreadResult)
@@ -302,16 +492,19 @@ export default function CSVEditor() {
                   !proofreadResult.duplicates.duplicateIndices.includes(index),
               )
               setCsvData(finalRows)
+              checkExistingAtoms(finalRows)
+            } else {
+              checkExistingAtoms(rows)
             }
           },
         )
+      } else {
+        checkExistingAtoms(rows)
       }
-
-      checkExistingAtoms(rows)
     }
   }
 
-  // Add this function to handle applying fixes
+  // Function to handle applying fixes
   const handleApplyFixes = useCallback(
     (updatedIssues: UnusualCharacterIssue[]) => {
       setCsvData((prevData) => {
@@ -350,11 +543,13 @@ export default function CSVEditor() {
             )
           }
         })
+
+        checkExistingAtoms(newData)
         return newData
       })
       setShowProofreadModal(false)
     },
-    [],
+    [checkExistingAtoms],
   )
 
   // // Function to update all cell highlights based on adjacent duplicates
@@ -428,52 +623,14 @@ export default function CSVEditor() {
   //   setCellHighlights(initialHighlights)
   // }
 
-  // Function to check which atoms already exist in the system
-  const checkExistingAtoms = async (data: string[][]) => {
-    const formData = new FormData()
-    formData.append('action', 'checkAtomsExist')
-    formData.append('csvData', JSON.stringify(data))
-
-    try {
-      setLoadingRows(new Set(data.slice(1).map((_, index) => index)))
-
-      const response = await fetch('/api/csv-editor', {
-        method: 'POST',
-        body: formData,
-      })
-
-      if (response.ok) {
-        const result = await response.json()
-        if (result.success && result.atomExistsResults) {
-          const existingIndexes = new Set(
-            result.atomExistsResults
-              .filter((result: AtomExistsResult) => result.alreadyExists)
-              .map((result: AtomExistsResult) => result.originalIndex),
-          )
-          console.log('Existing atom indexes:', existingIndexes)
-          // setExistingAtoms(new Set(existingIndexes as number[]))
-          setExistingAtoms(
-            new Set(
-              Array.from(existingIndexes).filter(
-                (index): index is number => typeof index === 'number',
-              ),
-            ),
-          )
-        }
-      } else {
-        console.error('Failed to check existing atoms')
-      }
-    } catch (error) {
-      console.error('Error checking existing atoms:', error)
-    } finally {
-      // Clear all loading states after check is complete
-      setLoadingRows(new Set())
-    }
-  }
-
   // Function to add a new empty row to the CSV data
   const addNewRow = () => {
-    setCsvData((prev) => [...prev, Array(prev[0]?.length || 0).fill('')])
+    setCsvData((prev: string[][]) => {
+      const newRow = prev[0].map(
+        (columnHeader: string) => defaultCSVValues[columnHeader] || '',
+      )
+      return [...prev, newRow]
+    })
   }
 
   // Function to delete selected rows from the CSV data
@@ -482,11 +639,11 @@ export default function CSVEditor() {
       `Delete ${selectedRows.length > 1 ? 'selected rows' : 'selected row'}?`,
       (confirm) => {
         if (confirm) {
-          setCsvData((prev) => {
+          setCsvData((prev: string[][]) => {
+            // Ensure we always have at least the header row
             const newData = prev.filter(
               (_, index) => index === 0 || !selectedRows.includes(index - 1),
             )
-            // Ensure we always have at least the header row
             return newData.length > 1 ? newData : [prev[0]]
           })
 
@@ -509,8 +666,8 @@ export default function CSVEditor() {
           // Clear selected rows
           setSelectedRows([])
 
-          // Use a callback to ensure we're working with the latest state
-          setCsvData((currentCsvData) => {
+          // Update highlights
+          setCsvData((currentCsvData: string[][]) => {
             setSortedIndices((currentSortedIndices) => {
               const dataIndices =
                 currentSortedIndices.length > 0
@@ -543,51 +700,28 @@ export default function CSVEditor() {
 
   // Function to determine the text for the create/tag atoms button
   const getCreateTagButtonText = useCallback(() => {
-    const selectedAtomsExist = selectedRows.every((rowIndex) =>
-      existingAtoms.has(rowIndex),
-    )
-    const selectedAtomsNotExist = selectedRows.every(
-      (rowIndex) => !existingAtoms.has(rowIndex),
-    )
-
-    if (selectedAtomsExist) {
-      return 'Tag Selected Atoms'
-    }
-    if (selectedAtomsNotExist) {
-      return 'Create and Tag Selected Atoms'
-    }
-    return 'Create / Tag Selected Atoms'
-  }, [selectedRows, existingAtoms])
+    return 'Tag Selected Atoms'
+  }, [])
 
   // Function to handle creating and tagging atoms
-  const handleCreateAndTagAtoms = () => {
+  const handleCreateAndTagAtoms = useCallback(() => {
+    // Convert selected rows to schema objects
+    const schemaObjects = convertCsvToSchemaObjects<Thing>(csvData)
+    const selectedAtoms = selectedRows.map((index) => schemaObjects[index])
+
     showConfirmModal(
-      `${getCreateTagButtonText()}?  This will take up to a minute or two.`,
+      'Tag Selected Atoms?  This will take up to a minute or two.',
       (confirm) => {
         if (confirm) {
-          setIsTagging(true)
-          const tag = {
-            '@context': newTag['@context'],
-            '@type': newTag['@type'],
-            name: newTag.name,
-            description: newTag.description,
-            image: newTag.image,
-            url: newTag.url,
-          }
-
-          submit(
-            {
-              action: 'createAndTagAtoms',
-              selectedRows: JSON.stringify(selectedRows),
-              csvData: JSON.stringify(csvData),
-              tag: JSON.stringify(tag),
-            },
-            { method: 'post' },
+          initiateTagRequest(
+            selectedRows,
+            selectedAtoms,
+            newTag as unknown as WithContext<Thing>,
           )
         }
       },
     )
-  }
+  }, [selectedRows, csvData, newTag, initiateTagRequest, showConfirmModal])
 
   // Effect to reset tagging state when the action is complete
   useEffect(() => {
@@ -624,7 +758,7 @@ export default function CSVEditor() {
   // Function to handle cell edits
   const handleCellEdit = useCallback(
     (rowIndex: number, cellIndex: number, value: string) => {
-      setCsvData((prev) => {
+      setCsvData((prev: string[][]) => {
         const newData = [...prev]
         newData[rowIndex][cellIndex] = value
         return newData
@@ -747,7 +881,7 @@ export default function CSVEditor() {
   // }
 
   // Function to search for atoms (currently not implemented)
-  const searchAtoms = () => {
+  const searchAtoms = (searchQuery: string) => {
     fetcher.load(`/api/csv-editor?action=searchAtoms&query=${searchQuery}`)
   }
 
@@ -769,6 +903,7 @@ export default function CSVEditor() {
       document.body.appendChild(link)
       link.click()
       document.body.removeChild(link)
+      setLoadedCSVData(csvData)
     }
   }
 
@@ -817,51 +952,243 @@ export default function CSVEditor() {
     }
   }, [actionData])
 
+  // Add this function to handle tag creation
+  const handleCreateTag = useCallback(() => {
+    const tagAtom = {
+      '@context': newTag['@context'],
+      '@type': newTag['@type'],
+      name: newTag.name,
+      description: newTag.description,
+      image: newTag.image,
+      url: newTag.url,
+    }
+
+    showConfirmModal(
+      'Create tag as atom? This will take about a minute.',
+      (confirm) => {
+        if (confirm) {
+          // Use the existing batch create flow with just one atom
+          initiateBatchRequest(
+            [0],
+            [
+              ['@context', '@type', 'name', 'description', 'image', 'url'],
+              [
+                tagAtom['@context'],
+                tagAtom['@type'],
+                tagAtom.name,
+                tagAtom.description,
+                tagAtom.image,
+                tagAtom.url,
+              ],
+            ],
+          )
+        }
+      },
+    )
+  }, [newTag, initiateBatchRequest, showConfirmModal])
+
+  // Add this function to check if tag exists
+  const checkTagExists = useCallback(async () => {
+    // Consider tag as non-existent if all fields are empty/default
+    if (!newTag.name && !newTag.description && !newTag.image && !newTag.url) {
+      setTagExists(false)
+      return
+    }
+
+    setIsCheckingTag(true)
+    const formData = new FormData()
+    formData.append('action', 'checkAtomExists')
+    formData.append(
+      'csvData',
+      JSON.stringify([
+        ['@context', '@type', 'name', 'description', 'image', 'url'],
+        [
+          newTag['@context'],
+          newTag['@type'],
+          newTag.name,
+          newTag.description,
+          newTag.image,
+          newTag.url,
+        ],
+      ]),
+    )
+    formData.append('index', '0')
+
+    try {
+      const response = await fetch('/api/csv-editor', {
+        method: 'POST',
+        body: formData,
+      })
+
+      if (response.ok) {
+        const result = await response.json()
+        if (result.success && result.atomExistsResults) {
+          setTagExists(result.atomExistsResults[0].alreadyExists)
+        }
+      }
+    } catch (error) {
+      console.error('Error checking tag existence:', error)
+    } finally {
+      setIsCheckingTag(false)
+    }
+  }, [newTag])
+
+  // Set default CSV data to Thing Schema
+  useEffect(() => {
+    if (csvData.length === 0) {
+      // Only set if no data exists
+      setCsvData(defaultCSVData)
+    }
+  }, [csvData.length])
+
+  // Add this effect to check tag existence when tag fields change
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      checkTagExists()
+    }, 500) // Debounce the check
+
+    return () => clearTimeout(timeoutId)
+  }, [newTag, checkTagExists])
+
+  // Add effect to recheck atoms when progress modal closes
+  useEffect(() => {
+    if (!isLoading && step === 'complete' && csvData.length > 0) {
+      checkExistingAtoms(csvData)
+    }
+  }, [isLoading, step, csvData])
+
+  // Add effect to recheck tag existence when tag creation completes
+  useEffect(() => {
+    if (!isLoading && step === 'complete') {
+      checkTagExists()
+    }
+  }, [isLoading, step, checkTagExists])
+
   // The main render function, containing the UI structure
   return (
     <>
       {/* Main content */}
       <div className="container mx-auto p-4 space-y-6 relative">
-        {/* Button row for main actions */}
+        {/* Add the file input before the buttons */}
+        <input
+          type="file"
+          ref={fileInputRef}
+          onChange={loadCSV}
+          style={{ display: 'none' }}
+          accept=".csv"
+        />
+
         <div className="flex space-x-4">
-          <Button onClick={() => fileInputRef.current?.click()}>
-            Load CSV
-          </Button>
-          <input
-            type="file"
-            ref={fileInputRef}
-            onChange={loadCSV}
-            style={{ display: 'none' }}
-            accept=".csv"
-          />
-          <Button onClick={addNewRow} disabled={isLoading}>
-            {isLoading ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
-            ) : (
-              <Plus className="h-4 w-4" />
-            )}
-            Add New Row
-          </Button>
-          <Button
-            onClick={deleteSelectedRows}
-            disabled={selectedRows.length === 0 || isLoading}
-          >
-            {isLoading ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
-            ) : (
-              <Minus className="h-4 w-4" />
-            )}
-            Delete Selected Row{selectedRows.length > 1 ? 's' : ''}
-          </Button>
-          <Button
-            onClick={handlePublishAtoms}
-            disabled={selectedRows.length === 0 || isLoading}
-          >
-            {isLoading ? 'Processing...' : 'Publish Atoms'}
-          </Button>
-          <Button onClick={saveCSV}>
-            <Save className="h-4 w-4" /> Save CSV
-          </Button>
+          {tooltipsEnabled ? (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button onClick={() => fileInputRef.current?.click()}>
+                  Load CSV
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>{getTooltip(TooltipKey.LOAD_CSV)}</TooltipContent>
+            </Tooltip>
+          ) : (
+            <Button onClick={() => fileInputRef.current?.click()}>
+              Load CSV
+            </Button>
+          )}
+
+          {tooltipsEnabled ? (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button onClick={addNewRow} disabled={isLoading}>
+                  {isLoading ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Plus className="h-4 w-4" />
+                  )}
+                  Add New Row
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>{getTooltip(TooltipKey.ADD_ROW)}</TooltipContent>
+            </Tooltip>
+          ) : (
+            <Button onClick={addNewRow} disabled={isLoading}>
+              {isLoading ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Plus className="h-4 w-4" />
+              )}
+              Add New Row
+            </Button>
+          )}
+
+          {tooltipsEnabled ? (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  onClick={deleteSelectedRows}
+                  disabled={selectedRows.length === 0 || isLoading}
+                >
+                  {isLoading ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Minus className="h-4 w-4" />
+                  )}
+                  Delete Selected Row{selectedRows.length > 1 ? 's' : ''}
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                {getTooltip(TooltipKey.DELETE_ROWS)}
+              </TooltipContent>
+            </Tooltip>
+          ) : (
+            <Button
+              onClick={deleteSelectedRows}
+              disabled={selectedRows.length === 0 || isLoading}
+            >
+              {isLoading ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Minus className="h-4 w-4" />
+              )}
+              Delete Selected Row{selectedRows.length > 1 ? 's' : ''}
+            </Button>
+          )}
+
+          {tooltipsEnabled ? (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  onClick={handlePublishAtoms}
+                  disabled={selectedRows.length === 0 || isLoading}
+                >
+                  {isLoading ? 'Processing...' : 'Publish Selected Atoms'}
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                {getTooltip(TooltipKey.PUBLISH_ATOMS)}
+              </TooltipContent>
+            </Tooltip>
+          ) : (
+            <Button
+              onClick={handlePublishAtoms}
+              disabled={selectedRows.length === 0 || isLoading}
+            >
+              {isLoading ? 'Processing...' : 'Publish Selected Atoms'}
+            </Button>
+          )}
+
+          {tooltipsEnabled ? (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button onClick={saveCSV} disabled={!isCSVDataModified}>
+                  <Save className="h-4 w-4" /> Save CSV
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>{getTooltip(TooltipKey.SAVE_CSV)}</TooltipContent>
+            </Tooltip>
+          ) : (
+            <Button onClick={saveCSV} disabled={!isCSVDataModified}>
+              <Save className="h-4 w-4" /> Save CSV
+            </Button>
+          )}
         </div>
 
         {/* Progress bar for loading states */}
@@ -869,139 +1196,166 @@ export default function CSVEditor() {
 
         {/* CSV data table */}
         {csvData.length > 0 && (
-          <div className="overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-8"></TableHead>{' '}
-                  {/* New column for checkmark */}
-                  {csvData[0].map((header, index) => (
-                    <TableHead
-                      key={index}
-                      className={`cursor-pointer hover:bg-gray-100 ${
-                        header === '@context'
-                          ? 'w-40'
-                          : header === '@type'
-                            ? 'w-24'
-                            : header === 'name'
-                              ? 'w-48'
-                              : header === 'image'
-                                ? 'w-64'
-                                : ''
-                      }`}
-                      onClick={() => handleSort(index)}
-                    >
-                      <div className="flex items-center space-x-2">
-                        <span>{header}</span>
-                        {sortState.column === index && (
-                          <span>
-                            {sortState.direction === 'asc' ? '▲' : '▼'}
-                          </span>
-                        )}
-                      </div>
-                    </TableHead>
-                  ))}
-                  <TableHead
-                    className="cursor-pointer hover:bg-gray-100 w-16"
-                    onClick={toggleAllRows}
-                  >
-                    <div className="flex items-center space-x-2">
-                      <Checkbox
-                        checked={selectedRows.length === csvData.length - 1}
-                        onCheckedChange={toggleAllRows}
-                        className="w-4 h-4"
-                      />
-                    </div>
-                  </TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {(sortedIndices.length > 0
-                  ? sortedIndices
-                  : csvData.slice(1).map((_, i) => i + 1)
-                ).map((rowIndex, displayIndex) => (
-                  <TableRow key={rowIndex}>
-                    <TableCell className="w-8 p-0">
-                      {loadingRows.has(rowIndex - 1) ? (
-                        <Loader2 className="animate-spin text-blue-500 w-5 h-5" />
-                      ) : existingAtoms.has(rowIndex - 1) ? (
-                        <CheckCircle2 className="text-green-500 w-5 h-5" />
-                      ) : null}
-                    </TableCell>
-                    {csvData[rowIndex].map((cell, cellIndex) => (
-                      <TableCell
-                        key={cellIndex}
-                        className={`p-0 ${
-                          csvData[0][cellIndex] === '@context'
-                            ? 'w-40'
-                            : csvData[0][cellIndex] === '@type'
-                              ? 'w-24'
-                              : csvData[0][cellIndex] === 'name'
-                                ? 'w-48'
-                                : csvData[0][cellIndex] === 'image'
-                                  ? 'w-64'
-                                  : ''
-                        } ${
-                          cellHighlights.some(
-                            (highlight) =>
-                              highlight.rowIndex === displayIndex &&
-                              highlight.cellIndex === cellIndex,
-                          )
-                            ? 'border-yellow-400 border-2'
-                            : ''
-                        }`}
-                      >
-                        <div className="flex items-center">
-                          <Textarea
-                            value={cell}
-                            onChange={(e) =>
-                              handleCellEdit(
-                                rowIndex,
-                                cellIndex,
-                                e.target.value,
-                              )
-                            }
-                            onFocus={handleFocus}
-                            onBlur={(e) =>
-                              handleCellBlur(e, rowIndex, cellIndex)
-                            }
-                            onPaste={(e) =>
-                              handleCellPaste(e, rowIndex, cellIndex)
-                            }
-                            className="w-full border-none focus:outline-none focus:ring-0 resize-none overflow-hidden h-8"
-                            readOnly={
-                              csvData[0][cellIndex] === '@context' ||
-                              csvData[0][cellIndex] === '@type'
-                            }
-                          />
-                          {csvData[0][cellIndex] === 'image' &&
-                            thumbnails[rowIndex] && (
-                              <img
-                                src={thumbnails[rowIndex]}
-                                alt="Thumbnail"
-                                className="w-8 h-8 object-cover ml-2 flex-shrink-0"
-                              />
+          <>
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold">Atoms View</h3>
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="w-8"></TableHead>{' '}
+                      {/* New column for checkmark */}
+                      {csvData[0].map((header, index) => (
+                        <TableHead
+                          key={index}
+                          className={`cursor-pointer hover:bg-gray-100 ${
+                            header === '@context'
+                              ? 'w-40'
+                              : header === '@type'
+                                ? 'w-24'
+                                : header === 'name'
+                                  ? 'w-48'
+                                  : header === 'image'
+                                    ? 'w-64'
+                                    : ''
+                          }`}
+                          onClick={() => handleSort(index)}
+                        >
+                          <div className="flex items-center space-x-2">
+                            <span>{header}</span>
+                            {sortState.column === index && (
+                              <span>
+                                {sortState.direction === 'asc' ? '▲' : '▼'}
+                              </span>
                             )}
+                          </div>
+                        </TableHead>
+                      ))}
+                      <TableHead
+                        className="cursor-pointer hover:bg-gray-100 w-16"
+                        onClick={toggleAllRows}
+                      >
+                        <div className="flex items-center space-x-2">
+                          <Checkbox
+                            checked={selectedRows.length === csvData.length - 1}
+                            onCheckedChange={toggleAllRows}
+                            className="w-4 h-4"
+                          />
                         </div>
-                      </TableCell>
+                      </TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {(sortedIndices.length > 0
+                      ? sortedIndices
+                      : csvData.slice(1).map((_, i) => i + 1)
+                    ).map((rowIndex, displayIndex) => (
+                      <TableRow key={rowIndex}>
+                        <TableCell className="w-8 p-0">
+                          {loadingRows.has(rowIndex - 1) ? (
+                            <Loader2 className="animate-spin text-blue-500 w-5 h-5" />
+                          ) : existingAtoms.has(rowIndex - 1) ? (
+                            <CheckCircle2 className="text-green-500 w-5 h-5" />
+                          ) : null}
+                        </TableCell>
+                        {csvData[rowIndex].map((cell, cellIndex) => (
+                          <TableCell
+                            key={cellIndex}
+                            className={`p-0 ${
+                              csvData[0][cellIndex] === '@context'
+                                ? 'w-40'
+                                : csvData[0][cellIndex] === '@type'
+                                  ? 'w-24'
+                                  : csvData[0][cellIndex] === 'name'
+                                    ? 'w-48'
+                                    : csvData[0][cellIndex] === 'image'
+                                      ? 'w-64'
+                                      : ''
+                            } ${
+                              cellHighlights.some(
+                                (highlight) =>
+                                  highlight.rowIndex === displayIndex &&
+                                  highlight.cellIndex === cellIndex,
+                              )
+                                ? 'border-yellow-400 border-2'
+                                : ''
+                            }`}
+                          >
+                            <div className="flex items-center">
+                              <Textarea
+                                value={cell}
+                                onChange={(e) =>
+                                  handleCellEdit(
+                                    rowIndex,
+                                    cellIndex,
+                                    e.target.value,
+                                  )
+                                }
+                                onFocus={handleFocus}
+                                onBlur={(e) =>
+                                  handleCellBlur(e, rowIndex, cellIndex)
+                                }
+                                onPaste={(e) =>
+                                  handleCellPaste(e, rowIndex, cellIndex)
+                                }
+                                placeholder={
+                                  !cell &&
+                                  defaultCSVDescriptions[csvData[0][cellIndex]]
+                                    ? defaultCSVDescriptions[
+                                        csvData[0][cellIndex]
+                                      ]
+                                    : ''
+                                }
+                                className={`w-full border-none focus:outline-none focus:ring-0 resize-none overflow-hidden h-8 ${
+                                  !cell ? 'text-gray-400 italic' : ''
+                                }`}
+                                readOnly={
+                                  csvData[0][cellIndex] === '@context' ||
+                                  csvData[0][cellIndex] === '@type'
+                                }
+                              />
+                              {csvData[0][cellIndex] === 'image' &&
+                                thumbnails[rowIndex] && (
+                                  <img
+                                    src={thumbnails[rowIndex]}
+                                    alt="Thumbnail"
+                                    className="w-8 h-8 object-cover ml-2 flex-shrink-0"
+                                  />
+                                )}
+                            </div>
+                          </TableCell>
+                        ))}
+                        <TableCell className="w-16">
+                          <Checkbox
+                            checked={selectedRows.includes(rowIndex - 1)}
+                            onCheckedChange={() =>
+                              toggleRowSelection(rowIndex - 1)
+                            }
+                            className="w-4 h-4"
+                          />
+                        </TableCell>
+                      </TableRow>
                     ))}
-                    <TableCell className="w-16">
-                      <Checkbox
-                        checked={selectedRows.includes(rowIndex - 1)}
-                        onCheckedChange={() => toggleRowSelection(rowIndex - 1)}
-                        className="w-4 h-4"
-                      />
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
+                  </TableBody>
+                </Table>
+              </div>
+            </div>
+          </>
         )}
 
-        {/* Tag creation section */}
+        {/* Add a horizontal divider */}
+        <hr className="my-6 border-gray-200" />
+
+        {/* Tag creation section with all its content */}
         <div className="space-y-4">
-          <h3 className="text-lg font-semibold">Create a Tag</h3>
+          <div className="flex items-center space-x-2">
+            <h3 className="text-lg font-semibold">Tag View</h3>
+            {isCheckingTag ? (
+              <Loader2 className="animate-spin text-blue-500 w-5 h-5" />
+            ) : tagExists ? (
+              <CheckCircle2 className="text-green-500 w-5 h-5" />
+            ) : null}
+          </div>
           <div className="grid grid-cols-2 gap-4">
             {Object.keys(newTag).map((key) => (
               <div key={key}>
@@ -1023,45 +1377,108 @@ export default function CSVEditor() {
             ))}
           </div>
           <div className="flex space-x-4">
-            <Button
-              onClick={handleCreateAndTagAtoms}
-              disabled={
-                selectedRows.length === 0 ||
-                !newTag.name ||
-                isTagging ||
-                navigation.state === 'submitting'
-              }
-            >
-              {isTagging || navigation.state === 'submitting' ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Tagging...
-                </>
-              ) : (
-                getCreateTagButtonText()
-              )}
-            </Button>
+            {tooltipsEnabled ? (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    onClick={handleCreateAndTagAtoms}
+                    disabled={
+                      selectedRows.length === 0 ||
+                      !tagExists || // Disable if tag doesn't exist
+                      isTagging ||
+                      navigation.state === 'submitting'
+                    }
+                  >
+                    {isTagging || navigation.state === 'submitting' ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Tagging...
+                      </>
+                    ) : (
+                      getCreateTagButtonText()
+                    )}
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  {getTooltip(TooltipKey.TAG_ATOMS)}
+                </TooltipContent>
+              </Tooltip>
+            ) : (
+              <Button
+                onClick={handleCreateAndTagAtoms}
+                disabled={
+                  selectedRows.length === 0 ||
+                  !tagExists || // Disable if tag doesn't exist
+                  isTagging ||
+                  navigation.state === 'submitting'
+                }
+              >
+                {isTagging || navigation.state === 'submitting' ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Tagging...
+                  </>
+                ) : (
+                  getCreateTagButtonText()
+                )}
+              </Button>
+            )}
+
+            {tooltipsEnabled ? (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    onClick={handleCreateTag}
+                    disabled={tagExists} // Disable only if tag exists
+                  >
+                    Create Tag
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  {getTooltip(TooltipKey.CREATE_TAG)}
+                </TooltipContent>
+              </Tooltip>
+            ) : (
+              <Button
+                onClick={handleCreateTag}
+                disabled={tagExists} // Disable only if tag exists
+              >
+                Create Tag
+              </Button>
+            )}
           </div>
         </div>
 
-        {/* Search for Atom section (currently disabled) */}
+        {/* Add a horizontal divider */}
+        <hr className="my-6 border-gray-200" />
+
+        {/* Search for Atom section */}
         <div className="space-y-4 opacity-50 pointer-events-none">
           <h3 className="text-lg font-semibold">Search for Atom</h3>
           <div className="flex space-x-4">
-            <Input
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search for atoms"
-            />
-            <Button onClick={searchAtoms}>
-              <Search className="mr-2 h-4 w-4" /> Search
-            </Button>
+            {tooltipsEnabled ? (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button onClick={() => searchAtoms('query')}>
+                    <Search className="mr-2 h-4 w-4" /> Search
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>{getTooltip(TooltipKey.SEARCH)}</TooltipContent>
+              </Tooltip>
+            ) : (
+              <Button onClick={() => searchAtoms('query')}>
+                <Search className="mr-2 h-4 w-4" /> Search
+              </Button>
+            )}
           </div>
           <p className="text-red-500 font-bold">Under Construction</p>
           {/* ... existing search results table ... */}
         </div>
 
-        {/* LLM Interaction section (currently disabled) */}
+        {/* Add another horizontal divider */}
+        <hr className="my-6 border-gray-200" />
+
+        {/* LLM Interaction section */}
         <div className="space-y-2 opacity-50 pointer-events-none">
           <h3 className="text-lg font-semibold">LLM Interaction</h3>
           <Textarea
@@ -1070,7 +1487,18 @@ export default function CSVEditor() {
             placeholder="Enter your message for the LLM"
             rows={4}
           />
-          <Button onClick={handleLLMInteraction}>Send to LLM</Button>
+          {tooltipsEnabled ? (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button onClick={handleLLMInteraction}>Send to LLM</Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                {getTooltip(TooltipKey.SEND_TO_LLM)}
+              </TooltipContent>
+            </Tooltip>
+          ) : (
+            <Button onClick={handleLLMInteraction}>Send to LLM</Button>
+          )}
           <p className="text-red-500 font-bold">Under Construction</p>
         </div>
 
@@ -1089,13 +1517,12 @@ export default function CSVEditor() {
       </div>
 
       <ProgressModal
-        isOpen={isLoading}
+        isOpen={isLoading || isTagLoading}
         onClose={() => {
-          // You might want to handle this differently, perhaps by cancelling the operation
           console.log('Progress modal closed')
         }}
-        step={step}
-        requestHash={requestHash}
+        step={isTagLoading ? tagStep : step}
+        requestHash={isTagLoading ? tagRequestHash : requestHash}
       />
 
       <ProofreadModal
