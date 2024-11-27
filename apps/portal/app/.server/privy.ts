@@ -3,7 +3,7 @@ import { AuthTokenClaims, PrivyClient, User } from '@privy-io/server-auth'
 import { parse } from 'cookie'
 
 function getPublicKey() {
-  return `-----BEGIN PUBLIC KEY-----\n${process.env.PRIVY_VERIFICATION_KEY}\n-----END PUBLIC KEY-----`;
+  return `-----BEGIN PUBLIC KEY-----\n${process.env.PRIVY_VERIFICATION_KEY}\n-----END PUBLIC KEY-----`
 }
 
 export function getPrivyClient() {

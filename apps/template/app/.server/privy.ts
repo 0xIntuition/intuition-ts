@@ -10,7 +10,7 @@ export function getPrivyClient() {
 }
 
 function getPublicKey() {
-  return `-----BEGIN PUBLIC KEY-----\n${process.env.PRIVY_VERIFICATION_KEY}\n-----END PUBLIC KEY-----`;
+  return `-----BEGIN PUBLIC KEY-----\n${process.env.PRIVY_VERIFICATION_KEY}\n-----END PUBLIC KEY-----`
 }
 
 export const verifyPrivyAccessToken = async (
