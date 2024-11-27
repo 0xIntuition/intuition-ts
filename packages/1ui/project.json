@@ -6,14 +6,11 @@
   "tags": [],
   "targets": {
     "build": {
-      "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
+      "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/dist"],
       "options": {
-        "outputPath": "dist/packages/1ui",
-        "tsConfig": "packages/1ui/tsconfig.lib.json",
-        "packageJson": "packages/1ui/package.json",
-        "main": "packages/1ui/src/index.ts",
-        "assets": ["packages/1ui/*.md"]
+        "command": "pnpm build",
+        "cwd": "packages/1ui"
       }
     },
     "lint": {

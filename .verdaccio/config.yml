@@ -15,7 +15,27 @@ uplinks:
     fail_timeout: 2m
 
 packages:
+  '@0xintuition/*':
+    # give all users (including non-authenticated users) full access
+    # because it is a local registry
+    access: $all
+    publish: $all
+    unpublish: $all
+
+    # if package is not available locally, proxy requests to npm registry
+    proxy: npmjs
+
   '@*/*':
+    # give all users (including non-authenticated users) full access
+    # because it is a local registry
+    access: $all
+    publish: $all
+    unpublish: $all
+
+    # if package is not available locally, proxy requests to npm registry
+    proxy: npmjs
+
+  '**':
     # give all users (including non-authenticated users) full access
     # because it is a local registry
     access: $all
@@ -29,7 +49,7 @@ packages:
 logs:
   type: stdout
   format: pretty
-  level: warn
+  level: http
 
 publish:
   allow_offline: true # set offline to true to allow publish offline

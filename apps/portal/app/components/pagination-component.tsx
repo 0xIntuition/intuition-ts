@@ -57,7 +57,7 @@ export function PaginationComponent({
   }
 
   return (
-    <Pagination className="flex w-full justify-between max-sm:flex-col max-sm:items-center max-sm:gap-3 px-5">
+    <Pagination className="flex w-full justify-between max-sm:flex-col max-sm:items-center max-sm:gap-3">
       <PaginationSummary totalEntries={totalEntries} label={label} />
       <div className="flex max-sm:flex-col max-sm:items-center max-sm:gap-3">
         <PaginationRowSelection
@@ -75,24 +75,28 @@ export function PaginationComponent({
           <PaginationContent>
             <PaginationItem>
               <PaginationFirst
+                size="icon"
                 onClick={() => handlePageChange(1)}
                 disabled={currentPage === 1}
               />
             </PaginationItem>
             <PaginationItem>
               <PaginationPrevious
+                size="icon"
                 onClick={() => handlePageChange(currentPage - 1)}
                 disabled={currentPage === 1 || currentPage === undefined}
               />
             </PaginationItem>
             <PaginationItem>
               <PaginationNext
+                size="icon"
                 onClick={() => handlePageChange(currentPage + 1)}
                 disabled={currentPage === totalPages}
               />
             </PaginationItem>
             <PaginationItem>
               <PaginationLast
+                size="icon"
                 onClick={() => handlePageChange(totalPages)}
                 disabled={currentPage === totalPages}
               />

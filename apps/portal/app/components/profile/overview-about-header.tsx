@@ -79,7 +79,9 @@ export function OverviewAboutHeader({
             </Text>
             <Text variant="bodyLarge" weight="medium" className="items-center">
               {formatNumber(
-                variant === 'claims' ? totalClaims ?? 0 : totalPositions ?? 0,
+                variant === 'claims'
+                  ? (totalClaims ?? 0)
+                  : (totalPositions ?? 0),
               )}
             </Text>
           </div>
