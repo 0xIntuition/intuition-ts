@@ -33,7 +33,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const queryAddresses = [wallet.toLowerCase()]
 
   const queryClient = new QueryClient()
-  logger('addresses', queryAddresses)
 
   logger('Addresses being passed to query:', queryAddresses)
   await queryClient.prefetchQuery({

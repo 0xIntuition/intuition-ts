@@ -1,8 +1,8 @@
 import { Suspense } from 'react'
 
 import { ErrorStateCard, IconName } from '@0xintuition/1ui'
-import { ActivityPresenter } from '@0xintuition/api'
 import {
+  Events,
   fetcher,
   GetEventsDocument,
   GetEventsQuery,
@@ -12,19 +12,16 @@ import {
 
 import { ErrorPage } from '@components/error-page'
 import ExploreHeader from '@components/explore/ExploreHeader'
-import { ActivityList } from '@components/list/activity'
+import { ActivityListNew } from '@components/list/activity'
 import { RevalidateButton } from '@components/revalidate-button'
 import { ActivitySkeleton } from '@components/skeleton'
-import { useLiveLoader } from '@lib/hooks/useLiveLoader'
-import { getActivity } from '@lib/services/activity'
 import logger from '@lib/utils/logger'
 import { invariant } from '@lib/utils/misc'
-import { defer, json, LoaderFunctionArgs } from '@remix-run/node'
-import { Await, useLoaderData, useSearchParams } from '@remix-run/react'
+import { json, LoaderFunctionArgs } from '@remix-run/node'
+import { useLoaderData, useSearchParams } from '@remix-run/react'
 import { requireUser, requireUserWallet } from '@server/auth'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
 import { HEADER_BANNER_ACTIVITY, NO_WALLET_ERROR } from 'app/consts'
-import { PaginationType } from 'app/types/pagination'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const wallet = await requireUserWallet(request)
@@ -34,11 +31,12 @@ export async function loader({ request }: LoaderFunctionArgs) {
   invariant(user, 'User not found')
   invariant(user.wallet?.address, 'User wallet not found')
   const url = new URL(request.url)
-  const searchParams = new URLSearchParams(url.search)
+
   const limit = parseInt(url.searchParams.get('limit') || '10')
   const offset = parseInt(url.searchParams.get('offset') || '0')
   const userWallet = user.wallet?.address
-  const queryAddresses = [userWallet.toLowerCase()]
+  const queryAddress = userWallet?.toLowerCase()
+  const queryAddresses = [queryAddress]
 
   const queryClient = new QueryClient()
   logger('Addresses being passed to query:', queryAddresses)
@@ -47,40 +45,47 @@ export async function loader({ request }: LoaderFunctionArgs) {
     _and: [
       {
         type: {
-          _neq: 'FeesTransfered',
+          // _neq: 'FeesTransfered',
+          _in: ['AtomCreated', 'TripleCreated'], // TODO: (ENG-4882) Include 'Deposited' and 'Redeemed' once we work out some of th questions with it
+        },
+      },
+    ],
+    _or: [
+      {
+        atom: {
+          creator: {
+            id: {
+              _eq: queryAddress,
+            },
+          },
         },
       },
       {
-        _or: [
-          {
-            atom: {
-              creatorId: {
-                _eq: userWallet,
-              },
+        triple: {
+          creator: {
+            id: {
+              _eq: queryAddress,
             },
           },
-          {
-            triple: {
-              creatorId: {
-                _eq: userWallet,
-              },
+        },
+      },
+      {
+        deposit: {
+          sender: {
+            id: {
+              _eq: queryAddress,
             },
           },
-          {
-            deposit: {
-              senderId: {
-                _eq: userWallet,
-              },
+        },
+      },
+      {
+        redemption: {
+          sender: {
+            id: {
+              _eq: queryAddress,
             },
           },
-          {
-            redemption: {
-              receiverId: {
-                _eq: userWallet,
-              },
-            },
-          },
-        ],
+        },
       },
     ],
   }
@@ -170,21 +175,51 @@ export default function PersonalActivityFeed() {
         bgImage={HEADER_BANNER_ACTIVITY}
       />
       <Suspense fallback={<ActivitySkeleton />}>
-        <Await
-          resolve={activity}
-          errorElement={
-            <ErrorStateCard>
-              <RevalidateButton />
-            </ErrorStateCard>
-          }
-        >
-          {(resolvedActivity) => (
-            <ActivityList
-              activities={resolvedActivity.activity as ActivityPresenter[]}
-              pagination={resolvedActivity.pagination as PaginationType}
+        {isLoading ? (
+          <ActivitySkeleton />
+        ) : isError ? (
+          <ErrorStateCard
+            title="Failed to load activity"
+            message={
+              (error as Error)?.message ?? 'An unexpected error occurred'
+            }
+          >
+            <RevalidateButton />
+          </ErrorStateCard>
+        ) : eventsData?.events ? (
+          <>
+            <ActivityListNew
+              activities={eventsData.events as Events[]}
+              pagination={{
+                currentPage: offset / limit + 1,
+                limit,
+                totalEntries: totalCount,
+                totalPages: Math.ceil(totalCount / limit),
+              }}
             />
-          )}
-        </Await>
+            <div className="flex gap-2 justify-center mt-4">
+              <button
+                onClick={() => handlePageChange(Math.max(0, offset - limit))}
+                disabled={offset === 0}
+                className="px-4 py-2 disabled:opacity-50"
+              >
+                Previous
+              </button>
+              <span>Page {offset / limit + 1}</span>
+              <button
+                onClick={() => handlePageChange(offset + limit)}
+                disabled={!hasMore}
+                className="px-4 py-2 disabled:opacity-50"
+              >
+                Next
+              </button>
+            </div>
+          </>
+        ) : (
+          <ErrorStateCard>
+            <RevalidateButton />
+          </ErrorStateCard>
+        )}
       </Suspense>
     </>
   )
