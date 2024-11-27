@@ -14,14 +14,14 @@ import {
   TextVariant,
   Trunctacular,
 } from '@0xintuition/1ui'
-import { ClaimPresenter } from '@0xintuition/api'
+import { GetTripleQuery } from '@0xintuition/graphql'
 
 import { getListUrl } from '@lib/utils/misc'
 
 export interface DetailInfoCardProps
   extends React.HTMLAttributes<HTMLDivElement> {
   variant: IdentityType
-  list?: ClaimPresenter
+  list?: GetTripleQuery['triple']
   username: string
   avatarImgSrc: string
   id: string
@@ -66,17 +66,17 @@ const DetailInfoCard = ({
             List
           </Text>
           <div className="flex justify-start items-center gap-1">
-            <a href={getListUrl(list.vault_id, '', readOnly)}>
+            <a href={getListUrl(list.id, '', readOnly)}>
               <IdentityTag
-                variant={list.object?.user ? Identity.user : Identity.nonUser}
+                variant={
+                  list.object?.type === 'Person'
+                    ? Identity.user
+                    : Identity.nonUser
+                }
                 imgSrc={list.object?.image ?? ''}
               >
                 <Trunctacular
-                  value={
-                    list.object?.user_display_name ??
-                    list.object?.display_name ??
-                    'Unknown'
-                  }
+                  value={list.object?.label ?? 'Unknown'}
                   maxStringLength={32}
                 />
               </IdentityTag>

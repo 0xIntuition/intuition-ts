@@ -394,14 +394,14 @@ export default function ClaimDetails() {
       <DetailInfoCard
         variant={Identity.user}
         list={
-          claim?.predicate?.id ===
-          getSpecialPredicate(CURRENT_ENV).tagPredicate.id
-            ? claim
+          String(tripleData?.triple?.predicate?.id) ===
+          String(getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId)
+            ? tripleData?.triple
             : undefined
         }
-        username={claim.creator?.display_name ?? '?'}
-        avatarImgSrc={claim.creator?.image ?? ''}
-        id={claim.creator?.wallet ?? ''}
+        username={tripleData?.triple?.creator?.label ?? '?'}
+        avatarImgSrc={tripleData?.triple?.creator?.image ?? ''}
+        id={tripleData?.triple?.creator?.id ?? ''}
         description={claim.creator?.description ?? ''}
         link={
           claim.creator?.id ? `${PATHS.PROFILE}/${claim.creator?.wallet}` : ''
