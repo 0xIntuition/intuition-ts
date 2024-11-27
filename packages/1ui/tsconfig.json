@@ -3,7 +3,7 @@
   "compilerOptions": {
     "jsx": "react-jsx",
     "baseUrl": "./src",
-    "outDir": "../../dist/packages/1ui",
+    "outDir": "dist",
     "declaration": true,
     "paths": {
       "components/*": ["components/*"],
@@ -12,12 +12,6 @@
       "styles/*": ["styles/*"]
     }
   },
-  "include": ["src"],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "**/*.stories.*",
-    "**/*.spec.*",
-    "**/*.test.*"
-  ]
+  "include": ["./src/**/*"],
+  "exclude": ["node_modules", "dist", "**/*.spec.*", "**/*.test.*"]
 }

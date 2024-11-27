@@ -2,6 +2,8 @@ import React, { useRef, useState } from 'react'
 
 import {
   Avatar,
+  ClaimPositionRowVariant,
+  ClaimPositionRowVariantType,
   ClaimPositionType,
   ClaimStatus,
   cn,
@@ -21,10 +23,6 @@ import {
   TextWeight,
   Trunctacular,
 } from '@0xintuition/1ui'
-import {
-  ClaimPositionRowVariant,
-  ClaimPositionRowVariantType,
-} from '@0xintuition/1ui/src/components/ClaimPositionRow/ClaimPositionRow.utils'
 
 import { useNavigate } from '@remix-run/react'
 
@@ -48,7 +46,7 @@ interface UserVariantProps extends CommonProps {
   claimsAgainst?: number
   name: string
   description?: string
-  avatarSrc: string
+  avatarSrc?: string
   link: string
   id: string
 }
@@ -125,14 +123,14 @@ const ClaimPositionRow = ({
         className,
       )}
     >
-      {variant === ClaimPositionRowVariant.user && (
+      {variant === ClaimPositionRowVariant.user && name && id && (
         <div className="flex items-center max-sm:justify-center">
           <HoverCard openDelay={150} closeDelay={150}>
             <HoverCardTrigger asChild>
               <a href={link}>
                 <Avatar
                   variant={variant}
-                  src={avatarSrc}
+                  src={avatarSrc ?? ''}
                   name={name}
                   className="mr-4 w-16 h-16"
                 />
@@ -144,22 +142,11 @@ const ClaimPositionRow = ({
                   variant={variant}
                   avatarSrc={avatarSrc ?? ''}
                   name={name}
-                  id={id ?? ''}
+                  id={id}
                   bio={description ?? ''}
                   ipfsLink={ipfsLink}
                   className="profile-card"
                 />
-                {/* {link && (
-                  <a href={link}>
-                    <Button
-                      variant={ButtonVariant.secondary}
-                      className="w-full"
-                    >
-                      View Identity{' '}
-                      <Icon name={'arrow-up-right'} className="h-3 w-3" />
-                    </Button>
-                  </a>
-                )} */}
               </div>
             </HoverCardContent>
           </HoverCard>

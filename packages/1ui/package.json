@@ -20,7 +20,7 @@
     "**/*.css"
   ],
   "scripts": {
-    "build": "tsup",
+    "build": "tsup && tsc --emitDeclarationOnly",
     "dev": "tsup --watch",
     "lint:fix": "pnpm lint --fix",
     "prepublish": "pnpm build",

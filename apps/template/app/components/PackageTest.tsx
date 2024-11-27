@@ -2,7 +2,7 @@ import { Button } from '@0xintuition/1ui'
 import { useGetStatsQuery } from '@0xintuition/graphql'
 
 export function PackageTest() {
-  const { data, isLoading, isError, error } = useGetStatsQuery()
+  const { data, isLoading, isError } = useGetStatsQuery()
 
   return (
     <div className="p-4">
@@ -18,9 +18,7 @@ export function PackageTest() {
           <h3 className="text-lg font-semibold mb-2">GraphQL Query Test:</h3>
           {isLoading && <p>Loading...</p>}
           {isError && (
-            <p className="text-red-500">
-              Error: {(error as any)?.message ?? 'Unknown error'}
-            </p>
+            <p className="text-red-500">Error: GraphQL Query Failed</p>
           )}
           {data && (
             <div className="space-y-2">

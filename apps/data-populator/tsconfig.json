@@ -27,10 +27,5 @@
     "tailwind.config.ts",
     "app/.server/csv-editor.tsx"
   ],
-  "exclude": ["node_modules", "build"],
-  "references": [
-    {
-      "path": "../../packages/1ui"
-    }
-  ]
+  "exclude": ["node_modules", "build"]
 }
