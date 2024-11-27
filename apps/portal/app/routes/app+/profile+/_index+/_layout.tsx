@@ -75,6 +75,7 @@ import { User } from '@privy-io/react-auth'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import {
   Outlet,
+  useLoaderData,
   useMatches,
   useNavigate,
   useRevalidator,
@@ -282,7 +283,7 @@ export default function Profile() {
     relicMintCount,
     relicHoldCount,
     initialParams,
-  } = useLiveLoader<ProfileLoaderData>(['attest', 'create'])
+  } = useLoaderData<ProfileLoaderData>()
 
   // TODO: Remove this once the `status is added to atoms -- that will be what we check if something is pending. For now setting this to false and removing the legacy isPending check
   const isPending = false
