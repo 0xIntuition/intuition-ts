@@ -1,7 +1,6 @@
 import { QuestHeaderCard, Text } from '@0xintuition/1ui'
 import {
   ClaimSortColumn,
-  ClaimsService,
   QuestNarrative,
   SortDirection,
 } from '@0xintuition/api'
@@ -31,21 +30,17 @@ import {
 
 import { ErrorPage } from '@components/error-page'
 import { ListClaimsList } from '@components/list/list-claims'
-import { OverviewAboutHeader } from '@components/profile/overview-about-header'
+import { OverviewAboutHeaderNew as OverviewAboutHeader } from '@components/profile/overview-about-header'
 import { OverviewCreatedHeader } from '@components/profile/overview-created-header'
 import { OverviewStakingHeader } from '@components/profile/overview-staking-header'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
-import { getClaimsAboutIdentity } from '@lib/services/claims'
 import { getIdentityOrPending } from '@lib/services/identities'
 import { getUserSavedLists } from '@lib/services/lists'
-import { getPositionsOnIdentity } from '@lib/services/positions'
-import { getUserIdentities } from '@lib/services/users'
 import logger from '@lib/utils/logger'
 import { formatBalance, invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { useNavigate, useRouteLoaderData } from '@remix-run/react'
 import { ProfileLoaderData } from '@routes/app+/profile+/_index+/_layout'
-import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
 import { getQuestsProgress } from '@server/quest'
 import { QueryClient } from '@tanstack/react-query'
@@ -66,8 +61,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
     userWallet,
   )
 
-  const url = new URL(request.url)
-  const searchParams = new URLSearchParams(url.search)
+  // const url = new URL(request.url)
+  // const searchParams = new URLSearchParams(url.search)
 
   const listSearchParams = new URLSearchParams()
   listSearchParams.set('sortsBy', ClaimSortColumn.ASSETS_SUM)
@@ -145,6 +140,14 @@ export async function loader({ request }: LoaderFunctionArgs) {
     },
   }
 
+  const allPositionsWhere = {
+    account: {
+      id: {
+        _eq: queryAddress,
+      },
+    },
+  }
+
   const accountResult = await fetcher<
     GetAccountQuery,
     GetAccountQueryVariables
@@ -217,6 +220,15 @@ export async function loader({ request }: LoaderFunctionArgs) {
       >(GetPositionsCountByTypeDocument, { where: triplePositionsWhere })(),
   })
 
+  await queryClient.prefetchQuery({
+    queryKey: ['get-all-positions', { where: allPositionsWhere }],
+    queryFn: () =>
+      fetcher<
+        GetPositionsCountByTypeQuery,
+        GetPositionsCountByTypeQueryVariables
+      >(GetPositionsCountByTypeDocument, { where: allPositionsWhere })(),
+  })
+
   return json({
     queryAddress,
     initialParams: {
@@ -226,6 +238,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
       createdAtomsWhere,
       atomPositionsWhere,
       triplePositionsWhere,
+      allPositionsWhere,
     },
     ...(!isPending &&
       !!userIdentity && {
@@ -233,27 +246,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
           request,
           options: {
             narrative: QuestNarrative.STANDARD,
-          },
-        }),
-        positions: await getPositionsOnIdentity({
-          request,
-          identityId: userIdentity.id,
-          searchParams,
-        }),
-        activeIdentities: await getUserIdentities({
-          request,
-          userWallet: userWallet.toLowerCase(),
-          searchParams,
-        }),
-        claims: await getClaimsAboutIdentity({
-          request,
-          identityId: userIdentity.id,
-          searchParams,
-        }),
-        claimsSummary: await fetchWrapper(request, {
-          method: ClaimsService.claimSummary,
-          args: {
-            identity: userIdentity.id,
           },
         }),
         savedListClaims: await getUserSavedLists({
@@ -266,17 +258,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export default function UserProfileOverview() {
-  const {
-    questsProgress,
-    activeIdentities,
-    claims,
-    positions,
-    claimsSummary,
-    savedListClaims,
-    initialParams,
-    queryAddress,
-  } = useLiveLoader<typeof loader>(['attest', 'create'])
-  const { userIdentity, userTotals, isPending } =
+  const { questsProgress, savedListClaims, initialParams, queryAddress } =
+    useLiveLoader<typeof loader>(['attest', 'create'])
+  const { userIdentity, isPending } =
     useRouteLoaderData<ProfileLoaderData>(
       'routes/app+/profile+/_index+/_layout',
     ) ?? {}
@@ -291,64 +275,35 @@ export default function UserProfileOverview() {
     createdAtomsWhere,
     atomPositionsWhere,
     triplePositionsWhere,
+    allPositionsWhere,
   } = initialParams
 
-  const {
-    data: accountResult,
-    isLoading: isLoadingAccount,
-    isError: isErrorAccount,
-    error: errorAccount,
-  } = useGetAccountQuery(
+  const { data: accountResult } = useGetAccountQuery(
     { address: queryAddress },
     { queryKey: ['get-account', { address: queryAddress }] },
   )
 
-  const {
-    data: triplesCountResult,
-    isLoading: isLoadingTriplesCount,
-    isError: isErrorTriplesCount,
-    error: errorTriplesCount,
-  } = useGetTriplesCountQuery(
+  const { data: triplesCountResult } = useGetTriplesCountQuery(
     { where: triplesCountWhere },
     { queryKey: ['get-triples-count', { where: triplesCountWhere }] },
   )
 
-  const {
-    data: positionsCountResult,
-    isLoading: isLoadingPositionsCount,
-    isError: isErrorPositionsCount,
-    error: errorPositionsCount,
-  } = useGetPositionsCountQuery(
+  const { data: positionsCountResult } = useGetPositionsCountQuery(
     { where: positionsCountWhere },
     { queryKey: ['get-positions-count', { where: positionsCountWhere }] },
   )
 
-  const {
-    data: createdTriplesResult,
-    isLoading: isLoadingCreatedTriples,
-    isError: isErrorCreatedTriples,
-    error: errorCreatedTriples,
-  } = useGetTriplesCountQuery(
+  const { data: createdTriplesResult } = useGetTriplesCountQuery(
     { where: createdTriplesWhere },
     { queryKey: ['get-created-triples', { where: createdTriplesWhere }] },
   )
 
-  const {
-    data: createdAtomsResult,
-    isLoading: isLoadingCreatedAtoms,
-    isError: isErrorCreatedAtoms,
-    error: errorCreatedAtoms,
-  } = useGetAtomsCountQuery(
+  const { data: createdAtomsResult } = useGetAtomsCountQuery(
     { where: createdAtomsWhere },
     { queryKey: ['get-created-atoms', { where: createdAtomsWhere }] },
   )
 
-  const {
-    data: atomPositionsResult,
-    isLoading: isLoadingAtomPositions,
-    isError: isErrorAtomPositions,
-    error: errorAtomPositions,
-  } = useGetPositionsCountByTypeQuery(
+  const { data: atomPositionsResult } = useGetPositionsCountByTypeQuery(
     {
       where: atomPositionsWhere,
     },
@@ -357,27 +312,14 @@ export default function UserProfileOverview() {
     },
   )
 
-  const atomPositionsCount =
-    atomPositionsResult?.positions_aggregate?.total?.count
-
-  const {
-    data: triplePositionsResult,
-    isLoading: isLoadingTriplePositions,
-    isError: isErrorTriplePositions,
-    error: errorTriplePositions,
-  } = useGetPositionsCountByTypeQuery(
+  const { data: triplePositionsResult } = useGetPositionsCountByTypeQuery(
     { where: triplePositionsWhere },
     { queryKey: ['get-triple-positions', { where: triplePositionsWhere }] },
   )
 
-  // Log all query results
-  logger('Account Result:', accountResult)
-  logger('Triples Count Result:', triplesCountResult)
-  logger('Positions Count Result:', positionsCountResult)
-  logger('Created Triples Result:', createdTriplesResult)
-  logger('Created Atoms Result:', createdAtomsResult)
-  logger('Atom Positions Result:', atomPositionsResult)
-  logger('Triple Positions Result:', triplePositionsResult)
+  const { data: allPositionsResult } = useGetPositionsCountByTypeQuery({
+    where: allPositionsWhere,
+  })
 
   return (
     <div className="flex flex-col gap-12">
@@ -402,16 +344,27 @@ export default function UserProfileOverview() {
         <div className="flex flex-col items-center gap-6 md:flex-row">
           <OverviewAboutHeader
             variant="claims"
-            userIdentity={userIdentity}
-            totalClaims={claims?.pagination?.totalEntries}
-            totalStake={+formatBalance(claimsSummary?.assets_sum ?? 0, 18)}
+            atomImage={accountResult?.account?.image ?? ''}
+            atomLabel={accountResult?.account?.label ?? ''}
+            totalClaims={
+              triplesCountResult?.triples_aggregate?.total?.count ?? 0
+            }
+            totalStake={0} // TODO: need to find way to get the shares -- may need to update the schema
             link={`${PATHS.PROFILE}/data-about`}
           />
           <OverviewAboutHeader
             variant="positions"
-            userIdentity={userIdentity}
-            totalPositions={positions?.pagination.totalEntries}
-            totalStake={+formatBalance(userIdentity.assets_sum, 18)}
+            atomImage={accountResult?.account?.image ?? ''}
+            atomLabel={accountResult?.account?.label ?? ''}
+            totalPositions={
+              positionsCountResult?.positions_aggregate?.total?.count ?? 0
+            }
+            totalStake={
+              +formatBalance(
+                positionsCountResult?.positions_aggregate?.total?.sum?.shares ??
+                  0,
+              )
+            } // TODO: need to find way to get the shares -- may need to update the schema
             link={`${PATHS.PROFILE}/data-about`}
           />
         </div>
@@ -427,22 +380,34 @@ export default function UserProfileOverview() {
         </Text>
         <div className="flex flex-col items-center gap-6">
           <OverviewStakingHeader
-            totalClaims={userTotals?.total_positions_on_claims ?? 0}
-            totalIdentities={activeIdentities?.pagination.totalEntries ?? 0}
+            totalClaims={
+              triplePositionsResult?.positions_aggregate?.total?.count ?? 0
+            }
+            totalIdentities={
+              atomPositionsResult?.positions_aggregate?.total?.count ?? 0
+            }
             totalStake={
-              +formatBalance(userTotals?.total_position_value ?? '0', 18)
+              +formatBalance(
+                allPositionsResult?.positions_aggregate?.total?.sum?.shares ??
+                  '0',
+                18,
+              )
             }
             link={`${PATHS.PROFILE}/data-created`}
           />
           <div className="flex flex-row w-full items-center gap-6 max-md:flex-col">
             <OverviewCreatedHeader
               variant="identities"
-              totalCreated={userTotals?.total_identities ?? 0}
+              totalCreated={
+                createdAtomsResult?.atoms_aggregate?.aggregate?.count ?? 0
+              }
               link={`${PATHS.PROFILE}/data-created`}
             />
             <OverviewCreatedHeader
               variant="claims"
-              totalCreated={userTotals?.total_claims ?? 0}
+              totalCreated={
+                createdTriplesResult?.triples_aggregate?.total?.count ?? 0
+              }
               link={`${PATHS.PROFILE}/data-created`}
             />
           </div>
