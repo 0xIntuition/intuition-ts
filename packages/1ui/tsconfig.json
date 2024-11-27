@@ -4,8 +4,20 @@
     "jsx": "react-jsx",
     "baseUrl": "./src",
     "outDir": "../../dist/packages/1ui",
-    "composite": true,
-    "moduleResolution": "bundler"
+    "declaration": true,
+    "paths": {
+      "components/*": ["components/*"],
+      "utils/*": ["utils/*"],
+      "types/*": ["types/*"],
+      "styles/*": ["styles/*"]
+    }
   },
-  "include": ["src"]
+  "include": ["src"],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "**/*.stories.*",
+    "**/*.spec.*",
+    "**/*.test.*"
+  ]
 }
