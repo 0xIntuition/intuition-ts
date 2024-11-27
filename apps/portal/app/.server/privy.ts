@@ -2,6 +2,10 @@ import logger from '@lib/utils/logger'
 import { AuthTokenClaims, PrivyClient, User } from '@privy-io/server-auth'
 import { parse } from 'cookie'
 
+function getPublicKey() {
+  return `-----BEGIN PUBLIC KEY-----\n${process.env.PRIVY_VERIFICATION_KEY}\n-----END PUBLIC KEY-----`;
+}
+
 export function getPrivyClient() {
   return new PrivyClient(
     process.env.PRIVY_APP_ID || '',
@@ -21,7 +25,7 @@ export const verifyPrivyAccessToken = async (
   try {
     const verifiedClaims = await privy.verifyAuthToken(
       authToken,
-      process.env.PRIVY_VERIFICATION_KEY,
+      getPublicKey(),
     )
     return verifiedClaims
   } catch (error) {

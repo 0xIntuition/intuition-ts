@@ -9,25 +9,9 @@ export function getPrivyClient() {
   )
 }
 
-// export const verifyPrivyAccessToken = async (
-//   req: Request,
-// ): Promise<AuthTokenClaims | null> => {
-//   logger('[verifyPrivyAccessToken] Entering verifyPrivyAccessToken')
-//   const privy = getPrivyClient()
-//   const authToken = getPrivyAccessToken(req)
-//   logger('[verifyPrivyAccessToken] authToken', authToken)
-//   if (!authToken) {
-//     logger('No privy access token found')
-//     return null
-//   }
-//   logger('[verifyPrivyAccessToken] verifiedClaims')
-//   const verifiedClaims = await privy.verifyAuthToken(
-//     authToken,
-//     process.env.PRIVY_VERIFICATION_KEY,
-//   )
-//   logger('[verifyPrivyAccessToken] verifiedClaims', verifiedClaims)
-//   return verifiedClaims
-// }
+function getPublicKey() {
+  return `-----BEGIN PUBLIC KEY-----\n${process.env.PRIVY_VERIFICATION_KEY}\n-----END PUBLIC KEY-----`;
+}
 
 export const verifyPrivyAccessToken = async (
   req: Request,
@@ -43,14 +27,12 @@ export const verifyPrivyAccessToken = async (
 
   const verificationKey = process.env.PRIVY_VERIFICATION_KEY
   if (verificationKey) {
-    // Convert the escaped newlines back to actual newlines
-    // const formattedKey = verificationKey.replace(/\\n/g, '\n')
     logger('[verifyPrivyAccessToken] Verification key found')
 
     try {
       const verifiedClaims = await privy.verifyAuthToken(
         authToken,
-        // formattedKey,
+        getPublicKey(),
       )
       logger('[verifyPrivyAccessToken] verifiedClaims', verifiedClaims)
       return verifiedClaims
@@ -59,14 +41,12 @@ export const verifyPrivyAccessToken = async (
         '[verifyPrivyAccessToken] Error verifying auth token with custom key',
         error,
       )
-      // Fallback to default verification if custom key fails
       logger(
         '[verifyPrivyAccessToken] Attempting verification with default key',
       )
     }
   }
 
-  // If no verification key or custom verification failed, use default verification
   try {
     const verifiedClaims = await privy.verifyAuthToken(authToken)
     logger('[verifyPrivyAccessToken] verifiedClaims', verifiedClaims)
