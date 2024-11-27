@@ -15,22 +15,18 @@ import {
 import {
   ClaimPresenter,
   ClaimSortColumn,
-  IdentityPresenter,
   SortDirection,
 } from '@0xintuition/api'
 import {
   fetcher,
-  GetListItemsDocument,
-  GetListItemsQuery,
-  GetListItemsQueryVariables,
+  GetAtomQuery,
   GetTripleDocument,
   GetTripleQuery,
   GetTripleQueryVariables,
-  useGetListItemsQuery,
   useGetTripleQuery,
 } from '@0xintuition/graphql'
 
-import { DetailInfoCard } from '@components/detail-info-card'
+import { DetailInfoCardNew } from '@components/detail-info-card'
 import { ErrorPage } from '@components/error-page'
 import NavigationButton from '@components/navigation-link'
 import RemixLink from '@components/remix-link'
@@ -47,17 +43,16 @@ import logger from '@lib/utils/logger'
 import {
   calculatePercentageOfTvl,
   formatBalance,
-  getAtomDescription,
-  getAtomImage,
-  getAtomIpfsLink,
-  getAtomLabel,
-  getAtomLink,
+  getAtomDescriptionGQL,
+  getAtomImageGQL,
+  getAtomIpfsLinkGQL,
+  getAtomLabelGQL,
+  getAtomLinkGQL,
   invariant,
 } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { Outlet } from '@remix-run/react'
 import { requireUserWallet } from '@server/auth'
-import { getVaultDetails } from '@server/multivault'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
 import {
   BLOCK_EXPLORER_URL,
@@ -107,26 +102,6 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     queryFn: () => tripleResult,
   })
 
-  // if (tripleResult?.triple?.id) {
-  //   await queryClient.prefetchQuery({
-  //     queryKey: [
-  //       'get-triple-list',
-  //       {
-  //         predicateId: getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId,
-  //         objectId: id,
-  //       },
-  //     ],
-  //     queryFn: () =>
-  //       fetcher<GetListItemsQuery, GetListItemsQueryVariables>(
-  //         GetListItemsDocument,
-  //         {
-  //           predicateId: getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId,
-  //           objectId: id,
-  //         },
-  //       ),
-  //   })
-  // }
-
   return json({
     wallet,
     claim,
@@ -146,6 +121,8 @@ export interface ClaimDetailsLoaderData {
   claim: ClaimPresenter
 }
 
+type Atom = GetAtomQuery['atom']
+
 export default function ClaimDetails() {
   const { wallet, claim, initialParams } = useLiveLoader<{
     wallet: string
@@ -160,12 +137,7 @@ export default function ClaimDetails() {
   const [stakeModalActive, setStakeModalActive] = useAtom(stakeModalAtom)
   const [shareModalActive, setShareModalActive] = useAtom(shareModalAtom)
 
-  const {
-    data: tripleData,
-    isLoading,
-    isError,
-    error,
-  } = useGetTripleQuery(
+  const { data: tripleData } = useGetTripleQuery(
     {
       tripleId: initialParams.id,
     },
@@ -199,7 +171,6 @@ export default function ClaimDetails() {
     )
 
   logger('Vault Details:', vaultDetails)
-  // const { user_assets, assets_sum } = vaultDetails ? vaultDetails : identity
 
   const direction: 'for' | 'against' =
     (vaultDetails?.user_conviction_against ?? claim.user_conviction_against) ===
@@ -227,29 +198,6 @@ export default function ClaimDetails() {
 
   const handleGoBack = useGoBack({ fallbackRoute: PATHS.EXPLORE_CLAIMS })
 
-  // const {
-  //   data: tripleListData,
-  //   // isLoading,
-  //   // isError,
-  //   // error,
-  // } = useGetListItemsQuery(
-  //   {
-  //     predicateId: initialParams.predicateId,
-  //     objectId: initialParams.objectId,
-  //   },
-  //   {
-  //     queryKey: [
-  //       'get-triple-list',
-  //       {
-  //         prediateId: initialParams.predicateId,
-  //         objectId: initialParams.id,
-  //       },
-  //     ],
-  //   },
-  // )
-
-  // logger('tripleListData', tripleListData)
-
   const leftPanel = (
     <div className="flex-col justify-start items-start gap-6 inline-flex w-full">
       <NavigationButton
@@ -263,38 +211,50 @@ export default function ClaimDetails() {
       <div className="flex-row flex m-auto md:hidden">
         <Claim
           size="xl"
+          maxIdentityLength={60}
           subject={{
-            variant: claim.subject?.is_user ? Identity.user : Identity.nonUser,
-            label: getAtomLabel(claim.subject as IdentityPresenter),
-            imgSrc: getAtomImage(claim.subject as IdentityPresenter),
-            id: claim.subject?.identity_id,
-            description: getAtomDescription(claim.subject as IdentityPresenter),
-            ipfsLink: getAtomIpfsLink(claim.subject as IdentityPresenter),
-            link: getAtomLink(claim.subject as IdentityPresenter),
+            variant:
+              tripleData?.triple?.subject?.type === 'Person'
+                ? Identity.user
+                : Identity.nonUser,
+            label: getAtomLabelGQL(tripleData?.triple?.subject as Atom),
+            imgSrc: getAtomImageGQL(tripleData?.triple?.subject as Atom),
+            id: tripleData?.triple?.subject?.id,
+            description: getAtomDescriptionGQL(
+              tripleData?.triple?.subject as Atom,
+            ),
+            ipfsLink: getAtomIpfsLinkGQL(tripleData?.triple?.subject as Atom),
+            link: getAtomLinkGQL(tripleData?.triple?.subject as Atom),
             linkComponent: RemixLink,
           }}
           predicate={{
-            variant: claim.predicate?.is_user
-              ? Identity.user
-              : Identity.nonUser,
-            label: getAtomLabel(claim.predicate as IdentityPresenter),
-            imgSrc: getAtomImage(claim.predicate as IdentityPresenter),
-            id: claim.predicate?.identity_id,
-            description: getAtomDescription(
-              claim.predicate as IdentityPresenter,
+            variant:
+              tripleData?.triple?.predicate?.type === 'Person'
+                ? Identity.user
+                : Identity.nonUser,
+            label: getAtomLabelGQL(tripleData?.triple?.predicate as Atom),
+            imgSrc: getAtomImageGQL(tripleData?.triple?.predicate as Atom),
+            id: tripleData?.triple?.predicate?.id,
+            description: getAtomDescriptionGQL(
+              tripleData?.triple?.predicate as Atom,
             ),
-            ipfsLink: getAtomIpfsLink(claim.predicate as IdentityPresenter),
-            link: getAtomLink(claim.predicate as IdentityPresenter),
+            ipfsLink: getAtomIpfsLinkGQL(tripleData?.triple?.predicate as Atom),
+            link: getAtomLinkGQL(tripleData?.triple?.predicate as Atom),
             linkComponent: RemixLink,
           }}
           object={{
-            variant: claim.object?.is_user ? Identity.user : Identity.nonUser,
-            label: getAtomLabel(claim.object as IdentityPresenter),
-            imgSrc: getAtomImage(claim.object as IdentityPresenter),
-            id: claim.object?.identity_id,
-            description: getAtomDescription(claim.object as IdentityPresenter),
-            ipfsLink: getAtomIpfsLink(claim.object as IdentityPresenter),
-            link: getAtomLink(claim.object as IdentityPresenter),
+            variant:
+              tripleData?.triple?.object?.type === 'Person'
+                ? Identity.user
+                : Identity.nonUser,
+            label: getAtomLabelGQL(tripleData?.triple?.object as Atom),
+            imgSrc: getAtomImageGQL(tripleData?.triple?.object as Atom),
+            id: tripleData?.triple?.object?.id,
+            description: getAtomDescriptionGQL(
+              tripleData?.triple?.object as Atom,
+            ),
+            ipfsLink: getAtomIpfsLinkGQL(tripleData?.triple?.object as Atom),
+            link: getAtomLinkGQL(tripleData?.triple?.object as Atom),
             linkComponent: RemixLink,
           }}
         />
@@ -391,7 +351,7 @@ export default function ClaimDetails() {
           (vaultDetails?.user_conviction ?? claim.user_conviction_for) > '0'
         }
       />
-      <DetailInfoCard
+      <DetailInfoCardNew
         variant={Identity.user}
         list={
           String(tripleData?.triple?.predicate?.id) ===

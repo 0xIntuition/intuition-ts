@@ -72,10 +72,28 @@ fragment TripleVaultDetails on triples {
   vaultId
   counterVaultId
   vault {
-    ...VaultDetails
+    positions {
+      id
+      vaultId
+      shares
+      account {
+        id
+        label
+        image
+      }
+    }
   }
   counterVault {
-    ...VaultDetails
+    positions {
+      id
+      vaultId
+      shares
+      account {
+        id
+        label
+        image
+      }
+    }
   }
 }
 
