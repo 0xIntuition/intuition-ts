@@ -88,9 +88,9 @@ export function LineChart({
               strokeWidth={2}
               dot={false}
               isAnimationActive={true}
-              animationDuration={1000}
+              animationDuration={165}
               animationBegin={0}
-              animationEasing="linear"
+              animationEasing="ease-in-out"
             />
           ))}
         </RechartsLineChart>

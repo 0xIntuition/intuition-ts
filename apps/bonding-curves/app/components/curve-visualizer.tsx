@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { Button, Input, Label, Text, TextVariant } from '@0xintuition/1ui'
 
@@ -101,6 +101,8 @@ export function CurveVisualizer() {
   const [contractLayout, setContractLayout] = useState<ContractLayout | null>(
     null,
   )
+  const pendingUpdateRef = useRef<NodeJS.Timeout | null>(null)
+  const latestRangeRef = useRef({ min: minValue, max: maxValue })
 
   const publicClient = createPublicClient({
     chain: foundry,
@@ -217,10 +219,12 @@ export function CurveVisualizer() {
   // Generate curve points when contract is deployed
   const generateCurvePoints = useCallback(
     async (address: string, abi: any[]) => {
+      const { min, max } = latestRangeRef.current
+      console.log('Generating points with range:', { min, max })
       const points: Point[] = []
       const numPoints = 100
-      const maxValueWei = parseEther(maxValue.toString())
-      const minValueWei = parseEther(minValue.toString())
+      const maxValueWei = parseEther(max.toString())
+      const minValueWei = parseEther(min.toString())
       const stepWei = (maxValueWei - minValueWei) / BigInt(numPoints)
 
       for (let i = 0; i <= numPoints; i++) {
@@ -244,7 +248,7 @@ export function CurveVisualizer() {
 
       return points
     },
-    [publicClient, minValue, maxValue],
+    [publicClient, latestRangeRef],
   )
 
   // Handle ABI response and deployment response
@@ -354,7 +358,7 @@ export function CurveVisualizer() {
       )
 
       // Force a small delay to ensure the storage update has propagated
-      await new Promise((resolve) => setTimeout(resolve, 100))
+      // await new Promise((resolve) => setTimeout(resolve, 100)) // Try removing this just to see what happens
 
       // Re-generate curve points with fresh data
       console.log('Regenerating curve points...')
@@ -392,6 +396,51 @@ export function CurveVisualizer() {
     }
   }
 
+  const regenerateCurves = useCallback(async () => {
+    const { min, max } = latestRangeRef.current
+    console.log('Regenerating all curves for range:', { min, max })
+
+    const updatedCurves = await Promise.all(
+      deployedContracts.map(async (contract) => {
+        const points = await generateCurvePoints(contract.address, contract.abi)
+        return {
+          ...contract,
+          points: points.map((p) => ({ ...p })),
+        }
+      }),
+    )
+
+    setDeployedContracts(updatedCurves)
+  }, [deployedContracts, generateCurvePoints])
+
+  const handleMinMaxChange = useCallback(
+    (newMin: number, newMax: number) => {
+      // Update latest values immediately
+      latestRangeRef.current = { min: newMin, max: newMax }
+
+      // Clear any pending updates
+      if (pendingUpdateRef.current) {
+        clearTimeout(pendingUpdateRef.current)
+      }
+
+      // Schedule new update with small delay
+      pendingUpdateRef.current = setTimeout(async () => {
+        await regenerateCurves()
+        pendingUpdateRef.current = null
+      }, 100)
+    },
+    [regenerateCurves],
+  )
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (pendingUpdateRef.current) {
+        clearTimeout(pendingUpdateRef.current)
+      }
+    }
+  }, [])
+
   return (
     <div className="w-full space-y-6">
       <div className="space-y-2">
@@ -411,7 +460,11 @@ export function CurveVisualizer() {
               min="0"
               step="0.1"
               value={minValue}
-              onChange={(e) => setMinValue(Number(e.target.value))}
+              onChange={(e) => {
+                const newMin = Number(e.target.value)
+                setMinValue(newMin)
+                handleMinMaxChange(newMin, maxValue)
+              }}
             />
           </div>
           <div className="space-y-2">
@@ -422,7 +475,11 @@ export function CurveVisualizer() {
               min="0"
               step="0.1"
               value={maxValue}
-              onChange={(e) => setMaxValue(Number(e.target.value))}
+              onChange={(e) => {
+                const newMax = Number(e.target.value)
+                setMaxValue(newMax)
+                handleMinMaxChange(minValue, newMax)
+              }}
             />
           </div>
         </div>
