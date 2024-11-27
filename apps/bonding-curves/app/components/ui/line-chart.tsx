@@ -75,6 +75,7 @@ export function LineChart({
               border: '1px solid hsl(var(--border))',
               borderRadius: 'var(--radius)',
             }}
+            isAnimationActive={false}
           />
           <Legend />
           {data.map((curve) => (
@@ -86,6 +87,10 @@ export function LineChart({
               stroke={curve.color}
               strokeWidth={2}
               dot={false}
+              isAnimationActive={true}
+              animationDuration={1000}
+              animationBegin={0}
+              animationEasing="linear"
             />
           ))}
         </RechartsLineChart>

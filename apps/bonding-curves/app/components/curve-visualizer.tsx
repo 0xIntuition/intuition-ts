@@ -363,23 +363,29 @@ export function CurveVisualizer() {
         selectedContract.abi,
       )
 
-      // Update the curve with new points and trigger re-render
-      setDeployedContracts((prev) => {
-        const updated = prev.map((c) =>
-          c.address === selectedContract.address
-            ? { ...c, points: [...points] } // Create new array to force re-render
-            : c,
-        )
-        return updated
-      })
-
-      // Update the layout
+      // First update the layout to ensure we have the latest values
       const newLayout = await getContractLayout(
         selectedContract.address,
         selectedContract.abi,
         publicClient,
       )
       setContractLayout(newLayout)
+
+      // Then update the curve points in a separate state update
+      // This ensures React properly recognizes the change
+      setTimeout(() => {
+        setDeployedContracts((prev) => {
+          const updated = prev.map((c) =>
+            c.address === selectedContract.address
+              ? {
+                  ...c,
+                  points: points.map((p) => ({ ...p })), // Create new point objects
+                }
+              : c,
+          )
+          return updated
+        })
+      }, 0)
     } catch (err) {
       console.error('Failed to update variable:', err)
       setError(err instanceof Error ? err.message : 'Failed to update variable')

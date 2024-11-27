@@ -67,9 +67,6 @@ export async function getContractLayout(
   )
 
   for (const v of stateVars) {
-    // Check if it's immutable by checking if name is all caps
-    const isImmutable = v.name.toUpperCase() === v.name
-
     try {
       // Try to read current value
       const value = await publicClient.readContract({
@@ -81,9 +78,9 @@ export async function getContractLayout(
 
       variables.push({
         name: v.name,
-        slot: slot++, // Always increment slot, even for immutable variables
+        slot: slot++,
         type: v.outputs[0].type,
-        isImmutable,
+        isImmutable: false,
         value
       })
     } catch (err) {
