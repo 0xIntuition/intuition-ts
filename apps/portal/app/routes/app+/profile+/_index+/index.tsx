@@ -10,6 +10,23 @@ import {
   GetAccountDocument,
   GetAccountQuery,
   GetAccountQueryVariables,
+  GetAtomsCountDocument,
+  GetAtomsCountQuery,
+  GetAtomsCountQueryVariables,
+  GetPositionsCountByTypeDocument,
+  GetPositionsCountByTypeQuery,
+  GetPositionsCountByTypeQueryVariables,
+  GetPositionsCountDocument,
+  GetPositionsCountQuery,
+  GetPositionsCountQueryVariables,
+  GetTriplesCountDocument,
+  GetTriplesCountQuery,
+  GetTriplesCountQueryVariables,
+  useGetAccountQuery,
+  useGetAtomsCountQuery,
+  useGetPositionsCountByTypeQuery,
+  useGetPositionsCountQuery,
+  useGetTriplesCountQuery,
 } from '@0xintuition/graphql'
 
 import { ErrorPage } from '@components/error-page'
@@ -60,7 +77,74 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   const queryClient = new QueryClient()
 
-  logger('Fetching Account Data...')
+  const triplesCountWhere = {
+    _or: [
+      {
+        subjectId: {
+          _eq: 14,
+        },
+      },
+      {
+        predicateId: {
+          _eq: 14,
+        },
+      },
+      {
+        objectId: {
+          _eq: 14,
+        },
+      },
+    ],
+  }
+
+  const positionsCountWhere = {
+    vaultId: {
+      _eq: 14,
+    },
+  }
+
+  const createdTriplesWhere = {
+    creator: {
+      id: {
+        _eq: queryAddress,
+      },
+    },
+  }
+
+  const createdAtomsWhere = {
+    creator: {
+      id: {
+        _eq: queryAddress,
+      },
+    },
+  }
+
+  const atomPositionsWhere = {
+    account: {
+      id: {
+        _eq: queryAddress,
+      },
+    },
+    vault: {
+      tripleId: {
+        _is_null: true,
+      },
+    },
+  }
+
+  const triplePositionsWhere = {
+    account: {
+      id: {
+        _eq: queryAddress,
+      },
+    },
+    vault: {
+      atomId: {
+        _is_null: true,
+      },
+    },
+  }
+
   const accountResult = await fetcher<
     GetAccountQuery,
     GetAccountQueryVariables
@@ -79,7 +163,70 @@ export async function loader({ request }: LoaderFunctionArgs) {
     queryFn: () => accountResult,
   })
 
+  await queryClient.prefetchQuery({
+    queryKey: ['get-triples-count', { where: triplesCountWhere }],
+    queryFn: () =>
+      fetcher<GetTriplesCountQuery, GetTriplesCountQueryVariables>(
+        GetTriplesCountDocument,
+        { where: triplesCountWhere },
+      )(),
+  })
+
+  await queryClient.prefetchQuery({
+    queryKey: ['get-positions-count', { where: positionsCountWhere }],
+    queryFn: () =>
+      fetcher<GetPositionsCountQuery, GetPositionsCountQueryVariables>(
+        GetPositionsCountDocument,
+        { where: positionsCountWhere },
+      )(),
+  })
+
+  await queryClient.prefetchQuery({
+    queryKey: ['get-created-triples', { where: createdTriplesWhere }],
+    queryFn: () =>
+      fetcher<GetTriplesCountQuery, GetTriplesCountQueryVariables>(
+        GetTriplesCountDocument,
+        { where: createdTriplesWhere },
+      )(),
+  })
+
+  await queryClient.prefetchQuery({
+    queryKey: ['get-created-atoms', { where: createdAtomsWhere }],
+    queryFn: () =>
+      fetcher<GetAtomsCountQuery, GetAtomsCountQueryVariables>(
+        GetAtomsCountDocument,
+        { where: createdAtomsWhere },
+      )(),
+  })
+
+  await queryClient.prefetchQuery({
+    queryKey: ['get-atom-positions', { where: atomPositionsWhere }],
+    queryFn: () =>
+      fetcher<
+        GetPositionsCountByTypeQuery,
+        GetPositionsCountByTypeQueryVariables
+      >(GetPositionsCountByTypeDocument, { where: atomPositionsWhere })(),
+  })
+
+  await queryClient.prefetchQuery({
+    queryKey: ['get-triple-positions', { where: triplePositionsWhere }],
+    queryFn: () =>
+      fetcher<
+        GetPositionsCountByTypeQuery,
+        GetPositionsCountByTypeQueryVariables
+      >(GetPositionsCountByTypeDocument, { where: triplePositionsWhere })(),
+  })
+
   return json({
+    queryAddress,
+    initialParams: {
+      triplesCountWhere,
+      positionsCountWhere,
+      createdTriplesWhere,
+      createdAtomsWhere,
+      atomPositionsWhere,
+      triplePositionsWhere,
+    },
     ...(!isPending &&
       !!userIdentity && {
         questsProgress: await getQuestsProgress({
@@ -126,6 +273,8 @@ export default function UserProfileOverview() {
     positions,
     claimsSummary,
     savedListClaims,
+    initialParams,
+    queryAddress,
   } = useLiveLoader<typeof loader>(['attest', 'create'])
   const { userIdentity, userTotals, isPending } =
     useRouteLoaderData<ProfileLoaderData>(
@@ -134,6 +283,101 @@ export default function UserProfileOverview() {
   invariant(userIdentity, NO_USER_IDENTITY_ERROR)
 
   const navigate = useNavigate()
+
+  const {
+    triplesCountWhere,
+    positionsCountWhere,
+    createdTriplesWhere,
+    createdAtomsWhere,
+    atomPositionsWhere,
+    triplePositionsWhere,
+  } = initialParams
+
+  const {
+    data: accountResult,
+    isLoading: isLoadingAccount,
+    isError: isErrorAccount,
+    error: errorAccount,
+  } = useGetAccountQuery(
+    { address: queryAddress },
+    { queryKey: ['get-account', { address: queryAddress }] },
+  )
+
+  const {
+    data: triplesCountResult,
+    isLoading: isLoadingTriplesCount,
+    isError: isErrorTriplesCount,
+    error: errorTriplesCount,
+  } = useGetTriplesCountQuery(
+    { where: triplesCountWhere },
+    { queryKey: ['get-triples-count', { where: triplesCountWhere }] },
+  )
+
+  const {
+    data: positionsCountResult,
+    isLoading: isLoadingPositionsCount,
+    isError: isErrorPositionsCount,
+    error: errorPositionsCount,
+  } = useGetPositionsCountQuery(
+    { where: positionsCountWhere },
+    { queryKey: ['get-positions-count', { where: positionsCountWhere }] },
+  )
+
+  const {
+    data: createdTriplesResult,
+    isLoading: isLoadingCreatedTriples,
+    isError: isErrorCreatedTriples,
+    error: errorCreatedTriples,
+  } = useGetTriplesCountQuery(
+    { where: createdTriplesWhere },
+    { queryKey: ['get-created-triples', { where: createdTriplesWhere }] },
+  )
+
+  const {
+    data: createdAtomsResult,
+    isLoading: isLoadingCreatedAtoms,
+    isError: isErrorCreatedAtoms,
+    error: errorCreatedAtoms,
+  } = useGetAtomsCountQuery(
+    { where: createdAtomsWhere },
+    { queryKey: ['get-created-atoms', { where: createdAtomsWhere }] },
+  )
+
+  const {
+    data: atomPositionsResult,
+    isLoading: isLoadingAtomPositions,
+    isError: isErrorAtomPositions,
+    error: errorAtomPositions,
+  } = useGetPositionsCountByTypeQuery(
+    {
+      where: atomPositionsWhere,
+    },
+    {
+      queryKey: ['get-atom-positions', { where: atomPositionsWhere }],
+    },
+  )
+
+  const atomPositionsCount =
+    atomPositionsResult?.positions_aggregate?.total?.count
+
+  const {
+    data: triplePositionsResult,
+    isLoading: isLoadingTriplePositions,
+    isError: isErrorTriplePositions,
+    error: errorTriplePositions,
+  } = useGetPositionsCountByTypeQuery(
+    { where: triplePositionsWhere },
+    { queryKey: ['get-triple-positions', { where: triplePositionsWhere }] },
+  )
+
+  // Log all query results
+  logger('Account Result:', accountResult)
+  logger('Triples Count Result:', triplesCountResult)
+  logger('Positions Count Result:', positionsCountResult)
+  logger('Created Triples Result:', createdTriplesResult)
+  logger('Created Atoms Result:', createdAtomsResult)
+  logger('Atom Positions Result:', atomPositionsResult)
+  logger('Triple Positions Result:', triplePositionsResult)
 
   return (
     <div className="flex flex-col gap-12">
