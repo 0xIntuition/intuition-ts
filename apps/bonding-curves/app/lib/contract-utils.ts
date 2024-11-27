@@ -1,4 +1,4 @@
-import { parseEther } from 'viem'
+import { parseEther, type Address, type PublicClient } from 'viem'
 
 export interface ConstructorArg {
   name: string
@@ -9,6 +9,19 @@ export interface ConstructorArg {
 export interface ConstructorArgs {
   args: ConstructorArg[]
   values: Record<string, string>
+}
+
+export interface StorageVariable {
+  name: string
+  slot: number
+  type: string
+  isImmutable: boolean
+  value?: bigint
+}
+
+export interface ContractLayout {
+  name: string
+  variables: StorageVariable[]
 }
 
 export function parseConstructorArgs(abi: any[]): ConstructorArg[] {
@@ -36,4 +49,84 @@ export function prepareConstructorArgs(
     }
     return value
   })
+}
+
+export async function getContractLayout(
+  address: Address,
+  abi: any[],
+  publicClient: PublicClient
+): Promise<ContractLayout> {
+  const variables: StorageVariable[] = []
+  let slot = 0
+
+  // Get all state variables from ABI
+  const stateVars = abi.filter(
+    item => item.type === 'function' &&
+      item.stateMutability === 'view' &&
+      item.inputs.length === 0
+  )
+
+  for (const v of stateVars) {
+    // Check if it's immutable by checking if name is all caps
+    const isImmutable = v.name.toUpperCase() === v.name
+
+    try {
+      // Try to read current value
+      const value = await publicClient.readContract({
+        address,
+        abi,
+        functionName: v.name,
+        args: [] as const
+      }) as bigint
+
+      variables.push({
+        name: v.name,
+        slot: slot++, // Always increment slot, even for immutable variables
+        type: v.outputs[0].type,
+        isImmutable,
+        value
+      })
+    } catch (err) {
+      console.error(`Failed to read ${v.name}:`, err)
+    }
+  }
+
+  return {
+    name: address,
+    variables
+  }
+}
+
+export async function writeStorageSlot(
+  address: Address,
+  slot: number,
+  value: bigint,
+  publicClient: PublicClient
+) {
+  console.log("Writing to storage slot")
+  console.log('Address: ', address)
+  console.log('Slot: ', slot)
+  console.log('Value: ', value)
+
+  // Read current value
+  const beforeValue = await publicClient.getStorageAt({
+    address,
+    slot: `0x${slot.toString(16)}`
+  })
+  console.log('Storage value before:', beforeValue)
+
+  // Convert value to 32-byte hex string
+  const hexValue = value.toString(16).padStart(64, '0')
+
+  await publicClient.request({
+    method: 'anvil_setStorageAt' as any,
+    params: [address, `0x${slot.toString(16)}`, `0x${hexValue}`]
+  })
+
+  // Read new value
+  const afterValue = await publicClient.getStorageAt({
+    address,
+    slot: `0x${slot.toString(16)}`
+  })
+  console.log('Storage value after:', afterValue)
 } 

@@ -2,30 +2,25 @@
 
 import { useCallback, useEffect, useState } from 'react'
 
+import { Button, Input, Label, Text, TextVariant } from '@0xintuition/1ui'
+
 import { useFetcher } from '@remix-run/react'
 import { createPublicClient, http, parseEther, toHex } from 'viem'
 import { foundry } from 'viem/chains'
 
 import {
   formatConstructorValues,
+  getContractLayout,
   parseConstructorArgs,
+  writeStorageSlot,
   type ConstructorArg,
+  type ContractLayout,
+  type StorageVariable,
 } from '../lib/contract-utils'
 import { parseNumberInput } from '../utils/units'
 import { ConstructorForm } from './constructor-form'
+import { ContractVariablesModal } from './contract-variables-modal'
 import { LineChart } from './ui/line-chart'
-import {
-  Alert,
-  AlertDescription,
-  Button,
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-  Input,
-  Label,
-} from './ui/ui-components'
 
 interface Point {
   x: number
@@ -101,6 +96,11 @@ export function CurveVisualizer() {
     Record<string, string>
   >({})
   const fetcher = useFetcher()
+  const [selectedContract, setSelectedContract] =
+    useState<DeployedContract | null>(null)
+  const [contractLayout, setContractLayout] = useState<ContractLayout | null>(
+    null,
+  )
 
   const publicClient = createPublicClient({
     chain: foundry,
@@ -308,15 +308,88 @@ export function CurveVisualizer() {
     setDeployedContracts((prev) => prev.filter((c) => c.id !== id))
   }
 
+  const handleContractClick = async (contract: DeployedContract) => {
+    const layout = await getContractLayout(
+      contract.address,
+      contract.abi,
+      publicClient,
+    )
+    setContractLayout(layout)
+    setSelectedContract(contract)
+  }
+
+  const handleVariableChange = async (
+    variable: StorageVariable,
+    newValue: string,
+  ) => {
+    console.log('handleVariableChange called with:', variable.name, newValue)
+    if (!selectedContract) {
+      console.log('Early return - no contract:', !selectedContract)
+      return
+    }
+
+    try {
+      // Parse the new value based on the variable type
+      let parsedValue: bigint
+      if (variable.type === 'string') {
+        console.log('String type detected, skipping')
+        return
+      } else if (
+        variable.type.startsWith('uint') ||
+        variable.type.startsWith('int')
+      ) {
+        console.log('Parsing numeric value:', newValue)
+        parsedValue = parseNumberInput(newValue)
+      } else {
+        console.warn('Unsupported variable type:', variable.type)
+        return
+      }
+
+      console.log('Writing to storage slot:', variable.slot, parsedValue)
+      // Write to storage
+      await writeStorageSlot(
+        selectedContract.address,
+        variable.slot,
+        parsedValue,
+        publicClient,
+      )
+
+      // Re-generate curve points
+      const points = await generateCurvePoints(
+        selectedContract.address,
+        selectedContract.abi,
+      )
+
+      // Update the curve
+      setDeployedContracts((prev) =>
+        prev.map((c) =>
+          c.address === selectedContract.address ? { ...c, points } : c,
+        ),
+      )
+
+      // Update the layout
+      const newLayout = await getContractLayout(
+        selectedContract.address,
+        selectedContract.abi,
+        publicClient,
+      )
+      setContractLayout(newLayout)
+    } catch (err) {
+      console.error('Failed to update variable:', err)
+      setError(err instanceof Error ? err.message : 'Failed to update variable')
+    }
+  }
+
   return (
-    <Card className="w-full">
-      <CardHeader>
-        <CardTitle>Bonding Curve Visualizer</CardTitle>
-        <CardDescription>
+    <div className="w-full space-y-6">
+      <div className="space-y-2">
+        <Text variant="heading2">Bonding Curve Visualizer</Text>
+        <Text variant="body" className="text-muted-foreground">
           Upload and compare multiple bonding curve implementations
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-6">
+        </Text>
+      </div>
+
+      <div className="space-y-6 rounded-lg border border-border bg-background p-6">
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
             <Label htmlFor="min-value">Min Value (ETH)</Label>
@@ -355,42 +428,38 @@ export function CurveVisualizer() {
         </div>
 
         {error && (
-          <Alert variant="destructive">
-            <AlertDescription>{error}</AlertDescription>
-          </Alert>
+          <Text variant="body" className="text-destructive">
+            {error}
+          </Text>
         )}
 
         {deployedContracts.length > 0 && (
           <div className="space-y-4">
-            <div className="flex flex-wrap gap-2">
-              {deployedContracts.map((contract) => (
-                <div
-                  key={contract.id}
-                  className="flex items-center gap-2 rounded-md border border-border bg-card p-2"
-                >
-                  <div
-                    className="h-3 w-3 rounded-full"
-                    style={{ backgroundColor: contract.color }}
-                  />
-                  <span>
-                    {contract.name}
-                    {contract.constructorValues && (
-                      <span className="text-sm text-muted-foreground">
-                        {' '}
-                        ({contract.constructorValues})
-                      </span>
-                    )}
-                  </span>
-                  <Button
-                    className="h-6 w-6 p-0"
-                    onClick={() => removeCurve(contract.id)}
-                  >
-                    ×
-                  </Button>
-                </div>
-              ))}
+            <div className="rounded-lg border border-border p-4">
+              <div className="grid gap-4">
+                {deployedContracts.map((contract) => (
+                  <div key={contract.id} className="flex items-center gap-2">
+                    <button
+                      onClick={() => handleContractClick(contract)}
+                      className="text-sm font-medium hover:underline"
+                    >
+                      {contract.name}
+                      {contract.constructorValues && (
+                        <span className="text-xs text-muted-foreground">
+                          {' '}
+                          ({contract.constructorValues})
+                        </span>
+                      )}
+                    </button>
+                    <div
+                      className="h-3 w-3 rounded-full"
+                      style={{ backgroundColor: contract.color }}
+                    />
+                  </div>
+                ))}
+              </div>
             </div>
-            <div className="h-[400px] w-full">
+            <div className="h-[400px] w-full rounded-lg border border-border p-4">
               <LineChart
                 data={deployedContracts}
                 xLabel="Assets (ETH)"
@@ -400,7 +469,7 @@ export function CurveVisualizer() {
             </div>
           </div>
         )}
-      </CardContent>
+      </div>
 
       {selectedFileId && (
         <ConstructorForm
@@ -411,6 +480,24 @@ export function CurveVisualizer() {
           fileName={files.get(selectedFileId)?.file.name || ''}
         />
       )}
-    </Card>
+
+      <ContractVariablesModal
+        isOpen={!!selectedContract}
+        onClose={() => {
+          setSelectedContract(null)
+          setContractLayout(null)
+        }}
+        contract={
+          selectedContract && contractLayout
+            ? {
+                address: selectedContract.address,
+                name: selectedContract.name,
+                variables: contractLayout.variables,
+              }
+            : null
+        }
+        onVariableChange={handleVariableChange}
+      />
+    </div>
   )
 }
