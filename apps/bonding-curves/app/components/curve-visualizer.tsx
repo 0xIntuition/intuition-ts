@@ -2,10 +2,10 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 
-import { Button, Input, Label, Text, TextVariant } from '@0xintuition/1ui'
+import { Button, Input, Label, Text } from '@0xintuition/1ui'
 
-import { useFetcher } from '@remix-run/react'
-import { createPublicClient, http, parseEther, toHex } from 'viem'
+import { X } from 'lucide-react'
+import { createPublicClient, formatEther, http, parseEther, toHex } from 'viem'
 import { foundry } from 'viem/chains'
 
 import {
@@ -25,22 +25,26 @@ import { LineChart } from './ui/line-chart'
 interface Point {
   x: number
   y: number
+  totalValue?: number
+  userValue?: number
 }
 
-interface DeployedCurve {
+interface DeployedContract {
   id: string
   name: string
   address: `0x${string}`
   abi: any[]
-  constructorValues?: string
-}
-
-interface CurveData {
-  id: string
-  name: string
-  points: Point[]
   color: string
-  constructorValues?: string
+  points: Point[]
+  totalAssets: number
+  totalShares: number
+  userAssets: number
+  userShares: number
+  previewDeposit?: Point
+  previewRedeem?: Point
+  constructorValues: Record<string, string>
+  variableToConstructor: Record<string, string>
+  constructorToVariable: Record<string, string>
 }
 
 interface FileData {
@@ -69,16 +73,6 @@ const CURVE_COLORS = [
   'hsl(var(--success))',
 ]
 
-interface DeployedContract {
-  id: string
-  name: string
-  address: `0x${string}`
-  abi: any[]
-  constructorValues?: string
-  points: Point[]
-  color: string
-}
-
 export function CurveVisualizer() {
   const [files, setFiles] = useState<Map<string, FileData>>(new Map())
   const [deployedContracts, setDeployedContracts] = useState<
@@ -95,14 +89,21 @@ export function CurveVisualizer() {
   const [constructorValues, setConstructorValues] = useState<
     Record<string, string>
   >({})
-  const fetcher = useFetcher()
   const [selectedContract, setSelectedContract] =
     useState<DeployedContract | null>(null)
   const [contractLayout, setContractLayout] = useState<ContractLayout | null>(
     null,
   )
-  const pendingUpdateRef = useRef<NodeJS.Timeout | null>(null)
+
+  // New state for simulation
+  const [totalAssets, setTotalAssets] = useState(0)
+  const [totalShares, setTotalShares] = useState(0)
+  const [selectedCurveId, setSelectedCurveId] = useState<string | null>(null)
+  const [depositAmount, setDepositAmount] = useState<number>(0)
+  const [redeemAmount, setRedeemAmount] = useState<number>(0)
+
   const latestRangeRef = useRef({ min: minValue, max: maxValue })
+  const pendingUpdateRef = useRef<NodeJS.Timeout | null>(null)
 
   const publicClient = createPublicClient({
     chain: foundry,
@@ -124,7 +125,6 @@ export function CurveVisualizer() {
       formData.append('file', file)
       formData.append('content', content)
 
-      // First compile the contract
       const compileResponse = await fetch('/api/compile', {
         method: 'POST',
         body: formData,
@@ -136,7 +136,6 @@ export function CurveVisualizer() {
         return
       }
 
-      // Store compilation results and file info
       const newId = crypto.randomUUID()
       setFiles((prevFiles) => {
         const newFiles = new Map(prevFiles)
@@ -149,7 +148,6 @@ export function CurveVisualizer() {
         return newFiles
       })
 
-      // Always show form for confirmation, even with no args
       setSelectedFileId(newId)
       setError(null)
     } catch (err) {
@@ -160,6 +158,90 @@ export function CurveVisualizer() {
     }
 
     event.target.value = ''
+  }
+
+  const generateCurvePoints = useCallback(
+    async (address: string, abi: any[]) => {
+      const { min, max } = latestRangeRef.current
+      const points: Point[] = []
+      const numPoints = 100
+      const maxValueWei = parseEther(max.toString())
+      const minValueWei = parseEther(min.toString())
+      const stepWei = (maxValueWei - minValueWei) / BigInt(numPoints)
+
+      for (let i = 0; i <= numPoints; i++) {
+        const assets = minValueWei + BigInt(i) * stepWei
+        try {
+          const shares = await publicClient.readContract({
+            address: address as `0x${string}`,
+            abi,
+            functionName: 'assetsToShares',
+            args: [assets, 0n, 0n],
+          })
+
+          points.push({
+            x: Number(assets) / 1e18,
+            y: Number(shares) / 1e18,
+          })
+        } catch (err) {
+          console.error('Error calling contract:', err)
+        }
+      }
+
+      return points
+    },
+    [publicClient, latestRangeRef],
+  )
+
+  const regenerateCurves = useCallback(async () => {
+    const { min, max } = latestRangeRef.current
+    console.log('Regenerating all curves for range:', { min, max })
+
+    const updatedCurves = await Promise.all(
+      deployedContracts.map(async (contract) => {
+        const points = await generateCurvePoints(contract.address, contract.abi)
+        return {
+          ...contract,
+          points: points.map((p) => ({ ...p })),
+        }
+      }),
+    )
+
+    setDeployedContracts(updatedCurves)
+  }, [deployedContracts, generateCurvePoints])
+
+  const handleMinMaxChange = useCallback(
+    (newMin: number, newMax: number) => {
+      latestRangeRef.current = { min: newMin, max: newMax }
+      if (pendingUpdateRef.current) {
+        clearTimeout(pendingUpdateRef.current)
+      }
+      pendingUpdateRef.current = setTimeout(async () => {
+        await regenerateCurves()
+        pendingUpdateRef.current = null
+      }, 100)
+    },
+    [regenerateCurves],
+  )
+
+  const removeCurve = (id: string) => {
+    setFiles((prev) => {
+      const newMap = new Map(prev)
+      newMap.delete(id)
+      return newMap
+    })
+    setDeployedContracts((prev) => prev.filter((c) => c.id !== id))
+  }
+
+  const handleConstructorSubmit = async (
+    values: Record<string, string>,
+    fileId?: string,
+  ) => {
+    const targetId = fileId || selectedFileId
+    if (!targetId) return
+
+    setSelectedFileId(null)
+    await deployContract(targetId, values)
   }
 
   const deployContract = async (
@@ -193,163 +275,440 @@ export function CurveVisualizer() {
       deployFormData.append('constructorArgs', JSON.stringify(parsedArgs))
 
       console.log('Deploying contract with args:', parsedArgs)
-      fetcher.submit(deployFormData, {
-        method: 'post',
-        action: '/api/deploy',
-        encType: 'multipart/form-data',
+      const response = await fetch('/api/deploy', {
+        method: 'POST',
+        body: deployFormData,
       })
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to deploy contract')
-      setPendingDeployment(null)
-      setIsDeploying(false)
-    }
-  }
+      const data = await response.json()
 
-  const handleConstructorSubmit = async (
-    values: Record<string, string>,
-    fileId?: string,
-  ) => {
-    const targetId = fileId || selectedFileId
-    if (!targetId) return
-
-    setSelectedFileId(null)
-    await deployContract(targetId, values)
-  }
-
-  // Generate curve points when contract is deployed
-  const generateCurvePoints = useCallback(
-    async (address: string, abi: any[]) => {
-      const { min, max } = latestRangeRef.current
-      console.log('Generating points with range:', { min, max })
-      const points: Point[] = []
-      const numPoints = 100
-      const maxValueWei = parseEther(max.toString())
-      const minValueWei = parseEther(min.toString())
-      const stepWei = (maxValueWei - minValueWei) / BigInt(numPoints)
-
-      for (let i = 0; i <= numPoints; i++) {
-        const assets = minValueWei + BigInt(i) * stepWei
-        try {
-          const shares = await publicClient.readContract({
-            address: address as `0x${string}`,
-            abi,
-            functionName: 'assetsToShares',
-            args: [assets, 0n, 0n], // Initial state
-          })
-
-          points.push({
-            x: Number(assets) / 1e18, // Convert to ETH
-            y: Number(shares) / 1e18, // Convert to ETH
-          })
-        } catch (err) {
-          console.error('Error calling contract:', err)
-        }
+      if (data.error) {
+        setError(data.error)
+        setPendingDeployment(null)
+        setIsDeploying(false)
+        return
       }
 
-      return points
-    },
-    [publicClient, latestRangeRef],
-  )
-
-  // Handle ABI response and deployment response
-  useEffect(() => {
-    if (!fetcher.data || !pendingDeployment || fetcher.state !== 'idle') return
-
-    const data = fetcher.data as AbiResponse | DeployResponse
-
-    if ('address' in data && data.address) {
-      const fileData = files.get(pendingDeployment)
-      if (!fileData) return
-
-      const contractAddress = data.address as `0x${string}`
-      console.log('New contract deployed at:', contractAddress)
-
-      generateCurvePoints(contractAddress, fileData.abi).then((points) => {
+      if (data.address) {
+        const points = await generateCurvePoints(data.address, fileData.abi)
         setDeployedContracts((prev) => {
-          // Skip if we already have this contract
-          // Fetchers are really good at creating bugs because of how they present stale data
-          if (prev.some((c) => c.address === contractAddress)) {
+          if (prev.some((c) => c.address === data.address)) {
             return prev
           }
 
+          // Create bidirectional mappings between constructor args and contract variables
+          const constructorToVariable: Record<string, string> = {}
+          const variableToConstructor: Record<string, string> = {}
+
+          fileData.constructorArgs.forEach((arg) => {
+            // Constructor args are lowercase (e.g., "offset")
+            // Contract variables are uppercase (e.g., "OFFSET")
+            const varName = arg.name.toUpperCase()
+            constructorToVariable[arg.name] = varName
+            variableToConstructor[varName] = arg.name
+          })
+
           const newContract: DeployedContract = {
-            id: contractAddress,
+            id: data.address,
             name: fileData.file.name.replace('.sol', ''),
-            address: contractAddress,
+            address: data.address,
             abi: fileData.abi,
-            constructorValues: formatConstructorValues(constructorValues),
+            constructorValues: values,
+            constructorToVariable,
+            variableToConstructor,
             points,
             color: CURVE_COLORS[prev.length % CURVE_COLORS.length],
+            totalAssets: 0,
+            totalShares: 0,
+            userAssets: 0,
+            userShares: 0,
           }
           return [...prev, newContract]
         })
-        setPendingDeployment(null)
-        setIsDeploying(false)
-      })
-    }
-
-    if ('error' in data && data.error) {
-      setError(data.error)
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to deploy contract')
+    } finally {
       setPendingDeployment(null)
       setIsDeploying(false)
     }
-  }, [
-    fetcher.data,
-    fetcher.state,
-    pendingDeployment,
-    files,
-    constructorValues,
-    generateCurvePoints,
-  ])
-
-  const removeCurve = (id: string) => {
-    setFiles((prev) => {
-      const newMap = new Map(prev)
-      newMap.delete(id)
-      return newMap
-    })
-    setDeployedContracts((prev) => prev.filter((c) => c.id !== id))
   }
 
-  const handleContractClick = async (contract: DeployedContract) => {
-    const layout = await getContractLayout(
-      contract.address,
-      contract.abi,
-      publicClient,
+  const handleCurveSelect = (id: string) => {
+    setSelectedCurveId(id)
+    const curve = deployedContracts.find((c) => c.id === id)
+    if (curve) {
+      setTotalAssets(curve.totalAssets)
+      setTotalShares(curve.totalShares)
+    }
+  }
+
+  const handleEditCurve = useCallback(async () => {
+    if (!selectedCurveId) return
+    const curve = deployedContracts.find((c) => c.id === selectedCurveId)
+    if (!curve) return
+
+    try {
+      const layout = await getContractLayout(
+        curve.address,
+        curve.abi,
+        publicClient,
+      )
+      setContractLayout(layout)
+      setSelectedContract(curve)
+    } catch (err) {
+      console.error('Error getting contract layout:', err)
+    }
+  }, [selectedCurveId, deployedContracts, publicClient])
+
+  const handleUpdateTotals = useCallback(async () => {
+    if (!selectedCurveId) return
+
+    setDeployedContracts((prev) =>
+      prev.map((curve) =>
+        curve.id === selectedCurveId
+          ? {
+              ...curve,
+              totalAssets,
+              totalShares,
+              points: curve.points.map((point) => ({
+                ...point,
+                totalValue: point.y * totalAssets,
+                userValue: point.y * curve.userShares,
+              })),
+            }
+          : curve,
+      ),
     )
-    setContractLayout(layout)
-    setSelectedContract(contract)
-  }
+  }, [selectedCurveId, totalAssets, totalShares])
+
+  // Calculate step size based on current value using logarithms
+  const calculateStepSize = useCallback((value: number) => {
+    if (value === 0) return 0.1
+    const magnitude = Math.floor(Math.log10(value))
+    return Math.pow(10, magnitude - 1)
+  }, [])
+
+  const handleTotalAssetsChange = useCallback(
+    async (newValue: string) => {
+      if (!selectedCurveId) return
+      const curve = deployedContracts.find((c) => c.id === selectedCurveId)
+      if (!curve) return
+
+      const numericValue = Number(newValue)
+      if (isNaN(numericValue) || numericValue < 0) return
+
+      try {
+        const shares = await publicClient.readContract({
+          address: curve.address,
+          abi: curve.abi,
+          functionName: 'assetsToShares',
+          args: [
+            parseEther(numericValue.toString()),
+            parseEther(curve.totalAssets.toString()),
+            parseEther(curve.totalShares.toString()),
+          ],
+        })
+        const sharesNumber = Number(formatEther(BigInt(shares.toString())))
+
+        setTotalAssets(numericValue)
+        setTotalShares(sharesNumber)
+
+        setDeployedContracts((prev) =>
+          prev.map((c) =>
+            c.id === selectedCurveId
+              ? {
+                  ...c,
+                  totalAssets: numericValue,
+                  totalShares: sharesNumber,
+                  points: c.points.map((point) => ({
+                    ...point,
+                    totalValue: point.x <= numericValue ? point.y : undefined,
+                    userValue: point.x <= c.userAssets ? point.y : undefined,
+                  })),
+                }
+              : c,
+          ),
+        )
+      } catch (err) {
+        console.error('Error converting assets to shares:', err)
+      }
+    },
+    [selectedCurveId, publicClient, deployedContracts],
+  )
+
+  const handleTotalSharesChange = useCallback(
+    async (newValue: string) => {
+      if (!selectedCurveId) return
+      const curve = deployedContracts.find((c) => c.id === selectedCurveId)
+      if (!curve) return
+
+      const numericValue = Number(newValue)
+      if (isNaN(numericValue) || numericValue < 0) return
+
+      try {
+        const assets = await publicClient.readContract({
+          address: curve.address,
+          abi: curve.abi,
+          functionName: 'sharesToAssets',
+          args: [
+            parseEther(numericValue.toString()),
+            parseEther(curve.totalAssets.toString()),
+            parseEther(curve.totalShares.toString()),
+          ],
+        })
+        const assetsNumber = Number(formatEther(BigInt(assets.toString())))
+
+        setTotalShares(numericValue)
+        setTotalAssets(assetsNumber)
+
+        setDeployedContracts((prev) =>
+          prev.map((c) =>
+            c.id === selectedCurveId
+              ? {
+                  ...c,
+                  totalAssets: assetsNumber,
+                  totalShares: numericValue,
+                  points: c.points.map((point) => ({
+                    ...point,
+                    totalValue: point.x <= assetsNumber ? point.y : undefined,
+                    userValue: point.x <= c.userAssets ? point.y : undefined,
+                  })),
+                }
+              : c,
+          ),
+        )
+      } catch (err) {
+        console.error('Error converting shares to assets:', err)
+      }
+    },
+    [selectedCurveId, publicClient, deployedContracts],
+  )
+
+  const handleDepositAmountChange = useCallback(
+    async (amount: number) => {
+      if (!selectedCurveId) return
+      const curve = deployedContracts.find((c) => c.id === selectedCurveId)
+      if (!curve) return
+
+      try {
+        if (!amount) {
+          setDepositAmount(0)
+          setDeployedContracts((prev) =>
+            prev.map((c) =>
+              c.id === selectedCurveId
+                ? { ...c, previewDeposit: undefined }
+                : c,
+            ),
+          )
+          return
+        }
+
+        setDepositAmount(amount)
+        const shares = await publicClient.readContract({
+          address: curve.address,
+          abi: curve.abi,
+          functionName: 'previewDeposit',
+          args: [parseEther(amount.toString())],
+        })
+        const sharesNumber = Number(formatEther(BigInt(shares.toString())))
+
+        // Update preview point
+        const previewPoint = {
+          x: curve.totalAssets + amount,
+          y: curve.totalShares + sharesNumber,
+        }
+
+        setDeployedContracts((prev) =>
+          prev.map((c) =>
+            c.id === selectedCurveId
+              ? {
+                  ...c,
+                  previewDeposit: previewPoint,
+                  previewRedeem: undefined,
+                }
+              : c,
+          ),
+        )
+      } catch (err) {
+        console.error('Error previewing deposit:', err)
+      }
+    },
+    [selectedCurveId, publicClient, deployedContracts],
+  )
+
+  const handleRedeemAmountChange = useCallback(
+    async (amount: number) => {
+      if (!selectedCurveId) return
+      const curve = deployedContracts.find((c) => c.id === selectedCurveId)
+      if (!curve) return
+
+      try {
+        if (!amount) {
+          setRedeemAmount(0)
+          setDeployedContracts((prev) =>
+            prev.map((c) =>
+              c.id === selectedCurveId ? { ...c, previewRedeem: undefined } : c,
+            ),
+          )
+          return
+        }
+
+        setRedeemAmount(amount)
+        const assets = await publicClient.readContract({
+          address: curve.address,
+          abi: curve.abi,
+          functionName: 'previewRedeem',
+          args: [parseEther(amount.toString())],
+        })
+        const assetsNumber = Number(formatEther(BigInt(assets.toString())))
+
+        // Update preview point
+        const previewPoint = {
+          x: curve.totalAssets - assetsNumber,
+          y: curve.totalShares - amount,
+        }
+
+        setDeployedContracts((prev) =>
+          prev.map((c) =>
+            c.id === selectedCurveId
+              ? {
+                  ...c,
+                  previewRedeem: previewPoint,
+                  previewDeposit: undefined,
+                }
+              : c,
+          ),
+        )
+      } catch (err) {
+        console.error('Error previewing redeem:', err)
+      }
+    },
+    [selectedCurveId, publicClient, deployedContracts],
+  )
+
+  const handleDeposit = useCallback(async () => {
+    if (!selectedCurveId || !depositAmount) return
+    const curve = deployedContracts.find((c) => c.id === selectedCurveId)
+    if (!curve) return
+
+    try {
+      const shares = await publicClient.readContract({
+        address: curve.address,
+        abi: curve.abi,
+        functionName: 'previewDeposit',
+        args: [parseEther(depositAmount.toString())],
+      })
+      const sharesNumber = Number(formatEther(BigInt(shares.toString())))
+
+      const newTotalAssets = curve.totalAssets + depositAmount
+      const newTotalShares = curve.totalShares + sharesNumber
+      const newUserAssets = curve.userAssets + depositAmount
+      const newUserShares = curve.userShares + sharesNumber
+
+      // Update all points with new totals
+      const updatedPoints = curve.points.map((point) => ({
+        ...point,
+        totalValue: point.x <= newTotalAssets ? point.y : undefined,
+        userValue: point.x <= newUserAssets ? point.y : undefined,
+      }))
+
+      setDeployedContracts((prev) =>
+        prev.map((c) =>
+          c.id === selectedCurveId
+            ? {
+                ...c,
+                totalAssets: newTotalAssets,
+                totalShares: newTotalShares,
+                userAssets: newUserAssets,
+                userShares: newUserShares,
+                previewDeposit: undefined,
+                points: updatedPoints,
+              }
+            : c,
+        ),
+      )
+
+      setDepositAmount(0)
+      setTotalAssets(newTotalAssets)
+      setTotalShares(newTotalShares)
+    } catch (err) {
+      console.error('Error simulating deposit:', err)
+    }
+  }, [selectedCurveId, depositAmount, publicClient, deployedContracts])
+
+  const handleRedeem = useCallback(async () => {
+    if (!selectedCurveId || !redeemAmount) return
+    const curve = deployedContracts.find((c) => c.id === selectedCurveId)
+    if (!curve) return
+
+    try {
+      const assets = await publicClient.readContract({
+        address: curve.address,
+        abi: curve.abi,
+        functionName: 'previewRedeem',
+        args: [parseEther(redeemAmount.toString())],
+      })
+      const assetsNumber = Number(formatEther(BigInt(assets.toString())))
+
+      const newTotalAssets = curve.totalAssets - assetsNumber
+      const newTotalShares = curve.totalShares - redeemAmount
+      const newUserAssets = curve.userAssets - assetsNumber
+      const newUserShares = curve.userShares - redeemAmount
+
+      // Update all points with new totals
+      const updatedPoints = curve.points.map((point) => ({
+        ...point,
+        totalValue: point.x <= newTotalAssets ? point.y : undefined,
+        userValue: point.x <= newUserAssets ? point.y : undefined,
+      }))
+
+      setDeployedContracts((prev) =>
+        prev.map((c) =>
+          c.id === selectedCurveId
+            ? {
+                ...c,
+                totalAssets: newTotalAssets,
+                totalShares: newTotalShares,
+                userAssets: newUserAssets,
+                userShares: newUserShares,
+                previewRedeem: undefined,
+                points: updatedPoints,
+              }
+            : c,
+        ),
+      )
+
+      setRedeemAmount(0)
+      setTotalAssets(newTotalAssets)
+      setTotalShares(newTotalShares)
+    } catch (err) {
+      console.error('Error simulating redeem:', err)
+    }
+  }, [selectedCurveId, redeemAmount, publicClient, deployedContracts])
 
   const handleVariableChange = async (
     variable: StorageVariable,
     newValue: string,
   ) => {
-    console.log('handleVariableChange called with:', variable.name, newValue)
-    if (!selectedContract) {
-      console.log('Early return - no contract:', !selectedContract)
-      return
-    }
+    if (!selectedContract) return
 
     try {
-      // Parse the new value based on the variable type
       let parsedValue: bigint
-      if (variable.type === 'string') {
-        console.log('String type detected, skipping')
-        return
+      const isString = variable.type === 'string'
+
+      if (isString) {
+        const strBytes = Buffer.from(newValue, 'utf8')
+        parsedValue = BigInt('0x' + strBytes.toString('hex').padEnd(64, '0'))
       } else if (
         variable.type.startsWith('uint') ||
         variable.type.startsWith('int')
       ) {
-        console.log('Parsing numeric value:', newValue)
         parsedValue = parseNumberInput(newValue)
       } else {
         console.warn('Unsupported variable type:', variable.type)
         return
       }
 
-      console.log('Writing to storage slot:', variable.slot, parsedValue)
-      // Write to storage
       await writeStorageSlot(
         selectedContract.address,
         variable.slot,
@@ -357,80 +716,56 @@ export function CurveVisualizer() {
         publicClient,
       )
 
-      // Force a small delay to ensure the storage update has propagated
-      // await new Promise((resolve) => setTimeout(resolve, 100)) // Try removing this just to see what happens
-
-      // Re-generate curve points with fresh data
-      console.log('Regenerating curve points...')
-      const points = await generateCurvePoints(
-        selectedContract.address,
-        selectedContract.abi,
-      )
-
-      // First update the layout to ensure we have the latest values
+      // Get updated contract state
       const newLayout = await getContractLayout(
         selectedContract.address,
         selectedContract.abi,
         publicClient,
       )
-      setContractLayout(newLayout)
 
-      // Then update the curve points in a separate state update
-      // This ensures React properly recognizes the change
-      setTimeout(() => {
-        setDeployedContracts((prev) => {
-          const updated = prev.map((c) =>
-            c.address === selectedContract.address
-              ? {
-                  ...c,
-                  points: points.map((p) => ({ ...p })), // Create new point objects
-                }
-              : c,
-          )
-          return updated
-        })
-      }, 0)
+      // Update the contract layout with the new values
+      setContractLayout({
+        ...newLayout,
+        variables: newLayout.variables.map((v) => ({
+          ...v,
+          // Only update the value for the variable we're changing
+          value:
+            v.name === variable.name
+              ? parsedValue.toString()
+              : contractLayout?.variables
+                  .find((cv) => cv.name === v.name)
+                  ?.value?.toString() ||
+                v.value?.toString() ||
+                '',
+        })),
+      })
+
+      const points = await generateCurvePoints(
+        selectedContract.address,
+        selectedContract.abi,
+      )
+
+      // Update both the contract state and constructor values
+      setDeployedContracts((prev) =>
+        prev.map((c) =>
+          c.address === selectedContract.address
+            ? {
+                ...c,
+                points: points.map((p) => ({ ...p })),
+                constructorValues: {
+                  ...c.constructorValues,
+                  [c.variableToConstructor[variable.name] ||
+                  variable.name.toLowerCase()]: newValue,
+                },
+              }
+            : c,
+        ),
+      )
     } catch (err) {
       console.error('Failed to update variable:', err)
       setError(err instanceof Error ? err.message : 'Failed to update variable')
     }
   }
-
-  const regenerateCurves = useCallback(async () => {
-    const { min, max } = latestRangeRef.current
-    console.log('Regenerating all curves for range:', { min, max })
-
-    const updatedCurves = await Promise.all(
-      deployedContracts.map(async (contract) => {
-        const points = await generateCurvePoints(contract.address, contract.abi)
-        return {
-          ...contract,
-          points: points.map((p) => ({ ...p })),
-        }
-      }),
-    )
-
-    setDeployedContracts(updatedCurves)
-  }, [deployedContracts, generateCurvePoints])
-
-  const handleMinMaxChange = useCallback(
-    (newMin: number, newMax: number) => {
-      // Update latest values immediately
-      latestRangeRef.current = { min: newMin, max: newMax }
-
-      // Clear any pending updates
-      if (pendingUpdateRef.current) {
-        clearTimeout(pendingUpdateRef.current)
-      }
-
-      // Schedule new update with small delay
-      pendingUpdateRef.current = setTimeout(async () => {
-        await regenerateCurves()
-        pendingUpdateRef.current = null
-      }, 100)
-    },
-    [regenerateCurves],
-  )
 
   // Cleanup on unmount
   useEffect(() => {
@@ -442,23 +777,20 @@ export function CurveVisualizer() {
   }, [])
 
   return (
-    <div className="w-full space-y-6">
-      <div className="space-y-2">
+    <div className="flex flex-col gap-4">
+      <div>
         <Text variant="heading2">Bonding Curve Visualizer</Text>
         <Text variant="body" className="text-muted-foreground">
           Upload and compare multiple bonding curve implementations
         </Text>
       </div>
 
-      <div className="space-y-6 rounded-lg border border-border bg-background p-6">
-        <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="min-value">Min Value (ETH)</Label>
+      <div className="flex flex-col gap-4 rounded-lg border border-border p-4">
+        <div className="flex justify-between gap-4">
+          <div className="flex flex-col gap-2">
+            <Label>Min Value (ETH)</Label>
             <Input
-              id="min-value"
               type="number"
-              min="0"
-              step="0.1"
               value={minValue}
               onChange={(e) => {
                 const newMin = Number(e.target.value)
@@ -467,13 +799,10 @@ export function CurveVisualizer() {
               }}
             />
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="max-value">Max Value (ETH)</Label>
+          <div className="flex flex-col gap-2">
+            <Label>Max Value (ETH)</Label>
             <Input
-              id="max-value"
               type="number"
-              min="0"
-              step="0.1"
               value={maxValue}
               onChange={(e) => {
                 const newMax = Number(e.target.value)
@@ -484,59 +813,144 @@ export function CurveVisualizer() {
           </div>
         </div>
 
-        <div className="grid w-full max-w-sm items-center gap-1.5">
-          <Label htmlFor="curve-file">Add Curve Implementation</Label>
-          <div className="flex gap-2">
-            <Input
-              id="curve-file"
-              type="file"
-              accept=".sol"
-              onChange={handleFileChange}
-            />
-          </div>
+        <div>
+          <Label>Add Curve Implementation</Label>
+          <Input type="file" onChange={handleFileChange} />
         </div>
 
-        {error && (
-          <Text variant="body" className="text-destructive">
-            {error}
-          </Text>
-        )}
-
-        {deployedContracts.length > 0 && (
-          <div className="space-y-4">
-            <div className="rounded-lg border border-border p-4">
-              <div className="grid gap-4">
-                {deployedContracts.map((contract) => (
-                  <div key={contract.id} className="flex items-center gap-2">
-                    <button
-                      onClick={() => handleContractClick(contract)}
-                      className="text-sm font-medium hover:underline"
-                    >
-                      {contract.name}
-                      {contract.constructorValues && (
-                        <span className="text-xs text-muted-foreground">
-                          {' '}
-                          ({contract.constructorValues})
-                        </span>
-                      )}
-                    </button>
-                    <div
-                      className="h-3 w-3 rounded-full"
-                      style={{ backgroundColor: contract.color }}
-                    />
-                  </div>
-                ))}
+        <div className="flex items-center gap-2">
+          {deployedContracts.map((contract) => (
+            <div
+              key={contract.id}
+              className={`flex flex-col gap-2 rounded-lg border p-2 cursor-pointer ${
+                selectedCurveId === contract.id
+                  ? 'border-primary bg-primary/10'
+                  : 'border-border'
+              }`}
+              onClick={() => handleCurveSelect(contract.id)}
+            >
+              <div className="flex items-center gap-2">
+                <div
+                  className="h-2 w-2 rounded-full"
+                  style={{ backgroundColor: contract.color }}
+                />
+                <span>{contract.name}</span>
+                <Button
+                  variant="ghost"
+                  className="h-4 w-4 p-0"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    removeCurve(contract.id)
+                  }}
+                >
+                  <X className="h-3 w-3" />
+                </Button>
+              </div>
+              <div className="text-xs text-muted-foreground">
+                {Object.entries(contract.constructorValues).map(
+                  ([key, value]) => (
+                    <div key={key}>
+                      {key}: {value}
+                    </div>
+                  ),
+                )}
               </div>
             </div>
-            <div className="h-[400px] w-full rounded-lg border border-border p-4">
-              <LineChart
-                data={deployedContracts}
-                xLabel="Assets (ETH)"
-                yLabel="Shares (ETH)"
-                title="Bonding Curves Comparison"
-              />
+          ))}
+        </div>
+
+        <div className="h-[400px] w-full rounded-lg border border-border p-4">
+          <LineChart
+            data={deployedContracts}
+            xLabel="Assets (ETH)"
+            yLabel="Shares (ETH)"
+            minValue={minValue}
+            maxValue={maxValue}
+          />
+        </div>
+
+        {selectedCurveId && (
+          <>
+            <div className="flex justify-between items-center">
+              <div className="flex gap-4">
+                <div className="flex-1">
+                  <Label>Total Assets (ETH)</Label>
+                  <Input
+                    type="number"
+                    value={totalAssets}
+                    onChange={(e) => handleTotalAssetsChange(e.target.value)}
+                    step={calculateStepSize(totalAssets)}
+                    min={0}
+                  />
+                </div>
+                <div className="flex-1">
+                  <Label>Total Shares</Label>
+                  <Input
+                    type="number"
+                    value={totalShares}
+                    onChange={(e) => handleTotalSharesChange(e.target.value)}
+                    step={calculateStepSize(totalShares)}
+                    min={0}
+                  />
+                </div>
+              </div>
+              <Button onClick={handleEditCurve}>Edit Curve</Button>
             </div>
-          </div>
+
+            <div className="flex gap-4">
+              <div className="flex-1">
+                <Label>Deposit Amount (ETH)</Label>
+                <div className="flex gap-2">
+                  <Input
+                    type="number"
+                    value={depositAmount}
+                    onChange={(e) =>
+                      handleDepositAmountChange(Number(e.target.value))
+                    }
+                  />
+                  <Button onClick={handleDeposit}>Deposit</Button>
+                </div>
+              </div>
+              <div className="flex-1">
+                <Label>Redeem Amount (Shares)</Label>
+                <div className="flex gap-2">
+                  <Input
+                    type="number"
+                    value={redeemAmount}
+                    onChange={(e) =>
+                      handleRedeemAmountChange(Number(e.target.value))
+                    }
+                  />
+                  <Button onClick={handleRedeem}>Redeem</Button>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex gap-4">
+              <div className="flex-1">
+                <Label>Your Assets (ETH)</Label>
+                <Input
+                  type="number"
+                  value={
+                    deployedContracts.find((c) => c.id === selectedCurveId)
+                      ?.userAssets || 0
+                  }
+                  readOnly
+                />
+              </div>
+              <div className="flex-1">
+                <Label>Your Shares</Label>
+                <Input
+                  type="number"
+                  value={
+                    deployedContracts.find((c) => c.id === selectedCurveId)
+                      ?.userShares || 0
+                  }
+                  readOnly
+                />
+              </div>
+            </div>
+          </>
         )}
       </div>
 

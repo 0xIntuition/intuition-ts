@@ -1,10 +1,12 @@
 'use client'
 
+import React from 'react'
+
 import {
+  Area,
   CartesianGrid,
-  Legend,
+  ComposedChart,
   Line,
-  LineChart as RechartsLineChart,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -14,86 +16,148 @@ import {
 interface Point {
   x: number
   y: number
+  totalValue?: number
+  userValue?: number
 }
 
 interface CurveData {
   id: string
   name: string
-  points: Point[]
   color: string
+  points: Point[]
+  totalAssets: number
+  totalShares: number
+  userAssets: number
+  userShares: number
+  previewDeposit?: Point
+  previewRedeem?: Point
 }
 
 interface LineChartProps {
   data: CurveData[]
   xLabel?: string
   yLabel?: string
-  title?: string
+  minValue?: number
+  maxValue?: number
 }
 
 export function LineChart({
   data,
-  xLabel = 'X',
-  yLabel = 'Y',
-  title,
+  xLabel,
+  yLabel,
+  minValue,
+  maxValue,
 }: LineChartProps) {
-  // Combine all points into a single dataset with multiple values
-  const formattedData =
-    data[0]?.points.map((_, index) => {
-      const point: any = { x: data[0].points[index].x }
-      data.forEach((curve) => {
-        point[curve.id] = curve.points[index].y
-      })
-      return point
-    }) || []
+  const curve = data[0]
+  if (!curve) return null
 
   return (
     <div className="w-full h-full">
-      {title && <h3 className="text-lg font-semibold mb-4">{title}</h3>}
       <ResponsiveContainer width="100%" height="100%">
-        <RechartsLineChart
-          data={formattedData}
-          margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-        >
-          <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
+        <ComposedChart data={curve.points}>
+          <CartesianGrid strokeDasharray="3 3" />
           <XAxis
             dataKey="x"
-            label={{ value: xLabel, position: 'insideBottom', offset: -5 }}
-            className="text-sm fill-muted-foreground"
+            type="number"
+            domain={[minValue || 'auto', maxValue || 'auto']}
+            label={{
+              value: xLabel,
+              position: 'insideBottom',
+              offset: -5,
+            }}
           />
           <YAxis
             label={{
               value: yLabel,
               angle: -90,
               position: 'insideLeft',
-              offset: 10,
             }}
-            className="text-sm fill-muted-foreground"
           />
           <Tooltip
-            contentStyle={{
-              backgroundColor: 'hsl(var(--background))',
-              border: '1px solid hsl(var(--border))',
-              borderRadius: 'var(--radius)',
+            formatter={(value: number, name: string) => {
+              if (name === 'y') return null // Don't show the curve line in tooltip
+              return value.toFixed(4)
             }}
-            isAnimationActive={false}
+            labelFormatter={(label: number) => `${xLabel}: ${label.toFixed(4)}`}
           />
-          <Legend />
-          {data.map((curve) => (
-            <Line
-              key={curve.id}
+
+          {/* Base curve */}
+          <Line
+            type="monotone"
+            dataKey="y"
+            name="y" // Changed from "Price" to "y" to hide in tooltip
+            stroke={curve.color}
+            dot={false}
+          />
+
+          {/* Total shares area */}
+          {curve.totalShares > 0 && (
+            <Area
               type="monotone"
-              dataKey={curve.id}
-              name={curve.name}
-              stroke={curve.color}
-              strokeWidth={2}
-              dot={false}
-              isAnimationActive={true}
-              animationDuration={165}
-              animationBegin={0}
-              animationEasing="ease-in-out"
+              dataKey="totalValue"
+              name="Total Shares"
+              fill={curve.color}
+              fillOpacity={0.1}
+              stroke="none"
             />
-          ))}
-        </RechartsLineChart>
+          )}
+
+          {/* User shares area */}
+          {curve.userShares > 0 && (
+            <Area
+              type="monotone"
+              dataKey="userValue"
+              name="Your Shares"
+              fill={curve.color}
+              fillOpacity={0.3}
+              stroke="none"
+            />
+          )}
+
+          {/* Preview deposit */}
+          {curve.previewDeposit && (
+            <Line
+              type="monotone"
+              data={[
+                {
+                  x: curve.totalAssets,
+                  y: curve.totalShares,
+                },
+                {
+                  x: curve.previewDeposit.x,
+                  y: curve.previewDeposit.y,
+                },
+              ]}
+              dataKey="y"
+              name="Preview Deposit"
+              stroke={curve.color}
+              strokeDasharray="5 5"
+              dot={{ fill: curve.color }}
+            />
+          )}
+
+          {/* Preview redeem */}
+          {curve.previewRedeem && (
+            <Line
+              type="monotone"
+              data={[
+                {
+                  x: curve.totalAssets,
+                  y: curve.totalShares,
+                },
+                {
+                  x: curve.previewRedeem.x,
+                  y: curve.previewRedeem.y,
+                },
+              ]}
+              dataKey="y"
+              name="Preview Redeem"
+              stroke={curve.color}
+              strokeDasharray="5 5"
+              dot={{ fill: curve.color }}
+            />
+          )}
+        </ComposedChart>
       </ResponsiveContainer>
     </div>
   )
