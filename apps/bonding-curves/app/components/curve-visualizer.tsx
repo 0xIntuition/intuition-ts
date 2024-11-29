@@ -5,7 +5,14 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { Button, Input, Label, Text } from '@0xintuition/1ui'
 
 import { X } from 'lucide-react'
-import { createPublicClient, formatEther, http, parseEther, toHex } from 'viem'
+import {
+  createPublicClient,
+  formatEther,
+  http,
+  parseEther,
+  stringToHex,
+  toHex,
+} from 'viem'
 import { foundry } from 'viem/chains'
 
 import {
@@ -697,8 +704,9 @@ export function CurveVisualizer() {
       const isString = variable.type === 'string'
 
       if (isString) {
-        const strBytes = Buffer.from(newValue, 'utf8')
-        parsedValue = BigInt('0x' + strBytes.toString('hex').padEnd(64, '0'))
+        // Use Viem's stringToHex, pad to 32 bytes
+        const hex = stringToHex(newValue, { size: 32 })
+        parsedValue = BigInt(hex)
       } else if (
         variable.type.startsWith('uint') ||
         variable.type.startsWith('int')
@@ -724,21 +732,24 @@ export function CurveVisualizer() {
       )
 
       // Update the contract layout with the new values
-      setContractLayout({
+      const updatedLayout = {
         ...newLayout,
         variables: newLayout.variables.map((v) => ({
           ...v,
-          // Only update the value for the variable we're changing
           value:
             v.name === variable.name
-              ? parsedValue.toString()
+              ? v.type === 'string'
+                ? newValue
+                : parsedValue.toString()
               : contractLayout?.variables
                   .find((cv) => cv.name === v.name)
                   ?.value?.toString() ||
                 v.value?.toString() ||
                 '',
         })),
-      })
+      }
+
+      setContractLayout(updatedLayout)
 
       const points = await generateCurvePoints(
         selectedContract.address,
