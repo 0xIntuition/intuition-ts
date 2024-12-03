@@ -76,11 +76,13 @@ export function useStakeMutation(contract: string, mode: 'deposit' | 'redeem') {
           predicate: (query) => {
             const [key, contract, vaultId, counterVaultId] = query.queryKey
             return (
-              (key === 'get-vault-details' &&
+              (key === 'get-vault-details' && // TODO: This doesn't seem to be working at the moment, but it's not a big deal. We can figure it out later.
                 contract === variables.contract &&
                 vaultId === variables.vaultId &&
                 counterVaultId === variables.claim?.counter_vault_id) ||
-              key === 'get-stats'
+              key === 'get-stats' ||
+              key === 'get-triple' ||
+              key === 'get-vault-details' // TODO: Remove this once we figure out the issue with the above queryKey for get-vault-details.
             )
           },
         })
