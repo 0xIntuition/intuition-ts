@@ -35,7 +35,6 @@ import {
   useGetAtomsCountQuery,
   useGetFollowerPositionsQuery,
   useGetPositionsCountByTypeQuery,
-  useGetPositionsCountQuery,
   useGetTriplesCountQuery,
   useGetTriplesWithPositionsQuery,
 } from '@0xintuition/graphql'
@@ -118,11 +117,6 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   })
 
   // TODO: once we fully fix sort/pagination, we'll want to update these to use triples instead of claims, and orderBy instead of sortBy in the actual query params
-  const triplesLimit = 10
-
-  const triplesOffset = 0
-  const triplesOrderBy = 'desc'
-
   const triplesWhere = {
     _or: [
       {
@@ -231,19 +225,16 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   }
 
   await queryClient.prefetchQuery({
-    queryKey: [
-      'get-triples-with-positions',
-      { triplesWhere, triplesLimit, triplesOffset, triplesOrderBy },
-    ],
+    queryKey: ['get-triples-with-positions', { triplesWhere }],
     queryFn: () =>
       fetcher<
         GetTriplesWithPositionsQuery,
         GetTriplesWithPositionsQueryVariables
       >(GetTriplesWithPositionsDocument, {
         where: triplesWhere,
-        limit: triplesLimit,
-        offset: triplesOffset,
-        orderBy: triplesOrderBy ? [{ [triplesOrderBy]: 'desc' }] : undefined,
+        limit: 10,
+        offset: 0,
+        orderBy: [{ blockNumber: 'desc' }],
         address: queryAddress,
       }),
   })
@@ -324,9 +315,6 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     queryAddress,
     initialParams: {
       atomId: accountResult.account?.atomId,
-      triplesLimit,
-      triplesOffset,
-      triplesOrderBy,
       triplesWhere,
       triplesCountWhere,
       positionsCountWhere,
@@ -351,7 +339,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 export default function ProfileOverview() {
   const { queryAddress, initialParams, savedListClaims } =
     useLoaderData<typeof loader>()
-  const { userIdentity, userTotals } =
+  const { userIdentity } =
     useRouteLoaderData<{
       userIdentity: IdentityPresenter
       userTotals: UserTotalsPresenter
@@ -365,8 +353,6 @@ export default function ProfileOverview() {
   const setCreateClaimModalActive = useSetAtom(globalCreateClaimModalAtom)
 
   const {
-    triplesCountWhere,
-    positionsCountWhere,
     createdTriplesWhere,
     createdAtomsWhere,
     atomPositionsWhere,
@@ -377,16 +363,6 @@ export default function ProfileOverview() {
   const { data: accountResult } = useGetAccountQuery(
     { address: queryAddress },
     { queryKey: ['get-account', { address: queryAddress }] },
-  )
-
-  const { data: triplesCountResult } = useGetTriplesCountQuery(
-    { where: triplesCountWhere },
-    { queryKey: ['get-triples-count', { where: triplesCountWhere }] },
-  )
-
-  const { data: positionsCountResult } = useGetPositionsCountQuery(
-    { where: positionsCountWhere },
-    { queryKey: ['get-positions-count', { where: positionsCountWhere }] },
   )
 
   const { data: createdTriplesResult } = useGetTriplesCountQuery(
@@ -425,11 +401,9 @@ export default function ProfileOverview() {
   } = useGetTriplesWithPositionsQuery(
     {
       where: initialParams.triplesWhere,
-      limit: initialParams.triplesLimit,
-      offset: initialParams.triplesOffset,
-      orderBy: initialParams.triplesOrderBy
-        ? [{ [initialParams.triplesOrderBy]: 'desc' }]
-        : undefined,
+      limit: 10,
+      offset: 0,
+      orderBy: [{ blockNumber: 'desc' }],
       address: queryAddress,
     },
     {
@@ -437,14 +411,16 @@ export default function ProfileOverview() {
         'get-triples-with-positions',
         {
           where: initialParams.triplesWhere,
-          limit: initialParams.triplesLimit,
-          offset: initialParams.triplesOffset,
-          orderBy: initialParams.triplesOrderBy,
+          limit: 10,
+          offset: 0,
+          orderBy: [{ blockNumber: 'desc' }],
           address: queryAddress,
         },
       ],
     },
   )
+
+  logger('Triples Result (Client):', triplesResult)
 
   const { data: followerData } = useGetFollowerPositionsQuery(
     {
@@ -476,7 +452,7 @@ export default function ProfileOverview() {
     },
   )
 
-  logger('Triples Result (Client):', triplesResult)
+  logger('Follower Data (Client):', followerData)
 
   return (
     <div className="flex flex-col gap-12">
@@ -566,7 +542,7 @@ export default function ProfileOverview() {
             <ErrorStateCard
               title="Failed to load claims"
               message={
-                (errorTripples as Error)?.message ??
+                (errorTriples as Error)?.message ??
                 'An unexpected error occurred'
               }
             >
@@ -630,7 +606,8 @@ function TopFollowers({
         Top Followers
       </Text>
       <FollowList
-        positions={followerData.triples ?? []}
+        positions={followerData?.triples[0]?.vault?.positions ?? []}
+        currentSharePrice={followerData?.triples[0]?.vault?.currentSharePrice}
         paramPrefix={ConnectionsHeaderVariants.followers}
         enableSearch={false}
         enableSort={false}

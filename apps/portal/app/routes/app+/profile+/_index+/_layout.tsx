@@ -52,7 +52,6 @@ import { SegmentedNav } from '@components/segmented-nav'
 import StakeModal from '@components/stake/stake-modal'
 import TagsModal from '@components/tags/tags-modal'
 import { useGetVaultDetails } from '@lib/hooks/useGetVaultDetails'
-import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getIdentityOrPending } from '@lib/services/identities'
 import { getPurchaseIntentsByAddress } from '@lib/services/phosphor'
 import {
