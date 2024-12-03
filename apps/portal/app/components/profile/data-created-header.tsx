@@ -9,6 +9,8 @@ import {
 } from '@0xintuition/1ui'
 import { IdentityPresenter, UserTotalsPresenter } from '@0xintuition/api'
 
+import logger from '@lib/utils/logger'
+
 export const DataCreatedHeaderVariants = {
   activeIdentities: 'activeIdentities',
   activeClaims: 'activeClaims',
@@ -19,6 +21,86 @@ export const DataCreatedHeaderVariants = {
 export type DataCreatedHeaderVariantType =
   (typeof DataCreatedHeaderVariants)[keyof typeof DataCreatedHeaderVariants]
 
+interface DataCreatedHeaderPropsNew
+  extends React.HTMLAttributes<HTMLDivElement> {
+  variant: DataCreatedHeaderVariantType
+  totalResults?: number
+  atomImage?: string
+  atomLabel?: string
+  atomVariant?: 'user' | 'non-user'
+  totalStake?: number
+}
+
+export const DataCreatedHeaderNew: React.FC<DataCreatedHeaderPropsNew> = ({
+  variant,
+  atomImage,
+  atomLabel,
+  atomVariant,
+  totalResults,
+  totalStake,
+  ...props
+}) => {
+  return (
+    <div className="h-46 flex flex-col w-full gap-3" {...props}>
+      <div className="p-6 bg-black rounded-xl theme-border flex flex-col gap-5">
+        <div className="flex gap-1.5 items-center">
+          <Text
+            variant="body"
+            weight={TextWeight.medium}
+            className="text-foreground/70"
+          >
+            {variant === 'activeIdentities' || variant === 'createdIdentities'
+              ? 'Identities'
+              : 'Claims'}{' '}
+            {variant === 'activeIdentities' || variant === 'activeClaims'
+              ? 'staked on by'
+              : 'created by'}
+          </Text>
+          <IdentityTag imgSrc={atomImage} variant={atomVariant}>
+            {atomLabel ?? ''}
+          </IdentityTag>
+        </div>
+        <div className="flex justify-between items-start max-sm:gap-5 max-sm:justify-center">
+          <div className="flex gap-10 max-sm:gap-5">
+            <div className="flex flex-col items-start max-sm:items-center">
+              <Text
+                variant="caption"
+                weight="regular"
+                className="text-secondary-foreground"
+              >
+                {variant === 'activeIdentities' ||
+                variant === 'createdIdentities'
+                  ? 'Identities'
+                  : 'Claims'}
+              </Text>
+              <Text variant={TextVariant.headline} weight={TextWeight.medium}>
+                {totalResults}
+              </Text>
+            </div>
+          </div>
+          {totalStake && (
+            <div className="flex flex-col items-end max-sm:items-center">
+              <Text
+                variant="caption"
+                weight="regular"
+                className="text-secondary-foreground"
+              >
+                TVL
+              </Text>
+              <MonetaryValue
+                value={totalStake ?? 0}
+                currency="ETH"
+                textVariant={TextVariant.headline}
+              />
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Legacy implementation -- delete once fully migrated both Data Created routes
 interface DataCreatedHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
   variant: DataCreatedHeaderVariantType
   userIdentity: IdentityPresenter
