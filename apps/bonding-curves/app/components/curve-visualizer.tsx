@@ -209,7 +209,11 @@ export function CurveVisualizer() {
         const points = await generateCurvePoints(contract.address, contract.abi)
         return {
           ...contract,
-          points: points.map((p) => ({ ...p })),
+          points: points.map((p) => ({
+            ...p,
+            totalValue: p.x <= contract.totalAssets ? p.y : undefined,
+            userValue: p.x <= contract.userAssets ? p.y : undefined,
+          })),
         }
       }),
     )
@@ -404,21 +408,24 @@ export function CurveVisualizer() {
       const numericValue = Number(newValue)
       if (isNaN(numericValue) || numericValue < 0) return
 
+      // Update max value if needed before updating graph
+      if (numericValue > maxValue) {
+        const newMax = Math.pow(2, Math.ceil(Math.log2(numericValue)))
+        setMaxValue(newMax) // Update UI
+        handleMinMaxChange(minValue, newMax) // Regenerate curves
+      }
+
       try {
         const shares = await publicClient.readContract({
           address: curve.address,
           abi: curve.abi,
           functionName: 'assetsToShares',
-          args: [
-            parseEther(numericValue.toString()),
-            parseEther(curve.totalAssets.toString()),
-            parseEther(curve.totalShares.toString()),
-          ],
+          args: [parseEther(numericValue.toString()), 0n, 0n],
         })
-        const sharesNumber = Number(formatEther(BigInt(shares.toString())))
 
+        const sharesNum = Number(formatEther(BigInt(shares.toString())))
         setTotalAssets(numericValue)
-        setTotalShares(sharesNumber)
+        setTotalShares(sharesNum)
 
         setDeployedContracts((prev) =>
           prev.map((c) =>
@@ -426,7 +433,7 @@ export function CurveVisualizer() {
               ? {
                   ...c,
                   totalAssets: numericValue,
-                  totalShares: sharesNumber,
+                  totalShares: sharesNum,
                   points: c.points.map((point) => ({
                     ...point,
                     totalValue: point.x <= numericValue ? point.y : undefined,
@@ -436,11 +443,19 @@ export function CurveVisualizer() {
               : c,
           ),
         )
-      } catch (err) {
-        console.error('Error converting assets to shares:', err)
+      } catch (error) {
+        console.error('Error in handleTotalAssetsChange:', error)
       }
     },
-    [selectedCurveId, publicClient, deployedContracts],
+    [
+      selectedCurveId,
+      deployedContracts,
+      maxValue,
+      minValue,
+      publicClient,
+      handleMinMaxChange,
+      setMaxValue,
+    ],
   )
 
   const handleTotalSharesChange = useCallback(
@@ -452,43 +467,128 @@ export function CurveVisualizer() {
       const numericValue = Number(newValue)
       if (isNaN(numericValue) || numericValue < 0) return
 
+      // Start with a small step and gradually increase
+      let currentAssets = 0
+      let step = 0.1
+      let prevShares = 0
+      let prevAssets = 0
+      const EPSILON = 0.0001
+
       try {
-        const assets = await publicClient.readContract({
-          address: curve.address,
-          abi: curve.abi,
-          functionName: 'sharesToAssets',
-          args: [
-            parseEther(numericValue.toString()),
-            parseEther(curve.totalAssets.toString()),
-            parseEther(curve.totalShares.toString()),
-          ],
-        })
-        const assetsNumber = Number(formatEther(BigInt(assets.toString())))
+        // Binary search with dynamic step size
+        while (true) {
+          const shares = await publicClient.readContract({
+            address: curve.address,
+            abi: curve.abi,
+            functionName: 'assetsToShares',
+            args: [parseEther(currentAssets.toString()), 0n, 0n],
+          })
+          const sharesNum = Number(formatEther(BigInt(shares.toString())))
 
-        setTotalShares(numericValue)
-        setTotalAssets(assetsNumber)
+          // Check if we've bracketed our target
+          if (Math.abs(sharesNum - numericValue) < EPSILON) {
+            // Found exact match within epsilon
+            setTotalShares(numericValue)
+            setTotalAssets(currentAssets)
 
-        setDeployedContracts((prev) =>
-          prev.map((c) =>
-            c.id === selectedCurveId
-              ? {
-                  ...c,
-                  totalAssets: assetsNumber,
-                  totalShares: numericValue,
-                  points: c.points.map((point) => ({
-                    ...point,
-                    totalValue: point.x <= assetsNumber ? point.y : undefined,
-                    userValue: point.x <= c.userAssets ? point.y : undefined,
-                  })),
-                }
-              : c,
-          ),
-        )
-      } catch (err) {
-        console.error('Error converting shares to assets:', err)
+            // Update max value if needed before updating graph
+            if (currentAssets > maxValue) {
+              const newMax = Math.pow(2, Math.ceil(Math.log2(currentAssets)))
+              setMaxValue(newMax) // Update UI
+              handleMinMaxChange(minValue, newMax) // Regenerate curves
+            }
+
+            // Update deployed contracts state with new values
+            setDeployedContracts((prev) =>
+              prev.map((c) =>
+                c.id === selectedCurveId
+                  ? {
+                      ...c,
+                      totalAssets: currentAssets,
+                      totalShares: numericValue,
+                      points: c.points.map((point) => ({
+                        ...point,
+                        totalValue:
+                          point.x <= currentAssets ? point.y : undefined,
+                        userValue:
+                          point.x <= c.userAssets ? point.y : undefined,
+                      })),
+                    }
+                  : c,
+              ),
+            )
+            break
+          }
+
+          if (prevShares < numericValue && sharesNum > numericValue) {
+            // We've bracketed the target, interpolate
+            const assetsNumber =
+              prevAssets +
+              ((numericValue - prevShares) * (currentAssets - prevAssets)) /
+                (sharesNum - prevShares)
+
+            setTotalShares(numericValue)
+            setTotalAssets(assetsNumber)
+
+            // Update max value if needed before updating graph
+            if (assetsNumber > maxValue) {
+              const newMax = Math.pow(2, Math.ceil(Math.log2(assetsNumber)))
+              setMaxValue(newMax) // Update UI
+              handleMinMaxChange(minValue, newMax) // Regenerate curves
+            }
+
+            // Update deployed contracts state with new values
+            setDeployedContracts((prev) =>
+              prev.map((c) =>
+                c.id === selectedCurveId
+                  ? {
+                      ...c,
+                      totalAssets: assetsNumber,
+                      totalShares: numericValue,
+                      points: c.points.map((point) => ({
+                        ...point,
+                        totalValue:
+                          point.x <= assetsNumber ? point.y : undefined,
+                        userValue:
+                          point.x <= c.userAssets ? point.y : undefined,
+                      })),
+                    }
+                  : c,
+              ),
+            )
+            break
+          }
+
+          prevShares = sharesNum
+          prevAssets = currentAssets
+
+          if (sharesNum < numericValue) {
+            currentAssets += step
+            step *= 1.5 // Accelerate step size
+          } else {
+            currentAssets -= step
+            step /= 2 // Reduce step size for finer search
+          }
+
+          // Safety check to prevent infinite loops
+          if (currentAssets > 1000000 || currentAssets < 0) {
+            console.error('Search exceeded bounds')
+            return
+          }
+        }
+      } catch (error) {
+        console.error('Error in handleTotalSharesChange:', error)
       }
     },
-    [selectedCurveId, publicClient, deployedContracts],
+    [
+      selectedCurveId,
+      deployedContracts,
+      maxValue,
+      minValue,
+      publicClient,
+      handleMinMaxChange,
+      setMaxValue,
+    ],
   )
 
   const handleDepositAmountChange = useCallback(
@@ -885,7 +985,7 @@ export function CurveVisualizer() {
             <div className="flex justify-between items-center">
               <div className="flex gap-4">
                 <div className="flex-1">
-                  <Label>Total Assets (ETH)</Label>
+                  <Label>Total Assets</Label>
                   <Input
                     type="number"
                     value={totalAssets}
@@ -899,7 +999,11 @@ export function CurveVisualizer() {
                   <Input
                     type="number"
                     value={totalShares}
-                    onChange={(e) => handleTotalSharesChange(e.target.value)}
+                    onChange={(e) => {
+                      const newValue = e.target.value
+                      setTotalShares(Number(newValue))
+                      handleTotalSharesChange(newValue)
+                    }}
                     step={calculateStepSize(totalShares)}
                     min={0}
                   />

@@ -19,3 +19,11 @@
 - Split into multiple responses if one response isn't enough to answer the question.
 
 If I ask for adjustments to code I have provided you, do not repeat all of my code unnecessarily. Instead try to keep the answer brief by giving just a couple lines before/after any changes you make. Multiple code blocks are ok
+
+# Cursor Rules
+
+1. Think carefully when prompted, and trace through all affected logic to ensure changes actually work
+2. Follow ALL instructions given - partial implementation is not acceptable
+3. When making changes, verify they solve the actual problem, not just superficial symptoms
+4. Test the full logical flow of any changes before considering them complete
+5. If unsure about any part of the implementation, ask for clarification rather than making assumptions
