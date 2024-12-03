@@ -20,6 +20,48 @@ query GetAtoms(
   }
 }
 
+query GetAtomsWithPositions(
+  $limit: Int
+  $offset: Int
+  $orderBy: [atoms_order_by!]
+  $where: atoms_bool_exp
+  $address: String
+) {
+  total: atoms_aggregate(where: $where) {
+    aggregate {
+      count
+    }
+  }
+  atoms(limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
+    ...AtomMetadata
+    ...AtomTxn
+    vault {
+      positionCount
+      totalShares
+      currentSharePrice
+      positions_aggregate {
+        aggregate {
+          count
+          sum {
+            shares
+          }
+        }
+      }
+      positions(where: { accountId: { _eq: $address } }) {
+        id
+        account {
+          label
+          id
+        }
+        shares
+      }
+    }
+    creator {
+      ...AccountMetadata
+    }
+  }
+}
+
 # Combined query with aggregates and nodes
 query GetAtomsWithAggregates(
   $limit: Int

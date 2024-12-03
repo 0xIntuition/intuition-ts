@@ -1,4 +1,4 @@
-import { isError } from 'util'
+import { error } from 'node:console'
 import { ReactNode, Suspense } from 'react'
 
 import {
@@ -10,32 +10,25 @@ import {
   Text,
 } from '@0xintuition/1ui'
 import {
-  ClaimsService,
-  IdentitiesService,
-  IdentityPresenter,
-  UserTotalsPresenter,
-} from '@0xintuition/api'
-import {
   fetcher,
-  GetAtomDocument,
-  GetAtomQuery,
-  GetAtomQueryVariables,
-  GetAtomsDocument,
-  GetAtomsQuery,
-  GetAtomsQueryVariables,
+  GetAtomsWithPositionsDocument,
+  GetAtomsWithPositionsQuery,
+  GetAtomsWithPositionsQueryVariables,
   GetTriplesDocument,
   GetTriplesQuery,
   GetTriplesQueryVariables,
+  GetTriplesWithPositionsDocument,
+  GetTriplesWithPositionsQuery,
+  GetTriplesWithPositionsQueryVariables,
   useGetAccountQuery,
-  useGetAtomsQuery,
+  useGetAtomsWithPositionsQuery,
   useGetTriplesQuery,
+  useGetTriplesWithPositionsQuery,
 } from '@0xintuition/graphql'
 
 import { ErrorPage } from '@components/error-page'
-import { ActivePositionsOnClaims } from '@components/list/active-positions-on-claims'
-import { ActivePositionsOnIdentities } from '@components/list/active-positions-on-identities'
 import { ClaimsList } from '@components/list/claims'
-import { IdentitiesList } from '@components/list/identities'
+import { IdentitiesListNew as IdentitiesList } from '@components/list/identities'
 import {
   DataCreatedHeaderNew as DataCreatedHeader,
   DataCreatedHeaderVariants,
@@ -47,27 +40,13 @@ import {
   PaginatedListSkeleton,
   TabsSkeleton,
 } from '@components/skeleton'
-import { useLiveLoader } from '@lib/hooks/useLiveLoader'
-import {
-  getCreatedClaims,
-  getCreatedIdentities,
-  getUserClaims,
-  getUserIdentities,
-} from '@lib/services/users'
 import logger from '@lib/utils/logger'
-import { formatBalance, invariant } from '@lib/utils/misc'
-import { defer, json, LoaderFunctionArgs } from '@remix-run/node'
-import { Await, useRouteLoaderData } from '@remix-run/react'
-import { fetchWrapper } from '@server/api'
+import { invariant } from '@lib/utils/misc'
+import { json, LoaderFunctionArgs } from '@remix-run/node'
+import { useLoaderData } from '@remix-run/react'
 import { requireUser, requireUserWallet } from '@server/auth'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
-import {
-  NO_USER_IDENTITY_ERROR,
-  NO_USER_TOTALS_ERROR,
-  NO_WALLET_ERROR,
-} from 'app/consts'
-
-import { ProfileLoaderData } from './_layout'
+import { NO_WALLET_ERROR } from 'app/consts'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await requireUser(request)
@@ -101,32 +80,58 @@ export async function loader({ request }: LoaderFunctionArgs) {
   }
   const atomsLimit = parseInt(url.searchParams.get('claimsLimit') || '10')
   const atomsOffset = parseInt(url.searchParams.get('claimsOffset') || '0')
-  const atomsOrderBy = url.searchParams.get('claimsSortBy')
+  // const atomsOrderBy = url.searchParams.get('claimsSortBy')
+  const atomsOrderBy = [
+    {
+      vault: {
+        totalShares: 'desc',
+      },
+    },
+  ]
   const triplesLimit = parseInt(url.searchParams.get('claimsLimit') || '10')
   const triplesOffset = parseInt(url.searchParams.get('claimsOffset') || '0')
   const triplesOrderBy = url.searchParams.get('claimsSortBy')
 
   await queryClient.prefetchQuery({
     queryKey: [
-      'get-atoms',
-      { atomsWhere, atomsLimit, atomsOffset, atomsOrderBy },
+      'get-atoms-with-positions',
+      {
+        atomsWhere,
+        atomsLimit,
+        atomsOffset,
+        atomsOrderBy,
+        address: queryAddress,
+      },
     ],
     queryFn: () =>
-      fetcher<GetAtomsQuery, GetAtomsQueryVariables>(GetAtomsDocument, {
-        where: atomsWhere,
-        limit: atomsLimit,
-        offset: atomsOffset,
-        orderBy: atomsOrderBy ? [{ [atomsOrderBy]: 'desc' }] : undefined,
-      })(),
+      fetcher<GetAtomsWithPositionsQuery, GetAtomsWithPositionsQueryVariables>(
+        GetAtomsWithPositionsDocument,
+        {
+          where: atomsWhere,
+          limit: atomsLimit,
+          offset: atomsOffset,
+          orderBy: [
+            {
+              vault: {
+                totalShares: 'desc',
+              },
+            },
+          ],
+          address: queryAddress,
+        },
+      )(),
   })
 
   await queryClient.prefetchQuery({
     queryKey: [
-      'get-triples',
+      'get-triples-with-positions',
       { triplesWhere, triplesLimit, triplesOffset, triplesOrderBy },
     ],
     queryFn: () =>
-      fetcher<GetTriplesQuery, GetTriplesQueryVariables>(GetTriplesDocument, {
+      fetcher<
+        GetTriplesWithPositionsQuery,
+        GetTriplesWithPositionsQueryVariables
+      >(GetTriplesWithPositionsDocument, {
         where: triplesWhere,
         limit: triplesLimit,
         offset: triplesOffset,
@@ -183,23 +188,7 @@ const TabContent = ({
 }
 
 export default function ProfileDataCreated() {
-  const {
-    queryAddress,
-    initialParams,
-    // activeIdentities,
-    // createdIdentities,
-    // createdIdentitiesSummary,
-    // activeClaims,
-    // createdClaims,
-    // createdClaimsSummary,
-  } = useLiveLoader<typeof loader>(['attest'])
-
-  const { userIdentity, userTotals } =
-    useRouteLoaderData<ProfileLoaderData>(
-      'routes/app+/profile+/_index+/_layout',
-    ) ?? {}
-  invariant(userIdentity, NO_USER_IDENTITY_ERROR)
-  invariant(userTotals, NO_USER_TOTALS_ERROR)
+  const { queryAddress, initialParams } = useLoaderData<typeof loader>()
 
   const { data: accountResult } = useGetAccountQuery(
     {
@@ -217,23 +206,32 @@ export default function ProfileDataCreated() {
     isLoading: isLoadingAtomsCreated,
     isError: isErrorAtomsCreated,
     error: errorAtomsCreated,
-  } = useGetAtomsQuery(
+  } = useGetAtomsWithPositionsQuery(
     {
       where: initialParams.atomsWhere,
       limit: initialParams.atomsLimit,
       offset: initialParams.atomsOffset,
-      orderBy: initialParams.atomsOrderBy
-        ? [{ [initialParams.atomsOrderBy]: 'desc' }]
-        : undefined,
+      orderBy: [
+        {
+          vault: {
+            totalShares: 'desc',
+          },
+        },
+      ],
+      // orderBy: initialParams.atomsOrderBy
+      //   ? [{ [initialParams.atomsOrderBy]: 'desc' }]
+      //   : undefined,
+      address: queryAddress,
     },
     {
       queryKey: [
-        'get-atoms',
+        'get-atoms-with-positions',
         {
           where: initialParams.atomsWhere,
           limit: initialParams.atomsLimit,
           offset: initialParams.atomsOffset,
           orderBy: initialParams.atomsOrderBy,
+          address: initialParams.queryAddress,
         },
       ],
     },
@@ -246,18 +244,24 @@ export default function ProfileDataCreated() {
     isLoading: isLoadingTriplesCreated,
     isError: isErrorTriplesCreated,
     error: errorTriplesCreated,
-  } = useGetTriplesQuery(
+  } = useGetTriplesWithPositionsQuery(
     {
       where: initialParams.triplesWhere,
       limit: initialParams.triplesLimit,
       offset: initialParams.triplesOffset,
       orderBy: initialParams.triplesOrderBy
         ? [{ [initialParams.triplesOrderBy]: 'desc' }]
-        : undefined,
+        : [
+            {
+              vault: {
+                totalShares: 'desc',
+              },
+            },
+          ],
     },
     {
       queryKey: [
-        'get-triples',
+        'get-triples-with-positions',
         {
           where: initialParams.triplesWhere,
           limit: initialParams.triplesLimit,
@@ -466,13 +470,13 @@ export default function ProfileDataCreated() {
                 // }  // Can't get TVL on created atoms at the moment
                 variant={DataCreatedHeaderVariants.createdIdentities}
               >
-                {/* <IdentitiesList
-                  identities={atomsCreatedResult}
+                <IdentitiesList
+                  identities={atomsCreatedResult?.atoms}
                   pagination={atomsCreatedResult?.total?.aggregate?.count}
                   paramPrefix="createdIdentities"
-                  enableSearch
+                  enableSearch //
                   enableSort
-                /> */}
+                />
               </TabContent>
             )}
           </Suspense>
