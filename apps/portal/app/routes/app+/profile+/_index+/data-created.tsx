@@ -1,4 +1,3 @@
-import { error } from 'node:console'
 import { ReactNode, Suspense } from 'react'
 
 import {
@@ -11,23 +10,20 @@ import {
 } from '@0xintuition/1ui'
 import {
   fetcher,
+  GetAtomsQuery,
   GetAtomsWithPositionsDocument,
   GetAtomsWithPositionsQuery,
   GetAtomsWithPositionsQueryVariables,
-  GetTriplesDocument,
-  GetTriplesQuery,
-  GetTriplesQueryVariables,
   GetTriplesWithPositionsDocument,
   GetTriplesWithPositionsQuery,
   GetTriplesWithPositionsQueryVariables,
   useGetAccountQuery,
   useGetAtomsWithPositionsQuery,
-  useGetTriplesQuery,
   useGetTriplesWithPositionsQuery,
 } from '@0xintuition/graphql'
 
 import { ErrorPage } from '@components/error-page'
-import { ClaimsList } from '@components/list/claims'
+import { ClaimsListNew as ClaimsList } from '@components/list/claims'
 import { IdentitiesListNew as IdentitiesList } from '@components/list/identities'
 import {
   DataCreatedHeaderNew as DataCreatedHeader,
@@ -47,6 +43,11 @@ import { useLoaderData } from '@remix-run/react'
 import { requireUser, requireUserWallet } from '@server/auth'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
 import { NO_WALLET_ERROR } from 'app/consts'
+
+type Atom = NonNullable<GetAtomsQuery['atoms']>[number]
+type Triple = NonNullable<
+  NonNullable<GetTriplesWithPositionsQuery['triples']>[number]
+>
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await requireUser(request)
@@ -125,7 +126,13 @@ export async function loader({ request }: LoaderFunctionArgs) {
   await queryClient.prefetchQuery({
     queryKey: [
       'get-triples-with-positions',
-      { triplesWhere, triplesLimit, triplesOffset, triplesOrderBy },
+      {
+        triplesWhere,
+        triplesLimit,
+        triplesOffset,
+        triplesOrderBy,
+        address: queryAddress,
+      },
     ],
     queryFn: () =>
       fetcher<
@@ -136,6 +143,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
         limit: triplesLimit,
         offset: triplesOffset,
         orderBy: triplesOrderBy ? [{ [triplesOrderBy]: 'desc' }] : undefined,
+        address: queryAddress,
       })(),
   })
 
@@ -258,7 +266,9 @@ export default function ProfileDataCreated() {
               },
             },
           ],
+      address: queryAddress,
     },
+
     {
       queryKey: [
         'get-triples-with-positions',
@@ -267,6 +277,7 @@ export default function ProfileDataCreated() {
           limit: initialParams.triplesLimit,
           offset: initialParams.triplesOffset,
           orderBy: initialParams.triplesOrderBy,
+          address: queryAddress,
         },
       ],
     },
@@ -470,17 +481,21 @@ export default function ProfileDataCreated() {
                 // }  // Can't get TVL on created atoms at the moment
                 variant={DataCreatedHeaderVariants.createdIdentities}
               >
-                <IdentitiesList
-                  identities={atomsCreatedResult?.atoms}
-                  pagination={atomsCreatedResult?.total?.aggregate?.count}
-                  paramPrefix="createdIdentities"
-                  enableSearch //
-                  enableSort
-                />
+                {atomsCreatedResult && (
+                  <IdentitiesList
+                    identities={atomsCreatedResult.atoms as Atom[]}
+                    pagination={
+                      atomsCreatedResult?.total?.aggregate?.count ?? 0
+                    }
+                    paramPrefix="createdIdentities"
+                    enableSearch //
+                    enableSort
+                  />
+                )}
               </TabContent>
             )}
           </Suspense>
-          {/* <Suspense
+          <Suspense
             fallback={
               <div className="flex flex-col w-full gap-6">
                 <DataHeaderSkeleton />
@@ -488,93 +503,46 @@ export default function ProfileDataCreated() {
               </div>
             }
           >
-            <Await
-              resolve={createdIdentities}
-              errorElement={
-                <ErrorStateCard>
-                  <RevalidateButton />
-                </ErrorStateCard>
-              }
-            >
-              {(resolvedIdentities) => (
-                <Await
-                  resolve={createdIdentitiesSummary}
-                  errorElement={
-                    <ErrorStateCard>
-                      <RevalidateButton />
-                    </ErrorStateCard>
-                  }
-                >
-                  {(resolvedIdentitiesSummary) => (
-                    <TabContent
-                      value={DataCreatedHeaderVariants.createdIdentities}
-                      userIdentity={userIdentity}
-                      userTotals={userTotals}
-                      totalResults={resolvedIdentities.pagination.totalEntries}
-                      totalStake={
-                        +formatBalance(
-                          resolvedIdentitiesSummary?.assets ?? '0',
-                          18,
-                        )
-                      }
-                      variant={DataCreatedHeaderVariants.createdIdentities}
-                    >
-                      <IdentitiesList
-                        identities={resolvedIdentities.data}
-                        pagination={resolvedIdentities.pagination}
-                        paramPrefix="createdIdentities"
-                        enableSearch
-                        enableSort
-                      />
-                    </TabContent>
-                  )}
-                </Await>
-              )}
-            </Await>
-            <Await
-              resolve={createdClaims}
-              errorElement={
-                <ErrorStateCard>
-                  <RevalidateButton />
-                </ErrorStateCard>
-              }
-            >
-              {(resolvedClaims) => (
-                <Await
-                  resolve={createdClaimsSummary}
-                  errorElement={
-                    <ErrorStateCard>
-                      <RevalidateButton />
-                    </ErrorStateCard>
-                  }
-                >
-                  {(resolvedClaimsSummary) => (
-                    <TabContent
-                      value={DataCreatedHeaderVariants.createdClaims}
-                      userIdentity={userIdentity}
-                      userTotals={userTotals}
-                      totalResults={resolvedClaims.pagination.totalEntries}
-                      totalStake={
-                        +formatBalance(
-                          resolvedClaimsSummary?.assets_sum ?? '0',
-                          18,
-                        )
-                      }
-                      variant={DataCreatedHeaderVariants.createdClaims}
-                    >
-                      <ClaimsList
-                        claims={resolvedClaims.data}
-                        pagination={resolvedClaims.pagination}
-                        paramPrefix="createdClaims"
-                        enableSearch
-                        enableSort
-                      />
-                    </TabContent>
-                  )}
-                </Await>
-              )}
-            </Await>
-          </Suspense> */}
+            {isLoadingAtomsCreated ? (
+              <div className="flex flex-col w-full gap-6">
+                <DataHeaderSkeleton />
+                <PaginatedListSkeleton />
+              </div>
+            ) : isErrorAtomsCreated ? (
+              <ErrorStateCard
+                title="Failed to load identities created"
+                message={
+                  (errorAtomsCreated as Error)?.message ??
+                  'An unexpected error occurred'
+                }
+              >
+                <RevalidateButton />
+              </ErrorStateCard>
+            ) : (
+              <TabContent
+                value={DataCreatedHeaderVariants.createdClaims}
+                totalResults={triplesCreatedResult?.total?.aggregate?.count}
+                atomImage={accountResult?.account?.image ?? ''}
+                atomLabel={accountResult?.account?.label ?? ''}
+                // totalStake={
+                //   +formatBalance(resolvedIdentitiesSummary?.assets ?? '0', 18)
+                // }  // Can't get TVL on created atoms at the moment
+                variant={DataCreatedHeaderVariants.createdClaims}
+              >
+                {triplesCreatedResult && (
+                  <ClaimsList
+                    claims={triplesCreatedResult.triples as Triple[]}
+                    pagination={
+                      triplesCreatedResult?.total?.aggregate?.count ?? 0
+                    }
+                    paramPrefix="createdClaims"
+                    enableSearch //
+                    enableSort
+                  />
+                )}
+              </TabContent>
+            )}
+          </Suspense>
         </Tabs>
       </div>
     </div>
