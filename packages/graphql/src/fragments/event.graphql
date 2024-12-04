@@ -6,6 +6,52 @@ fragment EventDetails on events {
   atomId
   tripleId
   depositId
-  feeTransferId
   redemptionId
+  ...DepositEventFragment
+  ...RedemptionEventFragment
+  atom {
+    ...AtomMetadata
+    vault {
+      totalShares
+      positionCount
+      positions {
+        accountId
+        shares
+        account {
+          id
+          label
+          image
+        }
+      }
+    }
+  }
+  triple {
+    ...TripleMetadata
+    vault {
+      totalShares
+      positionCount
+      positions {
+        accountId
+        shares
+        account {
+          id
+          label
+          image
+        }
+      }
+    }
+    counterVault {
+      totalShares
+      positionCount
+      positions {
+        accountId
+        shares
+        account {
+          id
+          label
+          image
+        }
+      }
+    }
+  }
 }

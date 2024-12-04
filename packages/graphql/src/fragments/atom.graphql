@@ -1,10 +1,40 @@
+fragment AtomValue on atoms {
+  value {
+    person {
+      name
+      image
+      description
+      url
+    }
+    thing {
+      name
+      image
+      description
+      url
+    }
+    organization {
+      name
+      image
+      description
+      url
+    }
+  }
+}
+
 fragment AtomMetadata on atoms {
-  data
   id
+  data
   image
   label
   emoji
   type
+  walletId
+  creator {
+    id
+    label
+    image
+  }
+  ...AtomValue
 }
 
 fragment AtomTxn on atoms {
@@ -21,6 +51,22 @@ fragment AtomVaultDetails on atoms {
     positionCount
     totalShares
     currentSharePrice
+    positions_aggregate {
+      aggregate {
+        count
+        sum {
+          shares
+        }
+      }
+    }
+    positions {
+      id
+      account {
+        label
+        id
+      }
+      shares
+    }
   }
 }
 
@@ -100,6 +146,26 @@ fragment AtomTriple on atoms {
       type
       creator {
         ...AccountMetadata
+      }
+    }
+  }
+}
+
+fragment AtomVaultDetailsWithPositions on atoms {
+  vault {
+    totalShares
+    currentSharePrice
+    positions_aggregate(where: { accountId: { _in: $addresses } }) {
+      aggregate {
+        sum {
+          shares
+        }
+      }
+      nodes {
+        account {
+          id
+        }
+        shares
       }
     }
   }

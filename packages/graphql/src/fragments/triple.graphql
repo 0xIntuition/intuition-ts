@@ -1,6 +1,8 @@
 fragment TripleMetadata on triples {
   id
-  label
+  subjectId
+  predicateId
+  objectId
   subject {
     data
     id
@@ -8,6 +10,7 @@ fragment TripleMetadata on triples {
     label
     emoji
     type
+    ...AtomValue
     creator {
       ...AccountMetadata
     }
@@ -19,6 +22,7 @@ fragment TripleMetadata on triples {
     label
     emoji
     type
+    ...AtomValue
     creator {
       ...AccountMetadata
     }
@@ -30,8 +34,29 @@ fragment TripleMetadata on triples {
     label
     emoji
     type
+    ...AtomValue
     creator {
       ...AccountMetadata
+    }
+  }
+  vault {
+    totalShares
+    currentSharePrice
+    allPositions: positions_aggregate {
+      ...PositionAggregateFields
+    }
+    positions {
+      ...PositionFields
+    }
+  }
+  counterVault {
+    totalShares
+    currentSharePrice
+    allPositions: positions_aggregate {
+      ...PositionAggregateFields
+    }
+    positions {
+      ...PositionFields
     }
   }
 }
@@ -47,9 +72,38 @@ fragment TripleVaultDetails on triples {
   vaultId
   counterVaultId
   vault {
-    ...VaultDetails
+    positions {
+      id
+      vaultId
+      shares
+      account {
+        id
+        label
+        image
+      }
+    }
   }
   counterVault {
-    ...VaultDetails
+    positions {
+      id
+      vaultId
+      shares
+      account {
+        id
+        label
+        image
+      }
+    }
+  }
+}
+
+fragment TripleVaultCouterVaultDetailsWithPositions on triples {
+  vaultId
+  counterVaultId
+  vault {
+    ...VaultDetailsWithFilteredPositions
+  }
+  counterVault {
+    ...VaultDetailsWithFilteredPositions
   }
 }

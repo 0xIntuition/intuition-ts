@@ -1,4 +1,4 @@
-fragment VaultDetails on vaults {
+fragment VaultBasicDetails on vaults {
   id
   atom {
     id
@@ -19,15 +19,40 @@ fragment VaultDetails on vaults {
       label
     }
   }
-  positions_aggregate {
-    nodes {
-      account {
-        id
-        label
-      }
-      shares
-    }
-  }
   currentSharePrice
   totalShares
+}
+
+fragment VaultPositionsAggregate on vaults {
+  positions_aggregate {
+    ...PositionAggregateFields
+  }
+}
+
+fragment VaultFilteredPositions on vaults {
+  positions(where: { accountId: { _in: $addresses } }) {
+    ...PositionFields
+  }
+}
+
+fragment VaultUnfilteredPositions on vaults {
+  positions {
+    ...PositionFields
+  }
+}
+
+fragment VaultDetails on vaults {
+  ...VaultBasicDetails
+}
+
+fragment VaultDetailsWithFilteredPositions on vaults {
+  ...VaultBasicDetails
+  ...VaultFilteredPositions
+}
+
+fragment VaultFieldsForTriple on vaults {
+  totalShares
+  currentSharePrice
+  ...VaultPositionsAggregate
+  ...VaultFilteredPositions
 }

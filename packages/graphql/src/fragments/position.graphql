@@ -3,12 +3,14 @@ fragment PositionDetails on positions {
   account {
     id
     label
+    image
   }
   vault {
     id
     atom {
       id
       label
+      image
     }
     triple {
       id
@@ -28,4 +30,21 @@ fragment PositionDetails on positions {
   }
   shares
   vaultId
+}
+
+fragment PositionFields on positions {
+  account {
+    id
+    label
+  }
+  shares
+}
+
+fragment PositionAggregateFields on positions_aggregate {
+  aggregate {
+    count
+    sum {
+      shares
+    }
+  }
 }

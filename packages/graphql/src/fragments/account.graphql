@@ -6,8 +6,29 @@ fragment AccountMetadata on accounts {
   type
 }
 
+fragment AccountClaimsAggregate on accounts {
+  claims_aggregate(order_by: { shares: desc }) {
+    aggregate {
+      count
+    }
+    nodes {
+      triple {
+        id
+        label
+      }
+      shares
+      counterShares
+    }
+  }
+}
+
 fragment AccountClaims on accounts {
-  claims(order_by: { shares: desc }) {
+  claims(
+    order_by: { shares: desc }
+    limit: $claimsLimit
+    offset: $claimsOffset
+    where: $claimsWhere
+  ) {
     triple {
       id
       label
@@ -17,8 +38,11 @@ fragment AccountClaims on accounts {
   }
 }
 
-fragment AccountPositions on accounts {
+fragment AccountPositionsAggregate on accounts {
   positions_aggregate(order_by: { shares: desc }) {
+    aggregate {
+      count
+    }
     nodes {
       id
       shares
@@ -34,6 +58,143 @@ fragment AccountPositions on accounts {
           id
           label
         }
+      }
+    }
+  }
+}
+
+fragment AccountPositions on accounts {
+  positions(
+    order_by: { shares: desc }
+    limit: $positionsLimit
+    offset: $positionsOffset
+    where: $positionsWhere
+  ) {
+    id
+    shares
+    vault {
+      id
+      totalShares
+      currentSharePrice
+      atom {
+        id
+        label
+      }
+      triple {
+        id
+        label
+      }
+    }
+  }
+}
+
+fragment AccountCreatedAtomsAggregate on accounts {
+  createdAtoms_aggregate(
+    where: $atomsWhere
+    order_by: $atomsOrderBy
+    limit: $atomsLimit
+    offset: $atomsOffset
+  ) {
+    aggregate {
+      count
+      sum {
+        id
+      }
+    }
+    nodes {
+      id
+      label
+      data
+      vault {
+        totalShares
+        positions_aggregate(where: { accountId: { _eq: $address } }) {
+          nodes {
+            account {
+              id
+            }
+            shares
+          }
+        }
+      }
+    }
+  }
+}
+
+fragment AccountCreatedAtoms on accounts {
+  createdAtoms(
+    where: $atomsWhere
+    order_by: $atomsOrderBy
+    limit: $atomsLimit
+    offset: $atomsOffset
+  ) {
+    id
+    label
+    data
+    vault {
+      totalShares
+      positions(where: { accountId: { _eq: $address } }) {
+        account {
+          id
+        }
+        shares
+      }
+    }
+  }
+}
+
+fragment AccountCreatedTriples on accounts {
+  createdTriples_aggregate(
+    where: $triplesWhere
+    order_by: $triplesOrderBy
+    limit: $triplesLimit
+    offset: $triplesOffset
+  ) {
+    aggregate {
+      count
+    }
+    nodes {
+      id
+      label
+      subject {
+        id
+        label
+      }
+      predicate {
+        id
+        label
+      }
+      object {
+        id
+        label
+      }
+    }
+  }
+}
+
+fragment AccountCreatedTriplesAggregate on accounts {
+  createdTriples_aggregate(
+    where: $triplesWhere
+    order_by: $triplesOrderBy
+    limit: $triplesLimit
+    offset: $triplesOffset
+  ) {
+    aggregate {
+      count
+    }
+    nodes {
+      id
+      label
+      subject {
+        id
+        label
+      }
+      predicate {
+        id
+        label
+      }
+      object {
+        id
+        label
       }
     }
   }
