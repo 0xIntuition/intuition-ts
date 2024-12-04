@@ -10,6 +10,7 @@ fragment PositionDetails on positions {
     atom {
       id
       label
+      image
     }
     triple {
       id

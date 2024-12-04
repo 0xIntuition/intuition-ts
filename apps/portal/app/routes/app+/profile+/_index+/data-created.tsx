@@ -14,15 +14,21 @@ import {
   GetAtomsWithPositionsDocument,
   GetAtomsWithPositionsQuery,
   GetAtomsWithPositionsQueryVariables,
+  GetPositionsDocument,
+  GetPositionsQuery,
+  GetPositionsQueryVariables,
   GetTriplesWithPositionsDocument,
   GetTriplesWithPositionsQuery,
   GetTriplesWithPositionsQueryVariables,
   useGetAccountQuery,
   useGetAtomsWithPositionsQuery,
+  useGetPositionsQuery,
   useGetTriplesWithPositionsQuery,
 } from '@0xintuition/graphql'
 
 import { ErrorPage } from '@components/error-page'
+import { ActivePositionsOnClaimsNew as ActivePositionsOnClaims } from '@components/list/active-positions-on-claims'
+import { ActivePositionsOnIdentitiesNew as ActivePositionsOnIdentities } from '@components/list/active-positions-on-identities'
 import { ClaimsListNew as ClaimsList } from '@components/list/claims'
 import { IdentitiesListNew as IdentitiesList } from '@components/list/identities'
 import {
@@ -37,9 +43,9 @@ import {
   TabsSkeleton,
 } from '@components/skeleton'
 import logger from '@lib/utils/logger'
-import { invariant } from '@lib/utils/misc'
+import { formatBalance, invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
-import { useLoaderData } from '@remix-run/react'
+import { useLoaderData, useSearchParams } from '@remix-run/react'
 import { requireUser, requireUserWallet } from '@server/auth'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
 import { NO_WALLET_ERROR } from 'app/consts'
@@ -79,6 +85,30 @@ export async function loader({ request }: LoaderFunctionArgs) {
       },
     },
   }
+
+  const atomPositionsWhere = {
+    accountId: {
+      _eq: queryAddress,
+    },
+    vault: {
+      tripleId: {
+        _is_null: true,
+      },
+    },
+  }
+
+  // this query is effectively the same as using a Claims query, but this query is more flexible
+  const triplePositionsWhere = {
+    accountId: {
+      _eq: queryAddress,
+    },
+    vault: {
+      atomId: {
+        _is_null: true,
+      },
+    },
+  }
+
   const atomsLimit = parseInt(url.searchParams.get('claimsLimit') || '10')
   const atomsOffset = parseInt(url.searchParams.get('claimsOffset') || '0')
   // const atomsOrderBy = url.searchParams.get('claimsSortBy')
@@ -92,6 +122,27 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const triplesLimit = parseInt(url.searchParams.get('claimsLimit') || '10')
   const triplesOffset = parseInt(url.searchParams.get('claimsOffset') || '0')
   const triplesOrderBy = url.searchParams.get('claimsSortBy')
+
+  const atomPositionsLimit = parseInt(
+    url.searchParams.get('claimsLimit') || '10',
+  )
+  const atomPositionsOffset = parseInt(
+    url.searchParams.get('claimsOffset') || '0',
+  )
+  const atomPositionsOrderBy = url.searchParams.get('claimsSortBy')
+    ? [{ [url.searchParams.get('claimsSortBy')!]: 'desc' }]
+    : undefined
+
+  const triplePositionsLimit = parseInt(
+    url.searchParams.get('claimsLimit') || '10',
+  )
+  const triplePositionsOffset = parseInt(
+    url.searchParams.get('claimsOffset') || '0',
+  )
+
+  const triplePositionsOrderBy = url.searchParams.get('claimsSortBy')
+    ? [{ [url.searchParams.get('claimsSortBy')!]: 'desc' }]
+    : undefined
 
   await queryClient.prefetchQuery({
     queryKey: [
@@ -147,6 +198,35 @@ export async function loader({ request }: LoaderFunctionArgs) {
       })(),
   })
 
+  await queryClient.prefetchQuery({
+    queryKey: ['get-atom-positions', { where: atomPositionsWhere }],
+    queryFn: () =>
+      fetcher<GetPositionsQuery, GetPositionsQueryVariables>(
+        GetPositionsDocument,
+        {
+          where: atomPositionsWhere,
+          limit: atomPositionsLimit,
+          offset: atomPositionsOffset,
+          orderBy: atomPositionsOrderBy,
+        },
+      )(),
+  })
+
+  await queryClient.prefetchQuery({
+    queryKey: ['get-triple-positions', { where: triplePositionsWhere }],
+    queryFn: () =>
+      fetcher<GetTriplesWithPositionsQuery, GetTriplesWithPositionsQueryVariables>(
+        GetTriplesWithPositionsDocument,
+        {
+          where: triplePositionsWhere,
+          limit: triplePositionsLimit,
+          offset: triplePositionsOffset,
+          orderBy: triplePositionsOrderBy,
+          address: queryAddress,
+        },
+      )(),
+  })
+
   return json({
     queryAddress,
     dehydratedState: dehydrate(queryClient),
@@ -159,6 +239,14 @@ export async function loader({ request }: LoaderFunctionArgs) {
       triplesOffset,
       triplesOrderBy,
       triplesWhere,
+      atomPositionsLimit,
+      atomPositionsOffset,
+      atomPositionsOrderBy,
+      atomPositionsWhere,
+      triplePositionsLimit,
+      triplePositionsOffset,
+      triplePositionsOrderBy,
+      triplePositionsWhere,
       queryAddress,
     },
   })
@@ -285,6 +373,82 @@ export default function ProfileDataCreated() {
 
   logger('Triples Created Result (Client):', triplesCreatedResult)
 
+  const {
+    data: atomPositionsResult,
+    isLoading: isLoadingAtomPositions,
+    isError: isErrorAtomPositions,
+    error: errorAtomPositions,
+  } = useGetPositionsQuery(
+    {
+      where: initialParams.atomPositionsWhere,
+      limit: initialParams.atomPositionsLimit,
+      offset: initialParams.atomPositionsOffset,
+      orderBy: [
+        {
+          vault: {
+            totalShares: 'desc',
+          },
+        },
+      ],
+      // orderBy: initialParams.atomsOrderBy
+      //   ? [{ [initialParams.atomsOrderBy]: 'desc' }]
+      //   : undefined,
+    },
+    {
+      queryKey: [
+        'get-atom-positions',
+        {
+          where: initialParams.atomsWhere,
+          limit: initialParams.atomsLimit,
+          offset: initialParams.atomsOffset,
+          orderBy: initialParams.atomsOrderBy,
+        },
+      ],
+    },
+  )
+
+  logger('Atom Positions Result (Client):', atomPositionsResult)
+
+  const {
+    data: triplePositionsResult,
+    isLoading: isLoadingTriplePositions,
+    isError: isErrorTriplePositions,
+    error: errorTriplePositions,
+  } = useGetTriplesWithPositionsQuery(
+    {
+      where: initialParams.triplePositionsWhere,
+      limit: initialParams.triplePositionsLimit,
+      offset: initialParams.triplePositionsOffset,
+      orderBy: [
+        {
+          vault: {
+            totalShares: 'desc',
+          },
+        },
+      ],
+      // orderBy: initialParams.atomsOrderBy
+      //   ? [{ [initialParams.atomsOrderBy]: 'desc' }]
+      //   : undefined,
+      address: queryAddress,
+    },
+    {
+      queryKey: [
+        'get-triple-positions',
+        {
+          where: initialParams.triplePositionsWhere,
+          limit: initialParams.triplePositionsLimit,
+          offset: initialParams.triplePositionsOffset,
+          orderBy: initialParams.triplePositionsOrderBy,
+        },
+      ],
+    },
+  )
+
+  logger('Triple Positions Result (Client):', triplePositionsResult)
+
+  const [searchParams, setSearchParams] = useSearchParams()
+  const positionDirection = searchParams.get('positionDirection')
+
   return (
     <div className="flex-col justify-start items-start flex w-full gap-12">
       <div className="flex flex-col w-full gap-6">
@@ -302,6 +466,135 @@ export default function ProfileDataCreated() {
             defaultValue={DataCreatedHeaderVariants.activeIdentities}
             className="w-full"
           >
+            <Suspense
+              fallback={
+                <div className="mb-6">
+                  <TabsSkeleton numOfTabs={2} />
+                </div>
+              }
+            >
+              <TabsList className="mb-6">
+                <TabsTrigger
+                  value={DataCreatedHeaderVariants.activeIdentities}
+                  label="Identities"
+                  totalCount={atomPositionsResult?.total?.aggregate?.count ?? 0}
+                  disabled={atomPositionsResult === undefined}
+                />
+                <TabsTrigger
+                  value={DataCreatedHeaderVariants.activeClaims}
+                  label="Claims"
+                  totalCount={
+                    triplePositionsResult?.total?.aggregate?.count ?? 0
+                  }
+                  disabled={triplePositionsResult === undefined}
+                />
+              </TabsList>
+            </Suspense>
+            <Suspense
+              fallback={
+                <div className="mb-6">
+                  <TabsSkeleton numOfTabs={2} />
+                </div>
+              }
+            >
+              {isLoadingAtomPositions ? (
+                <div className="flex flex-col w-full gap-6">
+                  <DataHeaderSkeleton />
+                  <PaginatedListSkeleton />
+                </div>
+              ) : isErrorAtomPositions ? (
+                <ErrorStateCard
+                  title="Failed to load positions on identities"
+                  message={
+                    (errorAtomPositions as Error)?.message ??
+                    'An unexpected error occurred'
+                  }
+                >
+                  <RevalidateButton />
+                </ErrorStateCard>
+              ) : (
+                <TabContent
+                  value={DataCreatedHeaderVariants.activeIdentities}
+                  totalResults={atomPositionsResult?.total?.aggregate?.count}
+                  atomImage={accountResult?.account?.image ?? ''}
+                  atomLabel={accountResult?.account?.label ?? ''}
+                  totalStake={
+                    +formatBalance(
+                      atomPositionsResult?.total?.aggregate?.sum?.shares ?? '0',
+                      18,
+                    )
+                  }
+                  variant={DataCreatedHeaderVariants.activeIdentities}
+                >
+                  {atomPositionsResult && (
+                    <ActivePositionsOnIdentities
+                      identities={atomPositionsResult.positions}
+                      pagination={
+                        atomPositionsResult.total?.aggregate?.count ?? 0
+                      }
+                    />
+                  )}
+                </TabContent>
+              )}
+            </Suspense>
+            <Suspense
+              fallback={
+                <div className="mb-6">
+                  <TabsSkeleton numOfTabs={2} />
+                </div>
+              }
+            >
+              {isLoadingTriplePositions ? (
+                <div className="flex flex-col w-full gap-6">
+                  <DataHeaderSkeleton />
+                  <PaginatedListSkeleton />
+                </div>
+              ) : isErrorTriplePositions ? (
+                <ErrorStateCard
+                  title="Failed to load positions on claims"
+                  message={
+                    (errorTriplePositions as Error)?.message ??
+                    'An unexpected error occurred'
+                  }
+                >
+                  <RevalidateButton />
+                </ErrorStateCard>
+              ) : (
+                <TabContent
+                  value={DataCreatedHeaderVariants.activeClaims}
+                  totalResults={triplePositionsResult?.total?.aggregate?.count}
+                  atomImage={accountResult?.account?.image ?? ''}
+                  atomLabel={accountResult?.account?.label ?? ''}
+                  totalStake={
+                    +formatBalance(
+                      triplePositionsResult?.total?.aggregate?.sum?.shares ??
+                        '0',
+                      18,
+                    )
+                  }
+                  variant={DataCreatedHeaderVariants.activeClaims}
+                >
+                  {triplePositionsResult && (
+                    <ActivePositionsOnClaims
+                      vaultPositions={
+                        triplePositionsResult?.positions?.vault?.positions ?? []
+                      }
+                      counterVaultPositions={
+                        triplePositionsResult?.positions?.counterVault?.positions ?? []
+                      }
+                      pagination={{
+                        aggregate: {
+                          count:
+                            (triplePositionsResult?.positions?.vault?.positionCount ?? 0) +
+                            (triplePositionsResult?.positions?.counterVault?.positionCount ?? 0),
+                        },
+                      }}
+                      positionDirection={positionDirection ?? undefined}
+                    />
+                  )}
+                </TabContent>
+              )}
+            </Suspense>
             {/* <Suspense
               fallback={
                 <div className="mb-6">
@@ -503,16 +796,16 @@ export default function ProfileDataCreated() {
               </div>
             }
           >
-            {isLoadingAtomsCreated ? (
+            {isLoadingTriplesCreated ? (
               <div className="flex flex-col w-full gap-6">
                 <DataHeaderSkeleton />
                 <PaginatedListSkeleton />
               </div>
-            ) : isErrorAtomsCreated ? (
+            ) : isErrorTriplesCreated ? (
               <ErrorStateCard
-                title="Failed to load identities created"
+                title="Failed to load claims created"
                 message={
-                  (errorAtomsCreated as Error)?.message ??
+                  (errorTriplesCreated as Error)?.message ??
                   'An unexpected error occurred'
                 }
               >

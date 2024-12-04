@@ -9,11 +9,9 @@ import {
   formatBalance,
   getAtomDescription,
   getAtomImage,
-  getAtomImageGQL,
   getAtomIpfsLink,
   getAtomIpfsLinkNew,
   getAtomLabel,
-  getAtomLabelGQL,
   getAtomLink,
   getAtomLinkNew,
 } from '@lib/utils/misc'

@@ -39,7 +39,7 @@ query GetAtomsWithPositions(
       positionCount
       totalShares
       currentSharePrice
-      positions_aggregate {
+      total: positions_aggregate {
         aggregate {
           count
           sum {
