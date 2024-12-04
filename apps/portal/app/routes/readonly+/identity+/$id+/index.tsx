@@ -231,7 +231,13 @@ export default function ReadOnlyProfileDataAbout() {
                 atomLabel={atomResult?.atom?.label ?? ''}
                 atomVariant="user" // TODO: Determine based on atom type
                 totalClaims={triplesResult?.total?.aggregate?.count ?? 0}
-                totalStake={0} // TODO: need to find way to get the shares
+                totalStake={0} // TODO: need to find way to get the shares -- may need to update the schema
+                // totalStake={
+                //   +formatBalance(
+                //     triplesResult?.total?.aggregate?.sums?.shares ?? 0,
+                //     18,
+                //   )
+                // }
               />
             )}
           </Suspense>
