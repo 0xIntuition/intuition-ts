@@ -1,4 +1,71 @@
+# Main pagination query
 query GetPositions(
+  $limit: Int
+  $offset: Int
+  $orderBy: [positions_order_by!]
+  $where: positions_bool_exp
+) {
+  total: positions_aggregate(where: $where) {
+    aggregate {
+      count
+      sum {
+        shares
+      }
+    }
+  }
+  positions(limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
+    ...PositionDetails
+  }
+}
+
+query GetTriplePositionsByAddress(
+  $limit: Int
+  $offset: Int
+  $orderBy: [positions_order_by!]
+  $where: positions_bool_exp
+  $address: String!
+) {
+  total: positions_aggregate(where: $where) {
+    aggregate {
+      count
+      sum {
+        shares
+      }
+    }
+  }
+  positions(limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
+    ...PositionDetails
+    vault {
+      atomId
+      tripleId
+      triple {
+        vault {
+          positions(where: { accountId: { _eq: $address } }) {
+            account {
+              id
+              label
+              image
+            }
+            shares
+          }
+        }
+        counterVault {
+          positions(where: { accountId: { _eq: $address } }) {
+            account {
+              id
+              label
+              image
+            }
+            shares
+          }
+        }
+      }
+    }
+  }
+}
+
+# Combined query with aggregates and nodes
+query GetPositionsWithAggregates(
   $limit: Int
   $offset: Int
   $orderBy: [positions_order_by!]
@@ -10,8 +77,22 @@ query GetPositions(
     order_by: $orderBy
     where: $where
   ) {
+    aggregate {
+      count
+    }
     nodes {
       ...PositionDetails
+    }
+  }
+}
+
+query GetPositionsCount($where: positions_bool_exp) {
+  positions_aggregate(where: $where) {
+    total: aggregate {
+      count
+      sum {
+        shares
+      }
     }
   }
 }
@@ -19,5 +100,22 @@ query GetPositions(
 query GetPosition($positionId: String!) {
   position(id: $positionId) {
     ...PositionDetails
+  }
+}
+
+query GetPositionsCountByType($where: positions_bool_exp) {
+  positions_aggregate(where: $where) {
+    total: aggregate {
+      count
+      sum {
+        shares
+      }
+    }
+  }
+  positions {
+    vault {
+      atomId
+      tripleId
+    }
   }
 }

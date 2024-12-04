@@ -1,17 +1,210 @@
+# Main pagination query
 query GetEvents(
   $limit: Int
   $offset: Int
   $orderBy: [events_order_by!]
   $where: events_bool_exp
+  $addresses: [String!]
+) {
+  total: events_aggregate(where: $where) {
+    aggregate {
+      count
+    }
+  }
+  events(limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
+    id
+    blockNumber
+    blockTimestamp
+    type
+    transactionHash
+    atomId
+    tripleId
+    depositId
+    redemptionId
+    atom {
+      ...AtomMetadata
+      vault {
+        totalShares
+        positionCount
+        positions(where: { account: { id: { _in: $addresses } } }) {
+          accountId
+          shares
+          account {
+            id
+            label
+            image
+          }
+        }
+      }
+    }
+    triple {
+      id
+      label
+      creator {
+        ...AccountMetadata
+      }
+      subject {
+        data
+        id
+        image
+        label
+        emoji
+        type
+        ...AtomValue
+        creator {
+          ...AccountMetadata
+        }
+      }
+      predicate {
+        data
+        id
+        image
+        label
+        emoji
+        type
+        ...AtomValue
+        creator {
+          ...AccountMetadata
+        }
+      }
+      object {
+        data
+        id
+        image
+        label
+        emoji
+        type
+        ...AtomValue
+        creator {
+          ...AccountMetadata
+        }
+      }
+      vault {
+        totalShares
+        positionCount
+        positions(where: { account: { id: { _in: $addresses } } }) {
+          accountId
+          shares
+          account {
+            id
+            label
+            image
+          }
+        }
+      }
+      counterVault {
+        totalShares
+        positionCount
+        positions(where: { account: { id: { _in: $addresses } } }) {
+          accountId
+          shares
+          account {
+            id
+            label
+            image
+          }
+        }
+      }
+    }
+    deposit {
+      senderId
+      sender {
+        id
+      }
+      sharesForReceiver
+      senderAssetsAfterTotalFees
+      vault {
+        totalShares
+        positionCount
+        positions(where: { account: { id: { _in: $addresses } } }) {
+          accountId
+          shares
+          account {
+            id
+            label
+            image
+          }
+        }
+      }
+    }
+    redemption {
+      senderId
+      sender {
+        id
+      }
+    }
+  }
+}
+
+# Combined query with aggregates and nodes
+query GetEventsWithAggregates(
+  $limit: Int
+  $offset: Int
+  $orderBy: [events_order_by!]
+  $where: events_bool_exp
+  $addresses: [String!]
 ) {
   events_aggregate(
+    where: $where
     limit: $limit
     offset: $offset
     order_by: $orderBy
-    where: $where
   ) {
+    aggregate {
+      count
+      max {
+        blockTimestamp
+        blockNumber
+      }
+      min {
+        blockTimestamp
+        blockNumber
+      }
+    }
     nodes {
       ...EventDetails
+    }
+  }
+}
+
+query GetEventsCount($where: events_bool_exp) {
+  events_aggregate(where: $where) {
+    aggregate {
+      count
+    }
+  }
+}
+
+query GetEventsData($where: events_bool_exp) {
+  events_aggregate(where: $where) {
+    aggregate {
+      count
+      max {
+        blockTimestamp
+        blockNumber
+      }
+      min {
+        blockTimestamp
+        blockNumber
+      }
+      avg {
+        blockNumber
+      }
+    }
+  }
+}
+
+# Debug query with explicit address and position filtering
+query GetDebugEvents($addresses: [String!]) {
+  debug_events: events {
+    id
+    atom {
+      vault {
+        positions(where: { accountId: { _in: $addresses } }) {
+          accountId
+          shares
+        }
+      }
     }
   }
 }

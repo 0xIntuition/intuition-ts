@@ -1,6 +1,17 @@
 # predicateId = 4 for tags
 
+# this query is a WIP and will be refined to be more generic
 query GetListItems($predicateId: numeric, $objectId: numeric) {
+  triples_aggregate(
+    where: { predicateId: { _eq: predicateId }, objectId: { _eq: $objectId } }
+    order_by: [
+      { vault: { positionCount: desc }, counterVault: { positionCount: desc } }
+    ]
+  ) {
+    aggregate {
+      count
+    }
+  }
   triples(
     where: { predicateId: { _eq: predicateId }, objectId: { _eq: $objectId } }
     order_by: [

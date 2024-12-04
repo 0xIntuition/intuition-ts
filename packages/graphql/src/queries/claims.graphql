@@ -1,5 +1,8 @@
 query GetClaimsByAddress($address: String) {
   claims_aggregate(where: { accountId: { _eq: $address } }) {
+    aggregate {
+      count
+    }
     nodes {
       account {
         label

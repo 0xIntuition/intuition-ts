@@ -1,15 +1,56 @@
+# Main pagination query
 query GetTriples(
   $limit: Int
   $offset: Int
   $orderBy: [triples_order_by!]
   $where: triples_bool_exp
 ) {
+  total: triples_aggregate(where: $where) {
+    aggregate {
+      count
+    }
+  }
   triples(limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
     ...TripleMetadata
     ...TripleTxn
     ...TripleVaultDetails
     creator {
       ...AccountMetadata
+    }
+  }
+}
+
+# Combined query with aggregates and nodes
+query GetTriplesWithAggregates(
+  $limit: Int
+  $offset: Int
+  $orderBy: [triples_order_by!]
+  $where: triples_bool_exp
+) {
+  triples_aggregate(
+    limit: $limit
+    offset: $offset
+    order_by: $orderBy
+    where: $where
+  ) {
+    aggregate {
+      count
+    }
+    nodes {
+      ...TripleMetadata
+      ...TripleTxn
+      ...TripleVaultDetails
+      creator {
+        ...AccountMetadata
+      }
+    }
+  }
+}
+
+query GetTriplesCount($where: triples_bool_exp) {
+  triples_aggregate(where: $where) {
+    total: aggregate {
+      count
     }
   }
 }
@@ -21,6 +62,70 @@ query GetTriple($tripleId: numeric!) {
     ...TripleVaultDetails
     creator {
       ...AccountMetadata
+    }
+  }
+}
+
+query GetAtomTriplesWithPositions($where: triples_bool_exp) {
+  triples_aggregate(where: $where) {
+    aggregate {
+      count
+    }
+  }
+}
+
+query GetTriplesWithPositions(
+  $limit: Int
+  $offset: Int
+  $orderBy: [triples_order_by!]
+  $where: triples_bool_exp
+  $address: String
+) {
+  total: triples_aggregate(where: $where) {
+    aggregate {
+      count
+    }
+  }
+  triples(limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
+    id
+    subject {
+      id
+      label
+      image
+    }
+    predicate {
+      id
+      label
+      image
+    }
+    object {
+      id
+      label
+      image
+    }
+    vault {
+      totalShares
+      positionCount
+      positions(where: { accountId: { _eq: $address } }) {
+        account {
+          id
+          label
+          image
+        }
+        shares
+      }
+    }
+    counterVault {
+      totalShares
+      positionCount
+      positions(where: { accountId: { _eq: $address } }) {
+        account {
+          id
+          label
+          image
+        }
+        shares
+      }
     }
   }
 }

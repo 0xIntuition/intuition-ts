@@ -1,18 +1,180 @@
-query GetAccounts {
-  accounts {
+# Main pagination query
+query GetAccounts(
+  $limit: Int
+  $offset: Int
+  $orderBy: [accounts_order_by!]
+  $where: accounts_bool_exp
+  $claimsLimit: Int
+  $claimsOffset: Int
+  $claimsWhere: claims_bool_exp
+  $positionsLimit: Int
+  $positionsOffset: Int
+  $positionsWhere: positions_bool_exp
+) {
+  accounts(limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
     ...AccountMetadata
     ...AccountClaims
     ...AccountPositions
+    atom {
+      vaultId
+      walletId
+      vault {
+        positionCount
+        totalShares
+        positions_aggregate {
+          aggregate {
+            count
+            sum {
+              shares
+            }
+          }
+        }
+        positions {
+          id
+          account {
+            label
+            id
+          }
+          shares
+        }
+      }
+    }
   }
 }
 
-query GetAccount($address: String!) {
+# Combined query with aggregates and nodes
+query GetAccountsWithAggregates(
+  $limit: Int
+  $offset: Int
+  $orderBy: [accounts_order_by!]
+  $where: accounts_bool_exp
+  $claimsLimit: Int
+  $claimsOffset: Int
+  $claimsWhere: claims_bool_exp
+  $positionsLimit: Int
+  $positionsOffset: Int
+  $positionsWhere: positions_bool_exp
+  $atomsWhere: atoms_bool_exp
+  $atomsOrderBy: [atoms_order_by!]
+  $atomsLimit: Int
+  $atomsOffset: Int
+) {
+  accounts_aggregate(
+    limit: $limit
+    offset: $offset
+    order_by: $orderBy
+    where: $where
+  ) {
+    aggregate {
+      count
+    }
+    nodes {
+      ...AccountMetadata
+      ...AccountClaims
+      ...AccountPositions
+    }
+  }
+}
+
+query GetAccountsCount($where: accounts_bool_exp) {
+  accounts_aggregate(where: $where) {
+    aggregate {
+      count
+    }
+  }
+}
+
+query GetAccount(
+  $address: String!
+  # Claims pagination
+  $claimsLimit: Int
+  $claimsOffset: Int
+  $claimsWhere: claims_bool_exp
+  # Positions pagination
+  $positionsLimit: Int
+  $positionsOffset: Int
+  $positionsWhere: positions_bool_exp
+  # Atoms pagination
+  $atomsWhere: atoms_bool_exp
+  $atomsOrderBy: [atoms_order_by!]
+  $atomsLimit: Int
+  $atomsOffset: Int
+  # Triples pagination
+  $triplesWhere: triples_bool_exp
+  $triplesOrderBy: [triples_order_by!]
+  $triplesLimit: Int
+  $triplesOffset: Int
+) {
+  account(id: $address) {
+    ...AccountMetadata
+    atom {
+      ...AtomMetadata
+      ...AtomVaultDetails
+    }
+    ...AccountClaims
+    ...AccountPositions
+    ...AccountCreatedAtoms
+    ...AccountCreatedTriples
+  }
+  chainLinkPrices(limit: 1, order_by: { id: desc }) {
+    usd
+  }
+}
+
+# For paginated lists
+query GetAccountWithPaginatedRelations(
+  $address: String!
+  $claimsLimit: Int
+  $claimsOffset: Int
+  $claimsWhere: claims_bool_exp
+  $positionsLimit: Int
+  $positionsOffset: Int
+  $positionsWhere: positions_bool_exp
+  $atomsLimit: Int
+  $atomsOffset: Int
+  $atomsWhere: atoms_bool_exp
+  $atomsOrderBy: [atoms_order_by!]
+  $triplesLimit: Int
+  $triplesOffset: Int
+  $triplesWhere: triples_bool_exp
+  $triplesOrderBy: [triples_order_by!]
+) {
   account(id: $address) {
     ...AccountMetadata
     ...AccountClaims
     ...AccountPositions
+    ...AccountCreatedAtoms
+    ...AccountCreatedTriples
   }
-  chainLinkPrices(limit: 1, order_by: { id: desc }) {
-    usd
+}
+
+# For aggregate views
+query GetAccountWithAggregates(
+  $address: String!
+  # Claims pagination
+  $claimsLimit: Int
+  $claimsOffset: Int
+  $claimsWhere: claims_bool_exp
+  # Positions pagination
+  $positionsLimit: Int
+  $positionsOffset: Int
+  $positionsWhere: positions_bool_exp
+  # Atoms pagination
+  $atomsWhere: atoms_bool_exp
+  $atomsOrderBy: [atoms_order_by!]
+  $atomsLimit: Int
+  $atomsOffset: Int
+  # Triples pagination
+  $triplesWhere: triples_bool_exp
+  $triplesOrderBy: [triples_order_by!]
+  $triplesLimit: Int
+  $triplesOffset: Int
+) {
+  account(id: $address) {
+    ...AccountMetadata
+    ...AccountClaimsAggregate
+    ...AccountPositionsAggregate
+    ...AccountCreatedAtomsAggregate
+    ...AccountCreatedTriplesAggregate
   }
 }
