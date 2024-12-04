@@ -1,9 +1,10 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 
 import { Popover, PopoverContent, PopoverTrigger, Text } from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
+import { GetAtomQuery } from '@0xintuition/graphql'
 
-import { IdentitySearchCombobox } from '@components/identity/identity-search-combo-box'
+import { AtomSearchComboboxExtended } from '@components/atom-search-combobox-extended'
 import { InfoTooltip } from '@components/info-tooltip'
 import { AddListExistingCta } from '@components/lists/add-list-existing-cta'
 import SaveListModal from '@components/save-list/save-list-modal'
@@ -16,26 +17,26 @@ import {
 } from '@lib/state/store'
 import { getSpecialPredicate } from '@lib/utils/app'
 import { TagLoaderData } from '@routes/resources+/tag'
-import { CURRENT_ENV } from 'app/consts'
+import { CURRENT_ENV, MULTIVAULT_CONTRACT_ADDRESS } from 'app/consts'
 import { TransactionActionType } from 'app/types/transaction'
 import { useAtom } from 'jotai'
 
 import { TagsListInputPortal } from './tags-list-input-portal'
 
 interface AddTagsProps {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  selectedTags: any // TODO: (ENG-4782) temporary type fix until we lock in final types
+  selectedTags: GetAtomQuery['atom'][]
   existingTagIds: string[]
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   identity: any // TODO: (ENG-4782) temporary type fix until we lock in final types
   userWallet: string
-  onAddTag: (newTag: IdentityPresenter) => void
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  onAddTag: (newTag: any) => void // TODO: (ENG-4782) temporary type fix until we lock in final types
   onRemoveTag: (id: string) => void
   onRemoveInvalidTag: (id: string) => void
   dispatch: (action: TransactionActionType) => void
   subjectVaultId: string
-  invalidTags: IdentityPresenter[]
-  setInvalidTags: React.Dispatch<React.SetStateAction<IdentityPresenter[]>>
+  invalidTags: GetAtomQuery['atom'][]
+  setInvalidTags: React.Dispatch<React.SetStateAction<GetAtomQuery['atom'][]>>
 }
 
 export function AddTags({
@@ -50,10 +51,10 @@ export function AddTags({
   setInvalidTags,
 }: AddTagsProps) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const formattedTags = selectedTags?.map((tag: any) => ({
-    name: tag.display_name,
-    id: tag.vault_id,
-    tagCount: tag.tag_count,
+  const formattedTags = selectedTags?.map((tag) => ({
+    name: tag?.label ?? '',
+    id: tag?.vaultId ?? '',
+    tagCount: 0, // TODO: (ENG-4782) temporary until we have tag count
   }))
 
   const [, setCreateIdentityModalActive] = useAtom(
@@ -63,54 +64,100 @@ export function AddTags({
   const [saveListModalActive, setSaveListModalActive] =
     useAtom(saveListModalAtom)
 
-  const [selectedInvalidTag, setSelectedInvalidTag] =
-    useState<IdentityPresenter | null>(null)
+  const [selectedInvalidTag, setSelectedInvalidTag] = useState<
+    GetAtomQuery['atom'] | null
+  >(null)
 
   const [isPopoverOpen, setIsPopoverOpen] = useState(false)
 
-  const { setSearchQuery, filteredIdentities, handleInput } =
-    useFilteredIdentitySearch({
-      selectedItems: selectedTags,
-    })
+  const { setSearchQuery } = useFilteredIdentitySearch({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    selectedItems: selectedTags as any[], // TODO: (ENG-4782) temporary type fix until we lock in final types
+  })
 
-  const { data: claimCheckData = { result: '0' } } = useCheckClaim(
-    {
-      subjectId: subjectVaultId,
-      predicateId:
-        getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId?.toString(),
-      objectId: selectedTags[selectedTags.length - 1]?.vault_id,
-    },
-    {
-      refetchOnWindowFocus: false,
-      refetchOnMount: false,
-      refetchOnReconnect: false,
-      enabled: Boolean(selectedTags[selectedTags.length - 1]?.vault_id),
-    },
-  )
+  const { data: claimCheckData = { result: '0' }, refetch: refetchClaimCheck } =
+    useCheckClaim(
+      {
+        subjectId: subjectVaultId,
+        predicateId:
+          getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId?.toString(),
+        objectId: selectedTags[selectedTags.length - 1]?.vaultId,
+      },
+      {
+        refetchOnWindowFocus: false,
+        refetchOnMount: false,
+        refetchOnReconnect: false,
+        enabled: Boolean(selectedTags[selectedTags.length - 1]?.vaultId),
+        staleTime: Infinity,
+        cacheTime: Infinity,
+      },
+    )
 
-  const handleIdentitySelect = (identity: IdentityPresenter) => {
-    onAddTag(identity)
+  console.log('claimCheckData', claimCheckData)
+
+  const handleIdentitySelect = (atom: GetAtomQuery['atom']) => {
+    onAddTag(atom)
     setSearchQuery('')
+    refetchClaimCheck()
     setIsPopoverOpen(false)
   }
 
   const handleSaveClick = (
-    invalidTag: IdentityPresenter & { tagClaimId: string },
+    invalidTag: GetAtomQuery['atom'] & { tagClaimId: string },
   ) => {
     setSelectedInvalidTag(invalidTag)
     setSaveListModalActive({
       isOpen: true,
-      identity: invalidTag,
+      identity: invalidTag
+        ? ({
+            id: invalidTag?.id ?? '',
+            label: invalidTag?.label ?? '',
+            image: invalidTag?.image ?? '',
+            vault_id: invalidTag?.vaultId,
+            assets_sum: '0',
+            user_assets: '0',
+            contract: MULTIVAULT_CONTRACT_ADDRESS,
+            asset_delta: '0',
+            conviction_price: '0',
+            conviction_price_delta: '0',
+            conviction_sum: '0',
+            num_positions: 0,
+            price: '0',
+            price_delta: '0',
+            status: 'active',
+            total_conviction: '0',
+            type: 'user',
+            updated_at: new Date().toISOString(),
+            created_at: new Date().toISOString(),
+            creator_address: '',
+            display_name: invalidTag.label ?? '',
+            follow_vault_id: '',
+            user: null,
+            creator: null,
+            identity_hash: '',
+            identity_id: '',
+            is_contract: false,
+            is_user: true,
+            pending: false,
+            pending_type: null,
+            pending_vault_id: null,
+          } as unknown as IdentityPresenter)
+        : undefined,
       id: invalidTag.tagClaimId,
     })
   }
 
-  useInvalidItems({
+  const memoizedSelectedTags = useMemo(
+    () => selectedTags,
+    [JSON.stringify(selectedTags)],
+  )
+
+  useInvalidItems<GetAtomQuery['atom']>({
     data: claimCheckData as TagLoaderData,
-    selectedItems: selectedTags,
+    selectedItems: memoizedSelectedTags,
     setInvalidItems: setInvalidTags,
     onRemoveItem: onRemoveTag,
-    idKey: 'vault_id',
+    idKey: 'vaultId' as keyof GetAtomQuery['atom'],
     dataIdKey: 'objectId',
   })
 
@@ -139,13 +186,12 @@ export function AddTags({
           modal={true}
         >
           <PopoverContent className="bg-transparent border-none">
-            <IdentitySearchCombobox
-              onCreateIdentityClick={() => setCreateIdentityModalActive(true)}
-              identities={filteredIdentities}
-              onIdentitySelect={handleIdentitySelect}
-              onValueChange={setSearchQuery}
-              onInput={handleInput}
-              shouldFilter={false}
+            <AtomSearchComboboxExtended
+              onAtomSelect={handleIdentitySelect}
+              onCreateAtomClick={() => setCreateIdentityModalActive(true)}
+              placeholder="Search for tags..."
+              initialValue=""
+              className="w-[600px]"
             />
           </PopoverContent>
           <div className="mb-8">
@@ -159,26 +205,60 @@ export function AddTags({
             />
           </div>
         </Popover>
-        {invalidTags.map((invalidTag) => (
+        {invalidTags.filter(Boolean).map((invalidTag) => (
           <AddListExistingCta
-            key={invalidTag.vault_id}
+            key={invalidTag?.vaultId ?? ''}
             identity={invalidTag}
             variant="tag"
             onSaveClick={() => {
-              if ('tagClaimId' in invalidTag) {
+              if (invalidTag && 'tagClaimId' in invalidTag) {
                 handleSaveClick(
-                  invalidTag as IdentityPresenter & { tagClaimId: string },
+                  invalidTag as GetAtomQuery['atom'] & { tagClaimId: string },
                 )
               }
             }}
-            onClose={() => onRemoveInvalidTag(invalidTag.vault_id)}
+            onClose={() => onRemoveInvalidTag(invalidTag?.vaultId ?? '')}
           />
         ))}
       </div>
       {selectedInvalidTag && (
         <SaveListModal
           contract={identity.contract}
-          tag={selectedInvalidTag}
+          tag={
+            {
+              id: selectedInvalidTag?.id ?? '',
+              label: selectedInvalidTag?.label ?? '',
+              image: selectedInvalidTag?.image ?? '',
+              vault_id: selectedInvalidTag?.vaultId,
+              assets_sum: '0',
+              user_assets: '0',
+              contract: MULTIVAULT_CONTRACT_ADDRESS,
+              asset_delta: '0',
+              conviction_price: '0',
+              conviction_price_delta: '0',
+              conviction_sum: '0',
+              num_positions: 0,
+              price: '0',
+              price_delta: '0',
+              status: 'active',
+              total_conviction: '0',
+              type: 'user',
+              updated_at: new Date().toISOString(),
+              created_at: new Date().toISOString(),
+              creator_address: '',
+              display_name: selectedInvalidTag.label ?? '',
+              follow_vault_id: '',
+              user: null,
+              creator: null,
+              identity_hash: '',
+              identity_id: '',
+              is_contract: false,
+              is_user: true,
+              pending: false,
+              pending_type: null,
+              pending_vault_id: null,
+            } as unknown as IdentityPresenter
+          }
           identity={identity}
           userWallet={userWallet}
           open={saveListModalActive.isOpen}

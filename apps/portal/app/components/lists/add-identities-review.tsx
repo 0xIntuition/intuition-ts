@@ -16,18 +16,18 @@ import {
   toast,
   Trunctacular,
 } from '@0xintuition/1ui'
-import { IdentityPresenter } from '@0xintuition/api'
+import { GetAtomQuery } from '@0xintuition/graphql'
 
 import { multivaultAbi } from '@lib/abis/multivault'
 import { useBatchCreateTriple } from '@lib/hooks/useBatchCreateTriple'
 import { useLoaderFetcher } from '@lib/hooks/useLoaderFetcher'
 import logger from '@lib/utils/logger'
 import {
-  getAtomDescription,
-  getAtomId,
-  getAtomImage,
-  getAtomIpfsLink,
-  getAtomLabel,
+  getAtomDescriptionGQL,
+  getAtomIdGQL,
+  getAtomImageGQL,
+  getAtomIpfsLinkGQL,
+  getAtomLabelGQL,
 } from '@lib/utils/misc'
 import { CreateLoaderData } from '@routes/resources+/create'
 import {
@@ -44,7 +44,7 @@ import { createIdentityArrays } from './list-utils'
 interface AddIdentitiesReviewProps {
   dispatch: (action: TransactionActionType) => void
   objectVaultId: string
-  identitiesToAdd: IdentityPresenter[]
+  identitiesToAdd: GetAtomQuery['atom'][]
 }
 
 export default function AddIdentitiesReview({
@@ -174,16 +174,16 @@ export default function AddIdentitiesReview({
           <Tags>
             <div className="flex flex-wrap gap-2 items-center">
               {identitiesToAdd.map((identity) => (
-                <HoverCard key={identity.id} openDelay={150} closeDelay={150}>
+                <HoverCard key={identity?.id} openDelay={150} closeDelay={150}>
                   <HoverCardTrigger>
                     <IdentityTag
-                      key={identity.id}
+                      key={identity?.id}
                       size={IdentityTagSize.md}
                       variant={Identity.nonUser}
-                      imgSrc={identity.image ?? ''}
+                      imgSrc={identity?.image ?? ''}
                     >
                       <Trunctacular
-                        value={identity.display_name}
+                        value={identity?.label ?? ''}
                         disableTooltip
                       />
                     </IdentityTag>
@@ -192,13 +192,16 @@ export default function AddIdentitiesReview({
                     <div className="flex flex-col gap-4 w-80 max-md:w-[80%]">
                       <ProfileCard
                         variant={
-                          identity.is_user ? Identity.user : Identity.nonUser
+                          identity?.type ===
+                          ('Account' || 'Person' || 'Default')
+                            ? Identity.user
+                            : Identity.nonUser
                         }
-                        avatarSrc={getAtomImage(identity)}
-                        name={getAtomLabel(identity)}
-                        id={getAtomId(identity)}
-                        bio={getAtomDescription(identity)}
-                        ipfsLink={getAtomIpfsLink(identity)}
+                        avatarSrc={getAtomImageGQL(identity)}
+                        name={getAtomLabelGQL(identity)}
+                        id={getAtomIdGQL(identity)}
+                        bio={getAtomDescriptionGQL(identity)}
+                        ipfsLink={getAtomIpfsLinkGQL(identity)}
                       />
                     </div>
                   </HoverCardContent>

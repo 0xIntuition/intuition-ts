@@ -1,6 +1,7 @@
 import * as React from 'react'
 
 import {
+  Button,
   Command,
   CommandEmpty,
   CommandGroup,
@@ -27,7 +28,7 @@ interface AtomSearchComboboxItemProps {
   attestors?: number
 }
 
-const AtomSearchComboboxItem = ({
+export const AtomSearchComboboxItem = ({
   id,
   name,
   avatarSrc,
@@ -93,6 +94,7 @@ export interface AtomSearchComboboxProps
 
 export function AtomSearchCombobox({
   onAtomSelect = () => {},
+  onCreateAtomClick = () => {},
   initialValue = '',
   placeholder = 'Search for an atom...',
   ...props
@@ -157,6 +159,16 @@ export function AtomSearchCombobox({
               message={isLoading ? 'Loading...' : 'No atoms found.'}
               className="border-none max-md:min-h-0 max-md:h-fit"
             />
+            {!isLoading && onCreateAtomClick && (
+              <Button
+                variant="text"
+                onClick={onCreateAtomClick}
+                className="w-fit p-2.5 mt-2"
+              >
+                <Icon name="plus-large" className="h-4 w-4" />
+                Create a new Atom
+              </Button>
+            )}
           </CommandEmpty>
           <CommandGroup>
             {searchResults.map((atom, index) => (

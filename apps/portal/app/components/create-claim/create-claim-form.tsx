@@ -14,8 +14,8 @@ import {
 import { ClaimPresenter } from '@0xintuition/api'
 import { GetAtomQuery, useGetTripleQuery } from '@0xintuition/graphql'
 
-import { IdentityPopover } from '@components/create-claim/create-claim-popovers'
 import CreateClaimReview from '@components/create-claim/create-claim-review'
+import { IdentitySelector } from '@components/identity/identity-selector'
 import { InfoTooltip } from '@components/info-tooltip'
 import WrongNetworkButton from '@components/wrong-network-button'
 import { multivaultAbi } from '@lib/abis/multivault'
@@ -365,37 +365,34 @@ function CreateClaimForm({
             <div className="flex-grow flex items-center justify-center max-sm:items-start max-sm:mt-4">
               <div className="flex flex-col items-center gap-14">
                 <div className="flex items-center max-sm:flex-col max-sm:gap-3">
-                  <IdentityPopover
+                  <IdentitySelector
                     type={ClaimElement.Subject}
-                    isObjectPopoverOpen={isSubjectPopoverOpen}
-                    setIsObjectPopoverOpen={setIsSubjectPopoverOpen}
+                    isOpen={isSubjectPopoverOpen}
+                    onOpenChange={setIsSubjectPopoverOpen}
                     selectedIdentity={selectedIdentities.subject}
-                    handleIdentitySelection={(
-                      identityType: ClaimElementType,
-                      identity: GetAtomQuery['atom'],
-                    ) => handleIdentitySelection(identityType, identity)}
+                    onSelect={(identity) =>
+                      handleIdentitySelection(ClaimElement.Subject, identity)
+                    }
                   />
                   <Divider />
-                  <IdentityPopover
+                  <IdentitySelector
                     type={ClaimElement.Predicate}
-                    isObjectPopoverOpen={isPredicatePopoverOpen}
-                    setIsObjectPopoverOpen={setIsPredicatePopoverOpen}
+                    isOpen={isPredicatePopoverOpen}
+                    onOpenChange={setIsPredicatePopoverOpen}
                     selectedIdentity={selectedIdentities.predicate}
-                    handleIdentitySelection={(
-                      identityType: ClaimElementType,
-                      identity: GetAtomQuery['atom'],
-                    ) => handleIdentitySelection(identityType, identity)}
+                    onSelect={(identity) =>
+                      handleIdentitySelection(ClaimElement.Predicate, identity)
+                    }
                   />
                   <Divider />
-                  <IdentityPopover
+                  <IdentitySelector
                     type={ClaimElement.Object}
-                    isObjectPopoverOpen={isObjectPopoverOpen}
-                    setIsObjectPopoverOpen={setIsObjectPopoverOpen}
+                    isOpen={isObjectPopoverOpen}
+                    onOpenChange={setIsObjectPopoverOpen}
                     selectedIdentity={selectedIdentities.object}
-                    handleIdentitySelection={(
-                      identityType: ClaimElementType,
-                      identity: GetAtomQuery['atom'],
-                    ) => handleIdentitySelection(identityType, identity)}
+                    onSelect={(identity) =>
+                      handleIdentitySelection(ClaimElement.Object, identity)
+                    }
                   />
                 </div>
                 <div className="flex flex-row items-center justify-center">

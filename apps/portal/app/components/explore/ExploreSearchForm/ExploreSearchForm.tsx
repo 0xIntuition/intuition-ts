@@ -77,10 +77,7 @@ const ExploreSearchForm = ({
       {searchParam === 'identity' && (
         <>
           <Separator className="my-2 in-out-gradient-strong max-md:m-0" />
-          <ExploreAddTags
-            inputId={tagsInputId}
-            initialValue={searchParams.get(tagsInputId)}
-          />
+          <ExploreAddTags inputId={tagsInputId} />
           <Separator className="my-2 in-out-gradient-strong max-md:m-0" />
           <RadioGroup
             name="isUser"
