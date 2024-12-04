@@ -1,9 +1,5 @@
 import { BannerVariant, Claim, Identity } from '@0xintuition/1ui'
-import {
-  ClaimPresenter,
-  ClaimSortColumn,
-  SortDirection,
-} from '@0xintuition/api'
+import { ClaimPresenter } from '@0xintuition/api'
 import {
   fetcher,
   GetAtomQuery,
@@ -17,8 +13,6 @@ import { DetailInfoCardNew } from '@components/detail-info-card'
 import { ErrorPage } from '@components/error-page'
 import ReadOnlyBanner from '@components/read-only-banner'
 import RemixLink from '@components/remix-link'
-import { useLiveLoader } from '@lib/hooks/useLiveLoader'
-import { getClaim } from '@lib/services/claims'
 import { getSpecialPredicate } from '@lib/utils/app'
 import logger from '@lib/utils/logger'
 import {
@@ -29,10 +23,15 @@ import {
   getAtomLinkGQL,
 } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs, MetaFunction } from '@remix-run/node'
-import { Outlet } from '@remix-run/react'
+import { Outlet, useLoaderData } from '@remix-run/react'
 import { getVaultDetails } from '@server/multivault'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
-import { BLOCK_EXPLORER_URL, CURRENT_ENV, PATHS } from 'app/consts'
+import {
+  BLOCK_EXPLORER_URL,
+  CURRENT_ENV,
+  MULTIVAULT_CONTRACT_ADDRESS,
+  PATHS,
+} from 'app/consts'
 import TwoPanelLayout from 'app/layouts/two-panel-layout'
 import { VaultDetailsType } from 'app/types/vault'
 
@@ -45,18 +44,6 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   }
 
   const queryClient = new QueryClient()
-
-  const url = new URL(request.url)
-  const searchParams = new URLSearchParams(url.search)
-  const sortBy: ClaimSortColumn =
-    (searchParams.get('sortBy') as ClaimSortColumn) ?? 'CreatedAt'
-  const direction: SortDirection =
-    (searchParams.get('direction') as SortDirection) ?? 'desc'
-
-  const { claim } = await getClaim(request, id)
-  if (!claim) {
-    throw new Response('Not Found', { status: 404 })
-  }
 
   const tripleResult = await fetcher<GetTripleQuery, GetTripleQueryVariables>(
     GetTripleDocument,
@@ -72,13 +59,13 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
   let vaultDetails: VaultDetailsType | null = null
 
-  if (claim && claim.vault_id) {
+  if (tripleResult && tripleResult.triple?.vaultId) {
     try {
       vaultDetails = await getVaultDetails(
-        claim.contract,
-        claim.vault_id,
+        MULTIVAULT_CONTRACT_ADDRESS,
+        tripleResult.triple?.vaultId,
         null, // TODO: Fix in [ENG-4038] where we refactor the params of getVaultDetails
-        claim.counter_vault_id,
+        tripleResult.triple?.counterVaultId,
       )
     } catch (error) {
       console.error('Failed to fetch vaultDetails', error)
@@ -86,15 +73,12 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     }
   }
 
-  const stringifiedClaim = `${claim.subject?.display_name} - ${claim.predicate?.display_name} - ${claim.object?.display_name}`
+  const stringifiedClaim = `${tripleResult.triple?.subject?.label} - ${tripleResult.triple?.predicate?.label} - ${tripleResult.triple?.object?.label}`
   const { origin } = new URL(request.url)
   const ogImageUrl = `${origin}/resources/create-og?id=${params.id}&type=claim
   `
 
   return json({
-    claim,
-    sortBy,
-    direction,
     dehydratedState: dehydrate(queryClient),
     initialParams: {
       id,
@@ -158,12 +142,12 @@ export interface ReadOnlyClaimDetailsLoaderData {
 }
 
 export default function ReadOnlyClaimDetails() {
-  const { claim, initialParams } = useLiveLoader<{
+  const { claim, initialParams } = useLoaderData<{
     claim: ClaimPresenter
     initialParams: {
       id: string
     }
-  }>(['create', 'attest'])
+  }>()
 
   const { data: tripleData } = useGetTripleQuery(
     {
