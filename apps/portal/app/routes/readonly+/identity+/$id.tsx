@@ -12,6 +12,17 @@ import {
   ClaimsService,
   IdentityPresenter,
 } from '@0xintuition/api'
+import {
+  fetcher,
+  GetAtomDocument,
+  GetAtomQuery,
+  GetAtomQueryVariables,
+  GetTagsDocument,
+  GetTagsQuery,
+  GetTagsQueryVariables,
+  useGetAtomQuery,
+  useGetTagsQuery,
+} from '@0xintuition/graphql'
 
 import { DetailInfoCard } from '@components/detail-info-card'
 import { ErrorPage } from '@components/error-page'
@@ -23,19 +34,11 @@ import { getIdentityOrPending } from '@lib/services/identities'
 import { imageModalAtom } from '@lib/state/store'
 import { getSpecialPredicate } from '@lib/utils/app'
 import logger from '@lib/utils/logger'
-import {
-  getAtomDescription,
-  getAtomId,
-  getAtomImage,
-  getAtomIpfsLink,
-  getAtomLabel,
-} from '@lib/utils/misc'
 import { json, LoaderFunctionArgs, MetaFunction } from '@remix-run/node'
 import { Outlet } from '@remix-run/react'
-import { getVaultDetails } from '@server/multivault'
+import { dehydrate, QueryClient } from '@tanstack/react-query'
 import { BLOCK_EXPLORER_URL, CURRENT_ENV, PATHS } from 'app/consts'
 import TwoPanelLayout from 'app/layouts/two-panel-layout'
-import { VaultDetailsType } from 'app/types/vault'
 import { useAtom } from 'jotai'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -44,6 +47,8 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   if (!params.id) {
     return
   }
+
+  const queryClient = new QueryClient()
 
   const { identity, isPending } = await getIdentityOrPending(request, params.id)
 
@@ -66,19 +71,48 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     logger('Failed to fetch list:', error)
   }
 
-  let vaultDetails: VaultDetailsType | null = null
+  let atomResult: GetAtomQuery | null = null
 
-  if (!!identity && identity.vault_id) {
-    try {
-      vaultDetails = await getVaultDetails(identity.contract, identity.vault_id)
-    } catch (error) {
-      logger('Failed to fetch vaultDetails:', error)
-      vaultDetails = null
+  try {
+    logger('Fetching Account Data...')
+    atomResult = await fetcher<GetAtomQuery, GetAtomQueryVariables>(
+      GetAtomDocument,
+      { id: params.id },
+    )()
+
+    if (!atomResult) {
+      throw new Error('No atom data found for id')
     }
+
+    await queryClient.prefetchQuery({
+      queryKey: ['get-atom', { id: params.id }],
+      queryFn: () => atomResult,
+    })
+
+    const atomTagsResult = await fetcher<GetTagsQuery, GetTagsQueryVariables>(
+      GetTagsDocument,
+      {
+        subjectId: params.id,
+        predicateId: getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId,
+      },
+    )()
+
+    await queryClient.prefetchQuery({
+      queryKey: [
+        'get-tags',
+        {
+          subjectId: params.id,
+          predicateId: getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId,
+        },
+      ],
+      queryFn: () => atomTagsResult,
+    })
+  } catch (error) {
+    logger('Query Error:', error)
+    throw error
   }
 
   const { origin } = new URL(request.url)
-
   const ogImageUrl = `${origin}/resources/create-og?id=${params.id}&type=identity`
 
   logger('[$ID] -- END')
@@ -86,8 +120,11 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     identity,
     list,
     isPending,
-    vaultDetails,
     ogImageUrl,
+    dehydratedState: dehydrate(queryClient),
+    initialParams: {
+      atomId: params.id,
+    },
   })
 }
 
@@ -140,28 +177,55 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 export interface ReadOnlyIdentityLoaderData {
   identity: IdentityPresenter
   list: ClaimPresenter
-  vaultDetails: VaultDetailsType
-  userWallet: string
   isPending: boolean
+  initialParams: {
+    atomId: string
+  }
 }
 
 export default function ReadOnlyIdentityDetails() {
-  const { identity, list, isPending } =
+  const { identity, list, isPending, initialParams } =
     useLiveLoader<ReadOnlyIdentityLoaderData>(['attest', 'create'])
 
   const [imageModalActive, setImageModalActive] = useAtom(imageModalAtom)
+
+  const { data: atomResult } = useGetAtomQuery(
+    {
+      id: initialParams.atomId,
+    },
+    {
+      queryKey: ['get-atom', { id: initialParams.atomId }],
+    },
+  )
+
+  const { data: atomTagsResult } = useGetTagsQuery(
+    {
+      subjectId: initialParams.atomId,
+      predicateId: getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId,
+    },
+    {
+      queryKey: [
+        'get-tags',
+        {
+          subjectId: initialParams.atomId,
+          predicateId: getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId,
+        },
+      ],
+      enabled: !!initialParams.atomId,
+    },
+  )
 
   const leftPanel = (
     <div className="flex-col justify-start items-start inline-flex gap-6 max-lg:w-full">
       <ProfileCard
         variant={Identity.nonUser}
-        avatarSrc={getAtomImage(identity)}
-        name={getAtomLabel(identity)}
-        id={getAtomId(identity)}
-        vaultId={identity?.vault_id}
-        bio={getAtomDescription(identity)}
-        ipfsLink={getAtomIpfsLink(identity)}
-        externalLink={identity.external_reference ?? ''}
+        avatarSrc={atomResult?.atom?.value?.thing?.image ?? ''}
+        name={atomResult?.atom?.value?.thing?.name ?? ''}
+        id={atomResult?.atom?.id ?? ''}
+        vaultId={atomResult?.atom?.id}
+        bio={atomResult?.atom?.value?.thing?.description ?? ''}
+        ipfsLink={atomResult?.atom?.data ?? ''}
+        externalLink={atomResult?.atom?.value?.thing?.url ?? ''}
         onAvatarClick={() => {
           setImageModalActive({
             isOpen: true,
@@ -170,40 +234,36 @@ export default function ReadOnlyIdentityDetails() {
         }}
       />
 
-      {!isPending && identity?.tags && identity?.tags.length > 0 && (
-        <>
-          <Tags>
-            <div className="flex flex-row gap-2 md:flex-col">
-              {identity?.tags && identity?.tags.length > 0 && (
-                <TagsContent numberOfTags={identity?.tag_count ?? 0}>
-                  {identity?.tags?.map((tag) => (
-                    <TagWithValue
-                      key={tag.identity_id}
-                      label={tag.display_name}
-                      value={tag.num_tagged_identities}
-                    />
-                  ))}
-                </TagsContent>
-              )}
-            </div>
-          </Tags>
-        </>
+      {!isPending && atomTagsResult && atomTagsResult.triples.length > 0 && (
+        <Tags>
+          <div className="flex flex-row gap-2 md:flex-col">
+            <TagsContent numberOfTags={atomTagsResult.triples.length}>
+              {atomTagsResult.triples.map((tag) => (
+                <TagWithValue
+                  key={tag.id}
+                  label={tag.object?.label ?? ''}
+                  value={tag.vault?.allPositions?.aggregate?.count ?? 0}
+                />
+              ))}
+            </TagsContent>
+          </div>
+        </Tags>
       )}
 
       <DetailInfoCard
         variant={Identity.user}
         list={list}
-        username={identity.creator?.display_name ?? '?'}
-        avatarImgSrc={identity.creator?.image ?? ''}
-        id={identity.creator?.wallet ?? ''}
+        username={atomResult?.atom?.creator?.label ?? '?'}
+        avatarImgSrc={atomResult?.atom?.creator?.image ?? ''}
+        id={atomResult?.atom?.creator?.id ?? ''}
         description={identity.creator?.description ?? ''}
         link={
-          identity.creator?.id
-            ? `${PATHS.READONLY_PROFILE}/${identity.creator?.wallet}`
+          atomResult?.atom?.creator?.id
+            ? `${PATHS.READONLY_PROFILE}/${atomResult?.atom?.creator?.id}`
             : ''
         }
-        ipfsLink={`${BLOCK_EXPLORER_URL}/address/${identity.creator?.wallet}`}
-        timestamp={identity.created_at}
+        ipfsLink={`${BLOCK_EXPLORER_URL}/address/${atomResult?.atom?.creator?.id}`}
+        timestamp={new Date().toISOString()} // TODO: Add blockTimestamp once available
         className="w-full"
         readOnly={true}
       />
