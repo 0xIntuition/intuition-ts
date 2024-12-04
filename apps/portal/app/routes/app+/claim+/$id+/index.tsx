@@ -23,7 +23,6 @@ import { ErrorPage } from '@components/error-page'
 import { PositionsOnClaimNew } from '@components/list/positions-on-claim'
 import RemixLink from '@components/remix-link'
 import { PaginatedListSkeleton, TabsSkeleton } from '@components/skeleton'
-import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import logger from '@lib/utils/logger'
 import {
   getAtomDescriptionGQL,
@@ -35,6 +34,7 @@ import {
 } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import {
+  useLoaderData,
   useNavigation,
   useRouteLoaderData,
   useSearchParams,
@@ -84,7 +84,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 }
 
 export default function ClaimOverview() {
-  const { initialParams } = useLiveLoader<typeof loader>(['attest', 'create'])
+  const { initialParams } = useLoaderData<typeof loader>()
   const { claim } =
     useRouteLoaderData<ClaimDetailsLoaderData>('routes/app+/claim+/$id') ?? {}
   invariant(claim, NO_CLAIM_ERROR)
