@@ -2,11 +2,18 @@ import { BannerVariant, Claim, Identity } from '@0xintuition/1ui'
 import {
   ClaimPresenter,
   ClaimSortColumn,
-  IdentityPresenter,
   SortDirection,
 } from '@0xintuition/api'
+import {
+  fetcher,
+  GetAtomQuery,
+  GetTripleDocument,
+  GetTripleQuery,
+  GetTripleQueryVariables,
+  useGetTripleQuery,
+} from '@0xintuition/graphql'
 
-import { DetailInfoCard } from '@components/detail-info-card'
+import { DetailInfoCardNew } from '@components/detail-info-card'
 import { ErrorPage } from '@components/error-page'
 import ReadOnlyBanner from '@components/read-only-banner'
 import RemixLink from '@components/remix-link'
@@ -15,24 +22,29 @@ import { getClaim } from '@lib/services/claims'
 import { getSpecialPredicate } from '@lib/utils/app'
 import logger from '@lib/utils/logger'
 import {
-  getAtomDescription,
-  getAtomImage,
-  getAtomIpfsLink,
-  getAtomLabel,
-  getAtomLink,
+  getAtomDescriptionGQL,
+  getAtomImageGQL,
+  getAtomIpfsLinkGQL,
+  getAtomLabelGQL,
+  getAtomLinkGQL,
 } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs, MetaFunction } from '@remix-run/node'
 import { Outlet } from '@remix-run/react'
 import { getVaultDetails } from '@server/multivault'
+import { dehydrate, QueryClient } from '@tanstack/react-query'
 import { BLOCK_EXPLORER_URL, CURRENT_ENV, PATHS } from 'app/consts'
 import TwoPanelLayout from 'app/layouts/two-panel-layout'
 import { VaultDetailsType } from 'app/types/vault'
 
+type Atom = GetAtomQuery['atom']
+
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const id = params.id
   if (!id) {
-    throw new Error('vault_id is undefined.')
+    throw new Error('Claim ID not found in the URL.')
   }
+
+  const queryClient = new QueryClient()
 
   const url = new URL(request.url)
   const searchParams = new URLSearchParams(url.search)
@@ -42,10 +54,21 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     (searchParams.get('direction') as SortDirection) ?? 'desc'
 
   const { claim } = await getClaim(request, id)
-
   if (!claim) {
     throw new Response('Not Found', { status: 404 })
   }
+
+  const tripleResult = await fetcher<GetTripleQuery, GetTripleQueryVariables>(
+    GetTripleDocument,
+    {
+      tripleId: id,
+    },
+  )()
+
+  await queryClient.prefetchQuery({
+    queryKey: ['get-triple', { id: params.id }],
+    queryFn: () => tripleResult,
+  })
 
   let vaultDetails: VaultDetailsType | null = null
 
@@ -72,6 +95,10 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     claim,
     sortBy,
     direction,
+    dehydratedState: dehydrate(queryClient),
+    initialParams: {
+      id,
+    },
     vaultDetails,
     stringifiedClaim,
     ogImageUrl,
@@ -131,67 +158,89 @@ export interface ReadOnlyClaimDetailsLoaderData {
 }
 
 export default function ReadOnlyClaimDetails() {
-  const { claim } = useLiveLoader<{
+  const { claim, initialParams } = useLiveLoader<{
     claim: ClaimPresenter
+    initialParams: {
+      id: string
+    }
   }>(['create', 'attest'])
+
+  const { data: tripleData } = useGetTripleQuery(
+    {
+      tripleId: initialParams.id,
+    },
+    {
+      queryKey: ['get-triple', { id: initialParams.id }],
+    },
+  )
 
   const leftPanel = (
     <div className="flex-col justify-start items-start gap-6 inline-flex w-full">
       <div className="flex-row flex m-auto md:hidden">
         <Claim
           size="xl"
+          maxIdentityLength={60}
           subject={{
-            variant: claim.subject?.is_user ? Identity.user : Identity.nonUser,
-            label: getAtomLabel(claim.subject as IdentityPresenter),
-            imgSrc: getAtomImage(claim.subject as IdentityPresenter),
-            id: claim.subject?.identity_id,
-            description: getAtomDescription(claim.subject as IdentityPresenter),
-            ipfsLink: getAtomIpfsLink(claim.subject as IdentityPresenter),
-            link: getAtomLink(claim.subject as IdentityPresenter),
+            variant:
+              tripleData?.triple?.subject?.type === 'Person'
+                ? Identity.user
+                : Identity.nonUser,
+            label: getAtomLabelGQL(tripleData?.triple?.subject as Atom),
+            imgSrc: getAtomImageGQL(tripleData?.triple?.subject as Atom),
+            id: tripleData?.triple?.subject?.id,
+            description: getAtomDescriptionGQL(
+              tripleData?.triple?.subject as Atom,
+            ),
+            ipfsLink: getAtomIpfsLinkGQL(tripleData?.triple?.subject as Atom),
+            link: getAtomLinkGQL(tripleData?.triple?.subject as Atom),
             linkComponent: RemixLink,
           }}
           predicate={{
-            variant: claim.predicate?.is_user
-              ? Identity.user
-              : Identity.nonUser,
-            label: getAtomLabel(claim.predicate as IdentityPresenter),
-            imgSrc: getAtomImage(claim.predicate as IdentityPresenter),
-            id: claim.predicate?.identity_id,
-            description: getAtomDescription(
-              claim.predicate as IdentityPresenter,
+            variant:
+              tripleData?.triple?.predicate?.type === 'Person'
+                ? Identity.user
+                : Identity.nonUser,
+            label: getAtomLabelGQL(tripleData?.triple?.predicate as Atom),
+            imgSrc: getAtomImageGQL(tripleData?.triple?.predicate as Atom),
+            id: tripleData?.triple?.predicate?.id,
+            description: getAtomDescriptionGQL(
+              tripleData?.triple?.predicate as Atom,
             ),
-            ipfsLink: getAtomIpfsLink(claim.predicate as IdentityPresenter),
-            link: getAtomLink(claim.predicate as IdentityPresenter),
+            ipfsLink: getAtomIpfsLinkGQL(tripleData?.triple?.predicate as Atom),
+            link: getAtomLinkGQL(tripleData?.triple?.predicate as Atom),
             linkComponent: RemixLink,
           }}
           object={{
-            variant: claim.object?.is_user ? Identity.user : Identity.nonUser,
-            label: getAtomLabel(claim.object as IdentityPresenter),
-            imgSrc: getAtomImage(claim.object as IdentityPresenter),
-            id: claim.object?.identity_id,
-            description: getAtomDescription(claim.object as IdentityPresenter),
-            ipfsLink: getAtomIpfsLink(claim.object as IdentityPresenter),
-            link: getAtomLink(claim.object as IdentityPresenter),
+            variant:
+              tripleData?.triple?.object?.type === 'Person'
+                ? Identity.user
+                : Identity.nonUser,
+            label: getAtomLabelGQL(tripleData?.triple?.object as Atom),
+            imgSrc: getAtomImageGQL(tripleData?.triple?.object as Atom),
+            id: tripleData?.triple?.object?.id,
+            description: getAtomDescriptionGQL(
+              tripleData?.triple?.object as Atom,
+            ),
+            ipfsLink: getAtomIpfsLinkGQL(tripleData?.triple?.object as Atom),
+            link: getAtomLinkGQL(tripleData?.triple?.object as Atom),
             linkComponent: RemixLink,
           }}
         />
       </div>
-      <DetailInfoCard
+      <DetailInfoCardNew
         variant={Identity.user}
         list={
-          claim?.predicate?.id ===
-          getSpecialPredicate(CURRENT_ENV).tagPredicate.id
-            ? (claim as ClaimPresenter)
+          String(tripleData?.triple?.predicate?.id) ===
+          String(getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId)
+            ? tripleData?.triple
             : undefined
         }
-        username={claim.creator?.display_name ?? '?'}
-        avatarImgSrc={claim.creator?.image ?? ''}
-        id={claim.creator?.wallet ?? ''}
+        username={tripleData?.triple?.creator?.label ?? '?'}
+        avatarImgSrc={tripleData?.triple?.creator?.image ?? ''}
+        id={tripleData?.triple?.creator?.id ?? ''}
         description={claim.creator?.description ?? ''}
         link={
-          claim.creator?.id
-            ? `${PATHS.READONLY_PROFILE}/${claim.creator?.wallet}`
-            : ''
+          claim.creator?.id ? `${PATHS.PROFILE}/${claim.creator?.wallet}` : ''
         }
         ipfsLink={`${BLOCK_EXPLORER_URL}/address/${claim.creator?.wallet}`}
         timestamp={claim.created_at}
