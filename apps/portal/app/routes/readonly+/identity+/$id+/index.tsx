@@ -23,10 +23,9 @@ import { PositionsOnIdentityNew } from '@components/list/positions-on-identity'
 import DataAboutHeader from '@components/profile/data-about-header'
 import { RevalidateButton } from '@components/revalidate-button'
 import { DataHeaderSkeleton, PaginatedListSkeleton } from '@components/skeleton'
-import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { formatBalance, invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
-import { useRouteLoaderData } from '@remix-run/react'
+import { useLoaderData, useRouteLoaderData } from '@remix-run/react'
 import { QueryClient } from '@tanstack/react-query'
 import { NO_IDENTITY_ERROR, NO_PARAM_ID_ERROR } from 'app/consts'
 
@@ -135,7 +134,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 }
 
 export default function ReadOnlyProfileDataAbout() {
-  const { initialParams } = useLiveLoader<typeof loader>(['attest'])
+  const { initialParams } = useLoaderData<typeof loader>()
 
   const { identity } =
     useRouteLoaderData<ReadOnlyIdentityLoaderData>(

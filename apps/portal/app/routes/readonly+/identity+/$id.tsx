@@ -29,13 +29,12 @@ import { ErrorPage } from '@components/error-page'
 import NavigationButton from '@components/navigation-link'
 import ImageModal from '@components/profile/image-modal'
 import ReadOnlyBanner from '@components/read-only-banner'
-import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getIdentityOrPending } from '@lib/services/identities'
 import { imageModalAtom } from '@lib/state/store'
 import { getSpecialPredicate } from '@lib/utils/app'
 import logger from '@lib/utils/logger'
 import { json, LoaderFunctionArgs, MetaFunction } from '@remix-run/node'
-import { Outlet } from '@remix-run/react'
+import { Outlet, useLoaderData } from '@remix-run/react'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
 import { BLOCK_EXPLORER_URL, CURRENT_ENV, PATHS } from 'app/consts'
 import TwoPanelLayout from 'app/layouts/two-panel-layout'
@@ -185,7 +184,7 @@ export interface ReadOnlyIdentityLoaderData {
 
 export default function ReadOnlyIdentityDetails() {
   const { identity, list, isPending, initialParams } =
-    useLiveLoader<ReadOnlyIdentityLoaderData>(['attest', 'create'])
+    useLoaderData<ReadOnlyIdentityLoaderData>()
 
   const [imageModalActive, setImageModalActive] = useAtom(imageModalAtom)
 
