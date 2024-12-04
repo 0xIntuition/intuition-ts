@@ -13,6 +13,7 @@ import { List } from './list'
 
 export function FollowList({
   positions,
+  currentSharePrice,
   pagination,
   paramPrefix,
   enableHeader = true,
@@ -22,6 +23,7 @@ export function FollowList({
 }: {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   positions?: any[] // TODO: (ENG-4782) Fix once we have the correct types
+  currentSharePrice?: string
   pagination?: PaginationType
   paramPrefix?: string
   enableHeader?: boolean
@@ -86,14 +88,8 @@ export function FollowList({
             }
             id={position.account?.id ?? position.object?.data ?? ''}
             amount={
-              +formatBalance(
-                BigInt(
-                  position.shares ||
-                    position.vault?.positions?.[0]?.shares ||
-                    '0',
-                ),
-                18,
-              )
+              +formatBalance(position.shares, 18) *
+              +formatBalance(currentSharePrice ?? '0', 18)
             }
             feesAccrued={
               position.user_asset_delta
