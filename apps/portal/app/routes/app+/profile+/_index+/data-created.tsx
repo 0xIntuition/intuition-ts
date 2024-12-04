@@ -215,16 +215,16 @@ export async function loader({ request }: LoaderFunctionArgs) {
   await queryClient.prefetchQuery({
     queryKey: ['get-triple-positions', { where: triplePositionsWhere }],
     queryFn: () =>
-      fetcher<GetTriplesWithPositionsQuery, GetTriplesWithPositionsQueryVariables>(
-        GetTriplesWithPositionsDocument,
-        {
-          where: triplePositionsWhere,
-          limit: triplePositionsLimit,
-          offset: triplePositionsOffset,
-          orderBy: triplePositionsOrderBy,
-          address: queryAddress,
-        },
-      )(),
+      fetcher<
+        GetTriplesWithPositionsQuery,
+        GetTriplesWithPositionsQueryVariables
+      >(GetTriplesWithPositionsDocument, {
+        where: triplePositionsWhere,
+        limit: triplePositionsLimit,
+        offset: triplePositionsOffset,
+        orderBy: triplePositionsOrderBy,
+        address: queryAddress,
+      })(),
   })
 
   return json({
@@ -580,13 +580,16 @@ export default function ProfileDataCreated() {
                         triplePositionsResult?.positions?.vault?.positions ?? []
                       }
                       counterVaultPositions={
-                        triplePositionsResult?.positions?.counterVault?.positions ?? []
+                        triplePositionsResult?.positions?.counterVault
+                          ?.positions ?? []
                       }
                       pagination={{
                         aggregate: {
                           count:
-                            (triplePositionsResult?.positions?.vault?.positionCount ?? 0) +
-                            (triplePositionsResult?.positions?.counterVault?.positionCount ?? 0),
+                            (triplePositionsResult?.positions?.vault
+                              ?.positionCount ?? 0) +
+                            (triplePositionsResult?.positions?.counterVault
+                              ?.positionCount ?? 0),
                         },
                       }}
                       positionDirection={positionDirection ?? undefined}
