@@ -8894,7 +8894,7 @@ export const useInfiniteGetAccountsQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          optionsQueryKey ?? variables === undefined
+          (optionsQueryKey ?? variables === undefined)
             ? ['GetAccounts.infinite']
             : ['GetAccounts.infinite', variables],
         queryFn: (metaData) =>
@@ -9065,7 +9065,7 @@ export const useInfiniteGetAtomsQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          optionsQueryKey ?? variables === undefined
+          (optionsQueryKey ?? variables === undefined)
             ? ['GetAtoms.infinite']
             : ['GetAtoms.infinite', variables],
         queryFn: (metaData) =>
@@ -9265,7 +9265,7 @@ export const useInfiniteGetClaimsByAddressQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          optionsQueryKey ?? variables === undefined
+          (optionsQueryKey ?? variables === undefined)
             ? ['GetClaimsByAddress.infinite']
             : ['GetClaimsByAddress.infinite', variables],
         queryFn: (metaData) =>
@@ -9354,7 +9354,7 @@ export const useInfiniteGetEventsQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          optionsQueryKey ?? variables === undefined
+          (optionsQueryKey ?? variables === undefined)
             ? ['GetEvents.infinite']
             : ['GetEvents.infinite', variables],
         queryFn: (metaData) =>
@@ -9444,7 +9444,7 @@ export const useInfiniteGetListItemsQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          optionsQueryKey ?? variables === undefined
+          (optionsQueryKey ?? variables === undefined)
             ? ['GetListItems.infinite']
             : ['GetListItems.infinite', variables],
         queryFn: (metaData) =>
@@ -9539,7 +9539,7 @@ export const useInfiniteGetPositionsQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          optionsQueryKey ?? variables === undefined
+          (optionsQueryKey ?? variables === undefined)
             ? ['GetPositions.infinite']
             : ['GetPositions.infinite', variables],
         queryFn: (metaData) =>
@@ -9697,7 +9697,7 @@ export const useInfiniteGetStatsQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          optionsQueryKey ?? variables === undefined
+          (optionsQueryKey ?? variables === undefined)
             ? ['GetStats.infinite']
             : ['GetStats.infinite', variables],
         queryFn: (metaData) =>
@@ -9789,7 +9789,7 @@ export const useInfiniteGetTriplesQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          optionsQueryKey ?? variables === undefined
+          (optionsQueryKey ?? variables === undefined)
             ? ['GetTriples.infinite']
             : ['GetTriples.infinite', variables],
         queryFn: (metaData) =>
@@ -9993,7 +9993,7 @@ export const useInfiniteGetVaultsQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          optionsQueryKey ?? variables === undefined
+          (optionsQueryKey ?? variables === undefined)
             ? ['GetVaults.infinite']
             : ['GetVaults.infinite', variables],
         queryFn: (metaData) =>

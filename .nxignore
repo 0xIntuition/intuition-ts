@@ -1,0 +1,66 @@
+# Dependencies
+**/node_modules
+**/.pnpm
+
+# Build outputs
+**/dist
+**/.next
+**/.cache
+**/.nx-cache
+**/build
+
+# Development files
+**/.git
+**/.env*
+**/.vscode
+**/.idea
+**/coverage
+**/*.log
+
+# Test files
+**/*.spec.ts
+**/*.test.ts
+**/*.spec.tsx
+**/*.test.tsx
+**/__tests__
+**/__mocks__
+**/*.spec.js
+**/*.test.js
+**/jest.config.*
+
+# Documentation and assets
+**/*.md
+**/*.mdx
+**/docs
+**/assets
+**/*.svg
+**/*.png
+**/*.jpg
+**/*.ico
+**/*.gif
+**/*.pdf
+
+# Temporary files
+**/.DS_Store
+**/.temp
+**/tmp
+**/*.swp
+**/*.swo
+
+# Generated files
+**/*.generated.*
+**/*.d.ts
+**/tsconfig.tsbuildinfo
+
+# Package files
+**/package-lock.json
+**/yarn.lock
+**/pnpm-lock.yaml
+
+# IDE and editor files
+**/.settings
+**/.project
+**/.classpath
+**/.factorypath
+**/.history
+  

@@ -5,6 +5,7 @@ out/
 tmp/
 
 .nx/cache
+.nx/workspace-data
 packages/1ui/storybook-static
 
 .env*
