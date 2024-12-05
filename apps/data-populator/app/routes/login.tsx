@@ -20,7 +20,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const authTokenClaims = await verifyPrivyAccessToken(request)
   if (authTokenClaims) {
     logger('[Loader] User is already authenticated, redirecting to home')
-    throw redirect('/app')
+    throw redirect(PATHS.APP)
   }
   return json({ authTokenClaims })
 }

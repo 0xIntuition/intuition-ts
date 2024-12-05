@@ -14,6 +14,7 @@ export default function PrivyRefresh({
   const { ready, getAccessToken } = usePrivy()
   const [accessToken, setAccessToken] = useState<string | null>(null)
 
+  logger('privy refresh ui')
   const refresh = useCallback(async () => {
     try {
       if (!ready) {

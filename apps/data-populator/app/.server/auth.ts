@@ -123,6 +123,7 @@ export async function handlePrivyRedirect({
   const accessToken = getPrivyAccessToken(request)
   const sessionToken = getPrivySessionToken(request)
   const isOAuth = await isOAuthInProgress(request.url)
+  logger('privy redirect')
 
   if (isOAuth) {
     // Do not redirect or interrupt the flow.
