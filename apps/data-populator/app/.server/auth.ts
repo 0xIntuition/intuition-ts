@@ -7,8 +7,9 @@ import { RedirectOptions } from 'app/types'
 
 import {
   getPrivyAccessToken,
+  getPrivyClient,
   getPrivySessionToken,
-  getPrivyUserById,
+  // getPrivyUserById,
   isOAuthInProgress,
   verifyPrivyAccessToken,
 } from './privy'
@@ -20,16 +21,39 @@ export async function getUserId(request: Request): Promise<string | null> {
 }
 
 export async function getUser(request: Request): Promise<User | null> {
-  const userId = await getUserId(request)
-  return userId ? await getPrivyUserById(userId) : null
+  const privyIdToken = getPrivyAccessToken(request)
+  const privyClient = getPrivyClient()
+
+  if (!privyIdToken) {
+    logger('No Privy ID token found')
+    return null
+  }
+
+  try {
+    // First verify the token is valid
+    const verifiedClaims = await verifyPrivyAccessToken(request)
+    if (!verifiedClaims) {
+      logger('Invalid Privy token')
+      return null
+    }
+
+    // Then get the full user object directly using the verified user ID
+    const user = await privyClient.getUserById(verifiedClaims.userId)
+    logger('Successfully fetched user by ID', user.wallet?.address)
+    return user
+  } catch (error) {
+    logger('Error fetching user', error)
+    return null
+  }
 }
 
 export async function getUserWallet(request: Request): Promise<string | null> {
-  logger('[getUserWallet] Entering getUserWallet')
   const user = await getUser(request)
-  return user?.wallet?.address ?? null
+  if (!user) {
+    return null
+  }
+  return user.wallet?.address ?? null
 }
-
 export async function requireUserId(
   request: Request,
   options: RedirectOptions = {},
@@ -99,13 +123,27 @@ export async function handlePrivyRedirect({
   const accessToken = getPrivyAccessToken(request)
   const sessionToken = getPrivySessionToken(request)
   const isOAuth = await isOAuthInProgress(request.url)
+  logger('privy redirect')
+
   if (isOAuth) {
     // Do not redirect or interrupt the flow.
-    return
-  } else if (!accessToken || !sessionToken) {
+    return null
+  }
+
+  // First check if we're missing any tokens
+  if (!accessToken || !sessionToken) {
     const redirectUrl = await getRedirectToUrl(request, path, options)
     throw redirect(redirectUrl)
   }
-  logger('Hit end of handlePrivyRedirect', accessToken, sessionToken, isOAuth)
-  return
+
+  // If we have both tokens, verify the access token
+  const verifiedClaims = await verifyPrivyAccessToken(request)
+  if (!verifiedClaims) {
+    // Token is invalid, redirect to refresh
+    const redirectUrl = await getRedirectToUrl(request, path, options)
+    throw redirect(redirectUrl)
+  }
+
+  // Only return null if we have valid tokens
+  return null
 }

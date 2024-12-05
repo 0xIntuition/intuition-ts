@@ -58,10 +58,10 @@ export const verifyPrivyAccessToken = async (
 }
 
 // takes user privy DID (e.g. authCheck().userId)
-export const getPrivyUserById = async (id: string): Promise<User> => {
+export const getPrivyUserById = async (idToken: string): Promise<User> => {
   const privy = getPrivyClient()
   logger('[getPrivyUserById] Entering getPrivyUserById')
-  const user = await privy.getUserById(id)
+  const user = await privy.getUser({ idToken })
   return user
 }
 
