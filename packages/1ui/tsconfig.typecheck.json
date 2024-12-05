@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "composite": false,
+    "declaration": true,
+    "emitDeclarationOnly": false,
+    "types": ["node"],
+    "typeRoots": ["./types.d.ts", "../../node_modules/@types"]
+  },
+  "include": ["src/**/*", ".storybook/**/*", "**/*.mdx", "types.d.ts"],
+  "exclude": ["**/*.spec.ts", "**/*.spec.tsx", "**/*.test.ts", "**/*.test.tsx"]
+}
