@@ -26,7 +26,7 @@
     "version:minor": "pnpm version minor --no-git-tag-version",
     "version:major": "pnpm version major --no-git-tag-version",
     "version:beta": "pnpm version prerelease --preid beta --no-git-tag-version",
-    "codegen:build": "NODE_ENV=production dotenv graphql-codegen --config codegen.ts",
+    "codegen:build": "NODE_ENV=production graphql-codegen --config codegen.ts",
     "codegen:watch": "NODE_ENV=development dotenv graphql-codegen --config codegen.ts",
     "test": "vitest",
     "lint:fix": "pnpm lint --fix"
