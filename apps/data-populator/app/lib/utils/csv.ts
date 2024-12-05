@@ -45,7 +45,7 @@ function parseCsvToThings(text: string): Thing[] {
     for (let j = 0; j < headers.length; j++) {
       const key = headers[j]
       const value = row[j]
-        ; (thing as any)[key] = value
+      ;(thing as any)[key] = value
     }
     things.push(thing)
   }
