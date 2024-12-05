@@ -114,7 +114,7 @@ export async function logout(
 
 export async function handlePrivyRedirect({
   request,
-  path = '/refresh',
+  path = '/',
   options = {},
 }: {
   request: Request

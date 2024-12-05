@@ -34,7 +34,7 @@ export async function loader() {
 export async function action({ request }: ActionFunctionArgs) {
   const redirectUrl = (await request.formData()).get('redirectUrl')
 
-  return redirect(typeof redirectUrl === 'string' ? redirectUrl : '/login', {
+  return redirect(typeof redirectUrl === 'string' ? redirectUrl : '/', {
     headers: {
       'Set-Cookie': await onboardingModalCookie.serialize({
         dateOnboardingCompleted: new Date().valueOf(),
