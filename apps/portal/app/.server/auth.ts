@@ -130,12 +130,21 @@ export async function handlePrivyRedirect({
     return null
   }
 
+  // First check if we're missing any tokens
   if (!accessToken || !sessionToken) {
     const redirectUrl = await getRedirectToUrl(request, path, options)
     throw redirect(redirectUrl)
   }
 
-  // Explicitly return null when we reach the end
+  // If we have both tokens, verify the access token
+  const verifiedClaims = await verifyPrivyAccessToken(request)
+  if (!verifiedClaims) {
+    // Token is invalid, redirect to refresh
+    const redirectUrl = await getRedirectToUrl(request, path, options)
+    throw redirect(redirectUrl)
+  }
+
+  // Only return null if we have valid tokens
   return null
 }
 
