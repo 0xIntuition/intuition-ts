@@ -1,0 +1,224 @@
+[
+  {
+    "name": "thread_name",
+    "ph": "M",
+    "pid": 51941,
+    "tid": 0,
+    "ts": 0,
+    "args": {
+      "name": "Group #1"
+    }
+  },
+  {
+    "name": "thread_name",
+    "ph": "M",
+    "pid": 51941,
+    "tid": 1,
+    "ts": 0,
+    "args": {
+      "name": "Group #2"
+    }
+  },
+  {
+    "name": "thread_name",
+    "ph": "M",
+    "pid": 51941,
+    "tid": 2,
+    "ts": 0,
+    "args": {
+      "name": "Group #3"
+    }
+  },
+  {
+    "name": "@0xintuition/api:build",
+    "cat": "@0xintuition/api,build,",
+    "ph": "X",
+    "ts": 1732693970428000,
+    "dur": 1110000,
+    "pid": 51941,
+    "tid": 0,
+    "args": {
+      "target": {
+        "project": "@0xintuition/api",
+        "target": "build"
+      },
+      "status": "success"
+    }
+  },
+  {
+    "name": "@0xintuition/protocol:build",
+    "cat": "@0xintuition/protocol,build,",
+    "ph": "X",
+    "ts": 1732693970428000,
+    "dur": 2201000,
+    "pid": 51941,
+    "tid": 1,
+    "args": {
+      "target": {
+        "project": "@0xintuition/protocol",
+        "target": "build"
+      },
+      "status": "success"
+    }
+  },
+  {
+    "name": "@0xintuition/graphql:build",
+    "cat": "@0xintuition/graphql,build,",
+    "ph": "X",
+    "ts": 1732693971540000,
+    "dur": 1314000,
+    "pid": 51941,
+    "tid": 0,
+    "args": {
+      "target": {
+        "project": "@0xintuition/graphql",
+        "target": "build"
+      },
+      "status": "success"
+    }
+  },
+  {
+    "name": "@0xintuition/sdk:build",
+    "cat": "@0xintuition/sdk,build,",
+    "ph": "X",
+    "ts": 1732693972629000,
+    "dur": 968000,
+    "pid": 51941,
+    "tid": 1,
+    "args": {
+      "target": {
+        "project": "@0xintuition/sdk",
+        "target": "build"
+      },
+      "status": "success"
+    }
+  },
+  {
+    "name": "@0xintuition/1ui:typecheck",
+    "cat": "@0xintuition/1ui,typecheck,",
+    "ph": "X",
+    "ts": 1732693970428000,
+    "dur": 3488000,
+    "pid": 51941,
+    "tid": 2,
+    "args": {
+      "target": {
+        "project": "@0xintuition/1ui",
+        "target": "typecheck"
+      },
+      "status": "success"
+    }
+  },
+  {
+    "name": "@0xintuition/1ui:build",
+    "cat": "@0xintuition/1ui,build,",
+    "ph": "X",
+    "ts": 1732693973916000,
+    "dur": 4739000,
+    "pid": 51941,
+    "tid": 0,
+    "args": {
+      "target": {
+        "project": "@0xintuition/1ui",
+        "target": "build"
+      },
+      "status": "success"
+    }
+  },
+  {
+    "name": "@0xintuition/template:typecheck",
+    "cat": "@0xintuition/template,typecheck,",
+    "ph": "X",
+    "ts": 1732693978659000,
+    "dur": 15849000,
+    "pid": 51941,
+    "tid": 2,
+    "args": {
+      "target": {
+        "project": "@0xintuition/template",
+        "target": "typecheck"
+      },
+      "status": "success"
+    }
+  },
+  {
+    "name": "@0xintuition/data-populator:typecheck",
+    "cat": "@0xintuition/data-populator,typecheck,",
+    "ph": "X",
+    "ts": 1732693978659000,
+    "dur": 20551000,
+    "pid": 51941,
+    "tid": 1,
+    "args": {
+      "target": {
+        "project": "@0xintuition/data-populator",
+        "target": "typecheck"
+      },
+      "status": "success"
+    }
+  },
+  {
+    "name": "@0xintuition/portal:typecheck",
+    "cat": "@0xintuition/portal,typecheck,",
+    "ph": "X",
+    "ts": 1732693978659000,
+    "dur": 24435000,
+    "pid": 51941,
+    "tid": 0,
+    "args": {
+      "target": {
+        "project": "@0xintuition/portal",
+        "target": "typecheck"
+      },
+      "status": "success"
+    }
+  },
+  {
+    "name": "@0xintuition/template:build",
+    "cat": "@0xintuition/template,build,",
+    "ph": "X",
+    "ts": 1732693994510000,
+    "dur": 23787000,
+    "pid": 51941,
+    "tid": 2,
+    "args": {
+      "target": {
+        "project": "@0xintuition/template",
+        "target": "build"
+      },
+      "status": "success"
+    }
+  },
+  {
+    "name": "@0xintuition/data-populator:build",
+    "cat": "@0xintuition/data-populator,build,",
+    "ph": "X",
+    "ts": 1732693999212000,
+    "dur": 27525000,
+    "pid": 51941,
+    "tid": 1,
+    "args": {
+      "target": {
+        "project": "@0xintuition/data-populator",
+        "target": "build"
+      },
+      "status": "success"
+    }
+  },
+  {
+    "name": "@0xintuition/portal:build",
+    "cat": "@0xintuition/portal,build,",
+    "ph": "X",
+    "ts": 1732694003095000,
+    "dur": 46389000,
+    "pid": 51941,
+    "tid": 0,
+    "args": {
+      "target": {
+        "project": "@0xintuition/portal",
+        "target": "build"
+      },
+      "status": "success"
+    }
+  }
+]

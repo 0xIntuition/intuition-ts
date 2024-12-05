@@ -1,13 +1,23 @@
 node_modules/
 .vscode/
 out/
-dist/
+/dist/
 tmp/
 
 .nx/cache
+.nx/workspace-data
 packages/1ui/storybook-static
 
 .env*
 !.env.example
 .secrets
 act.sh
+
+# Verdaccio local registry files
+.verdaccio-db.json
+.npmrc
+
+# Build outputs
+/dist/
+**/dist/
+packages/*/dist/
