@@ -8,38 +8,33 @@ import { PATHS } from 'app/consts'
 export async function loader({ request }: LoaderFunctionArgs) {
   getMaintenanceMode()
 
-  const cookieHeader = request.headers.get('Cookie')
-  const cookie = await onboardingModalCookie.parse(cookieHeader)
-  const redirectTo = new URL(request.url).searchParams.get('redirectTo')
-
   const url = new URL(request.url)
+  const redirectTo = url.searchParams.get('redirectTo')
   const isReadonlyRoute = url.pathname.startsWith('/readonly/')
 
   if (isReadonlyRoute) {
     return json({})
   }
 
+  // Check onboarding first
+  const cookieHeader = request.headers.get('Cookie')
+  const cookie = await onboardingModalCookie.parse(cookieHeader)
   if (!cookie) {
     throw redirect('/intro')
   }
 
   const { accessToken, sessionToken } = getPrivyTokens(request)
 
-  // If we have an access token, verify it's still valid
-  if (accessToken) {
-    const verifiedClaims = await verifyPrivyAccessToken(request)
-    if (verifiedClaims) {
-      logger('[Loader] User is authenticated, redirecting to destination')
-      throw redirect(redirectTo || PATHS.HOME)
-    }
-    // Token exists but is invalid - continue to refresh flow
+  // No tokens at all - redirect to login
+  if (!accessToken && !sessionToken) {
+    logger('[Loader] No tokens present, redirecting to login')
+    throw redirect('/login')
   }
 
-  // If we have a session token but no valid access token,
-  // redirect to refresh route to handle token refresh
-  if (sessionToken) {
+  // Has session token but no access token - needs refresh
+  if (!accessToken && sessionToken) {
     logger(
-      '[Loader] Session token present but no valid access token, redirecting to refresh',
+      '[Loader] No access token but have session token, redirecting to refresh',
     )
     const refreshUrl = new URL('/refresh', request.url)
     if (redirectTo) {
@@ -48,8 +43,31 @@ export async function loader({ request }: LoaderFunctionArgs) {
     throw redirect(refreshUrl.toString())
   }
 
-  // No tokens at all, redirect to login
-  logger('[Loader] No tokens present, redirecting to login')
+  // Verify access token if present
+  if (accessToken) {
+    const verifiedClaims = await verifyPrivyAccessToken(request)
+    if (verifiedClaims) {
+      logger('[Loader] Access token verified, redirecting to destination')
+      throw redirect(redirectTo || PATHS.HOME)
+    }
+
+    // Token is invalid - try refresh if we have session token
+    if (sessionToken) {
+      logger(
+        '[Loader] Access token invalid but have session token, redirecting to refresh',
+      )
+      const refreshUrl = new URL('/refresh', request.url)
+      if (redirectTo) {
+        refreshUrl.searchParams.set('redirectTo', redirectTo)
+      }
+      throw redirect(refreshUrl.toString())
+    }
+  }
+
+  // If we get here, we have an invalid access token and no session token
+  logger(
+    '[Loader] Invalid access token and no session token, redirecting to login',
+  )
   throw redirect('/login')
 }
 

@@ -14,10 +14,12 @@ export const verifyPrivyAccessToken = async (
 ): Promise<AuthTokenClaims | null> => {
   const privy = getPrivyClient()
   const authToken = getPrivyAccessToken(req)
+
   if (!authToken) {
-    logger('No Privy access token found')
+    logger('[verifyPrivyAccessToken] No Privy access token found')
     return null
   }
+
   try {
     const verifiedClaims = await privy.verifyAuthToken(
       authToken,
@@ -25,7 +27,7 @@ export const verifyPrivyAccessToken = async (
     )
     return verifiedClaims
   } catch (error) {
-    logger('Error verifying Privy access token', error)
+    logger('[verifyPrivyAccessToken] Error verifying Privy access token', error)
     return null
   }
 }
