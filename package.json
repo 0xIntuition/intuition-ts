@@ -54,7 +54,8 @@
     "pre-commit": "pnpm lint && pnpm typecheck && pretty-quick --verbose --staged",
     "prepare": "husky",
     "codegen": "nx codegen @0xintuition/api",
-    "postinstall": "pnpm prepare"
+    "postinstall": "pnpm prepare",
+    "clean": "nx reset && rm -rf dist"
   },
   "keywords": [],
   "author": "",

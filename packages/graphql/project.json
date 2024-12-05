@@ -5,17 +5,6 @@
   "projectType": "library",
   "tags": [],
   "targets": {
-    "build": {
-      "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
-      "options": {
-        "outputPath": "dist/packages/graphql",
-        "tsConfig": "packages/graphql/tsconfig.lib.json",
-        "packageJson": "packages/graphql/package.json",
-        "main": "packages/graphql/src/index.ts",
-        "assets": ["packages/graphql/*.md"]
-      }
-    },
     "lint": {
       "executor": "@nx/eslint:lint",
       "options": {
