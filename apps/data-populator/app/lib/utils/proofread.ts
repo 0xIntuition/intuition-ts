@@ -204,7 +204,7 @@ function fixGarbledText(cell: string): {
   }
 
   // Regular expression for acceptable characters
-  const acceptableChars = /[^\x20-\x7E\u00A0-\u00FF\u2010-\u206F]/g
+  const acceptableChars = /[^\p{L}\p{M}\p{N}\p{P}\p{S}\p{Z}]/gu
 
   // Check for garbled text (characters outside acceptable ranges)
   if (acceptableChars.test(fixedText)) {
