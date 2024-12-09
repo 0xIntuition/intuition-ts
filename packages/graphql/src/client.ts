@@ -14,10 +14,7 @@ let globalConfig: { apiUrl?: string } = {
 }
 
 export function configureClient(config: { apiUrl: string }) {
-  console.log('Configuring GraphQL client with URL:', config.apiUrl)
-  console.log('Previous config:', globalConfig)
   globalConfig = { ...globalConfig, ...config }
-  console.log('New config:', globalConfig)
 }
 
 export function getClientConfig(token?: string): ClientConfig {
@@ -59,7 +56,6 @@ export function fetcher<TData, TVariables>(
         'GraphQL API URL not configured. Call configureClient first.',
       )
     }
-    console.log('Fetching from URL:', globalConfig.apiUrl)
 
     const res = await fetch(globalConfig.apiUrl, {
       method: 'POST',
