@@ -21,6 +21,11 @@ import './styles/globals.css'
 import { useEffect } from 'react'
 
 import { Toaster } from '@0xintuition/1ui'
+import {
+  API_URL_DEV,
+  API_URL_PROD,
+  configureClient,
+} from '@0xintuition/graphql'
 
 import { ErrorPage } from '@components/error-page'
 import { getChainEnvConfig } from '@lib/utils/environment'
@@ -28,9 +33,15 @@ import { CURRENT_ENV } from 'app/consts'
 import { ClientOnly } from 'remix-utils/client-only'
 import { useAccount, useSwitchChain } from 'wagmi'
 
+// Configure GraphQL client at module initialization using the URLs from the package
+// This can be updated to use the same environment approach that we use in Portal in the future, or leave up to the template user to configure however makes sense for their use case
+configureClient({
+  apiUrl: process.env.NODE_ENV === 'production' ? API_URL_PROD : API_URL_DEV,
+})
+
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
   return [
-    { title: data ? 'Intuition Explorer' : 'Error | Intuition Explorer' },
+    { title: data ? 'Intuition Template' : 'Error | Intuition Template' },
     {
       name: 'description',
       content: `Intuition is an ecosystem of technologies composing a universal and permissionless knowledge graph, capable of handling both objective facts and subjective opinions - delivering superior data for intelligences across the spectrum, from human to artificial.`,
@@ -40,9 +51,8 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
       content:
         'https://res.cloudinary.com/dfpwy9nyv/image/upload/f_auto,q_auto/v1/Portal%20Assets/Site%20Metadata/site-og-image',
     },
-    { property: 'og:site_name', content: 'Intuition Explorer' },
+    { property: 'og:site_name', content: 'Intuition Template' },
     { property: 'og:locale', content: 'en_US' },
-    { property: 'og:url', content: 'https://beta.portal.intuition.systems' },
     {
       name: 'twitter:image',
       content:
