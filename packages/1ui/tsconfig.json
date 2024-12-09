@@ -5,7 +5,8 @@
     "baseUrl": "./src",
     "outDir": "../../dist/packages/1ui",
     "composite": true,
-    "moduleResolution": "bundler"
+    "moduleResolution": "bundler",
+    "types": ["jest", "node", "vitest"]
   },
   "include": ["src"]
 }
