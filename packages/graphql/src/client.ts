@@ -1,7 +1,23 @@
 import { GraphQLClient } from 'graphql-request'
 
+import { API_URL_DEV } from './constants'
+
 export interface ClientConfig {
   headers: HeadersInit
+  apiUrl?: string
+}
+
+const DEFAULT_API_URL = API_URL_DEV
+
+let globalConfig: { apiUrl?: string } = {
+  apiUrl: DEFAULT_API_URL,
+}
+
+export function configureClient(config: { apiUrl: string }) {
+  console.log('Configuring GraphQL client with URL:', config.apiUrl)
+  console.log('Previous config:', globalConfig)
+  globalConfig = { ...globalConfig, ...config }
+  console.log('New config:', globalConfig)
 }
 
 export function getClientConfig(token?: string): ClientConfig {
@@ -10,16 +26,18 @@ export function getClientConfig(token?: string): ClientConfig {
       ...(token && { authorization: `Bearer ${token}` }),
       'Content-Type': 'application/json',
     },
+    apiUrl: globalConfig.apiUrl,
   }
 }
 
-// add userId back in when we need to add user auth for mutations
-// TODO: Abstract this to allow for different environments
 export function createServerClient({ token }: { token?: string }) {
-  return new GraphQLClient(
-    'https://api.i7n.dev/v1/graphql',
-    getClientConfig(token),
-  )
+  const config = getClientConfig(token)
+  if (!config.apiUrl) {
+    throw new Error(
+      'GraphQL API URL not configured. Call configureClient first.',
+    )
+  }
+  return new GraphQLClient(config.apiUrl, config)
 }
 
 export const fetchParams = () => {
@@ -36,7 +54,14 @@ export function fetcher<TData, TVariables>(
   options?: RequestInit['headers'],
 ) {
   return async () => {
-    const res = await fetch('https://api.i7n.dev/v1/graphql', {
+    if (!globalConfig.apiUrl) {
+      throw new Error(
+        'GraphQL API URL not configured. Call configureClient first.',
+      )
+    }
+    console.log('Fetching from URL:', globalConfig.apiUrl)
+
+    const res = await fetch(globalConfig.apiUrl, {
       method: 'POST',
       ...fetchParams(),
       ...options,

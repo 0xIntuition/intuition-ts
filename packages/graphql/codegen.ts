@@ -4,7 +4,10 @@ import type { Types } from '@graphql-codegen/plugin-helpers'
 const commonGenerateOptions: Types.ConfiguredOutput = {
   config: {
     reactQueryVersion: 5,
-    fetcher: '../client#fetcher',
+    fetcher: {
+      func: '../client#fetcher',
+      isReactHook: false,
+    },
     exposeDocument: true,
     exposeFetcher: true,
     exposeQueryKeys: true,
