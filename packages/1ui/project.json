@@ -58,6 +58,19 @@
       "options": {
         "packageRoot": "dist/{projectRoot}"
       }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "dependsOn": [
+        {
+          "target": "build",
+          "projects": "dependencies"
+        }
+      ],
+      "options": {
+        "command": "tsc --noEmit -p packages/1ui/tsconfig.typecheck.json",
+        "cwd": "."
+      }
     }
   }
 }

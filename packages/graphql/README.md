@@ -44,6 +44,80 @@ You can also run this from the monorepo root:
 pnpm graphql:test
 ```
 
+### Testing with Local Registry
+
+#### Setup
+
+1. Copy `.npmrc.example` from the root to `.npmrc` to configure the local registry.
+
+2. Start the local registry:
+
+```bash
+pnpm nx local-registry
+```
+
+#### Version Management
+
+Before publishing, you may need to update the package version. Use one of these commands:
+
+```bash
+pnpm version:patch  # For bug fixes (0.0.x)
+pnpm version:minor  # For new features (0.x.0)
+pnpm version:major  # For breaking changes (x.0.0)
+pnpm version:beta   # For beta releases
+```
+
+#### Testing in Monorepo Apps (Recommended)
+
+1. Make changes to the package and build:
+
+```bash
+cd packages/graphql
+# This will run codegen first (prebuild) and then build
+pnpm build
+```
+
+2. Test the build before publishing (optional):
+
+```bash
+pnpm publish-dry
+```
+
+3. Publish to local registry using one of these commands:
+
+```bash
+# For local testing only
+npm publish --registry http://localhost:4873
+
+# For publishing to npm registry with tags (when ready)
+pnpm publish-latest  # Publishes with 'latest' tag
+pnpm publish-next   # Publishes with 'next' tag
+```
+
+4. In your test app, update the package version in package.json:
+
+```json
+{
+  "dependencies": {
+    "@0xintuition/graphql": "^x.x.x" // Use the version from package.json
+  }
+}
+```
+
+5. Install the updated package:
+
+```bash
+pnpm install
+```
+
+#### Notes
+
+- The local registry persists packages in `tmp/local-registry/storage`
+- Clear storage by stopping and restarting the registry
+- First-time publishing requires creating a user (any username/password works)
+- The registry runs on port 4873 by default
+- The build process automatically runs codegen before building
+
 ## Usage
 
 ### Client Setup
