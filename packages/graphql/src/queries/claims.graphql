@@ -1,5 +1,5 @@
 query GetClaimsByAddress($address: String) {
-  claims_aggregate(where: { accountId: { _eq: $address } }) {
+  claims_aggregate(where: { account_id: { _eq: $address } }) {
     aggregate {
       count
     }
@@ -19,10 +19,10 @@ query GetClaimsByAddress($address: String) {
         }
       }
       id
-      vaultId
-      counterVaultId
+      vault_id
+      counter_vault_id
       shares
-      counterShares
+      counter_shares
     }
   }
 }

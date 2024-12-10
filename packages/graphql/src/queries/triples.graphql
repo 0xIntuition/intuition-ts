@@ -104,9 +104,9 @@ query GetTriplesWithPositions(
       image
     }
     vault {
-      totalShares
-      positionCount
-      positions(where: { accountId: { _eq: $address } }) {
+      total_shares
+      position_count
+      positions(where: { account_id: { _eq: $address } }) {
         account {
           id
           label
@@ -115,10 +115,10 @@ query GetTriplesWithPositions(
         shares
       }
     }
-    counterVault {
-      totalShares
-      positionCount
-      positions(where: { accountId: { _eq: $address } }) {
+    counter_vault {
+      total_shares
+      position_count
+      positions(where: { account_id: { _eq: $address } }) {
         account {
           id
           label

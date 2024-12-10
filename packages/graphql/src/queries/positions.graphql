@@ -114,8 +114,8 @@ query GetPositionsCountByType($where: positions_bool_exp) {
   }
   positions {
     vault {
-      atomId
-      tripleId
+      atom_id
+      triple_id
     }
   }
 }
