@@ -10,20 +10,67 @@ fragment PositionDetails on positions {
     atom {
       id
       label
+      image
     }
     triple {
       id
+      vault {
+        id
+        positionCount
+        positions_aggregate {
+          aggregate {
+            sum {
+              shares
+            }
+          }
+        }
+      }
+      counterVault {
+        id
+        positionCount
+        positions_aggregate {
+          aggregate {
+            sum {
+              shares
+            }
+          }
+        }
+      }
       subject {
+        data
         id
         label
+        image
+        emoji
+        type
+        ...AtomValue
+        creator {
+          ...AccountMetadata
+        }
       }
       predicate {
+        data
         id
         label
+        image
+        emoji
+        type
+        ...AtomValue
+        creator {
+          ...AccountMetadata
+        }
       }
       object {
+        data
         id
         label
+        image
+        emoji
+        type
+        ...AtomValue
+        creator {
+          ...AccountMetadata
+        }
       }
     }
   }
