@@ -8,13 +8,25 @@ import {
   TagWithValue,
 } from '@0xintuition/1ui'
 import {
-  ClaimPresenter,
-  ClaimsService,
   IdentityPresenter,
   UserPresenter,
   UsersService,
-  UserTotalsPresenter,
 } from '@0xintuition/api'
+import {
+  fetcher,
+  GetAccountDocument,
+  GetAccountQuery,
+  GetAccountQueryVariables,
+  GetConnectionsCountDocument,
+  GetConnectionsCountQuery,
+  GetConnectionsCountQueryVariables,
+  GetTagsDocument,
+  GetTagsQuery,
+  GetTagsQueryVariables,
+  useGetAccountQuery,
+  useGetConnectionsCountQuery,
+  useGetTagsQuery,
+} from '@0xintuition/graphql'
 
 import { ErrorPage } from '@components/error-page'
 import NavigationButton from '@components/navigation-link'
@@ -22,46 +34,52 @@ import ImageModal from '@components/profile/image-modal'
 import ReadOnlyBanner from '@components/read-only-banner'
 import { SegmentedNav } from '@components/segmented-nav'
 import TagsModal from '@components/tags/tags-modal'
-import { useLiveLoader } from '@lib/hooks/useLiveLoader'
+import { useGetVaultDetails } from '@lib/hooks/useGetVaultDetails'
 import { getIdentityOrPending } from '@lib/services/identities'
 import { getPurchaseIntentsByAddress } from '@lib/services/phosphor'
-import { getTags } from '@lib/services/tags'
 import { imageModalAtom, tagsModalAtom } from '@lib/state/store'
 import { getSpecialPredicate } from '@lib/utils/app'
 import logger from '@lib/utils/logger'
-import { calculatePointsFromFees } from '@lib/utils/misc'
+import { calculatePointsFromFees, invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
-import { Outlet } from '@remix-run/react'
+import { Outlet, useLoaderData } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
-import { getVaultDetails } from '@server/multivault'
 import { getRelicCount } from '@server/relics'
+import { dehydrate, QueryClient } from '@tanstack/react-query'
 import {
   BLOCK_EXPLORER_URL,
   CURRENT_ENV,
+  MULTIVAULT_CONTRACT_ADDRESS,
   PATHS,
   readOnlyUserIdentityRouteOptions,
 } from 'app/consts'
 import TwoPanelLayout from 'app/layouts/two-panel-layout'
-import { VaultDetailsType } from 'app/types/vault'
 import { useAtom } from 'jotai'
 
-export async function loader({ request, params }: LoaderFunctionArgs) {
+export async function loader({ params, request }: LoaderFunctionArgs) {
   const wallet = params.wallet
+  invariant(wallet, 'Wallet is undefined in params')
 
-  if (!wallet) {
-    throw new Error('Wallet is undefined in params')
-  }
+  const queryAddress = wallet.toLowerCase()
+
+  const queryClient = new QueryClient()
+
+  // TODO: Remove this relic hold/mint count and points calculation when it is stored in BE.
+  const relicHoldCount = await getRelicCount(wallet as `0x${string}`)
+
+  const userCompletedMints = await getPurchaseIntentsByAddress(
+    wallet,
+    'CONFIRMED',
+  )
+
+  const relicMintCount = userCompletedMints.data?.total_results
 
   const { identity: userIdentity, isPending } = await getIdentityOrPending(
     request,
     wallet,
   )
 
-  logger('userIdentity in loader after pending check', userIdentity)
-
-  if (!userIdentity) {
-    throw new Response('Not Found', { status: 404 })
-  }
+  invariant(userIdentity, 'No user identity found')
 
   if (!userIdentity.creator) {
     throw new Response('Invalid or missing creator ID', { status: 404 })
@@ -98,106 +116,178 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     return logger('No user totals found')
   }
 
-  // TODO: Remove this relic hold/mint count and points calculation when it is stored in BE.
-  const relicHoldCount = await getRelicCount(wallet as `0x${string}`)
+  let accountResult: GetAccountQuery | null = null
 
-  const userCompletedMints = await getPurchaseIntentsByAddress(
-    wallet,
-    'CONFIRMED',
-  )
+  try {
+    logger('Fetching Account Data...')
+    accountResult = await fetcher<GetAccountQuery, GetAccountQueryVariables>(
+      GetAccountDocument,
+      { address: queryAddress },
+    )()
 
-  const relicMintCount = userCompletedMints.data?.total_results
-
-  let vaultDetails: VaultDetailsType | null = null
-
-  if (!!userIdentity && userIdentity.vault_id) {
-    try {
-      vaultDetails = await getVaultDetails(
-        userIdentity.contract,
-        userIdentity.vault_id,
-      )
-    } catch (error) {
-      logger('Failed to fetch vaultDetails', error)
-      vaultDetails = null
+    if (!accountResult) {
+      throw new Error('No account data found for address')
     }
-  }
 
-  let followClaim: ClaimPresenter | null = null
-  let followVaultDetails: VaultDetailsType | null = null
-
-  const followClaimResponse = await fetchWrapper(request, {
-    method: ClaimsService.searchClaims,
-    args: {
-      subject: getSpecialPredicate(CURRENT_ENV).iPredicate.vaultId,
-      predicate: getSpecialPredicate(CURRENT_ENV).amFollowingPredicate.vaultId,
-      object: userIdentity.vault_id,
-      page: 1,
-      limit: 1,
-    },
-  })
-
-  if (followClaimResponse.data && followClaimResponse.data.length) {
-    followClaim = followClaimResponse.data[0]
-  }
-
-  if (userIdentity.user && followClaim) {
-    try {
-      followVaultDetails = await getVaultDetails(
-        followClaim.contract,
-        followClaim.vault_id,
-      )
-    } catch (error) {
-      logger('Failed to fetch followVaultDetails', error)
-      followVaultDetails = null
+    if (!accountResult.account?.atomId) {
+      throw new Error('No atom ID found for account')
     }
+
+    await queryClient.prefetchQuery({
+      queryKey: ['get-account', { address: queryAddress }],
+      queryFn: () => accountResult,
+    })
+
+    const accountTagsResult = await fetcher<
+      GetTagsQuery,
+      GetTagsQueryVariables
+    >(GetTagsDocument, {
+      subjectId: accountResult.account.atomId,
+      predicateId: getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId,
+    })()
+
+    logger('Account Tags Result:', accountTagsResult)
+
+    await queryClient.prefetchQuery({
+      queryKey: [
+        'get-tags',
+        {
+          subjectId: accountResult.account.atomId,
+          predicateId: getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId,
+        },
+      ],
+      queryFn: () => accountTagsResult,
+    })
+
+    const accountConnectionsCountResult = await fetcher<
+      GetConnectionsCountQuery,
+      GetConnectionsCountQueryVariables
+    >(GetConnectionsCountDocument, {
+      subjectId: getSpecialPredicate(CURRENT_ENV).iPredicate.vaultId,
+      predicateId:
+        getSpecialPredicate(CURRENT_ENV).amFollowingPredicate.vaultId,
+      objectId: accountResult.account.atomId,
+      address: queryAddress,
+    })()
+
+    logger('Account Connections Count Result:', accountConnectionsCountResult)
+
+    await queryClient.prefetchQuery({
+      queryKey: [
+        'get-connections-count',
+        {
+          address: queryAddress,
+          subjectId: getSpecialPredicate(CURRENT_ENV).iPredicate.vaultId,
+          predicateId:
+            getSpecialPredicate(CURRENT_ENV).amFollowingPredicate.vaultId,
+          objectId: accountResult.account.atomId,
+        },
+      ],
+      queryFn: () => accountConnectionsCountResult,
+    })
+  } catch (error) {
+    logger('Query Error:', {
+      message: (error as Error).message,
+      stack: (error as Error).stack,
+      queryAddress,
+    })
+    throw error
   }
-
-  const url = new URL(request.url)
-  const searchParams = new URLSearchParams(url.search)
-
-  const { tagClaims } = await getTags({
-    request,
-    subjectId: userIdentity.id,
-    searchParams,
-  })
 
   return json({
-    wallet,
+    userWallet: wallet,
     userIdentity,
-    tagClaims,
     userTotals,
-    followClaim,
-    followVaultDetails,
-    vaultDetails,
     isPending,
     relicHoldCount: relicHoldCount.toString(),
     relicMintCount,
+    dehydratedState: dehydrate(queryClient),
+    initialParams: {
+      subjectId: accountResult?.account?.atomId,
+      queryAddress,
+    },
   })
 }
 
 export default function ReadOnlyProfile() {
   const {
-    wallet,
     userWallet,
     userIdentity,
-    tagClaims,
     userTotals,
-    isPending,
     relicMintCount,
     relicHoldCount,
-  } = useLiveLoader<{
-    wallet: string
-    userWallet: string
-    userIdentity: IdentityPresenter
-    tagClaims: ClaimPresenter[]
-    userTotals: UserTotalsPresenter
-    followClaim: ClaimPresenter
-    followVaultDetails: VaultDetailsType
-    vaultDetails: VaultDetailsType
-    isPending: boolean
-    relicMintCount: number
-    relicHoldCount: string
-  }>(['attest', 'create'])
+    initialParams,
+  } = useLoaderData<typeof loader>()
+
+  // TODO: Remove this once the `status is added to atoms -- that will be what we check if something is pending. For now setting this to false and removing the legacy isPending check
+  const isPending = false
+
+  const { data: accountResult } = useGetAccountQuery(
+    {
+      address: initialParams.queryAddress,
+    },
+    {
+      queryKey: ['get-account', { address: initialParams.queryAddress }],
+    },
+  )
+
+  const { data: accountTagsResult } = useGetTagsQuery(
+    {
+      subjectId: accountResult?.account?.atomId,
+      predicateId: getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId,
+    },
+    {
+      queryKey: [
+        'get-tags',
+        {
+          subjectId: initialParams?.subjectId,
+          predicateId: getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId,
+        },
+      ],
+      enabled: !!accountResult?.account?.atomId,
+    },
+  )
+
+  const { data: accountConnectionsCountResult } = useGetConnectionsCountQuery(
+    {
+      subjectId: getSpecialPredicate(CURRENT_ENV).iPredicate.vaultId,
+      predicateId:
+        getSpecialPredicate(CURRENT_ENV).amFollowingPredicate.vaultId,
+      objectId: accountResult?.account?.atomId,
+      address: initialParams.queryAddress,
+    },
+    {
+      queryKey: [
+        'get-connections-count',
+        {
+          address: initialParams.queryAddress,
+          subjectId: getSpecialPredicate(CURRENT_ENV).iPredicate.vaultId,
+          predicateId:
+            getSpecialPredicate(CURRENT_ENV).amFollowingPredicate.vaultId,
+          objectId: accountResult?.account?.atomId,
+        },
+      ],
+    },
+  )
+
+  const { data: vaultDetails } = useGetVaultDetails(
+    MULTIVAULT_CONTRACT_ADDRESS,
+    accountResult?.account?.atomId,
+    undefined, // no counterVaultId
+    {
+      queryKey: [
+        'get-vault-details',
+        MULTIVAULT_CONTRACT_ADDRESS,
+        accountResult?.account?.atomId,
+      ],
+    },
+  )
+
+  logger('Account Result:', accountResult)
+  logger('Account Tags Result:', accountTagsResult)
+  logger('Account Connections Count Result:', accountConnectionsCountResult)
+  logger('tags', accountTagsResult && accountTagsResult?.triples)
+  logger('Vault Details:', vaultDetails)
 
   const [tagsModalActive, setTagsModalActive] = useAtom(tagsModalAtom)
 
@@ -220,24 +310,23 @@ export default function ReadOnlyProfile() {
     <div className="flex-col justify-start items-start gap-5 inline-flex max-lg:w-full">
       <ProfileCard
         variant="user"
-        avatarSrc={userIdentity?.user?.image ?? ''}
-        name={userIdentity?.user?.display_name ?? ''}
-        id={
-          userIdentity?.user?.ens_name ??
-          userIdentity?.user?.wallet ??
-          userIdentity.identity_id
-        }
-        vaultId={userIdentity.vault_id}
+        avatarSrc={accountResult?.account?.image ?? ''}
+        name={accountResult?.account?.label ?? ''}
+        id={accountResult?.account?.id ?? ''}
+        vaultId={accountResult?.account?.atomId ?? 0}
         stats={{
-          numberOfFollowers: userTotals.follower_count,
-          numberOfFollowing: userTotals.followed_count,
-          // TODO: Remove this relic hold/mint count and points calculation when it is stored in BE.
+          numberOfFollowers:
+            accountConnectionsCountResult?.followers_count?.[0]?.vault
+              ?.positions_aggregate?.aggregate?.count ?? 0,
+          numberOfFollowing:
+            accountConnectionsCountResult?.following_count?.aggregate?.count ??
+            0,
           points: totalPoints,
         }}
-        bio={userIdentity?.user?.description ?? ''}
-        ipfsLink={`${BLOCK_EXPLORER_URL}/address/${userIdentity.identity_id}`}
-        followingLink={`${PATHS.PROFILE}/${wallet}/connections?tab=following`}
-        followerLink={`${PATHS.PROFILE}/${wallet}/connections?tab=followers`}
+        bio={accountResult?.account?.atom?.value?.person?.description ?? ''}
+        ipfsLink={`${BLOCK_EXPLORER_URL}/address/${accountResult?.account?.id}`}
+        followingLink={`${PATHS.PROFILE_CONNECTIONS}?tab=following`}
+        followerLink={`${PATHS.PROFILE_CONNECTIONS}?tab=followers`}
         onAvatarClick={() => {
           setImageModalActive({
             isOpen: true,
@@ -249,17 +338,21 @@ export default function ReadOnlyProfile() {
       {!isPending && (
         <>
           <Tags>
-            {userIdentity?.tags && userIdentity?.tags.length > 0 && (
-              <TagsContent numberOfTags={userIdentity?.tag_count ?? 0}>
-                {tagClaims.slice(0, 5).map((tagClaim) => (
-                  <TagWithValue
-                    key={tagClaim.claim_id}
-                    label={tagClaim.object?.display_name}
-                    value={tagClaim.num_positions}
-                  />
-                ))}
+            {accountTagsResult && accountTagsResult.triples.length > 0 ? (
+              <TagsContent
+                numberOfTags={accountTagsResult?.triples.length ?? 0}
+              >
+                {accountTagsResult?.triples
+                  .slice(0, 5)
+                  .map((tag) => (
+                    <TagWithValue
+                      key={tag.id}
+                      label={tag.object?.label ?? ''}
+                      value={tag.vault?.allPositions?.aggregate?.count ?? 0}
+                    />
+                  ))}
               </TagsContent>
-            )}
+            ) : null}
             <TagsButton
               onClick={() => {
                 setTagsModalActive({
@@ -274,7 +367,7 @@ export default function ReadOnlyProfile() {
       )}
       <ReadOnlyBanner
         variant={BannerVariant.warning}
-        to={`${PATHS.PROFILE}/${wallet}`}
+        to={`${PATHS.PROFILE}/${userWallet}`}
       />
     </div>
   )
@@ -308,8 +401,44 @@ export default function ReadOnlyProfile() {
       {!isPending && (
         <>
           <TagsModal
-            identity={userIdentity}
-            tagClaims={tagClaims}
+            identity={
+              accountResult?.account
+                ? ({
+                    id: accountResult?.account?.id ?? '',
+                    label: accountResult?.account?.label ?? '',
+                    image: accountResult?.account?.image ?? '',
+                    vault_id: accountResult?.account?.atomId,
+                    assets_sum: '0',
+                    user_assets: '0',
+                    contract: MULTIVAULT_CONTRACT_ADDRESS,
+                    asset_delta: '0',
+                    conviction_price: '0',
+                    conviction_price_delta: '0',
+                    conviction_sum: '0',
+                    num_positions: 0,
+                    price: '0',
+                    price_delta: '0',
+                    status: 'active',
+                    total_conviction: '0',
+                    type: 'user',
+                    updated_at: new Date().toISOString(),
+                    created_at: new Date().toISOString(),
+                    creator_address: '',
+                    display_name: accountResult?.account?.label ?? '',
+                    follow_vault_id: '',
+                    user: null,
+                    creator: null,
+                    identity_hash: '',
+                    identity_id: '',
+                    is_contract: false,
+                    is_user: true,
+                    pending: false,
+                    pending_type: null,
+                    pending_vault_id: null,
+                  } as unknown as IdentityPresenter)
+                : undefined
+            } // TODO: (ENG-4782) temporary type fix until we lock in final types
+            tagClaims={accountTagsResult?.triples ?? []} // TODO: (ENG-4782) temporary type fix until we lock in final types
             userWallet={userWallet}
             open={tagsModalActive.isOpen}
             mode={tagsModalActive.mode}
@@ -324,9 +453,11 @@ export default function ReadOnlyProfile() {
         </>
       )}
       <ImageModal
-        displayName={userIdentity?.user?.display_name ?? ''}
-        imageSrc={userIdentity?.user?.image ?? ''}
-        isUser={true}
+        displayName={accountResult?.account?.label ?? ''}
+        imageSrc={accountResult?.account?.image ?? ''}
+        isUser={
+          accountResult?.account?.type === ('Account' || 'Person' || 'Default')
+        }
         open={imageModalActive.isOpen}
         onClose={() =>
           setImageModalActive({
