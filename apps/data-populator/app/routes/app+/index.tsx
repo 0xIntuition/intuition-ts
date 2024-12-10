@@ -1055,6 +1055,7 @@ export default function CSVEditor() {
         const formData = new FormData()
         formData.append('action', 'checkAtomExists')
         formData.append('csvData', JSON.stringify(csvData))
+        formData.append('selectedType', selectedType)
         formData.append('index', (rowIndex - 1).toString())
 
         try {

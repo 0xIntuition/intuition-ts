@@ -345,7 +345,7 @@ export async function bulkEVMRead<T, P>(
           await new Promise((resolve) => setTimeout(resolve, delayBetweenReads))
         }
         const result = await evmReadFn(param)
-        console.log('Bulk EVM Read Result: ', result)
+        // console.log('Bulk EVM Read Result: ', result)
         return result
       }),
     )
