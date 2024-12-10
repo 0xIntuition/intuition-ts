@@ -219,7 +219,7 @@ export default function ReadOnlyClaimDetails() {
         username={tripleData?.triple?.creator?.label ?? '?'}
         avatarImgSrc={tripleData?.triple?.creator?.image ?? ''}
         id={tripleData?.triple?.creator?.id ?? ''}
-        description={tripleData?.triple?.creator?.label ?? ''}
+        description={tripleData?.triple?.creator?.label ?? ''} //TODO: We don't have a description for the creator on triples, but it exists on identities, have BE add this.
         link={
           tripleData?.triple?.creator?.id
             ? `${PATHS.PROFILE}/${tripleData?.triple?.creator?.id}`
