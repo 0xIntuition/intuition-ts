@@ -15,6 +15,7 @@ import {
   GetAtomsWithPositionsQuery,
   GetAtomsWithPositionsQueryVariables,
   GetPositionsDocument,
+  GetPositionsDocument,
   GetPositionsQuery,
   GetPositionsQueryVariables,
   GetTriplesWithPositionsDocument,
@@ -49,6 +50,7 @@ import { useLoaderData, useSearchParams } from '@remix-run/react'
 import { requireUser, requireUserWallet } from '@server/auth'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
 import { NO_WALLET_ERROR } from 'app/consts'
+import { url } from 'inspector'
 
 type Atom = NonNullable<GetAtomsQuery['atoms']>[number]
 type Triple = NonNullable<
@@ -111,14 +113,14 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   const atomsLimit = parseInt(url.searchParams.get('claimsLimit') || '10')
   const atomsOffset = parseInt(url.searchParams.get('claimsOffset') || '0')
-  // const atomsOrderBy = url.searchParams.get('claimsSortBy')
-  const atomsOrderBy = [
-    {
-      vault: {
-        totalShares: 'desc',
-      },
-    },
-  ]
+  const atomsOrderBy = url.searchParams.get('claimsSortBy')
+  // const atomsOrderBy = [
+  //   {
+  //     vault: {
+  //       totalShares: 'desc',
+  //     },
+  //   },
+  // ] // we may want to use this as the fallback. will work on when we handle the sorts
   const triplesLimit = parseInt(url.searchParams.get('claimsLimit') || '10')
   const triplesOffset = parseInt(url.searchParams.get('claimsOffset') || '0')
   const triplesOrderBy = url.searchParams.get('claimsSortBy')
@@ -162,13 +164,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
           where: atomsWhere,
           limit: atomsLimit,
           offset: atomsOffset,
-          orderBy: [
-            {
-              vault: {
-                totalShares: 'desc',
-              },
-            },
-          ],
+          orderBy: atomsOrderBy ? [{ [atomsOrderBy]: 'desc' }] : undefined,
           address: queryAddress,
         },
       )(),
@@ -215,17 +211,33 @@ export async function loader({ request }: LoaderFunctionArgs) {
   await queryClient.prefetchQuery({
     queryKey: ['get-triple-positions', { where: triplePositionsWhere }],
     queryFn: () =>
-      fetcher<
-        GetTriplesWithPositionsQuery,
-        GetTriplesWithPositionsQueryVariables
-      >(GetTriplesWithPositionsDocument, {
-        where: triplePositionsWhere,
-        limit: triplePositionsLimit,
-        offset: triplePositionsOffset,
-        orderBy: triplePositionsOrderBy,
-        address: queryAddress,
-      })(),
+      fetcher<GetPositionsQuery, GetPositionsQueryVariables>(
+        GetPositionsDocument,
+        {
+          where: triplePositionsWhere,
+          limit: triplePositionsLimit,
+          offset: triplePositionsOffset,
+          orderBy: triplePositionsOrderBy,
+        },
+      )(),
   })
+
+
+  // await queryClient.prefetchQuery({
+  //   queryKey: ['get-triple-positions', { where: triplePositionsWhere }],
+  //   queryFn: () =>
+  //     fetcher<
+  //       GetTriplesWithPositionsQuery,
+  //       GetTriplesWithPositionsQueryVariables
+  //     >(GetTriplesWithPositionsDocument, {
+  //       where: triplePositionsWhere,
+  //       limit: triplePositionsLimit,
+  //       offset: triplePositionsOffset,
+  //       orderBy: triplePositionsOrderBy,
+  //       address: queryAddress,
+  //     })(),
+  // })
+
 
   return json({
     queryAddress,
@@ -307,16 +319,9 @@ export default function ProfileDataCreated() {
       where: initialParams.atomsWhere,
       limit: initialParams.atomsLimit,
       offset: initialParams.atomsOffset,
-      orderBy: [
-        {
-          vault: {
-            totalShares: 'desc',
-          },
-        },
-      ],
-      // orderBy: initialParams.atomsOrderBy
-      //   ? [{ [initialParams.atomsOrderBy]: 'desc' }]
-      //   : undefined,
+      orderBy: initialParams.atomsOrderBy
+        ? [{ [initialParams.atomsOrderBy]: 'desc' }]
+        : undefined,
       address: queryAddress,
     },
     {
@@ -383,13 +388,14 @@ export default function ProfileDataCreated() {
       where: initialParams.atomPositionsWhere,
       limit: initialParams.atomPositionsLimit,
       offset: initialParams.atomPositionsOffset,
-      orderBy: [
-        {
-          vault: {
-            totalShares: 'desc',
-          },
-        },
-      ],
+      orderBy: initialParams.atomPositionsOrderBy,
+      // orderBy: [
+      //   {
+      //     vault: {
+      //       totalShares: 'desc',
+      //     },
+      //   },
+      // ],
       // orderBy: initialParams.atomsOrderBy
       //   ? [{ [initialParams.atomsOrderBy]: 'desc' }]
       //   : undefined,
@@ -398,10 +404,10 @@ export default function ProfileDataCreated() {
       queryKey: [
         'get-atom-positions',
         {
-          where: initialParams.atomsWhere,
-          limit: initialParams.atomsLimit,
-          offset: initialParams.atomsOffset,
-          orderBy: initialParams.atomsOrderBy,
+          where: initialParams.atomPositionsWhere,
+          limit: initialParams.atomPositionsLimit,
+          offset: initialParams.atomPositionsOffset,
+          orderBy: initialParams.atomPositionsOrderBy,
         },
       ],
     },
@@ -409,27 +415,45 @@ export default function ProfileDataCreated() {
 
   logger('Atom Positions Result (Client):', atomPositionsResult)
 
+  // const {
+  //   data: triplePositionsResult,
+  //   isLoading: isLoadingTriplePositions,
+  //   isError: isErrorTriplePositions,
+  //   error: errorTriplePositions,
+  // } = useGetTriplesWithPositionsQuery(
+  //   {
+  //     where: initialParams.triplePositionsWhere,
+  //     limit: initialParams.triplePositionsLimit,
+  //     offset: initialParams.triplePositionsOffset,
+  //     orderBy: initialParams.atomsOrderBy
+  //       ? [{ [initialParams.atomsOrderBy]: 'desc' }]
+  //       : undefined,
+  //     address: queryAddress,
+  //   },
+  //   {
+  //     queryKey: [
+  //       'get-triple-positions',
+  //       {
+  //         where: initialParams.triplePositionsWhere,
+  //         limit: initialParams.triplePositionsLimit,
+  //         offset: initialParams.triplePositionsOffset,
+  //         orderBy: initialParams.triplePositionsOrderBy,
+  //       },
+  //     ],
+  //   },
+  // )
+
   const {
     data: triplePositionsResult,
     isLoading: isLoadingTriplePositions,
     isError: isErrorTriplePositions,
     error: errorTriplePositions,
-  } = useGetTriplesWithPositionsQuery(
+  } = useGetPositionsQuery(
     {
       where: initialParams.triplePositionsWhere,
       limit: initialParams.triplePositionsLimit,
       offset: initialParams.triplePositionsOffset,
-      orderBy: [
-        {
-          vault: {
-            totalShares: 'desc',
-          },
-        },
-      ],
-      // orderBy: initialParams.atomsOrderBy
-      //   ? [{ [initialParams.atomsOrderBy]: 'desc' }]
-      //   : undefined,
-      address: queryAddress,
+      orderBy: initialParams.triplePositionsOrderBy,
     },
     {
       queryKey: [
@@ -577,19 +601,20 @@ export default function ProfileDataCreated() {
                   {triplePositionsResult && (
                     <ActivePositionsOnClaims
                       vaultPositions={
-                        triplePositionsResult?.positions?.vault?.positions ?? []
+                        triplePositionsResult?.triples?.[0]?.vault?.positions ??
+                        []
                       }
                       counterVaultPositions={
-                        triplePositionsResult?.positions?.counterVault
+                        triplePositionsResult?.triples?.[0]?.counterVault
                           ?.positions ?? []
                       }
                       pagination={{
                         aggregate: {
                           count:
-                            (triplePositionsResult?.positions?.vault
-                              ?.positionCount ?? 0) +
-                            (triplePositionsResult?.positions?.counterVault
-                              ?.positionCount ?? 0),
+                            (triplePositionsResult?.triples?.[0]?.positions
+                              ?.vault?.positionCount ?? 0) +
+                            (triplePositionsResult?.triples?.[0]?.positions
+                              ?.counterVault?.positionCount ?? 0),
                         },
                       }}
                       positionDirection={positionDirection ?? undefined}
@@ -598,112 +623,6 @@ export default function ProfileDataCreated() {
                 </TabContent>
               )}
             </Suspense>
-            {/* <Suspense
-              fallback={
-                <div className="mb-6">
-                  <TabsSkeleton numOfTabs={2} />
-                </div>
-              }
-            >
-              <TabsList className="mb-6">
-                <Await resolve={activeIdentities} errorElement={<></>}>
-                  {(resolvedIdentities) => (
-                    <TabsTrigger
-                      value={DataCreatedHeaderVariants.activeIdentities}
-                      label="Identities"
-                      totalCount={resolvedIdentities.pagination.totalEntries}
-                      disabled={activeIdentities === undefined}
-                    />
-                  )}
-                </Await>
-                <Await resolve={activeClaims} errorElement={<></>}>
-                  {(resolvedClaims) => (
-                    <TabsTrigger
-                      value={DataCreatedHeaderVariants.activeClaims}
-                      label="Claims"
-                      totalCount={resolvedClaims.pagination.totalEntries}
-                      disabled={activeClaims === undefined}
-                    />
-                  )}
-                </Await>
-              </TabsList>
-            </Suspense>
-            <Suspense
-              fallback={
-                <div className="flex flex-col w-full gap-6">
-                  <DataHeaderSkeleton />
-                  <PaginatedListSkeleton />
-                </div>
-              }
-            >
-              <Await
-                resolve={activeIdentities}
-                errorElement={
-                  <ErrorStateCard>
-                    <RevalidateButton />
-                  </ErrorStateCard>
-                }
-              >
-                {(resolvedIdentities) => (
-                  <TabContent
-                    value={DataCreatedHeaderVariants.activeIdentities}
-                    userIdentity={userIdentity}
-                    userTotals={userTotals}
-                    totalResults={resolvedIdentities.pagination.totalEntries}
-                    totalStake={
-                      +formatBalance(
-                        userTotals.total_position_value_on_identities ?? '0',
-                        18,
-                      )
-                    }
-                    variant={DataCreatedHeaderVariants.activeIdentities}
-                  >
-                    <ActivePositionsOnIdentities
-                      identities={resolvedIdentities.data}
-                      pagination={resolvedIdentities.pagination}
-                    />
-                  </TabContent>
-                )}
-              </Await>
-              <Await
-                resolve={activeClaims}
-                errorElement={
-                  <ErrorStateCard>
-                    <RevalidateButton />
-                  </ErrorStateCard>
-                }
-              >
-                {(resolvedClaims) => (
-                  <Await
-                    resolve={activeClaims}
-                    errorElement={
-                      <ErrorStateCard>
-                        <RevalidateButton />
-                      </ErrorStateCard>
-                    }
-                  >
-                    <TabContent
-                      value={DataCreatedHeaderVariants.activeClaims}
-                      userIdentity={userIdentity}
-                      userTotals={userTotals}
-                      totalResults={resolvedClaims.pagination.totalEntries}
-                      totalStake={
-                        +formatBalance(
-                          userTotals.total_position_value_on_claims ?? '0',
-                          18,
-                        )
-                      }
-                      variant={DataCreatedHeaderVariants.activeClaims}
-                    >
-                      <ActivePositionsOnClaims
-                        claims={resolvedClaims.data}
-                        pagination={resolvedClaims.pagination}
-                      />
-                    </TabContent>
-                  </Await>
-                )}
-              </Await>
-            </Suspense> */}
           </Tabs>
         </div>
       </div>
