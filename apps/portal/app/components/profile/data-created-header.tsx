@@ -9,8 +9,6 @@ import {
 } from '@0xintuition/1ui'
 import { IdentityPresenter, UserTotalsPresenter } from '@0xintuition/api'
 
-import logger from '@lib/utils/logger'
-
 export const DataCreatedHeaderVariants = {
   activeIdentities: 'activeIdentities',
   activeClaims: 'activeClaims',

@@ -51,13 +51,19 @@ export function IdentitiesListNew({
   const setStakeModalActive = useSetAtom(stakeModalAtom)
 
   logger('identities', identities)
+
+  const paginationCount =
+    typeof pagination === 'number'
+      ? pagination
+      : pagination?.aggregate?.count ?? 0
+
   return (
     <List<SortColumn>
       pagination={{
         currentPage: 1,
         limit: 10,
-        totalEntries: pagination,
-        totalPages: Math.ceil(pagination / 10),
+        totalEntries: paginationCount,
+        totalPages: Math.ceil(paginationCount / 10),
       }}
       paginationLabel="identities"
       options={options}

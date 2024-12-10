@@ -15,7 +15,6 @@ import {
   GetAtomsWithPositionsQuery,
   GetAtomsWithPositionsQueryVariables,
   GetPositionsDocument,
-  GetPositionsDocument,
   GetPositionsQuery,
   GetPositionsQueryVariables,
   GetTriplesWithPositionsDocument,
@@ -50,7 +49,6 @@ import { useLoaderData, useSearchParams } from '@remix-run/react'
 import { requireUser, requireUserWallet } from '@server/auth'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
 import { NO_WALLET_ERROR } from 'app/consts'
-import { url } from 'inspector'
 
 type Atom = NonNullable<GetAtomsQuery['atoms']>[number]
 type Triple = NonNullable<
@@ -221,23 +219,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
         },
       )(),
   })
-
-
-  // await queryClient.prefetchQuery({
-  //   queryKey: ['get-triple-positions', { where: triplePositionsWhere }],
-  //   queryFn: () =>
-  //     fetcher<
-  //       GetTriplesWithPositionsQuery,
-  //       GetTriplesWithPositionsQueryVariables
-  //     >(GetTriplesWithPositionsDocument, {
-  //       where: triplePositionsWhere,
-  //       limit: triplePositionsLimit,
-  //       offset: triplePositionsOffset,
-  //       orderBy: triplePositionsOrderBy,
-  //       address: queryAddress,
-  //     })(),
-  // })
-
 
   return json({
     queryAddress,
@@ -415,34 +396,6 @@ export default function ProfileDataCreated() {
 
   logger('Atom Positions Result (Client):', atomPositionsResult)
 
-  // const {
-  //   data: triplePositionsResult,
-  //   isLoading: isLoadingTriplePositions,
-  //   isError: isErrorTriplePositions,
-  //   error: errorTriplePositions,
-  // } = useGetTriplesWithPositionsQuery(
-  //   {
-  //     where: initialParams.triplePositionsWhere,
-  //     limit: initialParams.triplePositionsLimit,
-  //     offset: initialParams.triplePositionsOffset,
-  //     orderBy: initialParams.atomsOrderBy
-  //       ? [{ [initialParams.atomsOrderBy]: 'desc' }]
-  //       : undefined,
-  //     address: queryAddress,
-  //   },
-  //   {
-  //     queryKey: [
-  //       'get-triple-positions',
-  //       {
-  //         where: initialParams.triplePositionsWhere,
-  //         limit: initialParams.triplePositionsLimit,
-  //         offset: initialParams.triplePositionsOffset,
-  //         orderBy: initialParams.triplePositionsOrderBy,
-  //       },
-  //     ],
-  //   },
-  // )
-
   const {
     data: triplePositionsResult,
     isLoading: isLoadingTriplePositions,
@@ -470,7 +423,7 @@ export default function ProfileDataCreated() {
 
   logger('Triple Positions Result (Client):', triplePositionsResult)
 
-  const [searchParams, setSearchParams] = useSearchParams()
+  const [searchParams] = useSearchParams()
   const positionDirection = searchParams.get('positionDirection')
 
   return (
@@ -600,21 +553,11 @@ export default function ProfileDataCreated() {
                 >
                   {triplePositionsResult && (
                     <ActivePositionsOnClaims
-                      vaultPositions={
-                        triplePositionsResult?.triples?.[0]?.vault?.positions ??
-                        []
-                      }
-                      counterVaultPositions={
-                        triplePositionsResult?.triples?.[0]?.counterVault
-                          ?.positions ?? []
-                      }
+                      positions={triplePositionsResult?.positions ?? []}
                       pagination={{
                         aggregate: {
                           count:
-                            (triplePositionsResult?.triples?.[0]?.positions
-                              ?.vault?.positionCount ?? 0) +
-                            (triplePositionsResult?.triples?.[0]?.positions
-                              ?.counterVault?.positionCount ?? 0),
+                            triplePositionsResult?.total?.aggregate?.count ?? 0,
                         },
                       }}
                       positionDirection={positionDirection ?? undefined}
