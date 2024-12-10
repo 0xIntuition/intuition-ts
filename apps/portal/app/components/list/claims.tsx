@@ -11,7 +11,10 @@ import {
   ClaimSortColumn,
   IdentityPresenter,
 } from '@0xintuition/api'
-import { GetTriplesWithPositionsQuery } from '@0xintuition/graphql'
+import {
+  GetAtomQuery,
+  GetTriplesWithPositionsQuery,
+} from '@0xintuition/graphql'
 
 import { ListHeader } from '@components/list/list-header'
 import RemixLink from '@components/remix-link'
@@ -23,6 +26,7 @@ import {
   getAtomIpfsLink,
   getAtomLabel,
   getAtomLink,
+  getAtomLinkGQL,
   getClaimUrl,
 } from '@lib/utils/misc'
 import { Link } from '@remix-run/react'
@@ -31,6 +35,8 @@ import { useSetAtom } from 'jotai'
 
 import { SortOption } from '../sort-select'
 import { List } from './list'
+
+type Atom = GetAtomQuery['atom']
 
 type Triple = NonNullable<
   NonNullable<GetTriplesWithPositionsQuery['triples']>[number]
@@ -44,7 +50,7 @@ interface ClaimsListNewProps {
   enableHeader?: boolean
   enableSearch?: boolean
   enableSort?: boolean
-  // readOnly?: boolean
+  readOnly?: boolean
 }
 
 export function ClaimsListNew({
@@ -54,7 +60,7 @@ export function ClaimsListNew({
   enableHeader = true,
   enableSearch = true,
   enableSort = true,
-  // readOnly = false,
+  readOnly = false,
 }: ClaimsListNewProps) {
   const setStakeModalActive = useSetAtom(stakeModalAtom)
 
@@ -165,7 +171,7 @@ export function ClaimsListNew({
                   id: triple.subject?.id,
                   description: '',
                   ipfsLink: '',
-                  link: '',
+                  link: getAtomLinkGQL(triple.subject as Atom, readOnly),
                   linkComponent: RemixLink,
                 }}
                 predicate={{
@@ -175,7 +181,7 @@ export function ClaimsListNew({
                   id: triple.predicate?.id,
                   description: '',
                   ipfsLink: '',
-                  link: '',
+                  link: getAtomLinkGQL(triple.predicate as Atom, readOnly),
                   linkComponent: RemixLink,
                 }}
                 object={{
@@ -185,7 +191,7 @@ export function ClaimsListNew({
                   id: triple.object?.id,
                   description: '',
                   ipfsLink: '',
-                  link: '',
+                  link: getAtomLinkGQL(triple.object as Atom, readOnly),
                   linkComponent: RemixLink,
                 }}
                 isClickable={true}
