@@ -34,9 +34,8 @@ const commonGenerateOptions: Types.ConfiguredOutput = {
 const config: CodegenConfig = {
   overwrite: true,
   hooks: { afterAllFileWrite: ['prettier --write'] },
-  schema: process.env.HASURA_PROJECT_ENDPOINT
-    ? [process.env.HASURA_PROJECT_ENDPOINT]
-    : ['./schema.graphql'],
+  schema:
+    process.env.HASURA_PROJECT_ENDPOINT || 'http://localhost:8080/v1/graphql',
   ignoreNoDocuments: true,
   documents: ['**/*.graphql'],
   generates: {
