@@ -33,6 +33,14 @@ import { getIdentityOrPending } from '@lib/services/identities'
 import { imageModalAtom } from '@lib/state/store'
 import { getSpecialPredicate } from '@lib/utils/app'
 import logger from '@lib/utils/logger'
+import {
+  getAtomDescriptionGQL,
+  getAtomIdGQL,
+  getAtomImageGQL,
+  getAtomIpfsLinkGQL,
+  getAtomLabelGQL,
+  getAtomLinkGQL,
+} from '@lib/utils/misc'
 import { json, LoaderFunctionArgs, MetaFunction } from '@remix-run/node'
 import { Outlet, useLoaderData } from '@remix-run/react'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
@@ -218,13 +226,13 @@ export default function ReadOnlyIdentityDetails() {
     <div className="flex-col justify-start items-start inline-flex gap-6 max-lg:w-full">
       <ProfileCard
         variant={Identity.nonUser}
-        avatarSrc={atomResult?.atom?.value?.thing?.image ?? ''}
-        name={atomResult?.atom?.value?.thing?.name ?? ''}
-        id={atomResult?.atom?.id ?? ''}
-        vaultId={atomResult?.atom?.id}
-        bio={atomResult?.atom?.value?.thing?.description ?? ''}
-        ipfsLink={atomResult?.atom?.data ?? ''}
-        externalLink={atomResult?.atom?.value?.thing?.url ?? ''}
+        avatarSrc={getAtomImageGQL(atomResult?.atom) ?? ''}
+        name={getAtomLabelGQL(atomResult?.atom) ?? ''}
+        id={getAtomIdGQL(atomResult?.atom) ?? ''}
+        vaultId={atomResult?.atom?.vaultId}
+        bio={getAtomDescriptionGQL(atomResult?.atom) ?? ''}
+        ipfsLink={getAtomIpfsLinkGQL(atomResult?.atom) ?? ''}
+        externalLink={getAtomLinkGQL(atomResult?.atom) ?? ''}
         onAvatarClick={() => {
           setImageModalActive({
             isOpen: true,

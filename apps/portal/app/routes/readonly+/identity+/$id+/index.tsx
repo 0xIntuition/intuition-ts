@@ -12,6 +12,7 @@ import {
   GetTriplesWithPositionsDocument,
   GetTriplesWithPositionsQuery,
   GetTriplesWithPositionsQueryVariables,
+  Order_By,
   useGetAtomQuery,
   useGetPositionsQuery,
   useGetTriplesWithPositionsQuery,
@@ -37,10 +38,6 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
   const url = new URL(request.url)
   const queryClient = new QueryClient()
-
-  const triplesLimit = parseInt(url.searchParams.get('claimsLimit') || '10')
-  const triplesOffset = parseInt(url.searchParams.get('claimsOffset') || '0')
-  const triplesOrderBy = url.searchParams.get('claimsSortBy')
 
   const triplesWhere = {
     _or: [
@@ -83,19 +80,19 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   })
 
   await queryClient.prefetchQuery({
-    queryKey: [
-      'get-triples-with-positions',
-      { triplesWhere, triplesLimit, triplesOffset, triplesOrderBy },
-    ],
+    queryKey: ['get-triples-with-positions', { triplesWhere }],
     queryFn: () =>
       fetcher<
         GetTriplesWithPositionsQuery,
         GetTriplesWithPositionsQueryVariables
       >(GetTriplesWithPositionsDocument, {
         where: triplesWhere,
-        limit: triplesLimit,
-        offset: triplesOffset,
-        orderBy: triplesOrderBy ? [{ [triplesOrderBy]: 'desc' }] : undefined,
+        limit: 10,
+        offset: 0,
+        orderBy: {
+          blockTimestamp: 'desc' as Order_By,
+        },
+        address: '', //TODO: We don't have an address for the user since this is read-only. Do we continue to use this version of the hook or just pass in an empty string like so?
       })(),
   })
 
@@ -120,9 +117,6 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
   return json({
     initialParams: {
-      triplesLimit,
-      triplesOffset,
-      triplesOrderBy,
       triplesWhere,
       positionsLimit,
       positionsOffset,
@@ -159,20 +153,24 @@ export default function ReadOnlyProfileDataAbout() {
   } = useGetTriplesWithPositionsQuery(
     {
       where: initialParams.triplesWhere,
-      limit: initialParams.triplesLimit,
-      offset: initialParams.triplesOffset,
-      orderBy: initialParams.triplesOrderBy
-        ? [{ [initialParams.triplesOrderBy]: 'desc' }]
-        : undefined,
+      limit: 10,
+      offset: 0,
+      orderBy: {
+        blockTimestamp: 'desc' as Order_By,
+      },
+      address: '', //TODO: We don't have an address for the user since this is read-only. Do we continue to use this version of the hook or just pass in an empty string like so?
     },
     {
       queryKey: [
         'get-triples-with-positions',
         {
           where: initialParams.triplesWhere,
-          limit: initialParams.triplesLimit,
-          offset: initialParams.triplesOffset,
-          orderBy: initialParams.triplesOrderBy,
+          limit: 10,
+          offset: 0,
+          orderBy: {
+            blockTimestamp: 'desc' as Order_By,
+          },
+          address: '', //TODO: We don't have an address for the user since this is read-only. Do we continue to use this version of the hook or just pass in an empty string like so?
         },
       ],
     },
