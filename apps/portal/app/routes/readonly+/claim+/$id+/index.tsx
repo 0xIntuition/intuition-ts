@@ -31,15 +31,9 @@ import {
   invariant,
 } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
-import {
-  useLoaderData,
-  useNavigation,
-  useRouteLoaderData,
-  useSearchParams,
-} from '@remix-run/react'
-import { ReadOnlyClaimDetailsLoaderData } from '@routes/readonly+/claim+/$id'
+import { useLoaderData, useNavigation, useSearchParams } from '@remix-run/react'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
-import { NO_CLAIM_ERROR, NO_PARAM_ID_ERROR } from 'app/consts'
+import { NO_PARAM_ID_ERROR } from 'app/consts'
 
 type Atom = GetAtomQuery['atom']
 
@@ -76,11 +70,6 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
 export default function ReadOnlyClaimOverview() {
   const { initialParams } = useLoaderData<typeof loader>()
-  const { claim } =
-    useRouteLoaderData<ReadOnlyClaimDetailsLoaderData>(
-      'routes/readonly+/claim+/$id',
-    ) ?? {}
-  invariant(claim, NO_CLAIM_ERROR)
 
   const [searchParams, setSearchParams] = useSearchParams()
   const [isNavigating, setIsNavigating] = useState(false)

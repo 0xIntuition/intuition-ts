@@ -1,5 +1,4 @@
 import { BannerVariant, Claim, Identity } from '@0xintuition/1ui'
-import { ClaimPresenter } from '@0xintuition/api'
 import {
   fetcher,
   GetAtomQuery,
@@ -137,13 +136,11 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 
 export interface ReadOnlyClaimDetailsLoaderData {
   wallet: string
-  claim: ClaimPresenter
   vaultDetails: VaultDetailsType
 }
 
 export default function ReadOnlyClaimDetails() {
-  const { claim, initialParams } = useLoaderData<{
-    claim: ClaimPresenter
+  const { initialParams } = useLoaderData<{
     initialParams: {
       id: string
     }
@@ -222,17 +219,18 @@ export default function ReadOnlyClaimDetails() {
         username={tripleData?.triple?.creator?.label ?? '?'}
         avatarImgSrc={tripleData?.triple?.creator?.image ?? ''}
         id={tripleData?.triple?.creator?.id ?? ''}
-        description={claim.creator?.description ?? ''}
+        description={tripleData?.triple?.creator?.label ?? ''}
         link={
-          claim.creator?.id ? `${PATHS.PROFILE}/${claim.creator?.wallet}` : ''
+          tripleData?.triple?.creator?.id
+            ? `${PATHS.PROFILE}/${tripleData?.triple?.creator?.id}`
+            : ''
         }
-        ipfsLink={`${BLOCK_EXPLORER_URL}/address/${claim.creator?.wallet}`}
-        timestamp={claim.created_at}
-        className="w-full"
+        ipfsLink={`${BLOCK_EXPLORER_URL}/address/${tripleData?.triple?.creator?.id}`}
+        timestamp={tripleData?.triple?.blockTimestamp ?? ''}
       />
       <ReadOnlyBanner
         variant={BannerVariant.warning}
-        to={`${PATHS.CLAIM}/${claim.vault_id}`}
+        to={`${PATHS.CLAIM}/${tripleData?.triple?.vaultId}`}
       />
     </div>
   )
