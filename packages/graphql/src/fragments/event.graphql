@@ -1,21 +1,21 @@
 fragment EventDetails on events {
-  blockNumber
-  blockTimestamp
+  block_number
+  block_timestamp
   type
-  transactionHash
-  atomId
-  tripleId
-  depositId
-  redemptionId
+  transaction_hash
+  atom_id
+  triple_id
+  deposit_id
+  redemption_id
   ...DepositEventFragment
   ...RedemptionEventFragment
   atom {
     ...AtomMetadata
     vault {
-      totalShares
-      positionCount
+      total_shares
+      position_count
       positions {
-        accountId
+        account_id
         shares
         account {
           id
@@ -28,10 +28,10 @@ fragment EventDetails on events {
   triple {
     ...TripleMetadata
     vault {
-      totalShares
-      positionCount
+      total_shares
+      position_count
       positions {
-        accountId
+        account_id
         shares
         account {
           id
@@ -40,11 +40,11 @@ fragment EventDetails on events {
         }
       }
     }
-    counterVault {
-      totalShares
-      positionCount
+    counter_vault {
+      total_shares
+      position_count
       positions {
-        accountId
+        account_id
         shares
         account {
           id

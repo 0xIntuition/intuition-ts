@@ -1,8 +1,8 @@
 fragment DepositEventFragment on events {
   deposit {
-    vaultId
-    senderAssetsAfterTotalFees
-    sharesForReceiver
+    vault_id
+    sender_assets_after_total_fees
+    shares_for_receiver
     receiver {
       id
     }

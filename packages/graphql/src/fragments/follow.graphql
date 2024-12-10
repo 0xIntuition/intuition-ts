@@ -14,8 +14,8 @@ fragment FollowMetadata on triples {
   }
   vault {
     id
-    totalShares
-    currentSharePrice
+    total_shares
+    current_share_price
     positions_aggregate(where: $positionsWhere) {
       aggregate {
         count

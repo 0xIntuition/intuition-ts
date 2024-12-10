@@ -1,9 +1,9 @@
 fragment StatDetails on stats {
-  contractBalance
-  totalAccounts
-  totalFees
-  totalAtoms
-  totalTriples
-  totalPositions
-  totalSignals
+  contract_balance
+  total_accounts
+  total_fees
+  total_atoms
+  total_triples
+  total_positions
+  total_signals
 }

@@ -75,7 +75,7 @@ fragment PositionDetails on positions {
     }
   }
   shares
-  vaultId
+  vault_id
 }
 
 fragment PositionFields on positions {
