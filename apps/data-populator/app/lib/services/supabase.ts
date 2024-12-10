@@ -51,40 +51,71 @@ export async function searchMapping(key: string): Promise<string | null> {
   return data ? data.value : null
 }
 
-export async function multiSearchMapping(
-  keys: string[],
-): Promise<(string | null)[]> {
-  const batchSize = 100 // Adjust batch size as needed
-  const results: (string | null)[] = []
+// Generic batching helper for Supabase operations
+async function batchSupabaseOperation<T, R>(
+  items: T[],
+  operation: (batch: T[]) => Promise<R>,
+  getItemSize: (item: T) => number,
+  maxBatchChars: number = 10000,
+): Promise<R[]> {
+  const results: R[] = []
+  let currentBatch: T[] = []
+  let currentLength = 0
 
-  for (let i = 0; i < keys.length; i += batchSize) {
-    const batchKeys = keys.slice(i, i + batchSize)
+  for (const item of items) {
+    const itemSize = getItemSize(item)
+    if (currentLength + itemSize > maxBatchChars) {
+      // Process current batch
+      const result = await operation(currentBatch)
+      results.push(result)
 
-    const { data, error } = await supabase
-      .from(imageMappingTable)
-      .select('key, value')
-      .in('key', batchKeys)
-
-    if (error) {
-      console.error(
-        `Failed to fetch batch starting at index ${i}: ${error.message}`,
-      )
-      // Fill the results with nulls for this batch
-      results.push(...batchKeys.map(() => null))
-    } else if (data) {
-      // Create a map for quick lookup
-      const keyValueMap = new Map(
-        data.map((row: { key: string; value: string }) => [row.key, row.value]),
-      )
-      // Map the batch keys to their corresponding values or null
-      results.push(...batchKeys.map((key) => keyValueMap.get(key) || null))
+      // Start new batch with current item
+      currentBatch = [item]
+      currentLength = itemSize
     } else {
-      // If data is undefined, fill the results with nulls for this batch
-      results.push(...batchKeys.map(() => null))
+      currentBatch.push(item)
+      currentLength += itemSize
     }
   }
 
+  // Process final batch if any
+  if (currentBatch.length > 0) {
+    const result = await operation(currentBatch)
+    results.push(result)
+  }
+
   return results
+}
+
+export async function multiSearchMapping(
+  keys: string[],
+): Promise<(string | null)[]> {
+  const results = await batchSupabaseOperation(
+    keys,
+    async (batch) => {
+      const { data, error } = await supabase
+        .from(imageMappingTable)
+        .select('key, value')
+        .in('key', batch)
+
+      if (error) {
+        console.error(`Failed to fetch batch: ${error.message}`)
+        return batch.map(() => null)
+      } else if (data) {
+        const keyValueMap = new Map(
+          data.map((row: { key: string; value: string }) => [
+            row.key,
+            row.value,
+          ]),
+        )
+        return batch.map((key) => keyValueMap.get(key) || null)
+      }
+      return batch.map(() => null)
+    },
+    (key) => key.length,
+  )
+
+  return results.flat()
 }
 
 // Interfaces for log entries
@@ -126,12 +157,19 @@ export async function appendToAtomLog(
 export async function multiAppendToAtomLog(
   entries: AtomLogEntry[],
 ): Promise<void> {
-  const { error } = await supabase.from(atomLogTable).insert(entries)
-
-  if (error) {
-    console.error('Error appending to atom_log:', error)
-    throw error
-  }
+  await batchSupabaseOperation(
+    entries,
+    async (batch) => {
+      const { error } = await supabase.from(atomLogTable).insert(batch)
+      if (error) {
+        console.error('Error appending to atom_log:', error)
+        throw error
+      }
+      return undefined
+    },
+    // Estimate size based on JSON stringification of entry
+    (entry) => JSON.stringify(entry).length,
+  )
 }
 
 // Function to append a new entry to the triple_log table
@@ -356,39 +394,29 @@ export async function getAtomID(uri: string): Promise<string | null> {
 }
 
 export async function getAtomIDs(uris: string[]): Promise<(string | null)[]> {
-  const batchSize = 100 // Adjust batch size as needed
-  const results: (string | null)[] = []
+  const results = await batchSupabaseOperation(
+    uris,
+    async (batch) => {
+      const { data, error } = await supabase
+        .from(uriTable)
+        .select('uri, id')
+        .in('id', batch)
 
-  for (let i = 0; i < uris.length; i += batchSize) {
-    const batchURIs = uris.slice(i, i + batchSize)
+      if (error) {
+        console.error(`Failed to fetch batch: ${error.message}`)
+        return batch.map(() => null)
+      } else if (data) {
+        const uriIDMap = new Map(
+          data.map((row: { uri: string; id: string }) => [row.id, row.uri]),
+        )
+        return batch.map((uri) => uriIDMap.get(uri) || null)
+      }
+      return batch.map(() => null)
+    },
+    (uri) => uri.length,
+  )
 
-    const { data, error } = await supabase
-      .from(uriTable)
-      .select('uri, id')
-      .in('uri', batchURIs)
-
-    console.log('Batch URIs from supabase:', data)
-
-    if (error) {
-      console.error(
-        `Failed to fetch batch starting at index ${i}: ${error.message}`,
-      )
-      // Fill the results with nulls for this batch
-      results.push(...batchURIs.map(() => null))
-    } else if (data) {
-      // Create a map for quick lookup
-      const uriIDMap = new Map(
-        data.map((row: { uri: string; id: string }) => [row.uri, row.id]),
-      )
-      // Map the batch URIs to their corresponding IDs or null
-      results.push(...batchURIs.map((uri) => uriIDMap.get(uri) || null))
-    } else {
-      // If data is undefined, fill the results with nulls for this batch
-      results.push(...batchURIs.map(() => null))
-    }
-  }
-
-  return results
+  return results.flat()
 }
 
 export async function storeAtomURI(id: string, uri: string): Promise<void> {
@@ -404,15 +432,25 @@ export async function storeAtomURI(id: string, uri: string): Promise<void> {
 export async function storeAtomURIs(
   atomIDsToStore: Map<string, string>,
 ): Promise<void> {
-  const { error } = await supabase
-    .from(uriTable)
-    .insert(
-      Array.from(atomIDsToStore.entries()).map(([uri, id]) => ({ id, uri })),
-    )
+  const entries = Array.from(atomIDsToStore.entries()).map(([uri, id]) => ({
+    uri, // This is the IPFS URI
+    id, // This is the numeric ID
+  }))
 
-  if (error) {
-    console.error('Error storing URIs:', error)
-  }
+  await batchSupabaseOperation(
+    entries,
+    async (batch) => {
+      const { error } = await supabase
+        .from(uriTable)
+        .upsert(batch, { onConflict: 'id' })
+      if (error) {
+        console.error('Error storing URIs:', error)
+        throw error
+      }
+      return undefined
+    },
+    (entry) => entry.uri.length + entry.id.length,
+  )
 }
 
 export interface Triple {

@@ -58,7 +58,7 @@ export async function getAtomIDs(uris: string[]): Promise<string[]> {
     }
   }
 
-  console.log('URIs to fetch from EVM:', urisToFetchFromEVM)
+  // console.log('URIs to fetch from EVM:', urisToFetchFromEVM)
 
   // Fetch missing IDs in bulk from EVM
   const fetchedEVMIDs = await bulkEVMRead(
