@@ -10706,6 +10706,33 @@ export type GetConnectionsCountQuery = {
   }>
 }
 
+export type GetListsQueryVariables = Exact<{
+  where?: InputMaybe<PredicateObjects_Bool_Exp>
+}>
+
+export type GetListsQuery = {
+  __typename?: 'query_root'
+  predicateObjects_aggregate: {
+    __typename?: 'predicateObjects_aggregate'
+    aggregate?: {
+      __typename?: 'predicateObjects_aggregate_fields'
+      count: number
+    } | null
+  }
+  predicateObjects: Array<{
+    __typename?: 'predicateObjects'
+    id: string
+    claimCount: number
+    tripleCount: number
+    object?: {
+      __typename?: 'atoms'
+      id: any
+      label?: string | null
+      image?: string | null
+    } | null
+  }>
+}
+
 export type GetListItemsQueryVariables = Exact<{
   predicateId?: InputMaybe<Scalars['numeric']['input']>
   objectId?: InputMaybe<Scalars['numeric']['input']>
@@ -15969,6 +15996,96 @@ useGetConnectionsCountQuery.fetcher = (
 ) =>
   fetcher<GetConnectionsCountQuery, GetConnectionsCountQueryVariables>(
     GetConnectionsCountDocument,
+    variables,
+    options,
+  )
+
+export const GetListsDocument = `
+    query GetLists($where: predicateObjects_bool_exp) {
+  predicateObjects_aggregate(where: $where) {
+    aggregate {
+      count
+    }
+  }
+  predicateObjects(
+    where: $where
+    order_by: [{claimCount: desc}, {tripleCount: desc}]
+  ) {
+    id
+    claimCount
+    tripleCount
+    object {
+      id
+      label
+      image
+    }
+  }
+}
+    `
+
+export const useGetListsQuery = <TData = GetListsQuery, TError = unknown>(
+  variables?: GetListsQueryVariables,
+  options?: Omit<UseQueryOptions<GetListsQuery, TError, TData>, 'queryKey'> & {
+    queryKey?: UseQueryOptions<GetListsQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useQuery<GetListsQuery, TError, TData>({
+    queryKey: variables === undefined ? ['GetLists'] : ['GetLists', variables],
+    queryFn: fetcher<GetListsQuery, GetListsQueryVariables>(
+      GetListsDocument,
+      variables,
+    ),
+    ...options,
+  })
+}
+
+useGetListsQuery.document = GetListsDocument
+
+useGetListsQuery.getKey = (variables?: GetListsQueryVariables) =>
+  variables === undefined ? ['GetLists'] : ['GetLists', variables]
+
+export const useInfiniteGetListsQuery = <
+  TData = InfiniteData<GetListsQuery>,
+  TError = unknown,
+>(
+  variables: GetListsQueryVariables,
+  options: Omit<
+    UseInfiniteQueryOptions<GetListsQuery, TError, TData>,
+    'queryKey'
+  > & {
+    queryKey?: UseInfiniteQueryOptions<GetListsQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useInfiniteQuery<GetListsQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey:
+          optionsQueryKey ?? variables === undefined
+            ? ['GetLists.infinite']
+            : ['GetLists.infinite', variables],
+        queryFn: (metaData) =>
+          fetcher<GetListsQuery, GetListsQueryVariables>(GetListsDocument, {
+            ...variables,
+            ...(metaData.pageParam ?? {}),
+          })(),
+        ...restOptions,
+      }
+    })(),
+  )
+}
+
+useInfiniteGetListsQuery.getKey = (variables?: GetListsQueryVariables) =>
+  variables === undefined
+    ? ['GetLists.infinite']
+    : ['GetLists.infinite', variables]
+
+useGetListsQuery.fetcher = (
+  variables?: GetListsQueryVariables,
+  options?: RequestInit['headers'],
+) =>
+  fetcher<GetListsQuery, GetListsQueryVariables>(
+    GetListsDocument,
     variables,
     options,
   )
@@ -32183,6 +32300,126 @@ export const GetConnectionsCount = {
                           ],
                         },
                       },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export const GetLists = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'GetLists' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'where' },
+          },
+          type: {
+            kind: 'NamedType',
+            name: { kind: 'Name', value: 'predicateObjects_bool_exp' },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'predicateObjects_aggregate' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'where' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'aggregate' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'count' } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'predicateObjects' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'where' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'order_by' },
+                value: {
+                  kind: 'ListValue',
+                  values: [
+                    {
+                      kind: 'ObjectValue',
+                      fields: [
+                        {
+                          kind: 'ObjectField',
+                          name: { kind: 'Name', value: 'claimCount' },
+                          value: { kind: 'EnumValue', value: 'desc' },
+                        },
+                      ],
+                    },
+                    {
+                      kind: 'ObjectValue',
+                      fields: [
+                        {
+                          kind: 'ObjectField',
+                          name: { kind: 'Name', value: 'tripleCount' },
+                          value: { kind: 'EnumValue', value: 'desc' },
+                        },
+                      ],
+                    },
+                  ],
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'claimCount' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'tripleCount' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'object' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                     ],
                   },
                 },

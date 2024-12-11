@@ -8,6 +8,7 @@ import {
   ListGrid,
 } from '@0xintuition/1ui'
 import { ClaimPresenter, ClaimSortColumn } from '@0xintuition/api'
+import { GetListsQuery } from '@0xintuition/graphql'
 
 import { Search } from '@components/search'
 import { Sort } from '@components/sort'
@@ -124,6 +125,106 @@ export function ListClaimsList<T extends SortColumnType = ClaimSortColumn>({
                 )}
               />
             ))}
+        </ListGrid>
+        {pagination && pagination.currentPage < pagination.totalPages && (
+          <div className="flex justify-center mt-4">
+            <Button
+              onClick={handleLoadMore}
+              disabled={isLoading}
+              variant={ButtonVariant.ghost}
+            >
+              {isLoading ? 'Loading...' : 'Load More'}
+            </Button>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+export function ListClaimsListNew<T extends SortColumnType = ClaimSortColumn>({
+  listClaims,
+  pagination,
+  paramPrefix,
+  enableSearch = false,
+  enableSort = false,
+  onLoadMore,
+  sortOptions,
+  sourceUserAddress,
+  readOnly = false,
+}: {
+  listClaims: GetListsQuery['predicateObjects']
+  pagination?: PaginationType
+  paramPrefix?: string
+  enableSearch?: boolean
+  enableSort?: boolean
+  onLoadMore?: () => void
+  sortOptions?: SortOption<T>[]
+  sourceUserAddress?: string
+  readOnly?: boolean
+}) {
+  const defaultOptions: SortOption<ClaimSortColumn>[] = [
+    { value: 'Total ETH', sortBy: 'AssetsSum' },
+    { value: 'ETH For', sortBy: 'ForAssetsSum' },
+    { value: 'ETH Against', sortBy: 'AgainstAssetsSum' },
+    { value: 'Total Positions', sortBy: 'NumPositions' },
+    { value: 'Positions For', sortBy: 'ForNumPositions' },
+    { value: 'Positions Against', sortBy: 'AgainstNumPositions' },
+    { value: 'Updated At', sortBy: 'UpdatedAt' },
+    { value: 'Created At', sortBy: 'CreatedAt' },
+  ]
+
+  const options = sortOptions || defaultOptions
+
+  const [isLoading, setIsLoading] = useState(false)
+
+  const listContainerRef = useRef<HTMLDivElement>(null)
+  const { handleSearchChange, handleSortChange } =
+    useSearchAndSortParamsHandler(paramPrefix)
+
+  if (!listClaims.length) {
+    return <EmptyStateCard message="No lists found." />
+  }
+
+  const handleLoadMore = async () => {
+    if (onLoadMore) {
+      setIsLoading(true)
+      await onLoadMore()
+      setIsLoading(false)
+    }
+  }
+
+  return (
+    <div className="flex flex-col w-full">
+      <div className="flex flex-col w-full" ref={listContainerRef}>
+        <div
+          className={`flex flex-row w-full ${enableSearch ? 'justify-between' : 'justify-end'} ${enableSort ? 'mb-6' : 'mb-0'}`}
+        >
+          {enableSearch && <Search handleSearchChange={handleSearchChange} />}
+          {enableSort && options && options.length > 0 && (
+            <Sort
+              options={options as SortOption<T>[]}
+              handleSortChange={handleSortChange}
+            />
+          )}
+        </div>
+        <ListGrid>
+          {listClaims.map((claim, index) => (
+            <ListCard
+              key={claim.id || index}
+              displayName={claim.object?.label ?? 'Unknown'}
+              imgSrc={claim.object?.image ?? undefined}
+              identitiesCount={claim.claimCount ?? 0}
+              buttonWrapper={(button) => (
+                <Link
+                  to={getListUrl(claim.id, sourceUserAddress ?? '', readOnly)}
+                  prefetch="intent"
+                >
+                  {button}
+                </Link>
+              )}
+            />
+          ))}
         </ListGrid>
         {pagination && pagination.currentPage < pagination.totalPages && (
           <div className="flex justify-center mt-4">

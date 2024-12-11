@@ -1,4 +1,26 @@
-# predicateId = 4 for tags
+# predicateId = 4 for tags on dev, 3 on prod
+
+# GetLists query for Exploring Lists
+query GetLists($where: predicateObjects_bool_exp) {
+  predicateObjects_aggregate(where: $where) {
+    aggregate {
+      count
+    }
+  }
+  predicateObjects(
+    where: $where
+    order_by: [{ claimCount: desc }, { tripleCount: desc }]
+  ) {
+    id
+    claimCount
+    tripleCount
+    object {
+      id
+      label
+      image
+    }
+  }
+}
 
 query GetListItems($predicateId: numeric, $objectId: numeric) {
   triples_aggregate(
