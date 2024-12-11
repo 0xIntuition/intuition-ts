@@ -65,7 +65,7 @@
     "@ianvs/prettier-plugin-sort-imports": "^4.2.1",
     "@nx/devkit": "20.2.2",
     "@nx/eslint": "20.2.2",
-    "@nx/eslint-plugin": "19.1.0",
+    "@nx/eslint-plugin": "20.2.2",
     "@nx/jest": "20.2.2",
     "@nx/js": "20.2.2",
     "@nx/node": "20.2.2",
