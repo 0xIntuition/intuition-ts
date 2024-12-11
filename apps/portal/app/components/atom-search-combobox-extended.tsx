@@ -52,7 +52,7 @@ const AtomDetails = React.memo(({ atom }: AtomDetailsProps) => {
         <h3 className="text-lg font-medium text-center">{atom.label}</h3>
         <Tag size={TagSize.sm}>{atom.type}</Tag>
         <p className="text-base text-foreground/70 font-medium">
-          ID: {atom.vaultId}
+          ID: {atom.vault_id}
         </p>
       </div>
 
@@ -61,9 +61,9 @@ const AtomDetails = React.memo(({ atom }: AtomDetailsProps) => {
           <div className="text-sm text-foreground/70">TVL</div>
           <div className="text-base font-medium">
             {(
-              parseFloat(formatEther(BigInt(atom.vault?.totalShares || 0))) *
+              parseFloat(formatEther(BigInt(atom.vault?.total_shares || 0))) *
               parseFloat(
-                formatEther(BigInt(atom.vault?.currentSharePrice || 0)),
+                formatEther(BigInt(atom.vault?.current_share_price || 0)),
               )
             ).toFixed(4)}{' '}
             ETH
@@ -73,7 +73,7 @@ const AtomDetails = React.memo(({ atom }: AtomDetailsProps) => {
         <div className="flex items-center justify-between">
           <div className="text-sm text-foreground/70">Attestors</div>
           <div className="text-base font-medium">
-            {atom.vault?.positionCount}
+            {atom.vault?.position_count}
           </div>
         </div>
       </div>
@@ -146,12 +146,12 @@ const AtomSearchComboboxItem = React.memo(
   }: AtomSearchComboboxItemProps) => {
     return (
       <CommandItem
-        key={atom?.vaultId ?? ''}
+        key={atom?.vault_id ?? ''}
         className={`border border-transparent aria-selected:bg-primary/10 aria-selected:text-primary px-2.5 py-2.5 cursor-pointer group rounded-md ${
           isSelected ? 'bg-primary/5 text-primary' : ''
         }`}
         onSelect={onSelect}
-        data-atom-id={atom?.vaultId}
+        data-atom-id={atom?.vault_id}
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
       >
@@ -170,7 +170,7 @@ const AtomSearchComboboxItem = React.memo(
               <div className="text-md font-medium truncate">{atom?.label}</div>
               <div className="flex-shrink-0 flex items-center gap-1 bg-foreground/10 rounded-md py-0.5 px-1.5">
                 <span className="text-sm text-foreground/70 font-medium">
-                  #{atom?.vaultId}
+                  #{atom?.vault_id}
                 </span>
               </div>
             </div>
@@ -181,13 +181,13 @@ const AtomSearchComboboxItem = React.memo(
                 name={IconName.ethereum}
                 className="w-3 h-3 text-foreground"
               />
-              {atom?.vault?.currentSharePrice
+              {atom?.vault?.current_share_price
                 ? (
                     parseFloat(
-                      formatEther(BigInt(atom.vault?.totalShares || 0)),
+                      formatEther(BigInt(atom.vault?.total_shares || 0)),
                     ) *
                     parseFloat(
-                      formatEther(BigInt(atom.vault?.currentSharePrice || 0)),
+                      formatEther(BigInt(atom.vault?.current_share_price || 0)),
                     )
                   ).toFixed(3)
                 : undefined}
@@ -198,7 +198,7 @@ const AtomSearchComboboxItem = React.memo(
                 name={IconName.people}
                 className="w-3 h-3 text-foreground"
               />
-              {atom?.vault?.positionCount}
+              {atom?.vault?.position_count}
             </div>
           </div>
         </div>
@@ -208,7 +208,7 @@ const AtomSearchComboboxItem = React.memo(
   (prevProps, nextProps) => {
     return (
       prevProps.isSelected === nextProps.isSelected &&
-      prevProps.atom?.vaultId === nextProps.atom?.vaultId
+      prevProps.atom?.vault_id === nextProps.atom?.vault_id
     )
   },
 )
@@ -315,9 +315,9 @@ export function AtomSearchComboboxExtended({
             <CommandGroup>
               {searchResults.map((atom, index) => (
                 <AtomSearchComboboxItem
-                  key={atom.vaultId || index}
+                  key={atom.vault_id || index}
                   atom={atom as NonNullable<GetAtomQuery['atom']>}
-                  isSelected={selectedAtom?.vaultId === atom.vaultId}
+                  isSelected={selectedAtom?.vault_id === atom.vault_id}
                   onSelect={() => handleAtomSelect(atom)}
                   onMouseEnter={() =>
                     handleMouseEnter(atom as NonNullable<GetAtomQuery['atom']>)

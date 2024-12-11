@@ -81,7 +81,7 @@ export function AddIdentities({
   const { data: claimCheckData = { result: '0' }, refetch: refetchClaimCheck } =
     useCheckClaim(
       {
-        subjectId: selectedIdentities[selectedIdentities.length - 1]?.vaultId,
+        subjectId: selectedIdentities[selectedIdentities.length - 1]?.vault_id,
         predicateId:
           getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId?.toString(),
         objectId: objectVaultId,
@@ -91,7 +91,7 @@ export function AddIdentities({
         refetchOnMount: false,
         refetchOnReconnect: false,
         enabled: Boolean(
-          selectedIdentities[selectedIdentities.length - 1]?.vaultId,
+          selectedIdentities[selectedIdentities.length - 1]?.vault_id,
         ),
         staleTime: Infinity,
         cacheTime: Infinity,
@@ -118,7 +118,7 @@ export function AddIdentities({
             id: invalidIdentity?.id ?? '',
             label: invalidIdentity?.label ?? '',
             image: invalidIdentity?.image ?? '',
-            vault_id: invalidIdentity?.vaultId,
+            vault_id: invalidIdentity?.vault_id,
             assets_sum: '0',
             user_assets: '0',
             contract: MULTIVAULT_CONTRACT_ADDRESS,
@@ -178,7 +178,7 @@ export function AddIdentities({
   const validIdentities = selectedIdentities.filter(
     (identity) =>
       !invalidIdentities.some(
-        (invalid) => invalid?.vaultId === identity?.vaultId,
+        (invalid) => invalid?.vault_id === identity?.vault_id,
       ),
   )
 
@@ -228,7 +228,7 @@ export function AddIdentities({
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => onRemoveIdentity(identity?.vaultId ?? '')}
+              onClick={() => onRemoveIdentity(identity?.vault_id ?? '')}
               className="border-none"
             >
               <Icon name="cross-large" className="h-3 w-4" />
@@ -269,7 +269,7 @@ export function AddIdentities({
         )}
         {invalidIdentities.map((invalidIdentity) => (
           <AddListExistingCta
-            key={invalidIdentity?.vaultId}
+            key={invalidIdentity?.vault_id}
             identity={invalidIdentity}
             variant="identity"
             onSaveClick={() => {
@@ -281,7 +281,7 @@ export function AddIdentities({
                 )
               }
             }}
-            onClose={() => onRemoveInvalidIdentity(invalidIdentity?.vaultId)}
+            onClose={() => onRemoveInvalidIdentity(invalidIdentity?.vault_id)}
           />
         ))}
       </div>
@@ -294,7 +294,7 @@ export function AddIdentities({
               id: selectedInvalidIdentity?.id ?? '',
               label: selectedInvalidIdentity?.label ?? '',
               image: selectedInvalidIdentity?.image ?? '',
-              vault_id: selectedInvalidIdentity?.vaultId,
+              vault_id: selectedInvalidIdentity?.vault_id,
               assets_sum: '0',
               user_assets: '0',
               contract: MULTIVAULT_CONTRACT_ADDRESS,

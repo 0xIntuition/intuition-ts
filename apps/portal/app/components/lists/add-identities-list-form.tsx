@@ -77,15 +77,15 @@ export function AddIdentitiesListForm({
 
   const handleRemoveIdentity = (vaultId: string) => {
     setSelectedIdentities((prev) =>
-      prev.filter((identity) => identity?.vaultId !== vaultId),
+      prev.filter((identity) => identity?.vault_id !== vaultId),
     )
   }
   const handleRemoveInvalidIdentity = (vaultId: string) => {
     setInvalidIdentities((prev) =>
-      prev.filter((identity) => identity?.vaultId !== vaultId),
+      prev.filter((identity) => identity?.vault_id !== vaultId),
     )
     setSelectedIdentities((prev) =>
-      prev.filter((identity) => identity?.vaultId !== vaultId),
+      prev.filter((identity) => identity?.vault_id !== vaultId),
     )
   }
 

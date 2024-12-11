@@ -53,7 +53,7 @@ export function AddTags({
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const formattedTags = selectedTags?.map((tag) => ({
     name: tag?.label ?? '',
-    id: tag?.vaultId ?? '',
+    id: tag?.vault_id ?? '',
     tagCount: 0, // TODO: (ENG-4782) temporary until we have tag count
   }))
 
@@ -81,13 +81,13 @@ export function AddTags({
         subjectId: subjectVaultId,
         predicateId:
           getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId?.toString(),
-        objectId: selectedTags[selectedTags.length - 1]?.vaultId,
+        objectId: selectedTags[selectedTags.length - 1]?.vault_id,
       },
       {
         refetchOnWindowFocus: false,
         refetchOnMount: false,
         refetchOnReconnect: false,
-        enabled: Boolean(selectedTags[selectedTags.length - 1]?.vaultId),
+        enabled: Boolean(selectedTags[selectedTags.length - 1]?.vault_id),
         staleTime: Infinity,
         cacheTime: Infinity,
       },
@@ -113,7 +113,7 @@ export function AddTags({
             id: invalidTag?.id ?? '',
             label: invalidTag?.label ?? '',
             image: invalidTag?.image ?? '',
-            vault_id: invalidTag?.vaultId,
+            vault_id: invalidTag?.vault_id,
             assets_sum: '0',
             user_assets: '0',
             contract: MULTIVAULT_CONTRACT_ADDRESS,
@@ -207,7 +207,7 @@ export function AddTags({
         </Popover>
         {invalidTags.filter(Boolean).map((invalidTag) => (
           <AddListExistingCta
-            key={invalidTag?.vaultId ?? ''}
+            key={invalidTag?.vault_id ?? ''}
             identity={invalidTag}
             variant="tag"
             onSaveClick={() => {
@@ -217,7 +217,7 @@ export function AddTags({
                 )
               }
             }}
-            onClose={() => onRemoveInvalidTag(invalidTag?.vaultId ?? '')}
+            onClose={() => onRemoveInvalidTag(invalidTag?.vault_id ?? '')}
           />
         ))}
       </div>
@@ -229,7 +229,7 @@ export function AddTags({
               id: selectedInvalidTag?.id ?? '',
               label: selectedInvalidTag?.label ?? '',
               image: selectedInvalidTag?.image ?? '',
-              vault_id: selectedInvalidTag?.vaultId,
+              vault_id: selectedInvalidTag?.vault_id,
               assets_sum: '0',
               user_assets: '0',
               contract: MULTIVAULT_CONTRACT_ADDRESS,

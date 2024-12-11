@@ -89,14 +89,14 @@ export default function FollowModal({
 
   const vaultDetails = useGetVaultDetails(
     contract,
-    claimData?.triple?.vaultId,
-    claimData?.triple?.counterVaultId,
+    claimData?.triple?.vault_id,
+    claimData?.triple?.counter_vault_id,
     {
       queryKey: [
         'get-vault-details',
         contract,
-        claimData?.triple?.vaultId,
-        claimData?.triple?.counterVaultId,
+        claimData?.triple?.vault_id,
+        claimData?.triple?.counter_vault_id,
       ],
       enabled: open,
     },
@@ -116,7 +116,7 @@ export default function FollowModal({
     contract,
     vaultDetails?.data?.user_conviction ?? '0',
     mode,
-    claimData?.triple?.vaultId,
+    claimData?.triple?.vault_id,
   )
 
   const handleAction = async () => {
@@ -124,7 +124,7 @@ export default function FollowModal({
       const txHash = await follow({
         val,
         userWallet,
-        vaultId: claimData?.triple?.vaultId,
+        vaultId: claimData?.triple?.vault_id,
         tripleCost: BigInt(configData?.fees.tripleCost ?? '0'),
         userVaultId: identityVaultId,
       })

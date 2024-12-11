@@ -97,11 +97,11 @@ export function IdentitiesListNew({
               description={identity?.label ?? identity?.data}
               id={identity?.creator?.id ?? ''}
               totalTVL={formatBalance(
-                BigInt(identity?.vault?.totalShares ?? '0'),
+                BigInt(identity?.vault?.total_shares ?? '0'),
                 18,
               )}
               currency={'ETH'}
-              numPositions={identity?.vault?.positionCount ?? 0}
+              numPositions={identity?.vault?.position_count ?? 0}
               link={getAtomLinkNew(identity, readOnly)}
               ipfsLink={getAtomIpfsLinkNew(identity)}
               // tags={

@@ -43,17 +43,17 @@ export function HomeStatsHeader({ ...props }: HomeStatsHeaderProps) {
               <div className="flex gap-8 max-lg:flex-col max-lg:gap-2">
                 <StatItem
                   label="Identities"
-                  value={stats.totalAtoms}
+                  value={stats.total_atoms}
                   link={PATHS.EXPLORE_IDENTITIES}
                 />
                 <StatItem
                   label="Claims"
-                  value={stats.totalTriples}
+                  value={stats.total_triples}
                   link={PATHS.EXPLORE_CLAIMS}
                 />
                 <StatItem
                   label="Users"
-                  value={stats.totalAccounts}
+                  value={stats.total_accounts}
                   link={`${PATHS.EXPLORE_IDENTITIES}?isUser=true`}
                 />
               </div>
@@ -62,15 +62,15 @@ export function HomeStatsHeader({ ...props }: HomeStatsHeaderProps) {
                 className="mx-8 h-12 w-px bg-gradient-radial from-white via-white/20"
               />
               <div className="flex gap-8 max-lg:flex-col max-lg:gap-2">
-                {stats.contractBalance && (
+                {stats.contract_balance && (
                   <StatItem
                     label="TVL"
-                    value={`${formatBalance(stats.contractBalance, 18)} ETH`}
+                    value={`${formatBalance(stats.contract_balance, 18)} ETH`}
                   />
                 )}
                 <StatItem
                   label="Signals"
-                  value={stats.totalSignals}
+                  value={stats.total_signals}
                   link={PATHS.GLOBAL_ACTIVITY}
                 />
               </div>

@@ -173,22 +173,24 @@ export function AtomSearchCombobox({
           <CommandGroup>
             {searchResults.map((atom, index) => (
               <AtomSearchComboboxItem
-                key={atom?.vaultId || index}
-                id={atom?.vaultId}
+                key={atom?.vault_id || index}
+                id={atom?.vault_id}
                 variant={atom?.type === 'Account' ? 'user' : 'non-user'}
                 name={atom?.label ?? ''}
                 avatarSrc={atom?.image ?? ''}
                 value={
-                  atom?.vault?.currentSharePrice
+                  atom?.vault?.current_share_price
                     ? parseFloat(
-                        formatEther(BigInt(atom.vault?.totalShares || 0)),
+                        formatEther(BigInt(atom.vault?.total_shares || 0)),
                       ) *
                       parseFloat(
-                        formatEther(BigInt(atom.vault?.currentSharePrice || 0)),
+                        formatEther(
+                          BigInt(atom.vault?.current_share_price || 0),
+                        ),
                       )
                     : undefined
                 }
-                attestors={atom?.vault?.positionCount}
+                attestors={atom?.vault?.position_count}
                 onClick={() => handleAtomSelect(atom)}
                 onSelect={() => handleAtomSelect(atom)}
               />

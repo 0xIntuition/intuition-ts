@@ -154,9 +154,9 @@ function CreateClaimForm({
   const { fees } = configData ?? {}
 
   const { data: claimCheckData, refetch: refetchClaimCheck } = useCheckClaim({
-    subjectId: selectedIdentities.subject?.vaultId,
-    predicateId: selectedIdentities.predicate?.vaultId,
-    objectId: selectedIdentities.object?.vaultId,
+    subjectId: selectedIdentities.subject?.vault_id,
+    predicateId: selectedIdentities.predicate?.vault_id,
+    objectId: selectedIdentities.object?.vault_id,
   })
 
   const { data: claimData, refetch: refetchClaim } = useGetTripleQuery(
@@ -299,9 +299,9 @@ function CreateClaimForm({
         selectedIdentities.object !== null
       ) {
         handleOnChainCreateTriple({
-          subjectVaultId: selectedIdentities.subject?.vaultId ?? '',
-          predicateVaultId: selectedIdentities.predicate?.vaultId ?? '',
-          objectVaultId: selectedIdentities.object?.vaultId ?? '',
+          subjectVaultId: selectedIdentities.subject?.vault_id ?? '',
+          predicateVaultId: selectedIdentities.predicate?.vault_id ?? '',
+          objectVaultId: selectedIdentities.object?.vault_id ?? '',
         })
       }
     } catch (error: unknown) {

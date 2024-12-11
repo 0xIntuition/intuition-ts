@@ -108,28 +108,28 @@ export function ClaimsListNew({
           className="grow shrink basis-0 self-stretch bg-background first:border-t-px first:rounded-t-xl last:rounded-b-xl theme-border border-t-0 flex-col justify-start gap-5 inline-flex"
         >
           <ClaimRow
-            numPositionsFor={triple.vault?.positionCount ?? 0}
-            numPositionsAgainst={triple.counterVault?.positionCount ?? 0}
-            tvlFor={formatBalance(triple.vault?.totalShares ?? '0', 18)}
+            numPositionsFor={triple.vault?.position_count ?? 0}
+            numPositionsAgainst={triple.counter_vault?.position_count ?? 0}
+            tvlFor={formatBalance(triple.vault?.total_shares ?? '0', 18)}
             tvlAgainst={formatBalance(
-              triple.counterVault?.totalShares ?? '0',
+              triple.counter_vault?.total_shares ?? '0',
               18,
             )}
             totalTVL={formatBalance(
-              BigInt(triple.vault?.totalShares ?? '0') +
-                BigInt(triple.counterVault?.totalShares ?? '0'),
+              BigInt(triple.vault?.total_shares ?? '0') +
+                BigInt(triple.counter_vault?.total_shares ?? '0'),
               18,
             )}
             userPosition={formatBalance(
               triple.vault?.positions?.[0]?.shares ??
-                triple.counterVault?.positions?.[0]?.shares ??
+                triple.counter_vault?.positions?.[0]?.shares ??
                 '0',
               18,
             )}
             positionDirection={
               triple.vault?.positions?.[0]?.shares
                 ? ClaimPosition.claimFor
-                : triple.counterVault?.positions?.[0]?.shares
+                : triple.counter_vault?.positions?.[0]?.shares
                   ? ClaimPosition.claimAgainst
                   : undefined
             }

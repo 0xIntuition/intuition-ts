@@ -123,7 +123,7 @@ function ActivityItemNew({
   const eventMessage = messageKey ? eventMessages[messageKey] : undefined
   const value =
     activity.type === 'Deposited' || activity.type === 'Redeemed'
-      ? activity.redemption?.assetsForReceiver
+      ? activity.redemption?.assets_for_receiver
       : null
 
   const message = eventMessage
@@ -141,8 +141,8 @@ function ActivityItemNew({
   const setStakeModalActive = useSetAtom(stakeModalAtom)
 
   // Basic required fields with fallbacks
-  const timestamp = activity.blockTimestamp
-    ? new Date(parseInt(activity.blockTimestamp.toString()) * 1000)
+  const timestamp = activity.block_timestamp
+    ? new Date(parseInt(activity.block_timestamp.toString()) * 1000)
     : new Date()
 
   // Get creator from either atom or triple
@@ -222,7 +222,7 @@ function ActivityItemNew({
             {formatDistance(timestamp, new Date())} ago
           </Text>
           <a
-            href={`${BLOCK_EXPLORER_URL}/tx/${formatTransactionHash(activity.transactionHash)}`}
+            href={`${BLOCK_EXPLORER_URL}/tx/${formatTransactionHash(activity.transaction_hash)}`}
             target="_blank"
             rel="noreferrer noopener"
           >
@@ -247,14 +247,14 @@ function ActivityItemNew({
           // description={activity.atom.description ?? ''} // TODO: we need to determine best way to surface this field
           id={activity.atom.id}
           totalTVL={formatBalance(
-            BigInt(activity.atom.vault?.totalShares ?? '0'),
+            BigInt(activity.atom.vault?.total_shares ?? '0'),
             18,
           )}
           userPosition={formatBalance(
             activity.atom.vault?.positions?.[0]?.shares ?? '0',
             18,
           )}
-          numPositions={activity.atom.vault?.positionCount ?? 0}
+          numPositions={activity.atom.vault?.position_count ?? 0}
           link={getAtomLinkNew(activity.atom)}
           // link={activity.atom.id}
           ipfsLink={getAtomIpfsLinkNew(activity.atom)}
@@ -274,28 +274,30 @@ function ActivityItemNew({
       )}
       {activity.triple && (
         <ClaimRow
-          numPositionsFor={activity.triple.vault?.positionCount ?? 0}
-          numPositionsAgainst={activity.triple.counterVault?.positionCount ?? 0}
-          tvlFor={formatBalance(activity.triple.vault?.totalShares ?? '0', 18)}
+          numPositionsFor={activity.triple.vault?.position_count ?? 0}
+          numPositionsAgainst={
+            activity.triple.counter_vault?.position_count ?? 0
+          }
+          tvlFor={formatBalance(activity.triple.vault?.total_shares ?? '0', 18)}
           tvlAgainst={formatBalance(
-            activity.triple.counterVault?.totalShares ?? '0',
+            activity.triple.counter_vault?.total_shares ?? '0',
             18,
           )}
           totalTVL={formatBalance(
-            BigInt(activity.triple.vault?.totalShares ?? '0') +
-              BigInt(activity.triple.counterVault?.totalShares ?? '0'),
+            BigInt(activity.triple.vault?.total_shares ?? '0') +
+              BigInt(activity.triple.counter_vault?.total_shares ?? '0'),
             18,
           )}
           userPosition={formatBalance(
             activity.triple.vault?.positions?.[0]?.shares ??
-              activity.triple.counterVault?.positions?.[0]?.shares ??
+              activity.triple.counter_vault?.positions?.[0]?.shares ??
               '0',
             18,
           )}
           positionDirection={
             activity.triple.vault?.positions?.[0]?.shares
               ? ClaimPosition.claimFor
-              : activity.triple.counterVault?.positions?.[0]?.shares
+              : activity.triple.counter_vault?.positions?.[0]?.shares
                 ? ClaimPosition.claimAgainst
                 : undefined
           }
@@ -309,7 +311,7 @@ function ActivityItemNew({
               isOpen: true,
               claim: activity.triple ?? undefined,
               vaultId: activity.triple?.vault?.id ?? '0',
-              counterVaultId: activity.triple?.counterVault?.id ?? '0',
+              counterVaultId: activity.triple?.counter_vault?.id ?? '0',
             }))
           }
           onStakeAgainstClick={() =>
@@ -321,8 +323,8 @@ function ActivityItemNew({
               direction: ClaimPosition.claimAgainst,
               isOpen: true,
               claim: activity.triple ?? undefined,
-              vaultId: activity.triple?.counterVault?.id ?? '0',
-              counterVaultId: activity.triple?.counterVault?.id ?? '0',
+              vaultId: activity.triple?.counter_vault?.id ?? '0',
+              counterVaultId: activity.triple?.counter_vault?.id ?? '0',
             }))
           }
           className="w-full hover:bg-transparent"

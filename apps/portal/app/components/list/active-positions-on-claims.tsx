@@ -56,7 +56,7 @@ export function ActivePositionsOnClaimsNew({
     .map((p) => ({
       ...p,
       direction:
-        p?.vault?.id === p?.vault?.triple?.counterVault?.id
+        p?.vault?.id === p?.vault?.triple?.counter_vault?.id
           ? ('against' as const)
           : ('for' as const),
     }))
@@ -105,9 +105,9 @@ export function ActivePositionsOnClaimsNew({
                 ? ClaimPosition.claimFor
                 : ClaimPosition.claimAgainst
             }
-            claimsFor={position?.vault?.triple?.vault?.positionCount ?? 0}
+            claimsFor={position?.vault?.triple?.vault?.position_count ?? 0}
             claimsAgainst={
-              position?.vault?.triple?.counterVault?.positionCount ?? 0
+              position?.vault?.triple?.counter_vault?.position_count ?? 0
             }
             claimsForValue={
               +formatBalance(
@@ -118,7 +118,7 @@ export function ActivePositionsOnClaimsNew({
             }
             claimsAgainstValue={
               +formatBalance(
-                position?.vault?.triple?.counterVault?.positions_aggregate
+                position?.vault?.triple?.counter_vault?.positions_aggregate
                   ?.aggregate?.sum?.shares ?? '0',
                 18,
               )
