@@ -8,7 +8,7 @@ export const createIdentityArrays = (
   objectVaultId: string,
 ) => {
   const subjectIdentityVaultIds = identities.map(
-    (identity) => identity?.vaultId,
+    (identity) => identity?.vault_id,
   )
   const predicateHasTagVaultIds = identities.map(
     () => getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId,

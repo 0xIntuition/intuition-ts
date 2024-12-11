@@ -11,7 +11,7 @@ export const createTagArrays = (
   const predicateHasTagVaultIds = tags.map(
     () => getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId,
   )
-  const objectTagVaultIds = tags.map((tag) => tag?.vaultId)
+  const objectTagVaultIds = tags.map((tag) => tag?.vault_id)
 
   return { subjectIdentityVaultIds, predicateHasTagVaultIds, objectTagVaultIds }
 }

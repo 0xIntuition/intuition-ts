@@ -499,7 +499,7 @@ export const getAtomLabelGQL = (
     atom.value?.person?.name ??
     atom.value?.thing?.name ??
     atom.value?.organization?.name ??
-    atom.walletId ??
+    atom.wallet_id ??
     atom.id ??
     ''
   )
@@ -523,7 +523,7 @@ export const getAtomIpfsLinkGQL = (
     return ''
   }
   if (atom.type === ('Account' || 'Default')) {
-    return `${BLOCK_EXPLORER_URL}/address/${atom.walletId}`
+    return `${BLOCK_EXPLORER_URL}/address/${atom.wallet_id}`
   }
   if (atom.data?.startsWith('https')) {
     return atom.data
@@ -554,12 +554,12 @@ export const getAtomLinkGQL = (
   }
   if (atom.type === ('Account' || 'Default')) {
     return readOnly
-      ? `${PATHS.READONLY_PROFILE}/${atom.walletId}`
-      : `${PATHS.PROFILE}/${atom.walletId}`
+      ? `${PATHS.READONLY_PROFILE}/${atom.wallet_id}`
+      : `${PATHS.PROFILE}/${atom.wallet_id}`
   }
   return readOnly
-    ? `${PATHS.READONLY_IDENTITY}/${atom.vaultId}`
-    : `${PATHS.IDENTITY}/${atom.vaultId}`
+    ? `${PATHS.READONLY_IDENTITY}/${atom.vault_id}`
+    : `${PATHS.IDENTITY}/${atom.vault_id}`
 }
 
 export const getAtomIdGQL = (atom: GetAtomQuery['atom']) => {
@@ -567,7 +567,7 @@ export const getAtomIdGQL = (atom: GetAtomQuery['atom']) => {
     return ''
   }
   if (atom.type === ('Account' || 'Default')) {
-    return atom.walletId
+    return atom.wallet_id
   }
   return atom.id
 }
