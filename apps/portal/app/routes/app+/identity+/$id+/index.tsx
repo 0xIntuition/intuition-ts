@@ -63,17 +63,17 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const triplesWhere = {
     _or: [
       {
-        subjectId: {
+        subject_id: {
           _eq: id,
         },
       },
       {
-        objectId: {
+        predicate_id: {
           _eq: id,
         },
       },
       {
-        predicateId: {
+        object_id: {
           _eq: id,
         },
       },
@@ -90,7 +90,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const positionsOrderBy = url.searchParams.get('positionsSortBy')
 
   const positionsWhere = {
-    vaultId: { _eq: id },
+    vault_id: { _eq: id },
   }
 
   await queryClient.prefetchQuery({

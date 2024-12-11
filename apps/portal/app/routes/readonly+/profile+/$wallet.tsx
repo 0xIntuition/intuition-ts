@@ -129,7 +129,7 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
       throw new Error('No account data found for address')
     }
 
-    if (!accountResult.account?.atomId) {
+    if (!accountResult.account?.atom_id) {
       throw new Error('No atom ID found for account')
     }
 
@@ -142,7 +142,7 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
       GetTagsQuery,
       GetTagsQueryVariables
     >(GetTagsDocument, {
-      subjectId: accountResult.account.atomId,
+      subjectId: accountResult.account.atom_id,
       predicateId: getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId,
     })()
 
@@ -152,7 +152,7 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
       queryKey: [
         'get-tags',
         {
-          subjectId: accountResult.account.atomId,
+          subjectId: accountResult.account.atom_id,
           predicateId: getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId,
         },
       ],
@@ -166,7 +166,7 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
       subjectId: getSpecialPredicate(CURRENT_ENV).iPredicate.vaultId,
       predicateId:
         getSpecialPredicate(CURRENT_ENV).amFollowingPredicate.vaultId,
-      objectId: accountResult.account.atomId,
+      objectId: accountResult.account.atom_id,
       address: queryAddress,
     })()
 
@@ -180,7 +180,7 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
           subjectId: getSpecialPredicate(CURRENT_ENV).iPredicate.vaultId,
           predicateId:
             getSpecialPredicate(CURRENT_ENV).amFollowingPredicate.vaultId,
-          objectId: accountResult.account.atomId,
+          objectId: accountResult.account.atom_id,
         },
       ],
       queryFn: () => accountConnectionsCountResult,
@@ -203,7 +203,7 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
     relicMintCount,
     dehydratedState: dehydrate(queryClient),
     initialParams: {
-      subjectId: accountResult?.account?.atomId,
+      subjectId: accountResult?.account?.atom_id,
       queryAddress,
     },
   })
@@ -233,7 +233,7 @@ export default function ReadOnlyProfile() {
 
   const { data: accountTagsResult } = useGetTagsQuery(
     {
-      subjectId: accountResult?.account?.atomId,
+      subjectId: accountResult?.account?.atom_id,
       predicateId: getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId,
     },
     {
@@ -244,7 +244,7 @@ export default function ReadOnlyProfile() {
           predicateId: getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId,
         },
       ],
-      enabled: !!accountResult?.account?.atomId,
+      enabled: !!accountResult?.account?.atom_id,
     },
   )
 
@@ -253,7 +253,7 @@ export default function ReadOnlyProfile() {
       subjectId: getSpecialPredicate(CURRENT_ENV).iPredicate.vaultId,
       predicateId:
         getSpecialPredicate(CURRENT_ENV).amFollowingPredicate.vaultId,
-      objectId: accountResult?.account?.atomId,
+      objectId: accountResult?.account?.atom_id,
       address: initialParams.queryAddress,
     },
     {
@@ -264,7 +264,7 @@ export default function ReadOnlyProfile() {
           subjectId: getSpecialPredicate(CURRENT_ENV).iPredicate.vaultId,
           predicateId:
             getSpecialPredicate(CURRENT_ENV).amFollowingPredicate.vaultId,
-          objectId: accountResult?.account?.atomId,
+          objectId: accountResult?.account?.atom_id,
         },
       ],
     },
@@ -272,13 +272,13 @@ export default function ReadOnlyProfile() {
 
   const { data: vaultDetails } = useGetVaultDetails(
     MULTIVAULT_CONTRACT_ADDRESS,
-    accountResult?.account?.atomId,
+    accountResult?.account?.atom_id,
     undefined, // no counterVaultId
     {
       queryKey: [
         'get-vault-details',
         MULTIVAULT_CONTRACT_ADDRESS,
-        accountResult?.account?.atomId,
+        accountResult?.account?.atom_id,
       ],
     },
   )
@@ -313,7 +313,7 @@ export default function ReadOnlyProfile() {
         avatarSrc={accountResult?.account?.image ?? ''}
         name={accountResult?.account?.label ?? ''}
         id={accountResult?.account?.id ?? ''}
-        vaultId={accountResult?.account?.atomId ?? 0}
+        vaultId={accountResult?.account?.atom_id ?? 0}
         stats={{
           numberOfFollowers:
             accountConnectionsCountResult?.followers_count?.[0]?.vault
@@ -407,7 +407,7 @@ export default function ReadOnlyProfile() {
                     id: accountResult?.account?.id ?? '',
                     label: accountResult?.account?.label ?? '',
                     image: accountResult?.account?.image ?? '',
-                    vault_id: accountResult?.account?.atomId,
+                    vault_id: accountResult?.account?.atom_id,
                     assets_sum: '0',
                     user_assets: '0',
                     contract: MULTIVAULT_CONTRACT_ADDRESS,

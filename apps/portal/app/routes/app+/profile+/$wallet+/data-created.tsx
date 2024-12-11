@@ -87,11 +87,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
   }
 
   const atomPositionsWhere = {
-    accountId: {
+    account_id: {
       _eq: queryAddress,
     },
     vault: {
-      tripleId: {
+      triple_id: {
         _is_null: true,
       },
     },
@@ -103,7 +103,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
       _eq: queryAddress,
     },
     vault: {
-      atomId: {
+      atom_id: {
         _is_null: true,
       },
     },
@@ -333,7 +333,7 @@ export default function ProfileDataCreated() {
         : [
             {
               vault: {
-                totalShares: 'desc',
+                total_shares: 'desc',
               },
             },
           ],

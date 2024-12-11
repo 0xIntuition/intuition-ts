@@ -209,7 +209,7 @@ export default function ClaimOverview() {
                 totalCount={
                   (tripleData?.triple?.vault?.allPositions?.aggregate?.count ??
                     0) +
-                  (tripleData?.triple?.counterVault?.allPositions?.aggregate
+                  (tripleData?.triple?.counter_vault?.allPositions?.aggregate
                     ?.count ?? 0)
                 }
                 onClick={(e) => {
@@ -232,7 +232,7 @@ export default function ClaimOverview() {
                 value="against"
                 label="Against"
                 totalCount={
-                  tripleData?.triple?.counterVault?.allPositions?.aggregate
+                  tripleData?.triple?.counter_vault?.allPositions?.aggregate
                     ?.count ?? 0
                 }
                 onClick={(e) => {
@@ -251,14 +251,14 @@ export default function ClaimOverview() {
           <PositionsOnClaimNew
             vaultPositions={tripleData?.triple?.vault?.positions ?? []}
             counterVaultPositions={
-              tripleData?.triple?.counterVault?.positions ?? []
+              tripleData?.triple?.counter_vault?.positions ?? []
             }
             pagination={{
               aggregate: {
                 count:
                   (tripleData?.triple?.vault?.allPositions?.aggregate?.count ??
                     0) +
-                  (tripleData?.triple?.counterVault?.allPositions?.aggregate
+                  (tripleData?.triple?.counter_vault?.allPositions?.aggregate
                     ?.count ?? 0),
               },
             }}

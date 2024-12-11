@@ -45,7 +45,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
         limit,
         offset,
         addresses: queryAddresses,
-        orderBy: [{ blockTimestamp: 'desc' }],
+        orderBy: [{ block_timestamp: 'desc' }],
         where: {
           type: {
             _neq: 'FeesTransfered',
@@ -81,7 +81,7 @@ export default function GlobalActivityFeed() {
       limit,
       offset,
       addresses: initialParams.queryAddresses,
-      orderBy: [{ blockTimestamp: 'desc' }],
+      orderBy: [{ block_timestamp: 'desc' }],
       where: {
         type: {
           _neq: 'FeesTransfered',

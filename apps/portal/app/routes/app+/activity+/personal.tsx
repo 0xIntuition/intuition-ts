@@ -105,7 +105,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
         limit,
         offset,
         addresses: queryAddresses,
-        orderBy: [{ blockTimestamp: 'desc' }],
+        orderBy: [{ block_timestamp: 'desc' }],
         where: personalActivityFeedWhere,
       }),
   })
@@ -137,7 +137,7 @@ export default function PersonalActivityFeed() {
       limit,
       offset,
       addresses: initialParams.queryAddresses,
-      orderBy: [{ blockTimestamp: 'desc' }],
+      orderBy: [{ block_timestamp: 'desc' }],
       where: initialParams.personalActivityFeedWhere,
     },
     {

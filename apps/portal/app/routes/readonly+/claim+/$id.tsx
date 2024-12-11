@@ -58,13 +58,13 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
   let vaultDetails: VaultDetailsType | null = null
 
-  if (tripleResult && tripleResult.triple?.vaultId) {
+  if (tripleResult && tripleResult.triple?.vault_id) {
     try {
       vaultDetails = await getVaultDetails(
         MULTIVAULT_CONTRACT_ADDRESS,
-        tripleResult.triple?.vaultId,
+        tripleResult.triple?.vault_id,
         null, // TODO: Fix in [ENG-4038] where we refactor the params of getVaultDetails
-        tripleResult.triple?.counterVaultId,
+        tripleResult.triple?.counter_vault_id,
       )
     } catch (error) {
       console.error('Failed to fetch vaultDetails', error)
@@ -226,11 +226,11 @@ export default function ReadOnlyClaimDetails() {
             : ''
         }
         ipfsLink={`${BLOCK_EXPLORER_URL}/address/${tripleData?.triple?.creator?.id}`}
-        timestamp={tripleData?.triple?.blockTimestamp ?? ''}
+        timestamp={tripleData?.triple?.block_timestamp ?? ''}
       />
       <ReadOnlyBanner
         variant={BannerVariant.warning}
-        to={`${PATHS.CLAIM}/${tripleData?.triple?.vaultId}`}
+        to={`${PATHS.CLAIM}/${tripleData?.triple?.vault_id}`}
       />
     </div>
   )

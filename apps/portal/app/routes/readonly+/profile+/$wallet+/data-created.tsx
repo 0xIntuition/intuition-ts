@@ -84,11 +84,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
   }
 
   const atomPositionsWhere = {
-    accountId: {
+    account_id: {
       _eq: queryAddress,
     },
     vault: {
-      tripleId: {
+      triple_id: {
         _is_null: true,
       },
     },
@@ -96,11 +96,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   // this query is effectively the same as using a Claims query, but this query is more flexible
   const triplePositionsWhere = {
-    accountId: {
+    account_id: {
       _eq: queryAddress,
     },
     vault: {
-      atomId: {
+      atom_id: {
         _is_null: true,
       },
     },
@@ -330,7 +330,7 @@ export default function ProfileDataCreated() {
         : [
             {
               vault: {
-                totalShares: 'desc',
+                total_shares: 'desc',
               },
             },
           ],

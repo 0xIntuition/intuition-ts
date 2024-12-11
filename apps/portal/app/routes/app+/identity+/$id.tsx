@@ -385,7 +385,7 @@ export default function IdentityDetails() {
           ) : null}
           <IdentityStakeCard
             tvl={+formatBalance(assets_sum, 18)}
-            holders={atomResult?.atom?.vault?.positionCount ?? 0}
+            holders={atomResult?.atom?.vault?.position_count ?? 0}
             variant={Identity.nonUser} // TODO: Use the atom type to determine this once we have these
             // identityImgSrc={getAtomImage(identity)}
             // identityDisplayName={getAtomLabel(identity)}

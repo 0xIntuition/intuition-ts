@@ -81,7 +81,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     throw new Error('No account data found for address')
   }
 
-  if (!accountResult.account?.atomId) {
+  if (!accountResult.account?.atom_id) {
     throw new Error('No atom ID found for account')
   }
 
@@ -93,26 +93,26 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const triplesCountWhere = {
     _or: [
       {
-        subjectId: {
-          _eq: accountResult.account?.atomId,
+        subject_id: {
+          _eq: accountResult.account?.atom_id,
         },
       },
       {
-        predicateId: {
-          _eq: accountResult.account?.atomId,
+        predicate_id: {
+          _eq: accountResult.account?.atom_id,
         },
       },
       {
-        objectId: {
-          _eq: accountResult.account?.atomId,
+        object_id: {
+          _eq: accountResult.account?.atom_id,
         },
       },
     ],
   }
 
   const positionsCountWhere = {
-    vaultId: {
-      _eq: accountResult.account?.atomId,
+    vault_id: {
+      _eq: accountResult.account?.atom_id,
     },
   }
 
@@ -139,7 +139,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
       },
     },
     vault: {
-      tripleId: {
+      triple_id: {
         _is_null: true,
       },
     },
@@ -152,7 +152,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
       },
     },
     vault: {
-      atomId: {
+      atom_id: {
         _is_null: true,
       },
     },

@@ -107,7 +107,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     throw new Error('No account data found for address')
   }
 
-  if (!accountResult.account?.atomId) {
+  if (!accountResult.account?.atom_id) {
     throw new Error('No atom ID found for account')
   }
 
@@ -120,18 +120,18 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const triplesWhere = {
     _or: [
       {
-        subjectId: {
-          _eq: accountResult.account?.atomId,
+        subject_id: {
+          _eq: accountResult.account?.atom_id,
         },
       },
       {
-        objectId: {
-          _eq: accountResult.account?.atomId,
+        predicate_id: {
+          _eq: accountResult.account?.atom_id,
         },
       },
       {
-        predicateId: {
-          _eq: accountResult.account?.atomId,
+        object_id: {
+          _eq: accountResult.account?.atom_id,
         },
       },
     ],
@@ -140,26 +140,26 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const triplesCountWhere = {
     _or: [
       {
-        subjectId: {
-          _eq: accountResult.account?.atomId,
+        subject_id: {
+          _eq: accountResult.account?.atom_id,
         },
       },
       {
-        predicateId: {
-          _eq: accountResult.account?.atomId,
+        object_id: {
+          _eq: accountResult.account?.atom_id,
         },
       },
       {
-        objectId: {
-          _eq: accountResult.account?.atomId,
+        predicate_id: {
+          _eq: accountResult.account?.atom_id,
         },
       },
     ],
   }
 
   const positionsCountWhere = {
-    vaultId: {
-      _eq: accountResult.account?.atomId,
+    vault_id: {
+      _eq: accountResult.account?.atom_id,
     },
   }
 
@@ -186,7 +186,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
       },
     },
     vault: {
-      tripleId: {
+      triple_id: {
         _is_null: true,
       },
     },
@@ -199,7 +199,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
       },
     },
     vault: {
-      atomId: {
+      atom_id: {
         _is_null: true,
       },
     },
@@ -216,7 +216,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const followersWhere = {
     subjectId: getSpecialPredicate(CURRENT_ENV).iPredicate.vaultId,
     predicateId: getSpecialPredicate(CURRENT_ENV).amFollowingPredicate.vaultId,
-    objectId: accountResult.account.atomId,
+    objectId: accountResult.account.atom_id,
     positionsLimit: 10,
     positionsOffset: 0,
     positionsOrderBy: {
@@ -234,7 +234,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
         where: triplesWhere,
         limit: 10,
         offset: 0,
-        orderBy: [{ blockNumber: 'desc' }],
+        orderBy: [{ block_number: 'desc' }],
         address: queryAddress,
       }),
   })
@@ -314,7 +314,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   return json({
     queryAddress,
     initialParams: {
-      atomId: accountResult.account?.atomId,
+      atomId: accountResult.account?.atom_id,
       triplesWhere,
       triplesCountWhere,
       positionsCountWhere,
@@ -403,7 +403,7 @@ export default function ProfileOverview() {
       where: initialParams.triplesWhere,
       limit: 10,
       offset: 0,
-      orderBy: [{ blockNumber: 'desc' }],
+      orderBy: [{ block_number: 'desc' }],
       address: queryAddress,
     },
     {
@@ -607,7 +607,9 @@ function TopFollowers({
       </Text>
       <FollowList
         positions={followerData?.triples[0]?.vault?.positions ?? []}
-        currentSharePrice={followerData?.triples[0]?.vault?.currentSharePrice}
+        currentSharePrice={
+          followerData?.triples[0]?.vault?.current_share_price ?? 0
+        }
         paramPrefix={ConnectionsHeaderVariants.followers}
         enableSearch={false}
         enableSort={false}

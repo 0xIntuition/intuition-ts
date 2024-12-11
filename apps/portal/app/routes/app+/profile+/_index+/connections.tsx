@@ -65,7 +65,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
       GetAccountQueryVariables
     >(GetAccountDocument, { address: queryAddress })()
 
-    if (!accountResult.account?.atomId) {
+    if (!accountResult.account?.atom_id) {
       throw new Error('No atom ID found for account')
     }
 
@@ -95,7 +95,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
       subjectId: getSpecialPredicate(CURRENT_ENV).iPredicate.vaultId,
       predicateId:
         getSpecialPredicate(CURRENT_ENV).amFollowingPredicate.vaultId,
-      objectId: accountResult.account.atomId,
+      objectId: accountResult.account.atom_id,
       positionsLimit: limit,
       positionsOffset: offset,
       positionsOrderBy: {
@@ -142,7 +142,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
           subjectId: getSpecialPredicate(CURRENT_ENV).iPredicate.vaultId,
           predicateId:
             getSpecialPredicate(CURRENT_ENV).amFollowingPredicate.vaultId,
-          objectId: accountResult.account.atomId,
+          objectId: accountResult.account.atom_id,
           positionsLimit: limit,
           positionsOffset: offset,
           positionsOrderBy: {
@@ -156,7 +156,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     return json({
       dehydratedState: dehydrate(queryClient),
       initialParams: {
-        atomId: accountResult.account.atomId,
+        atomId: accountResult.account.atom_id,
         queryAddress,
         limit,
         offset,

@@ -156,17 +156,18 @@ export default function ClaimDetails() {
   const { data: vaultDetails, isLoading: isLoadingVaultDetails } =
     useGetVaultDetails(
       MULTIVAULT_CONTRACT_ADDRESS,
-      tripleData?.triple?.vaultId,
-      tripleData?.triple?.counterVaultId,
+      tripleData?.triple?.vault_id,
+      tripleData?.triple?.counter_vault_id,
       {
         queryKey: [
           'get-vault-details',
           MULTIVAULT_CONTRACT_ADDRESS,
-          tripleData?.triple?.vaultId,
-          tripleData?.triple?.counterVaultId,
+          tripleData?.triple?.vault_id,
+          tripleData?.triple?.counter_vault_id,
         ],
         enabled:
-          !!tripleData?.triple?.vaultId && !!tripleData?.triple?.counterVaultId,
+          !!tripleData?.triple?.vault_id &&
+          !!tripleData?.triple?.counter_vault_id,
       },
     )
 

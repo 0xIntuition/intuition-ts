@@ -229,7 +229,7 @@ export default function ReadOnlyIdentityDetails() {
         avatarSrc={getAtomImageGQL(atomResult?.atom) ?? ''}
         name={getAtomLabelGQL(atomResult?.atom) ?? ''}
         id={getAtomIdGQL(atomResult?.atom) ?? ''}
-        vaultId={atomResult?.atom?.vaultId}
+        vaultId={atomResult?.atom?.vault_id}
         bio={getAtomDescriptionGQL(atomResult?.atom) ?? ''}
         ipfsLink={getAtomIpfsLinkGQL(atomResult?.atom) ?? ''}
         externalLink={getAtomLinkGQL(atomResult?.atom) ?? ''}

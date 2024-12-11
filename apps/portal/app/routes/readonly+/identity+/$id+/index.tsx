@@ -42,17 +42,17 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const triplesWhere = {
     _or: [
       {
-        subjectId: {
+        subject_id: {
           _eq: id,
         },
       },
       {
-        objectId: {
+        predicate_id: {
           _eq: id,
         },
       },
       {
-        predicateId: {
+        object_id: {
           _eq: id,
         },
       },
@@ -68,7 +68,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const positionsOrderBy = url.searchParams.get('positionsSortBy')
 
   const positionsWhere = {
-    vaultId: { _eq: id },
+    vault_id: { _eq: id },
   }
 
   await queryClient.prefetchQuery({
@@ -90,7 +90,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
         limit: 10,
         offset: 0,
         orderBy: {
-          blockTimestamp: 'desc' as Order_By,
+          block_timestamp: 'desc' as Order_By,
         },
         address: '', //TODO: We don't have an address for the user since this is read-only. Do we continue to use this version of the hook or just pass in an empty string like so?
       })(),
@@ -156,7 +156,7 @@ export default function ReadOnlyProfileDataAbout() {
       limit: 10,
       offset: 0,
       orderBy: {
-        blockTimestamp: 'desc' as Order_By,
+        block_timestamp: 'desc' as Order_By,
       },
       address: '', //TODO: We don't have an address for the user since this is read-only. Do we continue to use this version of the hook or just pass in an empty string like so?
     },
@@ -168,7 +168,7 @@ export default function ReadOnlyProfileDataAbout() {
           limit: 10,
           offset: 0,
           orderBy: {
-            blockTimestamp: 'desc' as Order_By,
+            block_timestamp: 'desc' as Order_By,
           },
           address: '', //TODO: We don't have an address for the user since this is read-only. Do we continue to use this version of the hook or just pass in an empty string like so?
         },
