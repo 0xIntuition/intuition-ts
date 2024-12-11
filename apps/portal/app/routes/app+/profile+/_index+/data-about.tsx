@@ -1,4 +1,3 @@
-import { url } from 'node:inspector'
 import { Suspense } from 'react'
 
 import { Button, ErrorStateCard, Icon, IconName, Text } from '@0xintuition/1ui'

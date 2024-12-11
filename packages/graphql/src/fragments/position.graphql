@@ -84,6 +84,11 @@ fragment PositionFields on positions {
     label
   }
   shares
+  vault {
+    id
+    total_shares
+    current_share_price
+  }
 }
 
 fragment PositionAggregateFields on positions_aggregate {
