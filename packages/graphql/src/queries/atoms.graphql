@@ -14,6 +14,7 @@ query GetAtoms(
     ...AtomMetadata
     ...AtomTxn
     ...AtomVaultDetails
+    ...AtomTriple
     creator {
       ...AccountMetadata
     }

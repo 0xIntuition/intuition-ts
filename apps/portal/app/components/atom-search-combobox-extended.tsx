@@ -236,7 +236,7 @@ export function AtomSearchComboboxExtended({
   const [searchResults, setSearchResults] = React.useState<
     Omit<
       NonNullable<GetAtomQuery['atom']>,
-      'asSubject' | 'asPredicate' | 'asObject'
+      'as_subject_triples' | 'as_predicate_triples' | 'as_object_triples'
     >[]
   >([])
   const [selectedAtom, setSelectedAtom] = React.useState<GetAtomQuery['atom']>()

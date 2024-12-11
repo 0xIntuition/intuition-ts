@@ -84,7 +84,7 @@ export function HomeStatsHeader({ ...props }: HomeStatsHeaderProps) {
 
 interface StatItemProps {
   label: string
-  value: string | number
+  value?: string | number | null | undefined
   link?: string
 }
 

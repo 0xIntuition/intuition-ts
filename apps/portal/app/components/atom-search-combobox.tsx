@@ -105,7 +105,7 @@ export function AtomSearchCombobox({
   const [searchResults, setSearchResults] = React.useState<
     Omit<
       NonNullable<GetAtomQuery['atom']>,
-      'asSubject' | 'asPredicate' | 'asObject'
+      'as_subject_triples' | 'as_predicate_triples' | 'as_object_triples'
     >[]
   >([])
 
@@ -127,7 +127,10 @@ export function AtomSearchCombobox({
   }, [atomsData])
 
   const handleAtomSelect = (
-    atom: Omit<GetAtomQuery['atom'], 'asSubject' | 'asPredicate' | 'asObject'>,
+    atom: Omit<
+      NonNullable<GetAtomQuery['atom']>,
+      'as_subject_triples' | 'as_predicate_triples' | 'as_object_triples'
+    >,
   ) => {
     onAtomSelect(atom as GetAtomQuery['atom'])
     setIsOpen(false)
