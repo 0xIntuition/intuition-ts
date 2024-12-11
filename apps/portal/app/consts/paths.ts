@@ -7,6 +7,7 @@ export const PATHS = {
   EXPLORE: '/app/explore',
   ACTIVITY: '/app/activity',
   PROFILE: '/app/profile',
+  PORTFOLIO: '/app/portfolio',
   QUEST: '/app/quest',
   LISTS: '/app/lists',
   LIST: '/app/list',

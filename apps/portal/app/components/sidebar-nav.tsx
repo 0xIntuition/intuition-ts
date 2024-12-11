@@ -56,6 +56,11 @@ const sidebarNavRoutes: SidebarNavRoute[] = [
     iconName: 'people',
   },
   {
+    route: PATHS.PORTFOLIO,
+    label: 'Portfolio',
+    iconName: 'ethereum',
+  },
+  {
     route: PATHS.EXPLORE,
     label: 'Explore',
     iconName: 'magnifying-glass',
