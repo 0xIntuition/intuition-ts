@@ -3,14 +3,20 @@ import {
   ClaimSortColumn,
   ClaimsService,
   PositionSortColumn,
-  SortDirection,
   UsersService,
 } from '@0xintuition/api'
+import {
+  fetcher,
+  GetListsDocument,
+  GetListsQuery,
+  GetListsQueryVariables,
+} from '@0xintuition/graphql'
 
 import { getSpecialPredicate } from '@lib/utils/app'
 import { calculateTotalPages } from '@lib/utils/misc'
 import { getStandardPageParams } from '@lib/utils/params'
 import { fetchWrapper } from '@server/api'
+import { QueryClient } from '@tanstack/react-query'
 import { CURRENT_ENV } from 'app/consts'
 
 export async function getUserCreatedLists({
@@ -162,37 +168,39 @@ export async function getListClaims({
 }
 
 export async function getFeaturedLists({
-  request,
   listIds,
+  queryClient,
 }: {
   request: Request
   listIds: number[]
+  queryClient: QueryClient
 }) {
-  const commonArgs = {
-    limit: 1,
-    sortBy: ClaimSortColumn.CREATED_AT,
-    direction: SortDirection.DESC,
-    predicate: getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId,
+  const listsWhere = {
+    _and: [
+      {
+        predicateId: {
+          _eq: getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId,
+        },
+      },
+      {
+        object: {
+          id: { _in: listIds },
+        },
+      },
+    ],
   }
 
-  const featuredListsResults = await Promise.all(
-    listIds.map((id) =>
-      fetchWrapper(request, {
-        method: ClaimsService.searchClaims,
-        args: {
-          ...commonArgs,
-          object: id,
-        },
-      }),
-    ),
-  )
-
-  const featuredLists = featuredListsResults
-    .flatMap((result) => result.data)
-    .filter(Boolean) as ClaimPresenter[]
+  await queryClient.prefetchQuery({
+    queryKey: ['get-featured-lists', { listsWhere }],
+    queryFn: () =>
+      fetcher<GetListsQuery, GetListsQueryVariables>(GetListsDocument, {
+        where: listsWhere,
+      })(),
+  })
 
   return {
-    featuredLists,
-    total: featuredLists.length,
+    initialParams: {
+      listsWhere,
+    },
   }
 }

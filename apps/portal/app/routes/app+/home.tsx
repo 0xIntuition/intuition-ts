@@ -8,6 +8,7 @@ import {
   IdentitiesService,
   SortDirection,
 } from '@0xintuition/api'
+import { useGetListsQuery } from '@0xintuition/graphql'
 
 import { ErrorPage } from '@components/error-page'
 import HomeBanner from '@components/home/home-banner'
@@ -16,20 +17,20 @@ import { HomeStatsHeader } from '@components/home/home-stats-header'
 import { ActivityList } from '@components/list/activity'
 import { ClaimsList } from '@components/list/claims'
 import { IdentitiesList } from '@components/list/identities'
-import { FeaturedListCarousel } from '@components/lists/featured-lists-carousel'
+import { FeaturedListCarouselNew as FeaturedListCarousel } from '@components/lists/featured-lists-carousel'
 import { ListClaimsSkeletonLayout } from '@components/lists/list-skeletons'
 import { RevalidateButton } from '@components/revalidate-button'
 import { ActivitySkeleton, PaginatedListSkeleton } from '@components/skeleton'
-import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getActivity } from '@lib/services/activity'
 import { getFeaturedLists } from '@lib/services/lists'
 import { getSystemStats } from '@lib/services/stats'
 import { getFeaturedListObjectIds } from '@lib/utils/app'
 import { invariant } from '@lib/utils/misc'
 import { defer, LoaderFunctionArgs } from '@remix-run/node'
-import { Await } from '@remix-run/react'
+import { Await, useLoaderData } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
+import { dehydrate, QueryClient } from '@tanstack/react-query'
 import { CURRENT_ENV, NO_WALLET_ERROR } from 'app/consts'
 import FullPageLayout from 'app/layouts/full-page-layout'
 import { PaginationType } from 'app/types'
@@ -37,6 +38,8 @@ import { PaginationType } from 'app/types'
 export async function loader({ request }: LoaderFunctionArgs) {
   const userWallet = await requireUserWallet(request)
   invariant(userWallet, NO_WALLET_ERROR)
+
+  const queryClient = new QueryClient()
 
   const url = new URL(request.url)
   const activitySearchParams = new URLSearchParams(url.search)
@@ -47,6 +50,12 @@ export async function loader({ request }: LoaderFunctionArgs) {
   listSearchParams.set('limit', '6')
 
   return defer({
+    dehydratedState: dehydrate(queryClient),
+    featuredListsParams: await getFeaturedLists({
+      request,
+      listIds: getFeaturedListObjectIds(CURRENT_ENV),
+      queryClient,
+    }),
     systemStats: getSystemStats({ request }),
     topUsers: fetchWrapper(request, {
       method: IdentitiesService.searchIdentity,
@@ -65,19 +74,25 @@ export async function loader({ request }: LoaderFunctionArgs) {
         sortBy: 'AssetsSum',
       },
     }),
-
-    featuredLists: getFeaturedLists({
-      request,
-      listIds: getFeaturedListObjectIds(CURRENT_ENV),
-    }),
     activity: getActivity({ request, searchParams: activitySearchParams }),
   })
 }
 
 export default function HomePage() {
-  const { topUsers, topClaims, featuredLists, activity } = useLiveLoader<
-    typeof loader
-  >(['attest', 'create'])
+  const { topUsers, topClaims, activity, featuredListsParams } =
+    useLoaderData<typeof loader>()
+
+  const { data: resolvedFeaturedLists } = useGetListsQuery(
+    {
+      where: featuredListsParams.initialParams.listsWhere,
+    },
+    {
+      queryKey: [
+        'get-featured-lists',
+        { where: featuredListsParams.initialParams.listsWhere },
+      ],
+    },
+  )
 
   return (
     <FullPageLayout>
@@ -108,29 +123,10 @@ export default function HomePage() {
               />
             }
           >
-            <Await
-              resolve={featuredLists}
-              errorElement={
-                <ErrorStateCard>
-                  <RevalidateButton />
-                </ErrorStateCard>
-              }
-            >
-              {(resolvedFeaturedLists) => {
-                if (
-                  !resolvedFeaturedLists ||
-                  resolvedFeaturedLists.featuredLists.length === 0
-                ) {
-                  return <EmptyStateCard message="No lists found." />
-                }
-                return (
-                  <FeaturedListCarousel
-                    lists={resolvedFeaturedLists.featuredLists}
-                  />
-                )
-              }}
-            </Await>
-          </Suspense>{' '}
+            <FeaturedListCarousel
+              lists={resolvedFeaturedLists?.predicateObjects ?? []}
+            />
+          </Suspense>
         </div>
         <div className="flex flex-col gap-4">
           <HomeSectionHeader
