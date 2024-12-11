@@ -14,7 +14,6 @@ fragment AccountClaimsAggregate on accounts {
     nodes {
       triple {
         id
-        label
       }
       shares
       counter_shares
@@ -31,7 +30,6 @@ fragment AccountClaims on accounts {
   ) {
     triple {
       id
-      label
     }
     shares
     counter_shares
@@ -56,7 +54,6 @@ fragment AccountPositionsAggregate on accounts {
         }
         triple {
           id
-          label
         }
       }
     }
@@ -82,7 +79,6 @@ fragment AccountPositions on accounts {
       }
       triple {
         id
-        label
       }
     }
   }
@@ -156,7 +152,6 @@ fragment AccountTriples on accounts {
     }
     nodes {
       id
-      label
       subject {
         id
         label
@@ -185,7 +180,6 @@ fragment AccountTriplesAggregate on accounts {
     }
     nodes {
       id
-      label
       subject {
         id
         label

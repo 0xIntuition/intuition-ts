@@ -2,8 +2,8 @@ query GetTags($subjectId: numeric!, $predicateId: numeric!) {
   triples(
     where: {
       _and: [
-        { subjectId: { _eq: $subjectId } }
-        { predicateId: { _eq: $predicateId } }
+        { subject_id: { _eq: $subjectId } }
+        { predicate_id: { _eq: $predicateId } }
       ]
     }
   ) {

@@ -36,9 +36,9 @@ query GetAtomsWithPositions(
     ...AtomMetadata
     ...AtomTxn
     vault {
-      positionCount
-      totalShares
-      currentSharePrice
+      position_count
+      total_shares
+      current_share_price
       total: positions_aggregate {
         aggregate {
           count
@@ -47,7 +47,7 @@ query GetAtomsWithPositions(
           }
         }
       }
-      positions(where: { accountId: { _eq: $address } }) {
+      positions(where: { account_id: { _eq: $address } }) {
         id
         account {
           label

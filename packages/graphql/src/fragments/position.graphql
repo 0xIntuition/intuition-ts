@@ -16,7 +16,7 @@ fragment PositionDetails on positions {
       id
       vault {
         id
-        positionCount
+        position_count
         positions_aggregate {
           aggregate {
             sum {
@@ -25,9 +25,9 @@ fragment PositionDetails on positions {
           }
         }
       }
-      counterVault {
+      counter_vault {
         id
-        positionCount
+        position_count
         positions_aggregate {
           aggregate {
             sum {

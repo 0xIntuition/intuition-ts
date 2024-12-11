@@ -9,9 +9,9 @@ query GetFollowingPositions(
   triples_aggregate(
     where: {
       _and: [
-        { subjectId: { _eq: $subjectId } }
-        { predicateId: { _eq: $predicateId } }
-        { vault: { positions: { accountId: { _eq: $address } } } }
+        { subject_id: { _eq: $subjectId } }
+        { predicate_id: { _eq: $predicateId } }
+        { vault: { positions: { account_id: { _eq: $address } } } }
       ]
     }
   ) {
@@ -24,9 +24,9 @@ query GetFollowingPositions(
     offset: $offset
     where: {
       _and: [
-        { subjectId: { _eq: $subjectId } }
-        { predicateId: { _eq: $predicateId } }
-        { vault: { positions: { accountId: { _eq: $address } } } }
+        { subject_id: { _eq: $subjectId } }
+        { predicate_id: { _eq: $predicateId } }
+        { vault: { positions: { account_id: { _eq: $address } } } }
       ]
     }
   ) {
@@ -41,8 +41,8 @@ query GetFollowingPositions(
       ...AtomMetadata
     }
     vault {
-      totalShares
-      currentSharePrice
+      total_shares
+      current_share_price
       positions_aggregate {
         aggregate {
           count
@@ -52,10 +52,10 @@ query GetFollowingPositions(
         }
       }
       positions(
-        where: { accountId: { _eq: $address } }
+        where: { account_id: { _eq: $address } }
         order_by: $positionsOrderBy
       ) {
-        accountId
+        account_id
         account {
           id
           label
@@ -78,14 +78,13 @@ query GetFollowerPositions(
   triples(
     where: {
       _and: [
-        { subjectId: { _eq: $subjectId } }
-        { predicateId: { _eq: $predicateId } }
-        { objectId: { _eq: $objectId } }
+        { subject_id: { _eq: $subjectId } }
+        { predicate_id: { _eq: $predicateId } }
+        { object_id: { _eq: $objectId } }
       ]
     }
   ) {
     id
-    label
     subject {
       ...AtomMetadata
     }
@@ -96,8 +95,8 @@ query GetFollowerPositions(
       ...AtomMetadata
     }
     vault {
-      totalShares
-      currentSharePrice
+      total_shares
+      current_share_price
       positions_aggregate {
         aggregate {
           count
@@ -138,9 +137,9 @@ query GetConnections(
   following_count: triples_aggregate(
     where: {
       _and: [
-        { subjectId: { _eq: $subjectId } }
-        { predicateId: { _eq: $predicateId } }
-        { objectId: { _eq: $objectId } }
+        { subject_id: { _eq: $subjectId } }
+        { predicate_id: { _eq: $predicateId } }
+        { object_id: { _eq: $objectId } }
       ]
     }
   ) {
@@ -151,9 +150,9 @@ query GetConnections(
   following: triples(
     where: {
       _and: [
-        { subjectId: { _eq: $subjectId } }
-        { predicateId: { _eq: $predicateId } }
-        { objectId: { _eq: $objectId } }
+        { subject_id: { _eq: $subjectId } }
+        { predicate_id: { _eq: $predicateId } }
+        { object_id: { _eq: $objectId } }
       ]
     }
   ) {
@@ -164,9 +163,9 @@ query GetConnections(
   followers_count: triples_aggregate(
     where: {
       _and: [
-        { subjectId: { _eq: $subjectId } }
-        { predicateId: { _eq: $predicateId } }
-        { vault: { positions: { accountId: { _in: $addresses } } } }
+        { subject_id: { _eq: $subjectId } }
+        { predicate_id: { _eq: $predicateId } }
+        { vault: { positions: { account_id: { _in: $addresses } } } }
       ]
     }
   ) {
@@ -177,9 +176,9 @@ query GetConnections(
   followers: triples(
     where: {
       _and: [
-        { subjectId: { _eq: $subjectId } }
-        { predicateId: { _eq: $predicateId } }
-        { vault: { positions: { accountId: { _in: $addresses } } } }
+        { subject_id: { _eq: $subjectId } }
+        { predicate_id: { _eq: $predicateId } }
+        { vault: { positions: { account_id: { _in: $addresses } } } }
       ]
     }
   ) {
@@ -197,9 +196,9 @@ query GetConnectionsCount(
   following_count: triples_aggregate(
     where: {
       _and: [
-        { subjectId: { _eq: $subjectId } }
-        { predicateId: { _eq: $predicateId } }
-        { vault: { positions: { accountId: { _eq: $address } } } }
+        { subject_id: { _eq: $subjectId } }
+        { predicate_id: { _eq: $predicateId } }
+        { vault: { positions: { account_id: { _eq: $address } } } }
       ]
     }
   ) {
@@ -212,9 +211,9 @@ query GetConnectionsCount(
   followers_count: triples(
     where: {
       _and: [
-        { subjectId: { _eq: $subjectId } }
-        { predicateId: { _eq: $predicateId } }
-        { objectId: { _eq: $objectId } }
+        { subject_id: { _eq: $subjectId } }
+        { predicate_id: { _eq: $predicateId } }
+        { object_id: { _eq: $objectId } }
       ]
     }
   ) {

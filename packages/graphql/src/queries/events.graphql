@@ -39,7 +39,6 @@ query GetEvents(
     }
     triple {
       id
-      label
       creator {
         ...AccountMetadata
       }
