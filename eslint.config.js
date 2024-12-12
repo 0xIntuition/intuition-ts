@@ -2,6 +2,7 @@ import globals from 'globals';
 import js from '@eslint/js';
 import { FlatCompat } from '@eslint/eslintrc';
 import importPlugin from 'eslint-plugin-import';
+import reactHooksPlugin from 'eslint-plugin-react-hooks';
 import * as tseslint from '@typescript-eslint/eslint-plugin';
 import * as tsParser from '@typescript-eslint/parser';
 
@@ -102,6 +103,7 @@ export default [
     files: ['**/*.{js,jsx,ts,tsx}'],
     plugins: {
       import: importPlugin,
+      'react-hooks': reactHooksPlugin,
     },
     settings: {
       'import/resolver': {
