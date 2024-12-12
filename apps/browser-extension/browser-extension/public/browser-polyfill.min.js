@@ -1,0 +1,1 @@
+Found. Redirecting to /webextension-polyfill@0.12.0/dist/browser-polyfill.min.js
