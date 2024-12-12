@@ -1,19 +1,19 @@
 # predicateId = 4 for tags on dev, 3 on prod
 
 # GetLists query for Exploring Lists
-query GetLists($where: predicateObjects_bool_exp) {
-  predicateObjects_aggregate(where: $where) {
+query GetLists($where: predicate_objects_bool_exp) {
+  predicate_objects_aggregate(where: $where) {
     aggregate {
       count
     }
   }
-  predicateObjects(
+  predicate_objects(
     where: $where
-    order_by: [{ claimCount: desc }, { tripleCount: desc }]
+    order_by: [{ claim_count: desc }, { triple_count: desc }]
   ) {
     id
-    claimCount
-    tripleCount
+    claim_count
+    triple_count
     object {
       id
       label
