@@ -153,7 +153,7 @@ export function ListClaimsListNew<T extends SortColumnType = ClaimSortColumn>({
   sourceUserAddress,
   readOnly = false,
 }: {
-  listClaims: GetListsQuery['predicateObjects']
+  listClaims: GetListsQuery['predicate_objects']
   pagination?: PaginationType
   paramPrefix?: string
   enableSearch?: boolean
@@ -214,7 +214,7 @@ export function ListClaimsListNew<T extends SortColumnType = ClaimSortColumn>({
               key={claim.id || index}
               displayName={claim.object?.label ?? 'Unknown'}
               imgSrc={claim.object?.image ?? undefined}
-              identitiesCount={claim.claimCount ?? 0}
+              identitiesCount={claim.claim_count ?? 0}
               buttonWrapper={(button) => (
                 <Link
                   to={getListUrl(claim.id, sourceUserAddress ?? '', readOnly)}

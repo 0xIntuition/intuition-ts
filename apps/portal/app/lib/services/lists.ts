@@ -178,7 +178,7 @@ export async function getFeaturedLists({
   const listsWhere = {
     _and: [
       {
-        predicateId: {
+        predicate_id: {
           _eq: getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId,
         },
       },

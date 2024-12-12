@@ -52,7 +52,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const listsWhere = {
     _and: [
       {
-        predicateId: {
+        predicate_id: {
           _eq: getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId,
         },
       },
@@ -157,7 +157,7 @@ export default function ExploreLists() {
       />
       <ExploreSearch variant="list" />
       <ListClaimsList
-        listClaims={listsResult?.predicateObjects ?? []}
+        listClaims={listsResult?.predicate_objects ?? []}
         pagination={{ ...pagination, currentPage }}
         enableSearch={false}
         enableSort={true}

@@ -141,7 +141,7 @@ export function FeaturedListCarousel({ lists }: FeaturedListCarouselProps) {
 }
 
 interface FeaturedListCarouselNewProps {
-  lists: GetListsQuery['predicateObjects']
+  lists: GetListsQuery['predicate_objects']
 }
 
 export function FeaturedListCarouselNew({
@@ -246,7 +246,7 @@ export function FeaturedListCarouselNew({
                 <FeaturedListCard
                   displayName={list.object?.label ?? ''}
                   imgSrc={list.object?.image ?? ''}
-                  identitiesCount={list.claimCount ?? 0}
+                  identitiesCount={list.claim_count ?? 0}
                   // TODO: Update TVL and holders count when it becomes available. Because the list is identified by the object, the tvl and holders count are related to specific claim used for the query rather than the list itself.
                   // tvl={formatBalance(list.assets_sum ?? 0, 18)}
                   // holdersCount={list.num_positions ?? 0}

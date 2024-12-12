@@ -124,7 +124,7 @@ export default function HomePage() {
             }
           >
             <FeaturedListCarousel
-              lists={resolvedFeaturedLists?.predicateObjects ?? []}
+              lists={resolvedFeaturedLists?.predicate_objects ?? []}
             />
           </Suspense>
         </div>
