@@ -51,6 +51,7 @@ export default defineConfig({
         chunkFileNames: 'assets/[name].js',
         assetFileNames: 'assets/[name].[ext]',
       },
+      external: ['webextension-polyfill'],
     },
     commonjsOptions: {
       transformMixedEsModules: true,
@@ -64,5 +65,6 @@ export default defineConfig({
   appType: 'spa',
   optimizeDeps: {
     include: ['react', 'react-dom'],
+    exclude: ['webextension-polyfill'],
   },
 });
