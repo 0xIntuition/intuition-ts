@@ -21,10 +21,23 @@ export default defineConfig({
   plugins: [
     react(),
     nxViteTsPaths(),
+    {
+      name: 'copy-manifest',
+      generateBundle() {
+        this.emitFile({
+          type: 'asset',
+          fileName: 'manifest.json',
+          source: require('fs').readFileSync(
+            resolve(__dirname, 'public/manifest.json'),
+            'utf-8'
+          ),
+        });
+      },
+    },
   ],
 
   build: {
-    outDir: '../../../dist/apps/browser-extension/browser-extension',
+    outDir: 'dist',
     emptyOutDir: true,
     reportCompressedSize: true,
     rollupOptions: {
@@ -38,27 +51,14 @@ export default defineConfig({
         chunkFileNames: 'assets/[name].js',
         assetFileNames: 'assets/[name].[ext]',
       },
-      external: [
-        'webextension-polyfill',
-      ],
     },
     commonjsOptions: {
       transformMixedEsModules: true,
     },
   },
 
-  test: {
-    globals: true,
-    cache: {
-      dir: '../../../node_modules/.vitest/apps/browser-extension/browser-extension',
-    },
-    environment: 'jsdom',
-    include: ['src/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
-    reporters: ['default'],
-    coverage: {
-      reportsDirectory: '../../../coverage/apps/browser-extension/browser-extension',
-      provider: 'v8',
-    },
+  define: {
+    'process.env.VITE_OPENAI_API_KEY': JSON.stringify(process.env.VITE_OPENAI_API_KEY),
   },
 
   appType: 'spa',

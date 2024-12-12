@@ -2,6 +2,11 @@
   "name": "@0xintuition/browser-extension",
   "version": "0.1.0",
   "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
   "dependencies": {
     "@0xintuition/1ui": "workspace:^",
     "react": "^18.2.0",
