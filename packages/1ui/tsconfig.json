@@ -8,5 +8,5 @@
     "moduleResolution": "bundler",
     "types": ["jest", "node", "vitest"]
   },
-  "include": ["src"]
+  "include": ["src/**/*.ts", "src/**/*.tsx"]
 }
