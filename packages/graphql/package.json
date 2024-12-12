@@ -2,6 +2,7 @@
   "name": "@0xintuition/graphql",
   "description": "GraphQL",
   "version": "0.3.0",
+  "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",

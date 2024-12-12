@@ -1,9 +1,9 @@
 import React from 'react'
 
 import type { Meta, StoryObj } from '@storybook/react'
+import { ActivePositionCard } from './ActivePositionCard'
 import { ClaimPosition, Currency } from 'types'
 
-import { ActivePositionCard } from './ActivePositionCard'
 
 const meta: Meta<typeof ActivePositionCard> = {
   title: 'Components/ActivePositionCard',

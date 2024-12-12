@@ -1,12 +1,12 @@
 // Import React
 import React from 'react'
 
-// Import Storybook meta and StoryObj type
 import type { Meta, StoryObj } from '@storybook/react'
-import { IdentityTagSize } from 'components/IdentityTag'
+
+// Import Storybook meta and StoryObj type
+import { Claim } from './Claim'
 
 // Import your actual component
-import { Claim } from './Claim'
 
 // Setup meta for the Storybook
 const meta: Meta<typeof Claim> = {

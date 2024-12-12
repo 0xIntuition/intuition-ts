@@ -1,9 +1,9 @@
 import React from 'react'
 
 import type { Meta, StoryObj } from '@storybook/react'
+import { EmptyStateCard } from './EmptyStateCard'
 import { Button } from 'components/Button'
 
-import { EmptyStateCard } from './EmptyStateCard'
 
 const meta: Meta<typeof EmptyStateCard> = {
   title: 'Components/EmptyStateCard',

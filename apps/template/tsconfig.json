@@ -21,7 +21,17 @@
     },
     "outDir": "./build"
   },
-  "include": ["**/*.ts", "**/*.tsx", "tailwind.config.ts"],
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "tests/**/*.ts",
+    "tests/**/*.tsx",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/*.spec.ts",
+    "**/*.spec.tsx",
+    "tailwind.config.ts"
+  ],
   "exclude": ["node_modules", "build"],
   "references": [
     { "path": "../../packages/1ui" },

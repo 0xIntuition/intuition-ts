@@ -1,9 +1,9 @@
 import React from 'react'
 
 import type { Meta, StoryObj } from '@storybook/react'
+import { ErrorStateCard } from './ErrorStateCard'
 import { Button } from 'components/Button'
 
-import { ErrorStateCard } from './ErrorStateCard'
 
 const meta: Meta<typeof ErrorStateCard> = {
   title: 'Components/ErrorStateCard',

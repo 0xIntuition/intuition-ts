@@ -1,9 +1,9 @@
 import React from 'react'
 
 import { render } from '@testing-library/react'
+import { ListHeaderCard } from './ListHeaderCard'
 import { Claim } from 'components'
 
-import { ListHeaderCard } from './ListHeaderCard'
 
 describe('ListHeaderCard', () => {
   it('should render appropriate element', () => {

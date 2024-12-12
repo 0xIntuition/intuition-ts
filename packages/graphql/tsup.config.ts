@@ -10,4 +10,7 @@ export default defineConfig({
   external: ['react', 'graphql'],
   treeshake: true,
   noExternal: ['./src/generated/**'],
+  esbuildOptions(options) {
+    options.conditions = ['module']
+  },
 })

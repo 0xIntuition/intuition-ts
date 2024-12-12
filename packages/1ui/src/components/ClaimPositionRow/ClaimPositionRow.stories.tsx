@@ -1,9 +1,9 @@
 import React from 'react'
 
 import type { Meta, StoryObj } from '@storybook/react'
+import { ClaimPositionRow } from './ClaimPositionRow'
 import { Claim } from 'components'
 
-import { ClaimPositionRow } from './ClaimPositionRow'
 
 const meta: Meta<typeof ClaimPositionRow> = {
   title: 'Components/Claim/ClaimPositionRow',

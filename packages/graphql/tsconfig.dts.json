@@ -1,0 +1,26 @@
+{
+  "extends": "./tsconfig.json",
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/generated/**/*.ts",
+    "src/generated/**/*.tsx"
+  ],
+  "exclude": [
+    "**/*.spec.ts",
+    "**/*.test.ts",
+    "**/*.spec.tsx",
+    "**/*.test.tsx",
+    "vitest.config.ts"
+  ],
+  "compilerOptions": {
+    "composite": true,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "noEmit": false,
+    "moduleResolution": "bundler",
+    "baseUrl": "./src",
+    "rootDir": ".",
+    "outDir": "../../dist/packages/graphql"
+  }
+}

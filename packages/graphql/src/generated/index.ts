@@ -7,7 +7,7 @@ import {
 } from '@tanstack/react-query'
 import { DocumentNode } from 'graphql'
 
-import { fetcher } from '../client'
+import { fetcher } from '../client.js'
 
 export type Maybe<T> = T | null
 export type InputMaybe<T> = Maybe<T>

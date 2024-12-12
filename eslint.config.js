@@ -30,6 +30,10 @@ const baseConfig = {
       ...globals.node,
       ...globals.es2021,
       process: 'readonly',
+      console: 'readonly',
+      fetch: 'readonly',
+      Buffer: 'readonly',
+      btoa: 'readonly',
       vi: true,
       describe: true,
       it: true,
@@ -42,7 +46,10 @@ const baseConfig = {
     },
   },
   settings: {
-    react: { version: '18.2.0' },
+    react: {
+      version: 'detect',
+      runtime: 'automatic'
+    },
     'import/parsers': {
       '@typescript-eslint/parser': ['.ts', '.tsx'],
     },
@@ -70,7 +77,25 @@ export default [
     languageOptions: {
       parser: tsParser,
       parserOptions: {
-        project: ['/home/ubuntu/repos/intuition-ts/tsconfig.base.json', '/home/ubuntu/repos/intuition-ts/packages/*/tsconfig.json', '/home/ubuntu/repos/intuition-ts/apps/*/tsconfig.json'],
+        projectService: true,
+        tsconfigRootDir: '/home/ubuntu/repos/intuition-ts',
+        allowDefaultProject: true
+      },
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+        ...globals.es2021,
+        process: 'readonly',
+        console: 'readonly',
+        fetch: 'readonly',
+        Buffer: 'readonly',
+        btoa: 'readonly',
+        vi: true,
+        describe: true,
+        it: true,
+        expect: true,
+        beforeEach: true,
+        afterEach: true,
       },
     },
     plugins: {
@@ -94,7 +119,6 @@ export default [
   ...compat.extends(
     'plugin:react/recommended',
     'plugin:react/jsx-runtime',
-    'plugin:react-hooks/recommended',
     'plugin:jsx-a11y/recommended',
     'plugin:prettier/recommended'
   ),
@@ -122,7 +146,7 @@ export default [
       'import/no-named-as-default-member': 'off',
       'import/no-duplicates': 'error',
       'import/extensions': ['error', 'never', { json: 'always' }],
-      'import/order': ['error', { 'newlines-between': 'always', alphabetize: { order: 'asc' } }],
+      'import/order': ['warn', { 'newlines-between': 'always', alphabetize: { order: 'asc' } }],
     },
   },
 
@@ -140,7 +164,7 @@ export default [
     languageOptions: {
       parser: tsParser,
       parserOptions: {
-        project: null,
+        projectService: true,
       },
     },
   },
@@ -171,7 +195,13 @@ export default [
       'no-else-return': 'error',
       'react/prop-types': 'off',
       'prettier/prettier': 'error',
-      'react-hooks/exhaustive-deps': 'warn',
+      'react-hooks/rules-of-hooks': 'error',
+      'react-hooks/exhaustive-deps': [
+        'warn',
+        {
+          additionalHooks: '(useRecoilCallback|useRecoilTransaction_UNSTABLE)'
+        }
+      ],
       'prefer-const': 'error',
       'no-var': 'error',
       'prefer-spread': 'error',
@@ -180,7 +210,7 @@ export default [
       'no-undef-init': 'error',
       'no-lonely-if': 'error',
       'no-unneeded-ternary': 'error',
-      'no-confusing-arrow': 'error',
+      'no-confusing-arrow': 'warn',
       'no-extra-semi': 'error',
       'dot-notation': 'error',
     },

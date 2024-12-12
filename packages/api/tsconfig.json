@@ -1,12 +1,22 @@
 {
   "extends": "../../tsconfig.base.json",
-  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.d.ts",
+    "tests/**/*.ts",
+    "tests/**/*.tsx",
+    "*.config.ts",
+    "types.d.ts",
+    "index.d.ts"
+  ],
   "exclude": ["node_modules", "dist"],
   "compilerOptions": {
     "baseUrl": "./src",
-    "rootDir": "src",
+    "rootDir": ".",
     "outDir": "../../dist/packages/api",
     "composite": true,
-    "moduleResolution": "bundler"
+    "moduleResolution": "bundler",
+    "types": ["jest", "node", "vitest"]
   }
 }

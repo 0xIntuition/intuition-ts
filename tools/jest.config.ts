@@ -1,4 +1,3 @@
-/* eslint-disable */
 export default {
   displayName: '@0xintuition/automation-tools',
   preset: '../jest.preset.cjs',

@@ -5,7 +5,7 @@ const commonGenerateOptions: Types.ConfiguredOutput = {
   config: {
     reactQueryVersion: 5,
     fetcher: {
-      func: '../client#fetcher',
+      func: '../client.js#fetcher',
       isReactHook: false,
     },
     exposeDocument: true,

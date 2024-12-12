@@ -1,12 +1,27 @@
 {
   "extends": "../../tsconfig.base.json",
-  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "tests/**/*.ts",
+    "tests/**/*.tsx",
+    "*.config.ts",
+    "types.d.ts",
+    "src/generated/**/*.ts",
+    "src/generated/**/*.tsx"
+  ],
   "exclude": ["node_modules", "dist"],
   "compilerOptions": {
     "moduleResolution": "bundler",
+    "module": "esnext",
     "baseUrl": "./src",
-    "rootDir": "src",
+    "rootDir": ".",
     "outDir": "../../dist/packages/graphql",
-    "composite": true
+    "composite": true,
+    "declaration": true,
+    "types": ["jest", "node", "vitest"],
+    "allowJs": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true
   }
 }

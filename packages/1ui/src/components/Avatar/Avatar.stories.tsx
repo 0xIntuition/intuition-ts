@@ -1,9 +1,9 @@
 import React from 'react'
 
 import type { Meta, StoryObj } from '@storybook/react'
+import { Avatar } from './Avatar'
 import { Identity } from 'types'
 
-import { Avatar } from './Avatar'
 
 const meta: Meta<typeof Avatar> = {
   title: 'Components/Avatar',

@@ -24,6 +24,12 @@
   "include": [
     "**/*.ts",
     "**/*.tsx",
+    "tests/**/*.ts",
+    "tests/**/*.tsx",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/*.spec.ts",
+    "**/*.spec.tsx",
     "tailwind.config.ts",
     "app/.server/csv-editor.tsx"
   ],

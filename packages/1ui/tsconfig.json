@@ -6,7 +6,19 @@
     "outDir": "../../dist/packages/1ui",
     "composite": true,
     "moduleResolution": "bundler",
-    "types": ["jest", "node", "vitest"]
+    "types": ["node", "react", "react-dom", "jest", "vitest"],
+    "allowJs": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx"]
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.d.ts",
+    "tests/**/*.ts",
+    "tests/**/*.tsx",
+    "*.config.ts",
+    "types.d.ts",
+    "vitest.setup.ts"
+  ]
 }
