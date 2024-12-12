@@ -6,6 +6,7 @@
     "moduleResolution": "bundler",
     "baseUrl": "./src",
     "rootDir": "src",
-    "outDir": "../../dist/packages/graphql"
+    "outDir": "../../dist/packages/graphql",
+    "composite": true
   }
 }

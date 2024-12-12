@@ -5,7 +5,7 @@
     "baseUrl": ".",
     "forceConsistentCasingInFileNames": true,
     "lib": ["DOM", "DOM.Iterable", "ES2022"],
-    "moduleResolution": "Bundler",
+    "moduleResolution": "bundler",
     "noEmit": true,
     "types": ["@remix-run/node", "vite/client"],
     "paths": {
@@ -24,8 +24,10 @@
   "include": ["**/*.ts", "**/*.tsx", "tailwind.config.ts"],
   "exclude": ["node_modules", "build"],
   "references": [
-    {
-      "path": "../../packages/1ui"
-    }
+    { "path": "../../packages/1ui" },
+    { "path": "../../packages/api" },
+    { "path": "../../packages/graphql" },
+    { "path": "../../packages/protocol" },
+    { "path": "../../packages/sdk" }
   ]
 }
