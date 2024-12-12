@@ -48,7 +48,7 @@ const baseConfig = {
     },
     'import/resolver': {
       typescript: {
-        project: ['./tsconfig.base.json', './packages/*/tsconfig.json', './apps/*/tsconfig.json'],
+        project: ['/home/ubuntu/repos/intuition-ts/tsconfig.base.json', '/home/ubuntu/repos/intuition-ts/packages/*/tsconfig.json', '/home/ubuntu/repos/intuition-ts/apps/*/tsconfig.json'],
         alwaysTryTypes: true,
       },
       node: {
@@ -70,7 +70,7 @@ export default [
     languageOptions: {
       parser: tsParser,
       parserOptions: {
-        project: ['./tsconfig.base.json', './packages/*/tsconfig.json', './apps/*/tsconfig.json'],
+        project: ['/home/ubuntu/repos/intuition-ts/tsconfig.base.json', '/home/ubuntu/repos/intuition-ts/packages/*/tsconfig.json', '/home/ubuntu/repos/intuition-ts/apps/*/tsconfig.json'],
       },
     },
     plugins: {
@@ -108,7 +108,7 @@ export default [
     settings: {
       'import/resolver': {
         typescript: {
-          project: ['./tsconfig.base.json', './packages/*/tsconfig.json', './apps/*/tsconfig.json'],
+          project: ['/home/ubuntu/repos/intuition-ts/tsconfig.base.json', '/home/ubuntu/repos/intuition-ts/packages/*/tsconfig.json', '/home/ubuntu/repos/intuition-ts/apps/*/tsconfig.json'],
         },
         node: true,
       },
