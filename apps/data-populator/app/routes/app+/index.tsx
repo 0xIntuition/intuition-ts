@@ -424,6 +424,7 @@ export default function CSVEditor() {
     UnusualCharacterIssue[]
   >([])
   const [showProofreadModal, setShowProofreadModal] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
   const recheckAtomExistence = useCallback(() => {
     checkExistingAtoms(csvData, selectedType)
@@ -433,7 +434,7 @@ export default function CSVEditor() {
   const {
     step,
     requestHash,
-    isLoading,
+    isLoading: isBatchLoading,
     initiateBatchRequest,
     setSelectedType: setBatchCreateAtomSelectedType,
   } = useBatchCreateAtom(recheckAtomExistence)
@@ -622,8 +623,13 @@ export default function CSVEditor() {
 
   // Update processLoadedData to include CAIP10 proofing
   const processLoadedData = (rows: string[][], type: AtomDataTypeKey) => {
-    setCsvData(rows)
-    setLoadedCSVData(rows)
+    // Batch our updates together
+    const newRows = [...rows]
+    const newSelectedRows = newRows.slice(1).map((_, index) => index)
+
+    setCsvData(newRows)
+    setLoadedCSVData(newRows)
+    setSelectedRows(newSelectedRows)
 
     const proofreadResult = proofreadAll(rows)
     const issues: UnusualCharacterIssue[] = []
@@ -666,6 +672,7 @@ export default function CSVEditor() {
                 !proofreadResult.duplicates.duplicateIndices.includes(index),
             )
             setCsvData(finalRows)
+            setSelectedRows(finalRows.slice(1).map((_, index) => index))
             checkExistingAtoms(finalRows, type)
           } else {
             checkExistingAtoms(rows, type)
@@ -1451,6 +1458,14 @@ export default function CSVEditor() {
       })
     })
   }, [selectedRows, csvData, selectedType])
+
+  // Effect to handle row selection after data load
+  useEffect(() => {
+    if (isLoading && csvData.length > 0) {
+      setSelectedRows(csvData.slice(1).map((_, index) => index))
+      setIsLoading(false)
+    }
+  }, [csvData, isLoading])
 
   return (
     <>
