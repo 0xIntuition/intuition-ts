@@ -2,6 +2,7 @@ import { Suspense, useEffect, useState } from 'react'
 
 import {
   Claim,
+  ErrorStateCard,
   ListHeaderCard,
   Skeleton,
   Tabs,
@@ -29,6 +30,7 @@ import { ErrorPage } from '@components/error-page'
 import { TagsList } from '@components/list/tags'
 import { ListTabIdentityDisplay } from '@components/lists/list-tab-identity-display'
 import RemixLink from '@components/remix-link'
+import { RevalidateButton } from '@components/revalidate-button'
 import { DataHeaderSkeleton, PaginatedListSkeleton } from '@components/skeleton'
 import { getSpecialPredicate } from '@lib/utils/app'
 import logger from '@lib/utils/logger'
@@ -196,7 +198,12 @@ export default function ReadOnlyListOverview() {
     },
   )
 
-  const { data: listDetailsData } = useGetListDetailsQuery(
+  const {
+    data: listDetailsData,
+    isLoading: isLoadingTriples,
+    isError: isErrorTriples,
+    error: errorTriples,
+  } = useGetListDetailsQuery(
     {
       globalWhere: initialParams.globalWhere,
       userWhere: initialParams.userWhere,
@@ -213,7 +220,12 @@ export default function ReadOnlyListOverview() {
     },
   )
 
-  const { data: additionalUserData } = useGetListDetailsQuery(
+  const {
+    data: additionalUserData,
+    isLoading: isLoadingAdditionalTriples,
+    isError: isErrorAdditionalTriples,
+    error: errorAdditionalTriples,
+  } = useGetListDetailsQuery(
     additionalQueryAddress
       ? {
           userWhere: initialParams.userWhere,
@@ -347,45 +359,67 @@ export default function ReadOnlyListOverview() {
             <Suspense
               fallback={<Skeleton className="w-44 h-10 rounded mr-2" />}
             >
-              <TabsTrigger
-                value="global"
-                label="Global"
-                totalCount={
-                  listDetailsData?.globalTriplesAggregate.aggregate?.count ?? 0
-                }
-                onClick={(e) => {
-                  e.preventDefault()
-                  handleTabChange('global')
-                }}
-              />
-            </Suspense>
-            {userWalletAddress && (
-              <Suspense fallback={<Skeleton className="w-44 h-10 rounded" />}>
+              {isLoadingTriples ? (
+                <Skeleton className="w-44 h-10 rounded mr-2" />
+              ) : (
                 <TabsTrigger
-                  className="text-left"
-                  value="additional"
+                  value="global"
+                  label="Global"
                   totalCount={
-                    additionalUserData?.userTriplesAggregate.aggregate?.count ??
+                    listDetailsData?.globalTriplesAggregate.aggregate?.count ??
                     0
-                  }
-                  label={
-                    <ListTabIdentityDisplay
-                      imgSrc={additionalAccountResult?.account?.image}
-                    >
-                      {additionalAccountResult?.account?.label ?? 'Additional'}
-                    </ListTabIdentityDisplay>
                   }
                   onClick={(e) => {
                     e.preventDefault()
-                    handleTabChange('additional')
+                    handleTabChange('global')
                   }}
                 />
+              )}
+            </Suspense>
+            {userWalletAddress && (
+              <Suspense fallback={<Skeleton className="w-44 h-10 rounded" />}>
+                {isLoadingAdditionalTriples ? (
+                  <Skeleton className="w-44 h-10 rounded" />
+                ) : (
+                  <TabsTrigger
+                    className="text-left"
+                    value="additional"
+                    totalCount={
+                      additionalUserData?.userTriplesAggregate.aggregate
+                        ?.count ?? 0
+                    }
+                    label={
+                      <ListTabIdentityDisplay
+                        imgSrc={additionalAccountResult?.account?.image}
+                      >
+                        {additionalAccountResult?.account?.label ??
+                          'Additional'}
+                      </ListTabIdentityDisplay>
+                    }
+                    onClick={(e) => {
+                      e.preventDefault()
+                      handleTabChange('additional')
+                    }}
+                  />
+                )}
               </Suspense>
             )}
           </TabsList>
           <TabsContent value="global" className="mt-6">
             <Suspense fallback={<PaginatedListSkeleton />}>
-              {listDetailsData?.globalTriples ? (
+              {isLoadingTriples ? (
+                <PaginatedListSkeleton />
+              ) : isErrorTriples ? (
+                <ErrorStateCard
+                  title="Failed to load global list"
+                  message={
+                    (errorTriples as Error)?.message ??
+                    'An unexpected error occurred'
+                  }
+                >
+                  <RevalidateButton />
+                </ErrorStateCard>
+              ) : listDetailsData?.globalTriples ? (
                 isNavigating ? (
                   <PaginatedListSkeleton />
                 ) : (
@@ -393,24 +427,36 @@ export default function ReadOnlyListOverview() {
                     triples={listDetailsData.globalTriples}
                     enableSearch={true}
                     enableSort={true}
-                    readOnly
                   />
                 )
               ) : null}
             </Suspense>
           </TabsContent>
-          {userWalletAddress && !!additionalUserData && (
+          {userWalletAddress && (
             <TabsContent value="additional">
               <Suspense fallback={<PaginatedListSkeleton />}>
-                {isNavigating ? (
+                {isLoadingAdditionalTriples ? (
                   <PaginatedListSkeleton />
+                ) : isErrorAdditionalTriples ? (
+                  <ErrorStateCard
+                    title="Failed to load additional list"
+                    message={
+                      (errorAdditionalTriples as Error)?.message ??
+                      'An unexpected error occurred'
+                    }
+                  >
+                    <RevalidateButton />
+                  </ErrorStateCard>
                 ) : additionalUserData?.userTriples ? (
-                  <TagsList
-                    triples={additionalUserData?.userTriples}
-                    enableSearch={true}
-                    enableSort={true}
-                    readOnly
-                  />
+                  isNavigating ? (
+                    <PaginatedListSkeleton />
+                  ) : (
+                    <TagsList
+                      triples={additionalUserData.userTriples}
+                      enableSearch={true}
+                      enableSort={true}
+                    />
+                  )
                 ) : null}
               </Suspense>
             </TabsContent>
