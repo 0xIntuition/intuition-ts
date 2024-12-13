@@ -1,4 +1,3 @@
-/// <reference types='vitest' />
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { resolve } from 'path';
@@ -10,17 +9,16 @@ export default defineConfig({
   plugins: [react()],
 
   build: {
-    lib: {
-      entry: resolve(__dirname, 'src/content/index.ts'),
-      formats: ['iife'],
-      name: 'contentScript',
-      fileName: () => 'content.js',
-    },
     outDir: 'dist',
-    emptyOutDir: true,
+    emptyOutDir: false,
     rollupOptions: {
+      input: {
+        popup: resolve(__dirname, 'index.html'),
+      },
       output: {
-        extend: true,
+        entryFileNames: 'assets/[name].[hash].js',
+        chunkFileNames: 'assets/[name].[hash].js',
+        assetFileNames: 'assets/[name].[hash].[ext]',
       },
     },
   },
@@ -28,9 +26,5 @@ export default defineConfig({
   define: {
     'process.env.VITE_OPENAI_API_KEY': JSON.stringify(process.env.VITE_OPENAI_API_KEY),
     'process.env.VITE_JINA_API_KEY': JSON.stringify(process.env.VITE_JINA_API_KEY),
-  },
-
-  optimizeDeps: {
-    include: ['react', 'react-dom', 'webextension-polyfill'],
   },
 });

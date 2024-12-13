@@ -4,8 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview"
+    "build": "vite build && vite build -c vite.background.config.ts && vite build -c vite.popup.config.ts && cp public/manifest.json public/browser-polyfill.min.js public/icon*.png dist/",
+    "preview": "vite preview",
+    "test": "jest",
+    "test:watch": "jest --watch"
   },
   "dependencies": {
     "@0xintuition/1ui": "workspace:^",
@@ -14,7 +16,9 @@
     "webextension-polyfill": "^0.10.0"
   },
   "devDependencies": {
+    "@jest/globals": "^29.7.0",
     "@types/chrome": "^0.0.260",
+    "@types/jest": "^29.5.12",
     "@types/react": "^18.2.43",
     "@types/react-dom": "^18.2.17",
     "@types/webextension-polyfill": "^0.10.7",
@@ -22,8 +26,12 @@
     "@typescript-eslint/parser": "^6.14.0",
     "@vitejs/plugin-react": "^4.2.1",
     "autoprefixer": "^10.4.17",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
     "postcss": "^8.4.35",
     "tailwindcss": "^3.4.1",
+    "ts-jest": "^29.1.4",
+    "ts-node": "10.9.1",
     "typescript": "^5.2.2",
     "vite": "^5.0.8"
   }
