@@ -7826,8 +7826,10 @@ export type EventDetailsFragment = {
       __typename?: 'atoms'
       data: string
       id: any
+      vaultId: any
       image?: string | null
       label?: string | null
+      walletId: string
       emoji?: string | null
       type: string
       creator?: {
@@ -7867,8 +7869,10 @@ export type EventDetailsFragment = {
       __typename?: 'atoms'
       data: string
       id: any
+      vaultId: any
       image?: string | null
       label?: string | null
+      walletId: string
       emoji?: string | null
       type: string
       creator?: {
@@ -7908,8 +7912,10 @@ export type EventDetailsFragment = {
       __typename?: 'atoms'
       data: string
       id: any
+      vaultId: any
       image?: string | null
       label?: string | null
+      walletId: string
       emoji?: string | null
       type: string
       creator?: {
@@ -8225,8 +8231,10 @@ export type TripleMetadataFragment = {
     __typename?: 'atoms'
     data: string
     id: any
+    vaultId: any
     image?: string | null
     label?: string | null
+    walletId: string
     emoji?: string | null
     type: string
     creator?: {
@@ -8266,8 +8274,10 @@ export type TripleMetadataFragment = {
     __typename?: 'atoms'
     data: string
     id: any
+    vaultId: any
     image?: string | null
     label?: string | null
+    walletId: string
     emoji?: string | null
     type: string
     creator?: {
@@ -8307,8 +8317,10 @@ export type TripleMetadataFragment = {
     __typename?: 'atoms'
     data: string
     id: any
+    vaultId: any
     image?: string | null
     label?: string | null
+    walletId: string
     emoji?: string | null
     type: string
     creator?: {
@@ -10046,8 +10058,10 @@ export type GetEventsWithAggregatesQuery = {
           __typename?: 'atoms'
           data: string
           id: any
+          vaultId: any
           image?: string | null
           label?: string | null
+          walletId: string
           emoji?: string | null
           type: string
           creator?: {
@@ -10087,8 +10101,10 @@ export type GetEventsWithAggregatesQuery = {
           __typename?: 'atoms'
           data: string
           id: any
+          vaultId: any
           image?: string | null
           label?: string | null
+          walletId: string
           emoji?: string | null
           type: string
           creator?: {
@@ -10128,8 +10144,10 @@ export type GetEventsWithAggregatesQuery = {
           __typename?: 'atoms'
           data: string
           id: any
+          vaultId: any
           image?: string | null
           label?: string | null
+          walletId: string
           emoji?: string | null
           type: string
           creator?: {
@@ -10733,33 +10751,6 @@ export type GetListsQuery = {
   }>
 }
 
-export type GetListsQueryVariables = Exact<{
-  where?: InputMaybe<PredicateObjects_Bool_Exp>
-}>
-
-export type GetListsQuery = {
-  __typename?: 'query_root'
-  predicateObjects_aggregate: {
-    __typename?: 'predicateObjects_aggregate'
-    aggregate?: {
-      __typename?: 'predicateObjects_aggregate_fields'
-      count: number
-    } | null
-  }
-  predicateObjects: Array<{
-    __typename?: 'predicateObjects'
-    id: string
-    claimCount: number
-    tripleCount: number
-    object?: {
-      __typename?: 'atoms'
-      id: any
-      label?: string | null
-      image?: string | null
-    } | null
-  }>
-}
-
 export type GetListItemsQueryVariables = Exact<{
   predicateId?: InputMaybe<Scalars['numeric']['input']>
   objectId?: InputMaybe<Scalars['numeric']['input']>
@@ -10809,6 +10800,162 @@ export type GetListItemsQuery = {
       } | null
     }>
   }
+}
+
+export type GetListDetailsQueryVariables = Exact<{
+  globalWhere?: InputMaybe<Triples_Bool_Exp>
+  userWhere?: InputMaybe<Triples_Bool_Exp>
+  tagPredicateId?: InputMaybe<Scalars['numeric']['input']>
+}>
+
+export type GetListDetailsQuery = {
+  __typename?: 'query_root'
+  globalTriplesAggregate: {
+    __typename?: 'triples_aggregate'
+    aggregate?: {
+      __typename?: 'triples_aggregate_fields'
+      count: number
+    } | null
+  }
+  globalTriples: Array<{
+    __typename?: 'triples'
+    label?: string | null
+    vaultId: any
+    subject?: {
+      __typename?: 'atoms'
+      id: any
+      label?: string | null
+      walletId: string
+      image?: string | null
+      type: string
+      tags: {
+        __typename?: 'triples_aggregate'
+        nodes: Array<{
+          __typename?: 'triples'
+          object?: {
+            __typename?: 'atoms'
+            label?: string | null
+            vaultId: any
+            taggedIdentities: {
+              __typename?: 'triples_aggregate'
+              nodes: Array<{
+                __typename?: 'triples'
+                vaultId: any
+                subject?: {
+                  __typename?: 'atoms'
+                  label?: string | null
+                  vaultId: any
+                } | null
+              }>
+              aggregate?: {
+                __typename?: 'triples_aggregate_fields'
+                count: number
+              } | null
+            }
+          } | null
+        }>
+        aggregate?: {
+          __typename?: 'triples_aggregate_fields'
+          count: number
+        } | null
+      }
+    } | null
+    object?: {
+      __typename?: 'atoms'
+      id: any
+      label?: string | null
+      walletId: string
+      image?: string | null
+      type: string
+    } | null
+    vault?: {
+      __typename?: 'vaults'
+      positions_aggregate: {
+        __typename?: 'positions_aggregate'
+        aggregate?: {
+          __typename?: 'positions_aggregate_fields'
+          count: number
+          sum?: {
+            __typename?: 'positions_sum_fields'
+            shares?: any | null
+          } | null
+        } | null
+      }
+    } | null
+  }>
+  userTriplesAggregate: {
+    __typename?: 'triples_aggregate'
+    aggregate?: {
+      __typename?: 'triples_aggregate_fields'
+      count: number
+    } | null
+  }
+  userTriples: Array<{
+    __typename?: 'triples'
+    label?: string | null
+    vaultId: any
+    subject?: {
+      __typename?: 'atoms'
+      id: any
+      label?: string | null
+      walletId: string
+      image?: string | null
+      type: string
+      tags: {
+        __typename?: 'triples_aggregate'
+        nodes: Array<{
+          __typename?: 'triples'
+          object?: {
+            __typename?: 'atoms'
+            label?: string | null
+            vaultId: any
+            taggedIdentities: {
+              __typename?: 'triples_aggregate'
+              nodes: Array<{
+                __typename?: 'triples'
+                vaultId: any
+                subject?: {
+                  __typename?: 'atoms'
+                  label?: string | null
+                  vaultId: any
+                } | null
+              }>
+              aggregate?: {
+                __typename?: 'triples_aggregate_fields'
+                count: number
+              } | null
+            }
+          } | null
+        }>
+        aggregate?: {
+          __typename?: 'triples_aggregate_fields'
+          count: number
+        } | null
+      }
+    } | null
+    object?: {
+      __typename?: 'atoms'
+      id: any
+      label?: string | null
+      walletId: string
+      image?: string | null
+      type: string
+    } | null
+    vault?: {
+      __typename?: 'vaults'
+      positions_aggregate: {
+        __typename?: 'positions_aggregate'
+        aggregate?: {
+          __typename?: 'positions_aggregate_fields'
+          count: number
+          sum?: {
+            __typename?: 'positions_sum_fields'
+            shares?: any | null
+          } | null
+        } | null
+      }
+    } | null
+  }>
 }
 
 export type GetPositionsQueryVariables = Exact<{
@@ -11687,8 +11834,10 @@ export type GetTagsQuery = {
       __typename?: 'atoms'
       data: string
       id: any
+      vaultId: any
       image?: string | null
       label?: string | null
+      walletId: string
       emoji?: string | null
       type: string
       creator?: {
@@ -11728,8 +11877,10 @@ export type GetTagsQuery = {
       __typename?: 'atoms'
       data: string
       id: any
+      vaultId: any
       image?: string | null
       label?: string | null
+      walletId: string
       emoji?: string | null
       type: string
       creator?: {
@@ -11769,8 +11920,10 @@ export type GetTagsQuery = {
       __typename?: 'atoms'
       data: string
       id: any
+      vaultId: any
       image?: string | null
       label?: string | null
+      walletId: string
       emoji?: string | null
       type: string
       creator?: {
@@ -11867,8 +12020,10 @@ export type GetTagsCustomQuery = {
       __typename?: 'atoms'
       data: string
       id: any
+      vaultId: any
       image?: string | null
       label?: string | null
+      walletId: string
       emoji?: string | null
       type: string
       creator?: {
@@ -11908,8 +12063,10 @@ export type GetTagsCustomQuery = {
       __typename?: 'atoms'
       data: string
       id: any
+      vaultId: any
       image?: string | null
       label?: string | null
+      walletId: string
       emoji?: string | null
       type: string
       creator?: {
@@ -11949,8 +12106,10 @@ export type GetTagsCustomQuery = {
       __typename?: 'atoms'
       data: string
       id: any
+      vaultId: any
       image?: string | null
       label?: string | null
+      walletId: string
       emoji?: string | null
       type: string
       creator?: {
@@ -12071,8 +12230,10 @@ export type GetTriplesQuery = {
       __typename?: 'atoms'
       data: string
       id: any
+      vaultId: any
       image?: string | null
       label?: string | null
+      walletId: string
       emoji?: string | null
       type: string
       creator?: {
@@ -12112,8 +12273,10 @@ export type GetTriplesQuery = {
       __typename?: 'atoms'
       data: string
       id: any
+      vaultId: any
       image?: string | null
       label?: string | null
+      walletId: string
       emoji?: string | null
       type: string
       creator?: {
@@ -12153,8 +12316,10 @@ export type GetTriplesQuery = {
       __typename?: 'atoms'
       data: string
       id: any
+      vaultId: any
       image?: string | null
       label?: string | null
+      walletId: string
       emoji?: string | null
       type: string
       creator?: {
@@ -12288,8 +12453,10 @@ export type GetTriplesWithAggregatesQuery = {
         __typename?: 'atoms'
         data: string
         id: any
+        vaultId: any
         image?: string | null
         label?: string | null
+        walletId: string
         emoji?: string | null
         type: string
         creator?: {
@@ -12329,8 +12496,10 @@ export type GetTriplesWithAggregatesQuery = {
         __typename?: 'atoms'
         data: string
         id: any
+        vaultId: any
         image?: string | null
         label?: string | null
+        walletId: string
         emoji?: string | null
         type: string
         creator?: {
@@ -12370,8 +12539,10 @@ export type GetTriplesWithAggregatesQuery = {
         __typename?: 'atoms'
         data: string
         id: any
+        vaultId: any
         image?: string | null
         label?: string | null
+        walletId: string
         emoji?: string | null
         type: string
         creator?: {
@@ -12509,8 +12680,10 @@ export type GetTripleQuery = {
       __typename?: 'atoms'
       data: string
       id: any
+      vaultId: any
       image?: string | null
       label?: string | null
+      walletId: string
       emoji?: string | null
       type: string
       creator?: {
@@ -12550,8 +12723,10 @@ export type GetTripleQuery = {
       __typename?: 'atoms'
       data: string
       id: any
+      vaultId: any
       image?: string | null
       label?: string | null
+      walletId: string
       emoji?: string | null
       type: string
       creator?: {
@@ -12591,8 +12766,10 @@ export type GetTripleQuery = {
       __typename?: 'atoms'
       data: string
       id: any
+      vaultId: any
       image?: string | null
       label?: string | null
+      walletId: string
       emoji?: string | null
       type: string
       creator?: {
@@ -13291,8 +13468,10 @@ export const TripleMetadataFragmentDoc = `
   subject {
     data
     id
+    vaultId
     image
     label
+    walletId
     emoji
     type
     ...AtomValue
@@ -13303,8 +13482,10 @@ export const TripleMetadataFragmentDoc = `
   predicate {
     data
     id
+    vaultId
     image
     label
+    walletId
     emoji
     type
     ...AtomValue
@@ -13315,8 +13496,10 @@ export const TripleMetadataFragmentDoc = `
   object {
     data
     id
+    vaultId
     image
     label
+    walletId
     emoji
     type
     ...AtomValue
@@ -16117,96 +16300,6 @@ useGetListsQuery.fetcher = (
     options,
   )
 
-export const GetListsDocument = `
-    query GetLists($where: predicateObjects_bool_exp) {
-  predicateObjects_aggregate(where: $where) {
-    aggregate {
-      count
-    }
-  }
-  predicateObjects(
-    where: $where
-    order_by: [{claimCount: desc}, {tripleCount: desc}]
-  ) {
-    id
-    claimCount
-    tripleCount
-    object {
-      id
-      label
-      image
-    }
-  }
-}
-    `
-
-export const useGetListsQuery = <TData = GetListsQuery, TError = unknown>(
-  variables?: GetListsQueryVariables,
-  options?: Omit<UseQueryOptions<GetListsQuery, TError, TData>, 'queryKey'> & {
-    queryKey?: UseQueryOptions<GetListsQuery, TError, TData>['queryKey']
-  },
-) => {
-  return useQuery<GetListsQuery, TError, TData>({
-    queryKey: variables === undefined ? ['GetLists'] : ['GetLists', variables],
-    queryFn: fetcher<GetListsQuery, GetListsQueryVariables>(
-      GetListsDocument,
-      variables,
-    ),
-    ...options,
-  })
-}
-
-useGetListsQuery.document = GetListsDocument
-
-useGetListsQuery.getKey = (variables?: GetListsQueryVariables) =>
-  variables === undefined ? ['GetLists'] : ['GetLists', variables]
-
-export const useInfiniteGetListsQuery = <
-  TData = InfiniteData<GetListsQuery>,
-  TError = unknown,
->(
-  variables: GetListsQueryVariables,
-  options: Omit<
-    UseInfiniteQueryOptions<GetListsQuery, TError, TData>,
-    'queryKey'
-  > & {
-    queryKey?: UseInfiniteQueryOptions<GetListsQuery, TError, TData>['queryKey']
-  },
-) => {
-  return useInfiniteQuery<GetListsQuery, TError, TData>(
-    (() => {
-      const { queryKey: optionsQueryKey, ...restOptions } = options
-      return {
-        queryKey:
-          optionsQueryKey ?? variables === undefined
-            ? ['GetLists.infinite']
-            : ['GetLists.infinite', variables],
-        queryFn: (metaData) =>
-          fetcher<GetListsQuery, GetListsQueryVariables>(GetListsDocument, {
-            ...variables,
-            ...(metaData.pageParam ?? {}),
-          })(),
-        ...restOptions,
-      }
-    })(),
-  )
-}
-
-useInfiniteGetListsQuery.getKey = (variables?: GetListsQueryVariables) =>
-  variables === undefined
-    ? ['GetLists.infinite']
-    : ['GetLists.infinite', variables]
-
-useGetListsQuery.fetcher = (
-  variables?: GetListsQueryVariables,
-  options?: RequestInit['headers'],
-) =>
-  fetcher<GetListsQuery, GetListsQueryVariables>(
-    GetListsDocument,
-    variables,
-    options,
-  )
-
 export const GetListItemsDocument = `
     query GetListItems($predicateId: numeric, $objectId: numeric) {
   triples_aggregate(
@@ -16299,6 +16392,205 @@ useGetListItemsQuery.fetcher = (
 ) =>
   fetcher<GetListItemsQuery, GetListItemsQueryVariables>(
     GetListItemsDocument,
+    variables,
+    options,
+  )
+
+export const GetListDetailsDocument = `
+    query GetListDetails($globalWhere: triples_bool_exp, $userWhere: triples_bool_exp, $tagPredicateId: numeric) {
+  globalTriplesAggregate: triples_aggregate(where: $globalWhere) {
+    aggregate {
+      count
+    }
+  }
+  globalTriples: triples(where: $globalWhere) {
+    label
+    vaultId
+    subject {
+      id
+      label
+      walletId
+      image
+      type
+      tags: asSubject_aggregate(where: {predicateId: {_eq: $tagPredicateId}}) {
+        nodes {
+          object {
+            label
+            vaultId
+            taggedIdentities: asObject_aggregate {
+              nodes {
+                subject {
+                  label
+                  vaultId
+                }
+                vaultId
+              }
+              aggregate {
+                count
+              }
+            }
+          }
+        }
+        aggregate {
+          count
+        }
+      }
+    }
+    object {
+      id
+      label
+      walletId
+      image
+      type
+    }
+    vault {
+      positions_aggregate {
+        aggregate {
+          count
+          sum {
+            shares
+          }
+        }
+      }
+    }
+  }
+  userTriplesAggregate: triples_aggregate(where: $userWhere) {
+    aggregate {
+      count
+    }
+  }
+  userTriples: triples(where: $userWhere) {
+    label
+    vaultId
+    subject {
+      id
+      label
+      walletId
+      image
+      type
+      tags: asSubject_aggregate(where: {predicateId: {_eq: $tagPredicateId}}) {
+        nodes {
+          object {
+            label
+            vaultId
+            taggedIdentities: asObject_aggregate {
+              nodes {
+                subject {
+                  label
+                  vaultId
+                }
+                vaultId
+              }
+              aggregate {
+                count
+              }
+            }
+          }
+        }
+        aggregate {
+          count
+        }
+      }
+    }
+    object {
+      id
+      label
+      walletId
+      image
+      type
+    }
+    vault {
+      positions_aggregate {
+        aggregate {
+          count
+          sum {
+            shares
+          }
+        }
+      }
+    }
+  }
+}
+    `
+
+export const useGetListDetailsQuery = <
+  TData = GetListDetailsQuery,
+  TError = unknown,
+>(
+  variables?: GetListDetailsQueryVariables,
+  options?: Omit<
+    UseQueryOptions<GetListDetailsQuery, TError, TData>,
+    'queryKey'
+  > & {
+    queryKey?: UseQueryOptions<GetListDetailsQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useQuery<GetListDetailsQuery, TError, TData>({
+    queryKey:
+      variables === undefined
+        ? ['GetListDetails']
+        : ['GetListDetails', variables],
+    queryFn: fetcher<GetListDetailsQuery, GetListDetailsQueryVariables>(
+      GetListDetailsDocument,
+      variables,
+    ),
+    ...options,
+  })
+}
+
+useGetListDetailsQuery.document = GetListDetailsDocument
+
+useGetListDetailsQuery.getKey = (variables?: GetListDetailsQueryVariables) =>
+  variables === undefined ? ['GetListDetails'] : ['GetListDetails', variables]
+
+export const useInfiniteGetListDetailsQuery = <
+  TData = InfiniteData<GetListDetailsQuery>,
+  TError = unknown,
+>(
+  variables: GetListDetailsQueryVariables,
+  options: Omit<
+    UseInfiniteQueryOptions<GetListDetailsQuery, TError, TData>,
+    'queryKey'
+  > & {
+    queryKey?: UseInfiniteQueryOptions<
+      GetListDetailsQuery,
+      TError,
+      TData
+    >['queryKey']
+  },
+) => {
+  return useInfiniteQuery<GetListDetailsQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey:
+          optionsQueryKey ?? variables === undefined
+            ? ['GetListDetails.infinite']
+            : ['GetListDetails.infinite', variables],
+        queryFn: (metaData) =>
+          fetcher<GetListDetailsQuery, GetListDetailsQueryVariables>(
+            GetListDetailsDocument,
+            { ...variables, ...(metaData.pageParam ?? {}) },
+          )(),
+        ...restOptions,
+      }
+    })(),
+  )
+}
+
+useInfiniteGetListDetailsQuery.getKey = (
+  variables?: GetListDetailsQueryVariables,
+) =>
+  variables === undefined
+    ? ['GetListDetails.infinite']
+    : ['GetListDetails.infinite', variables]
+
+useGetListDetailsQuery.fetcher = (
+  variables?: GetListDetailsQueryVariables,
+  options?: RequestInit['headers'],
+) =>
+  fetcher<GetListDetailsQuery, GetListDetailsQueryVariables>(
+    GetListDetailsDocument,
     variables,
     options,
   )
@@ -19919,8 +20211,10 @@ export const TripleMetadata = {
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'data' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'vaultId' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'walletId' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'emoji' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'type' } },
                 {
@@ -19951,8 +20245,10 @@ export const TripleMetadata = {
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'data' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'vaultId' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'walletId' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'emoji' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'type' } },
                 {
@@ -19983,8 +20279,10 @@ export const TripleMetadata = {
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'data' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'vaultId' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'walletId' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'emoji' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'type' } },
                 {
@@ -20762,8 +21060,10 @@ export const EventDetails = {
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'data' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'vaultId' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'walletId' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'emoji' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'type' } },
                 {
@@ -20794,8 +21094,10 @@ export const EventDetails = {
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'data' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'vaultId' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'walletId' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'emoji' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'type' } },
                 {
@@ -20826,8 +21128,10 @@ export const EventDetails = {
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'data' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'vaultId' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'walletId' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'emoji' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'type' } },
                 {
@@ -29678,8 +29982,10 @@ export const GetEventsWithAggregates = {
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'data' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'vaultId' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'walletId' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'emoji' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'type' } },
                 {
@@ -29710,8 +30016,10 @@ export const GetEventsWithAggregates = {
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'data' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'vaultId' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'walletId' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'emoji' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'type' } },
                 {
@@ -29742,8 +30050,10 @@ export const GetEventsWithAggregates = {
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'data' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'vaultId' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'walletId' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'emoji' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'type' } },
                 {
@@ -32808,6 +33118,651 @@ export const GetListItems = {
     },
   ],
 } as unknown as DocumentNode
+export const GetListDetails = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'GetListDetails' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'globalWhere' },
+          },
+          type: {
+            kind: 'NamedType',
+            name: { kind: 'Name', value: 'triples_bool_exp' },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'userWhere' },
+          },
+          type: {
+            kind: 'NamedType',
+            name: { kind: 'Name', value: 'triples_bool_exp' },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'tagPredicateId' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'numeric' } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'globalTriplesAggregate' },
+            name: { kind: 'Name', value: 'triples_aggregate' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'globalWhere' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'aggregate' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'count' } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'globalTriples' },
+            name: { kind: 'Name', value: 'triples' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'globalWhere' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'vaultId' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'subject' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'walletId' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                      {
+                        kind: 'Field',
+                        alias: { kind: 'Name', value: 'tags' },
+                        name: { kind: 'Name', value: 'asSubject_aggregate' },
+                        arguments: [
+                          {
+                            kind: 'Argument',
+                            name: { kind: 'Name', value: 'where' },
+                            value: {
+                              kind: 'ObjectValue',
+                              fields: [
+                                {
+                                  kind: 'ObjectField',
+                                  name: { kind: 'Name', value: 'predicateId' },
+                                  value: {
+                                    kind: 'ObjectValue',
+                                    fields: [
+                                      {
+                                        kind: 'ObjectField',
+                                        name: { kind: 'Name', value: '_eq' },
+                                        value: {
+                                          kind: 'Variable',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'tagPredicateId',
+                                          },
+                                        },
+                                      },
+                                    ],
+                                  },
+                                },
+                              ],
+                            },
+                          },
+                        ],
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'nodes' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'object' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'label',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'vaultId',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          alias: {
+                                            kind: 'Name',
+                                            value: 'taggedIdentities',
+                                          },
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'asObject_aggregate',
+                                          },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'nodes',
+                                                },
+                                                selectionSet: {
+                                                  kind: 'SelectionSet',
+                                                  selections: [
+                                                    {
+                                                      kind: 'Field',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: 'subject',
+                                                      },
+                                                      selectionSet: {
+                                                        kind: 'SelectionSet',
+                                                        selections: [
+                                                          {
+                                                            kind: 'Field',
+                                                            name: {
+                                                              kind: 'Name',
+                                                              value: 'label',
+                                                            },
+                                                          },
+                                                          {
+                                                            kind: 'Field',
+                                                            name: {
+                                                              kind: 'Name',
+                                                              value: 'vaultId',
+                                                            },
+                                                          },
+                                                        ],
+                                                      },
+                                                    },
+                                                    {
+                                                      kind: 'Field',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: 'vaultId',
+                                                      },
+                                                    },
+                                                  ],
+                                                },
+                                              },
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'aggregate',
+                                                },
+                                                selectionSet: {
+                                                  kind: 'SelectionSet',
+                                                  selections: [
+                                                    {
+                                                      kind: 'Field',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: 'count',
+                                                      },
+                                                    },
+                                                  ],
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'aggregate' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'count' },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'object' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'walletId' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'vault' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'positions_aggregate' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'aggregate' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'count' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'sum' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'shares',
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'userTriplesAggregate' },
+            name: { kind: 'Name', value: 'triples_aggregate' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'userWhere' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'aggregate' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'count' } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'userTriples' },
+            name: { kind: 'Name', value: 'triples' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'userWhere' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'vaultId' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'subject' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'walletId' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                      {
+                        kind: 'Field',
+                        alias: { kind: 'Name', value: 'tags' },
+                        name: { kind: 'Name', value: 'asSubject_aggregate' },
+                        arguments: [
+                          {
+                            kind: 'Argument',
+                            name: { kind: 'Name', value: 'where' },
+                            value: {
+                              kind: 'ObjectValue',
+                              fields: [
+                                {
+                                  kind: 'ObjectField',
+                                  name: { kind: 'Name', value: 'predicateId' },
+                                  value: {
+                                    kind: 'ObjectValue',
+                                    fields: [
+                                      {
+                                        kind: 'ObjectField',
+                                        name: { kind: 'Name', value: '_eq' },
+                                        value: {
+                                          kind: 'Variable',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'tagPredicateId',
+                                          },
+                                        },
+                                      },
+                                    ],
+                                  },
+                                },
+                              ],
+                            },
+                          },
+                        ],
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'nodes' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'object' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'label',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'vaultId',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          alias: {
+                                            kind: 'Name',
+                                            value: 'taggedIdentities',
+                                          },
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'asObject_aggregate',
+                                          },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'nodes',
+                                                },
+                                                selectionSet: {
+                                                  kind: 'SelectionSet',
+                                                  selections: [
+                                                    {
+                                                      kind: 'Field',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: 'subject',
+                                                      },
+                                                      selectionSet: {
+                                                        kind: 'SelectionSet',
+                                                        selections: [
+                                                          {
+                                                            kind: 'Field',
+                                                            name: {
+                                                              kind: 'Name',
+                                                              value: 'label',
+                                                            },
+                                                          },
+                                                          {
+                                                            kind: 'Field',
+                                                            name: {
+                                                              kind: 'Name',
+                                                              value: 'vaultId',
+                                                            },
+                                                          },
+                                                        ],
+                                                      },
+                                                    },
+                                                    {
+                                                      kind: 'Field',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: 'vaultId',
+                                                      },
+                                                    },
+                                                  ],
+                                                },
+                                              },
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'aggregate',
+                                                },
+                                                selectionSet: {
+                                                  kind: 'SelectionSet',
+                                                  selections: [
+                                                    {
+                                                      kind: 'Field',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: 'count',
+                                                      },
+                                                    },
+                                                  ],
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'aggregate' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'count' },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'object' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'walletId' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'vault' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'positions_aggregate' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'aggregate' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'count' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'sum' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'shares',
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
 export const GetPositions = {
   kind: 'Document',
   definitions: [
@@ -35694,8 +36649,10 @@ export const GetTags = {
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'data' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'vaultId' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'walletId' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'emoji' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'type' } },
                 {
@@ -35726,8 +36683,10 @@ export const GetTags = {
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'data' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'vaultId' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'walletId' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'emoji' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'type' } },
                 {
@@ -35758,8 +36717,10 @@ export const GetTags = {
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'data' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'vaultId' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'walletId' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'emoji' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'type' } },
                 {
@@ -36095,8 +37056,10 @@ export const GetTagsCustom = {
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'data' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'vaultId' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'walletId' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'emoji' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'type' } },
                 {
@@ -36127,8 +37090,10 @@ export const GetTagsCustom = {
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'data' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'vaultId' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'walletId' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'emoji' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'type' } },
                 {
@@ -36159,8 +37124,10 @@ export const GetTagsCustom = {
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'data' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'vaultId' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'walletId' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'emoji' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'type' } },
                 {
@@ -36604,8 +37571,10 @@ export const GetTriples = {
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'data' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'vaultId' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'walletId' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'emoji' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'type' } },
                 {
@@ -36636,8 +37605,10 @@ export const GetTriples = {
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'data' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'vaultId' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'walletId' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'emoji' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'type' } },
                 {
@@ -36668,8 +37639,10 @@ export const GetTriples = {
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'data' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'vaultId' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'walletId' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'emoji' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'type' } },
                 {
@@ -37230,8 +38203,10 @@ export const GetTriplesWithAggregates = {
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'data' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'vaultId' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'walletId' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'emoji' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'type' } },
                 {
@@ -37262,8 +38237,10 @@ export const GetTriplesWithAggregates = {
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'data' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'vaultId' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'walletId' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'emoji' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'type' } },
                 {
@@ -37294,8 +38271,10 @@ export const GetTriplesWithAggregates = {
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'data' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'vaultId' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'walletId' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'emoji' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'type' } },
                 {
@@ -37841,8 +38820,10 @@ export const GetTriple = {
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'data' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'vaultId' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'walletId' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'emoji' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'type' } },
                 {
@@ -37873,8 +38854,10 @@ export const GetTriple = {
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'data' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'vaultId' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'walletId' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'emoji' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'type' } },
                 {
@@ -37905,8 +38888,10 @@ export const GetTriple = {
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'data' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'vaultId' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'walletId' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'emoji' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'type' } },
                 {

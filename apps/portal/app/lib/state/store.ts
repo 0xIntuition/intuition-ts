@@ -1,5 +1,5 @@
-import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
-import { GetAtomQuery } from '@0xintuition/graphql'
+import { IdentityPresenter } from '@0xintuition/api'
+import { GetAtomQuery, GetTripleQuery } from '@0xintuition/graphql'
 
 import { VaultDetailsType } from 'app/types'
 import type { WritableAtom } from 'jotai'
@@ -45,8 +45,8 @@ export const stakeModalAtom = atom<{
   direction?: 'for' | 'against'
   modalType?: 'identity' | 'claim'
   mode?: 'deposit' | 'redeem'
-  claim?: ClaimPresenter
-  identity?: IdentityPresenter
+  claim?: GetTripleQuery['triple']
+  identity?: GetAtomQuery['atom']
   vaultId: string
   vaultDetails?: VaultDetailsType
 }>({
@@ -80,9 +80,9 @@ export const addIdentitiesListModalAtom = atom<{
 export const saveListModalAtom = atom<{
   isOpen: boolean
   id?: string | null
-  tag?: IdentityPresenter | null
-  identity?: IdentityPresenter | null
-  invalidIdentity?: IdentityPresenter | null
+  tag?: GetAtomQuery['atom'] | null
+  identity?: GetAtomQuery['atom'] | null
+  invalidIdentity?: GetAtomQuery['atom'] | null
 }>({
   isOpen: false,
   id: null,

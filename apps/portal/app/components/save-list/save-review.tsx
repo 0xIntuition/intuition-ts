@@ -9,16 +9,16 @@ import {
   Identity,
   Text,
 } from '@0xintuition/1ui'
-import { IdentityPresenter, TagEmbeddedPresenter } from '@0xintuition/api'
+import { GetAtomQuery } from '@0xintuition/graphql'
 
 import {
   formatBalance,
   formatDisplayBalance,
-  getAtomDescription,
-  getAtomImage,
-  getAtomIpfsLink,
-  getAtomLabel,
-  getAtomLink,
+  getAtomDescriptionGQL,
+  getAtomImageGQL,
+  getAtomIpfsLinkGQL,
+  getAtomLabelGQL,
+  getAtomLinkGQL,
 } from '@lib/utils/misc'
 import { IPFS_GATEWAY_URL, PATHS } from 'app/consts'
 import {
@@ -32,8 +32,8 @@ interface SaveReviewProps {
   dispatch: (action: TransactionActionType) => void
   state: TransactionStateType
   isError?: boolean
-  tag: IdentityPresenter | TagEmbeddedPresenter
-  identity: IdentityPresenter
+  tagAtom: GetAtomQuery['atom'] | null
+  atom: GetAtomQuery['atom'] | null
   user_assets: string
   entry_fee: string
   exit_fee: string
@@ -45,8 +45,8 @@ export default function SaveReview({
   dispatch,
   state,
   isError,
-  tag,
-  identity,
+  tagAtom,
+  atom,
   user_assets,
   entry_fee,
   exit_fee,
@@ -109,13 +109,16 @@ export default function SaveReview({
             <Claim
               size="md"
               subject={{
-                variant: identity?.is_user ? Identity.user : Identity.nonUser,
-                label: getAtomLabel(identity),
-                imgSrc: getAtomImage(identity),
-                id: identity?.identity_id,
-                description: getAtomDescription(identity),
-                ipfsLink: getAtomIpfsLink(identity),
-                link: getAtomLink(identity),
+                variant:
+                  atom?.type === 'Account' || atom?.type === 'Default'
+                    ? Identity.user
+                    : Identity.nonUser,
+                label: getAtomLabelGQL(atom),
+                imgSrc: getAtomImageGQL(atom),
+                id: atom?.id,
+                description: getAtomDescriptionGQL(atom),
+                ipfsLink: getAtomIpfsLinkGQL(atom),
+                link: getAtomLinkGQL(atom),
               }}
               predicate={{
                 variant: Identity.nonUser,
@@ -128,9 +131,9 @@ export default function SaveReview({
               }}
               object={{
                 variant: Identity.nonUser,
-                label: tag.display_name ?? tag.identity_id ?? '',
-                imgSrc: tag.image,
-                id: tag.identity_id,
+                label: tagAtom?.label ?? tagAtom?.id ?? '',
+                imgSrc: tagAtom?.image,
+                id: tagAtom?.id,
                 description: '',
                 ipfsLink: '',
                 link: '',

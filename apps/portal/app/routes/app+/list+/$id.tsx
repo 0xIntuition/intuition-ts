@@ -1,9 +1,11 @@
 import { Button, Icon, ProfileCard } from '@0xintuition/1ui'
 import {
-  ClaimPresenter,
-  ClaimsService,
-  IdentityPresenter,
-} from '@0xintuition/api'
+  fetcher,
+  GetTripleDocument,
+  GetTripleQuery,
+  GetTripleQueryVariables,
+  useGetTripleQuery,
+} from '@0xintuition/graphql'
 
 import { ErrorPage } from '@components/error-page'
 import AddIdentitiesListModal from '@components/lists/add-identities-list-modal'
@@ -13,19 +15,16 @@ import ImageModal from '@components/profile/image-modal'
 import ShareCta from '@components/share-cta'
 import ShareModal from '@components/share-modal'
 import { useGoBack } from '@lib/hooks/useGoBack'
-import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import {
   addIdentitiesListModalAtom,
   imageModalAtom,
   shareModalAtom,
 } from '@lib/state/store'
-import logger from '@lib/utils/logger'
 import { invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
-import { Outlet, useNavigate } from '@remix-run/react'
-import { fetchWrapper } from '@server/api'
+import { Outlet, useLoaderData, useNavigate } from '@remix-run/react'
 import { requireUser, requireUserWallet } from '@server/auth'
-import { getVaultDetails } from '@server/multivault'
+import { QueryClient } from '@tanstack/react-query'
 import {
   BLOCK_EXPLORER_URL,
   IPFS_GATEWAY_URL,
@@ -34,7 +33,6 @@ import {
   PATHS,
 } from 'app/consts'
 import TwoPanelLayout from 'app/layouts/two-panel-layout'
-import { VaultDetailsType } from 'app/types'
 import { useAtom } from 'jotai'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -42,44 +40,59 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   invariant(user, 'User not found')
   invariant(user.wallet?.address, 'User wallet not found')
 
+  const queryClient = new QueryClient()
+
   const userWallet = await requireUserWallet(request)
   invariant(userWallet, NO_WALLET_ERROR)
   const id = params.id
   invariant(id, NO_PARAM_ID_ERROR)
 
-  const claim = await fetchWrapper(request, {
-    method: ClaimsService.getClaimById,
-    args: { id },
+  // const listsLimit = parseInt(url.searchParams.get('effectiveLimit') || '200')
+  // const listsOffset = parseInt(url.searchParams.get('listsOffset') || '0')
+  // const listsOrderBy = url.searchParams.get('listsSortBy')
+
+  const tripleResult = await fetcher<GetTripleQuery, GetTripleQueryVariables>(
+    GetTripleDocument,
+    {
+      tripleId: id,
+    },
+  )()
+
+  await queryClient.prefetchQuery({
+    queryKey: ['get-triple', { id: params.id }],
+    queryFn: () => tripleResult,
   })
 
-  let vaultDetails: VaultDetailsType | null = null
-
-  if (claim !== undefined && claim.vault_id) {
-    try {
-      vaultDetails = await getVaultDetails(
-        claim.contract,
-        claim.vault_id,
-        userWallet as `0x${string}`,
-      )
-    } catch (error) {
-      logger('Failed to fetch vaultDetails', error)
-      vaultDetails = null
-    }
-  }
-
   return json({
-    claim,
+    initialParams: {
+      id,
+    },
     userWallet,
-    vaultDetails,
+    tripleResult,
   })
 }
 
 export default function ListDetails() {
-  const { claim, userWallet } = useLiveLoader<{
-    claim: ClaimPresenter
+  const { initialParams, userWallet } = useLoaderData<{
+    initialParams: {
+      id: string
+    }
     userWallet: string
-    vaultDetails: VaultDetailsType
-  }>(['create', 'attest'])
+  }>()
+
+  const { data: tripleData } = useGetTripleQuery(
+    {
+      tripleId: initialParams.id,
+    },
+    {
+      queryKey: [
+        'get-triple',
+        {
+          id: initialParams.id,
+        },
+      ],
+    },
+  )
 
   const [addIdentitiesListModalActive, setAddIdentitiesListModalActive] =
     useAtom(addIdentitiesListModalAtom)
@@ -106,29 +119,29 @@ export default function ListDetails() {
       </NavigationButton>
       <ProfileCard
         variant="non-user"
-        avatarSrc={claim.object?.image ?? ''}
-        name={claim.object?.display_name ?? ''}
-        id={claim.object?.identity_id ?? ''}
-        bio={claim.object?.description ?? ''}
+        avatarSrc={tripleData?.triple?.object?.image ?? ''}
+        name={tripleData?.triple?.object?.label ?? ''}
+        id={tripleData?.triple?.object?.id ?? ''}
+        bio={''} // TODO: Add bio when it becomes available after the migration
         ipfsLink={
-          claim.object?.is_user === true
-            ? `${BLOCK_EXPLORER_URL}/address/${claim.object?.identity_id}`
-            : `${IPFS_GATEWAY_URL}/${claim.object?.identity_id?.replace('ipfs://', '')}`
+          tripleData?.triple?.object?.type === ('Account' || 'Default')
+            ? `${BLOCK_EXPLORER_URL}/address/${tripleData?.triple?.object?.walletId}`
+            : `${IPFS_GATEWAY_URL}/${tripleData?.triple?.object?.data?.replace('ipfs://', '')}`
         }
         onAvatarClick={() => {
-          if (claim.object) {
+          if (tripleData?.triple?.object) {
             setImageModalActive({
               isOpen: true,
-              identity: claim.object,
+              identity: tripleData?.triple?.object,
             })
           }
         }}
       />
       <ListIdentityDisplayCard
-        displayName={claim.object?.display_name ?? ''}
-        avatarImgSrc={claim.object?.image ?? ''}
+        displayName={tripleData?.triple?.object?.label ?? ''}
+        avatarImgSrc={tripleData?.triple?.object?.image ?? ''}
         onClick={() => {
-          navigate(`/app/identity/${claim.object?.vault_id}`)
+          navigate(`/app/identity/${tripleData?.triple?.object?.vaultId}`)
         }}
         className="hover:cursor-pointer w-full"
       />
@@ -151,7 +164,7 @@ export default function ListDetails() {
       <Button
         variant="secondary"
         onClick={() => {
-          navigate(`/app/identity/${claim.object?.vault_id}`)
+          navigate(`/app/identity/${tripleData?.triple?.object?.vaultId}`)
         }}
         className="w-full"
       >
@@ -172,9 +185,9 @@ export default function ListDetails() {
     <>
       <TwoPanelLayout leftPanel={leftPanel} rightPanel={<Outlet />} />
       <AddIdentitiesListModal
-        identity={claim.object as IdentityPresenter}
+        identity={tripleData?.triple?.object}
         userWallet={userWallet}
-        claimId={claim.claim_id}
+        claimId={tripleData?.triple?.object?.vaultId}
         open={addIdentitiesListModalActive.isOpen}
         onClose={() =>
           setAddIdentitiesListModalActive({
@@ -183,11 +196,11 @@ export default function ListDetails() {
           })
         }
       />
-      {claim.object && (
+      {tripleData?.triple?.object && (
         <ImageModal
-          displayName={claim.object?.display_name ?? ''}
-          imageSrc={claim.object?.image ?? ''}
-          isUser={claim.object?.is_user}
+          displayName={tripleData?.triple?.object?.label ?? ''}
+          imageSrc={tripleData?.triple?.object?.image ?? ''}
+          isUser={tripleData?.triple?.object?.type === ('Account' || 'Default')}
           open={imageModalActive.isOpen}
           onClose={() =>
             setImageModalActive({
