@@ -51,7 +51,7 @@ export const DetailInfoCardNew = ({
     year: 'numeric',
     month: 'long',
     day: 'numeric',
-  }).format(new Date(Number(timestamp) * 1000))
+  }).format(new Date(timestamp))
 
   return (
     <div
