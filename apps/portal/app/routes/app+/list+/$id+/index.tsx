@@ -4,6 +4,7 @@ import {
   Button,
   ButtonVariant,
   Claim,
+  ErrorStateCard,
   Icon,
   IconName,
   ListHeaderCard,
@@ -35,6 +36,7 @@ import { InfoPopover } from '@components/info-popover'
 import { TagsList } from '@components/list/tags'
 import { ListTabIdentityDisplay } from '@components/lists/list-tab-identity-display'
 import RemixLink from '@components/remix-link'
+import { RevalidateButton } from '@components/revalidate-button'
 import SaveListModal from '@components/save-list/save-list-modal'
 import { DataHeaderSkeleton, PaginatedListSkeleton } from '@components/skeleton'
 import { addIdentitiesListModalAtom, saveListModalAtom } from '@lib/state/store'
@@ -49,7 +51,7 @@ import {
   identityToAtom,
   invariant,
 } from '@lib/utils/misc'
-import { defer, LoaderFunctionArgs } from '@remix-run/node'
+import { json, LoaderFunctionArgs } from '@remix-run/node'
 import {
   useLoaderData,
   useNavigation,
@@ -57,7 +59,7 @@ import {
   useSearchParams,
 } from '@remix-run/react'
 import { requireUserWallet } from '@server/auth'
-import { QueryClient } from '@tanstack/react-query'
+import { dehydrate, QueryClient } from '@tanstack/react-query'
 import {
   CURRENT_ENV,
   MULTIVAULT_CONTRACT_ADDRESS,
@@ -231,7 +233,8 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     })
   }
 
-  return defer({
+  return json({
+    dehydratedState: dehydrate(queryClient),
     queryAddress,
     additionalQueryAddress,
     initialParams: {
@@ -269,7 +272,12 @@ export default function ListOverview() {
     },
   )
 
-  const { data: listDetailsData } = useGetListDetailsQuery(
+  const {
+    data: listDetailsData,
+    isLoading: isLoadingTriples,
+    isError: isErrorTriples,
+    error: errorTriples,
+  } = useGetListDetailsQuery(
     {
       globalWhere: initialParams.globalWhere,
       userWhere: initialParams.userWhere,
@@ -286,7 +294,12 @@ export default function ListOverview() {
     },
   )
 
-  const { data: additionalUserData } = useGetListDetailsQuery(
+  const {
+    data: additionalUserData,
+    isLoading: isLoadingAdditionalTriples,
+    isError: isErrorAdditionalTriples,
+    error: errorAdditionalTriples,
+  } = useGetListDetailsQuery(
     additionalQueryAddress
       ? {
           userWhere: initialParams.additionalUserWhere,
@@ -452,64 +465,90 @@ export default function ListOverview() {
             <Suspense
               fallback={<Skeleton className="w-44 h-10 rounded mr-2" />}
             >
-              <TabsTrigger
-                value="global"
-                label="Global"
-                totalCount={
-                  listDetailsData?.globalTriplesAggregate.aggregate?.count ?? 0
-                }
-                onClick={(e) => {
-                  e.preventDefault()
-                  handleTabChange('global')
-                }}
-              />
-            </Suspense>
-            <Suspense fallback={<Skeleton className="w-44 h-10 rounded" />}>
-              <TabsTrigger
-                value="you"
-                label={
-                  <ListTabIdentityDisplay
-                    imgSrc={accountResult?.account?.image}
-                  >
-                    You
-                  </ListTabIdentityDisplay>
-                }
-                totalCount={
-                  listDetailsData?.userTriplesAggregate.aggregate?.count ?? 0
-                }
-                onClick={(e) => {
-                  e.preventDefault()
-                  handleTabChange('you')
-                }}
-              />
-            </Suspense>
-            {userWalletAddress && (
-              <Suspense fallback={<Skeleton className="w-44 h-10 rounded" />}>
+              {isLoadingTriples ? (
+                <Skeleton className="w-44 h-10 rounded mr-2" />
+              ) : (
                 <TabsTrigger
-                  className="text-left"
-                  value="additional"
+                  value="global"
+                  label="Global"
                   totalCount={
-                    additionalUserData?.userTriplesAggregate.aggregate?.count ??
+                    listDetailsData?.globalTriplesAggregate.aggregate?.count ??
                     0
-                  }
-                  label={
-                    <ListTabIdentityDisplay
-                      imgSrc={additionalAccountResult?.account?.image}
-                    >
-                      {additionalAccountResult?.account?.label ?? 'Additional'}
-                    </ListTabIdentityDisplay>
                   }
                   onClick={(e) => {
                     e.preventDefault()
-                    handleTabChange('additional')
+                    handleTabChange('global')
                   }}
                 />
+              )}
+            </Suspense>
+            <Suspense fallback={<Skeleton className="w-44 h-10 rounded" />}>
+              {isLoadingTriples ? (
+                <Skeleton className="w-44 h-10 rounded" />
+              ) : (
+                <TabsTrigger
+                  value="you"
+                  label={
+                    <ListTabIdentityDisplay
+                      imgSrc={accountResult?.account?.image}
+                    >
+                      You
+                    </ListTabIdentityDisplay>
+                  }
+                  totalCount={
+                    listDetailsData?.userTriplesAggregate.aggregate?.count ?? 0
+                  }
+                  onClick={(e) => {
+                    e.preventDefault()
+                    handleTabChange('you')
+                  }}
+                />
+              )}
+            </Suspense>
+            {userWalletAddress && (
+              <Suspense fallback={<Skeleton className="w-44 h-10 rounded" />}>
+                {isLoadingAdditionalTriples ? (
+                  <Skeleton className="w-44 h-10 rounded" />
+                ) : (
+                  <TabsTrigger
+                    className="text-left"
+                    value="additional"
+                    totalCount={
+                      additionalUserData?.userTriplesAggregate.aggregate
+                        ?.count ?? 0
+                    }
+                    label={
+                      <ListTabIdentityDisplay
+                        imgSrc={additionalAccountResult?.account?.image}
+                      >
+                        {additionalAccountResult?.account?.label ??
+                          'Additional'}
+                      </ListTabIdentityDisplay>
+                    }
+                    onClick={(e) => {
+                      e.preventDefault()
+                      handleTabChange('additional')
+                    }}
+                  />
+                )}
               </Suspense>
             )}
           </TabsList>
           <TabsContent value="global" className="mt-6">
             <Suspense fallback={<PaginatedListSkeleton />}>
-              {listDetailsData?.globalTriples ? (
+              {isLoadingTriples ? (
+                <PaginatedListSkeleton />
+              ) : isErrorTriples ? (
+                <ErrorStateCard
+                  title="Failed to load global list"
+                  message={
+                    (errorTriples as Error)?.message ??
+                    'An unexpected error occurred'
+                  }
+                >
+                  <RevalidateButton />
+                </ErrorStateCard>
+              ) : listDetailsData?.globalTriples ? (
                 isNavigating ? (
                   <PaginatedListSkeleton />
                 ) : (
@@ -524,7 +563,19 @@ export default function ListOverview() {
           </TabsContent>
           <TabsContent value="you">
             <Suspense fallback={<PaginatedListSkeleton />}>
-              {listDetailsData?.userTriples ? (
+              {isLoadingTriples ? (
+                <PaginatedListSkeleton />
+              ) : isErrorTriples ? (
+                <ErrorStateCard
+                  title="Failed to load your list"
+                  message={
+                    (errorTriples as Error)?.message ??
+                    'An unexpected error occurred'
+                  }
+                >
+                  <RevalidateButton />
+                </ErrorStateCard>
+              ) : listDetailsData?.userTriples ? (
                 isNavigating ? (
                   <PaginatedListSkeleton />
                 ) : (
@@ -537,17 +588,31 @@ export default function ListOverview() {
               ) : null}
             </Suspense>
           </TabsContent>
-          {userWalletAddress && !!additionalUserData && (
+          {userWalletAddress && (
             <TabsContent value="additional">
               <Suspense fallback={<PaginatedListSkeleton />}>
-                {isNavigating ? (
+                {isLoadingAdditionalTriples ? (
                   <PaginatedListSkeleton />
+                ) : isErrorAdditionalTriples ? (
+                  <ErrorStateCard
+                    title="Failed to load additional list"
+                    message={
+                      (errorAdditionalTriples as Error)?.message ??
+                      'An unexpected error occurred'
+                    }
+                  >
+                    <RevalidateButton />
+                  </ErrorStateCard>
                 ) : additionalUserData?.userTriples ? (
-                  <TagsList
-                    triples={additionalUserData?.userTriples}
-                    enableSearch={true}
-                    enableSort={true}
-                  />
+                  isNavigating ? (
+                    <PaginatedListSkeleton />
+                  ) : (
+                    <TagsList
+                      triples={additionalUserData.userTriples}
+                      enableSearch={true}
+                      enableSort={true}
+                    />
+                  )
                 ) : null}
               </Suspense>
             </TabsContent>

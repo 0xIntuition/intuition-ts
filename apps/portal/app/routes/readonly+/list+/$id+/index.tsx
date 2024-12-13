@@ -47,7 +47,7 @@ import {
   useRouteLoaderData,
   useSearchParams,
 } from '@remix-run/react'
-import { QueryClient } from '@tanstack/react-query'
+import { dehydrate, QueryClient } from '@tanstack/react-query'
 import { CURRENT_ENV, NO_CLAIM_ERROR, NO_PARAM_ID_ERROR } from 'app/consts'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -169,6 +169,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   })
 
   return json({
+    dehydratedState: dehydrate(queryClient),
     additionalQueryAddress,
     initialParams: {
       id,
