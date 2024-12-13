@@ -1,9 +1,9 @@
 import React from 'react'
 
 import type { Meta, StoryObj } from '@storybook/react'
+import { Banner, BannerVariant } from './Banner'
 import { Button } from 'components/Button'
 
-import { Banner, BannerVariant } from './Banner'
 
 const meta: Meta<typeof Banner> = {
   title: 'Components/Banner',

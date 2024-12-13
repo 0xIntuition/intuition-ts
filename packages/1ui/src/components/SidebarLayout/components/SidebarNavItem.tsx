@@ -1,7 +1,6 @@
 import { ReactNode } from 'react'
 
 import { type VariantProps } from 'class-variance-authority'
-import { cn } from 'styles'
 
 import {
   Button,
@@ -17,6 +16,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '../..'
+
 import { useSidebarLayoutContext } from './SidebarLayoutProvider'
 
 export interface SidebarNavItemProps

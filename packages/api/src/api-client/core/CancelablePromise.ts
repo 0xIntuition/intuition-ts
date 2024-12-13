@@ -1,3 +1,5 @@
+// External dependencies
+
 export class CancelError extends Error {
   constructor(message: string) {
     super(message)
@@ -46,7 +48,9 @@ export class CancelablePromise<T> implements Promise<T> {
           return
         }
         this._isResolved = true
-        if (this._resolve) this._resolve(value)
+        if (this._resolve) {
+          this._resolve(value)
+        }
       }
 
       const onReject = (reason?: unknown): void => {
@@ -54,7 +58,9 @@ export class CancelablePromise<T> implements Promise<T> {
           return
         }
         this._isRejected = true
-        if (this._reject) this._reject(reason)
+        if (this._reject) {
+          this._reject(reason)
+        }
       }
 
       const onCancel = (cancelHandler: () => void): void => {
@@ -117,7 +123,9 @@ export class CancelablePromise<T> implements Promise<T> {
       }
     }
     this.cancelHandlers.length = 0
-    if (this._reject) this._reject(new CancelError('Request aborted'))
+    if (this._reject) {
+      this._reject(new CancelError('Request aborted'))
+    }
   }
 
   public get isCancelled(): boolean {

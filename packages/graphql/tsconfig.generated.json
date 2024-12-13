@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "composite": true,
+    "rootDir": "src/generated",
+    "outDir": "../../dist/packages/graphql/generated"
+  },
+  "include": ["src/generated/**/*.ts", "src/generated/**/*.tsx"],
+  "exclude": ["node_modules", "dist"]
+}

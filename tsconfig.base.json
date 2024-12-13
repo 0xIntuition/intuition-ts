@@ -3,15 +3,19 @@
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "baseUrl": "./",
+    "declaration": true,
+    "declarationMap": true,
     "esModuleInterop": true,
     "isolatedModules": true,
     "jsx": "react-jsx",
     "module": "ESNext",
-    "moduleResolution": "Node",
+    "moduleResolution": "bundler",
     "outDir": "./dist",
     "skipLibCheck": true,
     "target": "ESNext",
     "strict": true,
+    "composite": true,
+    "types": ["node", "react", "react-dom", "jest", "vitest"],
     "paths": {
       "@/*": ["src/*"],
       "@0xintuition/1ui": ["packages/1ui/src/index.ts"],
@@ -21,7 +25,20 @@
       "@0xintuition/portal": ["apps/portal/src/index.ts"],
       "@0xintuition/protocol": ["packages/protocol/src/index.ts"],
       "@0xintuition/sdk": ["packages/sdk/src/index.ts"]
-    }
+    },
+    "typeRoots": [
+      "./node_modules/@types",
+      "./node_modules/.pnpm/@types+*",
+      "./node_modules/.pnpm/**/node_modules/@types+*",
+      "./node_modules/.pnpm/**/@types+*"
+    ]
   },
-  "exclude": ["node_modules", "dist", "**/*.spec.ts"]
+  "exclude": ["node_modules", "dist", "tmp"],
+  "references": [
+    { "path": "./packages/1ui" },
+    { "path": "./packages/api" },
+    { "path": "./packages/graphql" },
+    { "path": "./packages/protocol" },
+    { "path": "./packages/sdk" }
+  ]
 }

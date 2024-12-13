@@ -1,9 +1,9 @@
 import React from 'react'
 
 import type { Meta, StoryObj } from '@storybook/react'
+import { IdentityTag, IdentityTagSize } from '.'
 import { Identity } from 'types'
 
-import { IdentityTag, IdentityTagSize } from '.'
 
 const meta: Meta<typeof IdentityTag> = {
   title: 'Components/Identity/IdentityTag',

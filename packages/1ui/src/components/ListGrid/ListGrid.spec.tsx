@@ -1,9 +1,9 @@
 import React from 'react'
 
 import { render } from '@testing-library/react'
+import { ListGrid } from './ListGrid'
 import { ListCard } from 'components'
 
-import { ListGrid } from './ListGrid'
 
 describe('ListGrid', () => {
   it('should render appropriate elements', () => {

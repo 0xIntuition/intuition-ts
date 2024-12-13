@@ -1,9 +1,8 @@
-import React from 'react'
 
 import { useGetAtomQuery } from '@0xintuition/graphql'
 
 import type { Meta, StoryObj } from '@storybook/react'
-import { Currency, Identity } from 'types'
+import React from 'react'
 
 import { IdentityCard } from './IdentityCard'
 

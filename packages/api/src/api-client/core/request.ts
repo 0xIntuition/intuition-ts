@@ -1,3 +1,4 @@
+// External dependencies
 import { ApiError } from './ApiError'
 import type { ApiRequestOptions } from './ApiRequestOptions'
 import type { ApiResult } from './ApiResult'
@@ -24,8 +25,8 @@ export const isFormData = (value: unknown): value is FormData => {
 export const base64 = (str: string): string => {
   try {
     return btoa(str)
-  } catch (err) {
-    // @ts-ignore
+  } catch {
+    // @ts-ignore - Buffer is only available in Node.js environments, while btoa is only available in browsers
     return Buffer.from(str).toString('base64')
   }
 }
@@ -64,7 +65,10 @@ const getUrl = (config: OpenAPIConfig, options: ApiRequestOptions): string => {
   const path = options.url
     .replace('{api-version}', config.VERSION)
     .replace(/{(.*?)}/g, (substring: string, group: string) => {
-      if (options.path?.hasOwnProperty(group)) {
+      if (
+        options.path &&
+        Object.prototype.hasOwnProperty.call(options.path, group)
+      ) {
         return encoder(String(options.path[group]))
       }
       return substring
@@ -141,12 +145,12 @@ export const getHeaders = async (
     )
 
   if (isStringWithValue(token)) {
-    headers['Authorization'] = `Bearer ${token}`
+    headers.Authorization = `Bearer ${token}`
   }
 
   if (isStringWithValue(username) && isStringWithValue(password)) {
     const credentials = base64(`${username}:${password}`)
-    headers['Authorization'] = `Basic ${credentials}`
+    headers.Authorization = `Basic ${credentials}`
   }
 
   if (options.body !== undefined) {
@@ -177,9 +181,8 @@ export const getRequestBody = (options: ApiRequestOptions): unknown => {
       isFormData(options.body)
     ) {
       return options.body
-    } else {
-      return JSON.stringify(options.body)
     }
+    return JSON.stringify(options.body)
   }
   return undefined
 }
@@ -320,7 +323,7 @@ export const catchErrorCodes = (
     const errorBody = (() => {
       try {
         return JSON.stringify(result.body, null, 2)
-      } catch (e) {
+      } catch {
         return undefined
       }
     })()

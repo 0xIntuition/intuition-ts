@@ -1,9 +1,9 @@
 import React from 'react'
 
 import type { Meta, StoryObj } from '@storybook/react'
+import { TransactionStatusIndicator } from './TransactionStatusIndicator'
 import { Transaction, TransactionStatus } from 'types'
 
-import { TransactionStatusIndicator } from './TransactionStatusIndicator'
 
 const meta: Meta<typeof TransactionStatusIndicator> = {
   title: 'Components/TransactionStatus/TransactionStatusIndicator',

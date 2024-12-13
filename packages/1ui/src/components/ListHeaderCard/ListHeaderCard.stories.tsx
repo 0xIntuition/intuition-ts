@@ -1,9 +1,9 @@
 import React from 'react'
 
 import type { Meta, StoryObj } from '@storybook/react'
+import { ListHeaderCard } from './ListHeaderCard'
 import { Claim } from 'components'
 
-import { ListHeaderCard } from './ListHeaderCard'
 
 const meta: Meta<typeof ListHeaderCard> = {
   title: 'Components/Lists/ListHeaderCard',

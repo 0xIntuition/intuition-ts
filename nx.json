@@ -9,7 +9,10 @@
     "build": {
       "dependsOn": ["^build", "typecheck"],
       "outputs": ["{projectRoot}/dist"],
-      "cache": true
+      "cache": true,
+      "options": {
+        "projectReferences": true
+      }
     },
     "dev": {
       "dependsOn": ["^build"]

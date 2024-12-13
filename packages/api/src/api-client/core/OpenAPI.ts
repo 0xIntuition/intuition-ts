@@ -1,5 +1,7 @@
+// External dependencies
 import type { ApiRequestOptions } from './ApiRequestOptions'
 
+// Type definitions
 type Headers = Record<string, string>
 type Middleware<T> = (value: T) => T | Promise<T>
 type Resolver<T> = (options: ApiRequestOptions) => Promise<T>

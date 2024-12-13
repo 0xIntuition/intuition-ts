@@ -1,9 +1,9 @@
 import React from 'react'
 
 import { render } from '@testing-library/react'
+import { EmptyStateCard } from './EmptyStateCard'
 import { Button } from 'components/Button'
 
-import { EmptyStateCard } from './EmptyStateCard'
 
 describe('EmptyStateCard', () => {
   it('should render appropriate element', () => {

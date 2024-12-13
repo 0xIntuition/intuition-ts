@@ -25,6 +25,11 @@ import {
   Trunctacular,
 } from '..'
 
+import { cn } from 'styles'
+import { CurrencyType, Identity, IdentityType } from 'types'
+import { formatDate } from 'utils/date'
+
+
 export interface IdentityPositionProps
   extends React.HTMLAttributes<HTMLDivElement> {
   variant?: IdentityType

@@ -1,8 +1,9 @@
 // Import React
 import React from 'react'
 
-// Import Storybook meta and StoryObj type
 import type { Meta, StoryObj } from '@storybook/react'
+
+// Import Storybook meta and StoryObj type
 
 // Import your actual component
 import { QuestHeaderCard } from './QuestHeaderCard'

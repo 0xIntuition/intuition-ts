@@ -1,9 +1,9 @@
 import React from 'react'
 
 import type { Meta, StoryObj } from '@storybook/react'
+import { TransactionStatusCard } from './TransactionStatusCard'
 import { TransactionStatus } from 'types'
 
-import { TransactionStatusCard } from './TransactionStatusCard'
 
 const meta: Meta<typeof TransactionStatusCard> = {
   title: 'Components/TransactionStatus/TransactionStatusCard',

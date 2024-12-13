@@ -1,9 +1,9 @@
 import React from 'react'
 
 import type { Meta, StoryObj } from '@storybook/react'
+import { IdentityPosition } from './IdentityPosition'
 import { Identity } from 'types'
 
-import { IdentityPosition } from './IdentityPosition'
 
 const meta: Meta<typeof IdentityPosition> = {
   title: 'Components/Identity/IdentityPosition',
