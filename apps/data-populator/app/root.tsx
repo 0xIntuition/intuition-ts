@@ -123,7 +123,7 @@ function App() {
 
   return (
     <Document nonce={nonce} theme={theme}>
-      <Toaster position="top-right" />
+      <Toaster position="top-right" closeButton={true} />
       <ClientOnly>
         {() => (
           <Providers privyAppId={env.PRIVY_APP_ID}>

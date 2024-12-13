@@ -426,6 +426,7 @@ export default function CSVEditor() {
   >([])
   const [showProofreadModal, setShowProofreadModal] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const [isLoadingCSV, setIsLoadingCSV] = useState(false)
 
   const [formatChangeDialog, setFormatChangeDialog] = useState<{
     isOpen: boolean
@@ -735,6 +736,7 @@ export default function CSVEditor() {
 
   // Update processLoadedData to include CAIP10 proofing
   const processLoadedData = (rows: string[][], type: AtomDataTypeKey) => {
+    setIsLoadingCSV(true)
     // Batch our updates together
     const newRows = [...rows]
     const newSelectedRows = newRows.slice(1).map((_, index) => index)
@@ -1573,11 +1575,11 @@ export default function CSVEditor() {
 
   // Effect to handle row selection after data load
   useEffect(() => {
-    if (isLoading && csvData.length > 0) {
+    if (isLoadingCSV && csvData.length > 0) {
       setSelectedRows(csvData.slice(1).map((_, index) => index))
-      setIsLoading(false)
+      setIsLoadingCSV(false)
     }
-  }, [csvData, isLoading])
+  }, [csvData, isLoadingCSV])
 
   return (
     <>
@@ -2414,10 +2416,10 @@ export default function CSVEditor() {
       </Dialog>
 
       <ProgressModal
-        isOpen={isLoading || isTagLoading}
+        isOpen={isBatchLoading || isTagLoading}
         onClose={() => {
-          if (isLoading || isTagLoading) {
-            console.log('Progress modal closed') // Leaving this here because this gets triggered when the modal loses focus
+          if (isBatchLoading || isTagLoading) {
+            console.log('Progress modal closed')
           }
         }}
         step={isTagLoading ? tagStep : step}
