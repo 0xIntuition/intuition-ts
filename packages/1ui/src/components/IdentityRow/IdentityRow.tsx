@@ -1,5 +1,8 @@
 import React from 'react'
 
+// Internal dependencies
+import { CurrencyType } from '../../types/currency'
+import { Identity, IdentityType } from '../../types/general'
 import {
   HoverCard,
   HoverCardContent,
@@ -10,21 +13,20 @@ import {
   TextVariant,
   Trunctacular,
   useSidebarLayoutContext,
-} from 'components'
-import { Button, ButtonSize, ButtonVariant } from 'components/Button'
+} from '../..'
+import { Button, ButtonSize, ButtonVariant } from '../Button'
 import {
   ContextMenu,
   ContextMenuContent,
   ContextMenuItem,
   ContextMenuTrigger,
-} from 'components/ContextMenu'
-import { Icon, IconName } from 'components/Icon'
-import { IdentityTag, IdentityTagSize } from 'components/IdentityTag'
-import { StakeButton } from 'components/StakeButton'
-import { StakeTVL } from 'components/StakeTVL'
-import { TagWithValueProps } from 'components/Tags'
-import { cn } from 'styles'
-import { CurrencyType, Identity, IdentityType } from 'types'
+} from '../ContextMenu'
+import { Icon, IconName } from '../Icon'
+import { IdentityTag, IdentityTagSize } from '../IdentityTag'
+import { StakeButton } from '../StakeButton'
+import { StakeTVL } from '../StakeTVL'
+import { TagWithValueProps } from '../Tags'
+import { cn } from '../../styles'
 
 export interface IdentityRowProps extends React.HTMLAttributes<HTMLDivElement> {
   variant?: IdentityType

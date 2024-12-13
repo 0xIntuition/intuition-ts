@@ -1,9 +1,8 @@
 import * as React from 'react'
 
-import { ClaimPositionType, CurrencyType } from 'types'
-import { formatDate } from 'utils/date'
-import { formatWalletAddress } from 'utils/wallet'
-
+// Internal dependencies
+import { CurrencyType } from '../../types/currency'
+import { ClaimPosition, ClaimPositionType } from '../../types/general'
 import {
   Avatar,
   PositionValueDisplay,
@@ -13,9 +12,11 @@ import {
   Text,
   TextVariant,
   TextWeight,
-} from '..'
+} from '../..'
+import { formatDate } from '../../utils/date'
+import { formatWalletAddress } from '../../utils/wallet'
 
-interface FollowPositionProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface FollowPositionProps extends React.HTMLAttributes<HTMLDivElement> {
   position: ClaimPositionType
   amount: number
   name: string

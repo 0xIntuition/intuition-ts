@@ -1,3 +1,4 @@
+// External dependencies
 import { ApiError } from './ApiError'
 import type { ApiRequestOptions } from './ApiRequestOptions'
 import type { ApiResult } from './ApiResult'
