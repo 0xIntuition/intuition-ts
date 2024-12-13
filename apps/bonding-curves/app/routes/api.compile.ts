@@ -21,7 +21,17 @@ export const action: ActionFunction = async ({ request }) => {
 
     try {
       // Remove immutable keywords from contract code
-      content = content.replace(/\bimmutable\b/g, '')
+      content = content
+        // Remove IMMUTABLE while preserving immutable keyword
+        .replace(/\bIMMUTABLE\b(?!\s+[a-zA-Z_])/g, '')
+        // Remove console.sol import
+        .replace(/import\s*{?\s*console\s*}?\s*from\s*["']forge-std\/console\.sol["'];?\s*/g, '')
+        // Remove console.log lines
+        .replace(/console\.log\s*\([^;]*\);?\s*/g, '')
+        // Remove imports from test files
+        .replace(/import\s*{[^}]*}\s*from\s*["'][^"']*\/test\/[^"']*["'];?\s*/g, '')
+        // Remove StringUtils using statements
+        .replace(/using\s+StringUtils\s+for\s+(?:u?int256);?\s*/g, '')
 
       // Save to container and compile
       const escapedContent = content

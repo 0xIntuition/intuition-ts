@@ -34,6 +34,7 @@ interface Point {
   y: number
   totalValue?: number
   userValue?: number
+  previewPoint?: boolean
 }
 
 interface DeployedContract {
@@ -43,12 +44,13 @@ interface DeployedContract {
   abi: any[]
   color: string
   points: Point[]
-  totalAssets: number
-  totalShares: number
-  userAssets: number
-  userShares: number
-  previewDeposit?: Point
-  previewRedeem?: Point
+  totalAssets: bigint
+  totalShares: bigint
+  userAssets: bigint
+  userShares: bigint
+  maxAssets: bigint
+  maxShares: bigint
+  previewPoints: Point[]
   constructorValues: Record<string, string>
   variableToConstructor: Record<string, string>
   constructorToVariable: Record<string, string>
@@ -103,11 +105,11 @@ export function CurveVisualizer() {
   )
 
   // New state for simulation
-  const [totalAssets, setTotalAssets] = useState(0)
-  const [totalShares, setTotalShares] = useState(0)
+  const [totalAssets, setTotalAssets] = useState<bigint>(0n)
+  const [totalShares, setTotalShares] = useState<bigint>(0n)
   const [selectedCurveId, setSelectedCurveId] = useState<string | null>(null)
-  const [depositAmount, setDepositAmount] = useState<number>(0)
-  const [redeemAmount, setRedeemAmount] = useState<number>(0)
+  const [depositAmount, setDepositAmount] = useState<bigint>(0n)
+  const [redeemAmount, setRedeemAmount] = useState<bigint>(0n)
 
   const latestRangeRef = useRef({ min: minValue, max: maxValue })
   const pendingUpdateRef = useRef<NodeJS.Timeout | null>(null)
@@ -169,35 +171,184 @@ export function CurveVisualizer() {
 
   const generateCurvePoints = useCallback(
     async (address: string, abi: any[]) => {
-      const { min, max } = latestRangeRef.current
       const points: Point[] = []
       const numPoints = 100
-      const maxValueWei = parseEther(max.toString())
-      const minValueWei = parseEther(min.toString())
-      const stepWei = (maxValueWei - minValueWei) / BigInt(numPoints)
 
-      for (let i = 0; i <= numPoints; i++) {
-        const assets = minValueWei + BigInt(i) * stepWei
-        try {
-          const shares = await publicClient.readContract({
-            address: address as `0x${string}`,
-            abi,
-            functionName: 'assetsToShares',
-            args: [assets, 0n, 0n],
-          })
+      try {
+        // Get max values in Wei
+        const maxAssets = (await publicClient.readContract({
+          address: address as `0x${string}`,
+          abi,
+          functionName: 'MAX_ASSETS',
+        })) as bigint
 
-          points.push({
-            x: Number(assets) / 1e18,
-            y: Number(shares) / 1e18,
-          })
-        } catch (err) {
-          console.error('Error calling contract:', err)
+        const maxShares = (await publicClient.readContract({
+          address: address as `0x${string}`,
+          abi,
+          functionName: 'MAX_SHARES',
+        })) as bigint
+
+        // Convert maxValue to Wei for comparison
+        const maxValueWei = parseEther(maxValue.toString())
+
+        // Use the smaller of maxValueWei and maxAssets as our upper bound
+        const upperBoundWei = maxValueWei < maxAssets ? maxValueWei : maxAssets
+        const stepWei = upperBoundWei / BigInt(numPoints)
+
+        for (let i = 0; i <= numPoints; i++) {
+          const assetsWei = stepWei * BigInt(i)
+          if (assetsWei > maxAssets) break // Stop if we exceed MAX_ASSETS
+
+          try {
+            const sharesWei = (await publicClient.readContract({
+              address: address as `0x${string}`,
+              abi,
+              functionName: 'integrateAssetsToShares',
+              args: [assetsWei],
+            })) as bigint
+
+            if (sharesWei > maxShares) break // Stop if we exceed MAX_SHARES
+
+            // Convert to ETH only for display
+            points.push({
+              x: Number(formatEther(assetsWei)),
+              y: Number(formatEther(sharesWei)),
+            })
+          } catch (err: any) {
+            if (
+              err.message?.includes('Assets exceed domain') ||
+              err.message?.includes('Shares exceed domain')
+            ) {
+              // Stop generating points if we hit domain boundary
+              break
+            }
+            throw err // Re-throw other errors
+          }
         }
+      } catch (err) {
+        console.error('Error generating curve points:', err)
       }
 
       return points
     },
-    [publicClient, latestRangeRef],
+    [maxValue, publicClient],
+  )
+
+  const simulatePreview = useCallback(
+    async (
+      contract: DeployedContract,
+      amount: number,
+      type: 'deposit' | 'mint' | 'withdraw' | 'redeem',
+    ) => {
+      const amountWei = parseEther(amount.toString())
+      const totalAssetsWei = parseEther(contract.totalAssets.toString())
+      const totalSharesWei = parseEther(contract.totalShares.toString())
+
+      try {
+        let result
+        switch (type) {
+          case 'deposit':
+            result = await publicClient.readContract({
+              address: contract.address,
+              abi: contract.abi,
+              functionName: 'previewDeposit',
+              args: [amountWei, totalAssetsWei, totalSharesWei],
+            })
+            return {
+              x: amount,
+              y: Number(result) / 1e18,
+              previewPoint: true,
+            }
+          case 'mint':
+            result = await publicClient.readContract({
+              address: contract.address,
+              abi: contract.abi,
+              functionName: 'previewMint',
+              args: [amountWei, totalSharesWei, totalAssetsWei],
+            })
+            return {
+              x: Number(result) / 1e18,
+              y: amount,
+              previewPoint: true,
+            }
+          case 'withdraw':
+            result = await publicClient.readContract({
+              address: contract.address,
+              abi: contract.abi,
+              functionName: 'previewWithdraw',
+              args: [amountWei, totalAssetsWei, totalSharesWei],
+            })
+            return {
+              x: amount,
+              y: Number(result) / 1e18,
+              previewPoint: true,
+            }
+          case 'redeem':
+            result = await publicClient.readContract({
+              address: contract.address,
+              abi: contract.abi,
+              functionName: 'previewRedeem',
+              args: [amountWei, totalSharesWei, totalAssetsWei],
+            })
+            return {
+              x: Number(result) / 1e18,
+              y: amount,
+              previewPoint: true,
+            }
+        }
+      } catch (err) {
+        console.error('Error simulating preview:', err)
+        return null
+      }
+    },
+    [publicClient],
+  )
+
+  const handlePreview = useCallback(
+    async (
+      type: 'deposit' | 'mint' | 'withdraw' | 'redeem',
+      amount: number,
+    ) => {
+      if (!selectedCurveId || amount <= 0) return
+
+      const contract = deployedContracts.find((c) => c.id === selectedCurveId)
+      if (!contract) return
+
+      const previewPoint = await simulatePreview(contract, amount, type)
+      if (!previewPoint) return
+
+      setDeployedContracts((prev) =>
+        prev.map((c) => {
+          if (c.id === selectedCurveId) {
+            return {
+              ...c,
+              previewPoints: [previewPoint],
+            }
+          }
+          return c
+        }),
+      )
+    },
+    [selectedCurveId, deployedContracts, simulatePreview],
+  )
+
+  // Add handlers for the new preview inputs
+  const handleDepositPreview = useCallback(
+    (value: string) => {
+      const amount = parseNumberInput(value)
+      setDepositAmount(amount)
+      handlePreview('deposit', Number(formatEther(amount)))
+    },
+    [handlePreview],
+  )
+
+  const handleRedeemPreview = useCallback(
+    (value: string) => {
+      const amount = parseNumberInput(value)
+      setRedeemAmount(amount)
+      handlePreview('redeem', Number(formatEther(amount)))
+    },
+    [handlePreview],
   )
 
   const regenerateCurves = useCallback(async () => {
@@ -255,52 +406,71 @@ export function CurveVisualizer() {
     await deployContract(targetId, values)
   }
 
-  const deployContract = async (
-    fileId: string,
-    values: Record<string, string>,
-  ) => {
-    if (isDeploying) return
-    const fileData = files.get(fileId)
-    if (!fileData) return
+  const deployContract = useCallback(
+    async (fileId: string, values: Record<string, string>) => {
+      if (isDeploying) return
+      const fileData = files.get(fileId)
+      if (!fileData) return
 
-    try {
-      setIsDeploying(true)
-      setPendingDeployment(fileId)
-      setConstructorValues(values)
+      try {
+        setIsDeploying(true)
+        setPendingDeployment(fileId)
+        setConstructorValues(values)
 
-      const parsedArgs = fileData.constructorArgs.map((arg) => {
-        const value = values[arg.name]
-        if (!value && arg.type.startsWith('uint')) return toHex(0n)
-        if (!value) return value
+        const parsedArgs = fileData.constructorArgs.map((arg) => {
+          const value = values[arg.name]
+          if (!value && arg.type.startsWith('uint')) return toHex(0n)
+          if (!value) return value
 
-        if (arg.type.startsWith('uint') || arg.type.startsWith('int')) {
-          const parsedValue = parseNumberInput(value)
-          return toHex(parsedValue)
+          if (arg.type.startsWith('uint') || arg.type.startsWith('int')) {
+            const parsedValue = parseNumberInput(value)
+            return toHex(parsedValue)
+          }
+          return value
+        })
+
+        const deployFormData = new FormData()
+        deployFormData.append('abi', JSON.stringify(fileData.abi))
+        deployFormData.append('bytecode', fileData.bytecode)
+        deployFormData.append('constructorArgs', JSON.stringify(parsedArgs))
+
+        console.log('Deploying contract with args:', parsedArgs)
+        const response = await fetch('/api/deploy', {
+          method: 'POST',
+          body: deployFormData,
+        })
+        const data = await response.json()
+
+        if (data.error) {
+          setError(data.error)
+          setPendingDeployment(null)
+          setIsDeploying(false)
+          return
         }
-        return value
-      })
 
-      const deployFormData = new FormData()
-      deployFormData.append('abi', JSON.stringify(fileData.abi))
-      deployFormData.append('bytecode', fileData.bytecode)
-      deployFormData.append('constructorArgs', JSON.stringify(parsedArgs))
+        if (!data.address) {
+          setError('No address returned from deployment')
+          setPendingDeployment(null)
+          setIsDeploying(false)
+          return
+        }
 
-      console.log('Deploying contract with args:', parsedArgs)
-      const response = await fetch('/api/deploy', {
-        method: 'POST',
-        body: deployFormData,
-      })
-      const data = await response.json()
-
-      if (data.error) {
-        setError(data.error)
-        setPendingDeployment(null)
-        setIsDeploying(false)
-        return
-      }
-
-      if (data.address) {
+        console.log('Contract deployed at:', data.address)
         const points = await generateCurvePoints(data.address, fileData.abi)
+
+        // Get max values first
+        const maxAssets = (await publicClient.readContract({
+          address: data.address as `0x${string}`,
+          abi: fileData.abi,
+          functionName: 'MAX_ASSETS',
+        })) as bigint
+
+        const maxShares = (await publicClient.readContract({
+          address: data.address as `0x${string}`,
+          abi: fileData.abi,
+          functionName: 'MAX_SHARES',
+        })) as bigint
+
         setDeployedContracts((prev) => {
           if (prev.some((c) => c.address === data.address)) {
             return prev
@@ -311,8 +481,6 @@ export function CurveVisualizer() {
           const variableToConstructor: Record<string, string> = {}
 
           fileData.constructorArgs.forEach((arg) => {
-            // Constructor args are lowercase (e.g., "offset")
-            // Contract variables are uppercase (e.g., "OFFSET")
             const varName = arg.name.toUpperCase()
             constructorToVariable[arg.name] = varName
             variableToConstructor[varName] = arg.name
@@ -321,28 +489,34 @@ export function CurveVisualizer() {
           const newContract: DeployedContract = {
             id: data.address,
             name: fileData.file.name.replace('.sol', ''),
-            address: data.address,
+            address: data.address as `0x${string}`,
             abi: fileData.abi,
             constructorValues: values,
             constructorToVariable,
             variableToConstructor,
             points,
             color: CURVE_COLORS[prev.length % CURVE_COLORS.length],
-            totalAssets: 0,
-            totalShares: 0,
-            userAssets: 0,
-            userShares: 0,
+            totalAssets: 0n,
+            totalShares: 0n,
+            userAssets: 0n,
+            userShares: 0n,
+            maxAssets,
+            maxShares,
+            previewPoints: [],
           }
           return [...prev, newContract]
         })
+      } catch (err) {
+        setError(
+          err instanceof Error ? err.message : 'Failed to deploy contract',
+        )
+      } finally {
+        setPendingDeployment(null)
+        setIsDeploying(false)
       }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to deploy contract')
-    } finally {
-      setPendingDeployment(null)
-      setIsDeploying(false)
-    }
-  }
+    },
+    [files, isDeploying, publicClient, generateCurvePoints],
+  )
 
   const handleCurveSelect = (id: string) => {
     setSelectedCurveId(id)
@@ -408,25 +582,26 @@ export function CurveVisualizer() {
       const numericValue = Number(newValue)
       if (isNaN(numericValue) || numericValue < 0) return
 
-      // Update max value if needed before updating graph
-      if (numericValue > maxValue) {
-        const newMax = Math.pow(2, Math.ceil(Math.log2(numericValue)))
-        setMaxValue(newMax) // Update UI
-        handleMinMaxChange(minValue, newMax) // Regenerate curves
-      }
-
       try {
         const shares = await publicClient.readContract({
           address: curve.address,
           abi: curve.abi,
-          functionName: 'assetsToShares',
-          args: [parseEther(numericValue.toString()), 0n, 0n],
+          functionName: 'integrateAssetsToShares',
+          args: [parseEther(numericValue.toString())],
         })
-
         const sharesNum = Number(formatEther(BigInt(shares.toString())))
+
         setTotalAssets(numericValue)
         setTotalShares(sharesNum)
 
+        // Update max value if needed before updating graph
+        if (numericValue > maxValue) {
+          const newMax = Math.pow(2, Math.ceil(Math.log2(numericValue)))
+          setMaxValue(newMax) // Update UI
+          handleMinMaxChange(minValue, newMax) // Regenerate curves
+        }
+
+        // Update deployed contracts state with new values
         setDeployedContracts((prev) =>
           prev.map((c) =>
             c.id === selectedCurveId
@@ -480,8 +655,8 @@ export function CurveVisualizer() {
           const shares = await publicClient.readContract({
             address: curve.address,
             abi: curve.abi,
-            functionName: 'assetsToShares',
-            args: [parseEther(currentAssets.toString()), 0n, 0n],
+            functionName: 'integrateAssetsToShares',
+            args: [parseEther(currentAssets.toString())],
           })
           const sharesNum = Number(formatEther(BigInt(shares.toString())))
 
@@ -520,48 +695,11 @@ export function CurveVisualizer() {
             break
           }
 
-          if (prevShares < numericValue && sharesNum > numericValue) {
-            // We've bracketed the target, interpolate
-            const assetsNumber =
-              prevAssets +
-              ((numericValue - prevShares) * (currentAssets - prevAssets)) /
-                (sharesNum - prevShares)
-
-            setTotalShares(numericValue)
-            setTotalAssets(assetsNumber)
-
-            // Update max value if needed before updating graph
-            if (assetsNumber > maxValue) {
-              const newMax = Math.pow(2, Math.ceil(Math.log2(assetsNumber)))
-              setMaxValue(newMax) // Update UI
-              handleMinMaxChange(minValue, newMax) // Regenerate curves
-            }
-
-            // Update deployed contracts state with new values
-            setDeployedContracts((prev) =>
-              prev.map((c) =>
-                c.id === selectedCurveId
-                  ? {
-                      ...c,
-                      totalAssets: assetsNumber,
-                      totalShares: numericValue,
-                      points: c.points.map((point) => ({
-                        ...point,
-                        totalValue:
-                          point.x <= assetsNumber ? point.y : undefined,
-                        userValue:
-                          point.x <= c.userAssets ? point.y : undefined,
-                      })),
-                    }
-                  : c,
-              ),
-            )
-            break
-          }
-
+          // Record previous values
           prevShares = sharesNum
           prevAssets = currentAssets
 
+          // Adjust assets based on comparison
           if (sharesNum < numericValue) {
             currentAssets += step
             step *= 1.5 // Accelerate step size
@@ -599,7 +737,7 @@ export function CurveVisualizer() {
 
       try {
         if (!amount) {
-          setDepositAmount(0)
+          setDepositAmount(0n)
           setDeployedContracts((prev) =>
             prev.map((c) =>
               c.id === selectedCurveId
@@ -651,7 +789,7 @@ export function CurveVisualizer() {
 
       try {
         if (!amount) {
-          setRedeemAmount(0)
+          setRedeemAmount(0n)
           setDeployedContracts((prev) =>
             prev.map((c) =>
               c.id === selectedCurveId ? { ...c, previewRedeem: undefined } : c,
@@ -735,7 +873,7 @@ export function CurveVisualizer() {
         ),
       )
 
-      setDepositAmount(0)
+      setDepositAmount(0n)
       setTotalAssets(newTotalAssets)
       setTotalShares(newTotalShares)
     } catch (err) {
@@ -785,7 +923,7 @@ export function CurveVisualizer() {
         ),
       )
 
-      setRedeemAmount(0)
+      setRedeemAmount(0n)
       setTotalAssets(newTotalAssets)
       setTotalShares(newTotalShares)
     } catch (err) {
@@ -972,11 +1110,16 @@ export function CurveVisualizer() {
 
         <div className="h-[400px] w-full rounded-lg border border-border p-4">
           <LineChart
-            data={deployedContracts}
-            xLabel="Assets (ETH)"
-            yLabel="Shares (ETH)"
-            minValue={minValue}
-            maxValue={maxValue}
+            data={deployedContracts.map((contract) => ({
+              id: contract.id,
+              color: contract.color,
+              points: [...contract.points, ...contract.previewPoints],
+              name: contract.name,
+              totalAssets: Number(formatEther(contract.totalAssets)),
+              totalShares: Number(formatEther(contract.totalShares)),
+            }))}
+            xLabel="Assets"
+            yLabel="Shares"
           />
         </div>
 
@@ -1096,6 +1239,28 @@ export function CurveVisualizer() {
         }
         onVariableChange={handleVariableChange}
       />
+
+      <div className="flex flex-col gap-4 mt-4">
+        <div>
+          <Label>Preview Deposit (Assets)</Label>
+          <Input
+            type="number"
+            value={depositAmount || ''}
+            onChange={(e) => handleDepositPreview(e.target.value)}
+            placeholder="Enter amount of assets"
+          />
+        </div>
+
+        <div>
+          <Label>Preview Redeem (Shares)</Label>
+          <Input
+            type="number"
+            value={redeemAmount || ''}
+            onChange={(e) => handleRedeemPreview(e.target.value)}
+            placeholder="Enter amount of shares"
+          />
+        </div>
+      </div>
     </div>
   )
 }
