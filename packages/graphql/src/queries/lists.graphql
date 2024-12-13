@@ -16,6 +16,7 @@ query GetLists($where: predicateObjects_bool_exp) {
     tripleCount
     object {
       id
+      vaultId
       label
       image
     }
@@ -50,9 +51,12 @@ query GetListDetails(
   }
   globalTriples: triples(where: $globalWhere) {
     label
+    id
     vaultId
+    counterVaultId
     subject {
       id
+      vaultId
       label
       walletId
       image
@@ -85,6 +89,15 @@ query GetListDetails(
     }
     object {
       id
+      vaultId
+      label
+      walletId
+      image
+      type
+    }
+    predicate {
+      id
+      vaultId
       label
       walletId
       image
@@ -108,9 +121,12 @@ query GetListDetails(
   }
   userTriples: triples(where: $userWhere) {
     label
+    id
     vaultId
+    counterVaultId
     subject {
       id
+      vaultId
       label
       walletId
       image
@@ -143,6 +159,7 @@ query GetListDetails(
     }
     object {
       id
+      vaultId
       label
       walletId
       image

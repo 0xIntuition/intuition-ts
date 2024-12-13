@@ -10,99 +10,241 @@ import {
   TabsTrigger,
 } from '@0xintuition/1ui'
 import {
-  ClaimPresenter,
-  ClaimsService,
-  IdentityPresenter,
-  UsersService,
-} from '@0xintuition/api'
+  fetcher,
+  GetAccountDocument,
+  GetAccountQuery,
+  GetAccountQueryVariables,
+  GetAtomDocument,
+  GetAtomQuery,
+  GetAtomQueryVariables,
+  GetListDetailsDocument,
+  GetListDetailsQuery,
+  GetListDetailsQueryVariables,
+  useGetAccountQuery,
+  useGetAtomQuery,
+  useGetListDetailsQuery,
+} from '@0xintuition/graphql'
 
 import { ErrorPage } from '@components/error-page'
 import { TagsList } from '@components/list/tags'
 import { ListTabIdentityDisplay } from '@components/lists/list-tab-identity-display'
 import RemixLink from '@components/remix-link'
 import { DataHeaderSkeleton, PaginatedListSkeleton } from '@components/skeleton'
-import { useLiveLoader } from '@lib/hooks/useLiveLoader'
-import { getListClaims } from '@lib/services/lists'
+import { getSpecialPredicate } from '@lib/utils/app'
+import logger from '@lib/utils/logger'
 import {
-  getAtomDescription,
-  getAtomImage,
-  getAtomIpfsLink,
-  getAtomLabel,
-  getAtomLink,
+  getAtomDescriptionGQL,
+  getAtomImageGQL,
+  getAtomIpfsLinkGQL,
+  getAtomLabelGQL,
+  getAtomLinkGQL,
   invariant,
 } from '@lib/utils/misc'
-import { defer, LoaderFunctionArgs } from '@remix-run/node'
+import { json, LoaderFunctionArgs } from '@remix-run/node'
 import {
-  Await,
+  useLoaderData,
   useNavigation,
   useRouteLoaderData,
   useSearchParams,
 } from '@remix-run/react'
-import { fetchWrapper } from '@server/api'
-import { NO_CLAIM_ERROR, NO_PARAM_ID_ERROR } from 'app/consts'
-import { VaultDetailsType } from 'app/types'
+import { QueryClient } from '@tanstack/react-query'
+import { CURRENT_ENV, NO_CLAIM_ERROR, NO_PARAM_ID_ERROR } from 'app/consts'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const id = params.id
   invariant(id, NO_PARAM_ID_ERROR)
 
+  const [predicateId, objectId] = id.split('-')
+  invariant(predicateId, 'Predicate ID not found in composite ID')
+  invariant(objectId, 'Object ID not found in composite ID')
+
   const url = new URL(request.url)
   const searchParams = new URLSearchParams(url.search)
   const paramWallet = searchParams.get('user')
 
-  const additionalUserObject = paramWallet
-    ? await fetchWrapper(request, {
-        method: UsersService.getUserByWalletPublic,
-        args: {
-          wallet: paramWallet,
+  const queryClient = new QueryClient()
+
+  const additionalQueryAddress = paramWallet ? paramWallet.toLowerCase() : ''
+
+  const globalWhere = {
+    predicateId: { _eq: parseInt(predicateId) },
+    objectId: { _eq: parseInt(objectId) },
+  }
+
+  const userWhere = {
+    predicateId: { _eq: parseInt(predicateId) },
+    objectId: { _eq: parseInt(objectId) },
+    vault: {
+      positions: {
+        accountId: {
+          _eq: additionalQueryAddress,
         },
-      })
-    : null
+      },
+    },
+  }
 
-  const claim = await fetchWrapper(request, {
-    method: ClaimsService.getClaimById,
-    args: { id },
+  await queryClient.prefetchQuery({
+    queryKey: [
+      'get-list-details',
+      { id, tagPredicateId: parseInt(predicateId) },
+    ],
+    queryFn: () =>
+      fetcher<GetListDetailsQuery, GetListDetailsQueryVariables>(
+        GetListDetailsDocument,
+        {
+          globalWhere,
+          userWhere,
+          tagPredicateId: parseInt(predicateId),
+        },
+      )(),
   })
-  invariant(claim.object?.id, NO_PARAM_ID_ERROR)
 
-  return defer({
-    globalListClaims: getListClaims({
-      request,
-      objectId: claim.object.id,
-      searchParams,
-    }),
-    userListClaims: getListClaims({
-      request,
-      objectId: claim.object.id,
-      searchParams,
-    }),
-    additionalUserListClaims: paramWallet
-      ? getListClaims({
-          request,
-          objectId: claim.object.id,
-          searchParams,
-          userWithPosition: additionalUserObject?.id,
-          userAssetsForPresent: true,
-        })
-      : null,
-    additionalUserObject,
+  if (paramWallet) {
+    let additionalAccountResult: GetAccountQuery | null = null
+
+    try {
+      additionalAccountResult = await fetcher<
+        GetAccountQuery,
+        GetAccountQueryVariables
+      >(GetAccountDocument, { address: additionalQueryAddress ?? '' })()
+
+      if (!additionalAccountResult) {
+        throw new Error('No account data found for address')
+      }
+
+      if (!additionalAccountResult.account?.atomId) {
+        throw new Error('No atom ID found for account')
+      }
+
+      await queryClient.prefetchQuery({
+        queryKey: [
+          'get-additional-account',
+          { address: additionalQueryAddress },
+        ],
+        queryFn: () => additionalAccountResult,
+      })
+    } catch (error) {
+      logger('Query Error:', {
+        message: (error as Error).message,
+        stack: (error as Error).stack,
+        queryAddress: additionalQueryAddress,
+      })
+      throw error
+    }
+    const additionalUserWhere = {
+      predicateId: {
+        _eq: getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId,
+      },
+      objectId: { _eq: id },
+      vault: {
+        positions: {
+          accountId: { _eq: paramWallet.toLowerCase() },
+        },
+      },
+    }
+
+    await queryClient.prefetchQuery({
+      queryKey: ['get-additional-user-list-details', { additionalUserWhere }],
+      queryFn: () =>
+        fetcher<GetListDetailsQuery, GetListDetailsQueryVariables>(
+          GetListDetailsDocument,
+          {
+            userWhere: additionalUserWhere,
+            tagPredicateId: parseInt(predicateId),
+          },
+        )(),
+    })
+  }
+
+  const predicateResult = await fetcher<GetAtomQuery, GetAtomQueryVariables>(
+    GetAtomDocument,
+    {
+      id: predicateId,
+    },
+  )()
+
+  await queryClient.prefetchQuery({
+    queryKey: ['get-predicate', { id: predicateId }],
+    queryFn: () => predicateResult,
+  })
+
+  return json({
+    additionalQueryAddress,
+    initialParams: {
+      id,
+      objectId,
+      predicateId,
+      paramWallet,
+      globalWhere,
+      userWhere,
+    },
   })
 }
 
 export default function ReadOnlyListOverview() {
-  const {
-    globalListClaims,
-    userListClaims,
-    additionalUserListClaims,
-    additionalUserObject,
-  } = useLiveLoader<typeof loader>(['create', 'attest'])
+  const { additionalQueryAddress, initialParams } =
+    useLoaderData<typeof loader>()
 
-  const { claim } =
+  const { data: additionalAccountResult } = useGetAccountQuery(
+    {
+      address: additionalQueryAddress ?? '',
+    },
+    {
+      queryKey: ['get-additional-account', { address: additionalQueryAddress }],
+      enabled: !!additionalQueryAddress,
+    },
+  )
+
+  const { data: listDetailsData } = useGetListDetailsQuery(
+    {
+      globalWhere: initialParams.globalWhere,
+      userWhere: initialParams.userWhere,
+      tagPredicateId: parseInt(initialParams.predicateId),
+    },
+    {
+      queryKey: [
+        'get-list-details',
+        {
+          id: initialParams.id,
+          tagPredicateId: parseInt(initialParams.predicateId),
+        },
+      ],
+    },
+  )
+
+  const { data: additionalUserData } = useGetListDetailsQuery(
+    additionalQueryAddress
+      ? {
+          userWhere: initialParams.userWhere,
+          tagPredicateId: parseInt(initialParams.predicateId),
+        }
+      : undefined,
+    {
+      queryKey: [
+        'get-additional-user-list-details',
+        {
+          userWhere: initialParams.userWhere,
+          tagPredicateId: parseInt(initialParams.predicateId),
+        },
+      ],
+      enabled: !!additionalQueryAddress,
+    },
+  )
+
+  const { data: predicateResult } = useGetAtomQuery(
+    {
+      id: initialParams.predicateId,
+    },
+    {
+      queryKey: ['get-predicate', { id: initialParams.predicateId }],
+    },
+  )
+
+  const { objectResult } =
     useRouteLoaderData<{
-      claim: ClaimPresenter
-      vaultDetails: VaultDetailsType
+      objectResult: GetAtomQuery
     }>('routes/readonly+/list+/$id') ?? {}
-  invariant(claim, NO_CLAIM_ERROR)
+  invariant(objectResult, NO_CLAIM_ERROR)
 
   const [searchParams, setSearchParams] = useSearchParams()
   const [isNavigating, setIsNavigating] = useState(false)
@@ -130,55 +272,72 @@ export default function ReadOnlyListOverview() {
     <div className="flex-col justify-start items-start flex w-full gap-6">
       <div className="flex flex-col gap-6 w-full">
         <Suspense fallback={<DataHeaderSkeleton />}>
-          <Await resolve={globalListClaims} errorElement={<></>}>
-            {(resolvedGlobalListClaims) => (
-              <ListHeaderCard
-                label="Identities"
-                value={resolvedGlobalListClaims.pagination.totalEntries}
-              >
-                <Claim
-                  size="md"
-                  subject={{
-                    variant: claim.subject?.is_user ? 'user' : 'non-user',
-                    label: '?',
-                    imgSrc: null,
-                    shouldHover: false,
-                  }}
-                  predicate={{
-                    variant: claim.predicate?.is_user ? 'user' : 'non-user',
-                    label: getAtomLabel(claim.predicate as IdentityPresenter),
-                    imgSrc: getAtomImage(claim.predicate as IdentityPresenter),
-                    id: claim.predicate?.identity_id,
-                    description: getAtomDescription(
-                      claim.predicate as IdentityPresenter,
-                    ),
-                    ipfsLink: getAtomIpfsLink(
-                      claim.predicate as IdentityPresenter,
-                    ),
-                    link: getAtomLink(
-                      claim.predicate as IdentityPresenter,
-                      true,
-                    ),
-                    linkComponent: RemixLink,
-                  }}
-                  object={{
-                    variant: claim.object?.is_user ? 'user' : 'non-user',
-                    label: getAtomLabel(claim.object as IdentityPresenter),
-                    imgSrc: getAtomImage(claim.object as IdentityPresenter),
-                    id: claim.object?.identity_id,
-                    description: getAtomDescription(
-                      claim.object as IdentityPresenter,
-                    ),
-                    ipfsLink: getAtomIpfsLink(
-                      claim.object as IdentityPresenter,
-                    ),
-                    link: getAtomLink(claim.object as IdentityPresenter, true),
-                    linkComponent: RemixLink,
-                  }}
-                />
-              </ListHeaderCard>
-            )}
-          </Await>
+          <ListHeaderCard
+            label="Identities"
+            value={
+              listDetailsData?.globalTriplesAggregate.aggregate?.count ?? 0
+            }
+          >
+            <Claim
+              size="md"
+              subject={{
+                variant: 'non-user',
+                label: '?',
+                imgSrc: null,
+                shouldHover: false,
+              }}
+              predicate={{
+                variant: 'non-user',
+                label: getAtomLabelGQL(
+                  predicateResult?.atom as GetAtomQuery['atom'],
+                ),
+                imgSrc: getAtomImageGQL(
+                  predicateResult?.atom as GetAtomQuery['atom'],
+                ),
+                id:
+                  predicateResult?.atom?.type === 'Account' ||
+                  predicateResult?.atom?.type === 'Default'
+                    ? predicateResult?.atom?.walletId
+                    : predicateResult?.atom?.id,
+                description: getAtomDescriptionGQL(
+                  predicateResult?.atom as GetAtomQuery['atom'],
+                ),
+                ipfsLink: getAtomIpfsLinkGQL(
+                  predicateResult?.atom as GetAtomQuery['atom'],
+                ),
+                link: getAtomLinkGQL(
+                  predicateResult?.atom as GetAtomQuery['atom'],
+                ),
+                linkComponent: RemixLink,
+              }}
+              object={{
+                variant:
+                  objectResult.atom?.type === 'Account' ||
+                  objectResult.atom?.type === 'Default'
+                    ? 'user'
+                    : 'non-user',
+                label: getAtomLabelGQL(
+                  objectResult.atom as GetAtomQuery['atom'],
+                ),
+                imgSrc: getAtomImageGQL(
+                  objectResult.atom as GetAtomQuery['atom'],
+                ),
+                id:
+                  objectResult.atom?.type === 'Account' ||
+                  objectResult.atom?.type === 'Default'
+                    ? objectResult.atom?.walletId
+                    : objectResult.atom?.id,
+                description: getAtomDescriptionGQL(
+                  objectResult.atom as GetAtomQuery['atom'],
+                ),
+                ipfsLink: getAtomIpfsLinkGQL(
+                  objectResult.atom as GetAtomQuery['atom'],
+                ),
+                link: getAtomLinkGQL(objectResult.atom as GetAtomQuery['atom']),
+                linkComponent: RemixLink,
+              }}
+            />
+          </ListHeaderCard>
         </Suspense>
       </div>
       <div className="flex flex-col gap-6 w-full">
@@ -187,112 +346,71 @@ export default function ReadOnlyListOverview() {
             <Suspense
               fallback={<Skeleton className="w-44 h-10 rounded mr-2" />}
             >
-              <Await resolve={globalListClaims}>
-                {(resolvedGlobalListClaims) => (
-                  <TabsTrigger
-                    value="global"
-                    label="Global"
-                    totalCount={
-                      resolvedGlobalListClaims?.pagination.totalEntries
-                    }
-                    onClick={(e) => {
-                      e.preventDefault()
-                      handleTabChange('global')
-                    }}
-                  />
-                )}
-              </Await>
+              <TabsTrigger
+                value="global"
+                label="Global"
+                totalCount={
+                  listDetailsData?.globalTriplesAggregate.aggregate?.count ?? 0
+                }
+                onClick={(e) => {
+                  e.preventDefault()
+                  handleTabChange('global')
+                }}
+              />
             </Suspense>
             {userWalletAddress && (
               <Suspense fallback={<Skeleton className="w-44 h-10 rounded" />}>
-                <Await resolve={additionalUserListClaims}>
-                  {(resolvedAdditionalUserListClaims) => (
-                    <TabsTrigger
-                      className="text-left"
-                      value="additional"
-                      totalCount={
-                        resolvedAdditionalUserListClaims?.pagination
-                          .totalEntries
-                      }
-                      label={
-                        <ListTabIdentityDisplay
-                          imgSrc={additionalUserObject?.image}
-                        >
-                          {additionalUserObject?.display_name ?? 'Additional'}
-                        </ListTabIdentityDisplay>
-                      }
-                      onClick={(e) => {
-                        e.preventDefault()
-                        handleTabChange('additional')
-                      }}
-                    />
-                  )}
-                </Await>
+                <TabsTrigger
+                  className="text-left"
+                  value="additional"
+                  totalCount={
+                    additionalUserData?.userTriplesAggregate.aggregate?.count ??
+                    0
+                  }
+                  label={
+                    <ListTabIdentityDisplay
+                      imgSrc={additionalAccountResult?.account?.image}
+                    >
+                      {additionalAccountResult?.account?.label ?? 'Additional'}
+                    </ListTabIdentityDisplay>
+                  }
+                  onClick={(e) => {
+                    e.preventDefault()
+                    handleTabChange('additional')
+                  }}
+                />
               </Suspense>
             )}
           </TabsList>
           <TabsContent value="global" className="mt-6">
             <Suspense fallback={<PaginatedListSkeleton />}>
-              <Await resolve={globalListClaims}>
-                {(resolvedGlobalListClaims) => {
-                  if (!resolvedGlobalListClaims) {
-                    return <PaginatedListSkeleton />
-                  }
-                  return isNavigating ? (
-                    <PaginatedListSkeleton />
-                  ) : (
-                    <TagsList
-                      claims={resolvedGlobalListClaims.claims}
-                      pagination={resolvedGlobalListClaims.pagination}
-                      enableSearch={true}
-                      enableSort={true}
-                      readOnly={true}
-                    />
-                  )
-                }}
-              </Await>
+              {listDetailsData?.globalTriples ? (
+                isNavigating ? (
+                  <PaginatedListSkeleton />
+                ) : (
+                  <TagsList
+                    triples={listDetailsData.globalTriples}
+                    enableSearch={true}
+                    enableSort={true}
+                    readOnly
+                  />
+                )
+              ) : null}
             </Suspense>
           </TabsContent>
-          <TabsContent value="you">
-            <Suspense fallback={<PaginatedListSkeleton />}>
-              <Await resolve={userListClaims}>
-                {(resolvedUserListClaims) => {
-                  if (!resolvedUserListClaims) {
-                    return <PaginatedListSkeleton />
-                  }
-                  return isNavigating ? (
-                    <PaginatedListSkeleton />
-                  ) : (
-                    <TagsList
-                      claims={resolvedUserListClaims.claims}
-                      pagination={resolvedUserListClaims.pagination}
-                      enableSearch={true}
-                      enableSort={true}
-                      readOnly={true}
-                    />
-                  )
-                }}
-              </Await>
-            </Suspense>
-          </TabsContent>
-          {userWalletAddress && !!additionalUserListClaims && (
+          {userWalletAddress && !!additionalUserData && (
             <TabsContent value="additional">
               <Suspense fallback={<PaginatedListSkeleton />}>
-                <Await resolve={additionalUserListClaims}>
-                  {(resolvedAdditionalUserListClaims) => {
-                    return isNavigating ? (
-                      <PaginatedListSkeleton />
-                    ) : resolvedAdditionalUserListClaims ? (
-                      <TagsList
-                        claims={resolvedAdditionalUserListClaims.claims}
-                        pagination={resolvedAdditionalUserListClaims.pagination}
-                        enableSearch={true}
-                        enableSort={true}
-                        readOnly={true}
-                      />
-                    ) : null
-                  }}
-                </Await>
+                {isNavigating ? (
+                  <PaginatedListSkeleton />
+                ) : additionalUserData?.userTriples ? (
+                  <TagsList
+                    triples={additionalUserData?.userTriples}
+                    enableSearch={true}
+                    enableSort={true}
+                    readOnly
+                  />
+                ) : null}
               </Suspense>
             </TabsContent>
           )}

@@ -13,17 +13,20 @@ import {
   TabsList,
   TabsTrigger,
 } from '@0xintuition/1ui'
+import { IdentityPresenter, Status } from '@0xintuition/api'
 import {
   fetcher,
   GetAccountDocument,
   GetAccountQuery,
   GetAccountQueryVariables,
+  GetAtomDocument,
   GetAtomQuery,
+  GetAtomQueryVariables,
   GetListDetailsDocument,
   GetListDetailsQuery,
   GetListDetailsQueryVariables,
-  GetTripleQuery,
   useGetAccountQuery,
+  useGetAtomQuery,
   useGetListDetailsQuery,
 } from '@0xintuition/graphql'
 
@@ -43,6 +46,7 @@ import {
   getAtomIpfsLinkGQL,
   getAtomLabelGQL,
   getAtomLinkGQL,
+  identityToAtom,
   invariant,
 } from '@lib/utils/misc'
 import { defer, LoaderFunctionArgs } from '@remix-run/node'
@@ -67,6 +71,10 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const id = params.id
   invariant(id, NO_PARAM_ID_ERROR)
 
+  const [predicateId, objectId] = id.split('-')
+  invariant(predicateId, 'Predicate ID not found in composite ID')
+  invariant(objectId, 'Object ID not found in composite ID')
+
   const wallet = await requireUserWallet(request)
   invariant(wallet, NO_WALLET_ERROR)
 
@@ -77,44 +85,32 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const paramWallet = searchParams.get('user')
 
   const queryAddress = wallet.toLowerCase()
-  const additionalQueryAddress = paramWallet ? paramWallet.toLowerCase() : null
+  const additionalQueryAddress = paramWallet ? paramWallet.toLowerCase() : ''
 
   const globalWhere = {
-    predicateId: {
-      _eq: getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId,
-    },
-    objectId: {
-      _eq: `%${id}%`,
-    },
+    predicateId: { _eq: parseInt(predicateId) },
+    objectId: { _eq: parseInt(objectId) },
   }
 
   const userWhere = {
-    predicateId: {
-      _eq: getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId,
-    },
-    objectId: {
-      _eq: id,
-    },
+    predicateId: { _eq: parseInt(predicateId) },
+    objectId: { _eq: parseInt(objectId) },
     vault: {
       positions: {
         accountId: {
-          _eq: wallet.toLowerCase(),
+          _eq: queryAddress,
         },
       },
     },
   }
 
   const additionalUserWhere = {
-    predicateId: {
-      _eq: getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId,
-    },
-    objectId: {
-      _eq: id,
-    },
+    predicateId: { _eq: parseInt(predicateId) },
+    objectId: { _eq: parseInt(objectId) },
     vault: {
       positions: {
         accountId: {
-          _eq: paramWallet,
+          _eq: additionalQueryAddress,
         },
       },
     },
@@ -178,12 +174,22 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     throw error
   }
 
+  const predicateResult = await fetcher<GetAtomQuery, GetAtomQueryVariables>(
+    GetAtomDocument,
+    {
+      id: predicateId,
+    },
+  )()
+
+  await queryClient.prefetchQuery({
+    queryKey: ['get-predicate', { id: predicateId }],
+    queryFn: () => predicateResult,
+  })
+
   await queryClient.prefetchQuery({
     queryKey: [
       'get-list-details',
-      {
-        id,
-      },
+      { id, tagPredicateId: parseInt(predicateId) },
     ],
     queryFn: () =>
       fetcher<GetListDetailsQuery, GetListDetailsQueryVariables>(
@@ -191,6 +197,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
         {
           globalWhere,
           userWhere,
+          tagPredicateId: parseInt(predicateId),
         },
       )(),
   })
@@ -209,12 +216,16 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     }
 
     await queryClient.prefetchQuery({
-      queryKey: ['get-additional-user-list-details', { additionalUserWhere }],
+      queryKey: [
+        'get-additional-user-list-details',
+        { additionalUserWhere, tagPredicateId: parseInt(predicateId) },
+      ],
       queryFn: () =>
         fetcher<GetListDetailsQuery, GetListDetailsQueryVariables>(
           GetListDetailsDocument,
           {
             userWhere: additionalUserWhere,
+            tagPredicateId: parseInt(predicateId),
           },
         )(),
     })
@@ -225,6 +236,8 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     additionalQueryAddress,
     initialParams: {
       id,
+      predicateId,
+      objectId,
       paramWallet,
       globalWhere,
       userWhere,
@@ -260,13 +273,14 @@ export default function ListOverview() {
     {
       globalWhere: initialParams.globalWhere,
       userWhere: initialParams.userWhere,
+      tagPredicateId: parseInt(initialParams.predicateId),
     },
     {
       queryKey: [
         'get-list-details',
         {
-          globalWhere: initialParams.globalWhere,
-          userWhere: initialParams.userWhere,
+          id: initialParams.id,
+          tagPredicateId: parseInt(initialParams.predicateId),
         },
       ],
     },
@@ -274,22 +288,37 @@ export default function ListOverview() {
 
   const { data: additionalUserData } = useGetListDetailsQuery(
     additionalQueryAddress
-      ? { userWhere: initialParams.additionalUserWhere }
+      ? {
+          userWhere: initialParams.additionalUserWhere,
+          tagPredicateId: parseInt(initialParams.predicateId),
+        }
       : undefined,
     {
       queryKey: [
         'get-additional-user-list-details',
-        { additionalUserWhere: initialParams.additionalUserWhere },
+        {
+          additionalUserWhere: initialParams.additionalUserWhere,
+          tagPredicateId: parseInt(initialParams.predicateId),
+        },
       ],
       enabled: !!additionalQueryAddress,
     },
   )
 
-  const { tripleResult } =
+  const { data: predicateResult } = useGetAtomQuery(
+    {
+      id: initialParams.predicateId,
+    },
+    {
+      queryKey: ['get-predicate', { id: initialParams.predicateId }],
+    },
+  )
+
+  const { objectResult } =
     useRouteLoaderData<{
-      tripleResult: GetTripleQuery
+      objectResult: GetAtomQuery
     }>('routes/app+/list+/$id') ?? {}
-  invariant(tripleResult, NO_CLAIM_ERROR)
+  invariant(objectResult, NO_CLAIM_ERROR)
 
   const [saveListModalActive, setSaveListModalActive] =
     useAtom(saveListModalAtom)
@@ -326,7 +355,7 @@ export default function ListOverview() {
           onClick={() => {
             setAddIdentitiesListModalActive({
               isOpen: true,
-              id: tripleResult?.triple?.object?.vaultId ?? null,
+              id: objectResult.atom?.vaultId ?? null,
             })
           }}
         >
@@ -358,69 +387,59 @@ export default function ListOverview() {
             <Claim
               size="md"
               subject={{
-                variant:
-                  tripleResult?.triple?.subject?.type === 'Account' ||
-                  tripleResult?.triple?.subject?.type === 'Default'
-                    ? 'user'
-                    : 'non-user',
+                variant: 'non-user',
                 label: '?',
                 imgSrc: null,
                 shouldHover: false,
               }}
               predicate={{
-                variant:
-                  tripleResult?.triple?.predicate?.type === 'Account' ||
-                  tripleResult?.triple?.predicate?.type === 'Default'
-                    ? 'user'
-                    : 'non-user',
+                variant: 'non-user',
                 label: getAtomLabelGQL(
-                  tripleResult?.triple?.predicate as GetAtomQuery['atom'],
+                  predicateResult?.atom as GetAtomQuery['atom'],
                 ),
                 imgSrc: getAtomImageGQL(
-                  tripleResult?.triple?.predicate as GetAtomQuery['atom'],
+                  predicateResult?.atom as GetAtomQuery['atom'],
                 ),
                 id:
-                  tripleResult?.triple?.predicate?.type === 'Account' ||
-                  tripleResult?.triple?.predicate?.type === 'Default'
-                    ? tripleResult?.triple?.object?.walletId
-                    : tripleResult?.triple?.object?.id,
+                  predicateResult?.atom?.type === 'Account' ||
+                  predicateResult?.atom?.type === 'Default'
+                    ? predicateResult?.atom?.walletId
+                    : predicateResult?.atom?.id,
                 description: getAtomDescriptionGQL(
-                  tripleResult?.triple?.predicate as GetAtomQuery['atom'],
+                  predicateResult?.atom as GetAtomQuery['atom'],
                 ),
                 ipfsLink: getAtomIpfsLinkGQL(
-                  tripleResult?.triple?.predicate as GetAtomQuery['atom'],
+                  predicateResult?.atom as GetAtomQuery['atom'],
                 ),
                 link: getAtomLinkGQL(
-                  tripleResult?.triple?.predicate as GetAtomQuery['atom'],
+                  predicateResult?.atom as GetAtomQuery['atom'],
                 ),
                 linkComponent: RemixLink,
               }}
               object={{
                 variant:
-                  tripleResult?.triple?.object?.type === 'Account' ||
-                  tripleResult?.triple?.object?.type === 'Default'
+                  objectResult.atom?.type === 'Account' ||
+                  objectResult.atom?.type === 'Default'
                     ? 'user'
                     : 'non-user',
                 label: getAtomLabelGQL(
-                  tripleResult?.triple?.object as GetAtomQuery['atom'],
+                  objectResult.atom as GetAtomQuery['atom'],
                 ),
                 imgSrc: getAtomImageGQL(
-                  tripleResult?.triple?.object as GetAtomQuery['atom'],
+                  objectResult.atom as GetAtomQuery['atom'],
                 ),
                 id:
-                  tripleResult?.triple?.predicate?.type === 'Account' ||
-                  tripleResult?.triple?.predicate?.type === 'Default'
-                    ? tripleResult?.triple?.object?.walletId
-                    : tripleResult?.triple?.object?.id,
+                  objectResult.atom?.type === 'Account' ||
+                  objectResult.atom?.type === 'Default'
+                    ? objectResult.atom?.walletId
+                    : objectResult.atom?.id,
                 description: getAtomDescriptionGQL(
-                  tripleResult?.triple?.object as GetAtomQuery['atom'],
+                  objectResult.atom as GetAtomQuery['atom'],
                 ),
                 ipfsLink: getAtomIpfsLinkGQL(
-                  tripleResult?.triple?.object as GetAtomQuery['atom'],
+                  objectResult.atom as GetAtomQuery['atom'],
                 ),
-                link: getAtomLinkGQL(
-                  tripleResult?.triple?.object as GetAtomQuery['atom'],
-                ),
+                link: getAtomLinkGQL(objectResult.atom as GetAtomQuery['atom']),
                 linkComponent: RemixLink,
               }}
             />
@@ -456,7 +475,7 @@ export default function ListOverview() {
                   </ListTabIdentityDisplay>
                 }
                 totalCount={
-                  listDetailsData?.globalTriplesAggregate.aggregate?.count ?? 0
+                  listDetailsData?.userTriplesAggregate.aggregate?.count ?? 0
                 }
                 onClick={(e) => {
                   e.preventDefault()
@@ -537,8 +556,33 @@ export default function ListOverview() {
       </div>
       <SaveListModal
         contract={MULTIVAULT_CONTRACT_ADDRESS}
-        atom={saveListModalActive.identity}
-        tagAtom={tripleResult?.triple?.object as GetAtomQuery['atom']}
+        atom={
+          identityToAtom(
+            (saveListModalActive.identity ?? {
+              asset_delta: '',
+              assets_sum: '',
+              contract: '',
+              conviction_price: '',
+              conviction_price_delta: '',
+              conviction_sum: '',
+              created_at: '',
+              creator_address: '',
+              display_name: '',
+              follow_vault_id: '',
+              id: '',
+              identity_hash: '',
+              identity_id: '',
+              is_contract: false,
+              is_user: false,
+              num_positions: 0,
+              predicate: false,
+              status: 'active' as Status,
+              updated_at: '',
+              vault_id: '',
+            }) as IdentityPresenter,
+          ) as GetAtomQuery['atom']
+        }
+        tagAtom={objectResult?.atom as GetAtomQuery['atom']}
         userWallet={queryAddress}
         open={saveListModalActive.isOpen}
         onClose={() =>

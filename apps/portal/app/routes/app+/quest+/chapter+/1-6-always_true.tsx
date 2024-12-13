@@ -13,6 +13,7 @@ import {
   UserQuestsService,
   UsersService,
 } from '@0xintuition/api'
+import { GetAtomQuery } from '@0xintuition/graphql'
 
 import { ErrorPage } from '@components/error-page'
 import { TagsList } from '@components/list/tags'
@@ -33,7 +34,7 @@ import { getListClaims } from '@lib/services/lists'
 import { saveListModalAtom } from '@lib/state/store'
 import { getQuestObjects } from '@lib/utils/app'
 import logger from '@lib/utils/logger'
-import { invariant } from '@lib/utils/misc'
+import { identityToAtom, invariant } from '@lib/utils/misc'
 import { getQuestCriteria, getQuestId, QuestRouteId } from '@lib/utils/quest'
 import { ActionFunctionArgs, json, LoaderFunctionArgs } from '@remix-run/node'
 import { Await, Form, useActionData, useLoaderData } from '@remix-run/react'
@@ -48,7 +49,7 @@ import {
 } from 'app/consts'
 import { MDXContentVariant } from 'app/types'
 import { useAtom } from 'jotai'
-import { parseUnits } from 'viem'
+import { parseUnits, Status } from 'viem'
 
 const ROUTE_ID = QuestRouteId.ALWAYS_TRUE
 
@@ -196,7 +197,56 @@ export default function Quests() {
                         maxStringLength={72}
                       />
                       <TagsList
-                        claims={resolveGlobalListClaims.claims}
+                        triples={resolveGlobalListClaims.claims.map(
+                          (claim) => ({
+                            __typename: 'triples',
+                            id: claim.claim_id,
+                            vaultId: claim.vault_id,
+                            counterVaultId: claim.counter_vault_id,
+                            subject: claim.subject && {
+                              __typename: 'atoms',
+                              id: claim.subject.id,
+                              vaultId: claim.subject.vault_id,
+                              label: claim.subject.display_name,
+                              walletId: claim.subject.identity_id,
+                              image: claim.subject.image,
+                              type: 'Default',
+                              tags: {
+                                __typename: 'triples_aggregate',
+                                nodes: [],
+                                aggregate: { count: 0 },
+                              },
+                            },
+                            object: claim.object && {
+                              __typename: 'atoms',
+                              id: claim.object.id,
+                              vaultId: claim.object.vault_id,
+                              label: claim.object.display_name,
+                              walletId: claim.object.identity_id,
+                              image: claim.object.image,
+                              type: 'Default',
+                              tags: {
+                                __typename: 'triples_aggregate',
+                                nodes: [],
+                                aggregate: { count: 0 },
+                              },
+                            },
+                            predicate: claim.predicate && {
+                              __typename: 'atoms',
+                              id: claim.predicate.id,
+                              vaultId: claim.predicate.vault_id,
+                              label: claim.predicate.display_name,
+                              walletId: claim.predicate.identity_id,
+                              image: claim.predicate.image,
+                              type: 'Default',
+                              tags: {
+                                __typename: 'triples_aggregate',
+                                nodes: [],
+                                aggregate: { count: 0 },
+                              },
+                            },
+                          }),
+                        )}
                         pagination={resolveGlobalListClaims.pagination}
                         enableSearch={true}
                         enableSort={true}
@@ -205,10 +255,37 @@ export default function Quests() {
                         contract={
                           claim.object?.contract ?? MULTIVAULT_CONTRACT_ADDRESS
                         }
-                        identity={
-                          saveListModalActive.identity as IdentityPresenter
+                        atom={
+                          identityToAtom(
+                            (saveListModalActive.identity ?? {
+                              asset_delta: '',
+                              assets_sum: '',
+                              contract: '',
+                              conviction_price: '',
+                              conviction_price_delta: '',
+                              conviction_sum: '',
+                              created_at: '',
+                              creator_address: '',
+                              display_name: '',
+                              follow_vault_id: '',
+                              id: '',
+                              identity_hash: '',
+                              identity_id: '',
+                              is_contract: false,
+                              is_user: false,
+                              num_positions: 0,
+                              predicate: false,
+                              status: 'active' as Status,
+                              updated_at: '',
+                              vault_id: '',
+                            }) as IdentityPresenter,
+                          ) as GetAtomQuery['atom']
                         }
-                        tag={claim.object as IdentityPresenter}
+                        tagAtom={
+                          identityToAtom(
+                            claim.object as IdentityPresenter,
+                          ) as GetAtomQuery['atom']
+                        }
                         userWallet={userWallet}
                         open={saveListModalActive.isOpen}
                         onClose={() =>

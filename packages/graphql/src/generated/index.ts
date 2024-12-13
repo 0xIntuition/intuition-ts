@@ -7763,6 +7763,8 @@ export type EventDetailsFragment = {
   triple?: {
     __typename?: 'triples'
     id: any
+    vaultId: any
+    counterVaultId: any
     subjectId: any
     predicateId: any
     objectId: any
@@ -8224,6 +8226,8 @@ export type StatDetailsFragment = {
 export type TripleMetadataFragment = {
   __typename?: 'triples'
   id: any
+  vaultId: any
+  counterVaultId: any
   subjectId: any
   predicateId: any
   objectId: any
@@ -9995,6 +9999,8 @@ export type GetEventsWithAggregatesQuery = {
       triple?: {
         __typename?: 'triples'
         id: any
+        vaultId: any
+        counterVaultId: any
         subjectId: any
         predicateId: any
         objectId: any
@@ -10745,6 +10751,7 @@ export type GetListsQuery = {
     object?: {
       __typename?: 'atoms'
       id: any
+      vaultId: any
       label?: string | null
       image?: string | null
     } | null
@@ -10820,10 +10827,13 @@ export type GetListDetailsQuery = {
   globalTriples: Array<{
     __typename?: 'triples'
     label?: string | null
+    id: any
     vaultId: any
+    counterVaultId: any
     subject?: {
       __typename?: 'atoms'
       id: any
+      vaultId: any
       label?: string | null
       walletId: string
       image?: string | null
@@ -10863,6 +10873,16 @@ export type GetListDetailsQuery = {
     object?: {
       __typename?: 'atoms'
       id: any
+      vaultId: any
+      label?: string | null
+      walletId: string
+      image?: string | null
+      type: string
+    } | null
+    predicate?: {
+      __typename?: 'atoms'
+      id: any
+      vaultId: any
       label?: string | null
       walletId: string
       image?: string | null
@@ -10893,10 +10913,13 @@ export type GetListDetailsQuery = {
   userTriples: Array<{
     __typename?: 'triples'
     label?: string | null
+    id: any
     vaultId: any
+    counterVaultId: any
     subject?: {
       __typename?: 'atoms'
       id: any
+      vaultId: any
       label?: string | null
       walletId: string
       image?: string | null
@@ -10936,6 +10959,7 @@ export type GetListDetailsQuery = {
     object?: {
       __typename?: 'atoms'
       id: any
+      vaultId: any
       label?: string | null
       walletId: string
       image?: string | null
@@ -11827,6 +11851,8 @@ export type GetTagsQuery = {
   triples: Array<{
     __typename?: 'triples'
     id: any
+    vaultId: any
+    counterVaultId: any
     subjectId: any
     predicateId: any
     objectId: any
@@ -12013,6 +12039,8 @@ export type GetTagsCustomQuery = {
   triples: Array<{
     __typename?: 'triples'
     id: any
+    vaultId: any
+    counterVaultId: any
     subjectId: any
     predicateId: any
     objectId: any
@@ -12209,6 +12237,8 @@ export type GetTriplesQuery = {
   triples: Array<{
     __typename?: 'triples'
     id: any
+    vaultId: any
+    counterVaultId: any
     subjectId: any
     predicateId: any
     objectId: any
@@ -12216,8 +12246,6 @@ export type GetTriplesQuery = {
     blockTimestamp: any
     transactionHash: any
     creatorId: string
-    vaultId: any
-    counterVaultId: any
     creator?: {
       __typename?: 'accounts'
       label: string
@@ -12432,6 +12460,8 @@ export type GetTriplesWithAggregatesQuery = {
     nodes: Array<{
       __typename?: 'triples'
       id: any
+      vaultId: any
+      counterVaultId: any
       subjectId: any
       predicateId: any
       objectId: any
@@ -12439,8 +12469,6 @@ export type GetTriplesWithAggregatesQuery = {
       blockTimestamp: any
       transactionHash: any
       creatorId: string
-      vaultId: any
-      counterVaultId: any
       creator?: {
         __typename?: 'accounts'
         label: string
@@ -12659,6 +12687,8 @@ export type GetTripleQuery = {
   triple?: {
     __typename?: 'triples'
     id: any
+    vaultId: any
+    counterVaultId: any
     subjectId: any
     predicateId: any
     objectId: any
@@ -12666,8 +12696,6 @@ export type GetTripleQuery = {
     blockTimestamp: any
     transactionHash: any
     creatorId: string
-    vaultId: any
-    counterVaultId: any
     creator?: {
       __typename?: 'accounts'
       label: string
@@ -12899,21 +12927,26 @@ export type GetTriplesWithPositionsQuery = {
   triples: Array<{
     __typename?: 'triples'
     id: any
+    vaultId: any
+    counterVaultId: any
     subject?: {
       __typename?: 'atoms'
       id: any
+      vaultId: any
       label?: string | null
       image?: string | null
     } | null
     predicate?: {
       __typename?: 'atoms'
       id: any
+      vaultId: any
       label?: string | null
       image?: string | null
     } | null
     object?: {
       __typename?: 'atoms'
       id: any
+      vaultId: any
       label?: string | null
       image?: string | null
     } | null
@@ -13462,6 +13495,8 @@ export const PositionFieldsFragmentDoc = `
 export const TripleMetadataFragmentDoc = `
     fragment TripleMetadata on triples {
   id
+  vaultId
+  counterVaultId
   subjectId
   predicateId
   objectId
@@ -16226,6 +16261,7 @@ export const GetListsDocument = `
     tripleCount
     object {
       id
+      vaultId
       label
       image
     }
@@ -16405,9 +16441,12 @@ export const GetListDetailsDocument = `
   }
   globalTriples: triples(where: $globalWhere) {
     label
+    id
     vaultId
+    counterVaultId
     subject {
       id
+      vaultId
       label
       walletId
       image
@@ -16438,6 +16477,15 @@ export const GetListDetailsDocument = `
     }
     object {
       id
+      vaultId
+      label
+      walletId
+      image
+      type
+    }
+    predicate {
+      id
+      vaultId
       label
       walletId
       image
@@ -16461,9 +16509,12 @@ export const GetListDetailsDocument = `
   }
   userTriples: triples(where: $userWhere) {
     label
+    id
     vaultId
+    counterVaultId
     subject {
       id
+      vaultId
       label
       walletId
       image
@@ -16494,6 +16545,7 @@ export const GetListDetailsDocument = `
     }
     object {
       id
+      vaultId
       label
       walletId
       image
@@ -17993,18 +18045,23 @@ export const GetTriplesWithPositionsDocument = `
   }
   triples(limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
     id
+    vaultId
+    counterVaultId
     subject {
       id
+      vaultId
       label
       image
     }
     predicate {
       id
+      vaultId
       label
       image
     }
     object {
       id
+      vaultId
       label
       image
     }
@@ -20200,6 +20257,8 @@ export const TripleMetadata = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'vaultId' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'counterVaultId' } },
           { kind: 'Field', name: { kind: 'Name', value: 'subjectId' } },
           { kind: 'Field', name: { kind: 'Name', value: 'predicateId' } },
           { kind: 'Field', name: { kind: 'Name', value: 'objectId' } },
@@ -21049,6 +21108,8 @@ export const EventDetails = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'vaultId' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'counterVaultId' } },
           { kind: 'Field', name: { kind: 'Name', value: 'subjectId' } },
           { kind: 'Field', name: { kind: 'Name', value: 'predicateId' } },
           { kind: 'Field', name: { kind: 'Name', value: 'objectId' } },
@@ -29971,6 +30032,8 @@ export const GetEventsWithAggregates = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'vaultId' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'counterVaultId' } },
           { kind: 'Field', name: { kind: 'Name', value: 'subjectId' } },
           { kind: 'Field', name: { kind: 'Name', value: 'predicateId' } },
           { kind: 'Field', name: { kind: 'Name', value: 'objectId' } },
@@ -32845,6 +32908,10 @@ export const GetLists = {
                     kind: 'SelectionSet',
                     selections: [
                       { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'vaultId' },
+                      },
                       { kind: 'Field', name: { kind: 'Name', value: 'label' } },
                       { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                     ],
@@ -33208,7 +33275,12 @@ export const GetListDetails = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'vaultId' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'counterVaultId' },
+                },
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'subject' },
@@ -33216,6 +33288,10 @@ export const GetListDetails = {
                     kind: 'SelectionSet',
                     selections: [
                       { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'vaultId' },
+                      },
                       { kind: 'Field', name: { kind: 'Name', value: 'label' } },
                       {
                         kind: 'Field',
@@ -33399,6 +33475,31 @@ export const GetListDetails = {
                     kind: 'SelectionSet',
                     selections: [
                       { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'vaultId' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'walletId' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'predicate' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'vaultId' },
+                      },
                       { kind: 'Field', name: { kind: 'Name', value: 'label' } },
                       {
                         kind: 'Field',
@@ -33507,7 +33608,12 @@ export const GetListDetails = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'vaultId' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'counterVaultId' },
+                },
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'subject' },
@@ -33515,6 +33621,10 @@ export const GetListDetails = {
                     kind: 'SelectionSet',
                     selections: [
                       { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'vaultId' },
+                      },
                       { kind: 'Field', name: { kind: 'Name', value: 'label' } },
                       {
                         kind: 'Field',
@@ -33698,6 +33808,10 @@ export const GetListDetails = {
                     kind: 'SelectionSet',
                     selections: [
                       { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'vaultId' },
+                      },
                       { kind: 'Field', name: { kind: 'Name', value: 'label' } },
                       {
                         kind: 'Field',
@@ -36638,6 +36752,8 @@ export const GetTags = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'vaultId' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'counterVaultId' } },
           { kind: 'Field', name: { kind: 'Name', value: 'subjectId' } },
           { kind: 'Field', name: { kind: 'Name', value: 'predicateId' } },
           { kind: 'Field', name: { kind: 'Name', value: 'objectId' } },
@@ -37045,6 +37161,8 @@ export const GetTagsCustom = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'vaultId' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'counterVaultId' } },
           { kind: 'Field', name: { kind: 'Name', value: 'subjectId' } },
           { kind: 'Field', name: { kind: 'Name', value: 'predicateId' } },
           { kind: 'Field', name: { kind: 'Name', value: 'objectId' } },
@@ -37560,6 +37678,8 @@ export const GetTriples = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'vaultId' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'counterVaultId' } },
           { kind: 'Field', name: { kind: 'Name', value: 'subjectId' } },
           { kind: 'Field', name: { kind: 'Name', value: 'predicateId' } },
           { kind: 'Field', name: { kind: 'Name', value: 'objectId' } },
@@ -38192,6 +38312,8 @@ export const GetTriplesWithAggregates = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'vaultId' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'counterVaultId' } },
           { kind: 'Field', name: { kind: 'Name', value: 'subjectId' } },
           { kind: 'Field', name: { kind: 'Name', value: 'predicateId' } },
           { kind: 'Field', name: { kind: 'Name', value: 'objectId' } },
@@ -38809,6 +38931,8 @@ export const GetTriple = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'vaultId' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'counterVaultId' } },
           { kind: 'Field', name: { kind: 'Name', value: 'subjectId' } },
           { kind: 'Field', name: { kind: 'Name', value: 'predicateId' } },
           { kind: 'Field', name: { kind: 'Name', value: 'objectId' } },
@@ -39327,6 +39451,11 @@ export const GetTriplesWithPositions = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'vaultId' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'counterVaultId' },
+                },
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'subject' },
@@ -39334,6 +39463,10 @@ export const GetTriplesWithPositions = {
                     kind: 'SelectionSet',
                     selections: [
                       { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'vaultId' },
+                      },
                       { kind: 'Field', name: { kind: 'Name', value: 'label' } },
                       { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                     ],
@@ -39346,6 +39479,10 @@ export const GetTriplesWithPositions = {
                     kind: 'SelectionSet',
                     selections: [
                       { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'vaultId' },
+                      },
                       { kind: 'Field', name: { kind: 'Name', value: 'label' } },
                       { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                     ],
@@ -39358,6 +39495,10 @@ export const GetTriplesWithPositions = {
                     kind: 'SelectionSet',
                     selections: [
                       { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'vaultId' },
+                      },
                       { kind: 'Field', name: { kind: 'Name', value: 'label' } },
                       { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                     ],

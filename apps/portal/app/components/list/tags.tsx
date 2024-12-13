@@ -7,10 +7,11 @@ import {
   Identity,
   IdentityRow,
 } from '@0xintuition/1ui'
-import { SortColumn } from '@0xintuition/api'
+import { IdentityPresenter, SortColumn, Status } from '@0xintuition/api'
 import { GetAtomQuery, GetListDetailsQuery } from '@0xintuition/graphql'
 
 import { ListHeader } from '@components/list/list-header'
+import { MULTIVAULT_CONTRACT_ADDRESS } from '@consts/index'
 import { saveListModalAtom, stakeModalAtom } from '@lib/state/store'
 import {
   formatBalance,
@@ -127,13 +128,164 @@ export function TagsList({
                     setStakeModalActive((prevState) => ({
                       ...prevState,
                       mode: 'deposit',
-                      modalType: 'identity',
+                      modalType: 'claim',
+                      direction: 'for',
                       isOpen: true,
-                      identity: (identity as GetAtomQuery['atom']) ?? undefined,
-                      vaultId:
-                        (identity as GetAtomQuery['atom'])?.vaultId ?? '0',
+                      claim: triple
+                        ? {
+                            id: triple.object?.id ?? '',
+                            label: triple.object?.label ?? '',
+                            image: triple.object?.image ?? '',
+                            vault_id: triple.object?.vaultId ?? '',
+                            against_assets_sum: '0',
+                            against_conviction_price: '0',
+                            against_conviction_sum: '0',
+                            against_num_positions: 0,
+                            assets_sum: '0',
+                            claim_id: triple.id ?? '',
+                            contract: MULTIVAULT_CONTRACT_ADDRESS,
+                            counter_vault_id: triple.counterVaultId ?? '',
+                            created_at: new Date().toISOString(),
+                            status: Status.COMPLETE,
+                            creator: null,
+                            for_assets_sum: '0',
+                            for_conviction_price: '0',
+                            for_conviction_sum: '0',
+                            for_num_positions: 0,
+                            num_positions: 0,
+                            object: triple.object
+                              ? {
+                                  id: triple.object.id,
+                                  label: triple.object.label,
+                                  vaultId: triple.object.vaultId,
+                                  image: triple.object.image,
+                                  walletId: triple.object.walletId,
+                                  type: triple.object.type,
+                                  asset_delta: '0',
+                                  assets_sum: '0',
+                                  contract: '',
+                                  conviction_price: '0',
+                                  conviction_price_delta: '0',
+                                  conviction_sum: '0',
+                                  num_positions: 0,
+                                  price: '0',
+                                  price_delta: '0',
+                                  status: Status.COMPLETE,
+                                  total_conviction: '0',
+                                  updated_at: new Date().toISOString(),
+                                  created_at: new Date().toISOString(),
+                                  creator_address: '',
+                                  display_name: triple.object.label ?? '',
+                                  follow_vault_id: '',
+                                  user: null,
+                                  creator: null,
+                                  identity_hash: '',
+                                  identity_id: '',
+                                  is_contract: false,
+                                  is_user: true,
+                                  pending: false,
+                                  pending_type: null,
+                                  pending_vault_id: null,
+                                  predicate: false, // Default value
+                                  user_asset_delta: '0', // Default value
+                                  user_assets: '0', // Default value
+                                  user_conviction: '0', // Default value
+                                  vault_id: triple.object.vaultId ?? '', // Default value
+                                }
+                              : null,
+                            predicate: triple.predicate
+                              ? {
+                                  id: triple.predicate.id,
+                                  label: triple.predicate.label,
+                                  vaultId: triple.predicate.vaultId,
+                                  image: triple.predicate.image,
+                                  walletId: triple.predicate.walletId,
+                                  type: triple.predicate.type,
+                                  asset_delta: '0',
+                                  assets_sum: '0',
+                                  contract: '',
+                                  conviction_price: '0',
+                                  conviction_price_delta: '0',
+                                  conviction_sum: '0',
+                                  num_positions: 0,
+                                  price: '0',
+                                  price_delta: '0',
+                                  status: Status.COMPLETE,
+                                  total_conviction: '0',
+                                  updated_at: new Date().toISOString(),
+                                  created_at: new Date().toISOString(),
+                                  creator_address: '',
+                                  display_name: triple.predicate.label ?? '',
+                                  follow_vault_id: '',
+                                  user: null,
+                                  creator: null,
+                                  identity_hash: '',
+                                  identity_id: '',
+                                  is_contract: false,
+                                  is_user: true,
+                                  pending: false,
+                                  pending_type: null,
+                                  pending_vault_id: null,
+                                  predicate: false, // Default value
+                                  user_asset_delta: '0', // Default value
+                                  user_assets: '0', // Default value
+                                  user_conviction: '0', // Default value
+                                  vault_id: triple.predicate.vaultId ?? '', // Default value
+                                }
+                              : null,
+                            subject: triple.subject
+                              ? {
+                                  id: triple.subject.id,
+                                  label: triple.subject.label,
+                                  vaultId: triple.subject.vaultId,
+                                  image: triple.subject.image,
+                                  walletId: triple.subject.walletId,
+                                  type: triple.subject.type,
+                                  asset_delta: '0',
+                                  assets_sum: '0',
+                                  contract: '',
+                                  conviction_price: '0',
+                                  conviction_price_delta: '0',
+                                  conviction_sum: '0',
+                                  num_positions: 0,
+                                  price: '0',
+                                  price_delta: '0',
+                                  status: Status.COMPLETE,
+                                  total_conviction: '0',
+                                  updated_at: new Date().toISOString(),
+                                  created_at: new Date().toISOString(),
+                                  creator_address: '',
+                                  display_name: triple.subject.label ?? '',
+                                  follow_vault_id: '',
+                                  user: null,
+                                  creator: null,
+                                  identity_hash: '',
+                                  identity_id: '',
+                                  is_contract: false,
+                                  is_user: true,
+                                  pending: false,
+                                  pending_type: null,
+                                  pending_vault_id: null,
+                                  predicate: false, // Default value
+                                  user_asset_delta: '0', // Default value
+                                  user_assets: '0', // Default value
+                                  user_conviction: '0', // Default value
+                                  vault_id: triple.subject.vaultId ?? '', // Default value
+                                }
+                              : null,
+                            updated_at: new Date().toISOString(),
+                            user_assets: '0',
+                            user_assets_against: '0',
+                            user_assets_for: '0',
+                            user_conviction: '0',
+                            user_conviction_against: '0',
+                            user_conviction_for: '0',
+                          }
+                        : undefined,
+                      vaultId: triple?.vaultId ?? '0',
                     }))
                   }
+                  readOnly
                   className={`w-full hover:bg-transparent ${readOnly ? '' : 'pr-0'}`}
                 />
                 {readOnly === false && (
@@ -144,8 +296,76 @@ export function TagsList({
                       setSaveListModalActive({
                         isOpen: true,
                         id: triple.vaultId,
-                        identity: triple.subject as GetAtomQuery['atom'],
-                        tag: triple.object as GetAtomQuery['atom'],
+                        identity: triple.subject
+                          ? ({
+                              id: triple.subject.id ?? '',
+                              label: triple.subject.label ?? '',
+                              image: triple.subject.image ?? '',
+                              vault_id: triple.subject.vaultId,
+                              assets_sum: '0',
+                              user_assets: '0',
+                              contract: MULTIVAULT_CONTRACT_ADDRESS,
+                              asset_delta: '0',
+                              conviction_price: '0',
+                              conviction_price_delta: '0',
+                              conviction_sum: '0',
+                              num_positions: 0,
+                              price: '0',
+                              price_delta: '0',
+                              status: 'active',
+                              total_conviction: '0',
+                              type: 'user',
+                              updated_at: new Date().toISOString(),
+                              created_at: new Date().toISOString(),
+                              creator_address: '',
+                              display_name: triple.subject?.label ?? '',
+                              follow_vault_id: '',
+                              user: null,
+                              creator: null,
+                              identity_hash: '',
+                              identity_id: '',
+                              is_contract: false,
+                              is_user: true,
+                              pending: false,
+                              pending_type: null,
+                              pending_vault_id: null,
+                            } as unknown as IdentityPresenter)
+                          : undefined,
+                        tag: triple.object
+                          ? ({
+                              id: triple.object.id ?? '',
+                              label: triple.object.label ?? '',
+                              image: triple.object.image ?? '',
+                              vault_id: triple.object.vaultId,
+                              assets_sum: '0',
+                              user_assets: '0',
+                              contract: MULTIVAULT_CONTRACT_ADDRESS,
+                              asset_delta: '0',
+                              conviction_price: '0',
+                              conviction_price_delta: '0',
+                              conviction_sum: '0',
+                              num_positions: 0,
+                              price: '0',
+                              price_delta: '0',
+                              status: 'active',
+                              total_conviction: '0',
+                              type: 'user',
+                              updated_at: new Date().toISOString(),
+                              created_at: new Date().toISOString(),
+                              creator_address: '',
+                              display_name: triple.object?.label ?? '',
+                              follow_vault_id: '',
+                              user: null,
+                              creator: null,
+                              identity_hash: '',
+                              identity_id: '',
+                              is_contract: false,
+                              is_user: true,
+                              pending: false,
+                              pending_type: null,
+                              pending_vault_id: null,
+                            } as unknown as IdentityPresenter)
+                          : undefined,
                       })
                     }}
                   >

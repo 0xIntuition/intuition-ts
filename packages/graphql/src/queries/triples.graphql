@@ -88,18 +88,23 @@ query GetTriplesWithPositions(
   }
   triples(limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
     id
+    vaultId
+    counterVaultId
     subject {
       id
+      vaultId
       label
       image
     }
     predicate {
       id
+      vaultId
       label
       image
     }
     object {
       id
+      vaultId
       label
       image
     }

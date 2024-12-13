@@ -236,7 +236,6 @@ export default function ReadOnlyIdentityDetails() {
         onAvatarClick={() => {
           setImageModalActive({
             isOpen: true,
-            identity,
           })
         }}
       />

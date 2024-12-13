@@ -1,5 +1,7 @@
 fragment TripleMetadata on triples {
   id
+  vaultId
+  counterVaultId
   subjectId
   predicateId
   objectId
