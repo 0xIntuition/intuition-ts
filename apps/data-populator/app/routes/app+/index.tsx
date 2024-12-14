@@ -7,6 +7,7 @@ import {
   cn,
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -424,6 +425,24 @@ export default function CSVEditor() {
     UnusualCharacterIssue[]
   >([])
   const [showProofreadModal, setShowProofreadModal] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [isLoadingCSV, setIsLoadingCSV] = useState(false)
+
+  const [formatChangeDialog, setFormatChangeDialog] = useState<{
+    isOpen: boolean
+    newFormat: AtomDataTypeKey
+    onResponse: (response: 'yes' | 'no' | 'cancel') => void
+  }>({ isOpen: false, newFormat: 'CSV', onResponse: () => {} })
+
+  const [headerValidationDialog, setHeaderValidationDialog] = useState<{
+    isOpen: boolean
+    onResponse: (response: 'fix' | 'proceed') => void
+  }>({ isOpen: false, onResponse: () => {} })
+
+  const [missingColumnsDialog, setMissingColumnsDialog] = useState<{
+    isOpen: boolean
+    onResponse: (response: 'cancel' | 'proceed') => void
+  }>({ isOpen: false, onResponse: () => {} })
 
   const recheckAtomExistence = useCallback(() => {
     checkExistingAtoms(csvData, selectedType)
@@ -433,7 +452,7 @@ export default function CSVEditor() {
   const {
     step,
     requestHash,
-    isLoading,
+    isLoading: isBatchLoading,
     initiateBatchRequest,
     setSelectedType: setBatchCreateAtomSelectedType,
   } = useBatchCreateAtom(recheckAtomExistence)
@@ -580,12 +599,53 @@ export default function CSVEditor() {
     }
   }
 
-  // In the CSVEditor component, add this state
-  const [formatChangeDialog, setFormatChangeDialog] =
-    useState<FormatChangeDialog>({
-      isOpen: false,
-      newFormat: null,
+  // Helper function to validate and fix headers
+  const validateAndFixHeaders = (
+    rows: string[][],
+    type: AtomDataTypeKey,
+  ): {
+    isValid: boolean
+    fixedRows: string[][]
+    hasExtraneousFields?: boolean
+  } => {
+    const defaultHeaders = atomDataTypes[type].defaultData[0]
+    const currentHeaders = rows[0]
+
+    // Check if headers match exactly
+    const headersMatch =
+      JSON.stringify(currentHeaders) === JSON.stringify(defaultHeaders)
+    if (headersMatch) {
+      return { isValid: true, fixedRows: rows }
+    }
+
+    // Check for any headers that don't exist in the default set
+    const hasExtraneousFields = currentHeaders.some(
+      (header) => !defaultHeaders.includes(header),
+    )
+
+    // Create fixed rows by keeping only valid columns and reordering them
+    const fixedRows = rows.map((row) => {
+      const newRow = Array(defaultHeaders.length).fill('')
+      defaultHeaders.forEach((header, defaultIndex) => {
+        const currentIndex = currentHeaders.indexOf(header)
+        if (currentIndex !== -1) {
+          newRow[defaultIndex] = row[currentIndex]
+        }
+      })
+      return newRow
     })
+
+    // Check if we have all required headers
+    const hasAllRequiredHeaders = defaultHeaders.every((header) =>
+      currentHeaders.includes(header),
+    )
+
+    return {
+      isValid: hasAllRequiredHeaders,
+      fixedRows,
+      hasExtraneousFields,
+    }
+  }
 
   // Update loadCSV to take a File directly
   const loadCSV = async (file: File) => {
@@ -595,35 +655,95 @@ export default function CSVEditor() {
     const detectedType = detectAtomDataType(headers)
     const rows = await parseCsv(file, detectedType)
 
-    if (detectedType !== selectedType && isCSVDataModified) {
-      setFormatChangeDialog({
-        isOpen: true,
-        newFormat: detectedType,
-        onResponse: (response) => {
-          if (response === 'cancel') {
-            return
-          }
-          if (response === 'yes') {
-            saveCSV()
-          }
+    // Validate headers
+    const {
+      isValid: headersValid,
+      fixedRows: initialFixedRows,
+      hasExtraneousFields,
+    } = validateAndFixHeaders(rows, detectedType)
+
+    if (!headersValid || hasExtraneousFields) {
+      return new Promise((resolve) => {
+        setHeaderValidationDialog({
+          isOpen: true,
+          onResponse: async (response) => {
+            setHeaderValidationDialog((prev) => ({ ...prev, isOpen: false }))
+
+            if (response === 'fix') {
+              const { isValid, fixedRows } = validateAndFixHeaders(
+                rows,
+                detectedType,
+              )
+
+              if (!isValid) {
+                // If still invalid after fixing, show missing columns dialog
+                setMissingColumnsDialog({
+                  isOpen: true,
+                  onResponse: (finalResponse) => {
+                    setMissingColumnsDialog((prev) => ({
+                      ...prev,
+                      isOpen: false,
+                    }))
+                    if (finalResponse === 'proceed') {
+                      handleFormatChange(rows)
+                    }
+                    resolve(undefined)
+                  },
+                })
+              } else {
+                // Use the fixed rows when user chooses to fix
+                handleFormatChange(fixedRows)
+                resolve(undefined)
+              }
+            } else {
+              // Proceed with original rows
+              handleFormatChange(rows)
+              resolve(undefined)
+            }
+          },
+        })
+      })
+    }
+    // Headers are valid and no extraneous fields
+    handleFormatChange(rows)
+
+    function handleFormatChange(rowsToUse = rows) {
+      if (detectedType !== selectedType && isCSVDataModified) {
+        setFormatChangeDialog({
+          isOpen: true,
+          newFormat: detectedType,
+          onResponse: (response) => {
+            if (response === 'cancel') {
+              return
+            }
+            if (response === 'yes') {
+              saveCSV()
+            }
+            setSelectedType(detectedType)
+            setBatchCreateAtomSelectedType(detectedType)
+            processLoadedData(rowsToUse, detectedType)
+          },
+        })
+      } else {
+        if (detectedType !== selectedType) {
           setSelectedType(detectedType)
           setBatchCreateAtomSelectedType(detectedType)
-          processLoadedData(rows, detectedType)
-        },
-      })
-    } else {
-      if (detectedType !== selectedType) {
-        setSelectedType(detectedType)
-        setBatchCreateAtomSelectedType(detectedType)
+        }
+        processLoadedData(rowsToUse, detectedType)
       }
-      processLoadedData(rows, detectedType)
     }
   }
 
   // Update processLoadedData to include CAIP10 proofing
   const processLoadedData = (rows: string[][], type: AtomDataTypeKey) => {
-    setCsvData(rows)
-    setLoadedCSVData(rows)
+    setIsLoadingCSV(true)
+    // Batch our updates together
+    const newRows = [...rows]
+    const newSelectedRows = newRows.slice(1).map((_, index) => index)
+
+    setCsvData(newRows)
+    setLoadedCSVData(newRows)
+    setSelectedRows(newSelectedRows)
 
     const proofreadResult = proofreadAll(rows)
     const issues: UnusualCharacterIssue[] = []
@@ -666,6 +786,7 @@ export default function CSVEditor() {
                 !proofreadResult.duplicates.duplicateIndices.includes(index),
             )
             setCsvData(finalRows)
+            setSelectedRows(finalRows.slice(1).map((_, index) => index))
             checkExistingAtoms(finalRows, type)
           } else {
             checkExistingAtoms(rows, type)
@@ -1452,8 +1573,80 @@ export default function CSVEditor() {
     })
   }, [selectedRows, csvData, selectedType])
 
+  // Effect to handle row selection after data load
+  useEffect(() => {
+    if (isLoadingCSV && csvData.length > 0) {
+      setSelectedRows(csvData.slice(1).map((_, index) => index))
+      setIsLoadingCSV(false)
+    }
+  }, [csvData, isLoadingCSV])
+
   return (
     <>
+      {/* Add dialogs to the JSX */}
+      <Dialog
+        open={headerValidationDialog.isOpen}
+        onOpenChange={(isOpen) => {
+          if (!isOpen) {
+            headerValidationDialog.onResponse('proceed')
+          }
+        }}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Malformed Headers Detected</DialogTitle>
+            <DialogDescription>
+              Should Data Populator attempt to fix them automatically? If you
+              select no, proceed at your own risk.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => headerValidationDialog.onResponse('proceed')}
+            >
+              No, proceed to load unsupported Atom Type
+            </Button>
+            <Button onClick={() => headerValidationDialog.onResponse('fix')}>
+              Yes, fix headers
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog
+        open={missingColumnsDialog.isOpen}
+        onOpenChange={(isOpen) => {
+          if (!isOpen) {
+            missingColumnsDialog.onResponse('cancel')
+          }
+        }}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Required Columns Missing</DialogTitle>
+            <DialogDescription>
+              The default data in the Atoms Table shows the required format for
+              the selected Atom Type. Please update your CSV file.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => missingColumnsDialog.onResponse('cancel')}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={() => missingColumnsDialog.onResponse('proceed')}
+            >
+              I don't care, let me proceed at my own risk
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
       <div className="container mx-auto p-0 border border-primary/30 rounded-lg my-4">
         <Tabs
           value={activeTab}
@@ -2223,10 +2416,10 @@ export default function CSVEditor() {
       </Dialog>
 
       <ProgressModal
-        isOpen={isLoading || isTagLoading}
+        isOpen={isBatchLoading || isTagLoading}
         onClose={() => {
-          if (isLoading || isTagLoading) {
-            console.log('Progress modal closed') // Leaving this here because this gets triggered when the modal loses focus
+          if (isBatchLoading || isTagLoading) {
+            console.log('Progress modal closed')
           }
         }}
         step={isTagLoading ? tagStep : step}
