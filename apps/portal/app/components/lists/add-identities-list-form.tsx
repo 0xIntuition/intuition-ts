@@ -28,7 +28,7 @@ import AddIdentitiesReview from './add-identities-review'
 interface AddIdentitiesListFormProps {
   identity: IdentityPresenter
   userWallet: string
-  claimId: string
+  claimId?: string
   onSuccess?: () => void
   onClose: () => void
 }

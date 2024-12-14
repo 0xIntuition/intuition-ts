@@ -28,6 +28,7 @@ import {
 } from '@lib/state/store'
 import { getSpecialPredicate } from '@lib/utils/app'
 import logger from '@lib/utils/logger'
+import { identityToAtom } from '@lib/utils/misc'
 import { TagLoaderData } from '@routes/resources+/tag'
 import { CURRENT_ENV, MULTIVAULT_CONTRACT_ADDRESS } from 'app/consts'
 import { useAtom } from 'jotai'
@@ -288,42 +289,8 @@ export function AddIdentities({
       {selectedInvalidIdentity && (
         <SaveListModal
           contract={identity.contract}
-          tag={identity}
-          identity={
-            {
-              id: selectedInvalidIdentity?.id ?? '',
-              label: selectedInvalidIdentity?.label ?? '',
-              image: selectedInvalidIdentity?.image ?? '',
-              vault_id: selectedInvalidIdentity?.vaultId,
-              assets_sum: '0',
-              user_assets: '0',
-              contract: MULTIVAULT_CONTRACT_ADDRESS,
-              asset_delta: '0',
-              conviction_price: '0',
-              conviction_price_delta: '0',
-              conviction_sum: '0',
-              num_positions: 0,
-              price: '0',
-              price_delta: '0',
-              status: 'active',
-              total_conviction: '0',
-              type: 'user',
-              updated_at: new Date().toISOString(),
-              created_at: new Date().toISOString(),
-              creator_address: '',
-              display_name: selectedInvalidIdentity.label ?? '',
-              follow_vault_id: '',
-              user: null,
-              creator: null,
-              identity_hash: '',
-              identity_id: '',
-              is_contract: false,
-              is_user: true,
-              pending: false,
-              pending_type: null,
-              pending_vault_id: null,
-            } as unknown as IdentityPresenter
-          }
+          tagAtom={identityToAtom(identity) as GetAtomQuery['atom']}
+          atom={selectedInvalidIdentity}
           userWallet={userWallet}
           open={saveListModalActive.isOpen}
           onClose={() => {

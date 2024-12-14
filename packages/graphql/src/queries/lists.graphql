@@ -16,6 +16,7 @@ query GetLists($where: predicateObjects_bool_exp) {
     tripleCount
     object {
       id
+      vaultId
       label
       image
     }
@@ -34,6 +35,145 @@ query GetListItems($predicateId: numeric, $objectId: numeric) {
     }
     nodes {
       ...TripleVaultDetails
+    }
+  }
+}
+
+query GetListDetails(
+  $globalWhere: triples_bool_exp
+  $userWhere: triples_bool_exp
+  $tagPredicateId: numeric
+) {
+  globalTriplesAggregate: triples_aggregate(where: $globalWhere) {
+    aggregate {
+      count
+    }
+  }
+  globalTriples: triples(where: $globalWhere) {
+    label
+    id
+    vaultId
+    counterVaultId
+    subject {
+      id
+      vaultId
+      label
+      walletId
+      image
+      type
+      tags: asSubject_aggregate(
+        where: { predicateId: { _eq: $tagPredicateId } }
+      ) {
+        nodes {
+          object {
+            label
+            vaultId
+            taggedIdentities: asObject_aggregate {
+              nodes {
+                subject {
+                  label
+                  vaultId
+                }
+                vaultId
+              }
+              aggregate {
+                count
+              }
+            }
+          }
+        }
+        aggregate {
+          count
+        }
+      }
+    }
+    object {
+      id
+      vaultId
+      label
+      walletId
+      image
+      type
+    }
+    predicate {
+      id
+      vaultId
+      label
+      walletId
+      image
+      type
+    }
+    vault {
+      positions_aggregate {
+        aggregate {
+          count
+          sum {
+            shares
+          }
+        }
+      }
+    }
+  }
+  userTriplesAggregate: triples_aggregate(where: $userWhere) {
+    aggregate {
+      count
+    }
+  }
+  userTriples: triples(where: $userWhere) {
+    label
+    id
+    vaultId
+    counterVaultId
+    subject {
+      id
+      vaultId
+      label
+      walletId
+      image
+      type
+      tags: asSubject_aggregate(
+        where: { predicateId: { _eq: $tagPredicateId } }
+      ) {
+        nodes {
+          object {
+            label
+            vaultId
+            taggedIdentities: asObject_aggregate {
+              nodes {
+                subject {
+                  label
+                  vaultId
+                }
+                vaultId
+              }
+              aggregate {
+                count
+              }
+            }
+          }
+        }
+        aggregate {
+          count
+        }
+      }
+    }
+    object {
+      id
+      vaultId
+      label
+      walletId
+      image
+      type
+    }
+    vault {
+      positions_aggregate {
+        aggregate {
+          count
+          sum {
+            shares
+          }
+        }
+      }
     }
   }
 }

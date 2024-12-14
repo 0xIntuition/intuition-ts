@@ -1,13 +1,17 @@
 fragment TripleMetadata on triples {
   id
+  vaultId
+  counterVaultId
   subjectId
   predicateId
   objectId
   subject {
     data
     id
+    vaultId
     image
     label
+    walletId
     emoji
     type
     ...AtomValue
@@ -18,8 +22,10 @@ fragment TripleMetadata on triples {
   predicate {
     data
     id
+    vaultId
     image
     label
+    walletId
     emoji
     type
     ...AtomValue
@@ -30,8 +36,10 @@ fragment TripleMetadata on triples {
   object {
     data
     id
+    vaultId
     image
     label
+    walletId
     emoji
     type
     ...AtomValue

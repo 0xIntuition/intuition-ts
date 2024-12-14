@@ -7,7 +7,7 @@ import {
   Skeleton,
   toast,
 } from '@0xintuition/1ui'
-import { IdentityPresenter } from '@0xintuition/api'
+import { GetAtomQuery } from '@0xintuition/graphql'
 
 import { multivaultAbi } from '@lib/abis/multivault'
 import { useSaveListMutation } from '@lib/hooks/mutations/useSaveListMutation'
@@ -41,8 +41,8 @@ const initialTxState: TransactionStateType = {
 interface SaveListModalProps {
   userWallet: string
   open: boolean
-  tag: IdentityPresenter
-  identity: IdentityPresenter
+  tagAtom: GetAtomQuery['atom'] | null
+  atom: GetAtomQuery['atom'] | null
   contract: string
   onClose?: () => void
   min_deposit?: string
@@ -51,8 +51,8 @@ interface SaveListModalProps {
 export default function SaveListModal({
   userWallet,
   open = false,
-  tag,
-  identity,
+  tagAtom,
+  atom,
   contract,
   onClose = () => {},
   min_deposit,
@@ -304,8 +304,8 @@ export default function SaveListModal({
         onOpenAutoFocus={(event) => event.preventDefault()}
       >
         <SaveForm
-          tag={tag}
-          identity={identity}
+          tagAtom={tagAtom}
+          atom={atom}
           user_assets={vaultDetails?.user_assets ?? '0'}
           entry_fee={vaultDetails?.formatted_entry_fee ?? '0'}
           exit_fee={vaultDetails?.formatted_exit_fee ?? '0'}
