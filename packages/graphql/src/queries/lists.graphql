@@ -168,6 +168,14 @@ query GetListDetails(
       image
       type
     }
+    predicate {
+      id
+      vault_id
+      label
+      wallet_id
+      image
+      type
+    }
     vault {
       positions_aggregate {
         aggregate {
