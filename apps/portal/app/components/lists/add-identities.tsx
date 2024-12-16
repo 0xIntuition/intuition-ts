@@ -289,8 +289,8 @@ export function AddIdentities({
       {selectedInvalidIdentity && (
         <SaveListModal
           contract={identity.contract}
-          tagAtom={identityToAtom(identity) as GetAtomQuery['atom']}
-          atom={selectedInvalidIdentity}
+          tagAtom={identityToAtom(identity) as unknown as GetAtomQuery['atom']}
+          atom={selectedInvalidIdentity as unknown as GetAtomQuery['atom']}
           userWallet={userWallet}
           open={saveListModalActive.isOpen}
           onClose={() => {

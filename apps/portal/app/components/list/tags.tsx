@@ -28,6 +28,8 @@ import { useSetAtom } from 'jotai'
 import { SortOption } from '../sort-select'
 import { List } from './list'
 
+type Triple = GetListDetailsQuery['globalTriples'][number]
+
 export function TagsList({
   triples,
   pagination,
@@ -37,7 +39,7 @@ export function TagsList({
   enableSort = true,
   readOnly = false,
 }: {
-  triples: GetListDetailsQuery['globalTriples']
+  triples: Triple[]
   pagination?: PaginationType
   paramPrefix?: string
   enableHeader?: boolean
@@ -92,11 +94,13 @@ export function TagsList({
                       : Identity.nonUser
                   }
                   avatarSrc={getAtomImageGQL(
-                    triple.subject as GetAtomQuery['atom'],
+                    triple.subject as unknown as GetAtomQuery['atom'],
                   )}
-                  name={getAtomLabelGQL(triple.subject as GetAtomQuery['atom'])}
+                  name={getAtomLabelGQL(
+                    triple.subject as unknown as GetAtomQuery['atom'],
+                  )}
                   description={getAtomDescriptionGQL(
-                    triple.subject as GetAtomQuery['atom'],
+                    triple.subject as unknown as GetAtomQuery['atom'],
                   )}
                   id={triple.subject?.wallet_id ?? triple.subject?.id ?? ''}
                   claimLink={getClaimUrl(triple.vault_id ?? '', readOnly)}
@@ -118,11 +122,11 @@ export function TagsList({
                     triple?.vault?.positions_aggregate?.aggregate?.count || 0
                   }
                   link={getAtomLinkGQL(
-                    identity as GetAtomQuery['atom'],
+                    identity as unknown as GetAtomQuery['atom'],
                     readOnly,
                   )}
                   ipfsLink={getAtomIpfsLinkGQL(
-                    identity as GetAtomQuery['atom'],
+                    identity as unknown as GetAtomQuery['atom'],
                   )}
                   onStakeClick={() =>
                     setStakeModalActive((prevState) => ({

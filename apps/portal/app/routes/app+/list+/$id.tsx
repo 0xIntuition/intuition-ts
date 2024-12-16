@@ -119,7 +119,6 @@ export default function ListDetails() {
           if (claim.object) {
             setImageModalActive({
               isOpen: true,
-              identity: claim.object,
             })
           }
         }}

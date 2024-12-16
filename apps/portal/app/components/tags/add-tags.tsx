@@ -53,7 +53,7 @@ export function AddTags({
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const formattedTags = selectedTags?.map((tag) => ({
     name: tag?.label ?? '',
-    id: tag?.vaultId ?? '',
+    id: tag?.vault_id ?? '',
     tagCount: 0, // TODO: (ENG-4782) temporary until we have tag count
   }))
 
