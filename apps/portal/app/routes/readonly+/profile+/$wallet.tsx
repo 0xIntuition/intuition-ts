@@ -212,7 +212,6 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
 export default function ReadOnlyProfile() {
   const {
     userWallet,
-    userIdentity,
     userTotals,
     relicMintCount,
     relicHoldCount,
@@ -330,7 +329,6 @@ export default function ReadOnlyProfile() {
         onAvatarClick={() => {
           setImageModalActive({
             isOpen: true,
-            identity: userIdentity,
           })
         }}
       />

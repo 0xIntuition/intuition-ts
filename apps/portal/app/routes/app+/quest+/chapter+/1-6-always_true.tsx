@@ -7,12 +7,14 @@ import {
   ProfileCardHeader,
 } from '@0xintuition/1ui'
 import {
+  ClaimPresenter,
   ClaimsService,
   IdentityPresenter,
   QuestStatus,
   UserQuestsService,
   UsersService,
 } from '@0xintuition/api'
+import { GetAtomQuery, GetListDetailsQuery } from '@0xintuition/graphql'
 
 import { ErrorPage } from '@components/error-page'
 import { TagsList } from '@components/list/tags'
@@ -33,7 +35,7 @@ import { getListClaims } from '@lib/services/lists'
 import { saveListModalAtom } from '@lib/state/store'
 import { getQuestObjects } from '@lib/utils/app'
 import logger from '@lib/utils/logger'
-import { invariant } from '@lib/utils/misc'
+import { identityToAtom, invariant } from '@lib/utils/misc'
 import { getQuestCriteria, getQuestId, QuestRouteId } from '@lib/utils/quest'
 import { ActionFunctionArgs, json, LoaderFunctionArgs } from '@remix-run/node'
 import { Await, Form, useActionData, useLoaderData } from '@remix-run/react'
@@ -48,7 +50,7 @@ import {
 } from 'app/consts'
 import { MDXContentVariant } from 'app/types'
 import { useAtom } from 'jotai'
-import { parseUnits } from 'viem'
+import { parseUnits, Status } from 'viem'
 
 const ROUTE_ID = QuestRouteId.ALWAYS_TRUE
 
@@ -140,6 +142,65 @@ export async function action({ request }: ActionFunctionArgs) {
   return json({ success: false })
 }
 
+// Add mapping function
+const claimToTriple = (
+  claim: ClaimPresenter,
+): GetListDetailsQuery['globalTriples'][number] => ({
+  __typename: 'triples',
+  id: claim.claim_id,
+  vault_id: claim.vault_id,
+  counter_vault_id: claim.counter_vault_id,
+  subject: {
+    __typename: 'atoms',
+    id: claim.subject?.id ?? '',
+    vault_id: claim.subject?.vault_id ?? '',
+    label: claim.subject?.display_name ?? '',
+    wallet_id: claim.subject?.identity_id ?? '',
+    image: claim.subject?.image ?? null,
+    type: claim.subject?.entity_type ?? 'Default',
+    tags: {
+      __typename: 'triples_aggregate',
+      nodes: [],
+      aggregate: {
+        __typename: 'triples_aggregate_fields',
+        count: 0,
+      },
+    },
+  },
+  object: {
+    __typename: 'atoms',
+    id: claim.object?.id ?? '',
+    vault_id: claim.object?.vault_id ?? '',
+    label: claim.object?.display_name ?? '',
+    wallet_id: claim.object?.identity_id ?? '',
+    image: claim.object?.image ?? null,
+    type: claim.object?.entity_type ?? 'Default',
+  },
+  predicate: {
+    __typename: 'atoms',
+    id: claim.predicate?.id ?? '',
+    vault_id: claim.predicate?.vault_id ?? '',
+    label: claim.predicate?.display_name ?? '',
+    wallet_id: claim.predicate?.identity_id ?? '',
+    image: claim.predicate?.image ?? null,
+    type: claim.predicate?.entity_type ?? 'Default',
+  },
+  vault: {
+    __typename: 'vaults',
+    positions_aggregate: {
+      __typename: 'positions_aggregate',
+      aggregate: {
+        __typename: 'positions_aggregate_fields',
+        count: 0,
+        sum: {
+          __typename: 'positions_sum_fields',
+          shares: '0',
+        },
+      },
+    },
+  },
+})
+
 export default function Quests() {
   const { quest, userQuest, userWallet, claim, globalListClaims } =
     useLoaderData<typeof loader>()
@@ -196,8 +257,9 @@ export default function Quests() {
                         maxStringLength={72}
                       />
                       <TagsList
-                        claims={resolveGlobalListClaims.claims}
-                        pagination={resolveGlobalListClaims.pagination}
+                        triples={resolveGlobalListClaims.claims.map(
+                          claimToTriple,
+                        )}
                         enableSearch={true}
                         enableSort={true}
                       />
@@ -205,10 +267,37 @@ export default function Quests() {
                         contract={
                           claim.object?.contract ?? MULTIVAULT_CONTRACT_ADDRESS
                         }
-                        identity={
-                          saveListModalActive.identity as IdentityPresenter
+                        atom={
+                          identityToAtom(
+                            (saveListModalActive.identity ?? {
+                              asset_delta: '',
+                              assets_sum: '',
+                              contract: '',
+                              conviction_price: '',
+                              conviction_price_delta: '',
+                              conviction_sum: '',
+                              created_at: '',
+                              creator_address: '',
+                              display_name: '',
+                              follow_vault_id: '',
+                              id: '',
+                              identity_hash: '',
+                              identity_id: '',
+                              is_contract: false,
+                              is_user: false,
+                              num_positions: 0,
+                              predicate: false,
+                              status: 'active' as Status,
+                              updated_at: '',
+                              vault_id: '',
+                            }) as IdentityPresenter,
+                          ) as GetAtomQuery['atom']
                         }
-                        tag={claim.object as IdentityPresenter}
+                        tagAtom={
+                          identityToAtom(
+                            claim.object as IdentityPresenter,
+                          ) as GetAtomQuery['atom']
+                        }
                         userWallet={userWallet}
                         open={saveListModalActive.isOpen}
                         onClose={() =>

@@ -40,3 +40,151 @@ query GetListItems($predicateId: numeric, $objectId: numeric) {
     }
   }
 }
+
+# GetListDetails query for List Details page
+## Combines the aggregates and nodes within since we don't need pagination on the tags yet
+## If we do, we'd need to paginate the triples and tags separately and split
+query GetListDetails(
+  $globalWhere: triples_bool_exp
+  $userWhere: triples_bool_exp
+  $tagPredicateId: numeric
+) {
+  globalTriplesAggregate: triples_aggregate(where: $globalWhere) {
+    aggregate {
+      count
+    }
+  }
+  globalTriples: triples(where: $globalWhere) {
+    id
+    vault_id
+    counter_vault_id
+    subject {
+      id
+      vault_id
+      label
+      wallet_id
+      image
+      type
+      tags: as_subject_triples_aggregate(
+        where: { predicate_id: { _eq: $tagPredicateId } }
+      ) {
+        nodes {
+          object {
+            label
+            vault_id
+            taggedIdentities: as_object_triples_aggregate {
+              nodes {
+                subject {
+                  label
+                  vault_id
+                }
+                vault_id
+              }
+              aggregate {
+                count
+              }
+            }
+          }
+        }
+        aggregate {
+          count
+        }
+      }
+    }
+    object {
+      id
+      vault_id
+      label
+      wallet_id
+      image
+      type
+    }
+    predicate {
+      id
+      vault_id
+      label
+      wallet_id
+      image
+      type
+    }
+    vault {
+      positions_aggregate {
+        aggregate {
+          count
+          sum {
+            shares
+          }
+        }
+      }
+    }
+  }
+  userTriplesAggregate: triples_aggregate(where: $userWhere) {
+    aggregate {
+      count
+    }
+  }
+  userTriples: triples(where: $userWhere) {
+    id
+    vault_id
+    counter_vault_id
+    subject {
+      id
+      vault_id
+      label
+      wallet_id
+      image
+      type
+      tags: as_subject_triples_aggregate(
+        where: { predicate_id: { _eq: $tagPredicateId } }
+      ) {
+        nodes {
+          object {
+            label
+            vault_id
+            taggedIdentities: as_object_triples_aggregate {
+              nodes {
+                subject {
+                  label
+                  vault_id
+                }
+                vault_id
+              }
+              aggregate {
+                count
+              }
+            }
+          }
+        }
+        aggregate {
+          count
+        }
+      }
+    }
+    object {
+      id
+      vault_id
+      label
+      wallet_id
+      image
+      type
+    }
+    predicate {
+      id
+      vault_id
+      label
+      wallet_id
+      image
+      type
+    }
+    vault {
+      positions_aggregate {
+        aggregate {
+          count
+          sum {
+            shares
+          }
+        }
+      }
+    }
+  }
+}

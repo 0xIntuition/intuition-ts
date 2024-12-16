@@ -29,6 +29,7 @@ import {
   GetAccountDocument,
   GetAccountQuery,
   GetAccountQueryVariables,
+  GetAtomQuery,
   GetConnectionsCountDocument,
   GetConnectionsCountQuery,
   GetConnectionsCountQueryVariables,
@@ -68,6 +69,7 @@ import {
   calculatePercentageOfTvl,
   calculatePointsFromFees,
   formatBalance,
+  identityToAtom,
   invariant,
 } from '@lib/utils/misc'
 import { User } from '@privy-io/react-auth'
@@ -441,7 +443,6 @@ export default function Profile() {
         onAvatarClick={() => {
           setImageModalActive({
             isOpen: true,
-            identity: userIdentity,
           })
         }}
       >
@@ -762,8 +763,14 @@ export default function Profile() {
           {selectedTag && (
             <SaveListModal
               contract={userIdentity.contract ?? MULTIVAULT_CONTRACT_ADDRESS}
-              tag={saveListModalActive.tag ?? selectedTag}
-              identity={userIdentity}
+              tagAtom={
+                identityToAtom(
+                  saveListModalActive.tag ?? selectedTag,
+                ) as unknown as GetAtomQuery['atom']
+              }
+              atom={
+                identityToAtom(userIdentity) as unknown as GetAtomQuery['atom']
+              }
               userWallet={userWallet}
               open={saveListModalActive.isOpen}
               onClose={() =>

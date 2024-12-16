@@ -1,23 +1,25 @@
+import { BannerVariant, Button, Icon, ProfileCard } from '@0xintuition/1ui'
 import {
-  BannerVariant,
-  Button,
-  Icon,
-  InfoCard,
-  ProfileCard,
-} from '@0xintuition/1ui'
-import { ClaimPresenter, ClaimsService } from '@0xintuition/api'
+  fetcher,
+  GetAtomDocument,
+  GetAtomQuery,
+  GetAtomQueryVariables,
+  GetTripleDocument,
+  GetTripleQuery,
+  GetTripleQueryVariables,
+  useGetAtomQuery,
+} from '@0xintuition/graphql'
 
 import { ErrorPage } from '@components/error-page'
 import { ListIdentityDisplayCard } from '@components/lists/list-identity-display-card'
 import ImageModal from '@components/profile/image-modal'
 import ReadOnlyBanner from '@components/read-only-banner'
-import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { imageModalAtom } from '@lib/state/store'
 import logger from '@lib/utils/logger'
 import { invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs, MetaFunction } from '@remix-run/node'
-import { Outlet, useNavigate } from '@remix-run/react'
-import { fetchWrapper } from '@server/api'
+import { Outlet, useLoaderData, useNavigate } from '@remix-run/react'
+import { QueryClient } from '@tanstack/react-query'
 import {
   BLOCK_EXPLORER_URL,
   IPFS_GATEWAY_URL,
@@ -25,16 +27,43 @@ import {
   PATHS,
 } from 'app/consts'
 import TwoPanelLayout from 'app/layouts/two-panel-layout'
-import { VaultDetailsType } from 'app/types'
 import { useAtom } from 'jotai'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const id = params.id
   invariant(id, NO_PARAM_ID_ERROR)
 
-  const claim = await fetchWrapper(request, {
-    method: ClaimsService.getClaimById,
-    args: { id },
+  const queryClient = new QueryClient()
+
+  const [, objectId] = id.split('-')
+  invariant(objectId, 'Object ID not found in composite ID')
+
+  // const listsLimit = parseInt(url.searchParams.get('effectiveLimit') || '200')
+  // const listsOffset = parseInt(url.searchParams.get('listsOffset') || '0')
+  // const listsOrderBy = url.searchParams.get('listsSortBy')
+
+  const tripleResult = await fetcher<GetTripleQuery, GetTripleQueryVariables>(
+    GetTripleDocument,
+    {
+      tripleId: objectId,
+    },
+  )()
+
+  await queryClient.prefetchQuery({
+    queryKey: ['get-triple', { id: objectId }],
+    queryFn: () => tripleResult,
+  })
+
+  const objectResult = await fetcher<GetAtomQuery, GetAtomQueryVariables>(
+    GetAtomDocument,
+    {
+      id: objectId,
+    },
+  )()
+
+  await queryClient.prefetchQuery({
+    queryKey: ['get-object', { id: objectId }],
+    queryFn: () => objectResult,
   })
 
   const { origin } = new URL(request.url)
@@ -42,7 +71,12 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const ogImageUrl = `${origin}/resources/create-og?id=${id}&type=list`
 
   return json({
-    claim,
+    initialParams: {
+      id,
+      objectId,
+    },
+    objectResult,
+    tripleResult,
     ogImageUrl,
   })
 }
@@ -52,12 +86,14 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
     return []
   }
 
-  const { claim, ogImageUrl } = data
+  const { objectResult, ogImageUrl } = data
   logger('ogImageUrl data in meta', ogImageUrl)
 
   return [
     {
-      title: claim ? claim.object?.display_name : 'Error | Intuition Explorer',
+      title: objectResult
+        ? objectResult.atom?.label
+        : 'Error | Intuition Explorer',
     },
     {
       name: 'description',
@@ -65,7 +101,9 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
     },
     {
       property: 'og-title',
-      name: claim ? claim.object?.display_name : 'Error | Intuition Explorer',
+      name: objectResult
+        ? objectResult.atom?.label
+        : 'Error | Intuition Explorer',
     },
     {
       property: 'og:image',
@@ -83,7 +121,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
     },
     {
       name: 'twitter:title',
-      content: `Intuition Explorer | ${claim ? claim.object?.display_name : ''}`,
+      content: `Intuition Explorer | ${objectResult ? objectResult.atom?.label : ''}`,
     },
     {
       name: 'twitter:description',
@@ -94,11 +132,22 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 }
 
 export default function ReadOnlyListDetails() {
-  const { claim } = useLiveLoader<{
-    claim: ClaimPresenter
+  const { initialParams } = useLoaderData<{
+    initialParams: {
+      id: string
+      objectId: string
+    }
     userWallet: string
-    vaultDetails: VaultDetailsType
-  }>(['create', 'attest'])
+  }>()
+
+  const { data: objectData } = useGetAtomQuery(
+    {
+      id: initialParams.objectId,
+    },
+    {
+      queryKey: ['get-object', { id: initialParams.objectId }],
+    },
+  )
 
   const [imageModalActive, setImageModalActive] = useAtom(imageModalAtom)
   const navigate = useNavigate()
@@ -107,51 +156,36 @@ export default function ReadOnlyListDetails() {
     <div className="flex-col justify-start items-start gap-6 inline-flex max-lg:w-full">
       <ProfileCard
         variant="non-user"
-        avatarSrc={claim.object?.image ?? ''}
-        name={claim.object?.display_name ?? ''}
-        id={claim.object?.identity_id ?? ''}
-        bio={claim.object?.description ?? ''}
+        avatarSrc={objectData?.atom?.image ?? ''}
+        name={objectData?.atom?.label ?? ''}
+        id={objectData?.atom?.id ?? ''}
+        bio={''} // TODO: Add bio when it becomes available after the migration
         ipfsLink={
-          claim.object?.is_user === true
-            ? `${BLOCK_EXPLORER_URL}/address/${claim.object?.identity_id}`
-            : `${IPFS_GATEWAY_URL}/${claim.object?.identity_id?.replace('ipfs://', '')}`
+          objectData?.atom?.type === ('Account' || 'Default')
+            ? `${BLOCK_EXPLORER_URL}/address/${objectData?.atom?.wallet_id}`
+            : `${IPFS_GATEWAY_URL}/${objectData?.atom?.data?.replace('ipfs://', '')}`
         }
         onAvatarClick={() => {
-          if (claim.object) {
+          if (objectData?.atom) {
             setImageModalActive({
               isOpen: true,
-              identity: claim.object,
             })
           }
         }}
       />
       <ListIdentityDisplayCard
-        displayName={claim.object?.display_name ?? ''}
-        avatarImgSrc={claim.object?.image ?? ''}
+        displayName={objectData?.atom?.label ?? ''}
+        avatarImgSrc={objectData?.atom?.image ?? ''}
         onClick={() => {
-          navigate(`/readonly/identity/${claim.object?.vault_id}`)
+          navigate(`/app/identity/${objectData?.atom?.vault_id}`)
         }}
         className="hover:cursor-pointer w-full"
       />
-      <InfoCard
-        variant="user"
-        username={claim.creator?.display_name ?? claim.creator?.wallet ?? ''}
-        avatarImgSrc={claim.creator?.image ?? ''}
-        id={claim.creator?.wallet ?? ''}
-        description={claim.creator?.description ?? ''}
-        link={
-          claim.creator?.id
-            ? `${PATHS.READONLY_PROFILE}/${claim.creator?.wallet}`
-            : ''
-        }
-        ipfsLink={`${BLOCK_EXPLORER_URL}/address/${claim.creator?.wallet}`}
-        timestamp={claim.created_at}
-        className="w-full"
-      />
+
       <Button
         variant="secondary"
         onClick={() => {
-          navigate(`/readonly/identity/${claim.object?.vault_id}`)
+          navigate(`/readonly/identity/${objectData?.atom?.vault_id}`)
         }}
         className="w-full"
       >
@@ -159,7 +193,7 @@ export default function ReadOnlyListDetails() {
       </Button>
       <ReadOnlyBanner
         variant={BannerVariant.warning}
-        to={`${PATHS.LIST}/${claim.vault_id}`}
+        to={`${PATHS.LIST}/${objectData?.atom?.vault_id}`}
       />
     </div>
   )
@@ -167,11 +201,14 @@ export default function ReadOnlyListDetails() {
   return (
     <>
       <TwoPanelLayout leftPanel={leftPanel} rightPanel={<Outlet />} />
-      {claim.object && (
+      {objectData?.atom && (
         <ImageModal
-          displayName={claim.object?.display_name ?? ''}
-          imageSrc={claim.object?.image ?? ''}
-          isUser={claim.object?.is_user}
+          displayName={objectData?.atom?.label ?? ''}
+          imageSrc={objectData?.atom?.image ?? ''}
+          isUser={
+            objectData?.atom?.type === 'Account' ||
+            objectData?.atom?.type === 'Default'
+          }
           open={imageModalActive.isOpen}
           onClose={() =>
             setImageModalActive({

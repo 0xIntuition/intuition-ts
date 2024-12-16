@@ -6,7 +6,7 @@ import { AddIdentitiesListForm } from './add-identities-list-form'
 export interface AddIdentitiesListModalProps {
   identity: IdentityPresenter
   userWallet: string
-  claimId: string
+  claimId?: string
   open?: boolean
   onClose: () => void
   onSuccess?: () => void

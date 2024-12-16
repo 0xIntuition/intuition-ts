@@ -59,6 +59,7 @@ import logger from '@lib/utils/logger'
 import {
   calculatePercentageOfTvl,
   formatBalance,
+  identityToAtom,
   invariant,
 } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
@@ -277,7 +278,6 @@ export default function IdentityDetails() {
         onAvatarClick={() => {
           setImageModalActive({
             isOpen: true,
-            identity,
           })
         }}
       />
@@ -521,8 +521,12 @@ export default function IdentityDetails() {
           {selectedTag && (
             <SaveListModal
               contract={identity.contract ?? MULTIVAULT_CONTRACT_ADDRESS}
-              tag={saveListModalActive.tag ?? selectedTag}
-              identity={identity}
+              tagAtom={
+                identityToAtom(
+                  saveListModalActive.tag ?? selectedTag,
+                ) as unknown as GetAtomQuery['atom']
+              }
+              atom={identityToAtom(identity) as unknown as GetAtomQuery['atom']}
               userWallet={userWallet}
               open={saveListModalActive.isOpen}
               onClose={() =>

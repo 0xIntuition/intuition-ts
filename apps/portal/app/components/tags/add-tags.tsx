@@ -224,42 +224,8 @@ export function AddTags({
       {selectedInvalidTag && (
         <SaveListModal
           contract={identity.contract}
-          tag={
-            {
-              id: selectedInvalidTag?.id ?? '',
-              label: selectedInvalidTag?.label ?? '',
-              image: selectedInvalidTag?.image ?? '',
-              vault_id: selectedInvalidTag?.vault_id,
-              assets_sum: '0',
-              user_assets: '0',
-              contract: MULTIVAULT_CONTRACT_ADDRESS,
-              asset_delta: '0',
-              conviction_price: '0',
-              conviction_price_delta: '0',
-              conviction_sum: '0',
-              num_positions: 0,
-              price: '0',
-              price_delta: '0',
-              status: 'active',
-              total_conviction: '0',
-              type: 'user',
-              updated_at: new Date().toISOString(),
-              created_at: new Date().toISOString(),
-              creator_address: '',
-              display_name: selectedInvalidTag.label ?? '',
-              follow_vault_id: '',
-              user: null,
-              creator: null,
-              identity_hash: '',
-              identity_id: '',
-              is_contract: false,
-              is_user: true,
-              pending: false,
-              pending_type: null,
-              pending_vault_id: null,
-            } as unknown as IdentityPresenter
-          }
-          identity={identity}
+          tagAtom={selectedInvalidTag}
+          atom={identity}
           userWallet={userWallet}
           open={saveListModalActive.isOpen}
           onClose={() => {
