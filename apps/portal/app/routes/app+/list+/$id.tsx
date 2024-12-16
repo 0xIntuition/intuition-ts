@@ -28,7 +28,7 @@ import { invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { Outlet, useLoaderData, useNavigate } from '@remix-run/react'
 import { requireUser, requireUserWallet } from '@server/auth'
-import { QueryClient } from '@tanstack/react-query'
+import { dehydrate, QueryClient } from '@tanstack/react-query'
 import {
   BLOCK_EXPLORER_URL,
   IPFS_GATEWAY_URL,
@@ -84,6 +84,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   })
 
   return json({
+    dehydratedState: dehydrate(queryClient),
     initialParams: {
       id,
       objectId,
