@@ -93,10 +93,8 @@ export const saveListModalAtom = atom<{
 
 export const imageModalAtom = atom<{
   isOpen: boolean
-  identity: IdentityPresenter | null
 }>({
   isOpen: false,
-  identity: null,
 })
 
 export const createClaimModalAtom = atom<{

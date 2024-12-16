@@ -603,3 +603,40 @@ export const getProfileUrl = (
 
 export const sleep = (ms: number) =>
   new Promise((resolve) => setTimeout(resolve, ms))
+
+// #TODO: 4782 Remove this once we have a proper GQL implementation
+export const identityToAtom = (identity: IdentityPresenter) => ({
+  __typename: 'atoms',
+  id: identity.id,
+  data: '',
+  image: identity.image,
+  label: identity.display_name,
+  emoji: null,
+  type: identity.entity_type ?? 'default',
+  walletId: identity.creator_address,
+  blockNumber: '',
+  blockTimestamp: identity.created_at,
+  transactionHash: '',
+  creatorId: identity.creator_id ?? '',
+  vaultId: identity.vault_id,
+  creator: identity.creator
+    ? {
+        __typename: 'accounts',
+        id: identity.creator.id,
+        label: identity.creator.display_name,
+        image: identity.creator.image,
+        atomId: identity.vault_id,
+        type: 'Account',
+      }
+    : null,
+  value: {
+    __typename: 'atomValues',
+    person: {
+      __typename: 'persons',
+      name: identity.display_name,
+      image: identity.image,
+      description: identity.description,
+      url: identity.url,
+    },
+  },
+})
