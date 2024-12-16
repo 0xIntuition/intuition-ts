@@ -24,6 +24,7 @@ import { type FetcherWithComponents } from '@remix-run/react'
 import { VaultDetailsType } from 'app/types'
 import { TransactionStateType } from 'app/types/transaction'
 import { useAtom } from 'jotai'
+import { formatUnits } from 'viem'
 
 import StakeActions from './stake-actions'
 import StakeInput from './stake-input'
@@ -75,6 +76,9 @@ export default function StakeForm({
   setValidationErrors,
 }: StakeFormProps) {
   const [stakeModalState, setStakeModalState] = useAtom(stakeModalAtom)
+  const formattedMinDeposit = vaultDetails?.min_deposit
+    ? formatUnits(BigInt(BigInt(vaultDetails.min_deposit)), 18)
+    : MIN_DEPOSIT
 
   return (
     <>
@@ -208,7 +212,7 @@ export default function StakeForm({
                   <StakeActions
                     action={mode}
                     setVal={setVal}
-                    minDeposit={vaultDetails?.min_deposit ?? MIN_DEPOSIT}
+                    minDeposit={formattedMinDeposit}
                     userConviction={user_conviction}
                     price={conviction_price}
                   />

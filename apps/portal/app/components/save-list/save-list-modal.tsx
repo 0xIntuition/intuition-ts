@@ -63,8 +63,8 @@ export default function SaveListModal({
   const formRef = useRef(null)
   const formattedMinDeposit = min_deposit
     ? formatUnits(BigInt(BigInt(min_deposit)), 18)
-    : null
-  const [val, setVal] = useState(formattedMinDeposit ?? MIN_DEPOSIT)
+    : MIN_DEPOSIT
+  const [val, setVal] = useState(formattedMinDeposit)
   const [mode, setMode] = useState<'save' | 'unsave'>('save')
   const [showErrors, setShowErrors] = useState(false)
   const [validationErrors, setValidationErrors] = useState<string[]>([])
@@ -285,7 +285,7 @@ export default function SaveListModal({
     if (!vaultDetails) {
       throw new Error('Missing required parameters')
     }
-    if (+val < +MIN_DEPOSIT || +val > +walletBalance) {
+    if (+val < +formattedMinDeposit || +val > +walletBalance) {
       setShowErrors(true)
       return
     }
@@ -316,7 +316,7 @@ export default function SaveListModal({
     setMode('save')
     setVaultDetails(undefined)
     setIsLoading(true)
-    setVal(formattedMinDeposit ?? MIN_DEPOSIT)
+    setVal(formattedMinDeposit)
     setShowErrors(false)
     setValidationErrors([])
     vaultDetailsFetcher.data = undefined
@@ -333,7 +333,7 @@ export default function SaveListModal({
       setMode('save')
       setVaultDetails(undefined)
       setIsLoading(true)
-      setVal(formattedMinDeposit ?? MIN_DEPOSIT)
+      setVal(formattedMinDeposit)
       setShowErrors(false)
       setValidationErrors([])
       vaultDetailsFetcher.data = undefined
