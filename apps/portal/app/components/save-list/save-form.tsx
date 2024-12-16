@@ -9,17 +9,17 @@ import {
   Skeleton,
   Text,
 } from '@0xintuition/1ui'
-import { IdentityPresenter } from '@0xintuition/api'
+import { GetAtomQuery } from '@0xintuition/graphql'
 
 import StakingRadioGroup from '@components/staking-radio-group'
 import { TransactionState } from '@components/transaction-state'
 import {
   formatBalance,
-  getAtomDescription,
-  getAtomImage,
-  getAtomIpfsLink,
-  getAtomLabel,
-  getAtomLink,
+  getAtomDescriptionGQL,
+  getAtomImageGQL,
+  getAtomIpfsLinkGQL,
+  getAtomLabelGQL,
+  getAtomLinkGQL,
 } from '@lib/utils/misc'
 import { IPFS_GATEWAY_URL, PATHS } from 'app/consts'
 import {
@@ -30,8 +30,8 @@ import {
 import SaveReview from './save-review'
 
 interface SaveFormProps {
-  tag: IdentityPresenter
-  identity: IdentityPresenter
+  tagAtom: GetAtomQuery['atom'] | null
+  atom: GetAtomQuery['atom'] | null
   user_assets: string
   entry_fee: string
   exit_fee: string
@@ -49,8 +49,8 @@ interface SaveFormProps {
 }
 
 export default function SaveForm({
-  identity,
-  tag,
+  atom,
+  tagAtom,
   user_assets,
   entry_fee,
   exit_fee,
@@ -93,13 +93,16 @@ export default function SaveForm({
               <Claim
                 size="md"
                 subject={{
-                  variant: identity?.is_user ? Identity.user : Identity.nonUser,
-                  label: getAtomLabel(identity),
-                  imgSrc: getAtomImage(identity),
-                  id: identity?.identity_id,
-                  description: getAtomDescription(identity),
-                  ipfsLink: getAtomIpfsLink(identity),
-                  link: getAtomLink(identity),
+                  variant:
+                    atom?.type === 'Account' || atom?.type === 'Default'
+                      ? Identity.user
+                      : Identity.nonUser,
+                  label: getAtomLabelGQL(atom),
+                  imgSrc: getAtomImageGQL(atom),
+                  id: atom?.id,
+                  description: getAtomDescriptionGQL(atom),
+                  ipfsLink: getAtomIpfsLinkGQL(atom),
+                  link: getAtomLinkGQL(atom),
                 }}
                 predicate={{
                   variant: Identity.nonUser,
@@ -112,12 +115,12 @@ export default function SaveForm({
                 }}
                 object={{
                   variant: Identity.nonUser,
-                  label: getAtomLabel(tag),
-                  imgSrc: getAtomImage(tag),
-                  id: tag.identity_id,
-                  description: getAtomDescription(tag),
-                  ipfsLink: getAtomIpfsLink(tag),
-                  link: getAtomLink(tag),
+                  label: getAtomLabelGQL(tagAtom),
+                  imgSrc: getAtomImageGQL(tagAtom),
+                  id: tagAtom?.id,
+                  description: getAtomDescriptionGQL(tagAtom),
+                  ipfsLink: getAtomIpfsLinkGQL(tagAtom),
+                  link: getAtomLinkGQL(tagAtom),
                 }}
                 maxIdentityLength={12}
               />
@@ -156,8 +159,8 @@ export default function SaveForm({
             val={val}
             dispatch={dispatch}
             state={state}
-            tag={tag}
-            identity={identity}
+            tagAtom={tagAtom}
+            atom={atom}
             user_assets={user_assets}
             entry_fee={entry_fee}
             exit_fee={exit_fee}
