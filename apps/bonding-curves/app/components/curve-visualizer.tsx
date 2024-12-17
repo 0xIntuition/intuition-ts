@@ -170,7 +170,7 @@ export function CurveVisualizer() {
   }
 
   const generateCurvePoints = useCallback(
-    async (address: string, abi: any[]) => {
+    async (address: string, abi: any[], currentMaxValue: number) => {
       const points: Point[] = []
       const numPoints = 100
 
@@ -189,7 +189,7 @@ export function CurveVisualizer() {
         })) as bigint
 
         // Convert maxValue to Wei for comparison
-        const maxValueWei = parseEther(maxValue.toString())
+        const maxValueWei = parseEther(currentMaxValue.toString())
 
         // Use the smaller of maxValueWei and maxAssets as our upper bound
         const upperBoundWei = maxValueWei < maxAssets ? maxValueWei : maxAssets
@@ -197,7 +197,7 @@ export function CurveVisualizer() {
 
         for (let i = 0; i <= numPoints; i++) {
           const assetsWei = stepWei * BigInt(i)
-          if (assetsWei > maxAssets) break // Stop if we exceed MAX_ASSETS
+          if (assetsWei > maxAssets) break
 
           try {
             const sharesWei = (await publicClient.readContract({
@@ -207,9 +207,8 @@ export function CurveVisualizer() {
               args: [assetsWei],
             })) as bigint
 
-            if (sharesWei > maxShares) break // Stop if we exceed MAX_SHARES
+            if (sharesWei > maxShares) break
 
-            // Convert to ETH only for display
             points.push({
               x: Number(formatEther(assetsWei)),
               y: Number(formatEther(sharesWei)),
@@ -219,10 +218,9 @@ export function CurveVisualizer() {
               err.message?.includes('Assets exceed domain') ||
               err.message?.includes('Shares exceed domain')
             ) {
-              // Stop generating points if we hit domain boundary
               break
             }
-            throw err // Re-throw other errors
+            throw err
           }
         }
       } catch (err) {
@@ -231,7 +229,7 @@ export function CurveVisualizer() {
 
       return points
     },
-    [maxValue, publicClient],
+    [publicClient],
   )
 
   const simulatePreview = useCallback(
@@ -357,33 +355,68 @@ export function CurveVisualizer() {
 
     const updatedCurves = await Promise.all(
       deployedContracts.map(async (contract) => {
-        const points = await generateCurvePoints(contract.address, contract.abi)
+        const points = await generateCurvePoints(
+          contract.address,
+          contract.abi,
+          maxValue,
+        )
         return {
           ...contract,
           points: points.map((p) => ({
             ...p,
-            totalValue: p.x <= contract.totalAssets ? p.y : undefined,
-            userValue: p.x <= contract.userAssets ? p.y : undefined,
+            totalValue:
+              p.x <= Number(formatEther(contract.totalAssets))
+                ? p.y
+                : undefined,
+            userValue:
+              p.x <= Number(formatEther(contract.userAssets)) ? p.y : undefined,
           })),
         }
       }),
     )
 
     setDeployedContracts(updatedCurves)
-  }, [deployedContracts, generateCurvePoints])
+  }, [deployedContracts, generateCurvePoints, maxValue])
 
   const handleMinMaxChange = useCallback(
-    (newMin: number, newMax: number) => {
+    async (newMin: number, newMax: number) => {
+      // Update the ref with the latest values
       latestRangeRef.current = { min: newMin, max: newMax }
+
+      // Clear any pending updates
       if (pendingUpdateRef.current) {
         clearTimeout(pendingUpdateRef.current)
-      }
-      pendingUpdateRef.current = setTimeout(async () => {
-        await regenerateCurves()
         pendingUpdateRef.current = null
-      }, 100)
+      }
+
+      // Use the latest values from the ref for regeneration
+      const points = await Promise.all(
+        deployedContracts.map(async (contract) => {
+          const newPoints = await generateCurvePoints(
+            contract.address,
+            contract.abi,
+            newMax,
+          )
+          return {
+            ...contract,
+            points: newPoints.map((p) => ({
+              ...p,
+              totalValue:
+                p.x <= Number(formatEther(contract.totalAssets))
+                  ? p.y
+                  : undefined,
+              userValue:
+                p.x <= Number(formatEther(contract.userAssets))
+                  ? p.y
+                  : undefined,
+            })),
+          }
+        }),
+      )
+
+      setDeployedContracts(points)
     },
-    [regenerateCurves],
+    [deployedContracts, generateCurvePoints],
   )
 
   const removeCurve = (id: string) => {
@@ -456,7 +489,11 @@ export function CurveVisualizer() {
         }
 
         console.log('Contract deployed at:', data.address)
-        const points = await generateCurvePoints(data.address, fileData.abi)
+        const points = await generateCurvePoints(
+          data.address,
+          fileData.abi,
+          maxValue,
+        )
 
         // Get max values first
         const maxAssets = (await publicClient.readContract({
@@ -515,7 +552,7 @@ export function CurveVisualizer() {
         setIsDeploying(false)
       }
     },
-    [files, isDeploying, publicClient, generateCurvePoints],
+    [files, isDeploying, publicClient, generateCurvePoints, maxValue],
   )
 
   const handleCurveSelect = (id: string) => {
@@ -591,33 +628,46 @@ export function CurveVisualizer() {
         })
         const sharesNum = Number(formatEther(BigInt(shares.toString())))
 
+        // Calculate new max value if needed
+        let newMax = maxValue
+        if (numericValue > maxValue) {
+          newMax = Math.pow(2, Math.ceil(Math.log2(numericValue)))
+        }
+
+        // Batch state updates
+        setMaxValue(newMax)
         setTotalAssets(numericValue)
         setTotalShares(sharesNum)
 
-        // Update max value if needed before updating graph
-        if (numericValue > maxValue) {
-          const newMax = Math.pow(2, Math.ceil(Math.log2(numericValue)))
-          setMaxValue(newMax) // Update UI
-          handleMinMaxChange(minValue, newMax) // Regenerate curves
-        }
-
-        // Update deployed contracts state with new values
-        setDeployedContracts((prev) =>
-          prev.map((c) =>
-            c.id === selectedCurveId
-              ? {
-                  ...c,
-                  totalAssets: numericValue,
-                  totalShares: sharesNum,
-                  points: c.points.map((point) => ({
-                    ...point,
-                    totalValue: point.x <= numericValue ? point.y : undefined,
-                    userValue: point.x <= c.userAssets ? point.y : undefined,
-                  })),
-                }
-              : c,
-          ),
+        // Update deployed contracts with new values
+        const updatedContracts = deployedContracts.map((c) =>
+          c.id === selectedCurveId
+            ? {
+                ...c,
+                totalAssets: numericValue,
+                totalShares: sharesNum,
+                points: c.points.map((point) => ({
+                  ...point,
+                  totalValue: point.x <= numericValue ? point.y : undefined,
+                  userValue: point.x <= c.userAssets ? point.y : undefined,
+                })),
+              }
+            : c,
         )
+        setDeployedContracts(updatedContracts)
+
+        // Only regenerate curves if max value changed
+        if (newMax !== maxValue) {
+          // Use the latest values
+          latestRangeRef.current = { min: minValue, max: newMax }
+          if (pendingUpdateRef.current) {
+            clearTimeout(pendingUpdateRef.current)
+          }
+          pendingUpdateRef.current = setTimeout(async () => {
+            await regenerateCurves()
+            pendingUpdateRef.current = null
+          }, 100)
+        }
       } catch (error) {
         console.error('Error in handleTotalAssetsChange:', error)
       }
@@ -628,8 +678,7 @@ export function CurveVisualizer() {
       maxValue,
       minValue,
       publicClient,
-      handleMinMaxChange,
-      setMaxValue,
+      regenerateCurves,
     ],
   )
 
@@ -992,6 +1041,7 @@ export function CurveVisualizer() {
       const points = await generateCurvePoints(
         selectedContract.address,
         selectedContract.abi,
+        maxValue,
       )
 
       // Update both the contract state and constructor values
@@ -1056,7 +1106,7 @@ export function CurveVisualizer() {
               onChange={(e) => {
                 const newMax = Number(e.target.value)
                 setMaxValue(newMax)
-                handleMinMaxChange(minValue, newMax)
+                handleMinMaxChange(minValue, newMax).catch(console.error)
               }}
             />
           </div>

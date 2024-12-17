@@ -56,4 +56,14 @@
   body {
     @apply bg-background text-foreground;
   }
+  input {
+    @apply bg-background text-foreground border-border;
+  }
+}
+
+/* Dark mode specific input styles */
+.dark input {
+  background-color: hsl(217.2 32.6% 17.5%);
+  color: hsl(210 40% 98%);
+  border-color: hsl(217.2 32.6% 17.5%);
 }
