@@ -8,6 +8,7 @@
     "build": "remix vite:build --emptyOutDir",
     "dev": "remix vite:dev",
     "start": "PORT=8080 remix-serve ./build/server/index.js",
+    "lint": "eslint .",
     "lint:fix": "pnpm lint --fix"
   },
   "repository": {

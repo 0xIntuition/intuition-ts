@@ -358,13 +358,6 @@ const useCSVData = (selectedType: AtomDataTypeKey) => {
   return [csvData, setCsvData] as const
 }
 
-// Add this type for the dialog state
-type FormatChangeDialog = {
-  isOpen: boolean
-  newFormat: AtomDataTypeKey | null
-  onResponse?: (response: 'yes' | 'no' | 'cancel') => void
-}
-
 // Add this type and constant before the CSVEditor component
 type ViewTab = 'select' | 'upload' | 'publish' | 'tag'
 
@@ -410,6 +403,7 @@ export default function CSVEditor() {
   const [thumbnails, setThumbnails] = useState<Record<number, string>>({})
   const [existingAtoms, setExistingAtoms] = useState<Set<number>>(new Set())
   const [loadingRows, setLoadingRows] = useState<Set<number>>(new Set())
+  const [isLoading, setIsLoading] = useState(false)
   const [isTagging, setIsTagging] = useState(false)
   const [sortState, setSortState] = useState<{
     column: number
@@ -425,14 +419,13 @@ export default function CSVEditor() {
     UnusualCharacterIssue[]
   >([])
   const [showProofreadModal, setShowProofreadModal] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
   const [isLoadingCSV, setIsLoadingCSV] = useState(false)
 
   const [formatChangeDialog, setFormatChangeDialog] = useState<{
     isOpen: boolean
-    newFormat: AtomDataTypeKey
+    newFormat: AtomDataTypeKey | null
     onResponse: (response: 'yes' | 'no' | 'cancel') => void
-  }>({ isOpen: false, newFormat: 'CSV', onResponse: () => {} })
+  }>({ isOpen: false, newFormat: null, onResponse: () => {} })
 
   const [headerValidationDialog, setHeaderValidationDialog] = useState<{
     isOpen: boolean
@@ -648,7 +641,7 @@ export default function CSVEditor() {
   }
 
   // Update loadCSV to take a File directly
-  const loadCSV = async (file: File) => {
+  const loadCSV = async (file: File): Promise<void> => {
     const text = await file.text()
     const data = parseCsvText(text)
     const headers = data[0]
@@ -656,11 +649,8 @@ export default function CSVEditor() {
     const rows = await parseCsv(file, detectedType)
 
     // Validate headers
-    const {
-      isValid: headersValid,
-      fixedRows: initialFixedRows,
-      hasExtraneousFields,
-    } = validateAndFixHeaders(rows, detectedType)
+    const { isValid: headersValid, hasExtraneousFields } =
+      validateAndFixHeaders(rows, detectedType)
 
     if (!headersValid || hasExtraneousFields) {
       return new Promise((resolve) => {
@@ -1464,6 +1454,9 @@ export default function CSVEditor() {
       setFormatChangeDialog({
         isOpen: true,
         newFormat,
+        onResponse: (response) => {
+          handleFormatChangeResponse(response)
+        },
       })
     } else {
       setSelectedType(newFormat)
@@ -1477,7 +1470,11 @@ export default function CSVEditor() {
   // Simplify the format change response handler
   const handleFormatChangeResponse = (response: 'yes' | 'no' | 'cancel') => {
     if (!formatChangeDialog.newFormat || response === 'cancel') {
-      setFormatChangeDialog({ isOpen: false, newFormat: null })
+      setFormatChangeDialog({
+        isOpen: false,
+        newFormat: null,
+        onResponse: () => {},
+      })
       return
     }
 
@@ -1501,7 +1498,11 @@ export default function CSVEditor() {
       )
     }
 
-    setFormatChangeDialog({ isOpen: false, newFormat: null })
+    setFormatChangeDialog({
+      isOpen: false,
+      newFormat: null,
+      onResponse: () => {},
+    })
   }
 
   // Add these helper functions near the top of the CSVEditor component
@@ -1641,7 +1642,7 @@ export default function CSVEditor() {
               variant="destructive"
               onClick={() => missingColumnsDialog.onResponse('proceed')}
             >
-              I don't care, let me proceed at my own risk
+              I don&apos;t care, let me proceed at my own risk
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -2438,7 +2439,11 @@ export default function CSVEditor() {
         open={formatChangeDialog.isOpen}
         onOpenChange={(isOpen: boolean) => {
           if (!isOpen) {
-            setFormatChangeDialog({ isOpen: false, newFormat: null })
+            setFormatChangeDialog({
+              isOpen: false,
+              newFormat: null,
+              onResponse: () => {},
+            })
           }
         }}
       >
