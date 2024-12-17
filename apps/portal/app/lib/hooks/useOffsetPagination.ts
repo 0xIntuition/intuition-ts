@@ -12,12 +12,12 @@ export interface OffsetPaginationParams {
 
 export const PAGINATION_KEYS = {
   limit: 'limit',
-  offset: 'offset',
+  page: 'page',
 } as const
 
 /**
  * Hook for handling offset-based pagination with React Query
- * Manages URL state and provides helpers for React Query integration
+ * Shows page numbers in URLs for better UX but uses offset/limit for queries
  */
 export const useOffsetPagination = ({
   defaultLimit = 10,
@@ -38,9 +38,13 @@ export const useOffsetPagination = ({
       searchParams.get(getParamName(PAGINATION_KEYS.limit)) ||
         String(defaultLimit),
     )
-    const offset = parseInt(
-      searchParams.get(getParamName(PAGINATION_KEYS.offset)) || '0',
+    // Get page from URL and convert to offset
+    const page = Math.max(
+      1,
+      parseInt(searchParams.get(getParamName(PAGINATION_KEYS.page)) || '1'),
     )
+    const offset = (page - 1) * limit
+
     return { limit, offset }
   }
 
@@ -51,14 +55,14 @@ export const useOffsetPagination = ({
   const currentPage = Math.floor(offset / limit) + 1
 
   const onPageChange = (newPage: number) => {
-    const newOffset = (newPage - 1) * limit
     setSearchParams(
       (prev) => {
         const newParams = new URLSearchParams(prev)
-        newParams.set(
-          getParamName(PAGINATION_KEYS.offset),
-          newOffset.toString(),
-        )
+        if (newPage === 1) {
+          newParams.delete(getParamName(PAGINATION_KEYS.page))
+        } else {
+          newParams.set(getParamName(PAGINATION_KEYS.page), newPage.toString())
+        }
         return newParams
       },
       { preventScrollReset: true },
@@ -69,8 +73,16 @@ export const useOffsetPagination = ({
     setSearchParams(
       (prev) => {
         const newParams = new URLSearchParams(prev)
-        newParams.set(getParamName(PAGINATION_KEYS.limit), newLimit.toString())
-        newParams.set(getParamName(PAGINATION_KEYS.offset), '0')
+        if (newLimit === defaultLimit) {
+          newParams.delete(getParamName(PAGINATION_KEYS.limit))
+        } else {
+          newParams.set(
+            getParamName(PAGINATION_KEYS.limit),
+            newLimit.toString(),
+          )
+        }
+        // Reset to first page when changing limit
+        newParams.delete(getParamName(PAGINATION_KEYS.page))
         return newParams
       },
       { preventScrollReset: true },

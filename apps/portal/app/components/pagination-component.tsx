@@ -33,19 +33,18 @@ export function PaginationComponent({
 
   // Get current values from URL
   const limit = parseInt(searchParams.get('limit') || String(defaultLimit))
-  const offset = parseInt(searchParams.get('offset') || '0')
+  const page = Math.max(1, parseInt(searchParams.get('page') || '1'))
 
-  // Calculate current page and total pages for display
-  const currentPage = Math.floor(offset / limit) + 1
+  // Calculate total pages for display
   const totalPages = Math.ceil(totalEntries / limit)
 
   // Track previous page for scroll behavior
-  const prevPageRef = useRef(currentPage)
+  const prevPageRef = useRef(page)
 
   useEffect(() => {
     if (
       hasUserInteracted &&
-      prevPageRef.current !== currentPage &&
+      prevPageRef.current !== page &&
       listContainerRef?.current
     ) {
       listContainerRef.current.scrollIntoView({
@@ -53,18 +52,18 @@ export function PaginationComponent({
         block: 'start',
       })
     }
-    prevPageRef.current = currentPage
-  }, [listContainerRef, currentPage, hasUserInteracted])
+    prevPageRef.current = page
+  }, [listContainerRef, page, hasUserInteracted])
 
   // Navigation handlers
   const handlePrevious = () => {
     setHasUserInteracted(true)
     const params = new URLSearchParams(searchParams)
-    const newOffset = Math.max(0, offset - limit)
-    if (newOffset === 0) {
-      params.delete('offset')
+    const newPage = Math.max(1, page - 1)
+    if (newPage === 1) {
+      params.delete('page')
     } else {
-      params.set('offset', String(newOffset))
+      params.set('page', String(newPage))
     }
     setSearchParams(params, { preventScrollReset: true })
   }
@@ -72,22 +71,21 @@ export function PaginationComponent({
   const handleNext = () => {
     setHasUserInteracted(true)
     const params = new URLSearchParams(searchParams)
-    params.set('offset', String(offset + limit))
+    params.set('page', String(page + 1))
     setSearchParams(params, { preventScrollReset: true })
   }
 
   const handleFirst = () => {
     setHasUserInteracted(true)
     const params = new URLSearchParams(searchParams)
-    params.delete('offset')
+    params.delete('page')
     setSearchParams(params, { preventScrollReset: true })
   }
 
   const handleLast = () => {
     setHasUserInteracted(true)
     const params = new URLSearchParams(searchParams)
-    const lastPageOffset = (totalPages - 1) * limit
-    params.set('offset', String(lastPageOffset))
+    params.set('page', String(totalPages))
     setSearchParams(params, { preventScrollReset: true })
   }
 
@@ -95,10 +93,8 @@ export function PaginationComponent({
     setHasUserInteracted(true)
     const params = new URLSearchParams(searchParams)
     params.set('limit', newLimit)
-    // If we're on the first page (offset = 0), don't include offset
-    if (offset === 0) {
-      params.delete('offset')
-    }
+    // Reset to first page when changing limit
+    params.delete('page')
     setSearchParams(params, { preventScrollReset: true })
   }
 
@@ -111,33 +107,27 @@ export function PaginationComponent({
           onValueChange={handleLimitChange}
         />
         <div className="flex items-center w-fit">
-          <PaginationPageCounter
-            currentPage={currentPage}
-            totalPages={totalPages}
-          />
+          <PaginationPageCounter currentPage={page} totalPages={totalPages} />
           <PaginationContent>
             <PaginationItem>
-              <PaginationFirst
-                onClick={handleFirst}
-                disabled={currentPage === 1}
-              />
+              <PaginationFirst onClick={handleFirst} disabled={page === 1} />
             </PaginationItem>
             <PaginationItem>
               <PaginationPrevious
                 onClick={handlePrevious}
-                disabled={currentPage === 1}
+                disabled={page === 1}
               />
             </PaginationItem>
             <PaginationItem>
               <PaginationNext
                 onClick={handleNext}
-                disabled={currentPage === totalPages}
+                disabled={page === totalPages}
               />
             </PaginationItem>
             <PaginationItem>
               <PaginationLast
                 onClick={handleLast}
-                disabled={currentPage === totalPages}
+                disabled={page === totalPages}
               />
             </PaginationItem>
           </PaginationContent>

@@ -97,7 +97,15 @@ export default function GlobalActivityFeed() {
         'get-events-global',
         { limit, offset, addresses: initialParams.queryAddresses },
       ],
-      // placeholderData: (previousData) => previousData,
+      placeholderData: (previousData) => {
+        if (previousData) {
+          return {
+            ...previousData,
+            events: previousData.events,
+            total: previousData.total,
+          }
+        }
+      },
       staleTime: 1000 * 60 * 5,
     },
   )
