@@ -10,6 +10,15 @@ export interface OffsetPaginationParams {
   prefix?: string
 }
 
+export const PAGINATION_KEYS = {
+  limit: 'limit',
+  offset: 'offset',
+} as const
+
+/**
+ * Hook for handling offset-based pagination with React Query
+ * Manages URL state and provides helpers for React Query integration
+ */
 export const useOffsetPagination = ({
   defaultLimit = 10,
   prefix,
@@ -26,9 +35,12 @@ export const useOffsetPagination = ({
   // Get current pagination state from URL
   const getPaginationState = (): OffsetPaginationState => {
     const limit = parseInt(
-      searchParams.get(getParamName('limit')) || String(defaultLimit),
+      searchParams.get(getParamName(PAGINATION_KEYS.limit)) ||
+        String(defaultLimit),
     )
-    const offset = parseInt(searchParams.get(getParamName('offset')) || '0')
+    const offset = parseInt(
+      searchParams.get(getParamName(PAGINATION_KEYS.offset)) || '0',
+    )
     return { limit, offset }
   }
 
@@ -40,18 +52,48 @@ export const useOffsetPagination = ({
 
   const onPageChange = (newPage: number) => {
     const newOffset = (newPage - 1) * limit
-    setSearchParams({
-      ...Object.fromEntries(searchParams),
-      [getParamName('offset')]: newOffset.toString(),
-    })
+    setSearchParams(
+      (prev) => {
+        const newParams = new URLSearchParams(prev)
+        newParams.set(
+          getParamName(PAGINATION_KEYS.offset),
+          newOffset.toString(),
+        )
+        return newParams
+      },
+      { preventScrollReset: true },
+    )
   }
 
   const onLimitChange = (newLimit: number) => {
-    setSearchParams({
-      ...Object.fromEntries(searchParams),
-      [getParamName('limit')]: newLimit.toString(),
-      [getParamName('offset')]: '0', // Reset to first page when changing limit
-    })
+    setSearchParams(
+      (prev) => {
+        const newParams = new URLSearchParams(prev)
+        newParams.set(getParamName(PAGINATION_KEYS.limit), newLimit.toString())
+        newParams.set(getParamName(PAGINATION_KEYS.offset), '0')
+        return newParams
+      },
+      { preventScrollReset: true },
+    )
+  }
+
+  /**
+   * Creates a query key array for React Query
+   * @param baseKey - The base key for the query (e.g., ['events', 'global'])
+   * @param additionalParams - Additional parameters to include in the query key
+   */
+  const getQueryKey = (
+    baseKey: readonly unknown[],
+    additionalParams?: Record<string, unknown>,
+  ) => {
+    return [
+      ...baseKey,
+      {
+        limit,
+        offset,
+        ...additionalParams,
+      },
+    ]
   }
 
   return {
@@ -62,7 +104,8 @@ export const useOffsetPagination = ({
     // Actions
     onPageChange,
     onLimitChange,
-    // Helper for React Query
+    // React Query helpers
+    getQueryKey,
     getPaginationState,
   }
 }
