@@ -24,8 +24,6 @@ import { requireUserWallet } from '@server/auth'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
 import { HEADER_BANNER_ACTIVITY, NO_WALLET_ERROR } from 'app/consts'
 
-const EVENTS_QUERY_KEY = ['events', 'global'] as const
-
 export async function loader({ request }: LoaderFunctionArgs) {
   const wallet = await requireUserWallet(request)
   invariant(wallet, NO_WALLET_ERROR)
@@ -40,7 +38,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   logger('Addresses being passed to query:', queryAddresses)
   await queryClient.prefetchQuery({
     queryKey: [
-      ...EVENTS_QUERY_KEY,
+      'get-events-global',
       { limit, offset, addresses: queryAddresses },
     ],
     queryFn: () =>
@@ -48,7 +46,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
         limit,
         offset,
         addresses: queryAddresses,
-        orderBy: [{ blockTimestamp: 'desc' }],
+        orderBy: [
+          { blockTimestamp: 'desc' },
+          { blockNumber: 'desc' },
+          { id: 'desc' },
+        ],
         where: {
           type: {
             _neq: 'FeesTransfered',
@@ -65,17 +67,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 export default function GlobalActivityFeed() {
   const { initialParams } = useLoaderData<typeof loader>()
-  const { limit, offset, currentPage, getQueryKey } = useOffsetPagination({
+  const { limit, offset, currentPage } = useOffsetPagination({
     defaultLimit: 10,
-  })
-
-  const queryKey = getQueryKey(EVENTS_QUERY_KEY, {
-    addresses: initialParams.queryAddresses,
-    where: {
-      type: {
-        _neq: 'FeesTransfered',
-      },
-    },
   })
 
   const {
@@ -88,7 +81,11 @@ export default function GlobalActivityFeed() {
       limit,
       offset,
       addresses: initialParams.queryAddresses,
-      orderBy: [{ blockTimestamp: 'desc' }],
+      orderBy: [
+        { blockTimestamp: 'desc' },
+        { blockNumber: 'desc' },
+        { id: 'desc' },
+      ],
       where: {
         type: {
           _neq: 'FeesTransfered',
@@ -96,9 +93,12 @@ export default function GlobalActivityFeed() {
       },
     },
     {
-      queryKey,
-      placeholderData: (previousData) => previousData,
-      staleTime: 1000 * 60 * 5, // Consider data fresh for 5 minutes
+      queryKey: [
+        'get-events-global',
+        { limit, offset, addresses: initialParams.queryAddresses },
+      ],
+      // placeholderData: (previousData) => previousData,
+      staleTime: 1000 * 60 * 5,
     },
   )
 
