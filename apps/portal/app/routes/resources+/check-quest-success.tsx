@@ -7,7 +7,8 @@ import {
 
 import logger from '@lib/utils/logger'
 import { invariant } from '@lib/utils/misc'
-import { json, LoaderFunctionArgs } from '@remix-run/node'
+import type { LoaderFunction } from '@remix-run/node'
+import { json } from '@remix-run/node'
 import { fetchWrapper } from '@server/api'
 import { requireUser } from '@server/auth'
 
@@ -20,75 +21,119 @@ export type CheckQuestSuccessLoaderData = {
 const RETRY_LIMIT = 10
 const RETRY_DELAY = 3000
 
-export async function loader({ request }: LoaderFunctionArgs) {
-  const user = await requireUser(request)
-  invariant(user, 'Unauthorized')
-  invariant(user.wallet?.address, 'User wallet address is required')
-  const { id: userId } = await fetchWrapper(request, {
-    method: UsersService.getUserByWalletPublic,
-    args: {
-      wallet: user.wallet?.address,
-    },
-  })
+// Change to explicit loader function export
+export const loader: LoaderFunction = async ({ request }) => {
+  console.log('Starting check-quest-success loader - console.log')
+  logger('Starting check-quest-success loader - explicit function')
+  try {
+    const user = await requireUser(request)
+    invariant(user, 'Unauthorized')
+    invariant(user.wallet?.address, 'User wallet address is required')
 
-  const url = new URL(request.url)
-  const userQuestId = url.searchParams.get('userQuestId')
-  invariant(userQuestId, 'userQuestId is required')
+    console.log('User authenticated:', { wallet: user.wallet.address })
+    logger('Fetching user by wallet', { wallet: user.wallet.address })
+    const { id: userId } = await fetchWrapper(request, {
+      method: UsersService.getUserByWalletPublic,
+      args: {
+        wallet: user.wallet?.address,
+      },
+    })
+    logger('Found userId:', userId)
 
-  const userQuest = await fetchWrapper(request, {
-    method: UserQuestsService.getUserQuestById,
-    args: {
+    const url = new URL(request.url)
+    const userQuestId = url.searchParams.get('userQuestId')
+    logger('Extracted userQuestId from URL:', {
       userQuestId,
-    },
-  })
+      url: url.toString(),
+    })
+    invariant(userQuestId, 'userQuestId is required')
 
-  let attempts = 0
+    logger('Fetching userQuest', { userQuestId })
+    const userQuest = await fetchWrapper(request, {
+      method: UserQuestsService.getUserQuestById,
+      args: {
+        userQuestId,
+      },
+    })
+    logger('Found userQuest:', {
+      questId: userQuest.quest_id,
+      status: userQuest.status,
+    })
 
-  while (attempts < RETRY_LIMIT) {
-    try {
-      const status = await fetchWrapper(request, {
-        method: UserQuestsService.checkQuestStatus,
-        args: {
+    let attempts = 0
+
+    while (attempts < RETRY_LIMIT) {
+      try {
+        logger(`Attempt ${attempts + 1}/${RETRY_LIMIT} to check quest status`, {
           questId: userQuest.quest_id,
           userId,
-        },
-      })
+        })
+        const status = await fetchWrapper(request, {
+          method: UserQuestsService.checkQuestStatus,
+          args: {
+            questId: userQuest.quest_id,
+            userId,
+          },
+        })
 
-      logger(
-        'Checking quest_completion_object_id & status',
-        userQuest.quest_completion_object_id,
-        status,
-      )
-
-      if (
-        status === QuestStatus.CLAIMABLE ||
-        status === QuestStatus.COMPLETED
-      ) {
-        logger(
-          'quest_completion_object_Id found & status is claimable/completed',
-          userQuest.quest_completion_object_id,
-        )
-        return json({
-          quest_completion_object_id: userQuest.quest_completion_object_id,
+        logger('Quest status check response:', {
           status,
-          success: true,
-        } as CheckQuestSuccessLoaderData)
-      }
+          questCompletionObjectId: userQuest.quest_completion_object_id,
+        })
 
-      attempts++
-      await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY))
-    } catch (error) {
-      if (error instanceof ApiError && error.status === 404) {
-        logger('UserQuest not found, retrying...')
+        if (
+          status === QuestStatus.CLAIMABLE ||
+          status === QuestStatus.COMPLETED
+        ) {
+          logger('Quest is claimable/completed, returning success')
+          return json({
+            quest_completion_object_id: userQuest.quest_completion_object_id,
+            status,
+            success: true,
+          } as CheckQuestSuccessLoaderData)
+        }
+
+        logger(`Status not claimable/completed (${status}), retrying...`)
         attempts++
         await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY))
-      } else {
-        throw error
+      } catch (error) {
+        logger('Error during quest status check:', {
+          error,
+          attempt: attempts + 1,
+          questId: userQuest.quest_id,
+          userId,
+        })
+
+        if (error instanceof ApiError && error.status === 404) {
+          logger('UserQuest not found error, retrying...', {
+            attempt: attempts + 1,
+          })
+          attempts++
+          await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY))
+        } else {
+          throw error
+        }
       }
     }
-  }
 
-  return json({
-    success: false,
-  } as CheckQuestSuccessLoaderData)
+    logger('Retry limit reached without success')
+    return json({
+      success: false,
+    } as CheckQuestSuccessLoaderData)
+  } catch (error) {
+    logger('Unexpected error in check-quest-success loader:', error)
+    // Return error response instead of throwing
+    return json(
+      {
+        success: false,
+        error: error instanceof Error ? error.message : 'Unknown error',
+      },
+      { status: 500 },
+    )
+  }
+}
+
+// Add default export for the route
+export default function CheckQuestSuccess() {
+  return null
 }

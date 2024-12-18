@@ -316,20 +316,42 @@ export default function Quests() {
     direction?: 'for' | 'against'
   }) {
     const { claim } = args
-    logger('Activity success', claim)
+    logger('Activity success', {
+      claimId: claim?.claim_id,
+      questStatus: userQuest?.status,
+      questId: quest.id,
+      direction: args.direction,
+    })
+
+    // Only check if we're not already in a completed or claimable state
     if (
-      claim &&
-      userQuest.status !== QuestStatus.CLAIMABLE &&
-      userQuest.status !== QuestStatus.COMPLETED
+      userQuest?.status !== QuestStatus.COMPLETED &&
+      userQuest?.status !== QuestStatus.CLAIMABLE
     ) {
       logger('Firing off check quest success')
       checkQuestSuccess()
+    } else {
+      logger(
+        'Skipping quest status check - quest already completed/claimable',
+        {
+          status: userQuest?.status,
+        },
+      )
     }
   }
 
   // TODO: This is a temporary fix to ensure the quest completes when the user stakes the claim, remove once backend is properly setting the quest_completion_object_id
   useEffect(() => {
-    if (claim && claim.user_assets) {
+    if (
+      claim &&
+      claim.user_assets &&
+      userQuest?.status !== QuestStatus.COMPLETED &&
+      userQuest?.status !== QuestStatus.CLAIMABLE
+    ) {
+      logger('Auto-checking quest status due to user assets', {
+        userAssets: claim.user_assets,
+        questStatus: userQuest?.status,
+      })
       checkQuestSuccess()
     }
   }, [claim])
@@ -339,6 +361,17 @@ export default function Quests() {
       setSuccessModalOpen(true)
     }
   }, [actionData])
+
+  // Add timeout effect for loading state
+  useEffect(() => {
+    if (checkQuestSuccessLoading) {
+      const timeout = setTimeout(() => {
+        logger('Force resetting loading state after timeout')
+        revalidate() // Force a refresh
+      }, 10000) // 10 seconds
+      return () => clearTimeout(timeout)
+    }
+  }, [checkQuestSuccessLoading])
 
   return (
     <div className="px-10 w-full max-w-7xl mx-auto flex flex-col gap-10 max-lg:px-4 max-md:gap-4">

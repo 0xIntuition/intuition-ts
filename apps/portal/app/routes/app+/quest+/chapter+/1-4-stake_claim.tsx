@@ -314,13 +314,27 @@ export default function Quests() {
     direction?: 'for' | 'against'
   }) {
     const { claim } = args
-    logger('Activity success', claim)
+    logger('Activity success', {
+      claimId: claim?.claim_id,
+      questStatus: userQuest?.status,
+      questId: quest.id,
+      direction: args.direction,
+    })
+
+    // Only check if we're not already in a completed or claimable state
     if (
-      (claim && userQuest.status !== QuestStatus.CLAIMABLE) ||
-      userQuest.status !== QuestStatus.COMPLETED
+      userQuest?.status !== QuestStatus.COMPLETED &&
+      userQuest?.status !== QuestStatus.CLAIMABLE
     ) {
       logger('Firing off check quest success')
       checkQuestSuccess()
+    } else {
+      logger(
+        'Skipping quest status check - quest already completed/claimable',
+        {
+          status: userQuest?.status,
+        },
+      )
     }
   }
 
@@ -329,6 +343,17 @@ export default function Quests() {
       setSuccessModalOpen(true)
     }
   }, [actionData])
+
+  // Add timeout effect for loading state
+  useEffect(() => {
+    if (checkQuestSuccessLoading) {
+      const timeout = setTimeout(() => {
+        logger('Force resetting loading state after timeout')
+        revalidate() // Force a refresh
+      }, 10000) // 10 seconds
+      return () => clearTimeout(timeout)
+    }
+  }, [checkQuestSuccessLoading])
 
   return (
     <div className="px-10 w-full max-w-7xl mx-auto flex flex-col gap-10 max-lg:px-4 max-md:gap-4">

@@ -33,7 +33,12 @@ import logger from '@lib/utils/logger'
 import { invariant } from '@lib/utils/misc'
 import { getQuestCriteria, getQuestId, QuestRouteId } from '@lib/utils/quest'
 import { ActionFunctionArgs, json, LoaderFunctionArgs } from '@remix-run/node'
-import { Form, useActionData, useLoaderData } from '@remix-run/react'
+import {
+  Form,
+  useActionData,
+  useLoaderData,
+  useRevalidator,
+} from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUser, requireUserId } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
@@ -175,6 +180,7 @@ export default function Quests() {
   const [stakeModalActive, setStakeModalActive] = useAtom(stakeModalAtom)
   const { introBody, mainBody, closingBody } = useQuestMdxContent(quest?.id)
   const actionData = useActionData<typeof action>()
+  const { revalidate } = useRevalidator()
 
   function handleDepositActivityClick() {
     setStakeModalActive((prevState) => ({
@@ -212,9 +218,24 @@ export default function Quests() {
     vaultDetailsProp?: VaultDetailsType
     direction?: 'for' | 'against'
   }) {
-    logger('Activity success', args.identity)
-    if (userQuest?.status !== QuestStatus.COMPLETED) {
+    logger('Activity success', {
+      identity: args.identity,
+      currentQuestStatus: userQuest?.status,
+    })
+
+    // Only check if we're not already in a completed or claimable state
+    if (
+      userQuest?.status !== QuestStatus.COMPLETED &&
+      userQuest?.status !== QuestStatus.CLAIMABLE
+    ) {
       checkQuestSuccess()
+    } else {
+      logger(
+        'Skipping quest status check - quest already completed/claimable',
+        {
+          status: userQuest?.status,
+        },
+      )
     }
   }
 
@@ -223,6 +244,17 @@ export default function Quests() {
       setSuccessModalOpen(true)
     }
   }, [actionData])
+
+  // Add timeout effect for loading state
+  useEffect(() => {
+    if (checkQuestSuccessLoading) {
+      const timeout = setTimeout(() => {
+        logger('Force resetting loading state after timeout')
+        revalidate() // Force a refresh
+      }, 10000) // 10 seconds
+      return () => clearTimeout(timeout)
+    }
+  }, [checkQuestSuccessLoading])
 
   return (
     <div className="px-10 w-full max-w-7xl mx-auto flex flex-col gap-10 max-lg:px-4 max-md:gap-4">

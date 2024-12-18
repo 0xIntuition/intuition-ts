@@ -36,7 +36,13 @@ import logger from '@lib/utils/logger'
 import { invariant } from '@lib/utils/misc'
 import { getQuestCriteria, getQuestId, QuestRouteId } from '@lib/utils/quest'
 import { ActionFunctionArgs, json, LoaderFunctionArgs } from '@remix-run/node'
-import { Await, Form, useActionData, useLoaderData } from '@remix-run/react'
+import {
+  Await,
+  Form,
+  useActionData,
+  useLoaderData,
+  useRevalidator,
+} from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUser, requireUserId } from '@server/auth'
 import { getUserQuest } from '@server/quest'
@@ -144,15 +150,44 @@ export default function Quests() {
   const { quest, userQuest, userWallet, claim, globalListClaims } =
     useLoaderData<typeof loader>()
   const actionData = useActionData<typeof action>()
-  const { successModalOpen, setSuccessModalOpen } =
-    useQuestCompletion(userQuest)
+  const {
+    successModalOpen,
+    setSuccessModalOpen,
+    isLoading: checkQuestSuccessLoading,
+  } = useQuestCompletion(userQuest)
   const { introBody, mainBody, closingBody } = useQuestMdxContent(quest.id)
+  const { revalidate } = useRevalidator()
 
   useEffect(() => {
     if (actionData?.success) {
+      logger('Action data success, opening success modal', {
+        questStatus: userQuest?.status,
+        questId: quest.id,
+      })
       setSuccessModalOpen(true)
     }
-  }, [actionData])
+  }, [actionData?.success])
+
+  // Add logging for status changes
+  useEffect(() => {
+    logger('Quest status updated', {
+      questStatus: userQuest?.status,
+      questId: quest.id,
+      isClaimable: userQuest?.status === QuestStatus.CLAIMABLE,
+      isCompleted: userQuest?.status === QuestStatus.COMPLETED,
+    })
+  }, [userQuest?.status])
+
+  // Add timeout effect for loading state
+  useEffect(() => {
+    if (checkQuestSuccessLoading) {
+      const timeout = setTimeout(() => {
+        logger('Force resetting loading state after timeout')
+        revalidate() // Force a refresh
+      }, 10000) // 10 seconds
+      return () => clearTimeout(timeout)
+    }
+  }, [checkQuestSuccessLoading])
 
   const [saveListModalActive, setSaveListModalActive] =
     useAtom(saveListModalAtom)
