@@ -67,6 +67,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
   )
 }
 
+// Our Providers aren't wrapped with ClientOnly yet -- we can revisit the necessity once we bring Privy in
 export default function App() {
   return (
     <main className="relative flex min-h-screen w-full flex-col justify-between antialiased">
