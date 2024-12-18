@@ -3,6 +3,7 @@
 Apps
 
 - [ ] data populator
+- [ ] launchpad
 - [ ] portal
 - [ ] template
 
