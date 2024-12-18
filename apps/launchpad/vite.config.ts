@@ -7,7 +7,7 @@ import { defineConfig } from 'vite'
 // import envOnly from 'vite-env-only'
 import tsconfigPaths from 'vite-tsconfig-paths'
 
-import { themePreset } from '../../packages/1ui/src/styles/index'
+import { themePreset } from '../../packages/1ui/src/styles'
 
 installGlobals()
 

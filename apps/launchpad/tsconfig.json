@@ -17,13 +17,12 @@
       "@server/*": ["app/.server/*"],
       "@client/*": ["app/.client/*"],
       "@images/*": ["./src/images/*"],
-      "@assets/*": ["app/assets/*"],
-      "content-collections": ["./.content-collections/generated"]
+      "@assets/*": ["app/assets/*"]
     },
     "outDir": "./build"
   },
   "include": ["**/*.ts", "**/*.tsx", "tailwind.config.js"],
-  "exclude": ["node_modules", "build", "./.content-collections"],
+  "exclude": ["node_modules", "build"],
   "references": [
     {
       "path": "../../packages/1ui"
