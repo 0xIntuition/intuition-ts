@@ -19,9 +19,9 @@ configureClient({
   apiUrl: API_URL_LOCAL,
 })
 
-export const meta: MetaFunction = ({ data }) => {
+export const meta: MetaFunction = () => {
   return [
-    { title: data ? 'Intuition Launchpad' : 'Error | Intuition Launchpad' },
+    { title: 'Intuition Launchpad' },
     {
       name: 'description',
       content: `Intuition is an ecosystem of technologies composing a universal and permissionless knowledge graph, capable of handling both objective facts and subjective opinions - delivering superior data for intelligences across the spectrum, from human to artificial.`,
