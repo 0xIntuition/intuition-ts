@@ -1,0 +1,55 @@
+{
+  "name": "@0xintuition/launchpad",
+  "version": "0.0.1",
+  "sideEffects": false,
+  "type": "module",
+  "scripts": {
+    "build": "remix vite:build --emptyOutDir",
+    "dev": "remix vite:dev",
+    "start": "NODE_OPTIONS='--import ./instrumentation.server.mjs' PORT=8080 remix-serve ./build/server/index.js",
+    "lint:fix": "pnpm lint --fix"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/0xIntuition/intuition-ts",
+    "directory": "apps/launchpad"
+  },
+  "dependencies": {
+    "@0xintuition/1ui": "workspace:^",
+    "@0xintuition/graphql": "workspace:^",
+    "@privy-io/react-auth": "^1.97.0",
+    "@privy-io/wagmi": "^0.2.13",
+    "@remix-run/node": "^2.15.1",
+    "@remix-run/react": "^2.15.1",
+    "@remix-run/serve": "^2.15.1",
+    "@tanstack/react-query": "^5.32.0",
+    "class-variance-authority": "^0.7.0",
+    "isbot": "^4.1.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "tailwind-merge": "^2.3.0"
+  },
+  "devDependencies": {
+    "@remix-run/dev": "^2.15.1",
+    "@types/react": "^18.2.20",
+    "@types/react-dom": "^18.2.7",
+    "@typescript-eslint/eslint-plugin": "^6.7.4",
+    "@typescript-eslint/parser": "^6.7.4",
+    "autoprefixer": "^10.4.19",
+    "eslint": "^8.38.0",
+    "eslint-import-resolver-typescript": "^3.6.1",
+    "eslint-plugin-import": "^2.28.1",
+    "eslint-plugin-jsx-a11y": "^6.7.1",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "postcss": "^8.4.38",
+    "remix-flat-routes": "^0.6.4",
+    "tailwindcss": "^3.4.4",
+    "typescript": "^5.1.6",
+    "vite": "^5.1.0",
+    "vite-tsconfig-paths": "^4.2.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

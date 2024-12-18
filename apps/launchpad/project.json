@@ -1,0 +1,41 @@
+{
+  "name": "@0xintuition/launchpad",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/launchpad",
+  "projectType": "application",
+  "tags": [],
+  "targets": {
+    "build": {
+      "configurations": {
+        "development": {
+          "mode": "development"
+        },
+        "staging": {
+          "mode": "staging"
+        },
+        "production": {
+          "mode": "production"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "options": {
+        "lintFilePatterns": ["apps/launchpad/**/*.{ts,tsx,js,jsx}"]
+      }
+    },
+    "test": {
+      "executor": "@nx/vite:test",
+      "options": {
+        "config": "apps/launchpad/vitest.config.ts"
+      }
+    },
+    "typecheck": {
+      "dependsOn": ["^build"],
+      "command": "tsc",
+      "options": {
+        "cwd": "apps/launchpad"
+      }
+    }
+  }
+}
