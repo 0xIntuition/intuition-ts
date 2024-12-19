@@ -12,6 +12,9 @@ services:
       - type: bind
         source: ./foundry.toml
         target: /app/foundry.toml
+      - type: bind
+        source: ./lib
+        target: /app/lib
     command: >
       anvil
       --host 0.0.0.0

@@ -43,7 +43,7 @@ export const action: ActionFunction = async ({ request }) => {
 
       await execAsync(`docker exec bonding-curves-anvil-1 bash -c "echo '${escapedContent}' > /app/contracts/${fileName}"`)
 
-      // Compile
+      // Compile using the remappings from the container's remappings.txt
       let { stdout, stderr } = await execAsync('docker exec bonding-curves-anvil-1 forge build --force --sizes')
       console.log('Compilation output:', stdout)
       if (stderr) {

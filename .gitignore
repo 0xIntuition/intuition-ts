@@ -12,3 +12,4 @@ packages/1ui/storybook-static
 .secrets
 act.sh
 .cursorrules
+apps/bonding-curves/lib/prb-math/
