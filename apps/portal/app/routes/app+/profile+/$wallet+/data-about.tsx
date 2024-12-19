@@ -28,6 +28,7 @@ import DataAboutHeader from '@components/profile/data-about-header'
 import { RevalidateButton } from '@components/revalidate-button'
 import { DataHeaderSkeleton, PaginatedListSkeleton } from '@components/skeleton'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
+import { useOffsetPagination } from '@lib/hooks/useOffsetPagination'
 import { detailCreateClaimModalAtom } from '@lib/state/store'
 import logger from '@lib/utils/logger'
 import { formatBalance, invariant } from '@lib/utils/misc'
@@ -47,7 +48,17 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const queryAddress = wallet.toLowerCase()
 
   const url = new URL(request.url)
-  // const searchParams = new URLSearchParams(url.search)
+  const triplesLimit = parseInt(url.searchParams.get('claimsLimit') || '10')
+  const triplesOffset = parseInt(url.searchParams.get('claimsOffset') || '0')
+  const triplesOrderBy = url.searchParams.get('claimsSortBy')
+
+  const positionsLimit = parseInt(
+    url.searchParams.get('positionsLimit') || '10',
+  )
+  const positionsOffset = parseInt(
+    url.searchParams.get('positionsOffset') || '0',
+  )
+  const positionsOrderBy = url.searchParams.get('positionsSortBy')
 
   const queryClient = new QueryClient()
 
@@ -69,12 +80,6 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     queryKey: ['get-account', { address: queryAddress }],
     queryFn: () => accountResult,
   })
-
-  // TODO: once we fully fix sort/pagination, we'll want to update these to use triples instead of claims, and orderBy instead of sortBy in the actual query params
-  const triplesLimit = parseInt(url.searchParams.get('claimsLimit') || '10')
-
-  const triplesOffset = parseInt(url.searchParams.get('claimsOffset') || '0')
-  const triplesOrderBy = url.searchParams.get('claimsSortBy')
 
   const atomId = accountResult.account.atomId
   logger('atomId', atomId)
@@ -98,15 +103,6 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
       },
     ],
   }
-
-  const positionsLimit = parseInt(
-    url.searchParams.get('positionsLimit') || '10',
-  )
-
-  const positionsOffset = parseInt(
-    url.searchParams.get('positionsOffset') || '0',
-  )
-  const positionsOrderBy = url.searchParams.get('positionsSortBy')
 
   const positionsWhere = {
     vaultId: { _eq: atomId },
@@ -183,6 +179,28 @@ export default function ProfileDataAbout() {
     detailCreateClaimModalAtom,
   )
 
+  const {
+    offset: triplesOffset,
+    limit: triplesLimit,
+    onOffsetChange: onTriplesOffsetChange,
+    onLimitChange: onTriplesLimitChange,
+  } = useOffsetPagination({
+    paramPrefix: 'claims',
+    initialOffset: initialParams.triplesOffset,
+    initialLimit: initialParams.triplesLimit,
+  })
+
+  const {
+    offset: positionsOffset,
+    limit: positionsLimit,
+    onOffsetChange: onPositionsOffsetChange,
+    onLimitChange: onPositionsLimitChange,
+  } = useOffsetPagination({
+    paramPrefix: 'positions',
+    initialOffset: initialParams.positionsOffset,
+    initialLimit: initialParams.positionsLimit,
+  })
+
   logger('initialParams', initialParams)
   const { data: atomResult, isLoading: isLoadingAtom } = useGetAtomQuery(
     {
@@ -203,8 +221,8 @@ export default function ProfileDataAbout() {
   } = useGetTriplesWithPositionsQuery(
     {
       where: initialParams.triplesWhere,
-      limit: initialParams.triplesLimit,
-      offset: initialParams.triplesOffset,
+      limit: triplesLimit,
+      offset: triplesOffset,
       orderBy: initialParams.triplesOrderBy
         ? [{ [initialParams.triplesOrderBy]: 'desc' }]
         : undefined,
@@ -215,8 +233,8 @@ export default function ProfileDataAbout() {
         'get-triples-with-positions',
         {
           where: initialParams.triplesWhere,
-          limit: initialParams.triplesLimit,
-          offset: initialParams.triplesOffset,
+          limit: triplesLimit,
+          offset: triplesOffset,
           orderBy: initialParams.triplesOrderBy,
           address: queryAddress,
         },
@@ -234,8 +252,8 @@ export default function ProfileDataAbout() {
   } = useGetPositionsQuery(
     {
       where: initialParams.positionsWhere,
-      limit: initialParams.positionsLimit,
-      offset: initialParams.positionsOffset,
+      limit: positionsLimit,
+      offset: positionsOffset,
       orderBy: initialParams.positionsOrderBy
         ? [{ [initialParams.positionsOrderBy]: 'desc' }]
         : undefined,
@@ -245,8 +263,8 @@ export default function ProfileDataAbout() {
         'get-atom-positions',
         {
           where: initialParams.positionsWhere,
-          limit: initialParams.positionsLimit,
-          offset: initialParams.positionsOffset,
+          limit: positionsLimit,
+          offset: positionsOffset,
           orderBy: initialParams.positionsOrderBy,
         },
       ],
@@ -278,32 +296,14 @@ export default function ProfileDataAbout() {
             </Button>
           </div>
           <Suspense fallback={<DataHeaderSkeleton />}>
-            {isLoadingTriples || isLoadingAtom ? (
-              <DataHeaderSkeleton />
-            ) : isErrorTriples ? (
-              <ErrorStateCard
-                title="Failed to load claims"
-                message={
-                  (errorTriples as Error)?.message ??
-                  'An unexpected error occurred'
-                }
-              />
-            ) : (
-              <DataAboutHeader
-                variant="claims"
-                atomImage={atomResult?.atom?.image ?? ''}
-                atomLabel={atomResult?.atom?.label ?? ''}
-                atomVariant="user" // TODO: Determine based on atom type
-                totalClaims={triplesResult?.total?.aggregate?.count ?? 0}
-                totalStake={0} // TODO: need to find way to get the shares -- may need to update the schema
-                // totalStake={
-                //   +formatBalance(
-                //     triplesResult?.total?.aggregate?.sums?.shares ?? 0,
-                //     18,
-                //   )
-                // }
-              />
-            )}
+            <DataAboutHeader
+              variant="claims"
+              atomImage={atomResult?.atom?.image ?? ''}
+              atomLabel={atomResult?.atom?.label ?? ''}
+              atomVariant="user" // TODO: Determine based on atom type
+              totalClaims={triplesResult?.total?.aggregate?.count ?? 0}
+              totalStake={0} // TODO: need to find way to get the shares -- may need to update the schema
+            />
           </Suspense>
           <Suspense fallback={<PaginatedListSkeleton />}>
             {isLoadingTriples ? (
@@ -321,35 +321,34 @@ export default function ProfileDataAbout() {
             ) : (
               <ClaimsAboutIdentity
                 claims={triplesResult?.triples ?? []}
-                pagination={triplesResult?.total?.aggregate?.count ?? {}}
+                pagination={{
+                  totalEntries: triplesResult?.total?.aggregate?.count ?? 0,
+                  limit: triplesLimit,
+                  offset: triplesOffset,
+                  onOffsetChange: onTriplesOffsetChange,
+                  onLimitChange: onTriplesLimitChange,
+                }}
                 paramPrefix="claims"
-                enableSearch={false} // TODO: (ENG-4481) Re-enable search and sort
-                enableSort={false} // TODO: (ENG-4481) Re-enable search and sort
+                enableSearch={false}
+                enableSort={false}
               />
             )}
           </Suspense>
         </div>
-        <div className="flex flex-col pt-4 w-full gap-6">
+        <div className="flex flex-col w-full gap-6">
           <div className="self-stretch justify-between items-center inline-flex">
             <Text
               variant="headline"
               weight="medium"
               className="text-secondary-foreground w-full"
+              id="positions"
             >
               Positions on this Identity
             </Text>
           </div>
           <Suspense fallback={<DataHeaderSkeleton />}>
-            {isLoadingTriples || isLoadingAtom ? (
+            {isLoadingPositions && isLoadingAtom ? (
               <DataHeaderSkeleton />
-            ) : isErrorTriples ? (
-              <ErrorStateCard
-                title="Failed to load claims"
-                message={
-                  (errorTriples as Error)?.message ??
-                  'An unexpected error occurred'
-                }
-              />
             ) : (
               <DataAboutHeader
                 variant="positions"
@@ -357,7 +356,6 @@ export default function ProfileDataAbout() {
                 atomLabel={atomResult?.atom?.label ?? ''}
                 atomVariant="user" // TODO: Determine based on atom type
                 totalPositions={positionsResult?.total?.aggregate?.count ?? 0}
-                // totalStake={0} // TODO: need to find way to get the shares -- may need to update the schema
                 totalStake={
                   +formatBalance(
                     positionsResult?.total?.aggregate?.sum?.shares ?? 0,
@@ -383,7 +381,15 @@ export default function ProfileDataAbout() {
             ) : (
               <PositionsOnIdentity
                 positions={positionsResult?.positions ?? []}
-                pagination={positionsResult?.total?.aggregate?.count ?? {}}
+                pagination={{
+                  totalEntries: positionsResult?.total?.aggregate?.count ?? 0,
+                  limit: positionsLimit,
+                  offset: positionsOffset,
+                  onOffsetChange: onPositionsOffsetChange,
+                  onLimitChange: onPositionsLimitChange,
+                }}
+                paramPrefix="positions"
+                readOnly={false}
               />
             )}
           </Suspense>

@@ -42,6 +42,7 @@ import {
   PaginatedListSkeleton,
   TabsSkeleton,
 } from '@components/skeleton'
+import { useOffsetPagination } from '@lib/hooks/useOffsetPagination'
 import logger from '@lib/utils/logger'
 import { formatBalance, invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
@@ -55,7 +56,7 @@ type Triple = NonNullable<
   NonNullable<GetTriplesWithPositionsQuery['triples']>[number]
 >
 
-export async function loader({ request }: LoaderFunctionArgs) {
+export async function loader({ request, params }: LoaderFunctionArgs) {
   const user = await requireUser(request)
   invariant(user, 'User not found')
   invariant(user.wallet?.address, 'User wallet not found')
@@ -65,10 +66,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const queryAddress = userWallet.toLowerCase()
 
   const url = new URL(request.url)
-  // const searchParams = new URLSearchParams(url.search)
   const queryClient = new QueryClient()
-
-  // TODO: once we fully fix sort/pagination, we'll want to update these to use triples instead of claims, and orderBy instead of sortBy in the actual query params
 
   const atomsWhere = {
     creator: {
@@ -97,7 +95,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
     },
   }
 
-  // this query is effectively the same as using a Claims query, but this query is more flexible
   const triplePositionsWhere = {
     accountId: {
       _eq: queryAddress,
@@ -108,40 +105,43 @@ export async function loader({ request }: LoaderFunctionArgs) {
       },
     },
   }
-  const atomsLimit = parseInt(url.searchParams.get('claimsLimit') || '10')
-  const atomsOffset = parseInt(url.searchParams.get('claimsOffset') || '0')
-  const atomsOrderBy = url.searchParams.get('claimsSortBy')
-  // const atomsOrderBy = [
-  //   {
-  //     vault: {
-  //       totalShares: 'desc',
-  //     },
-  //   },
-  // ] // we may want to use this as the fallback. will work on when we handle the sorts
-  const triplesLimit = parseInt(url.searchParams.get('claimsLimit') || '10')
-  const triplesOffset = parseInt(url.searchParams.get('claimsOffset') || '0')
-  const triplesOrderBy = url.searchParams.get('claimsSortBy')
+
+  const atomsLimit = parseInt(
+    url.searchParams.get('createdIdentitiesLimit') || '10',
+  )
+  const atomsOffset = parseInt(
+    url.searchParams.get('createdIdentitiesOffset') || '0',
+  )
+  const atomsOrderBy = url.searchParams.get('createdIdentitiesSortBy')
+
+  const triplesLimit = parseInt(
+    url.searchParams.get('createdClaimsLimit') || '10',
+  )
+  const triplesOffset = parseInt(
+    url.searchParams.get('createdClaimsOffset') || '0',
+  )
+  const triplesOrderBy = url.searchParams.get('createdClaimsSortBy')
 
   const atomPositionsLimit = parseInt(
-    url.searchParams.get('claimsLimit') || '10',
+    url.searchParams.get('atomPositionsLimit') || '10',
   )
   const atomPositionsOffset = parseInt(
-    url.searchParams.get('claimsOffset') || '0',
+    url.searchParams.get('atomPositionsOffset') || '0',
   )
-  const atomPositionsOrderBy = url.searchParams.get('claimsSortBy')
-    ? [{ [url.searchParams.get('claimsSortBy')!]: 'desc' }]
+  const atomPositionsOrderBy = url.searchParams.get('atomPositionsSortBy')
+    ? [{ [url.searchParams.get('atomPositionsSortBy')!]: 'desc' }]
     : undefined
 
   const triplePositionsLimit = parseInt(
-    url.searchParams.get('claimsLimit') || '10',
+    url.searchParams.get('triplePositionsLimit') || '10',
   )
   const triplePositionsOffset = parseInt(
-    url.searchParams.get('claimsOffset') || '0',
+    url.searchParams.get('triplePositionsOffset') || '0',
   )
-
-  const triplePositionsOrderBy = url.searchParams.get('claimsSortBy')
-    ? [{ [url.searchParams.get('claimsSortBy')!]: 'desc' }]
+  const triplePositionsOrderBy = url.searchParams.get('triplePositionsSortBy')
+    ? [{ [url.searchParams.get('triplePositionsSortBy')!]: 'desc' }]
     : undefined
+
   await queryClient.prefetchQuery({
     queryKey: [
       'get-atoms-with-positions',
@@ -189,6 +189,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
         address: queryAddress,
       })(),
   })
+
   await queryClient.prefetchQuery({
     queryKey: ['get-atom-positions', { where: atomPositionsWhere }],
     queryFn: () =>
@@ -275,6 +276,51 @@ const TabContent = ({
 
 export default function ProfileDataCreated() {
   const { queryAddress, initialParams } = useLoaderData<typeof loader>()
+  const [searchParams] = useSearchParams()
+
+  const {
+    offset: atomPositionsOffset,
+    limit: atomPositionsLimit,
+    onOffsetChange: onAtomPositionsOffsetChange,
+    onLimitChange: onAtomPositionsLimitChange,
+  } = useOffsetPagination({
+    paramPrefix: 'atomPositions',
+    initialOffset: initialParams.atomPositionsOffset,
+    initialLimit: initialParams.atomPositionsLimit,
+  })
+
+  const {
+    offset: triplePositionsOffset,
+    limit: triplePositionsLimit,
+    onOffsetChange: onTriplePositionsOffsetChange,
+    onLimitChange: onTriplePositionsLimitChange,
+  } = useOffsetPagination({
+    paramPrefix: 'triplePositions',
+    initialOffset: initialParams.triplePositionsOffset,
+    initialLimit: initialParams.triplePositionsLimit,
+  })
+
+  const {
+    offset: createdIdentitiesOffset,
+    limit: createdIdentitiesLimit,
+    onOffsetChange: onCreatedIdentitiesOffsetChange,
+    onLimitChange: onCreatedIdentitiesLimitChange,
+  } = useOffsetPagination({
+    paramPrefix: 'createdIdentities',
+    initialOffset: initialParams.atomsOffset,
+    initialLimit: initialParams.atomsLimit,
+  })
+
+  const {
+    offset: createdClaimsOffset,
+    limit: createdClaimsLimit,
+    onOffsetChange: onCreatedClaimsOffsetChange,
+    onLimitChange: onCreatedClaimsLimitChange,
+  } = useOffsetPagination({
+    paramPrefix: 'createdClaims',
+    initialOffset: initialParams.triplesOffset,
+    initialLimit: initialParams.triplesLimit,
+  })
 
   const { data: accountResult } = useGetAccountQuery(
     {
@@ -295,8 +341,8 @@ export default function ProfileDataCreated() {
   } = useGetAtomsWithPositionsQuery(
     {
       where: initialParams.atomsWhere,
-      limit: initialParams.atomsLimit,
-      offset: initialParams.atomsOffset,
+      limit: createdIdentitiesLimit,
+      offset: createdIdentitiesOffset,
       orderBy: initialParams.atomsOrderBy
         ? [{ [initialParams.atomsOrderBy]: 'desc' }]
         : undefined,
@@ -307,8 +353,8 @@ export default function ProfileDataCreated() {
         'get-atoms-with-positions',
         {
           where: initialParams.atomsWhere,
-          limit: initialParams.atomsLimit,
-          offset: initialParams.atomsOffset,
+          limit: createdIdentitiesLimit,
+          offset: createdIdentitiesOffset,
           orderBy: initialParams.atomsOrderBy,
           address: initialParams.queryAddress,
         },
@@ -326,8 +372,8 @@ export default function ProfileDataCreated() {
   } = useGetTriplesWithPositionsQuery(
     {
       where: initialParams.triplesWhere,
-      limit: initialParams.triplesLimit,
-      offset: initialParams.triplesOffset,
+      limit: createdClaimsLimit,
+      offset: createdClaimsOffset,
       orderBy: initialParams.triplesOrderBy
         ? [{ [initialParams.triplesOrderBy]: 'desc' }]
         : [
@@ -339,14 +385,13 @@ export default function ProfileDataCreated() {
           ],
       address: queryAddress,
     },
-
     {
       queryKey: [
         'get-triples-with-positions',
         {
           where: initialParams.triplesWhere,
-          limit: initialParams.triplesLimit,
-          offset: initialParams.triplesOffset,
+          limit: createdClaimsLimit,
+          offset: createdClaimsOffset,
           orderBy: initialParams.triplesOrderBy,
           address: queryAddress,
         },
@@ -364,27 +409,17 @@ export default function ProfileDataCreated() {
   } = useGetPositionsQuery(
     {
       where: initialParams.atomPositionsWhere,
-      limit: initialParams.atomPositionsLimit,
-      offset: initialParams.atomPositionsOffset,
+      limit: atomPositionsLimit,
+      offset: atomPositionsOffset,
       orderBy: initialParams.atomPositionsOrderBy,
-      // orderBy: [
-      //   {
-      //     vault: {
-      //       totalShares: 'desc',
-      //     },
-      //   },
-      // ],
-      // orderBy: initialParams.atomsOrderBy
-      //   ? [{ [initialParams.atomsOrderBy]: 'desc' }]
-      //   : undefined,
     },
     {
       queryKey: [
         'get-atom-positions',
         {
           where: initialParams.atomPositionsWhere,
-          limit: initialParams.atomPositionsLimit,
-          offset: initialParams.atomPositionsOffset,
+          limit: atomPositionsLimit,
+          offset: atomPositionsOffset,
           orderBy: initialParams.atomPositionsOrderBy,
         },
       ],
@@ -401,8 +436,8 @@ export default function ProfileDataCreated() {
   } = useGetPositionsQuery(
     {
       where: initialParams.triplePositionsWhere,
-      limit: initialParams.triplePositionsLimit,
-      offset: initialParams.triplePositionsOffset,
+      limit: triplePositionsLimit,
+      offset: triplePositionsOffset,
       orderBy: initialParams.triplePositionsOrderBy,
     },
     {
@@ -410,8 +445,8 @@ export default function ProfileDataCreated() {
         'get-triple-positions',
         {
           where: initialParams.triplePositionsWhere,
-          limit: initialParams.triplePositionsLimit,
-          offset: initialParams.triplePositionsOffset,
+          limit: triplePositionsLimit,
+          offset: triplePositionsOffset,
           orderBy: initialParams.triplePositionsOrderBy,
         },
       ],
@@ -420,7 +455,6 @@ export default function ProfileDataCreated() {
 
   logger('Triple Positions Result (Client):', triplePositionsResult)
 
-  const [searchParams] = useSearchParams()
   const positionDirection = searchParams.get('positionDirection')
 
   return (
@@ -503,9 +537,15 @@ export default function ProfileDataCreated() {
                   {atomPositionsResult && (
                     <ActivePositionsOnIdentities
                       identities={atomPositionsResult.positions}
-                      pagination={
-                        atomPositionsResult.total?.aggregate?.count ?? 0
-                      }
+                      pagination={{
+                        totalEntries:
+                          atomPositionsResult.total?.aggregate?.count ?? 0,
+                        limit: atomPositionsLimit,
+                        offset: atomPositionsOffset,
+                        onOffsetChange: onAtomPositionsOffsetChange,
+                        onLimitChange: onAtomPositionsLimitChange,
+                      }}
+                      paramPrefix="atomPositions"
                     />
                   )}
                 </TabContent>
@@ -552,11 +592,14 @@ export default function ProfileDataCreated() {
                     <ActivePositionsOnClaims
                       positions={triplePositionsResult?.positions ?? []}
                       pagination={{
-                        aggregate: {
-                          count:
-                            triplePositionsResult?.total?.aggregate?.count ?? 0,
-                        },
+                        totalEntries:
+                          triplePositionsResult?.total?.aggregate?.count ?? 0,
+                        limit: triplePositionsLimit,
+                        offset: triplePositionsOffset,
+                        onOffsetChange: onTriplePositionsOffsetChange,
+                        onLimitChange: onTriplePositionsLimitChange,
                       }}
+                      paramPrefix="triplePositions"
                       positionDirection={positionDirection ?? undefined}
                     />
                   )}
@@ -631,19 +674,21 @@ export default function ProfileDataCreated() {
                 totalResults={atomsCreatedResult?.total?.aggregate?.count}
                 atomImage={accountResult?.account?.image ?? ''}
                 atomLabel={accountResult?.account?.label ?? ''}
-                // totalStake={
-                //   +formatBalance(resolvedIdentitiesSummary?.assets ?? '0', 18)
-                // }  // Can't get TVL on created atoms at the moment
                 variant={DataCreatedHeaderVariants.createdIdentities}
               >
                 {atomsCreatedResult && (
                   <IdentitiesList
                     identities={atomsCreatedResult.atoms as Atom[]}
-                    pagination={
-                      atomsCreatedResult?.total?.aggregate?.count ?? 0
-                    }
+                    pagination={{
+                      totalEntries:
+                        atomsCreatedResult?.total?.aggregate?.count ?? 0,
+                      limit: createdIdentitiesLimit,
+                      offset: createdIdentitiesOffset,
+                      onOffsetChange: onCreatedIdentitiesOffsetChange,
+                      onLimitChange: onCreatedIdentitiesLimitChange,
+                    }}
                     paramPrefix="createdIdentities"
-                    enableSearch //
+                    enableSearch
                     enableSort
                   />
                 )}
@@ -679,19 +724,21 @@ export default function ProfileDataCreated() {
                 totalResults={triplesCreatedResult?.total?.aggregate?.count}
                 atomImage={accountResult?.account?.image ?? ''}
                 atomLabel={accountResult?.account?.label ?? ''}
-                // totalStake={
-                //   +formatBalance(resolvedIdentitiesSummary?.assets ?? '0', 18)
-                // }  // Can't get TVL on created atoms at the moment
                 variant={DataCreatedHeaderVariants.createdClaims}
               >
                 {triplesCreatedResult && (
                   <ClaimsList
                     claims={triplesCreatedResult.triples as Triple[]}
-                    pagination={
-                      triplesCreatedResult?.total?.aggregate?.count ?? 0
-                    }
+                    pagination={{
+                      totalEntries:
+                        triplesCreatedResult?.total?.aggregate?.count ?? 0,
+                      limit: createdClaimsLimit,
+                      offset: createdClaimsOffset,
+                      onOffsetChange: onCreatedClaimsOffsetChange,
+                      onLimitChange: onCreatedClaimsLimitChange,
+                    }}
                     paramPrefix="createdClaims"
-                    enableSearch //
+                    enableSearch
                     enableSort
                   />
                 )}
