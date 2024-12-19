@@ -50,6 +50,7 @@ import { OverviewCreatedHeader } from '@components/profile/overview-created-head
 import { OverviewStakingHeader } from '@components/profile/overview-staking-header'
 import { RevalidateButton } from '@components/revalidate-button'
 import { DataHeaderSkeleton, PaginatedListSkeleton } from '@components/skeleton'
+import { useOffsetPagination } from '@lib/hooks/useOffsetPagination'
 import { getIdentityOrPending } from '@lib/services/identities'
 import { getUserSavedLists } from '@lib/services/lists'
 import { globalCreateClaimModalAtom } from '@lib/state/store'
@@ -88,8 +89,8 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     wallet,
   )
 
-  // const url = new URL(request.url)
-  // const searchParams = new URLSearchParams(url.search)
+  const url = new URL(request.url)
+  const searchParams = new URLSearchParams(url.search)
 
   const listSearchParams = new URLSearchParams()
   listSearchParams.set('sortsBy', ClaimSortColumn.ASSETS_SUM)
@@ -213,27 +214,35 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     },
   }
 
+  const claimsLimit = +(searchParams.get('claims_limit') ?? '10')
+  const claimsOffset = +(searchParams.get('claims_offset') ?? '0')
+  const followersLimit = +(searchParams.get('followers_limit') ?? '10')
+  const followersOffset = +(searchParams.get('followers_offset') ?? '0')
+
   const followersWhere = {
     subjectId: getSpecialPredicate(CURRENT_ENV).iPredicate.vaultId,
     predicateId: getSpecialPredicate(CURRENT_ENV).amFollowingPredicate.vaultId,
     objectId: accountResult.account.atomId,
-    positionsLimit: 10,
-    positionsOffset: 0,
+    positionsLimit: followersLimit,
+    positionsOffset: followersOffset,
     positionsOrderBy: {
       shares: 'desc' as Order_By,
     },
   }
 
   await queryClient.prefetchQuery({
-    queryKey: ['get-triples-with-positions', { triplesWhere }],
+    queryKey: [
+      'get-triples-with-positions',
+      { triplesWhere, limit: claimsLimit, offset: claimsOffset },
+    ],
     queryFn: () =>
       fetcher<
         GetTriplesWithPositionsQuery,
         GetTriplesWithPositionsQueryVariables
       >(GetTriplesWithPositionsDocument, {
         where: triplesWhere,
-        limit: 10,
-        offset: 0,
+        limit: claimsLimit,
+        offset: claimsOffset,
         orderBy: [{ blockNumber: 'desc' }],
         address: queryAddress,
       }),
@@ -303,7 +312,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   })
 
   await queryClient.prefetchQuery({
-    queryKey: ['get-follower-positions', {}],
+    queryKey: ['get-follower-positions', { ...followersWhere }],
     queryFn: () =>
       fetcher<GetFollowerPositionsQuery, GetFollowerPositionsQueryVariables>(
         GetFollowerPositionsDocument,
@@ -324,6 +333,10 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
       triplePositionsWhere,
       allPositionsWhere,
       followersWhere,
+      claimsLimit,
+      claimsOffset,
+      followersLimit,
+      followersOffset,
     },
     ...(!isPending &&
       !!userIdentity && {
@@ -394,6 +407,28 @@ export default function ProfileOverview() {
   })
 
   const {
+    offset: claimsOffset,
+    limit: claimsLimit,
+    onOffsetChange: onClaimsOffsetChange,
+    onLimitChange: onClaimsLimitChange,
+  } = useOffsetPagination({
+    paramPrefix: 'claims',
+    initialOffset: initialParams.claimsOffset,
+    initialLimit: initialParams.claimsLimit,
+  })
+
+  const {
+    offset: followersOffset,
+    limit: followersLimit,
+    onOffsetChange: onFollowersOffsetChange,
+    onLimitChange: onFollowersLimitChange,
+  } = useOffsetPagination({
+    paramPrefix: 'followers',
+    initialOffset: initialParams.followersOffset,
+    initialLimit: initialParams.followersLimit,
+  })
+
+  const {
     data: triplesResult,
     isLoading: isLoadingTriples,
     isError: isErrorTriples,
@@ -401,8 +436,8 @@ export default function ProfileOverview() {
   } = useGetTriplesWithPositionsQuery(
     {
       where: initialParams.triplesWhere,
-      limit: 10,
-      offset: 0,
+      limit: claimsLimit,
+      offset: claimsOffset,
       orderBy: [{ blockNumber: 'desc' }],
       address: queryAddress,
     },
@@ -411,8 +446,8 @@ export default function ProfileOverview() {
         'get-triples-with-positions',
         {
           where: initialParams.triplesWhere,
-          limit: 10,
-          offset: 0,
+          limit: claimsLimit,
+          offset: claimsOffset,
           orderBy: [{ blockNumber: 'desc' }],
           address: queryAddress,
         },
@@ -428,8 +463,8 @@ export default function ProfileOverview() {
       predicateId:
         getSpecialPredicate(CURRENT_ENV).amFollowingPredicate.vaultId,
       objectId: initialParams.atomId,
-      positionsLimit: 10,
-      positionsOffset: 0,
+      positionsLimit: followersLimit,
+      positionsOffset: followersOffset,
       positionsOrderBy: {
         shares: 'desc',
       },
@@ -442,8 +477,8 @@ export default function ProfileOverview() {
           predicateId:
             getSpecialPredicate(CURRENT_ENV).amFollowingPredicate.vaultId,
           objectId: initialParams.atomId,
-          positionsLimit: 10,
-          positionsOffset: 0,
+          positionsLimit: followersLimit,
+          positionsOffset: followersOffset,
           positionsOrderBy: {
             shares: 'desc',
           },
@@ -551,15 +586,29 @@ export default function ProfileOverview() {
           ) : (
             <ClaimsAboutIdentity
               claims={triplesResult?.triples ?? []}
-              pagination={triplesResult?.total?.aggregate?.count ?? {}}
+              pagination={{
+                totalEntries: triplesResult?.total?.aggregate?.count ?? 0,
+                limit: claimsLimit,
+                offset: claimsOffset,
+                onOffsetChange: onClaimsOffsetChange,
+                onLimitChange: onClaimsLimitChange,
+              }}
               paramPrefix="claims"
-              enableSearch={false} // TODO: (ENG-4481) Re-enable search and sort
-              enableSort={false} // TODO: (ENG-4481) Re-enable search and sort
+              enableSearch={false}
+              enableSort={false}
             />
           )}
         </Suspense>
       </div>
-      {followerData && <TopFollowers followerData={followerData} />}
+      {followerData && (
+        <TopFollowers
+          followerData={followerData}
+          followersLimit={followersLimit}
+          followersOffset={followersOffset}
+          onFollowersOffsetChange={onFollowersOffsetChange}
+          onFollowersLimitChange={onFollowersLimitChange}
+        />
+      )}
       <div className="flex flex-col gap-4">
         <Text
           variant="headline"
@@ -593,8 +642,16 @@ export function ErrorBoundary() {
 
 function TopFollowers({
   followerData,
+  followersLimit,
+  followersOffset,
+  onFollowersOffsetChange,
+  onFollowersLimitChange,
 }: {
   followerData: GetFollowerPositionsQuery
+  followersLimit: number
+  followersOffset: number
+  onFollowersOffsetChange: (newOffset: number) => void
+  onFollowersLimitChange: (newLimit: number) => void
 }) {
   return (
     <div className="flex flex-col gap-6">
@@ -609,6 +666,15 @@ function TopFollowers({
         positions={followerData?.triples[0]?.vault?.positions ?? []}
         currentSharePrice={followerData?.triples[0]?.vault?.currentSharePrice}
         paramPrefix={ConnectionsHeaderVariants.followers}
+        pagination={{
+          totalEntries:
+            followerData?.triples[0]?.vault?.positions_aggregate?.aggregate
+              ?.count ?? 0,
+          limit: followersLimit,
+          offset: followersOffset,
+          onOffsetChange: onFollowersOffsetChange,
+          onLimitChange: onFollowersLimitChange,
+        }}
         enableSearch={false}
         enableSort={false}
       />
