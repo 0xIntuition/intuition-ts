@@ -34,11 +34,13 @@ type Atom = GetAtomQuery['atom']
 export function ActivePositionsOnClaimsNew({
   positions,
   pagination,
+  paramPrefix,
   readOnly = false,
   positionDirection,
 }: {
   positions: Position[]
-  pagination: { aggregate?: { count: number } } | number
+  pagination: PaginationType
+  paramPrefix: string
   readOnly?: boolean
   positionDirection?: string
 }) {
@@ -72,20 +74,11 @@ export function ActivePositionsOnClaimsNew({
 
   logger('positionsMapped', { positionsMapped })
 
-  const paginationCount =
-    typeof pagination === 'number'
-      ? pagination
-      : pagination?.aggregate?.count ?? 0
-
   return (
     <List<SortColumn>
-      pagination={{
-        currentPage: 1,
-        limit: 10,
-        totalEntries: paginationCount,
-        totalPages: Math.ceil(paginationCount / 10),
-      }}
+      pagination={pagination}
       paginationLabel="positions"
+      paramPrefix={paramPrefix}
     >
       <ListHeader
         items={[

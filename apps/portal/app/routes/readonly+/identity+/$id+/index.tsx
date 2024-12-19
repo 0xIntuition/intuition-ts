@@ -12,7 +12,6 @@ import {
   GetTriplesWithPositionsDocument,
   GetTriplesWithPositionsQuery,
   GetTriplesWithPositionsQueryVariables,
-  Order_By,
   useGetAtomQuery,
   useGetPositionsQuery,
   useGetTriplesWithPositionsQuery,
@@ -24,6 +23,7 @@ import { PositionsOnIdentityNew } from '@components/list/positions-on-identity'
 import DataAboutHeader from '@components/profile/data-about-header'
 import { RevalidateButton } from '@components/revalidate-button'
 import { DataHeaderSkeleton, PaginatedListSkeleton } from '@components/skeleton'
+import { useOffsetPagination } from '@lib/hooks/useOffsetPagination'
 import { formatBalance, invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData, useRouteLoaderData } from '@remix-run/react'
@@ -37,6 +37,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   invariant(id, NO_PARAM_ID_ERROR)
 
   const url = new URL(request.url)
+  const searchParams = new URLSearchParams(url.search)
   const queryClient = new QueryClient()
 
   const triplesWhere = {
@@ -59,13 +60,13 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     ],
   }
 
-  const positionsLimit = parseInt(
-    url.searchParams.get('positionsLimit') || '10',
-  )
-  const positionsOffset = parseInt(
-    url.searchParams.get('positionsOffset') || '0',
-  )
-  const positionsOrderBy = url.searchParams.get('positionsSortBy')
+  const triplesLimit = parseInt(searchParams.get('claims_limit') || '10')
+  const triplesOffset = parseInt(searchParams.get('claims_offset') || '0')
+  const triplesOrderBy = searchParams.get('claims_sort_by')
+
+  const positionsLimit = parseInt(searchParams.get('positions_limit') || '10')
+  const positionsOffset = parseInt(searchParams.get('positions_offset') || '0')
+  const positionsOrderBy = searchParams.get('positions_sort_by')
 
   const positionsWhere = {
     vaultId: { _eq: id },
@@ -80,18 +81,19 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   })
 
   await queryClient.prefetchQuery({
-    queryKey: ['get-triples-with-positions', { triplesWhere }],
+    queryKey: [
+      'get-triples-with-positions',
+      { triplesWhere, triplesLimit, triplesOffset, triplesOrderBy },
+    ],
     queryFn: () =>
       fetcher<
         GetTriplesWithPositionsQuery,
         GetTriplesWithPositionsQueryVariables
       >(GetTriplesWithPositionsDocument, {
         where: triplesWhere,
-        limit: 10,
-        offset: 0,
-        orderBy: {
-          blockTimestamp: 'desc' as Order_By,
-        },
+        limit: triplesLimit,
+        offset: triplesOffset,
+        orderBy: triplesOrderBy ? [{ [triplesOrderBy]: 'desc' }] : undefined,
         address: '', //TODO: We don't have an address for the user since this is read-only. Do we continue to use this version of the hook or just pass in an empty string like so?
       })(),
   })
@@ -118,6 +120,9 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   return json({
     initialParams: {
       triplesWhere,
+      triplesLimit,
+      triplesOffset,
+      triplesOrderBy,
       positionsLimit,
       positionsOffset,
       positionsOrderBy,
@@ -136,6 +141,28 @@ export default function ReadOnlyProfileDataAbout() {
     ) ?? {}
   invariant(identity, NO_IDENTITY_ERROR)
 
+  const {
+    offset: triplesOffset,
+    limit: triplesLimit,
+    onOffsetChange: onTriplesOffsetChange,
+    onLimitChange: onTriplesLimitChange,
+  } = useOffsetPagination({
+    paramPrefix: 'claims',
+    initialOffset: initialParams.triplesOffset,
+    initialLimit: initialParams.triplesLimit,
+  })
+
+  const {
+    offset: positionsOffset,
+    limit: positionsLimit,
+    onOffsetChange: onPositionsOffsetChange,
+    onLimitChange: onPositionsLimitChange,
+  } = useOffsetPagination({
+    paramPrefix: 'positions',
+    initialOffset: initialParams.positionsOffset,
+    initialLimit: initialParams.positionsLimit,
+  })
+
   const { data: atomResult, isLoading: isLoadingAtom } = useGetAtomQuery(
     {
       id: initialParams.atomId,
@@ -153,11 +180,11 @@ export default function ReadOnlyProfileDataAbout() {
   } = useGetTriplesWithPositionsQuery(
     {
       where: initialParams.triplesWhere,
-      limit: 10,
-      offset: 0,
-      orderBy: {
-        blockTimestamp: 'desc' as Order_By,
-      },
+      limit: triplesLimit,
+      offset: triplesOffset,
+      orderBy: initialParams.triplesOrderBy
+        ? [{ [initialParams.triplesOrderBy]: 'desc' }]
+        : undefined,
       address: '', //TODO: We don't have an address for the user since this is read-only. Do we continue to use this version of the hook or just pass in an empty string like so?
     },
     {
@@ -165,11 +192,9 @@ export default function ReadOnlyProfileDataAbout() {
         'get-triples-with-positions',
         {
           where: initialParams.triplesWhere,
-          limit: 10,
-          offset: 0,
-          orderBy: {
-            blockTimestamp: 'desc' as Order_By,
-          },
+          limit: triplesLimit,
+          offset: triplesOffset,
+          orderBy: initialParams.triplesOrderBy,
           address: '', //TODO: We don't have an address for the user since this is read-only. Do we continue to use this version of the hook or just pass in an empty string like so?
         },
       ],
@@ -184,8 +209,8 @@ export default function ReadOnlyProfileDataAbout() {
   } = useGetPositionsQuery(
     {
       where: initialParams.positionsWhere,
-      limit: initialParams.positionsLimit,
-      offset: initialParams.positionsOffset,
+      limit: positionsLimit,
+      offset: positionsOffset,
       orderBy: initialParams.positionsOrderBy
         ? [{ [initialParams.positionsOrderBy]: 'desc' }]
         : undefined,
@@ -195,8 +220,8 @@ export default function ReadOnlyProfileDataAbout() {
         'get-atom-positions',
         {
           where: initialParams.positionsWhere,
-          limit: initialParams.positionsLimit,
-          offset: initialParams.positionsOffset,
+          limit: positionsLimit,
+          offset: positionsOffset,
           orderBy: initialParams.positionsOrderBy,
         },
       ],
@@ -229,12 +254,6 @@ export default function ReadOnlyProfileDataAbout() {
                 atomVariant="user" // TODO: Determine based on atom type
                 totalClaims={triplesResult?.total?.aggregate?.count ?? 0}
                 totalStake={0} // TODO: need to find way to get the shares -- may need to update the schema
-                // totalStake={
-                //   +formatBalance(
-                //     triplesResult?.total?.aggregate?.sums?.shares ?? 0,
-                //     18,
-                //   )
-                // }
               />
             )}
           </Suspense>
@@ -254,28 +273,32 @@ export default function ReadOnlyProfileDataAbout() {
             ) : (
               <ClaimsAboutIdentity
                 claims={triplesResult?.triples ?? []}
-                pagination={triplesResult?.total?.aggregate?.count ?? {}}
+                pagination={{
+                  totalEntries: triplesResult?.total?.aggregate?.count ?? 0,
+                  limit: triplesLimit,
+                  offset: triplesOffset,
+                  onOffsetChange: onTriplesOffsetChange,
+                  onLimitChange: onTriplesLimitChange,
+                }}
                 paramPrefix="claims"
                 enableSearch={false}
                 enableSort={false}
-                readOnly
               />
             )}
           </Suspense>
         </div>
-        <div className="flex flex-col w-full gap-6">
+        <div className="flex flex-col pt-4 w-full gap-6">
           <div className="self-stretch justify-between items-center inline-flex">
             <Text
               variant="headline"
               weight="medium"
               className="text-secondary-foreground w-full"
-              id="positions"
             >
               Positions on this Identity
             </Text>
           </div>
           <Suspense fallback={<DataHeaderSkeleton />}>
-            {isLoadingPositions && isLoadingAtom ? (
+            {isLoadingTriples && isLoadingAtom ? (
               <DataHeaderSkeleton />
             ) : (
               <DataAboutHeader
@@ -309,7 +332,14 @@ export default function ReadOnlyProfileDataAbout() {
             ) : (
               <PositionsOnIdentityNew
                 positions={positionsResult?.positions ?? []}
-                pagination={positionsResult?.total?.aggregate?.count ?? {}}
+                pagination={{
+                  totalEntries: positionsResult?.total?.aggregate?.count ?? 0,
+                  limit: positionsLimit,
+                  offset: positionsOffset,
+                  onOffsetChange: onPositionsOffsetChange,
+                  onLimitChange: onPositionsLimitChange,
+                }}
+                paramPrefix="positions"
               />
             )}
           </Suspense>

@@ -1,17 +1,13 @@
 import {
   ClaimPositionsService,
-  Identifier,
   IdentityPositionsService,
   PositionPresenter,
   PositionSortColumn,
-  SortDirection,
   VaultType,
 } from '@0xintuition/api'
 
-import { calculateTotalPages } from '@lib/utils/misc'
 import { getStandardPageParams } from '@lib/utils/params'
 import { fetchWrapper } from '@server/api'
-import { PaginationType } from 'app/types/pagination'
 
 export async function getPositionsOnIdentity({
   request,
@@ -22,70 +18,22 @@ export async function getPositionsOnIdentity({
   identityId: string
   searchParams: URLSearchParams
 }) {
-  const { page, limit, sortBy, direction } = getStandardPageParams({
+  const { offset, limit, sortBy, direction } = getStandardPageParams({
     searchParams,
     paramPrefix: 'positions',
     defaultSortByValue: PositionSortColumn.ASSETS,
   })
-  const positionsSearch =
-    (searchParams.get('positionsSearch') as Identifier) || null
+  const positionsSearch = searchParams.get('positionsSearch')
 
   const positions = await fetchWrapper(request, {
-    method: IdentityPositionsService.getIdentityPositions,
+    method: IdentityPositionsService.getPositions,
     args: {
-      id: identityId,
-      page,
+      identityId,
       limit,
-      sortBy: sortBy as PositionSortColumn,
+      offset,
+      sortBy,
       direction,
-      creator: positionsSearch,
-    },
-  })
-
-  return {
-    data: positions.data as PositionPresenter[],
-    pagination: {
-      currentPage: page,
-      limit,
-      totalEntries: positions.total,
-      totalPages: Math.ceil(positions.total / limit),
-    },
-  }
-}
-
-export async function getPositionsOnClaim({
-  request,
-  claimId,
-  searchParams,
-}: {
-  request: Request
-  claimId: string
-  searchParams: URLSearchParams
-}): Promise<{
-  data: PositionPresenter[]
-  sortBy: PositionSortColumn
-  direction: SortDirection
-  pagination: PaginationType
-}> {
-  const { page, limit, sortBy, direction } = getStandardPageParams({
-    searchParams,
-    paramPrefix: 'positions',
-    defaultSortByValue: PositionSortColumn.CREATED_AT,
-  })
-  const creator = searchParams.get('positionsSearch')
-  const positionDirection =
-    (searchParams.get('positionDirection') as VaultType) || null
-
-  const positions = await fetchWrapper(request, {
-    method: ClaimPositionsService.getClaimPositions,
-    args: {
-      id: claimId,
-      page,
-      limit,
-      sortBy: sortBy as PositionSortColumn,
-      direction,
-      creator,
-      positionDirection,
+      search: positionsSearch,
     },
   })
 
@@ -94,10 +42,56 @@ export async function getPositionsOnClaim({
     sortBy: sortBy as PositionSortColumn,
     direction,
     pagination: {
-      currentPage: page,
+      totalEntries: positions.total ?? 0,
       limit,
-      totalEntries: positions.total,
-      totalPages: calculateTotalPages(positions.total ?? 0, limit),
+      offset,
+      onOffsetChange: () => {},
+      onLimitChange: () => {},
+    },
+  }
+}
+
+export async function getPositionsOnClaim({
+  request,
+  claimId,
+  searchParams,
+  vaultType,
+}: {
+  request: Request
+  claimId: string
+  searchParams: URLSearchParams
+  vaultType?: VaultType
+}) {
+  const { offset, limit, sortBy, direction } = getStandardPageParams({
+    searchParams,
+    paramPrefix: 'positions',
+    defaultSortByValue: PositionSortColumn.ASSETS,
+  })
+  const positionsSearch = searchParams.get('positionsSearch')
+
+  const positions = await fetchWrapper(request, {
+    method: ClaimPositionsService.getPositions,
+    args: {
+      claimId,
+      limit,
+      offset,
+      sortBy,
+      direction,
+      search: positionsSearch,
+      vaultType,
+    },
+  })
+
+  return {
+    data: positions.data as PositionPresenter[],
+    sortBy: sortBy as PositionSortColumn,
+    direction,
+    pagination: {
+      totalEntries: positions.total ?? 0,
+      limit,
+      offset,
+      onOffsetChange: () => {},
+      onLimitChange: () => {},
     },
   }
 }

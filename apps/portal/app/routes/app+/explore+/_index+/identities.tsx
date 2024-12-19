@@ -23,53 +23,46 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   const url = new URL(request.url)
   const searchParams = new URLSearchParams(url.search)
-  const { page, limit, sortBy, direction } = getStandardPageParams({
+  const { offset, limit, sortBy, direction } = getStandardPageParams({
     searchParams,
   })
   const displayName = searchParams.get('identity') || null
   const hasTag = searchParams.get('tagIds') || null
   const isUser = searchParams.get('isUser')
 
-  const identities = await fetchWrapper(request, {
-    method: IdentitiesService.searchIdentity,
-    args: {
-      page,
-      limit,
-      sortBy: sortBy as SortColumn,
-      direction,
-      displayName,
-      hasTag,
-      isUser: isUser === 'true' ? true : isUser === 'false' ? false : undefined,
-    },
+  const identities = await fetchWrapper(request, IdentitiesService, {
+    offset,
+    limit,
+    sortBy: sortBy as SortColumn,
+    direction,
+    displayName,
+    hasTag,
+    isUser: isUser === 'true' ? true : isUser === 'false' ? false : undefined,
   })
 
-  const totalPages = calculateTotalPages(identities?.total ?? 0, limit)
-
   return json({
-    identities: identities?.data as IdentityPresenter[],
+    identities: identities.data as IdentityPresenter[],
     sortBy,
     direction,
     pagination: {
-      currentPage: page,
+      totalEntries: identities.total ?? 0,
       limit,
-      totalEntries: identities?.total ?? 0,
-      totalPages,
+      offset,
+      onOffsetChange: () => {},
+      onLimitChange: () => {},
     },
   })
 }
 
 export default function ExploreIdentities() {
-  const { identities, pagination } = useLiveLoader<typeof loader>([
-    'create',
-    'attest',
-  ])
+  const { identities, pagination } = useLiveLoader<typeof loader>()
 
   return (
     <>
       <ExploreHeader
         title="Identities"
-        content="Decentralized identities for anything and everything - not just people."
-        icon={IconName.fingerprint}
+        description="Explore identities in the network"
+        icon={IconName.identity}
         bgImage={HEADER_BANNER_IDENTITIES}
       />
       <ExploreSearch variant="identity" />

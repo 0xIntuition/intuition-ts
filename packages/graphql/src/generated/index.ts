@@ -12680,6 +12680,8 @@ export type GetTriplesCountQuery = {
 
 export type GetTripleQueryVariables = Exact<{
   tripleId: Scalars['numeric']['input']
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
 }>
 
 export type GetTripleQuery = {
@@ -12703,6 +12705,72 @@ export type GetTripleQuery = {
       id: string
       atomId?: any | null
       type: string
+    } | null
+    vault?: {
+      __typename?: 'vaults'
+      totalShares: any
+      currentSharePrice: any
+      allPositions: {
+        __typename?: 'positions_aggregate'
+        aggregate?: {
+          __typename?: 'positions_aggregate_fields'
+          count: number
+          sum?: {
+            __typename?: 'positions_sum_fields'
+            shares?: any | null
+          } | null
+        } | null
+      }
+      paginatedPositions: Array<{
+        __typename?: 'positions'
+        id: string
+        vaultId: any
+        shares: any
+        account?: {
+          __typename?: 'accounts'
+          id: string
+          label: string
+          image?: string | null
+        } | null
+      }>
+      positions: Array<{
+        __typename?: 'positions'
+        shares: any
+        account?: { __typename?: 'accounts'; id: string; label: string } | null
+      }>
+    } | null
+    counterVault?: {
+      __typename?: 'vaults'
+      totalShares: any
+      currentSharePrice: any
+      allPositions: {
+        __typename?: 'positions_aggregate'
+        aggregate?: {
+          __typename?: 'positions_aggregate_fields'
+          count: number
+          sum?: {
+            __typename?: 'positions_sum_fields'
+            shares?: any | null
+          } | null
+        } | null
+      }
+      paginatedPositions: Array<{
+        __typename?: 'positions'
+        id: string
+        vaultId: any
+        shares: any
+        account?: {
+          __typename?: 'accounts'
+          id: string
+          label: string
+          image?: string | null
+        } | null
+      }>
+      positions: Array<{
+        __typename?: 'positions'
+        shares: any
+        account?: { __typename?: 'accounts'; id: string; label: string } | null
+      }>
     } | null
     subject?: {
       __typename?: 'atoms'
@@ -12832,62 +12900,6 @@ export type GetTripleQuery = {
           url?: string | null
         } | null
       } | null
-    } | null
-    vault?: {
-      __typename?: 'vaults'
-      totalShares: any
-      currentSharePrice: any
-      allPositions: {
-        __typename?: 'positions_aggregate'
-        aggregate?: {
-          __typename?: 'positions_aggregate_fields'
-          count: number
-          sum?: {
-            __typename?: 'positions_sum_fields'
-            shares?: any | null
-          } | null
-        } | null
-      }
-      positions: Array<{
-        __typename?: 'positions'
-        id: string
-        vaultId: any
-        shares: any
-        account?: {
-          __typename?: 'accounts'
-          id: string
-          label: string
-          image?: string | null
-        } | null
-      }>
-    } | null
-    counterVault?: {
-      __typename?: 'vaults'
-      totalShares: any
-      currentSharePrice: any
-      allPositions: {
-        __typename?: 'positions_aggregate'
-        aggregate?: {
-          __typename?: 'positions_aggregate_fields'
-          count: number
-          sum?: {
-            __typename?: 'positions_sum_fields'
-            shares?: any | null
-          } | null
-        } | null
-      }
-      positions: Array<{
-        __typename?: 'positions'
-        id: string
-        vaultId: any
-        shares: any
-        account?: {
-          __typename?: 'accounts'
-          id: string
-          label: string
-          image?: string | null
-        } | null
-      }>
     } | null
   } | null
 }
@@ -17845,13 +17857,56 @@ useGetTriplesCountQuery.fetcher = (
   )
 
 export const GetTripleDocument = `
-    query GetTriple($tripleId: numeric!) {
+    query GetTriple($tripleId: numeric!, $limit: Int, $offset: Int) {
   triple(id: $tripleId) {
     ...TripleMetadata
     ...TripleTxn
-    ...TripleVaultDetails
     creator {
       ...AccountMetadata
+    }
+    vault {
+      totalShares
+      currentSharePrice
+      allPositions: positions_aggregate {
+        aggregate {
+          count
+          sum {
+            shares
+          }
+        }
+      }
+      paginatedPositions: positions(limit: $limit, offset: $offset) {
+        id
+        vaultId
+        shares
+        account {
+          id
+          label
+          image
+        }
+      }
+    }
+    counterVault {
+      totalShares
+      currentSharePrice
+      allPositions: positions_aggregate {
+        aggregate {
+          count
+          sum {
+            shares
+          }
+        }
+      }
+      paginatedPositions: positions(limit: $limit, offset: $offset) {
+        id
+        vaultId
+        shares
+        account {
+          id
+          label
+          image
+        }
+      }
     }
   }
 }
@@ -17860,8 +17915,7 @@ ${AtomValueFragmentDoc}
 ${AccountMetadataFragmentDoc}
 ${PositionAggregateFieldsFragmentDoc}
 ${PositionFieldsFragmentDoc}
-${TripleTxnFragmentDoc}
-${TripleVaultDetailsFragmentDoc}`
+${TripleTxnFragmentDoc}`
 
 export const useGetTripleQuery = <TData = GetTripleQuery, TError = unknown>(
   variables: GetTripleQueryVariables,
@@ -38720,6 +38774,22 @@ export const GetTriple = {
             },
           },
         },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'limit' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'offset' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
       ],
       selectionSet: {
         kind: 'SelectionSet',
@@ -38749,10 +38819,6 @@ export const GetTriple = {
                   name: { kind: 'Name', value: 'TripleTxn' },
                 },
                 {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'TripleVaultDetails' },
-                },
-                {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'creator' },
                   selectionSet: {
@@ -38761,6 +38827,240 @@ export const GetTriple = {
                       {
                         kind: 'FragmentSpread',
                         name: { kind: 'Name', value: 'AccountMetadata' },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'vault' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'totalShares' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'currentSharePrice' },
+                      },
+                      {
+                        kind: 'Field',
+                        alias: { kind: 'Name', value: 'allPositions' },
+                        name: { kind: 'Name', value: 'positions_aggregate' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'aggregate' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'count' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'sum' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'shares',
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        alias: { kind: 'Name', value: 'paginatedPositions' },
+                        name: { kind: 'Name', value: 'positions' },
+                        arguments: [
+                          {
+                            kind: 'Argument',
+                            name: { kind: 'Name', value: 'limit' },
+                            value: {
+                              kind: 'Variable',
+                              name: { kind: 'Name', value: 'limit' },
+                            },
+                          },
+                          {
+                            kind: 'Argument',
+                            name: { kind: 'Name', value: 'offset' },
+                            value: {
+                              kind: 'Variable',
+                              name: { kind: 'Name', value: 'offset' },
+                            },
+                          },
+                        ],
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'vaultId' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'shares' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'account' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'label' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'image' },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'counterVault' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'totalShares' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'currentSharePrice' },
+                      },
+                      {
+                        kind: 'Field',
+                        alias: { kind: 'Name', value: 'allPositions' },
+                        name: { kind: 'Name', value: 'positions_aggregate' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'aggregate' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'count' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'sum' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'shares',
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        alias: { kind: 'Name', value: 'paginatedPositions' },
+                        name: { kind: 'Name', value: 'positions' },
+                        arguments: [
+                          {
+                            kind: 'Argument',
+                            name: { kind: 'Name', value: 'limit' },
+                            value: {
+                              kind: 'Variable',
+                              name: { kind: 'Name', value: 'limit' },
+                            },
+                          },
+                          {
+                            kind: 'Argument',
+                            name: { kind: 'Name', value: 'offset' },
+                            value: {
+                              kind: 'Variable',
+                              name: { kind: 'Name', value: 'offset' },
+                            },
+                          },
+                        ],
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'vaultId' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'shares' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'account' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'label' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'image' },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
                       },
                     ],
                   },
@@ -39143,117 +39443,6 @@ export const GetTriple = {
           { kind: 'Field', name: { kind: 'Name', value: 'blockTimestamp' } },
           { kind: 'Field', name: { kind: 'Name', value: 'transactionHash' } },
           { kind: 'Field', name: { kind: 'Name', value: 'creatorId' } },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'TripleVaultDetails' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'triples' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          { kind: 'Field', name: { kind: 'Name', value: 'vaultId' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'counterVaultId' } },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'vault' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'positions' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'vaultId' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'shares' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'account' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'id' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'label' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'image' },
-                            },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'counterVault' },
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'positions' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'vaultId' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'shares' },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'account' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'id' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'label' },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'image' },
-                            },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
         ],
       },
     },

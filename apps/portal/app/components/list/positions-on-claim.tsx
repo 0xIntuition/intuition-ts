@@ -4,7 +4,6 @@ import { GetPositionsQuery } from '@0xintuition/graphql'
 
 import { ClaimPositionRow } from '@components/claim/claim-position-row'
 import { ListHeader } from '@components/list/list-header'
-import logger from '@lib/utils/logger'
 import { formatBalance, getProfileUrl } from '@lib/utils/misc'
 import { BLOCK_EXPLORER_URL } from 'app/consts'
 import { PaginationType } from 'app/types/pagination'
@@ -18,12 +17,13 @@ type Position = NonNullable<GetPositionsQuery['positions']>[number]
 export function PositionsOnClaimNew({
   vaultPositions,
   counterVaultPositions,
+  pagination,
   readOnly = false,
   positionDirection,
 }: {
   vaultPositions: Position[]
   counterVaultPositions: Position[]
-  pagination: { aggregate?: { count: number } } | number
+  pagination: PaginationType
   readOnly?: boolean
   positionDirection?: string
 }) {
@@ -32,25 +32,6 @@ export function PositionsOnClaimNew({
     { value: 'Updated At', sortBy: PositionSortColumn.UPDATED_AT },
     { value: 'Created At', sortBy: PositionSortColumn.CREATED_AT },
   ]
-
-  logger('positions in PositionsOnClaim', {
-    vaultPositions,
-    counterVaultPositions,
-  })
-
-  // Leaving in case we need this for how we approach pagination
-  // const paginationCount =
-  //   positionDirection === 'for'
-  //     ? typeof pagination === 'number'
-  //       ? pagination
-  //       : pagination?.aggregate?.count ?? 0
-  //     : positionDirection === 'against'
-  //       ? typeof pagination === 'number'
-  //         ? pagination
-  //         : pagination?.aggregate?.count ?? 0
-  //       : typeof pagination === 'number'
-  //         ? pagination
-  //         : pagination?.aggregate?.count ?? 0
 
   // Combining and transforming positions -- we can see if there is a better/different way to do this, but the issue is previously these were combined and now they're split so we need to recombine for the tabs UI
   const allPositions = [
@@ -71,12 +52,7 @@ export function PositionsOnClaimNew({
 
   return (
     <List<PositionSortColumn>
-      pagination={{
-        currentPage: 1,
-        limit: 10,
-        totalEntries: allPositions.length,
-        totalPages: Math.ceil(allPositions.length / 10),
-      }}
+      pagination={pagination}
       paginationLabel="positions"
       options={options}
       paramPrefix="positions"

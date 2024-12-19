@@ -28,6 +28,7 @@ import DataAboutHeader from '@components/profile/data-about-header'
 import { RevalidateButton } from '@components/revalidate-button'
 import { DataHeaderSkeleton, PaginatedListSkeleton } from '@components/skeleton'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
+import { useOffsetPagination } from '@lib/hooks/useOffsetPagination'
 import { detailCreateClaimModalAtom } from '@lib/state/store'
 import logger from '@lib/utils/logger'
 import { formatBalance, invariant } from '@lib/utils/misc'
@@ -179,6 +180,28 @@ export default function ProfileDataAbout() {
     detailCreateClaimModalAtom,
   )
 
+  const {
+    offset: triplesOffset,
+    limit: triplesLimit,
+    onOffsetChange: onTriplesOffsetChange,
+    onLimitChange: onTriplesLimitChange,
+  } = useOffsetPagination({
+    paramPrefix: 'claims',
+    initialOffset: initialParams.triplesOffset,
+    initialLimit: initialParams.triplesLimit,
+  })
+
+  const {
+    offset: positionsOffset,
+    limit: positionsLimit,
+    onOffsetChange: onPositionsOffsetChange,
+    onLimitChange: onPositionsLimitChange,
+  } = useOffsetPagination({
+    paramPrefix: 'positions',
+    initialOffset: initialParams.positionsOffset,
+    initialLimit: initialParams.positionsLimit,
+  })
+
   logger('initialParams', initialParams)
   const { data: atomResult, isLoading: isLoadingAtom } = useGetAtomQuery(
     {
@@ -317,10 +340,16 @@ export default function ProfileDataAbout() {
             ) : (
               <ClaimsAboutIdentity
                 claims={triplesResult?.triples ?? []}
-                pagination={triplesResult?.total?.aggregate?.count ?? {}}
+                pagination={{
+                  total: triplesResult?.total?.aggregate?.count ?? 0,
+                  limit: triplesLimit,
+                  offset: triplesOffset,
+                  onOffsetChange: onTriplesOffsetChange,
+                  onLimitChange: onTriplesLimitChange,
+                }}
                 paramPrefix="claims"
-                enableSearch={false} // TODO: (ENG-4481) Re-enable search and sort
-                enableSort={false} // TODO: (ENG-4481) Re-enable search and sort
+                enableSearch={false}
+                enableSort={false}
               />
             )}
           </Suspense>
@@ -379,7 +408,15 @@ export default function ProfileDataAbout() {
             ) : (
               <PositionsOnIdentity
                 positions={positionsResult?.positions ?? []}
-                pagination={positionsResult?.total?.aggregate?.count ?? {}}
+                pagination={{
+                  total: positionsResult?.total?.aggregate?.count ?? 0,
+                  limit: positionsLimit,
+                  offset: positionsOffset,
+                  onOffsetChange: onPositionsOffsetChange,
+                  onLimitChange: onPositionsLimitChange,
+                }}
+                paramPrefix="positions"
+                readOnly={false}
               />
             )}
           </Suspense>

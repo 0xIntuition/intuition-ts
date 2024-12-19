@@ -45,6 +45,7 @@ import { OverviewCreatedHeader } from '@components/profile/overview-created-head
 import { OverviewStakingHeader } from '@components/profile/overview-staking-header'
 import { RevalidateButton } from '@components/revalidate-button'
 import { DataHeaderSkeleton, PaginatedListSkeleton } from '@components/skeleton'
+import { useOffsetPagination } from '@lib/hooks/useOffsetPagination'
 import { getIdentityOrPending } from '@lib/services/identities'
 import { getUserSavedLists } from '@lib/services/lists'
 import { getSpecialPredicate } from '@lib/utils/app'
@@ -66,8 +67,8 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     wallet,
   )
 
-  // const url = new URL(request.url)
-  // const searchParams = new URLSearchParams(url.search)
+  const url = new URL(request.url)
+  const searchParams = new URLSearchParams(url.search)
 
   const listSearchParams = new URLSearchParams()
   listSearchParams.set('sortsBy', ClaimSortColumn.ASSETS_SUM)
@@ -94,7 +95,6 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     queryFn: () => accountResult,
   })
 
-  // TODO: once we fully fix sort/pagination, we'll want to update these to use triples instead of claims, and orderBy instead of sortBy in the actual query params
   const triplesWhere = {
     _or: [
       {
@@ -191,28 +191,40 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     },
   }
 
+  const claimsLimit = parseInt(searchParams.get('claims_limit') || '10')
+  const claimsOffset = parseInt(searchParams.get('claims_offset') || '0')
+  const claimsSortBy = searchParams.get('claims_sort_by')
+
+  const followersLimit = parseInt(searchParams.get('followers_limit') || '10')
+  const followersOffset = parseInt(searchParams.get('followers_offset') || '0')
+
   const followersWhere = {
     subjectId: getSpecialPredicate(CURRENT_ENV).iPredicate.vaultId,
     predicateId: getSpecialPredicate(CURRENT_ENV).amFollowingPredicate.vaultId,
     objectId: accountResult.account.atomId,
-    positionsLimit: 10,
-    positionsOffset: 0,
+    positionsLimit: followersLimit,
+    positionsOffset: followersOffset,
     positionsOrderBy: {
       shares: 'desc' as Order_By,
     },
   }
 
   await queryClient.prefetchQuery({
-    queryKey: ['get-triples-with-positions', { triplesWhere }],
+    queryKey: [
+      'get-triples-with-positions',
+      { triplesWhere, limit: claimsLimit, offset: claimsOffset },
+    ],
     queryFn: () =>
       fetcher<
         GetTriplesWithPositionsQuery,
         GetTriplesWithPositionsQueryVariables
       >(GetTriplesWithPositionsDocument, {
         where: triplesWhere,
-        limit: 10,
-        offset: 0,
-        orderBy: [{ blockNumber: 'desc' }],
+        limit: claimsLimit,
+        offset: claimsOffset,
+        orderBy: claimsSortBy
+          ? [{ [claimsSortBy]: 'desc' }]
+          : [{ blockNumber: 'desc' }],
         address: queryAddress,
       }),
   })
@@ -302,6 +314,11 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
       triplePositionsWhere,
       allPositionsWhere,
       followersWhere,
+      claimsLimit,
+      claimsOffset,
+      claimsSortBy,
+      followersLimit,
+      followersOffset,
     },
     ...(!isPending &&
       !!userIdentity && {
@@ -360,6 +377,17 @@ export default function ReadOnlyProfileOverview() {
   })
 
   const {
+    offset: claimsOffset,
+    limit: claimsLimit,
+    onOffsetChange: onClaimsOffsetChange,
+    onLimitChange: onClaimsLimitChange,
+  } = useOffsetPagination({
+    paramPrefix: 'claims',
+    initialOffset: initialParams.claimsOffset,
+    initialLimit: initialParams.claimsLimit,
+  })
+
+  const {
     data: triplesResult,
     isLoading: isLoadingTriples,
     isError: isErrorTriples,
@@ -367,9 +395,11 @@ export default function ReadOnlyProfileOverview() {
   } = useGetTriplesWithPositionsQuery(
     {
       where: initialParams.triplesWhere,
-      limit: 10,
-      offset: 0,
-      orderBy: [{ blockNumber: 'desc' }],
+      limit: claimsLimit,
+      offset: claimsOffset,
+      orderBy: initialParams.claimsSortBy
+        ? [{ [initialParams.claimsSortBy]: 'desc' }]
+        : [{ blockNumber: 'desc' }],
       address: queryAddress,
     },
     {
@@ -377,9 +407,9 @@ export default function ReadOnlyProfileOverview() {
         'get-triples-with-positions',
         {
           where: initialParams.triplesWhere,
-          limit: 10,
-          offset: 0,
-          orderBy: [{ blockNumber: 'desc' }],
+          limit: claimsLimit,
+          offset: claimsOffset,
+          orderBy: initialParams.claimsSortBy,
           address: queryAddress,
         },
       ],
@@ -394,8 +424,8 @@ export default function ReadOnlyProfileOverview() {
       predicateId:
         getSpecialPredicate(CURRENT_ENV).amFollowingPredicate.vaultId,
       objectId: initialParams.atomId,
-      positionsLimit: 10,
-      positionsOffset: 0,
+      positionsLimit: initialParams.followersLimit,
+      positionsOffset: initialParams.followersOffset,
       positionsOrderBy: {
         shares: 'desc',
       },
@@ -408,8 +438,8 @@ export default function ReadOnlyProfileOverview() {
           predicateId:
             getSpecialPredicate(CURRENT_ENV).amFollowingPredicate.vaultId,
           objectId: initialParams.atomId,
-          positionsLimit: 10,
-          positionsOffset: 0,
+          positionsLimit: initialParams.followersLimit,
+          positionsOffset: initialParams.followersOffset,
           positionsOrderBy: {
             shares: 'desc',
           },
@@ -511,7 +541,13 @@ export default function ReadOnlyProfileOverview() {
           ) : (
             <ClaimsAboutIdentity
               claims={triplesResult?.triples ?? []}
-              pagination={triplesResult?.total?.aggregate?.count ?? {}}
+              pagination={{
+                totalEntries: triplesResult?.total?.aggregate?.count ?? 0,
+                limit: claimsLimit,
+                offset: claimsOffset,
+                onOffsetChange: onClaimsOffsetChange,
+                onLimitChange: onClaimsLimitChange,
+              }}
               paramPrefix="claims"
               enableSearch={false} // TODO: (ENG-4481) Re-enable search and sort
               enableSort={false} // TODO: (ENG-4481) Re-enable search and sort

@@ -13,34 +13,38 @@ import {
   PaginationSummary,
 } from '@0xintuition/1ui'
 
-interface PaginationComponentProps {
+import logger from '@lib/utils/logger'
+
+export interface PaginationComponentProps {
   totalEntries: number
-  currentPage: number
-  totalPages: number
+  offset: number
   limit: number
-  onPageChange: (newPage: number) => void
-  onLimitChange: (newLimit: number) => void
-  label: string
+  onOffsetChange: (offset: number) => void
+  onLimitChange: (limit: number) => void
+  label?: string
   listContainerRef?: React.RefObject<HTMLDivElement>
 }
 
 export function PaginationComponent({
   totalEntries,
-  currentPage,
-  totalPages,
+  offset,
   limit,
-  onPageChange,
+  onOffsetChange,
   onLimitChange,
   label,
   listContainerRef,
 }: PaginationComponentProps) {
   const [hasUserInteracted, setHasUserInteracted] = useState(false)
-  const prevPageRef = useRef(currentPage)
+  const prevOffsetRef = useRef(offset)
+
+  // Calculate current page and total pages for display
+  const currentPage = Math.floor(offset / limit) + 1
+  const totalPages = Math.ceil(totalEntries / limit)
 
   useEffect(() => {
     if (
       hasUserInteracted &&
-      prevPageRef.current !== currentPage &&
+      prevOffsetRef.current !== offset &&
       listContainerRef?.current
     ) {
       listContainerRef.current.scrollIntoView({
@@ -48,24 +52,51 @@ export function PaginationComponent({
         block: 'start',
       })
     }
-    prevPageRef.current = currentPage
-  }, [listContainerRef, currentPage, hasUserInteracted])
+    prevOffsetRef.current = offset
+  }, [listContainerRef, offset, hasUserInteracted])
 
-  const handlePageChange = (newPage: number) => {
+  // Navigation handlers
+  const handlePrevious = () => {
     setHasUserInteracted(true)
-    onPageChange(newPage)
+    onOffsetChange(Math.max(0, offset - limit))
+  }
+
+  const handleNext = () => {
+    setHasUserInteracted(true)
+    onOffsetChange(offset + limit)
+  }
+
+  const handleFirst = () => {
+    setHasUserInteracted(true)
+    onOffsetChange(0)
+  }
+
+  const handleLast = () => {
+    setHasUserInteracted(true)
+    onOffsetChange((totalPages - 1) * limit)
+  }
+
+  const handleLimitChange = (newLimit: string) => {
+    setHasUserInteracted(true)
+    logger(
+      'PaginationComponent: handleLimitChange called with newLimit:',
+      newLimit,
+    )
+    const parsedLimit = parseInt(newLimit, 10)
+    if (isNaN(parsedLimit)) {
+      logger('PaginationComponent: Invalid limit value:', newLimit)
+      return
+    }
+    onLimitChange(parsedLimit)
   }
 
   return (
     <Pagination className="flex w-full justify-between max-sm:flex-col max-sm:items-center max-sm:gap-3">
-      <PaginationSummary totalEntries={totalEntries} label={label} />
+      <PaginationSummary totalEntries={totalEntries} label={label || ''} />
       <div className="flex max-sm:flex-col max-sm:items-center max-sm:gap-3">
         <PaginationRowSelection
           value={limit.toString()}
-          onValueChange={(newLimit) => {
-            setHasUserInteracted(true)
-            onLimitChange(Number(newLimit))
-          }}
+          onValueChange={handleLimitChange}
         />
         <div className="flex items-center w-fit">
           <PaginationPageCounter
@@ -74,27 +105,24 @@ export function PaginationComponent({
           />
           <PaginationContent>
             <PaginationItem>
-              <PaginationFirst
-                onClick={() => handlePageChange(1)}
-                disabled={currentPage === 1}
-              />
+              <PaginationFirst onClick={handleFirst} disabled={offset === 0} />
             </PaginationItem>
             <PaginationItem>
               <PaginationPrevious
-                onClick={() => handlePageChange(currentPage - 1)}
-                disabled={currentPage === 1 || currentPage === undefined}
+                onClick={handlePrevious}
+                disabled={offset === 0}
               />
             </PaginationItem>
             <PaginationItem>
               <PaginationNext
-                onClick={() => handlePageChange(currentPage + 1)}
-                disabled={currentPage === totalPages}
+                onClick={handleNext}
+                disabled={offset + limit >= totalEntries}
               />
             </PaginationItem>
             <PaginationItem>
               <PaginationLast
-                onClick={() => handlePageChange(totalPages)}
-                disabled={currentPage === totalPages}
+                onClick={handleLast}
+                disabled={offset + limit >= totalEntries}
               />
             </PaginationItem>
           </PaginationContent>

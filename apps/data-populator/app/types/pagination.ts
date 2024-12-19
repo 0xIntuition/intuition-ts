@@ -1,6 +1,7 @@
 export interface PaginationType {
-  currentPage: number
-  limit: number
   totalEntries: number
-  totalPages: number
+  limit: number
+  offset: number
+  onOffsetChange: (offset: number) => void
+  onLimitChange: (limit: number) => void
 }

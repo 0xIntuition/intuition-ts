@@ -6,7 +6,11 @@ import { IdentityPositionRow } from '@components/identity/identity-position-row'
 import { ListHeader } from '@components/list/list-header'
 import { formatBalance, getProfileUrl } from '@lib/utils/misc'
 import { BLOCK_EXPLORER_URL } from 'app/consts'
-import { PaginationType } from 'app/types'
+import {
+  mapPaginationInput,
+  PaginationInput,
+  PaginationType,
+} from 'app/types/pagination'
 import { formatUnits } from 'viem'
 
 import { SortOption } from '../sort-select'
@@ -17,10 +21,12 @@ type Position = NonNullable<GetPositionsQuery['positions']>[number]
 export function PositionsOnIdentityNew({
   positions,
   pagination,
+  paramPrefix,
   readOnly = false,
 }: {
   positions: Position[]
-  pagination: { aggregate?: { count: number } } | number
+  pagination: PaginationInput
+  paramPrefix: string
   readOnly?: boolean
 }) {
   const options: SortOption<PositionSortColumn>[] = [
@@ -29,22 +35,12 @@ export function PositionsOnIdentityNew({
     { value: 'Created At', sortBy: 'CreatedAt' },
   ]
 
-  const paginationCount =
-    typeof pagination === 'number'
-      ? pagination
-      : pagination?.aggregate?.count ?? 0
-
   return (
     <List<PositionSortColumn>
-      pagination={{
-        currentPage: 1,
-        limit: 10,
-        totalEntries: paginationCount,
-        totalPages: Math.ceil(paginationCount / 10),
-      }}
+      pagination={mapPaginationInput(pagination)}
       paginationLabel="positions"
       options={options}
-      paramPrefix="positions"
+      paramPrefix={paramPrefix}
     >
       <ListHeader
         items={[
