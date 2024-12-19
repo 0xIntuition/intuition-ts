@@ -42,8 +42,11 @@ interface DeployedContract {
   name: string
   address: `0x${string}`
   abi: any[]
-  color: string
+  constructorValues: Record<string, string>
+  constructorToVariable: Record<string, string>
+  variableToConstructor: Record<string, string>
   points: Point[]
+  color: string
   totalAssets: bigint
   totalShares: bigint
   userAssets: bigint
@@ -51,9 +54,6 @@ interface DeployedContract {
   maxAssets: bigint
   maxShares: bigint
   previewPoints: Point[]
-  constructorValues: Record<string, string>
-  variableToConstructor: Record<string, string>
-  constructorToVariable: Record<string, string>
 }
 
 interface FileData {
@@ -72,6 +72,12 @@ interface AbiResponse {
 interface DeployResponse {
   address?: string
   error?: string
+}
+
+interface ContractInfo {
+  address: `0x${string}`
+  name: string
+  variables: StorageVariable[]
 }
 
 const CURVE_COLORS = [
@@ -103,6 +109,7 @@ export function CurveVisualizer() {
   const [contractLayout, setContractLayout] = useState<ContractLayout | null>(
     null,
   )
+  const [contractInfo, setContractInfo] = useState<ContractInfo | null>(null)
 
   // New state for simulation
   const [totalAssets, setTotalAssets] = useState<bigint>(0n)
@@ -179,14 +186,16 @@ export function CurveVisualizer() {
         const maxAssets = (await publicClient.readContract({
           address: address as `0x${string}`,
           abi,
-          functionName: 'MAX_ASSETS',
-        })) as bigint
+          functionName: 'maxAssets',
+          args: [],
+        })) as unknown as bigint
 
         const maxShares = (await publicClient.readContract({
           address: address as `0x${string}`,
           abi,
-          functionName: 'MAX_SHARES',
-        })) as bigint
+          functionName: 'maxShares',
+          args: [],
+        })) as unknown as bigint
 
         // Convert maxValue to Wei for comparison
         const maxValueWei = parseEther(currentMaxValue.toString())
@@ -195,23 +204,31 @@ export function CurveVisualizer() {
         const upperBoundWei = maxValueWei < maxAssets ? maxValueWei : maxAssets
         const stepWei = upperBoundWei / BigInt(numPoints)
 
-        for (let i = 0; i <= numPoints; i++) {
-          const assetsWei = stepWei * BigInt(i)
+        // Add the origin point explicitly
+        points.push({
+          x: 0,
+          y: 0,
+        })
+
+        // Start from the first non-zero step
+        for (let i = 1n; i <= BigInt(numPoints); i++) {
+          const assetsWei = stepWei * i
           if (assetsWei > maxAssets) break
 
           try {
+            // Use previewDeposit with totalAssets=0 and totalShares=0 for plotting
             const sharesWei = (await publicClient.readContract({
               address: address as `0x${string}`,
               abi,
-              functionName: 'integrateAssetsToShares',
-              args: [assetsWei],
-            })) as bigint
+              functionName: 'previewDeposit',
+              args: [assetsWei, 0n, 0n],
+            })) as unknown as bigint
 
             if (sharesWei > maxShares) break
 
             points.push({
-              x: Number(formatEther(assetsWei)),
-              y: Number(formatEther(sharesWei)),
+              x: parseFloat(formatEther(assetsWei)),
+              y: parseFloat(formatEther(sharesWei)),
             })
           } catch (err: any) {
             if (
@@ -612,170 +629,76 @@ export function CurveVisualizer() {
 
   const handleTotalAssetsChange = useCallback(
     async (newValue: string) => {
-      if (!selectedCurveId) return
-      const curve = deployedContracts.find((c) => c.id === selectedCurveId)
-      if (!curve) return
-
-      const numericValue = Number(newValue)
-      if (isNaN(numericValue) || numericValue < 0) return
-
       try {
-        const shares = await publicClient.readContract({
-          address: curve.address,
-          abi: curve.abi,
-          functionName: 'integrateAssetsToShares',
-          args: [parseEther(numericValue.toString())],
-        })
-        const sharesNum = Number(formatEther(BigInt(shares.toString())))
+        const parsedValue = parseEther(newValue || '0')
+        setTotalAssets(parsedValue)
 
-        // Calculate new max value if needed
-        let newMax = maxValue
-        if (numericValue > maxValue) {
-          newMax = Math.pow(2, Math.ceil(Math.log2(numericValue)))
+        // Update deployed contracts
+        if (selectedCurveId) {
+          setDeployedContracts((prev: DeployedContract[]) =>
+            prev.map((c) =>
+              c.id === selectedCurveId
+                ? {
+                    ...c,
+                    totalAssets: parsedValue,
+                    points: c.points.map((point) => ({
+                      ...point,
+                      totalValue:
+                        point.x <= parseFloat(formatEther(parsedValue))
+                          ? point.y
+                          : undefined,
+                      userValue:
+                        point.x <= parseFloat(formatEther(c.userAssets))
+                          ? point.y
+                          : undefined,
+                    })),
+                  }
+                : c,
+            ),
+          )
         }
-
-        // Batch state updates
-        setMaxValue(newMax)
-        setTotalAssets(numericValue)
-        setTotalShares(sharesNum)
-
-        // Update deployed contracts with new values
-        const updatedContracts = deployedContracts.map((c) =>
-          c.id === selectedCurveId
-            ? {
-                ...c,
-                totalAssets: numericValue,
-                totalShares: sharesNum,
-                points: c.points.map((point) => ({
-                  ...point,
-                  totalValue: point.x <= numericValue ? point.y : undefined,
-                  userValue: point.x <= c.userAssets ? point.y : undefined,
-                })),
-              }
-            : c,
-        )
-        setDeployedContracts(updatedContracts)
-
-        // Only regenerate curves if max value changed
-        if (newMax !== maxValue) {
-          // Use the latest values
-          latestRangeRef.current = { min: minValue, max: newMax }
-          if (pendingUpdateRef.current) {
-            clearTimeout(pendingUpdateRef.current)
-          }
-          pendingUpdateRef.current = setTimeout(async () => {
-            await regenerateCurves()
-            pendingUpdateRef.current = null
-          }, 100)
-        }
-      } catch (error) {
-        console.error('Error in handleTotalAssetsChange:', error)
+      } catch (err) {
+        console.error('Error updating total assets:', err)
       }
     },
-    [
-      selectedCurveId,
-      deployedContracts,
-      maxValue,
-      minValue,
-      publicClient,
-      regenerateCurves,
-    ],
+    [selectedCurveId, setDeployedContracts],
   )
 
   const handleTotalSharesChange = useCallback(
     async (newValue: string) => {
-      if (!selectedCurveId) return
-      const curve = deployedContracts.find((c) => c.id === selectedCurveId)
-      if (!curve) return
-
-      const numericValue = Number(newValue)
-      if (isNaN(numericValue) || numericValue < 0) return
-
-      // Start with a small step and gradually increase
-      let currentAssets = 0
-      let step = 0.1
-      let prevShares = 0
-      let prevAssets = 0
-      const EPSILON = 0.0001
-
       try {
-        // Binary search with dynamic step size
-        while (true) {
-          const shares = await publicClient.readContract({
-            address: curve.address,
-            abi: curve.abi,
-            functionName: 'integrateAssetsToShares',
-            args: [parseEther(currentAssets.toString())],
-          })
-          const sharesNum = Number(formatEther(BigInt(shares.toString())))
+        const parsedValue = parseEther(newValue || '0')
+        setTotalShares(parsedValue)
 
-          // Check if we've bracketed our target
-          if (Math.abs(sharesNum - numericValue) < EPSILON) {
-            // Found exact match within epsilon
-            setTotalShares(numericValue)
-            setTotalAssets(currentAssets)
-
-            // Update max value if needed before updating graph
-            if (currentAssets > maxValue) {
-              const newMax = Math.pow(2, Math.ceil(Math.log2(currentAssets)))
-              setMaxValue(newMax) // Update UI
-              handleMinMaxChange(minValue, newMax) // Regenerate curves
-            }
-
-            // Update deployed contracts state with new values
-            setDeployedContracts((prev) =>
-              prev.map((c) =>
-                c.id === selectedCurveId
-                  ? {
-                      ...c,
-                      totalAssets: currentAssets,
-                      totalShares: numericValue,
-                      points: c.points.map((point) => ({
-                        ...point,
-                        totalValue:
-                          point.x <= currentAssets ? point.y : undefined,
-                        userValue:
-                          point.x <= c.userAssets ? point.y : undefined,
-                      })),
-                    }
-                  : c,
-              ),
-            )
-            break
-          }
-
-          // Record previous values
-          prevShares = sharesNum
-          prevAssets = currentAssets
-
-          // Adjust assets based on comparison
-          if (sharesNum < numericValue) {
-            currentAssets += step
-            step *= 1.5 // Accelerate step size
-          } else {
-            currentAssets -= step
-            step /= 2 // Reduce step size for finer search
-          }
-
-          // Safety check to prevent infinite loops
-          if (currentAssets > 1000000 || currentAssets < 0) {
-            console.error('Search exceeded bounds')
-            return
-          }
+        // Update deployed contracts
+        if (selectedCurveId) {
+          setDeployedContracts((prev: DeployedContract[]) =>
+            prev.map((c) =>
+              c.id === selectedCurveId
+                ? {
+                    ...c,
+                    totalShares: parsedValue,
+                    points: c.points.map((point) => ({
+                      ...point,
+                      totalValue:
+                        point.x <= parseFloat(formatEther(c.totalAssets))
+                          ? point.y
+                          : undefined,
+                      userValue:
+                        point.x <= parseFloat(formatEther(c.userAssets))
+                          ? point.y
+                          : undefined,
+                    })),
+                  }
+                : c,
+            ),
+          )
         }
-      } catch (error) {
-        console.error('Error in handleTotalSharesChange:', error)
+      } catch (err) {
+        console.error('Error updating total shares:', err)
       }
     },
-    [
-      selectedCurveId,
-      deployedContracts,
-      maxValue,
-      minValue,
-      publicClient,
-      handleMinMaxChange,
-      setMaxValue,
-    ],
+    [selectedCurveId, setDeployedContracts],
   )
 
   const handleDepositAmountChange = useCallback(
@@ -1066,6 +989,60 @@ export function CurveVisualizer() {
     }
   }
 
+  const handleContractLayout = useCallback(
+    async (layout: {
+      name: string
+      variables: {
+        value: string
+        name: string
+        slot: number
+        type: string
+        isImmutable: boolean
+      }[]
+    }) => {
+      const formattedLayout: ContractLayout = {
+        name: layout.name,
+        variables: layout.variables.map((v) => ({
+          value: BigInt(v.value),
+          name: v.name,
+          slot: v.slot,
+          type: v.type,
+          isImmutable: v.isImmutable,
+        })),
+      }
+      setContractLayout(formattedLayout)
+    },
+    [],
+  )
+
+  const handleContractInfo = useCallback(
+    async (info: {
+      address: `0x${string}`
+      name: string
+      variables: {
+        value: string
+        name: string
+        slot: number
+        type: string
+        isImmutable: boolean
+      }[]
+    }) => {
+      const formattedInfo: ContractInfo = {
+        address: info.address,
+        name: info.name,
+        variables: info.variables.map((v) => ({
+          value: BigInt(v.value),
+          name: v.name,
+          slot: v.slot,
+          type: v.type,
+          isImmutable: v.isImmutable,
+        })),
+      }
+      setContractInfo(formattedInfo)
+    },
+    [],
+  )
+
   // Cleanup on unmount
   useEffect(() => {
     return () => {
@@ -1180,25 +1157,25 @@ export function CurveVisualizer() {
                 <div className="flex-1">
                   <Label>Total Assets</Label>
                   <Input
-                    type="number"
-                    value={totalAssets}
+                    type="text"
+                    value={formatEther(totalAssets).toString()}
                     onChange={(e) => handleTotalAssetsChange(e.target.value)}
-                    step={calculateStepSize(totalAssets)}
-                    min={0}
+                    step={calculateStepSize(
+                      parseFloat(formatEther(totalAssets)),
+                    ).toString()}
+                    min="0"
                   />
                 </div>
                 <div className="flex-1">
                   <Label>Total Shares</Label>
                   <Input
-                    type="number"
-                    value={totalShares}
-                    onChange={(e) => {
-                      const newValue = e.target.value
-                      setTotalShares(Number(newValue))
-                      handleTotalSharesChange(newValue)
-                    }}
-                    step={calculateStepSize(totalShares)}
-                    min={0}
+                    type="text"
+                    value={formatEther(totalShares).toString()}
+                    onChange={(e) => handleTotalSharesChange(e.target.value)}
+                    step={calculateStepSize(
+                      parseFloat(formatEther(totalShares)),
+                    ).toString()}
+                    min="0"
                   />
                 </div>
               </div>
