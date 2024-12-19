@@ -5,7 +5,6 @@ import { GetPositionsQuery } from '@0xintuition/graphql'
 import { IdentityPositionRow } from '@components/identity/identity-position-row'
 import { ListHeader } from '@components/list/list-header'
 import { BLOCK_EXPLORER_URL } from '@consts/general'
-import logger from '@lib/utils/logger'
 import {
   formatBalance,
   getAtomDescription,

@@ -24,7 +24,6 @@ import { PositionsOnClaimNew } from '@components/list/positions-on-claim'
 import RemixLink from '@components/remix-link'
 import { PaginatedListSkeleton, TabsSkeleton } from '@components/skeleton'
 import { useOffsetPagination } from '@lib/hooks/useOffsetPagination'
-import logger from '@lib/utils/logger'
 import {
   getAtomDescriptionGQL,
   getAtomImageGQL,

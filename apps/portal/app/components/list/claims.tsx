@@ -30,11 +30,7 @@ import {
   getClaimUrl,
 } from '@lib/utils/misc'
 import { Link } from '@remix-run/react'
-import {
-  mapPaginationInput,
-  PaginationInput,
-  PaginationType,
-} from 'app/types/pagination'
+import { PaginationType } from 'app/types/pagination'
 import { useSetAtom } from 'jotai'
 
 import { SortOption } from '../sort-select'

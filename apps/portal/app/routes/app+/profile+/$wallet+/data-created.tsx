@@ -56,7 +56,7 @@ type Triple = NonNullable<
   NonNullable<GetTriplesWithPositionsQuery['triples']>[number]
 >
 
-export async function loader({ request, params }: LoaderFunctionArgs) {
+export async function loader({ request }: LoaderFunctionArgs) {
   const user = await requireUser(request)
   invariant(user, 'User not found')
   invariant(user.wallet?.address, 'User wallet not found')

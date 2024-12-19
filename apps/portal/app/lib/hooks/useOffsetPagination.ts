@@ -6,15 +6,11 @@ import { useSearchParams } from '@remix-run/react'
 interface UseOffsetPaginationProps {
   defaultLimit?: number
   paramPrefix?: string
-  initialOffset?: number
-  initialLimit?: number
 }
 
 export function useOffsetPagination({
   defaultLimit = 10,
   paramPrefix,
-  initialOffset = 0,
-  initialLimit = 10,
 }: UseOffsetPaginationProps = {}) {
   const [searchParams, setSearchParams] = useSearchParams()
 

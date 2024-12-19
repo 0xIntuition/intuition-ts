@@ -4,7 +4,6 @@ import { GetPositionsQuery } from '@0xintuition/graphql'
 
 import { ClaimPositionRow } from '@components/claim/claim-position-row'
 import { ListHeader } from '@components/list/list-header'
-import logger from '@lib/utils/logger'
 import { formatBalance, getProfileUrl } from '@lib/utils/misc'
 import { BLOCK_EXPLORER_URL } from 'app/consts'
 import { PaginationType } from 'app/types/pagination'
