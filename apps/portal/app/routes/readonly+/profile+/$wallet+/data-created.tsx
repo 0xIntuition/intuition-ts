@@ -44,12 +44,11 @@ import {
 } from '@components/skeleton'
 import { NO_WALLET_ERROR } from '@consts/errors'
 import logger from '@lib/utils/logger'
-import { formatBalance } from '@lib/utils/misc'
+import { formatBalance, invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData, useSearchParams } from '@remix-run/react'
 import { requireUserWallet } from '@server/auth'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
-import { invariant } from 'framer-motion'
 
 type Atom = NonNullable<GetAtomsQuery['atoms']>[number]
 type Triple = NonNullable<
