@@ -43,10 +43,10 @@ describe('ClaimRow', () => {
                     data-state="closed"
                   >
                     <span
-                      class="flex h-full w-full items-center justify-center bg-inherit"
+                      class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background theme-border rounded"
                     >
-                      <svg
-                        class="text-primary/30 w-[80%] h-[80%] max-w-8 max-h-8"
+                      <span
+                        class="flex h-full w-full items-center justify-center bg-inherit"
                       >
                         <svg
                           class="text-primary/30 w-[80%] h-[80%]"
@@ -75,10 +75,10 @@ describe('ClaimRow', () => {
                     data-state="closed"
                   >
                     <span
-                      class="flex h-full w-full items-center justify-center bg-inherit"
+                      class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background theme-border rounded"
                     >
-                      <svg
-                        class="text-primary/30 w-[80%] h-[80%] max-w-8 max-h-8"
+                      <span
+                        class="flex h-full w-full items-center justify-center bg-inherit"
                       >
                         <svg
                           class="text-primary/30 w-[80%] h-[80%]"
@@ -465,126 +465,6 @@ describe('ClaimRow', () => {
             >
               You have staked 3.19 ETH for this claim
             </div>
-            <div
-              class="flex items-center gap-3"
-            >
-              <svg
-                class="h-4 w-4"
-              >
-                <use
-                  href="/src/components/Icon/Icon.sprites.svg#arrow-up"
-                />
-              </svg>
-
-              <div
-                class="h-9 justify-start items-center gap-1 inline-flex"
-              >
-                <div
-                  class="justify-start items-center gap-1 flex"
-                >
-                  <div
-                    class="flex-col justify-start items-end inline-flex"
-                  >
-                    <div
-                      class="text-sm font-normal text-primary/70"
-                    >
-                      TVL
-                    </div>
-                    <div
-                      class="text-primary text-sm font-normal"
-                    >
-                      420.69 ETH
-                    </div>
-                  </div>
-                </div>
-                <div
-                  class="p-0.5"
-                >
-                  <div
-                    class="grid"
-                  >
-                    <span
-                      class="col-[1] row-[1] rounded-full block"
-                      style="height: 32px; width: 32px; mask: radial-gradient(farthest-side,#0000 calc(99% - 4px),var(--background) calc(100% - 4px);"
-                    />
-                    <span
-                      class="col-[1] row-[1] border-muted-foreground rounded-full block"
-                      style="border-width: 4px;"
-                    />
-                  </div>
-                </div>
-              </div>
-            </button>
-            <button
-              class="flex justify-center items-center text-sm font-medium border disabled:text-muted-foreground aria-disabled:text-muted-foreground disabled:border-muted aria-disabled:border-muted aria-disabled:pointer-events-none bg-gradient-to-b from-transparent to-transparent rounded-lg hover:text-primary disabled:bg-transparent aria-disabled:bg-transparent aria-selected:primary-gradient-subtle aria-selected:border-primary/10 shadow-md-subtle max-sm:py-2 max-sm:text-base py-0.5 px-2.5 gap-1.5 h-9 w-16 bg-against/10 border-against/30 hover:bg-against hover:border-against/50 text-against"
-            >
-              <svg
-                class="h-4 w-4"
-              >
-                <use
-                  href="/src/components/Icon/Icon.sprites.svg#arrow-up"
-                />
-              </svg>
-
-              <div
-                class="text-sm font-normal text-inherit"
-              >
-                42
-              </div>
-            </button>
-            <span
-              data-state="closed"
-            >
-              <button
-                class="flex justify-center items-center text-sm font-medium border aria-disabled:text-muted-foreground aria-disabled:border-muted aria-disabled:pointer-events-none bg-gradient-to-b from-transparent to-transparent hover:text-primary aria-disabled:bg-transparent aria-selected:primary-gradient-subtle aria-selected:border-primary/10 shadow-md-subtle max-sm:py-2 max-sm:text-base py-0.5 px-2.5 gap-1.5 h-9 w-16 rounded-xl disabled:bg-primary/5 disabled:border-primary/20 disabled:text-primary/20 bg-for/10 border-for/30 hover:bg-for hover:border-for/50 text-for"
-              >
-                <svg
-                  class="h-4 w-4"
-                >
-                  <use
-                    href="/src/components/Icon/Icon.sprites.svg#arrow-up"
-                  />
-                </svg>
-                <div
-                  class="text-sm font-normal text-inherit"
-                >
-                  69
-                </div>
-              </button>
-              <button
-                class="flex justify-center items-center text-sm font-medium border aria-disabled:text-muted-foreground aria-disabled:border-muted aria-disabled:pointer-events-none bg-gradient-to-b from-transparent to-transparent hover:text-primary aria-disabled:bg-transparent aria-selected:primary-gradient-subtle aria-selected:border-primary/10 shadow-md-subtle max-sm:py-2 max-sm:text-base py-0.5 px-2.5 gap-1.5 h-9 w-16 rounded-xl disabled:bg-primary/5 disabled:border-primary/20 disabled:text-primary/20 bg-against/10 border-against/30 hover:bg-against hover:border-against/50 text-against"
-              >
-                <svg
-                  class="h-4 w-4"
-                >
-                  <use
-                    href="/src/components/Icon/Icon.sprites.svg#arrow-down"
-                  />
-                </svg>
-                <div
-                  class="text-sm font-normal text-inherit"
-                >
-                  42
-                </div>
-              </button>
-              <span
-                data-disabled=""
-                data-state="closed"
-              >
-                <button
-                  class="flex justify-center items-center gap-2 text-sm font-medium border disabled:text-muted-foreground aria-disabled:text-muted-foreground aria-disabled:pointer-events-none bg-transparent text-primary/70 border-transparent hover:text-primary disabled:border-transparent aria-disabled:border-transparent disabled:bg-transparent aria-disabled:bg-transparent shadow-none p-1"
-                  disabled=""
-                >
-                  <svg
-                    class="text-secondary/70 h-4 w-4"
-                  >
-                    <use
-                      href="/src/components/Icon/Icon.sprites.svg#context"
-                    />
-                  </svg>
-                </button>
-              </span>
-            </div>
           </div>
         </div>
       </DocumentFragment>
@@ -638,7 +518,7 @@ describe('ClaimRow', () => {
                         class="flex h-full w-full items-center justify-center bg-inherit"
                       >
                         <svg
-                          class="text-primary/30 w-[80%] h-[80%] max-w-8 max-h-8"
+                          class="text-primary/30 w-[80%] h-[80%]"
                         >
                           <use
                             href="/src/components/Icon/Icon.sprites.svg#fingerprint"
@@ -670,7 +550,7 @@ describe('ClaimRow', () => {
                         class="flex h-full w-full items-center justify-center bg-inherit"
                       >
                         <svg
-                          class="text-primary/30 w-[80%] h-[80%] max-w-8 max-h-8"
+                          class="text-primary/30 w-[80%] h-[80%]"
                         >
                           <use
                             href="/src/components/Icon/Icon.sprites.svg#fingerprint"
@@ -702,7 +582,7 @@ describe('ClaimRow', () => {
                         class="flex h-full w-full items-center justify-center bg-inherit"
                       >
                         <svg
-                          class="text-primary/30 w-[80%] h-[80%] max-w-8 max-h-8"
+                          class="text-primary/30 w-[80%] h-[80%]"
                         >
                           <use
                             href="/src/components/Icon/Icon.sprites.svg#fingerprint"

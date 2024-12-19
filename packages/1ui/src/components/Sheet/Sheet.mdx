@@ -1,0 +1,57 @@
+import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
+
+import * as SheetStories from './Sheet.stories'
+
+<Meta of={SheetStories} />
+
+<Title />
+
+#### A slide-out panel component for displaying content from the edges of the screen.
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@0xintuition/1ui'
+
+<Sheet>
+  <SheetTrigger>Open Sheet</SheetTrigger>
+  <SheetContent>
+    <SheetHeader>
+      <SheetTitle>Sheet Title</SheetTitle>
+      <SheetDescription>Sheet description goes here.</SheetDescription>
+    </SheetHeader>
+    <div>Content</div>
+  </SheetContent>
+</Sheet>
+`} />
+
+<Canvas of={SheetStories.Default} sourceState="none" />
+
+## Properties
+
+<Controls />
+
+## Variants
+
+### With Custom Position
+
+The Sheet can be configured to slide in from different sides of the screen.
+
+<Source
+  dark
+  language="tsx"
+  code={`
+<Sheet>
+  <SheetTrigger>Open Sheet</SheetTrigger>
+  <SheetContent side="right">
+    <SheetHeader>
+      <SheetTitle>Right Sheet</SheetTitle>
+    </SheetHeader>
+    <div>Content</div>
+  </SheetContent>
+</Sheet>
+`}
+/>
+
+<Canvas of={SheetStories.WithCustomPosition} sourceState="none" />
