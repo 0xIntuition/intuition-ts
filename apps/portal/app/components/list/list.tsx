@@ -10,7 +10,6 @@ import {
 import { Search } from '@components/search'
 import { Sort } from '@components/sort'
 import { SortOption } from '@components/sort-select'
-import { useOffsetPagination } from '@lib/hooks/useOffsetPagination'
 import { useSearchAndSortParamsHandler } from '@lib/hooks/useSearchAndSortParams'
 import {
   globalCreateClaimModalAtom,
@@ -42,7 +41,6 @@ export function List<T extends SortColumnType>({
 }) {
   const { handleSortChange, handleSearchChange } =
     useSearchAndSortParamsHandler<T>(paramPrefix)
-  const { onPageChange, onLimitChange } = useOffsetPagination(paramPrefix)
 
   const listContainerRef = useRef<HTMLDivElement>(null)
 
@@ -88,12 +86,11 @@ export function List<T extends SortColumnType>({
       )}
       {pagination && (
         <PaginationComponent
-          totalEntries={pagination.totalEntries ?? 0}
-          currentPage={pagination.currentPage ?? 0}
-          totalPages={pagination.totalPages ?? 0}
-          limit={pagination.limit ?? 0}
-          onPageChange={onPageChange}
-          onLimitChange={onLimitChange}
+          totalEntries={pagination.totalEntries}
+          offset={pagination.offset}
+          limit={pagination.limit}
+          onOffsetChange={pagination.onOffsetChange}
+          onLimitChange={pagination.onLimitChange}
           label={paginationLabel}
           listContainerRef={listContainerRef}
         />

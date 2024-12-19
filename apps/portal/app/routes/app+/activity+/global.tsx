@@ -67,7 +67,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 export default function GlobalActivityFeed() {
   const { initialParams } = useLoaderData<typeof loader>()
-  const { limit, offset, currentPage } = useOffsetPagination({
+  const { limit, offset, onOffsetChange, onLimitChange } = useOffsetPagination({
     defaultLimit: 10,
   })
 
@@ -110,11 +110,7 @@ export default function GlobalActivityFeed() {
     },
   )
 
-  logger('Full events response:', eventsData)
-  logger('Addresses being passed to query:', initialParams.queryAddresses)
-
   const totalCount = eventsData?.total?.aggregate?.count ?? 0
-  logger('totalCount', totalCount)
 
   return (
     <>
@@ -140,10 +136,11 @@ export default function GlobalActivityFeed() {
           <ActivityListNew
             activities={eventsData.events as Events[]}
             pagination={{
-              currentPage,
+              offset,
               limit,
               totalEntries: totalCount,
-              totalPages: Math.ceil(totalCount / limit),
+              onOffsetChange,
+              onLimitChange,
             }}
           />
         ) : (
