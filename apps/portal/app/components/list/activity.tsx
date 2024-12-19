@@ -28,7 +28,6 @@ import { Events } from '@0xintuition/graphql'
 
 import RemixLink from '@components/remix-link'
 import { stakeModalAtom } from '@lib/state/store'
-import logger from '@lib/utils/logger'
 import {
   formatBalance,
   getAtomDescription,
@@ -79,7 +78,6 @@ export function ActivityListNew({
       `redeemed ${formatBalance(value, 18)} ETH from a claim`,
   }
 
-  logger('activities in activity list', activities)
   return (
     <List<SortColumn>
       pagination={pagination}
@@ -132,12 +130,6 @@ function ActivityItemNew({
       : eventMessage.toString()
     : ''
 
-  logger('activity', activity)
-  logger(
-    'user shares on triple',
-    activity?.triple?.vault?.positions?.[0]?.shares ?? '0',
-  )
-
   const setStakeModalActive = useSetAtom(stakeModalAtom)
 
   // Basic required fields with fallbacks
@@ -147,7 +139,7 @@ function ActivityItemNew({
 
   // Get creator from either atom or triple
   const creator = activity.atom?.creator || activity.triple?.creator
-  logger('creator', creator)
+
   const creatorAddress =
     activity?.atom?.creator?.id || activity?.triple?.creator?.id || '0x'
   const atomId = activity.atom?.id || ''
@@ -155,8 +147,6 @@ function ActivityItemNew({
   function formatTransactionHash(txHash: string): string {
     return `0x${txHash.replace('\\x', '')}`
   }
-
-  logger('format balance test', formatBalance('3726450001000000', 18))
 
   return (
     <div

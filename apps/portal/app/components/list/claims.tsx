@@ -30,7 +30,7 @@ import {
   getClaimUrl,
 } from '@lib/utils/misc'
 import { Link } from '@remix-run/react'
-import { PaginationType } from 'app/types'
+import { PaginationType } from 'app/types/pagination'
 import { useSetAtom } from 'jotai'
 
 import { SortOption } from '../sort-select'
@@ -45,8 +45,8 @@ type Triple = NonNullable<
 // TODO: (ENG-4830) Add ReadOnly support back in and update our util functions that use it
 interface ClaimsListNewProps {
   claims: Triple[]
-  pagination: { aggregate?: { count: number } } | number
-  paramPrefix?: string
+  pagination: PaginationType
+  paramPrefix: string
   enableHeader?: boolean
   enableSearch?: boolean
   enableSort?: boolean
@@ -64,11 +64,6 @@ export function ClaimsListNew({
 }: ClaimsListNewProps) {
   const setStakeModalActive = useSetAtom(stakeModalAtom)
 
-  const paginationCount =
-    typeof pagination === 'number'
-      ? pagination
-      : pagination?.aggregate?.count ?? 0
-
   const options: SortOption<ClaimSortColumn>[] = [
     { value: 'Total ETH', sortBy: 'AssetsSum' },
     { value: 'ETH For', sortBy: 'ForAssetsSum' },
@@ -82,12 +77,7 @@ export function ClaimsListNew({
 
   return (
     <List<ClaimSortColumn>
-      pagination={{
-        currentPage: 1,
-        limit: 10,
-        totalEntries: paginationCount,
-        totalPages: Math.ceil(paginationCount / 10),
-      }}
+      pagination={pagination}
       paginationLabel="claims"
       options={options}
       paramPrefix={paramPrefix}

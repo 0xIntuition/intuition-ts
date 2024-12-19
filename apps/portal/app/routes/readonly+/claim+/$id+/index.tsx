@@ -22,6 +22,7 @@ import { ErrorPage } from '@components/error-page'
 import { PositionsOnClaimNew } from '@components/list/positions-on-claim'
 import RemixLink from '@components/remix-link'
 import { PaginatedListSkeleton, TabsSkeleton } from '@components/skeleton'
+import { useOffsetPagination } from '@lib/hooks/useOffsetPagination'
 import {
   getAtomDescriptionGQL,
   getAtomImageGQL,
@@ -43,6 +44,8 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
   const url = new URL(request.url)
   const searchParams = new URLSearchParams(url.search)
+  const limit = parseInt(searchParams.get('limit') || '10')
+  const offset = parseInt(searchParams.get('offset') || '0')
 
   const queryClient = new QueryClient()
 
@@ -52,11 +55,15 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
       {
         id: params.id,
         positionDirection: searchParams.get('positionDirection'),
+        limit,
+        offset,
       },
     ],
     queryFn: () =>
       fetcher<GetTripleQuery, GetTripleQueryVariables>(GetTripleDocument, {
         tripleId: id,
+        limit,
+        offset,
       })(),
   })
 
@@ -64,6 +71,8 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     dehydratedState: dehydrate(queryClient),
     initialParams: {
       id,
+      limit,
+      offset,
     },
   })
 }
@@ -74,21 +83,11 @@ export default function ReadOnlyClaimOverview() {
   const [searchParams, setSearchParams] = useSearchParams()
   const [isNavigating, setIsNavigating] = useState(false)
   const positionDirection = searchParams.get('positionDirection')
-
-  const { data: tripleData, isLoading } = useGetTripleQuery(
-    {
-      tripleId: initialParams.id,
-    },
-    {
-      queryKey: [
-        'get-triple',
-        {
-          id: initialParams.id,
-          positionDirection,
-        },
-      ],
-    },
-  )
+  const { limit, offset, onOffsetChange, onLimitChange } = useOffsetPagination({
+    defaultLimit: 10,
+    initialLimit: initialParams.limit,
+    initialOffset: initialParams.offset,
+  })
 
   const { state } = useNavigation()
 
@@ -100,8 +99,11 @@ export default function ReadOnlyClaimOverview() {
       newParams.set('positionDirection', value)
     }
     newParams.delete('positionsSearch')
-    newParams.set('page', '1')
-    setSearchParams(newParams)
+    newParams.delete('offset') // Reset offset when changing tabs
+    setSearchParams(newParams, {
+      replace: true,
+      preventScrollReset: true,
+    })
     setIsNavigating(true)
   }
 
@@ -110,6 +112,34 @@ export default function ReadOnlyClaimOverview() {
       setIsNavigating(false)
     }
   }, [state])
+
+  const { data: tripleData, isLoading } = useGetTripleQuery(
+    {
+      tripleId: initialParams.id,
+      limit,
+      offset,
+    },
+    {
+      queryKey: [
+        'get-triple',
+        {
+          id: initialParams.id,
+          positionDirection,
+          limit,
+          offset,
+        },
+      ],
+    },
+  )
+
+  const totalCount =
+    positionDirection === 'for'
+      ? tripleData?.triple?.vault?.allPositions?.aggregate?.count ?? 0
+      : positionDirection === 'against'
+        ? tripleData?.triple?.counterVault?.allPositions?.aggregate?.count ?? 0
+        : (tripleData?.triple?.vault?.allPositions?.aggregate?.count ?? 0) +
+          (tripleData?.triple?.counterVault?.allPositions?.aggregate?.count ??
+            0)
 
   return (
     <div className="flex-col justify-start items-start flex w-full gap-6">
@@ -230,13 +260,11 @@ export default function ReadOnlyClaimOverview() {
               tripleData?.triple?.counterVault?.positions ?? []
             }
             pagination={{
-              aggregate: {
-                count:
-                  (tripleData?.triple?.vault?.allPositions?.aggregate?.count ??
-                    0) +
-                  (tripleData?.triple?.counterVault?.allPositions?.aggregate
-                    ?.count ?? 0),
-              },
+              totalEntries: totalCount,
+              limit,
+              offset,
+              onOffsetChange,
+              onLimitChange,
             }}
             positionDirection={positionDirection ?? undefined}
           />

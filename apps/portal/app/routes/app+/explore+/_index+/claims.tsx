@@ -24,60 +24,50 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   const url = new URL(request.url)
   const searchParams = new URLSearchParams(url.search)
-  const { page, limit, sortBy, direction } = getStandardPageParams({
+  const { offset, limit, sortBy, direction } = getStandardPageParams({
     searchParams,
   })
   const subjectId = searchParams.get('subject') || null
   const predicateId = searchParams.get('predicate') || null
   const objectId = searchParams.get('object') || null
 
-  const claims = await fetchWrapper(request, {
-    method: ClaimsService.searchClaims,
-    args: {
-      page,
-      limit,
-      sortBy: sortBy as ClaimSortColumn,
-      direction,
-      subject: subjectId,
-      predicate: predicateId,
-      object: objectId,
-    },
+  const claims = await fetchWrapper(request, ClaimsService, {
+    offset,
+    limit,
+    sortBy: sortBy as ClaimSortColumn,
+    direction,
+    subject: subjectId,
+    predicate: predicateId,
+    object: objectId,
   })
 
-  const identities = await fetchWrapper(request, {
-    method: IdentitiesService.searchIdentity,
-    args: {
-      page: 1,
-      limit: 20,
-      sortBy: 'CreatedAt',
-      direction: 'desc',
-    },
+  const identities = await fetchWrapper(request, IdentitiesService, {
+    offset: 0,
+    limit: 10,
+    search: null,
   })
-
-  const claimsTotalPages = calculateTotalPages(claims?.total ?? 0, limit)
 
   return json({
-    identities: identities?.data,
-    claims: claims?.data as ClaimPresenter[],
+    claims: claims.data as ClaimPresenter[],
     claimsPagination: {
-      currentPage: page,
+      totalEntries: claims.total ?? 0,
       limit,
-      totalEntries: claims?.total ?? 0,
-      totalPages: claimsTotalPages,
+      offset,
+      onOffsetChange: () => {},
+      onLimitChange: () => {},
     },
+    identities: identities.data,
   })
 }
 
 export default function ExploreClaims() {
-  const { claims, claimsPagination } = useLiveLoader<typeof loader>([
-    'create',
-    'attest',
-  ])
+  const { claims, claimsPagination } = useLiveLoader<typeof loader>()
+
   return (
     <>
       <ExploreHeader
         title="Claims"
-        content="Semantic statements, allowing anyone to claim anything about anything."
+        description="Explore claims made about identities"
         icon={IconName.claim}
         bgImage={HEADER_BANNER_CLAIMS}
       />

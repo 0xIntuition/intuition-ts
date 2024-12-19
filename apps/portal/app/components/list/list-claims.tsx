@@ -28,7 +28,6 @@ export function ListClaimsList<T extends SortColumnType = ClaimSortColumn>({
   paramPrefix,
   enableSearch = false,
   enableSort = false,
-  onLoadMore,
   sortOptions,
   sourceUserAddress,
   readOnly = false,
@@ -38,7 +37,6 @@ export function ListClaimsList<T extends SortColumnType = ClaimSortColumn>({
   paramPrefix?: string
   enableSearch?: boolean
   enableSort?: boolean
-  onLoadMore?: () => void
   sortOptions?: SortOption<T>[]
   sourceUserAddress?: string
   readOnly?: boolean
@@ -55,78 +53,63 @@ export function ListClaimsList<T extends SortColumnType = ClaimSortColumn>({
   ]
 
   const options = sortOptions || defaultOptions
-
   const [isLoading, setIsLoading] = useState(false)
-
-  const uniqueClaimData = Array.from(
-    new Map(
-      listClaims.map((claim) => [
-        claim.object?.identity_id || 'unknown',
-        claim,
-      ]),
-    ).values(),
-  ).map((claim) => ({
-    object: claim.object,
-    user_assets_for: claim.user_assets_for,
-    claim_id: claim.claim_id,
-    vault_id: claim.vault_id,
-  }))
-
   const listContainerRef = useRef<HTMLDivElement>(null)
   const { handleSearchChange, handleSortChange } =
     useSearchAndSortParamsHandler(paramPrefix)
 
-  if (!uniqueClaimData.length) {
-    return <EmptyStateCard message="No lists found." />
-  }
-
   const handleLoadMore = async () => {
-    if (onLoadMore) {
+    if (pagination) {
       setIsLoading(true)
-      await onLoadMore()
-      setIsLoading(false)
+      try {
+        pagination.onOffsetChange(pagination.offset + pagination.limit)
+      } finally {
+        setIsLoading(false)
+      }
     }
   }
 
+  if (!listClaims.length) {
+    return <EmptyStateCard message="No lists found." />
+  }
+
   return (
-    <div className="flex flex-col w-full">
-      <div className="flex flex-col w-full" ref={listContainerRef}>
-        <div
-          className={`flex flex-row w-full ${enableSearch ? 'justify-between' : 'justify-end'} ${enableSort ? 'mb-6' : 'mb-0'}`}
-        >
-          {enableSearch && <Search handleSearchChange={handleSearchChange} />}
-          {enableSort && options && options.length > 0 && (
+    <div ref={listContainerRef}>
+      {(enableSearch || enableSort) && (
+        <div className="flex flex-col md:flex-row gap-4 mb-6">
+          {enableSearch && (
+            <Search
+              placeholder="Search lists..."
+              onChange={handleSearchChange}
+              className="w-full md:w-96"
+            />
+          )}
+          {enableSort && (
             <Sort
-              options={options as SortOption<T>[]}
-              handleSortChange={handleSortChange}
+              options={options}
+              onChange={handleSortChange}
+              className="w-full md:w-96"
             />
           )}
         </div>
-        <ListGrid>
-          {uniqueClaimData
-            .filter((claim) => claim && claim.object)
-            .map((claim, index) => (
-              <ListCard
-                key={claim.claim_id || index}
-                displayName={claim.object?.display_name ?? 'Unknown'}
-                imgSrc={claim.object?.image ?? undefined}
-                identitiesCount={claim.object?.tag_count ?? 0}
-                buttonWrapper={(button) => (
-                  <Link
-                    to={getListUrl(
-                      claim.vault_id,
-                      sourceUserAddress ?? '',
-                      readOnly,
-                    )}
-                    prefetch="intent"
-                  >
-                    {button}
-                  </Link>
-                )}
-              />
-            ))}
-        </ListGrid>
-        {pagination && pagination.currentPage < pagination.totalPages && (
+      )}
+      <ListGrid>
+        {listClaims.map((listClaim) => (
+          <ListCard
+            key={listClaim.claim_id}
+            title={listClaim.object?.label ?? ''}
+            description={listClaim.object?.description ?? ''}
+            image={listClaim.object?.image ?? ''}
+            link={
+              <Link to={getListUrl(listClaim.claim_id, readOnly)}>
+                View List
+              </Link>
+            }
+          />
+        ))}
+      </ListGrid>
+      {pagination &&
+        pagination.offset + pagination.limit < pagination.totalEntries && (
           <div className="flex justify-center mt-4">
             <Button
               onClick={handleLoadMore}
@@ -137,7 +120,6 @@ export function ListClaimsList<T extends SortColumnType = ClaimSortColumn>({
             </Button>
           </div>
         )}
-      </div>
     </div>
   )
 }
@@ -187,46 +169,56 @@ export function ListClaimsListNew<T extends SortColumnType = ClaimSortColumn>({
   }
 
   const handleLoadMore = async () => {
-    if (onLoadMore) {
+    if (pagination) {
       setIsLoading(true)
-      await onLoadMore()
-      setIsLoading(false)
+      try {
+        pagination.onOffsetChange(pagination.offset + pagination.limit)
+      } finally {
+        setIsLoading(false)
+      }
     }
   }
 
   return (
-    <div className="flex flex-col w-full">
-      <div className="flex flex-col w-full" ref={listContainerRef}>
-        <div
-          className={`flex flex-row w-full ${enableSearch ? 'justify-between' : 'justify-end'} ${enableSort ? 'mb-6' : 'mb-0'}`}
-        >
-          {enableSearch && <Search handleSearchChange={handleSearchChange} />}
-          {enableSort && options && options.length > 0 && (
+    <div ref={listContainerRef}>
+      {(enableSearch || enableSort) && (
+        <div className="flex flex-col md:flex-row gap-4 mb-6">
+          {enableSearch && (
+            <Search
+              placeholder="Search lists..."
+              onChange={handleSearchChange}
+              className="w-full md:w-96"
+            />
+          )}
+          {enableSort && (
             <Sort
-              options={options as SortOption<T>[]}
-              handleSortChange={handleSortChange}
+              options={options}
+              onChange={handleSortChange}
+              className="w-full md:w-96"
             />
           )}
         </div>
-        <ListGrid>
-          {listClaims.map((claim, index) => (
-            <ListCard
-              key={claim.id || index}
-              displayName={claim.object?.label ?? 'Unknown'}
-              imgSrc={claim.object?.image ?? undefined}
-              identitiesCount={claim.claimCount ?? 0}
-              buttonWrapper={(button) => (
-                <Link
-                  to={getListUrl(claim.id, sourceUserAddress ?? '', readOnly)}
-                  prefetch="intent"
-                >
-                  {button}
-                </Link>
-              )}
-            />
-          ))}
-        </ListGrid>
-        {pagination && pagination.currentPage < pagination.totalPages && (
+      )}
+      <ListGrid>
+        {listClaims.map((claim, index) => (
+          <ListCard
+            key={claim.id || index}
+            displayName={claim.object?.label ?? 'Unknown'}
+            imgSrc={claim.object?.image ?? undefined}
+            identitiesCount={claim.claimCount ?? 0}
+            buttonWrapper={(button) => (
+              <Link
+                to={getListUrl(claim.id, sourceUserAddress ?? '', readOnly)}
+                prefetch="intent"
+              >
+                {button}
+              </Link>
+            )}
+          />
+        ))}
+      </ListGrid>
+      {pagination &&
+        pagination.offset + pagination.limit < pagination.totalEntries && (
           <div className="flex justify-center mt-4">
             <Button
               onClick={handleLoadMore}
@@ -237,7 +229,6 @@ export function ListClaimsListNew<T extends SortColumnType = ClaimSortColumn>({
             </Button>
           </div>
         )}
-      </div>
     </div>
   )
 }

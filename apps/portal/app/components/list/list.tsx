@@ -39,7 +39,7 @@ export function List<T extends SortColumnType>({
   enableSearch?: boolean
   enableSort?: boolean
 }) {
-  const { handleSortChange, handleSearchChange, onPageChange, onLimitChange } =
+  const { handleSortChange, handleSearchChange } =
     useSearchAndSortParamsHandler<T>(paramPrefix)
 
   const listContainerRef = useRef<HTMLDivElement>(null)
@@ -86,14 +86,11 @@ export function List<T extends SortColumnType>({
       )}
       {pagination && (
         <PaginationComponent
-          totalEntries={pagination.totalEntries ?? 0}
-          currentPage={pagination.currentPage ?? 0}
-          totalPages={pagination.totalPages ?? 0}
-          limit={pagination.limit ?? 0}
-          onPageChange={(newOffset) => {
-            onPageChange(newOffset)
-          }}
-          onLimitChange={onLimitChange}
+          totalEntries={pagination.totalEntries}
+          offset={pagination.offset}
+          limit={pagination.limit}
+          onOffsetChange={pagination.onOffsetChange}
+          onLimitChange={pagination.onLimitChange}
           label={paginationLabel}
           listContainerRef={listContainerRef}
         />

@@ -34,6 +34,7 @@ import { OverviewAboutHeaderNew as OverviewAboutHeader } from '@components/profi
 import { OverviewCreatedHeader } from '@components/profile/overview-created-header'
 import { OverviewStakingHeader } from '@components/profile/overview-staking-header'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
+import { useOffsetPagination } from '@lib/hooks/useOffsetPagination'
 import { getIdentityOrPending } from '@lib/services/identities'
 import { getUserSavedLists } from '@lib/services/lists'
 import logger from '@lib/utils/logger'
@@ -61,13 +62,18 @@ export async function loader({ request }: LoaderFunctionArgs) {
     userWallet,
   )
 
-  // const url = new URL(request.url)
-  // const searchParams = new URLSearchParams(url.search)
+  const url = new URL(request.url)
+  const searchParams = new URLSearchParams(url.search)
 
   const listSearchParams = new URLSearchParams()
   listSearchParams.set('sortsBy', ClaimSortColumn.ASSETS_SUM)
   listSearchParams.set('direction', SortDirection.DESC)
-  listSearchParams.set('limit', '6')
+  listSearchParams.set('limit', searchParams.get('lists_limit') ?? '6')
+  listSearchParams.set('offset', searchParams.get('lists_offset') ?? '0')
+
+  const listsLimit = +(searchParams.get('lists_limit') ?? '6')
+  const listsOffset = +(searchParams.get('lists_offset') ?? '0')
+
   logger('wallet', userWallet.toLowerCase())
 
   const queryClient = new QueryClient()
@@ -239,6 +245,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
       atomPositionsWhere,
       triplePositionsWhere,
       allPositionsWhere,
+      listsLimit,
+      listsOffset,
     },
     ...(!isPending &&
       !!userIdentity && {
@@ -319,6 +327,17 @@ export default function UserProfileOverview() {
 
   const { data: allPositionsResult } = useGetPositionsCountByTypeQuery({
     where: allPositionsWhere,
+  })
+
+  const {
+    offset: listsOffset,
+    limit: listsLimit,
+    onOffsetChange: onListsOffsetChange,
+    onLimitChange: onListsLimitChange,
+  } = useOffsetPagination({
+    paramPrefix: 'lists',
+    initialOffset: initialParams.listsOffset,
+    initialLimit: initialParams.listsLimit,
   })
 
   return (
@@ -424,6 +443,14 @@ export default function UserProfileOverview() {
         </Text>
         <ListClaimsList
           listClaims={savedListClaims?.savedListClaims ?? []}
+          pagination={{
+            totalEntries: savedListClaims?.totalCount ?? 0,
+            limit: listsLimit,
+            offset: listsOffset,
+            onOffsetChange: onListsOffsetChange,
+            onLimitChange: onListsLimitChange,
+          }}
+          paramPrefix="lists"
           enableSort={false}
           enableSearch={false}
         />
