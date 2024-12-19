@@ -49,7 +49,7 @@ type Triple = NonNullable<
 // TODO: (ENG-4830) Add ReadOnly support back in and update our util functions that use it
 interface ClaimsListNewProps {
   claims: Triple[]
-  pagination: PaginationInput
+  pagination: PaginationType
   paramPrefix: string
   enableHeader?: boolean
   enableSearch?: boolean
@@ -81,7 +81,7 @@ export function ClaimsListNew({
 
   return (
     <List<ClaimSortColumn>
-      pagination={mapPaginationInput(pagination)}
+      pagination={pagination}
       paginationLabel="claims"
       options={options}
       paramPrefix={paramPrefix}

@@ -34,8 +34,8 @@ export function IdentitiesListNew({
 }: {
   variant?: 'explore' | 'positions'
   identities: Atom[]
-  pagination: { aggregate?: { count: number } } | number
-  paramPrefix?: string
+  pagination: PaginationType
+  paramPrefix: string
   enableHeader?: boolean
   enableSearch?: boolean
   enableSort?: boolean
@@ -52,19 +52,9 @@ export function IdentitiesListNew({
 
   logger('identities', identities)
 
-  const paginationCount =
-    typeof pagination === 'number'
-      ? pagination
-      : pagination?.aggregate?.count ?? 0
-
   return (
     <List<SortColumn>
-      pagination={{
-        currentPage: 1,
-        limit: 10,
-        totalEntries: paginationCount,
-        totalPages: Math.ceil(paginationCount / 10),
-      }}
+      pagination={pagination}
       paginationLabel="identities"
       options={options}
       paramPrefix={paramPrefix}

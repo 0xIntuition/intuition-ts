@@ -26,10 +26,12 @@ type Position = NonNullable<GetPositionsQuery['positions']>[number]
 export function ActivePositionsOnIdentitiesNew({
   identities,
   pagination,
+  paramPrefix,
   readOnly = false,
 }: {
   identities: Position[]
-  pagination: { aggregate?: { count: number } } | number
+  pagination: PaginationType
+  paramPrefix: string
   readOnly?: boolean
 }) {
   const options: SortOption<SortColumn>[] = [
@@ -39,23 +41,12 @@ export function ActivePositionsOnIdentitiesNew({
     { value: 'Created At', sortBy: 'CreatedAt' },
   ]
 
-  const paginationCount =
-    typeof pagination === 'number'
-      ? pagination
-      : pagination?.aggregate?.count ?? 0
-
-  logger('identities in active positions component', identities)
   return (
     <List<SortColumn>
-      pagination={{
-        currentPage: 1,
-        limit: 10,
-        totalEntries: paginationCount,
-        totalPages: Math.ceil(paginationCount / 10),
-      }}
+      pagination={pagination}
       paginationLabel="positions"
       options={options}
-      paramPrefix="activeIdentities"
+      paramPrefix={paramPrefix}
     >
       <ListHeader
         items={[
