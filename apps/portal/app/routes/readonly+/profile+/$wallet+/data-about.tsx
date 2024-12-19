@@ -26,6 +26,7 @@ import { PositionsOnIdentityNew as PositionsOnIdentity } from '@components/list/
 import DataAboutHeader from '@components/profile/data-about-header'
 import { RevalidateButton } from '@components/revalidate-button'
 import { DataHeaderSkeleton, PaginatedListSkeleton } from '@components/skeleton'
+import { useOffsetPagination } from '@lib/hooks/useOffsetPagination'
 import logger from '@lib/utils/logger'
 import { formatBalance, invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
@@ -33,13 +34,24 @@ import { useLoaderData } from '@remix-run/react'
 import { QueryClient } from '@tanstack/react-query'
 import { NO_PARAM_ID_ERROR } from 'app/consts'
 
-export async function loader({ params }: LoaderFunctionArgs) {
-  const wallet = params.wallet
-  invariant(wallet, NO_PARAM_ID_ERROR)
+export async function loader({ request, params }: LoaderFunctionArgs) {
+  invariant(params.wallet, NO_PARAM_ID_ERROR)
+  const queryAddress = params.wallet.toLowerCase()
 
-  const queryAddress = wallet.toLowerCase()
-
+  const url = new URL(request.url)
   const queryClient = new QueryClient()
+
+  const triplesLimit = parseInt(url.searchParams.get('claimsLimit') || '10')
+  const triplesOffset = parseInt(url.searchParams.get('claimsOffset') || '0')
+  const triplesOrderBy = url.searchParams.get('claimsSortBy')
+
+  const positionsLimit = parseInt(
+    url.searchParams.get('positionsLimit') || '10',
+  )
+  const positionsOffset = parseInt(
+    url.searchParams.get('positionsOffset') || '0',
+  )
+  const positionsOrderBy = url.searchParams.get('positionsSortBy')
 
   logger('Fetching Account Data...')
   const accountResult = await fetcher<
@@ -55,13 +67,7 @@ export async function loader({ params }: LoaderFunctionArgs) {
     throw new Error('No atom ID found for account')
   }
 
-  await queryClient.prefetchQuery({
-    queryKey: ['get-account', { address: queryAddress }],
-    queryFn: () => accountResult,
-  })
-
   const atomId = accountResult.account.atomId
-  logger('atomId', atomId)
 
   const triplesWhere = {
     _or: [
@@ -96,30 +102,38 @@ export async function loader({ params }: LoaderFunctionArgs) {
   })
 
   await queryClient.prefetchQuery({
-    queryKey: ['get-triples-with-positions', { triplesWhere }],
+    queryKey: [
+      'get-triples-with-positions',
+      { triplesWhere, triplesLimit, triplesOffset, triplesOrderBy },
+    ],
     queryFn: () =>
       fetcher<
         GetTriplesWithPositionsQuery,
         GetTriplesWithPositionsQueryVariables
       >(GetTriplesWithPositionsDocument, {
         where: triplesWhere,
-        limit: 10,
-        offset: 0,
-        orderBy: [{ blockNumber: 'desc' }],
+        limit: triplesLimit,
+        offset: triplesOffset,
+        orderBy: triplesOrderBy ? [{ [triplesOrderBy]: 'desc' }] : undefined,
         address: queryAddress,
-      }),
+      })(),
   })
 
   await queryClient.prefetchQuery({
-    queryKey: ['get-atom-positions', { positionsWhere }],
+    queryKey: [
+      'get-atom-positions',
+      { positionsWhere, positionsLimit, positionsOffset, positionsOrderBy },
+    ],
     queryFn: () =>
       fetcher<GetPositionsQuery, GetPositionsQueryVariables>(
         GetPositionsDocument,
         {
           where: positionsWhere,
-          limit: 10,
-          offset: 0,
-          orderBy: [{ shares: 'desc' }],
+          limit: positionsLimit,
+          offset: positionsOffset,
+          orderBy: positionsOrderBy
+            ? [{ [positionsOrderBy]: 'desc' }]
+            : undefined,
         },
       )(),
   })
@@ -127,7 +141,13 @@ export async function loader({ params }: LoaderFunctionArgs) {
   return json({
     queryAddress,
     initialParams: {
+      triplesLimit,
+      triplesOffset,
+      triplesOrderBy,
       triplesWhere,
+      positionsLimit,
+      positionsOffset,
+      positionsOrderBy,
       positionsWhere,
       atomId,
     },
@@ -137,8 +157,19 @@ export async function loader({ params }: LoaderFunctionArgs) {
 export default function ReadOnlyProfileDataAbout() {
   const { queryAddress, initialParams } = useLoaderData<typeof loader>()
 
-  logger('initialParams', initialParams)
+  const claimsPagination = useOffsetPagination({
+    paramPrefix: 'claims',
+    initialOffset: initialParams.triplesOffset,
+    initialLimit: initialParams.triplesLimit,
+  })
 
+  const positionsPagination = useOffsetPagination({
+    paramPrefix: 'positions',
+    initialOffset: initialParams.positionsOffset,
+    initialLimit: initialParams.positionsLimit,
+  })
+
+  logger('initialParams', initialParams)
   const { data: atomResult, isLoading: isLoadingAtom } = useGetAtomQuery(
     {
       id: initialParams.atomId,
@@ -158,9 +189,11 @@ export default function ReadOnlyProfileDataAbout() {
   } = useGetTriplesWithPositionsQuery(
     {
       where: initialParams.triplesWhere,
-      limit: 10,
-      offset: 0,
-      orderBy: [{ blockNumber: 'desc' }],
+      limit: claimsPagination.limit,
+      offset: claimsPagination.offset,
+      orderBy: initialParams.triplesOrderBy
+        ? [{ [initialParams.triplesOrderBy]: 'desc' }]
+        : undefined,
       address: queryAddress,
     },
     {
@@ -168,9 +201,9 @@ export default function ReadOnlyProfileDataAbout() {
         'get-triples-with-positions',
         {
           where: initialParams.triplesWhere,
-          limit: 10,
-          offset: 0,
-          orderBy: [{ blockNumber: 'desc' }],
+          limit: claimsPagination.limit,
+          offset: claimsPagination.offset,
+          orderBy: initialParams.triplesOrderBy,
           address: queryAddress,
         },
       ],
@@ -187,18 +220,20 @@ export default function ReadOnlyProfileDataAbout() {
   } = useGetPositionsQuery(
     {
       where: initialParams.positionsWhere,
-      limit: 10,
-      offset: 0,
-      orderBy: [{ shares: 'desc' }],
+      limit: positionsPagination.limit,
+      offset: positionsPagination.offset,
+      orderBy: initialParams.positionsOrderBy
+        ? [{ [initialParams.positionsOrderBy]: 'desc' }]
+        : undefined,
     },
     {
       queryKey: [
         'get-atom-positions',
         {
           where: initialParams.positionsWhere,
-          limit: 10,
-          offset: 0,
-          orderBy: [{ shares: 'desc' }],
+          limit: positionsPagination.limit,
+          offset: positionsPagination.offset,
+          orderBy: initialParams.positionsOrderBy,
         },
       ],
     },
@@ -265,10 +300,16 @@ export default function ReadOnlyProfileDataAbout() {
             ) : (
               <ClaimsAboutIdentity
                 claims={triplesResult?.triples ?? []}
-                pagination={triplesResult?.total?.aggregate?.count ?? {}}
+                pagination={{
+                  totalEntries: triplesResult?.total?.aggregate?.count ?? 0,
+                  limit: claimsPagination.limit,
+                  offset: claimsPagination.offset,
+                  onOffsetChange: claimsPagination.onOffsetChange,
+                  onLimitChange: claimsPagination.onLimitChange,
+                }}
                 paramPrefix="claims"
-                enableSearch={false} // TODO: (ENG-4481) Re-enable search and sort
-                enableSort={false} // TODO: (ENG-4481) Re-enable search and sort
+                enableSearch={false}
+                enableSort={false}
               />
             )}
           </Suspense>
@@ -327,7 +368,14 @@ export default function ReadOnlyProfileDataAbout() {
             ) : (
               <PositionsOnIdentity
                 positions={positionsResult?.positions ?? []}
-                pagination={positionsResult?.total?.aggregate?.count ?? {}}
+                pagination={{
+                  totalEntries: positionsResult?.total?.aggregate?.count ?? 0,
+                  limit: positionsPagination.limit,
+                  offset: positionsPagination.offset,
+                  onOffsetChange: positionsPagination.onOffsetChange,
+                  onLimitChange: positionsPagination.onLimitChange,
+                }}
+                paramPrefix="positions"
               />
             )}
           </Suspense>
