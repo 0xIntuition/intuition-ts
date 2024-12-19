@@ -1,0 +1,36 @@
+import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
+
+import * as NetworkStatsStories from './NetworkStats.stories'
+
+<Meta of={NetworkStatsStories} />
+
+<Title />
+
+#### Displays key network statistics in a grid layout.
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { NetworkStats } from '@0xintuition/1ui'
+
+<NetworkStats
+  tvl={133.345}
+  atomsCount={4200}
+  triplesCount={4200}
+  signalsCount={4200}
+  usersCount={4200}
+/>
+`} />
+
+<Canvas of={NetworkStatsStories.Default} sourceState="none" />
+
+## Properties
+
+<Controls />
+
+## Variants
+
+### With Live Data
+
+<Canvas of={NetworkStatsStories.WithLiveData} sourceState="none" />
