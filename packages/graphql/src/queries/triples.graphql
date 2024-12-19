@@ -55,13 +55,56 @@ query GetTriplesCount($where: triples_bool_exp) {
   }
 }
 
-query GetTriple($tripleId: numeric!) {
+query GetTriple($tripleId: numeric!, $limit: Int, $offset: Int) {
   triple(id: $tripleId) {
     ...TripleMetadata
     ...TripleTxn
-    ...TripleVaultDetails
     creator {
       ...AccountMetadata
+    }
+    vault {
+      totalShares
+      currentSharePrice
+      allPositions: positions_aggregate {
+        aggregate {
+          count
+          sum {
+            shares
+          }
+        }
+      }
+      paginatedPositions: positions(limit: $limit, offset: $offset) {
+        id
+        vaultId
+        shares
+        account {
+          id
+          label
+          image
+        }
+      }
+    }
+    counterVault {
+      totalShares
+      currentSharePrice
+      allPositions: positions_aggregate {
+        aggregate {
+          count
+          sum {
+            shares
+          }
+        }
+      }
+      paginatedPositions: positions(limit: $limit, offset: $offset) {
+        id
+        vaultId
+        shares
+        account {
+          id
+          label
+          image
+        }
+      }
     }
   }
 }
