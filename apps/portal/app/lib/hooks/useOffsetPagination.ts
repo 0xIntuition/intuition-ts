@@ -6,11 +6,15 @@ import { useSearchParams } from '@remix-run/react'
 interface UseOffsetPaginationProps {
   defaultLimit?: number
   paramPrefix?: string
+  initialOffset?: number
+  initialLimit?: number
 }
 
 export function useOffsetPagination({
   defaultLimit = 10,
   paramPrefix,
+  initialOffset,
+  initialLimit,
 }: UseOffsetPaginationProps = {}) {
   const [searchParams, setSearchParams] = useSearchParams()
 
@@ -20,9 +24,13 @@ export function useOffsetPagination({
     const limitParam = paramPrefix ? `${paramPrefix}Limit` : 'limit'
 
     const limit = parseInt(
-      searchParams.get(limitParam) || defaultLimit.toString(),
+      searchParams.get(limitParam) ||
+        initialLimit?.toString() ||
+        defaultLimit.toString(),
     )
-    const offset = parseInt(searchParams.get(offsetParam) || '0')
+    const offset = parseInt(
+      searchParams.get(offsetParam) || initialOffset?.toString() || '0',
+    )
 
     const onOffsetChange = (newOffset: number) => {
       logger('useOffsetPagination: onOffsetChange called with:', newOffset)
@@ -64,5 +72,12 @@ export function useOffsetPagination({
       onOffsetChange,
       onLimitChange,
     }
-  }, [searchParams, setSearchParams, defaultLimit, paramPrefix])
+  }, [
+    searchParams,
+    setSearchParams,
+    defaultLimit,
+    paramPrefix,
+    initialOffset,
+    initialLimit,
+  ])
 }
