@@ -1,9 +1,11 @@
-import React from 'react'
+'use client'
+
+import * as React from 'react'
 
 import { Slot } from '@radix-ui/react-slot'
 import { cva, VariantProps } from 'class-variance-authority'
-import { Input } from 'components'
 import { Button } from 'components/Button'
+import { Input } from 'components/Input'
 import { Separator } from 'components/Separator'
 import { Sheet, SheetContent } from 'components/Sheet'
 import { Skeleton } from 'components/Skeleton'
@@ -22,15 +24,6 @@ const SIDEBAR_WIDTH = '16rem'
 const SIDEBAR_WIDTH_MOBILE = '18rem'
 const SIDEBAR_WIDTH_ICON = '3rem'
 const SIDEBAR_KEYBOARD_SHORTCUT = 'b'
-
-// Add theme constants
-const SIDEBAR_THEME = {
-  background: 'bg-[#0D0D0D]',
-  text: 'text-white/80',
-  hover: 'hover:bg-white/5',
-  active: 'bg-white/10',
-  border: 'border-white/10',
-}
 
 type SidebarContext = {
   state: 'expanded' | 'collapsed'
@@ -195,9 +188,7 @@ const Sidebar = React.forwardRef<
       return (
         <div
           className={cn(
-            'flex h-full w-[--sidebar-width] flex-col',
-            SIDEBAR_THEME.background,
-            SIDEBAR_THEME.text,
+            'flex h-full w-[--sidebar-width] flex-col bg-sidebar text-sidebar-foreground',
             className,
           )}
           ref={ref}
@@ -214,11 +205,7 @@ const Sidebar = React.forwardRef<
           <SheetContent
             data-sidebar="sidebar"
             data-mobile="true"
-            className={cn(
-              'w-[--sidebar-width] p-0 [&>button]:hidden',
-              SIDEBAR_THEME.background,
-              SIDEBAR_THEME.text,
-            )}
+            className="w-[--sidebar-width] bg-sidebar p-0 text-sidebar-foreground [&>button]:hidden"
             style={
               {
                 '--sidebar-width': SIDEBAR_WIDTH_MOBILE,
@@ -235,34 +222,40 @@ const Sidebar = React.forwardRef<
     return (
       <div
         ref={ref}
-        className="group peer hidden md:block"
+        className="group peer hidden md:block text-sidebar-foreground"
         data-state={state}
         data-collapsible={state === 'collapsed' ? collapsible : ''}
         data-variant={variant}
         data-side={side}
       >
+        {/* This is what handles the sidebar gap on desktop */}
+        <div
+          className={cn(
+            'duration-200 relative h-svh w-[--sidebar-width] bg-transparent transition-[width] ease-linear',
+            'group-data-[collapsible=offcanvas]:w-0',
+            'group-data-[side=right]:rotate-180',
+            variant === 'floating' || variant === 'inset'
+              ? 'group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)_+_theme(spacing.4))]'
+              : 'group-data-[collapsible=icon]:w-[--sidebar-width-icon]',
+          )}
+        />
         <div
           className={cn(
             'duration-200 fixed inset-y-0 z-10 hidden h-svh w-[--sidebar-width] transition-[left,right,width] ease-linear md:flex',
-            SIDEBAR_THEME.background,
-            SIDEBAR_THEME.text,
             side === 'left'
               ? 'left-0 group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)]'
               : 'right-0 group-data-[collapsible=offcanvas]:right-[calc(var(--sidebar-width)*-1)]',
+            // Adjust the padding for floating and inset variants.
             variant === 'floating' || variant === 'inset'
               ? 'p-2 group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)_+_theme(spacing.4)_+2px)]'
-              : 'group-data-[collapsible=icon]:w-[--sidebar-width-icon]',
+              : 'group-data-[collapsible=icon]:w-[--sidebar-width-icon] group-data-[side=left]:border-r group-data-[side=right]:border-l',
             className,
           )}
           {...props}
         >
           <div
             data-sidebar="sidebar"
-            className={cn(
-              'flex h-full w-full flex-col',
-              variant === 'floating' && 'rounded-lg border shadow-lg',
-              variant === 'floating' && SIDEBAR_THEME.border,
-            )}
+            className="flex h-full w-full flex-col bg-sidebar group-data-[variant=floating]:rounded-lg group-data-[variant=floating]:border group-data-[variant=floating]:border-sidebar-border group-data-[variant=floating]:shadow"
           >
             {children}
           </div>
@@ -559,6 +552,7 @@ const SidebarMenuButton = React.forwardRef<
     {
       asChild = false,
       isActive = false,
+      variant = 'default',
       size = 'default',
       tooltip,
       className,
@@ -575,13 +569,7 @@ const SidebarMenuButton = React.forwardRef<
         data-sidebar="menu-button"
         data-size={size}
         data-active={isActive}
-        className={cn(
-          'flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm font-medium outline-none transition-colors',
-          SIDEBAR_THEME.text,
-          SIDEBAR_THEME.hover,
-          isActive && SIDEBAR_THEME.active,
-          className,
-        )}
+        className={cn(sidebarMenuButtonVariants({ variant, size }), className)}
         {...props}
       />
     )

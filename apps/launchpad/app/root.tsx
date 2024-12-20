@@ -1,3 +1,7 @@
+import { SidebarProvider } from '@0xintuition/1ui'
+import { API_URL_LOCAL, configureClient } from '@0xintuition/graphql'
+
+import Providers from '@components/providers'
 import {
   Links,
   Meta,
@@ -9,9 +13,7 @@ import {
 
 import './styles/globals.css'
 
-import { API_URL_LOCAL, configureClient } from '@0xintuition/graphql'
-
-import Providers from '@components/providers'
+import { AppSidebar } from '@components/AppSidebar'
 
 // Configure GraphQL client at module initialization using the URLs from the package. For now, we should use the local URL for development
 // This can be updated to use the same environment approach that we use in Portal in the future, or leave up to the template user to configure however makes sense for their use case
@@ -59,21 +61,24 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        {children}
-        <ScrollRestoration />
-        <Scripts />
+        <SidebarProvider>
+          <AppSidebar />
+          <main className="relative ml-[16rem] flex min-h-screen w-[calc(100%-16rem)] flex-col antialiased">
+            {children}
+            <ScrollRestoration />
+            <Scripts />
+          </main>
+        </SidebarProvider>
       </body>
     </html>
   )
 }
 
-// Our Providers aren't wrapped with ClientOnly yet -- we can revisit the necessity once we bring Privy in
 export default function App() {
+  // TODO: Our Providers aren't wrapped with ClientOnly yet -- we can revisit the necessity once we bring Privy in
   return (
-    <main className="relative flex min-h-screen w-full flex-col justify-between antialiased">
-      <Providers>
-        <Outlet />
-      </Providers>
-    </main>
+    <Providers>
+      <Outlet />
+    </Providers>
   )
 }
