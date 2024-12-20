@@ -6588,7 +6588,7 @@ export type Subscription_RootVaults_StreamArgs = {
 export type Things = {
   __typename?: 'things'
   /** An object relationship */
-  atom?: Maybe<Things>
+  atom?: Maybe<Atoms>
   description?: Maybe<Scalars['String']['output']>
   id: Scalars['numeric']['output']
   image?: Maybe<Scalars['String']['output']>
@@ -6636,7 +6636,7 @@ export type Things_Bool_Exp = {
   _and?: InputMaybe<Array<Things_Bool_Exp>>
   _not?: InputMaybe<Things_Bool_Exp>
   _or?: InputMaybe<Array<Things_Bool_Exp>>
-  atom?: InputMaybe<Things_Bool_Exp>
+  atom?: InputMaybe<Atoms_Bool_Exp>
   description?: InputMaybe<String_Comparison_Exp>
   id?: InputMaybe<Numeric_Comparison_Exp>
   image?: InputMaybe<String_Comparison_Exp>
@@ -6666,7 +6666,7 @@ export type Things_Min_Fields = {
 
 /** Ordering options when selecting data from "thing". */
 export type Things_Order_By = {
-  atom?: InputMaybe<Things_Order_By>
+  atom?: InputMaybe<Atoms_Order_By>
   description?: InputMaybe<Order_By>
   id?: InputMaybe<Order_By>
   image?: InputMaybe<Order_By>
