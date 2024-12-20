@@ -9654,7 +9654,7 @@ type things {
   """
   An object relationship
   """
-  atom: things
+  atom: atoms
   description: String
   id: numeric!
   image: String
@@ -9701,7 +9701,7 @@ input things_bool_exp {
   _and: [things_bool_exp!]
   _not: things_bool_exp
   _or: [things_bool_exp!]
-  atom: things_bool_exp
+  atom: atoms_bool_exp
   description: String_comparison_exp
   id: numeric_comparison_exp
   image: String_comparison_exp
@@ -9735,7 +9735,7 @@ type things_min_fields {
 Ordering options when selecting data from "thing".
 """
 input things_order_by {
-  atom: things_order_by
+  atom: atoms_order_by
   description: order_by
   id: order_by
   image: order_by
