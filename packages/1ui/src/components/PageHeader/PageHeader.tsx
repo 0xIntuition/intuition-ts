@@ -20,12 +20,12 @@ export function PageHeader({
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-semibold">{title}</h1>
         {lastUpdated && (
-          <span className="text-sm text-muted-foreground">
+          <span className="text-sm text-primary/70">
             Last Updated {lastUpdated} ago
           </span>
         )}
       </div>
-      {subtitle && <p className="text-sm text-muted-foreground">{subtitle}</p>}
+      {subtitle && <p className="text-sm text-primary/70">{subtitle}</p>}
     </div>
   )
 }

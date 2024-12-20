@@ -33,7 +33,7 @@ export function NetworkStats({
   return (
     <div
       className={cn(
-        'grid grid-cols-2 gap-4 rounded-lg bg-background/20 p-4 sm:grid-cols-4 lg:grid-cols-5',
+        'grid grid-cols-2 gap-4 p-4 sm:grid-cols-4 lg:grid-cols-5',
         className,
       )}
       {...props}

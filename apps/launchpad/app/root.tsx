@@ -63,7 +63,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <body>
         <SidebarProvider>
           <AppSidebar />
-          <main className="relative ml-[16rem] flex min-h-screen w-[calc(100%-16rem)] flex-col antialiased">
+          <main className="relative ml-[16rem] flex min-h-screen w-[calc(100%-16rem)] flex-col antialiased bg-[#131313]">
             {children}
             <ScrollRestoration />
             <Scripts />
