@@ -1,5 +1,5 @@
 import { SidebarProvider } from '@0xintuition/1ui'
-import { API_URL_LOCAL, configureClient } from '@0xintuition/graphql'
+import { API_URL_DEV, configureClient } from '@0xintuition/graphql'
 
 import Providers from '@components/providers'
 import {
@@ -18,7 +18,7 @@ import { AppSidebar } from '@components/AppSidebar'
 // Configure GraphQL client at module initialization using the URLs from the package. For now, we should use the local URL for development
 // This can be updated to use the same environment approach that we use in Portal in the future, or leave up to the template user to configure however makes sense for their use case
 configureClient({
-  apiUrl: API_URL_LOCAL,
+  apiUrl: API_URL_DEV,
 })
 
 export const meta: MetaFunction = () => {
