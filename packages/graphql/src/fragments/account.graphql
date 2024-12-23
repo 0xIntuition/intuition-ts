@@ -2,7 +2,7 @@ fragment AccountMetadata on accounts {
   label
   image
   id
-  atomId
+  atom_id
   type
 }
 
@@ -17,7 +17,7 @@ fragment AccountClaimsAggregate on accounts {
         label
       }
       shares
-      counterShares
+      counter_shares
     }
   }
 }
@@ -34,7 +34,7 @@ fragment AccountClaims on accounts {
       label
     }
     shares
-    counterShares
+    counter_shares
   }
 }
 
@@ -48,8 +48,8 @@ fragment AccountPositionsAggregate on accounts {
       shares
       vault {
         id
-        totalShares
-        currentSharePrice
+        total_shares
+        current_share_price
         atom {
           id
           label
@@ -74,8 +74,8 @@ fragment AccountPositions on accounts {
     shares
     vault {
       id
-      totalShares
-      currentSharePrice
+      total_shares
+      current_share_price
       atom {
         id
         label
@@ -88,8 +88,8 @@ fragment AccountPositions on accounts {
   }
 }
 
-fragment AccountCreatedAtomsAggregate on accounts {
-  createdAtoms_aggregate(
+fragment AccountAtomsAggregate on accounts {
+  created_atoms_aggregate(
     where: $atomsWhere
     order_by: $atomsOrderBy
     limit: $atomsLimit
@@ -106,8 +106,8 @@ fragment AccountCreatedAtomsAggregate on accounts {
       label
       data
       vault {
-        totalShares
-        positions_aggregate(where: { accountId: { _eq: $address } }) {
+        total_shares
+        positions_aggregate(where: { account_id: { _eq: $address } }) {
           nodes {
             account {
               id
@@ -120,8 +120,8 @@ fragment AccountCreatedAtomsAggregate on accounts {
   }
 }
 
-fragment AccountCreatedAtoms on accounts {
-  createdAtoms(
+fragment AccountAtoms on accounts {
+  created_atoms(
     where: $atomsWhere
     order_by: $atomsOrderBy
     limit: $atomsLimit
@@ -131,8 +131,8 @@ fragment AccountCreatedAtoms on accounts {
     label
     data
     vault {
-      totalShares
-      positions(where: { accountId: { _eq: $address } }) {
+      total_shares
+      positions(where: { account_id: { _eq: $address } }) {
         account {
           id
         }
@@ -142,8 +142,8 @@ fragment AccountCreatedAtoms on accounts {
   }
 }
 
-fragment AccountCreatedTriples on accounts {
-  createdTriples_aggregate(
+fragment AccountTriples on accounts {
+  created_triples_aggregate(
     where: $triplesWhere
     order_by: $triplesOrderBy
     limit: $triplesLimit
@@ -171,8 +171,8 @@ fragment AccountCreatedTriples on accounts {
   }
 }
 
-fragment AccountCreatedTriplesAggregate on accounts {
-  createdTriples_aggregate(
+fragment AccountTriplesAggregate on accounts {
+  created_triples_aggregate(
     where: $triplesWhere
     order_by: $triplesOrderBy
     limit: $triplesLimit

@@ -1,8 +1,8 @@
 fragment RedemptionEventFragment on events {
   redemption {
-    vaultId
-    receiverId
-    sharesRedeemedBySender
-    assetsForReceiver
+    vault_id
+    receiver_id
+    shares_redeemed_by_sender
+    assets_for_receiver
   }
 }

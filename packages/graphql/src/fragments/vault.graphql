@@ -19,8 +19,8 @@ fragment VaultBasicDetails on vaults {
       label
     }
   }
-  currentSharePrice
-  totalShares
+  current_share_price
+  total_shares
 }
 
 fragment VaultPositionsAggregate on vaults {
@@ -30,7 +30,7 @@ fragment VaultPositionsAggregate on vaults {
 }
 
 fragment VaultFilteredPositions on vaults {
-  positions(where: { accountId: { _in: $addresses } }) {
+  positions(where: { account_id: { _in: $addresses } }) {
     ...PositionFields
   }
 }
@@ -51,8 +51,8 @@ fragment VaultDetailsWithFilteredPositions on vaults {
 }
 
 fragment VaultFieldsForTriple on vaults {
-  totalShares
-  currentSharePrice
+  total_shares
+  current_share_price
   ...VaultPositionsAggregate
   ...VaultFilteredPositions
 }
