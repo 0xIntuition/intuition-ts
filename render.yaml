@@ -1,69 +1,8 @@
 services:
   - type: web
-    name: portal
+    name: launchpad
     env: docker
     region: oregon
     rootDir: .
-    dockerfilePath: ./apps/portal/Dockerfile
+    dockerfilePath: ./apps/launchpad/Dockerfile
     dockerContext: .
-    envVars:
-      - key: NODE_ENV
-        value: production
-      - key: PORT
-        value: 8080
-      - key: ALCHEMY_MAINNET_API_KEY
-        sync: false
-      - key: ALCHEMY_API_KEY
-        sync: false
-      - key: ALCHEMY_MAINNET_RPC_URL
-        sync: false
-      - key: ALCHEMY_BASE_SEPOLIA_RPC_URL
-        sync: false
-      - key: ALCHEMY_BASE_RPC_URL
-        sync: false
-      - key: WALLETCONNECT_PROJECT_ID
-        sync: false
-      - key: SESSION_SECRET
-        sync: false
-      - key: API_URL
-        sync: false
-      - key: API_KEY
-        sync: false
-      - key: PRIVY_APP_ID
-        sync: false
-      - key: PRIVY_APP_SECRET
-        sync: false
-      - key: PRIVY_VERIFICATION_KEY
-        sync: false
-      - key: CLOUDINARY_CLOUD_NAME
-        sync: false
-      - key: CLOUDINARY_API_KEY
-        sync: false
-      - key: CLOUDINARY_API_SECRET
-        sync: false
-      - key: SENTRY_AUTH_TOKEN
-        sync: false
-      - key: SENTRY_DSN
-        sync: false
-      - key: SENTRY_ORG
-        sync: false
-      - key: SENTRY_PROJECT
-        sync: false
-      - key: ORIGIN_URL
-        sync: false
-      - key: PHOSPHOR_API_KEY
-        sync: false
-      - key: PHOSPHOR_ADMIN_API_URL
-        sync: false
-      - key: PHOSPHOR_COLLECTION_ID
-        sync: false
-      - key: GTM_TRACKING_ID
-        sync: false
-      - key: FF_FULL_LOCKDOWN_ENABLED
-        sync: false
-      - key: FF_INCIDENT_BANNER_ENABLED
-        sync: false
-      - key: FF_GENERIC_BANNER_ENABLED
-        sync: false
-      - key: VITE_DEPLOY_ENV
-        sync: false
