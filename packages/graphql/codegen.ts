@@ -1,6 +1,8 @@
 import { CodegenConfig } from '@graphql-codegen/cli'
 import type { Types } from '@graphql-codegen/plugin-helpers'
 
+import { API_URL_DEV } from './src/constants'
+
 const commonGenerateOptions: Types.ConfiguredOutput = {
   config: {
     reactQueryVersion: 5,
@@ -34,8 +36,7 @@ const commonGenerateOptions: Types.ConfiguredOutput = {
 const config: CodegenConfig = {
   overwrite: true,
   hooks: { afterAllFileWrite: ['prettier --write'] },
-  schema:
-    process.env.HASURA_PROJECT_ENDPOINT || 'http://localhost:8080/v1/graphql',
+  schema: process.env.HASURA_PROJECT_ENDPOINT || API_URL_DEV,
   ignoreNoDocuments: true,
   documents: ['**/*.graphql'],
   generates: {
