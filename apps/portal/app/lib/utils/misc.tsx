@@ -399,7 +399,7 @@ export const getAtomIpfsLinkNew = (atom: Atom) => {
       ? `${chain.blockExplorers.default.url}/address/${address}`
       : ''
   }
-  return `${IPFS_GATEWAY_URL}/${atom.data.replace('ipfs://', '')}`
+  return `${IPFS_GATEWAY_URL}/${atom.data?.replace('ipfs://', '')}`
 }
 
 // LEGACY IMPLEMENTATION -- CAN REMOVE ONCE ALL ATOMS ARE CONVERTED TO NEW IMPLEMENTATION

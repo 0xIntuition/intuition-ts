@@ -93,8 +93,8 @@ export function IdentitiesListNew({
                 identity.type === 'user' ? Identity.user : Identity.nonUser
               }
               avatarSrc={identity?.image ?? ''}
-              name={identity?.label ?? identity?.data}
-              description={identity?.label ?? identity?.data}
+              name={identity?.label ?? identity?.data ?? ''}
+              description={identity?.label ?? identity?.data ?? ''}
               id={identity?.creator?.id ?? ''}
               totalTVL={formatBalance(
                 BigInt(identity?.vault?.total_shares ?? '0'),
