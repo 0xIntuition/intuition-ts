@@ -18,13 +18,13 @@ describe('NetworkStats', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="grid grid-cols-2 gap-4 rounded-lg bg-background/20 p-4 sm:grid-cols-4 lg:grid-cols-5"
+          class="grid grid-cols-2 gap-4 p-4 sm:grid-cols-4 lg:grid-cols-5"
         >
           <div
-            class="relative text-center px-12 after:absolute after:right-0 after:top-1/2 after:-translate-y-1/2 after:h-8 after:w-px after:bg-border/20"
+            class="relative text-center px-12 after:absolute after:right-0 after:inset-y-0 after:w-px after:bg-border/20"
           >
             <div
-              class="text-sm text-muted-foreground"
+              class="text-sm text-foreground/70"
             >
               TVL
             </div>
@@ -35,10 +35,10 @@ describe('NetworkStats', () => {
             </div>
           </div>
           <div
-            class="relative text-center px-12 after:absolute after:right-0 after:top-1/2 after:-translate-y-1/2 after:h-8 after:w-px after:bg-border/20"
+            class="relative text-center px-12 after:absolute after:right-0 after:inset-y-0 after:w-px after:bg-border/20"
           >
             <div
-              class="text-sm text-muted-foreground"
+              class="text-sm text-foreground/70"
             >
               Atoms
             </div>
@@ -49,10 +49,10 @@ describe('NetworkStats', () => {
             </div>
           </div>
           <div
-            class="relative text-center px-12 after:absolute after:right-0 after:top-1/2 after:-translate-y-1/2 after:h-8 after:w-px after:bg-border/20"
+            class="relative text-center px-12 after:absolute after:right-0 after:inset-y-0 after:w-px after:bg-border/20"
           >
             <div
-              class="text-sm text-muted-foreground"
+              class="text-sm text-foreground/70"
             >
               Triples
             </div>
@@ -63,10 +63,10 @@ describe('NetworkStats', () => {
             </div>
           </div>
           <div
-            class="relative text-center px-12 hidden lg:block after:absolute after:right-0 after:top-1/2 after:-translate-y-1/2 after:h-8 after:w-px after:bg-border/20"
+            class="relative text-center px-12 hidden lg:block after:absolute after:right-0 after:inset-y-0 after:w-px after:bg-border/20"
           >
             <div
-              class="text-sm text-muted-foreground"
+              class="text-sm text-foreground/70"
             >
               Signals
             </div>
@@ -80,7 +80,7 @@ describe('NetworkStats', () => {
             class="relative text-center px-12"
           >
             <div
-              class="text-sm text-muted-foreground"
+              class="text-sm text-foreground/70"
             >
               Users
             </div>

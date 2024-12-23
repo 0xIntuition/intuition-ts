@@ -1,19 +1,37 @@
-import { NetworkStats, PageHeader, Skeleton } from '@0xintuition/1ui'
+import {
+  NetworkStats,
+  PageHeader,
+  Skeleton,
+  Text,
+  TextVariant,
+  TextWeight,
+} from '@0xintuition/1ui'
 import {
   fetcher,
+  GetEventsDocument,
+  GetEventsQuery,
+  GetEventsQueryVariables,
   GetStatsDocument,
   GetStatsQuery,
   GetStatsQueryVariables,
+  useGetEventsQuery,
   useGetStatsQuery,
 } from '@0xintuition/graphql'
 
+import ActivityFeed from '@components/ActivityFeed'
 import logger from '@lib/utils/logger'
 import { LoaderFunctionArgs } from '@remix-run/node'
+import { useLoaderData, useSearchParams } from '@remix-run/react'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
 import { formatUnits } from 'viem'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   logger('request', request)
+
+  const url = new URL(request.url)
+  const activityLimit = parseInt(url.searchParams.get('activityLimit') || '10')
+  const activityOffset = parseInt(url.searchParams.get('activityOffset') || '0')
+
   const queryClient = new QueryClient()
 
   await queryClient.prefetchQuery({
@@ -22,18 +40,77 @@ export async function loader({ request }: LoaderFunctionArgs) {
       fetcher<GetStatsQuery, GetStatsQueryVariables>(GetStatsDocument, {}),
   })
 
+  await queryClient.prefetchQuery({
+    queryKey: ['get-events-global', { activityLimit, activityOffset }],
+    queryFn: () =>
+      fetcher<GetEventsQuery, GetEventsQueryVariables>(GetEventsDocument, {
+        limit: activityLimit,
+        offset: activityOffset,
+        addresses: [],
+        orderBy: [{ block_timestamp: 'desc' }],
+        where: {
+          type: {
+            _neq: 'FeesTransfered',
+          },
+        },
+      }),
+  })
+
   return {
     dehydratedState: dehydrate(queryClient),
+    initialParams: {
+      activityLimit,
+      activityOffset,
+    },
   }
 }
 
 export default function Network() {
+  const { initialParams } = useLoaderData<typeof loader>()
+  const [searchParams] = useSearchParams()
+
+  const activityLimit = parseInt(
+    searchParams.get('activityLimit') || String(initialParams.activityLimit),
+  )
+  const activityOffset = parseInt(
+    searchParams.get('activityOffset') || String(initialParams.activityOffset),
+  )
+
   const { data: systemStats } = useGetStatsQuery(
     {},
     {
       queryKey: ['get-stats'],
     },
   )
+
+  const { data: eventsData } = useGetEventsQuery(
+    {
+      limit: activityLimit,
+      offset: activityOffset,
+      addresses: [],
+      orderBy: [{ block_timestamp: 'desc' }],
+      where: {
+        type: {
+          _neq: 'FeesTransfered',
+        },
+      },
+    },
+    {
+      queryKey: [
+        'get-events-global',
+        {
+          limit: activityLimit,
+          offset: activityOffset,
+          where: {
+            type: {
+              _neq: 'FeesTransfered',
+            },
+          },
+        },
+      ],
+    },
+  )
+  logger('eventsData', eventsData)
   logger('systemStats', systemStats)
 
   const stats = systemStats?.stats[0]
@@ -53,6 +130,19 @@ export default function Network() {
               usersCount={stats?.total_accounts ?? 0}
             />
           </div>
+        </div>
+        <div className="flex flex-col gap-4">
+          <Text variant={TextVariant.headline} weight={TextWeight.medium}>
+            Data Stream
+          </Text>
+          <ActivityFeed
+            activities={{
+              events: eventsData?.events || [],
+              total: {
+                aggregate: { count: eventsData?.total.aggregate?.count || 0 },
+              },
+            }}
+          />
         </div>
       </div>
     </div>
