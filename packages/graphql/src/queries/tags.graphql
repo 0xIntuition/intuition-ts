@@ -1,0 +1,18 @@
+query GetTags($subjectId: numeric!, $predicateId: numeric!) {
+  triples(
+    where: {
+      _and: [
+        { subject_id: { _eq: $subjectId } }
+        { predicate_id: { _eq: $predicateId } }
+      ]
+    }
+  ) {
+    ...TripleMetadata
+  }
+}
+
+query GetTagsCustom($where: triples_bool_exp) {
+  triples(where: $where) {
+    ...TripleMetadata
+  }
+}

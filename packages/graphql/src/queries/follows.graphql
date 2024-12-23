@@ -1,0 +1,231 @@
+query GetFollowingPositions(
+  $subjectId: numeric!
+  $predicateId: numeric!
+  $address: String!
+  $limit: Int
+  $offset: Int
+  $positionsOrderBy: [positions_order_by!]
+) {
+  triples_aggregate(
+    where: {
+      _and: [
+        { subject_id: { _eq: $subjectId } }
+        { predicate_id: { _eq: $predicateId } }
+        { vault: { positions: { account_id: { _eq: $address } } } }
+      ]
+    }
+  ) {
+    aggregate {
+      count
+    }
+  }
+  triples(
+    limit: $limit
+    offset: $offset
+    where: {
+      _and: [
+        { subject_id: { _eq: $subjectId } }
+        { predicate_id: { _eq: $predicateId } }
+        { vault: { positions: { account_id: { _eq: $address } } } }
+      ]
+    }
+  ) {
+    id
+    subject {
+      ...AtomMetadata
+    }
+    predicate {
+      ...AtomMetadata
+    }
+    object {
+      ...AtomMetadata
+    }
+    vault {
+      total_shares
+      current_share_price
+      positions_aggregate {
+        aggregate {
+          count
+          sum {
+            shares
+          }
+        }
+      }
+      positions(
+        where: { account_id: { _eq: $address } }
+        order_by: $positionsOrderBy
+      ) {
+        account_id
+        account {
+          id
+          label
+        }
+        shares
+      }
+    }
+  }
+}
+
+query GetFollowerPositions(
+  $subjectId: numeric!
+  $predicateId: numeric!
+  $objectId: numeric!
+  $positionsLimit: Int
+  $positionsOffset: Int
+  $positionsOrderBy: [positions_order_by!]
+  $positionsWhere: positions_bool_exp
+) {
+  triples(
+    where: {
+      _and: [
+        { subject_id: { _eq: $subjectId } }
+        { predicate_id: { _eq: $predicateId } }
+        { object_id: { _eq: $objectId } }
+      ]
+    }
+  ) {
+    id
+    subject {
+      ...AtomMetadata
+    }
+    predicate {
+      ...AtomMetadata
+    }
+    object {
+      ...AtomMetadata
+    }
+    vault {
+      total_shares
+      current_share_price
+      positions_aggregate {
+        aggregate {
+          count
+          sum {
+            shares
+          }
+        }
+      }
+      positions(
+        limit: $positionsLimit
+        offset: $positionsOffset
+        order_by: $positionsOrderBy
+        where: $positionsWhere
+      ) {
+        account {
+          id
+          label
+          image
+        }
+        shares
+      }
+    }
+  }
+}
+
+# Combined query to get following and followers
+query GetConnections(
+  $subjectId: numeric!
+  $predicateId: numeric!
+  $objectId: numeric!
+  $addresses: [String!]
+  $positionsLimit: Int
+  $positionsOffset: Int
+  $positionsOrderBy: [positions_order_by!]
+  $positionsWhere: positions_bool_exp
+) {
+  # Following
+  following_count: triples_aggregate(
+    where: {
+      _and: [
+        { subject_id: { _eq: $subjectId } }
+        { predicate_id: { _eq: $predicateId } }
+        { object_id: { _eq: $objectId } }
+      ]
+    }
+  ) {
+    aggregate {
+      count
+    }
+  }
+  following: triples(
+    where: {
+      _and: [
+        { subject_id: { _eq: $subjectId } }
+        { predicate_id: { _eq: $predicateId } }
+        { object_id: { _eq: $objectId } }
+      ]
+    }
+  ) {
+    ...FollowMetadata
+  }
+
+  # Followers
+  followers_count: triples_aggregate(
+    where: {
+      _and: [
+        { subject_id: { _eq: $subjectId } }
+        { predicate_id: { _eq: $predicateId } }
+        { vault: { positions: { account_id: { _in: $addresses } } } }
+      ]
+    }
+  ) {
+    aggregate {
+      count
+    }
+  }
+  followers: triples(
+    where: {
+      _and: [
+        { subject_id: { _eq: $subjectId } }
+        { predicate_id: { _eq: $predicateId } }
+        { vault: { positions: { account_id: { _in: $addresses } } } }
+      ]
+    }
+  ) {
+    ...FollowMetadata
+  }
+}
+
+query GetConnectionsCount(
+  $subjectId: numeric!
+  $predicateId: numeric!
+  $objectId: numeric!
+  $address: String!
+) {
+  # Following count
+  following_count: triples_aggregate(
+    where: {
+      _and: [
+        { subject_id: { _eq: $subjectId } }
+        { predicate_id: { _eq: $predicateId } }
+        { vault: { positions: { account_id: { _eq: $address } } } }
+      ]
+    }
+  ) {
+    aggregate {
+      count
+    }
+  }
+
+  # Followers count
+  followers_count: triples(
+    where: {
+      _and: [
+        { subject_id: { _eq: $subjectId } }
+        { predicate_id: { _eq: $predicateId } }
+        { object_id: { _eq: $objectId } }
+      ]
+    }
+  ) {
+    vault {
+      positions_aggregate {
+        aggregate {
+          count
+          sum {
+            shares
+          }
+        }
+      }
+    }
+  }
+}
