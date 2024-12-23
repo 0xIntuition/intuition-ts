@@ -16,11 +16,11 @@ query GetAccounts(
     ...AccountClaims
     ...AccountPositions
     atom {
-      vaultId
-      walletId
+      vault_id
+      wallet_id
       vault {
-        positionCount
-        totalShares
+        position_count
+        total_shares
         positions_aggregate {
           aggregate {
             count
@@ -113,10 +113,10 @@ query GetAccount(
     }
     ...AccountClaims
     ...AccountPositions
-    ...AccountCreatedAtoms
-    ...AccountCreatedTriples
+    ...AccountAtoms
+    ...AccountTriples
   }
-  chainLinkPrices(limit: 1, order_by: { id: desc }) {
+  chainlink_prices(limit: 1, order_by: { id: desc }) {
     usd
   }
 }
@@ -143,8 +143,8 @@ query GetAccountWithPaginatedRelations(
     ...AccountMetadata
     ...AccountClaims
     ...AccountPositions
-    ...AccountCreatedAtoms
-    ...AccountCreatedTriples
+    ...AccountAtoms
+    ...AccountTriples
   }
 }
 
@@ -174,7 +174,7 @@ query GetAccountWithAggregates(
     ...AccountMetadata
     ...AccountClaimsAggregate
     ...AccountPositionsAggregate
-    ...AccountCreatedAtomsAggregate
-    ...AccountCreatedTriplesAggregate
+    ...AccountAtomsAggregate
+    ...AccountTriplesAggregate
   }
 }

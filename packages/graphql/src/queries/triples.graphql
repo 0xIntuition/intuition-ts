@@ -88,25 +88,30 @@ query GetTriplesWithPositions(
   }
   triples(limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
     id
+    vault_id
+    counter_vault_id
     subject {
       id
+      vault_id
       label
       image
     }
     predicate {
       id
+      vault_id
       label
       image
     }
     object {
       id
+      vault_id
       label
       image
     }
     vault {
-      totalShares
-      positionCount
-      positions(where: { accountId: { _eq: $address } }) {
+      total_shares
+      position_count
+      positions(where: { account_id: { _eq: $address } }) {
         account {
           id
           label
@@ -115,10 +120,10 @@ query GetTriplesWithPositions(
         shares
       }
     }
-    counterVault {
-      totalShares
-      positionCount
-      positions(where: { accountId: { _eq: $address } }) {
+    counter_vault {
+      total_shares
+      position_count
+      positions(where: { account_id: { _eq: $address } }) {
         account {
           id
           label

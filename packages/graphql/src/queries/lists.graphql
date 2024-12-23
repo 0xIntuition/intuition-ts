@@ -1,23 +1,193 @@
-# predicateId = 4 for tags
+# predicateId = 4 for tags on dev, 3 on prod
 
-# this query is a WIP and will be refined to be more generic
+# GetLists query for Exploring Lists
+query GetLists($where: predicate_objects_bool_exp) {
+  predicate_objects_aggregate(where: $where) {
+    aggregate {
+      count
+    }
+  }
+  predicate_objects(
+    where: $where
+    order_by: [{ claim_count: desc }, { triple_count: desc }]
+  ) {
+    id
+    claim_count
+    triple_count
+    object {
+      id
+      label
+      image
+    }
+  }
+}
+
 query GetListItems($predicateId: numeric, $objectId: numeric) {
   triples_aggregate(
-    where: { predicateId: { _eq: predicateId }, objectId: { _eq: $objectId } }
+    where: {
+      predicate_id: { _eq: $predicateId }
+      object_id: { _eq: $objectId }
+    }
     order_by: [
-      { vault: { positionCount: desc }, counterVault: { positionCount: desc } }
+      {
+        vault: { position_count: desc }
+        counter_vault: { position_count: desc }
+      }
     ]
   ) {
     aggregate {
       count
     }
+    nodes {
+      ...TripleVaultDetails
+    }
   }
-  triples(
-    where: { predicateId: { _eq: predicateId }, objectId: { _eq: $objectId } }
-    order_by: [
-      { vault: { positionCount: desc }, counterVault: { positionCount: desc } }
-    ]
-  ) {
-    ...TripleVaultDetails
+}
+
+# GetListDetails query for List Details page
+## Combines the aggregates and nodes within since we don't need pagination on the tags yet
+## If we do, we'd need to paginate the triples and tags separately and split
+query GetListDetails(
+  $globalWhere: triples_bool_exp
+  $userWhere: triples_bool_exp
+  $tagPredicateId: numeric
+) {
+  globalTriplesAggregate: triples_aggregate(where: $globalWhere) {
+    aggregate {
+      count
+    }
+  }
+  globalTriples: triples(where: $globalWhere) {
+    id
+    vault_id
+    counter_vault_id
+    subject {
+      id
+      vault_id
+      label
+      wallet_id
+      image
+      type
+      tags: as_subject_triples_aggregate(
+        where: { predicate_id: { _eq: $tagPredicateId } }
+      ) {
+        nodes {
+          object {
+            label
+            vault_id
+            taggedIdentities: as_object_triples_aggregate {
+              nodes {
+                subject {
+                  label
+                  vault_id
+                }
+                vault_id
+              }
+              aggregate {
+                count
+              }
+            }
+          }
+        }
+        aggregate {
+          count
+        }
+      }
+    }
+    object {
+      id
+      vault_id
+      label
+      wallet_id
+      image
+      type
+    }
+    predicate {
+      id
+      vault_id
+      label
+      wallet_id
+      image
+      type
+    }
+    vault {
+      positions_aggregate {
+        aggregate {
+          count
+          sum {
+            shares
+          }
+        }
+      }
+    }
+  }
+  userTriplesAggregate: triples_aggregate(where: $userWhere) {
+    aggregate {
+      count
+    }
+  }
+  userTriples: triples(where: $userWhere) {
+    id
+    vault_id
+    counter_vault_id
+    subject {
+      id
+      vault_id
+      label
+      wallet_id
+      image
+      type
+      tags: as_subject_triples_aggregate(
+        where: { predicate_id: { _eq: $tagPredicateId } }
+      ) {
+        nodes {
+          object {
+            label
+            vault_id
+            taggedIdentities: as_object_triples_aggregate {
+              nodes {
+                subject {
+                  label
+                  vault_id
+                }
+                vault_id
+              }
+              aggregate {
+                count
+              }
+            }
+          }
+        }
+        aggregate {
+          count
+        }
+      }
+    }
+    object {
+      id
+      vault_id
+      label
+      wallet_id
+      image
+      type
+    }
+    predicate {
+      id
+      vault_id
+      label
+      wallet_id
+      image
+      type
+    }
+    vault {
+      positions_aggregate {
+        aggregate {
+          count
+          sum {
+            shares
+          }
+        }
+      }
+    }
   }
 }

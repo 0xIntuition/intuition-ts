@@ -13,21 +13,21 @@ query GetEvents(
   }
   events(limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
     id
-    blockNumber
-    blockTimestamp
+    block_number
+    block_timestamp
     type
-    transactionHash
-    atomId
-    tripleId
-    depositId
-    redemptionId
+    transaction_hash
+    atom_id
+    triple_id
+    deposit_id
+    redemption_id
     atom {
       ...AtomMetadata
       vault {
-        totalShares
-        positionCount
+        total_shares
+        position_count
         positions(where: { account: { id: { _in: $addresses } } }) {
-          accountId
+          account_id
           shares
           account {
             id
@@ -39,7 +39,6 @@ query GetEvents(
     }
     triple {
       id
-      label
       creator {
         ...AccountMetadata
       }
@@ -80,10 +79,10 @@ query GetEvents(
         }
       }
       vault {
-        totalShares
-        positionCount
+        total_shares
+        position_count
         positions(where: { account: { id: { _in: $addresses } } }) {
-          accountId
+          account_id
           shares
           account {
             id
@@ -92,11 +91,11 @@ query GetEvents(
           }
         }
       }
-      counterVault {
-        totalShares
-        positionCount
+      counter_vault {
+        total_shares
+        position_count
         positions(where: { account: { id: { _in: $addresses } } }) {
-          accountId
+          account_id
           shares
           account {
             id
@@ -107,17 +106,17 @@ query GetEvents(
       }
     }
     deposit {
-      senderId
+      sender_id
       sender {
         id
       }
-      sharesForReceiver
-      senderAssetsAfterTotalFees
+      shares_for_receiver
+      sender_assets_after_total_fees
       vault {
-        totalShares
-        positionCount
+        total_shares
+        position_count
         positions(where: { account: { id: { _in: $addresses } } }) {
-          accountId
+          account_id
           shares
           account {
             id
@@ -128,7 +127,7 @@ query GetEvents(
       }
     }
     redemption {
-      senderId
+      sender_id
       sender {
         id
       }
@@ -153,12 +152,12 @@ query GetEventsWithAggregates(
     aggregate {
       count
       max {
-        blockTimestamp
-        blockNumber
+        block_timestamp
+        block_number
       }
       min {
-        blockTimestamp
-        blockNumber
+        block_timestamp
+        block_number
       }
     }
     nodes {
@@ -180,15 +179,15 @@ query GetEventsData($where: events_bool_exp) {
     aggregate {
       count
       max {
-        blockTimestamp
-        blockNumber
+        block_timestamp
+        block_number
       }
       min {
-        blockTimestamp
-        blockNumber
+        block_timestamp
+        block_number
       }
       avg {
-        blockNumber
+        block_number
       }
     }
   }
@@ -200,8 +199,8 @@ query GetDebugEvents($addresses: [String!]) {
     id
     atom {
       vault {
-        positions(where: { accountId: { _in: $addresses } }) {
-          accountId
+        positions(where: { account_id: { _in: $addresses } }) {
+          account_id
           shares
         }
       }
