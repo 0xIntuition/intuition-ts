@@ -1,5 +1,5 @@
 import {
-  NetworkStats,
+  AggregatedMetrics,
   PageHeader,
   Skeleton,
   Text,
@@ -130,7 +130,7 @@ export default function Network() {
         <div className="flex flex-col rounded-xl overflow-hidden theme-border">
           <Skeleton className="h-[695px] w-full animate-none rounded-b-none" />
           <div className="py-4 bg-gradient-to-b from-[#060504] to-[#101010]">
-            <NetworkStats
+            <AggregatedMetrics
               tvl={+formatUnits(stats?.contract_balance ?? 0, 18)}
               atomsCount={stats?.total_atoms ?? 0}
               triplesCount={stats?.total_triples ?? 0}

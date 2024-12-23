@@ -1,11 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/react'
 
 import { useGetStatsQuery } from '../../../../graphql/dist'
-import { NetworkStats } from './NetworkStats'
+import { AggregatedMetrics } from './AggregatedMetrics'
 
-const meta: Meta<typeof NetworkStats> = {
-  title: 'Components/Network/NetworkStats',
-  component: NetworkStats,
+const meta: Meta<typeof AggregatedMetrics> = {
+  title: 'Components/AggregatedMetrics',
+  component: AggregatedMetrics,
   parameters: {
     layout: 'fullscreen',
   },
@@ -13,7 +13,7 @@ const meta: Meta<typeof NetworkStats> = {
 
 export default meta
 
-type Story = StoryObj<typeof NetworkStats>
+type Story = StoryObj<typeof AggregatedMetrics>
 
 export const Default: Story = {
   decorators: [
@@ -41,7 +41,7 @@ const SmartNetworkStats = () => {
   )
 
   return (
-    <NetworkStats
+    <AggregatedMetrics
       tvl={systemStats?.stats?.[0]?.contract_balance || 0}
       atomsCount={systemStats?.stats?.[0]?.total_atoms || 0}
       triplesCount={systemStats?.stats?.[0]?.total_triples || 0}
