@@ -77,8 +77,8 @@ export default function Playground() {
             userPosition: position
               ? {
                   shares: position.shares,
-                  totalShares: position.vault?.totalShares,
-                  currentSharePrice: position.vault?.currentSharePrice,
+                  totalShares: position.vault?.total_shares,
+                  currentSharePrice: position.vault?.current_share_price,
                 }
               : null,
           }
