@@ -1,28 +1,37 @@
-import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
+import { Canvas, Controls, Meta, Story, Title } from '@storybook/blocks'
 
-import * as Stories from './ProgressBar.stories'
+import * as ProgressStories from './Progress.stories'
 
-<Meta of={Stories} />
+<Meta of={ProgressStories} />
 
 <Title />
 
-#### Progress bar to percentage progress
+A progress indicator component built on top of Radix UI Progress primitive.
 
-<Source
-  dark
-  language="tsx"
-  code={`
-import { ProgressBar } from '@0xintuition/1ui'
+## Usage
 
-<ProgressBar
-  percentage={50}
-  primaryClassName={'bg-primary'}
-  secondaryClassName={'bg-muted'}
-/>
-`} />
+<Canvas of={ProgressStories.Default} />
 
-<Canvas of={Stories.BasicUsage} sourceState="none" />
+```tsx
+import { Progress } from '@0xintuition/1ui'
 
-## Properties
+;<Progress value={50} />
+```
+
+## Examples
+
+### With Custom Value
+
+<Canvas of={ProgressStories.WithValue} />
+
+### Custom Styles
+
+<Canvas of={ProgressStories.CustomStyles} />
+
+### Indeterminate State
+
+<Canvas of={ProgressStories.Indeterminate} />
+
+## API Reference
 
 <Controls />
