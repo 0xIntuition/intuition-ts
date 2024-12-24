@@ -30,6 +30,10 @@ You can also run this from the monorepo root:
 pnpm graphql:codegen
 ```
 
+### Schema Management
+
+The package uses a local `schema.graphql` file as the source of truth for generating TypeScript types. This ensures consistent behavior across all environments and makes the package more portable for external use.
+
 ### Testing
 
 Run unit tests with:
@@ -166,6 +170,7 @@ The package can be configured through the following files:
 - `codegen.ts` - GraphQL code generation settings
 - `tsconfig.json` - TypeScript configuration
 - `vitest.config.ts` - Test configuration
+- `schema.graphql` - GraphQL schema (source of truth)
 
 ## Contributing
 

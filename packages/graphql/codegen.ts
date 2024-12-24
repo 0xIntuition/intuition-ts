@@ -1,6 +1,8 @@
 import { CodegenConfig } from '@graphql-codegen/cli'
 import type { Types } from '@graphql-codegen/plugin-helpers'
 
+import { API_URL_DEV } from './src/constants'
+
 const commonGenerateOptions: Types.ConfiguredOutput = {
   config: {
     reactQueryVersion: 5,
@@ -34,9 +36,18 @@ const commonGenerateOptions: Types.ConfiguredOutput = {
 const config: CodegenConfig = {
   overwrite: true,
   hooks: { afterAllFileWrite: ['prettier --write'] },
-  schema: process.env.HASURA_PROJECT_ENDPOINT
-    ? [process.env.HASURA_PROJECT_ENDPOINT]
-    : ['./schema.graphql'],
+  // Try local schema first, fall back to remote if not found
+  schema: [
+    './schema.graphql',
+    {
+      [API_URL_DEV]: {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },
+    },
+  ],
   ignoreNoDocuments: true,
   documents: ['**/*.graphql'],
   generates: {
@@ -45,12 +56,6 @@ const config: CodegenConfig = {
         ...commonGenerateOptions.config,
       },
       plugins: commonGenerateOptions.plugins,
-    },
-    './schema.graphql': {
-      plugins: ['schema-ast'],
-      config: {
-        includeDirectives: true,
-      },
     },
   },
   watch: process.env.NODE_ENV === 'development',
