@@ -3,10 +3,10 @@
 import React from 'react'
 
 import {
-  Area,
   CartesianGrid,
   Line,
   LineChart as LineChartComponent,
+  ReferenceArea,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -58,83 +58,39 @@ export function LineChart({
         />
         <Tooltip formatter={(value: any) => value.toFixed(4)} />
 
-        {data.map((curve) => {
-          // Create arrays with boundary points included
-          const totalAssetsPoints =
-            totalAssets !== undefined
-              ? [
-                  { x: 0, y: 0 },
-                  ...curve.points.filter((p) => p.x <= totalAssets),
-                  {
-                    x: totalAssets,
-                    y: curve.points.find((p) => p.x >= totalAssets)?.y || 0,
-                  },
-                ]
-              : []
+        {data.map((curve) => (
+          <React.Fragment key={curve.id}>
+            {/* Base curve line */}
+            <Line
+              type="monotone"
+              data={curve.points}
+              dataKey="y"
+              stroke={curve.color}
+              dot={false}
+              name={curve.name}
+            />
 
-          const previewPoints =
-            previewAmount !== undefined && totalAssets !== undefined
-              ? [
-                  {
-                    x: totalAssets,
-                    y: curve.points.find((p) => p.x >= totalAssets)?.y || 0,
-                  },
-                  ...curve.points.filter(
-                    (p) =>
-                      p.x > totalAssets && p.x <= totalAssets + previewAmount,
-                  ),
-                  {
-                    x: totalAssets + previewAmount,
-                    y:
-                      curve.points.find(
-                        (p) => p.x >= totalAssets + previewAmount,
-                      )?.y || 0,
-                  },
-                ]
-              : []
-
-          return (
-            <React.Fragment key={curve.id}>
-              {/* Total Assets area fill */}
-              {totalAssets !== undefined && (
-                <Area
-                  type="monotone"
-                  data={totalAssetsPoints}
-                  dataKey="y"
-                  x="x"
-                  stroke="none"
-                  fill={curve.color}
-                  fillOpacity={0.2}
-                  isAnimationActive={false}
-                />
-              )}
-
-              {/* Preview area fill */}
-              {previewAmount !== undefined && totalAssets !== undefined && (
-                <Area
-                  type="monotone"
-                  data={previewPoints}
-                  dataKey="y"
-                  x="x"
-                  stroke="none"
-                  fill={curve.color}
-                  fillOpacity={0.1}
-                  isAnimationActive={false}
-                />
-              )}
-
-              {/* Base curve line */}
-              <Line
-                type="monotone"
-                data={curve.points}
-                dataKey="y"
-                stroke={curve.color}
-                dot={false}
-                name={curve.name}
+            {/* Total Assets area fill */}
+            {totalAssets !== undefined && (
+              <ReferenceArea
+                x1={0}
+                x2={totalAssets}
+                fill={curve.color}
+                fillOpacity={0.3}
               />
-            </React.Fragment>
-          )
-        })}
+            )}
+
+            {/* Preview area fill */}
+            {previewAmount !== undefined && totalAssets !== undefined && (
+              <ReferenceArea
+                x1={totalAssets}
+                x2={totalAssets + previewAmount}
+                fill={curve.color}
+                fillOpacity={0.15}
+              />
+            )}
+          </React.Fragment>
+        ))}
       </LineChartComponent>
     </ResponsiveContainer>
   )

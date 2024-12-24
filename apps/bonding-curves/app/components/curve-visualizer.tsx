@@ -59,7 +59,6 @@ interface DeployedContract {
   userShares: bigint
   maxAssets: bigint
   maxShares: bigint
-  previewPoints: Point[]
 }
 
 interface FileData {
@@ -216,6 +215,13 @@ export function CurveVisualizer() {
         const upperBoundWei = maxValueWei < maxAssets ? maxValueWei : maxAssets
         const stepWei = upperBoundWei / BigInt(numPoints)
 
+        console.log('Generating points with:', {
+          maxAssets: formatEther(maxAssets),
+          maxShares: formatEther(maxShares),
+          upperBound: formatEther(upperBoundWei),
+          step: formatEther(stepWei),
+        })
+
         // Add the origin point explicitly
         points.push({
           x: 0,
@@ -252,11 +258,13 @@ export function CurveVisualizer() {
             throw err
           }
         }
+
+        console.log('Generated points:', points)
+        return points
       } catch (err) {
         console.error('Error generating curve points:', err)
+        return points
       }
-
-      return points
     },
     [publicClient],
   )
@@ -282,6 +290,7 @@ export function CurveVisualizer() {
               args: [amountWei, totalAssetsWei, totalSharesWei] as const,
             })
             result = BigInt(response as unknown as string)
+            console.log('result', result)
             return {
               x: amount,
               y: Number(formatEther(result)),
@@ -367,72 +376,34 @@ export function CurveVisualizer() {
     [selectedCurveId, deployedContracts, simulatePreview],
   )
 
-  // Add handlers for the new preview inputs
-  const handleDepositPreview = useCallback(
-    (value: string) => {
-      const amountBigInt = parseNumberInput(value)
-      setDepositAmount(amountBigInt)
+  // Calculate step size based on current value
+  const getStepSize = (value: number) => {
+    if (value === 0) return 0.1
+    const magnitude = Math.floor(Math.log10(Math.abs(value)))
+    return magnitude < 0 ? 0.1 : Math.pow(10, magnitude - 1)
+  }
 
-      if (!selectedCurveId) return
-      const curve = deployedContracts.find((c) => c.id === selectedCurveId)
-      if (!curve) return
+  const formatDisplayValue = (value: bigint) => {
+    const floatValue = Number(formatEther(value))
+    if (floatValue === 0) return '0'
+    if (floatValue < 0.1) return floatValue.toFixed(18).replace(/\.?0+$/, '')
+    if (floatValue < 1) return floatValue.toFixed(1)
+    if (floatValue < 10) return floatValue.toFixed(1)
+    return floatValue.toFixed(0)
+  }
 
-      // Preview the deposit with current pool state
-      publicClient
-        .readContract({
-          address: curve.address,
-          abi: curve.abi,
-          functionName: 'previewDeposit',
-          args: [
-            amountBigInt,
-            curve.totalAssets,
-            curve.totalShares,
-          ] as readonly [bigint, bigint, bigint],
-        })
-        .then((sharesWei: unknown) => {
-          const shares = BigInt(sharesWei as string)
+  const handleDepositPreview = useCallback((value: string) => {
+    // Convert empty string to 0
+    if (!value) {
+      setDepositAmount(0n)
+      return
+    }
 
-          // Update points to show both current total and preview
-          const updatedPoints = curve.points.map((point) => ({
-            ...point,
-            // Keep existing totalValue for current holdings
-            totalValue:
-              point.x <= Number(formatEther(curve.totalAssets))
-                ? point.y
-                : undefined,
-            // Add preview highlighting up to new total
-            previewValue:
-              point.x <= Number(formatEther(curve.totalAssets + amountBigInt))
-                ? point.y
-                : undefined,
-          }))
+    const numValue = parseFloat(value)
+    if (isNaN(numValue)) return
 
-          setDeployedContracts((prev) =>
-            prev.map((c) =>
-              c.id === selectedCurveId
-                ? {
-                    ...c,
-                    points: updatedPoints,
-                    previewPoints: [
-                      {
-                        x: Number(
-                          formatEther(curve.totalAssets + amountBigInt),
-                        ),
-                        y: Number(formatEther(curve.totalShares + shares)),
-                        previewPoint: true,
-                      },
-                    ],
-                  }
-                : c,
-            ),
-          )
-        })
-        .catch((err) => {
-          console.error('Error previewing deposit:', err)
-        })
-    },
-    [selectedCurveId, deployedContracts, publicClient],
-  )
+    setDepositAmount(parseEther(numValue.toString()))
+  }, [])
 
   const handleRedeemPreview = useCallback(
     (value: string) => {
@@ -633,7 +604,6 @@ export function CurveVisualizer() {
             userShares: 0n,
             maxAssets,
             maxShares,
-            previewPoints: [],
           }
           return [...prev, newContract]
         })
@@ -706,13 +676,6 @@ export function CurveVisualizer() {
       ),
     )
   }, [selectedCurveId, totalAssets, totalShares])
-
-  // Calculate step size based on current value using logarithms
-  const calculateStepSize = useCallback((value: number) => {
-    if (value === 0) return 0.1
-    const magnitude = Math.floor(Math.log10(value))
-    return Math.pow(10, magnitude - 1)
-  }, [])
 
   const handleTotalAssetsChange = useCallback(
     async (newValue: string) => {
@@ -797,42 +760,35 @@ export function CurveVisualizer() {
       try {
         if (!amount) {
           setDepositAmount(0n)
-          setDeployedContracts((prev) =>
-            prev.map((c) =>
-              c.id === selectedCurveId
-                ? { ...c, previewDeposit: undefined }
-                : c,
-            ),
-          )
           return
         }
 
-        setDepositAmount(parseEther(amount.toString()))
+        // Convert scientific notation to fixed decimal string
+        const fixedAmount = amount.toFixed(18)
+        const amountBigInt = parseEther(fixedAmount)
+        setDepositAmount(amountBigInt)
+
+        // Preview the deposit with current pool state
         const shares = await publicClient.readContract({
           address: curve.address,
           abi: curve.abi,
           functionName: 'previewDeposit',
-          args: [
-            parseEther(amount.toString()),
-            curve.totalAssets,
-            curve.totalShares,
-          ] as const,
+          args: [amountBigInt, curve.totalAssets, curve.totalShares] as const,
         })
         const sharesNumber = Number(formatEther(BigInt(shares.toString())))
-
-        // Update preview point
-        const previewPoint = {
-          x: curve.totalAssets + parseEther(amount.toString()),
-          y: curve.totalShares + parseEther(sharesNumber.toString()),
-        }
 
         setDeployedContracts((prev) =>
           prev.map((c) =>
             c.id === selectedCurveId
               ? {
                   ...c,
-                  previewDeposit: previewPoint,
-                  previewRedeem: undefined,
+                  previewPoints: [
+                    {
+                      x: Number(formatEther(curve.totalAssets + amountBigInt)),
+                      y: sharesNumber,
+                      previewPoint: true,
+                    },
+                  ],
                 }
               : c,
           ),
@@ -1122,7 +1078,6 @@ export function CurveVisualizer() {
       userShares: 0n,
       maxAssets: 0n,
       maxShares: 0n,
-      previewPoints: [],
     }
 
     setSelectedContract(deployedContract)
@@ -1233,14 +1188,7 @@ export function CurveVisualizer() {
             xLabel="Assets"
             yLabel="Shares"
             totalAssets={
-              selectedCurveId
-                ? Number(
-                    formatEther(
-                      deployedContracts.find((c) => c.id === selectedCurveId)
-                        ?.totalAssets || 0n,
-                    ),
-                  )
-                : undefined
+              selectedCurveId ? Number(formatEther(totalAssets)) : undefined
             }
             previewAmount={
               depositAmount > 0n
@@ -1260,9 +1208,7 @@ export function CurveVisualizer() {
                     type="text"
                     value={formatEther(totalAssets).toString()}
                     onChange={(e) => handleTotalAssetsChange(e.target.value)}
-                    step={calculateStepSize(
-                      parseFloat(formatEther(totalAssets)),
-                    ).toString()}
+                    step={getStepSize(parseFloat(formatEther(totalAssets)))}
                     min="0"
                   />
                 </div>
@@ -1272,9 +1218,7 @@ export function CurveVisualizer() {
                     type="text"
                     value={formatEther(totalShares).toString()}
                     onChange={(e) => handleTotalSharesChange(e.target.value)}
-                    step={calculateStepSize(
-                      parseFloat(formatEther(totalShares)),
-                    ).toString()}
+                    step={getStepSize(parseFloat(formatEther(totalShares)))}
                     min="0"
                   />
                 </div>
@@ -1288,10 +1232,10 @@ export function CurveVisualizer() {
                 <div className="flex gap-2">
                   <Input
                     type="number"
-                    value={Number(formatEther(depositAmount))}
-                    onChange={(e) =>
-                      handleDepositAmountChange(Number(e.target.value))
-                    }
+                    value={formatDisplayValue(depositAmount)}
+                    onChange={(e) => handleDepositPreview(e.target.value)}
+                    step={getStepSize(Number(formatEther(depositAmount)))}
+                    min="0"
                   />
                   <Button onClick={handleDeposit}>Deposit</Button>
                 </div>
