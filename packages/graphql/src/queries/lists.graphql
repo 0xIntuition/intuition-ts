@@ -24,10 +24,7 @@ query GetLists($where: predicate_objects_bool_exp) {
 
 query GetListItems($predicateId: numeric, $objectId: numeric) {
   triples_aggregate(
-    where: {
-      predicate_id: { _eq: $predicateId }
-      object_id: { _eq: $objectId }
-    }
+    where: { predicate_id: { _eq: predicateId }, object_id: { _eq: $objectId } }
     order_by: [
       {
         vault: { position_count: desc }

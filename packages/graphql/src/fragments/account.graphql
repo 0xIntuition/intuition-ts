@@ -14,7 +14,6 @@ fragment AccountClaimsAggregate on accounts {
     nodes {
       triple {
         id
-        label
       }
       shares
       counter_shares
@@ -31,7 +30,6 @@ fragment AccountClaims on accounts {
   ) {
     triple {
       id
-      label
     }
     shares
     counter_shares
@@ -56,7 +54,6 @@ fragment AccountPositionsAggregate on accounts {
         }
         triple {
           id
-          label
         }
       }
     }
@@ -82,14 +79,37 @@ fragment AccountPositions on accounts {
       }
       triple {
         id
-        label
+      }
+    }
+  }
+}
+
+fragment AccountAtoms on accounts {
+  atoms(
+    where: $atomsWhere
+    order_by: $atomsOrderBy
+    limit: $atomsLimit
+    offset: $atomsOffset
+  ) {
+    id
+    label
+    data
+    vault {
+      total_shares
+      positions_aggregate(where: { account_id: { _eq: $address } }) {
+        nodes {
+          account {
+            id
+          }
+          shares
+        }
       }
     }
   }
 }
 
 fragment AccountAtomsAggregate on accounts {
-  created_atoms_aggregate(
+  atoms_aggregate(
     where: $atomsWhere
     order_by: $atomsOrderBy
     limit: $atomsLimit
@@ -120,30 +140,8 @@ fragment AccountAtomsAggregate on accounts {
   }
 }
 
-fragment AccountAtoms on accounts {
-  created_atoms(
-    where: $atomsWhere
-    order_by: $atomsOrderBy
-    limit: $atomsLimit
-    offset: $atomsOffset
-  ) {
-    id
-    label
-    data
-    vault {
-      total_shares
-      positions(where: { account_id: { _eq: $address } }) {
-        account {
-          id
-        }
-        shares
-      }
-    }
-  }
-}
-
 fragment AccountTriples on accounts {
-  created_triples_aggregate(
+  triples_aggregate(
     where: $triplesWhere
     order_by: $triplesOrderBy
     limit: $triplesLimit
@@ -154,7 +152,6 @@ fragment AccountTriples on accounts {
     }
     nodes {
       id
-      label
       subject {
         id
         label
@@ -172,7 +169,7 @@ fragment AccountTriples on accounts {
 }
 
 fragment AccountTriplesAggregate on accounts {
-  created_triples_aggregate(
+  triples_aggregate(
     where: $triplesWhere
     order_by: $triplesOrderBy
     limit: $triplesLimit
@@ -183,7 +180,6 @@ fragment AccountTriplesAggregate on accounts {
     }
     nodes {
       id
-      label
       subject {
         id
         label

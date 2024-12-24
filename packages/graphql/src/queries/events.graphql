@@ -1,207 +1,229 @@
-# Main pagination query
-query GetEvents(
+query GetFollowingPositions(
+  $subjectId: numeric!
+  $predicateId: numeric!
+  $address: String!
   $limit: Int
   $offset: Int
-  $orderBy: [events_order_by!]
-  $where: events_bool_exp
-  $addresses: [String!]
+  $positionsOrderBy: [positions_order_by!]
 ) {
-  total: events_aggregate(where: $where) {
-    aggregate {
-      count
+  triples_aggregate(
+    where: {
+      _and: [
+        { subject_id: { _eq: $subjectId } }
+        { predicate_id: { _eq: $predicateId } }
+        { vault: { positions: { account_id: { _eq: $address } } } }
+      ]
     }
-  }
-  events(limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
-    id
-    block_number
-    block_timestamp
-    type
-    transaction_hash
-    atom_id
-    triple_id
-    deposit_id
-    redemption_id
-    atom {
-      ...AtomMetadata
-      vault {
-        total_shares
-        position_count
-        positions(where: { account: { id: { _in: $addresses } } }) {
-          account_id
-          shares
-          account {
-            id
-            label
-            image
-          }
-        }
-      }
-    }
-    triple {
-      id
-      creator {
-        ...AccountMetadata
-      }
-      subject {
-        data
-        id
-        image
-        label
-        emoji
-        type
-        ...AtomValue
-        creator {
-          ...AccountMetadata
-        }
-      }
-      predicate {
-        data
-        id
-        image
-        label
-        emoji
-        type
-        ...AtomValue
-        creator {
-          ...AccountMetadata
-        }
-      }
-      object {
-        data
-        id
-        image
-        label
-        emoji
-        type
-        ...AtomValue
-        creator {
-          ...AccountMetadata
-        }
-      }
-      vault {
-        total_shares
-        position_count
-        positions(where: { account: { id: { _in: $addresses } } }) {
-          account_id
-          shares
-          account {
-            id
-            label
-            image
-          }
-        }
-      }
-      counter_vault {
-        total_shares
-        position_count
-        positions(where: { account: { id: { _in: $addresses } } }) {
-          account_id
-          shares
-          account {
-            id
-            label
-            image
-          }
-        }
-      }
-    }
-    deposit {
-      sender_id
-      sender {
-        id
-      }
-      shares_for_receiver
-      sender_assets_after_total_fees
-      vault {
-        total_shares
-        position_count
-        positions(where: { account: { id: { _in: $addresses } } }) {
-          account_id
-          shares
-          account {
-            id
-            label
-            image
-          }
-        }
-      }
-    }
-    redemption {
-      sender_id
-      sender {
-        id
-      }
-    }
-  }
-}
-
-# Combined query with aggregates and nodes
-query GetEventsWithAggregates(
-  $limit: Int
-  $offset: Int
-  $orderBy: [events_order_by!]
-  $where: events_bool_exp
-  $addresses: [String!]
-) {
-  events_aggregate(
-    where: $where
-    limit: $limit
-    offset: $offset
-    order_by: $orderBy
   ) {
     aggregate {
       count
-      max {
-        block_timestamp
-        block_number
-      }
-      min {
-        block_timestamp
-        block_number
-      }
-    }
-    nodes {
-      ...EventDetails
     }
   }
-}
-
-query GetEventsCount($where: events_bool_exp) {
-  events_aggregate(where: $where) {
-    aggregate {
-      count
+  triples(
+    limit: $limit
+    offset: $offset
+    where: {
+      _and: [
+        { subject_id: { _eq: $subjectId } }
+        { predicate_id: { _eq: $predicateId } }
+        { vault: { positions: { account_id: { _eq: $address } } } }
+      ]
     }
-  }
-}
-
-query GetEventsData($where: events_bool_exp) {
-  events_aggregate(where: $where) {
-    aggregate {
-      count
-      max {
-        block_timestamp
-        block_number
-      }
-      min {
-        block_timestamp
-        block_number
-      }
-      avg {
-        block_number
-      }
-    }
-  }
-}
-
-# Debug query with explicit address and position filtering
-query GetDebugEvents($addresses: [String!]) {
-  debug_events: events {
+  ) {
     id
-    atom {
-      vault {
-        positions(where: { account_id: { _in: $addresses } }) {
-          account_id
-          shares
+    subject {
+      ...AtomMetadata
+    }
+    predicate {
+      ...AtomMetadata
+    }
+    object {
+      ...AtomMetadata
+    }
+    vault {
+      total_shares
+      current_share_price
+      positions_aggregate {
+        aggregate {
+          count
+          sum {
+            shares
+          }
+        }
+      }
+      positions(
+        where: { account_id: { _eq: $address } }
+        order_by: $positionsOrderBy
+      ) {
+        account_id
+        account {
+          id
+          label
+        }
+        shares
+      }
+    }
+  }
+}
+
+query GetFollowerPositions(
+  $subjectId: numeric!
+  $predicateId: numeric!
+  $objectId: numeric!
+  $positionsLimit: Int
+  $positionsOffset: Int
+  $positionsOrderBy: [positions_order_by!]
+  $positionsWhere: positions_bool_exp
+) {
+  triples(
+    where: {
+      _and: [
+        { subject_id: { _eq: $subjectId } }
+        { predicate_id: { _eq: $predicateId } }
+        { object_id: { _eq: $objectId } }
+      ]
+    }
+  ) {
+    id
+    subject {
+      ...AtomMetadata
+    }
+    predicate {
+      ...AtomMetadata
+    }
+    object {
+      ...AtomMetadata
+    }
+    vault {
+      total_shares
+      current_share_price
+      positions_aggregate {
+        aggregate {
+          count
+          sum {
+            shares
+          }
+        }
+      }
+      positions(
+        limit: $positionsLimit
+        offset: $positionsOffset
+        order_by: $positionsOrderBy
+        where: $positionsWhere
+      ) {
+        account {
+          id
+          label
+          image
+        }
+        shares
+      }
+    }
+  }
+}
+
+# Combined query to get following and followers
+query GetConnections(
+  $subjectId: numeric!
+  $predicateId: numeric!
+  $objectId: numeric!
+  $addresses: [String!]
+  $positionsLimit: Int
+  $positionsOffset: Int
+  $positionsOrderBy: [positions_order_by!]
+  $positionsWhere: positions_bool_exp
+) {
+  # Following
+  following_count: triples_aggregate(
+    where: {
+      _and: [
+        { subject_id: { _eq: $subjectId } }
+        { predicate_id: { _eq: $predicateId } }
+        { object_id: { _eq: $objectId } }
+      ]
+    }
+  ) {
+    aggregate {
+      count
+    }
+  }
+  following: triples(
+    where: {
+      _and: [
+        { subject_id: { _eq: $subjectId } }
+        { predicate_id: { _eq: $predicateId } }
+        { object_id: { _eq: $objectId } }
+      ]
+    }
+  ) {
+    ...FollowMetadata
+  }
+
+  # Followers
+  followers_count: triples_aggregate(
+    where: {
+      _and: [
+        { subject_id: { _eq: $subjectId } }
+        { predicate_id: { _eq: $predicateId } }
+        { vault: { positions: { account_id: { _in: $addresses } } } }
+      ]
+    }
+  ) {
+    aggregate {
+      count
+    }
+  }
+  followers: triples(
+    where: {
+      _and: [
+        { subject_id: { _eq: $subjectId } }
+        { predicate_id: { _eq: $predicateId } }
+        { vault: { positions: { account_id: { _in: $addresses } } } }
+      ]
+    }
+  ) {
+    ...FollowMetadata
+  }
+}
+
+query GetConnectionsCount(
+  $subjectId: numeric!
+  $predicateId: numeric!
+  $objectId: numeric!
+  $address: String!
+) {
+  # Following count
+  following_count: triples_aggregate(
+    where: {
+      _and: [
+        { subject_id: { _eq: $subjectId } }
+        { predicate_id: { _eq: $predicateId } }
+        { vault: { positions: { account_id: { _eq: $address } } } }
+      ]
+    }
+  ) {
+    aggregate {
+      count
+    }
+  }
+
+  # Followers count
+  followers_count: triples(
+    where: {
+      _and: [
+        { subject_id: { _eq: $subjectId } }
+        { predicate_id: { _eq: $predicateId } }
+        { object_id: { _eq: $objectId } }
+      ]
+    }
+  ) {
+    vault {
+      positions_aggregate {
+        aggregate {
+          count
+          sum {
+            shares
+          }
         }
       }
     }

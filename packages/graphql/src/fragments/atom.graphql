@@ -71,9 +71,8 @@ fragment AtomVaultDetails on atoms {
 }
 
 fragment AtomTriple on atoms {
-  as_subject {
+  as_subject_triples {
     id
-    label
     object {
       data
       id
@@ -97,9 +96,8 @@ fragment AtomTriple on atoms {
       }
     }
   }
-  as_predicate {
+  as_predicate_triples {
     id
-    label
     subject {
       data
       id
@@ -123,9 +121,8 @@ fragment AtomTriple on atoms {
       }
     }
   }
-  as_object {
+  as_object_triples {
     id
-    label
     subject {
       data
       id

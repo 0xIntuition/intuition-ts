@@ -83,7 +83,6 @@ query GetAtomsWithAggregates(
       ...AtomMetadata
       ...AtomTxn
       ...AtomVaultDetails
-      ...AtomTriple
       creator {
         ...AccountMetadata
       }

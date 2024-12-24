@@ -14,17 +14,63 @@ fragment PositionDetails on positions {
     }
     triple {
       id
+      vault {
+        id
+        position_count
+        positions_aggregate {
+          aggregate {
+            sum {
+              shares
+            }
+          }
+        }
+      }
+      counter_vault {
+        id
+        position_count
+        positions_aggregate {
+          aggregate {
+            sum {
+              shares
+            }
+          }
+        }
+      }
       subject {
+        data
         id
         label
+        image
+        emoji
+        type
+        ...AtomValue
+        creator {
+          ...AccountMetadata
+        }
       }
       predicate {
+        data
         id
         label
+        image
+        emoji
+        type
+        ...AtomValue
+        creator {
+          ...AccountMetadata
+        }
       }
       object {
+        data
         id
         label
+        image
+        emoji
+        type
+        ...AtomValue
+        creator {
+          ...AccountMetadata
+        }
       }
     }
   }
@@ -38,6 +84,11 @@ fragment PositionFields on positions {
     label
   }
   shares
+  vault {
+    id
+    total_shares
+    current_share_price
+  }
 }
 
 fragment PositionAggregateFields on positions_aggregate {

@@ -36,7 +36,7 @@ const commonGenerateOptions: Types.ConfiguredOutput = {
 const config: CodegenConfig = {
   overwrite: true,
   hooks: { afterAllFileWrite: ['prettier --write'] },
-  // Try local schema first, fall back to remote if not found
+  // Try local schema first, fall back to remote if needed
   schema: [
     './schema.graphql',
     {
@@ -56,6 +56,12 @@ const config: CodegenConfig = {
         ...commonGenerateOptions.config,
       },
       plugins: commonGenerateOptions.plugins,
+    },
+    './schema.graphql': {
+      plugins: ['schema-ast'],
+      config: {
+        includeDirectives: true,
+      },
     },
   },
   watch: process.env.NODE_ENV === 'development',

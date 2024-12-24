@@ -73,26 +73,12 @@ fragment TripleVaultDetails on triples {
   counter_vault_id
   vault {
     positions {
-      id
-      vault_id
-      shares
-      account {
-        id
-        label
-        image
-      }
+      ...PositionDetails
     }
   }
   counter_vault {
     positions {
-      id
-      vault_id
-      shares
-      account {
-        id
-        label
-        image
-      }
+      ...PositionDetails
     }
   }
 }
