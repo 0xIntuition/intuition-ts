@@ -88,9 +88,9 @@ const SmartIdentityCard = () => {
       variant="non-user"
       avatarSrc={atomData?.atom?.image ?? ''}
       name={atomData?.atom?.label ?? ''}
-      value={atomData?.atom?.vault?.totalShares ?? 0}
+      value={atomData?.atom?.vault?.total_shares ?? 0}
       currency="ETH"
-      walletAddress={atomData?.atom?.walletId ?? ''}
+      walletAddress={atomData?.atom?.wallet_id ?? ''}
     />
   )
 }
