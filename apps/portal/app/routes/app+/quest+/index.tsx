@@ -21,14 +21,12 @@ import { QuestSetCard } from '@components/quest/quest-set-card'
 import { QuestSetProgressCard } from '@components/quest/quest-set-progress-card'
 import { ReferralCard } from '@components/referral-card/referral-card'
 import RelicPointCard from '@components/relic-point-card/relic-point-card'
-import { getPurchaseIntentsByAddress } from '@lib/services/phosphor'
 import { calculatePointsFromFees, invariant } from '@lib/utils/misc'
-import { defer, LoaderFunctionArgs } from '@remix-run/node'
+import { LoaderFunctionArgs } from '@remix-run/node'
 import { Await, Link, useLoaderData } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
 import { getQuestsProgress } from '@server/quest'
-import { getRelicCount } from '@server/relics'
 import {
   BLOCK_EXPLORER_URL,
   COMING_SOON_QUEST_SET,
@@ -38,19 +36,114 @@ import {
 } from 'app/consts'
 import { isAddress } from 'viem'
 
+interface GraphQLResponse<T> {
+  data?: T
+  errors?: Array<{ message: string }>
+}
+
+const GetMintCountDocument = {
+  query: `
+    query GetMintCountUntilDate($address: String!, $cutoff_timestamp: Int!) {
+      voucherRedeemedEvents(
+        where: { redeemer: $address, timestamp_lte: $cutoff_timestamp }
+      ) {
+        totalCount
+      }
+    }
+  `,
+} as const
+
+interface GetMintCountQuery {
+  voucherRedeemedEvents: {
+    totalCount: number
+  }
+}
+
+interface GetMintCountQueryVariables {
+  address: string
+  cutoff_timestamp: number
+}
+
+async function fetchGraphQL<T, V>(
+  document: { query: string },
+  variables: V,
+): Promise<GraphQLResponse<T>> {
+  const endpoint = process.env.RELIC_GRAPHQL_ENDPOINT
+  if (!endpoint) {
+    throw new Error('RELIC_GRAPHQL_ENDPOINT not configured')
+  }
+
+  const response = await fetch(endpoint, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      query: document.query,
+      variables,
+    }),
+  })
+
+  if (!response.ok) {
+    throw new Error(`GraphQL request failed: ${response.statusText}`)
+  }
+
+  return response.json()
+}
+
+const GetRelicHoldingsDocument = {
+  query: `
+    query GetRelicHoldings($address: String!) {
+      account(address: $address) {
+        tokens {
+          totalCount
+        }
+        voucherRedeemedEvents {
+          totalCount
+        }
+      }
+    }
+  `,
+} as const
+
+interface GetRelicHoldingsQuery {
+  account: {
+    tokens: {
+      totalCount: number
+    }
+    voucherRedeemedEvents: {
+      totalCount: number
+    }
+  }
+}
+
+interface GetRelicHoldingsQueryVariables {
+  address: string
+}
+
 export async function loader({ request }: LoaderFunctionArgs) {
   const userWallet = await requireUserWallet(request)
   invariant(userWallet, 'Unauthorized')
 
-  // TODO: Remove this relic hold/mint count and points calculation when it is stored in BE.
-  const relicHoldCount = await getRelicCount(userWallet as `0x${string}`)
+  const cutoffTimestamp = 1735516799
 
-  const userCompletedMints = await getPurchaseIntentsByAddress(
-    userWallet,
-    'CONFIRMED',
-  )
+  const mintCountData = await fetchGraphQL<
+    GetMintCountQuery,
+    GetMintCountQueryVariables
+  >(GetMintCountDocument, {
+    address: userWallet,
+    cutoff_timestamp: cutoffTimestamp,
+  })
 
-  const relicMintCount = userCompletedMints.data?.total_results
+  const holdingsData = await fetchGraphQL<
+    GetRelicHoldingsQuery,
+    GetRelicHoldingsQueryVariables
+  >(GetRelicHoldingsDocument, {
+    address: userWallet,
+  })
+
+  const mintCount = mintCountData.data?.voucherRedeemedEvents?.totalCount ?? 0
+  const holdCount = holdingsData.data?.account?.tokens?.totalCount ?? 0
 
   const userProfile = await fetchWrapper(request, {
     method: UsersService.getUserByWalletPublic,
@@ -59,7 +152,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     },
   })
 
-  const userTotals = fetchWrapper(request, {
+  const userTotals = await fetchWrapper(request, {
     method: UsersService.getUserTotals,
     args: {
       id: userWallet,
@@ -73,32 +166,32 @@ export async function loader({ request }: LoaderFunctionArgs) {
     },
   })
 
-  const details = getQuestsProgress({
+  const details = await getQuestsProgress({
     request,
     options: {
       narrative: QuestNarrative.STANDARD,
     },
   })
 
-  return defer({
+  return {
     details,
     userWallet,
     userProfile,
     userTotals,
     inviteCodes: inviteCodes.invite_codes,
-    relicHoldCount: relicHoldCount.toString(),
-    relicMintCount,
-  })
+    relicHoldCount: holdCount.toString(),
+    mintCount,
+  }
 }
 
 export default function Quests() {
-  const { details, userTotals, inviteCodes, relicMintCount, relicHoldCount } =
+  const { userTotals, inviteCodes, relicHoldCount, details, mintCount } =
     useLoaderData<typeof loader>()
 
-  // TODO: Remove this relic hold/mint count and points calculation when it is stored in BE.
-  const nftMintPoints = relicMintCount ? relicMintCount * 2000000 : 0
-  const nftHoldPoints = relicHoldCount ? +relicHoldCount * 250000 : 0
+  const nftMintPoints = mintCount * 2000000
+  const nftHoldPoints = parseInt(relicHoldCount) * 250000
   const totalNftPoints = nftMintPoints + nftHoldPoints
+
   return (
     <div className="p-10 w-full max-w-7xl mx-auto flex flex-col gap-5 max-md:p-5 max-sm:p-2">
       <ExploreHeader
@@ -139,20 +232,13 @@ export default function Quests() {
                 <Await resolve={userTotals}>
                   {(resolvedUserTotals) => (
                     <PointsEarnedCard
-                      // TODO: Remove this relic hold/mint count and points calculation when it is stored in BE.
                       totalPoints={
-                        relicMintCount || relicHoldCount
-                          ? resolvedUserTotals.referral_points +
-                            resolvedUserTotals.quest_points +
-                            totalNftPoints +
-                            calculatePointsFromFees(
-                              resolvedUserTotals.total_protocol_fee_paid,
-                            )
-                          : resolvedUserTotals.referral_points +
-                            resolvedUserTotals.quest_points +
-                            calculatePointsFromFees(
-                              resolvedUserTotals.total_protocol_fee_paid,
-                            )
+                        resolvedUserTotals.referral_points +
+                        resolvedUserTotals.quest_points +
+                        totalNftPoints +
+                        calculatePointsFromFees(
+                          resolvedUserTotals.total_protocol_fee_paid,
+                        )
                       }
                       activities={[
                         {
@@ -175,7 +261,7 @@ export default function Quests() {
                         },
                         {
                           name: 'Community',
-                          points: 0, // TODO: Update this when backend adds social points
+                          points: 0,
                           disabled: true,
                         },
                       ]}
@@ -185,8 +271,8 @@ export default function Quests() {
               </Suspense>
             </div>
             <RelicPointCard
-              relicsMintCount={relicMintCount ? relicMintCount : 0}
-              relicsHoldCount={relicHoldCount ? +relicHoldCount : 0}
+              relicsMintCount={mintCount}
+              relicsHoldCount={parseInt(relicHoldCount)}
               relicsPoints={totalNftPoints}
             />
           </div>
