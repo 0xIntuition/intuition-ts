@@ -20,7 +20,6 @@ import { PointsEarnedCard } from '@components/points-card/points-card'
 import { QuestSetProgressCard } from '@components/quest/quest-set-progress-card'
 import { ReferralCard } from '@components/referral-card/referral-card'
 import RelicPointCard from '@components/relic-point-card/relic-point-card'
-import { fetchRelicCounts } from '@lib/services/relic'
 import { calculatePointsFromFees, invariant } from '@lib/utils/misc'
 import { LoaderFunctionArgs } from '@remix-run/node'
 import { Await, useLoaderData } from '@remix-run/react'
@@ -32,6 +31,7 @@ import {
   HEADER_BANNER_HELP_CENTER,
   STANDARD_QUEST_SET,
 } from 'app/consts'
+import { fetchRelicCounts } from 'app/lib/services/relic'
 import { isAddress } from 'viem'
 
 export async function loader({ request }: LoaderFunctionArgs) {
