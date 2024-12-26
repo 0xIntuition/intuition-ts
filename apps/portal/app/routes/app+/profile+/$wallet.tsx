@@ -137,7 +137,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     return logger('No user totals found')
   }
 
-  const relicCounts = await fetchRelicCounts(wallet)
+  const relicCounts = await fetchRelicCounts(wallet.toLowerCase())
 
   let vaultDetails: VaultDetailsType | null = null
 

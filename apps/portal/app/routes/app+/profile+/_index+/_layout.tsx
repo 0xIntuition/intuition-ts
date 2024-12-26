@@ -90,7 +90,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const userWallet = user.wallet?.address
 
   const relicCounts = await fetchRelicCounts(userWallet.toLowerCase())
-  console.log('_layout.tsx - Relic counts from server:', relicCounts)
 
   const userObject = await fetchWrapper(request, {
     method: UsersService.getUserByWalletPublic,
