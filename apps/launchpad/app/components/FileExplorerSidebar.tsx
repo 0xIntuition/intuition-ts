@@ -42,56 +42,61 @@ function FileExplorerItem({
   onSelect,
   selectedPath,
 }: FileExplorerItemProps) {
-  const [isOpen, setIsOpen] = useState(false)
+  console.log('FileExplorerItem rendering:', {
+    name: node.name,
+    hasNodes: !!node.nodes?.length,
+  })
+  const [isOpen, setIsOpen] = useState(true)
   const isSelected = selectedPath === node.path
+  const hasChildren = node.nodes && node.nodes.length > 0
 
   return (
-    <li key={node.name}>
-      <button
-        onClick={() => {
-          if (node.nodes?.length) {
-            setIsOpen(!isOpen)
-          }
-          onSelect?.(node.path)
-        }}
-        className={`w-full text-left ${isSelected ? 'text-accent' : ''}`}
-      >
-        <span className="flex items-center gap-1.5 py-1">
-          {node.nodes?.length > 0 && (
-            <motion.span
-              animate={{ rotate: isOpen ? 90 : 0 }}
-              transition={{ type: 'spring', bounce: 0, duration: 0.4 }}
-              className="flex"
-            >
-              <Icon
-                name={IconName.chevronRight}
-                className="size-4 text-gray-500"
-              />
-            </motion.span>
-          )}
-
-          <Icon
-            name={
-              node.icon ||
-              (node.nodes?.length ? IconName.folder : IconName.fileText)
+    <li>
+      <div className="flex flex-col">
+        <button
+          onClick={() => {
+            if (hasChildren) {
+              setIsOpen(!isOpen)
             }
-            className={`size-5 ${
-              node.nodes?.length ? 'text-sky-500' : 'text-foreground/50'
-            } ${!node.nodes?.length ? 'ml-[22px]' : ''}`}
-          />
-          <span className="text-sm">{node.name}</span>
-        </span>
-      </button>
-      <AnimatePresence>
-        {isOpen && node.nodes && (
+          }}
+          className={`w-full text-left ${isSelected ? 'text-accent' : 'text-muted-foreground'}`}
+        >
+          <span className="flex items-center gap-1 py-0.5">
+            {hasChildren && (
+              <motion.span
+                animate={{ rotate: isOpen ? 90 : 0 }}
+                transition={{ type: 'spring', bounce: 0, duration: 0.4 }}
+                className="flex"
+              >
+                <Icon
+                  name={IconName.chevronRight}
+                  className="size-3 text-muted-foreground/70"
+                />
+              </motion.span>
+            )}
+
+            <Icon
+              name={
+                node.icon || (hasChildren ? IconName.folder : IconName.fileText)
+              }
+              className={`size-4 ${
+                hasChildren
+                  ? 'text-muted-foreground'
+                  : 'text-muted-foreground/50'
+              } ${!hasChildren ? 'ml-[18px]' : ''}`}
+            />
+            <span className="text-xs">{node.name}</span>
+          </span>
+        </button>
+        {hasChildren && isOpen && (
           <motion.ul
             initial={{ height: 0 }}
             animate={{ height: 'auto' }}
             exit={{ height: 0 }}
             transition={{ type: 'spring', bounce: 0, duration: 0.4 }}
-            className="pl-6 overflow-hidden"
+            className="pl-4 overflow-hidden"
           >
-            {node.nodes.map((childNode) => (
+            {node.nodes?.map((childNode) => (
               <FileExplorerItem
                 key={childNode.path}
                 node={childNode}
@@ -101,7 +106,7 @@ function FileExplorerItem({
             ))}
           </motion.ul>
         )}
-      </AnimatePresence>
+      </div>
     </li>
   )
 }
@@ -168,10 +173,10 @@ export function FileExplorerSidebar({
       </SidebarHeader>
       <SidebarContent className="px-3">
         <ul className="space-y-1">
-          {items.map((item) => (
+          {items.map((rootNode) => (
             <FileExplorerItem
-              key={item.path}
-              node={item}
+              key={rootNode.path}
+              node={rootNode}
               onSelect={onSelect}
               selectedPath={selectedPath}
             />

@@ -101,12 +101,6 @@ export default function PreferencesLayout() {
   const location = useLocation()
   const navigate = useNavigate()
 
-  // TODO: Replace with actual user data
-  const user = {
-    name: 'Demo User',
-    avatar: '',
-  }
-
   const handleSelect = (path: string) => {
     navigate(path)
   }
@@ -117,7 +111,6 @@ export default function PreferencesLayout() {
         <FileExplorerSidebar
           items={preferencesTree}
           selectedPath={location.pathname}
-          user={user}
           onSelect={handleSelect}
         />
         <main className="flex-1 overflow-auto p-6">
