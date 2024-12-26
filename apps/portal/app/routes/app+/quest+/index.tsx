@@ -20,11 +20,7 @@ import { PointsEarnedCard } from '@components/points-card/points-card'
 import { QuestSetProgressCard } from '@components/quest/quest-set-progress-card'
 import { ReferralCard } from '@components/referral-card/referral-card'
 import RelicPointCard from '@components/relic-point-card/relic-point-card'
-<<<<<<< HEAD
 import { fetchRelicCounts } from '@lib/services/relic'
-=======
-import { useRelicCounts } from '@lib/hooks/useRelicCounts'
->>>>>>> 51adb7b3 (update workflows and relic points on profile routes)
 import { calculatePointsFromFees, invariant } from '@lib/utils/misc'
 import { LoaderFunctionArgs } from '@remix-run/node'
 import { Await, useLoaderData } from '@remix-run/react'
@@ -42,11 +38,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const userWallet = await requireUserWallet(request)
   invariant(userWallet, 'Unauthorized')
 
-<<<<<<< HEAD
   const relicCounts = await fetchRelicCounts(userWallet.toLowerCase())
 
-=======
->>>>>>> 51adb7b3 (update workflows and relic points on profile routes)
   const userProfile = await fetchWrapper(request, {
     method: UsersService.getUserByWalletPublic,
     args: {
@@ -81,25 +74,18 @@ export async function loader({ request }: LoaderFunctionArgs) {
     userProfile,
     userTotals,
     inviteCodes: inviteCodes.invite_codes,
-<<<<<<< HEAD
     relicHoldCount: relicCounts.holdCount,
     mintCount: relicCounts.mintCount,
-=======
->>>>>>> 51adb7b3 (update workflows and relic points on profile routes)
   }
 }
 
 export default function Quests() {
-  const { userTotals, inviteCodes, userWallet, details } =
+  const { userTotals, inviteCodes, mintCount, relicHoldCount, details } =
     useLoaderData<typeof loader>()
-<<<<<<< HEAD
 
   const nftMintPoints = mintCount * 2000000
   const nftHoldPoints = relicHoldCount * 250000
   const totalNftPoints = nftMintPoints + nftHoldPoints
-=======
-  const { mintCount, holdCount, totalNftPoints } = useRelicCounts(userWallet)
->>>>>>> 51adb7b3 (update workflows and relic points on profile routes)
 
   return (
     <div className="p-10 w-full max-w-7xl mx-auto flex flex-col gap-5 max-md:p-5 max-sm:p-2">
@@ -181,11 +167,7 @@ export default function Quests() {
             </div>
             <RelicPointCard
               relicsMintCount={mintCount}
-<<<<<<< HEAD
               relicsHoldCount={relicHoldCount}
-=======
-              relicsHoldCount={holdCount}
->>>>>>> 51adb7b3 (update workflows and relic points on profile routes)
               relicsPoints={totalNftPoints}
             />
           </div>
