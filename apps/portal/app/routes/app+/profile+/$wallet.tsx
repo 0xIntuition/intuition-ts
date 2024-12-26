@@ -204,7 +204,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     followVaultDetails,
     vaultDetails,
     isPending,
-    relicHoldCount: relicCounts.holdCount.toString(),
+    relicHoldCount: relicCounts.holdCount,
     relicMintCount: relicCounts.mintCount,
   })
 }
@@ -233,7 +233,7 @@ export default function Profile() {
     vaultDetails: VaultDetailsType
     isPending: boolean
     relicMintCount: number
-    relicHoldCount: string
+    relicHoldCount: number
   }>(['attest', 'create'])
   const navigate = useNavigate()
 
@@ -257,7 +257,7 @@ export default function Profile() {
   }, [saveListModalActive])
 
   const nftMintPoints = relicMintCount ? relicMintCount * 2000000 : 0
-  const nftHoldPoints = relicHoldCount ? +relicHoldCount * 250000 : 0
+  const nftHoldPoints = relicHoldCount ? relicHoldCount * 250000 : 0
   const totalNftPoints = nftMintPoints + nftHoldPoints
 
   const feePoints = calculatePointsFromFees(userTotals.total_protocol_fee_paid)

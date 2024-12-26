@@ -192,7 +192,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     vaultDetails,
     followClaim,
     isPending,
-    relicHoldCount: relicCounts.holdCount.toString(),
+    relicHoldCount: relicCounts.holdCount,
     relicMintCount: relicCounts.mintCount,
   })
 }
@@ -208,7 +208,7 @@ export interface ProfileLoaderData {
   followClaim: ClaimPresenter
   isPending: boolean
   relicMintCount: number
-  relicHoldCount: string
+  relicHoldCount: number
 }
 
 export default function Profile() {
@@ -281,7 +281,7 @@ export default function Profile() {
 
   // TODO: Remove this relic hold/mint count and points calculation when it is stored in BE.
   const nftMintPoints = relicMintCount * 2000000
-  const nftHoldPoints = parseInt(relicHoldCount) * 250000
+  const nftHoldPoints = relicHoldCount * 250000
   const totalNftPoints = nftMintPoints + nftHoldPoints
 
   const feePoints = calculatePointsFromFees(userTotals.total_protocol_fee_paid)
