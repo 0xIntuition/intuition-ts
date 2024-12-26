@@ -39,8 +39,8 @@ import ShareModal from '@components/share-modal'
 import StakeModal from '@components/stake/stake-modal'
 import TagsModal from '@components/tags/tags-modal'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
+import { useRelicCounts } from '@lib/hooks/useRelicCounts'
 import { getIdentityOrPending } from '@lib/services/identities'
-import { getPurchaseIntentsByAddress } from '@lib/services/phosphor'
 import { getTags } from '@lib/services/tags'
 import {
   followModalAtom,
@@ -65,7 +65,6 @@ import { Outlet, useNavigate } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
-import { getRelicCount } from '@server/relics'
 import {
   BLOCK_EXPLORER_URL,
   CURRENT_ENV,
@@ -138,16 +137,6 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     return logger('No user totals found')
   }
 
-  // TODO: Remove this relic hold/mint count and points calculation when it is stored in BE.
-  const relicHoldCount = await getRelicCount(wallet as `0x${string}`)
-
-  const userCompletedMints = await getPurchaseIntentsByAddress(
-    wallet,
-    'CONFIRMED',
-  )
-
-  const relicMintCount = userCompletedMints.data?.total_results
-
   let vaultDetails: VaultDetailsType | null = null
 
   if (!!userIdentity && userIdentity.vault_id) {
@@ -213,8 +202,6 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     followVaultDetails,
     vaultDetails,
     isPending,
-    relicHoldCount: relicHoldCount.toString(),
-    relicMintCount,
   })
 }
 
@@ -229,8 +216,6 @@ export default function Profile() {
     followVaultDetails,
     vaultDetails,
     isPending,
-    relicMintCount,
-    relicHoldCount,
   } = useLiveLoader<{
     wallet: string
     userWallet: string
@@ -241,12 +226,11 @@ export default function Profile() {
     followVaultDetails: VaultDetailsType
     vaultDetails: VaultDetailsType
     isPending: boolean
-    relicMintCount: number
-    relicHoldCount: string
   }>(['attest', 'create'])
   const navigate = useNavigate()
 
   const { user_assets, assets_sum } = vaultDetails ? vaultDetails : userIdentity
+  const { totalNftPoints } = useRelicCounts(wallet)
 
   const [stakeModalActive, setStakeModalActive] = useAtom(stakeModalAtom)
   const [tagsModalActive, setTagsModalActive] = useAtom(tagsModalAtom)
@@ -264,11 +248,6 @@ export default function Profile() {
       setSelectedTag(saveListModalActive.tag)
     }
   }, [saveListModalActive])
-
-  // TODO: Remove this relic hold/mint count and points calculation when it is stored in BE.
-  const nftMintPoints = relicMintCount ? relicMintCount * 2000000 : 0
-  const nftHoldPoints = relicHoldCount ? +relicHoldCount * 250000 : 0
-  const totalNftPoints = nftMintPoints + nftHoldPoints
 
   const feePoints = calculatePointsFromFees(userTotals.total_protocol_fee_paid)
 
