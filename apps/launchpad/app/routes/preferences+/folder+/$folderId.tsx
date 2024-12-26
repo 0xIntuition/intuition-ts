@@ -115,7 +115,8 @@ function getParentFolderName(path: string): string {
   if (filteredParts.length < 2) {
     return ''
   }
-  return filteredParts[filteredParts.length - 2]
+  // Return the parent folder name with underscores
+  return filteredParts[filteredParts.length - 2].replace(/-/g, '_')
 }
 
 export default function FolderView() {
