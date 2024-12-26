@@ -91,14 +91,75 @@ export default function ItemView() {
           </Button>
         </div>
       </div>
-      <Button variant="secondary" className="px-4">
+      <Button variant="secondary">
         <Icon name="eye-open" className="h-4 w-4" />
         View Metadata
       </Button>
 
-      {/* Chart Area */}
-      <div className="h-[400px] rounded-lg border border-border/10 bg-gradient-to-b from-[#060504] to-[#101010]">
-        {/* Chart will go here */}
+      {/* Chart Card */}
+      <div className="rounded-lg border border-border/10 bg-gradient-to-b from-[#060504] to-[#101010] p-6">
+        {/* Header */}
+        <div className="flex items-center justify-between">
+          <div className="flex flex-col gap-1">
+            <Text variant="caption" className="text-muted-foreground">
+              Share Price
+            </Text>
+            <Text variant="headline" weight="medium">
+              $235.70
+            </Text>
+          </div>
+          <Text variant="caption" className="text-[#E6B17E]">
+            Vault ID 1337
+          </Text>
+        </div>
+
+        {/* Chart Area */}
+        <div className="h-[300px]">{/* Chart will go here */}</div>
+
+        {/* Time Period Selector */}
+        <div className="flex items-center gap-4 border-t border-dashed border-border/10 pt-4">
+          {['1D', '1W', '1M', '3M', '1Y', 'YTD'].map((period) => (
+            <button
+              key={period}
+              className={`text-sm ${
+                period === 'YTD'
+                  ? 'text-[#E6B17E]'
+                  : 'text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              {period}
+            </button>
+          ))}
+          <Icon
+            name={IconName.filter1}
+            className="ml-auto size-4 text-muted-foreground"
+          />
+        </div>
+      </div>
+
+      {/* Position Info */}
+      <div className="flex items-center justify-between rounded-lg bg-[#060504] px-6 py-3">
+        <div className="flex flex-col gap-1">
+          <Text
+            variant="caption"
+            weight="medium"
+            className="text-muted-foreground"
+          >
+            Your Position
+          </Text>
+          <div className="flex items-center gap-2">
+            <Text variant="headline" weight="medium">
+              $0.0
+            </Text>
+            <Text variant="body" className="text-success">
+              +0.0 (+0.0%)
+            </Text>
+          </div>
+        </div>
+        <div className="flex gap-2">
+          <Button variant="secondary">Sell</Button>
+          <Button variant="secondary">Buy</Button>
+        </div>
       </div>
 
       {/* Stats Grid */}
@@ -119,33 +180,7 @@ export default function ItemView() {
             </Text>
           </div>
         ))}
-      </div>
-
-      {/* Position Info */}
-      <div className="flex items-center justify-between bg-[#060504] px-6 py-3 rounded-lg">
-        <div className="flex-col items-center gap-2">
-          <Text
-            variant="caption"
-            weight="regular"
-            className="text-muted-foreground"
-          >
-            Your Position
-          </Text>
-          <div className="flex items-center gap-2">
-            <Text variant="headline" weight="medium" className="font-medium">
-              $0.0
-            </Text>
-            <Text variant="body" weight="medium" className="text-success">
-              +0.0%
-            </Text>
-          </div>
-        </div>
-        <div className="flex gap-2">
-          <Button variant="outline" className="bg-[#060504]">
-            Sell
-          </Button>
-          <Button>Buy</Button>
-        </div>
+        {/* <div className="h-[400px] w-100 rounded-lg border border-border/10 bg-gradient-to-b from-[#060504] to-[#101010]"></div> */}
       </div>
     </div>
   )
