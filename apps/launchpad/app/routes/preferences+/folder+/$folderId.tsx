@@ -9,6 +9,8 @@ import {
   DropdownMenuTrigger,
   Icon,
   IconName,
+  SegmentedControl,
+  SegmentedControlItem,
   Text,
 } from '@0xintuition/1ui'
 
@@ -39,7 +41,7 @@ function ItemCard({
   return (
     <div
       className={cn(
-        'rounded-lg border border-border/10 bg-gradient-to-b from-[#060504] to-[#101010]',
+        'rounded-lg border border-border/10 bg-gradient-to-b from-[#060504] to-[#101010] min-w-[480px]',
         className,
       )}
       {...props}
@@ -88,7 +90,7 @@ function FolderTag({
         <span>{name}</span>
       </div>
       {showCount && (
-        <div className="absolute -right-2 -top-2">
+        <div className="absolute -right-2 -top-3">
           <span className="bg-blue-500 text-[10px] rounded-sm px-1 text-white">
             37
           </span>
@@ -147,26 +149,20 @@ export default function FolderView() {
             <FolderTag name={folder.name} variant="brown" showCount />
           </div>
         </div>
-        <div className="flex items-center gap-2">
-          <label className="flex items-center gap-2">
-            <input type="radio" name="label" className="text-accent" />
-            <span className="text-sm">Label</span>
-          </label>
-          <label className="flex items-center gap-2">
-            <input type="radio" name="label" className="text-accent" />
-            <span className="text-sm">Label</span>
-          </label>
-        </div>
+        <SegmentedControl>
+          <SegmentedControlItem isActive>Label</SegmentedControlItem>
+          <SegmentedControlItem>Label</SegmentedControlItem>
+        </SegmentedControl>
       </div>
 
       {/* Folder Card */}
       <ItemCard>
         <div className="flex flex-col">
           {/* Header */}
-          <div className="flex items-center justify-between p-6">
+          <div className="flex items-center justify-between p-4">
             <div className="flex items-center gap-3">
               <div className="size-8 rounded bg-muted/50" />
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-1.5">
                 <Text variant="body" className="text-muted-foreground">
                   {folder.name}
                 </Text>
@@ -190,21 +186,52 @@ export default function FolderView() {
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
+
+          {/* Middle section with dotted line */}
+          <div className="py-8">
+            <div className="border-t border-dashed border-border/10" />
+          </div>
+
+          {/* Position info */}
+          <div className="flex items-center justify-between bg-black px-6 py-3 rounded-b-lg">
+            <div className="flex-col items-center gap-2">
+              <Text
+                variant="caption"
+                weight="regular"
+                className="text-muted-foreground"
+              >
+                Your Position
+              </Text>
+              <div className="flex items-center gap-2">
+                <Text
+                  variant="headline"
+                  weight="medium"
+                  className="font-medium"
+                >
+                  $0.0
+                </Text>
+                <Text variant="body" weight="medium" className="text-success">
+                  +0.0%
+                </Text>
+              </div>
+            </div>
+            <Button variant="secondary">Main Action</Button>
+          </div>
         </div>
       </ItemCard>
 
       {/* Grid of items */}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-8">
         {folder.items
           .filter((item) => item.type === 'item')
           .map((item: FileNode) => (
             <ItemCard key={item.id}>
               <div className="flex flex-col">
                 {/* Header */}
-                <div className="flex items-center justify-between p-6">
+                <div className="flex items-center justify-between p-4">
                   <div className="flex items-center gap-3">
                     <div className="size-8 rounded bg-muted/50" />
-                    <div className="flex flex-col gap-2">
+                    <div className="flex flex-col gap-1.5">
                       <Text variant="body" className="text-muted-foreground">
                         {folder.name}
                       </Text>
@@ -230,12 +257,12 @@ export default function FolderView() {
                 </div>
 
                 {/* Middle section with dotted line */}
-                <div className="py-16">
+                <div className="py-8">
                   <div className="border-t border-dashed border-border/10" />
                 </div>
 
                 {/* Position info */}
-                <div className="flex items-center justify-between bg-black px-6 py-4 rounded-b-lg">
+                <div className="flex items-center justify-between bg-black px-6 py-3 rounded-b-lg">
                   <div className="flex-col items-center gap-2">
                     <Text
                       variant="caption"

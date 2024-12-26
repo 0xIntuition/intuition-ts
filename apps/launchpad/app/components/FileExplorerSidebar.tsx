@@ -5,6 +5,7 @@ import {
   Avatar,
   AvatarFallback,
   AvatarImage,
+  cn,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -19,9 +20,10 @@ import {
   SidebarMenuItem,
   SidebarRail,
   Skeleton,
+  Text,
 } from '@0xintuition/1ui'
 
-import { useNavigate } from '@remix-run/react'
+import { useLocation, useNavigate } from '@remix-run/react'
 import { motion } from 'framer-motion'
 import { MoreVertical } from 'lucide-react'
 
@@ -56,8 +58,9 @@ function FileExplorerItem({
   selectedPath,
 }: FileExplorerItemProps) {
   const navigate = useNavigate()
+  const location = useLocation()
   const [isOpen, setIsOpen] = useState(true)
-  const isSelected = selectedPath === node.path
+  const isSelected = location.pathname === `/preferences/folder/${node.id}`
   const isFolder = node.type === 'folder'
 
   const handleClick = () => {
@@ -80,7 +83,11 @@ function FileExplorerItem({
         <div className="group relative">
           <button
             onClick={handleClick}
-            className={`w-full text-left ${isSelected ? 'text-accent' : 'text-muted-foreground'}`}
+            className={cn(
+              'w-full text-left',
+              isSelected && 'text-foreground bg-muted/50',
+              !isSelected && 'text-foreground hover:bg-muted/5',
+            )}
           >
             <span className="flex items-center gap-1 py-0.5">
               {isFolder && (
@@ -101,12 +108,18 @@ function FileExplorerItem({
                   node.icon || (isFolder ? IconName.folder : IconName.fileText)
                 }
                 className={`size-4 ${
-                  isFolder
-                    ? 'text-muted-foreground'
-                    : 'text-muted-foreground/50'
+                  isFolder ? 'text-foreground' : 'text-muted-foreground/50'
                 } ${!isFolder ? 'ml-[18px]' : ''}`}
               />
-              <span className="text-xs">{node.name}</span>
+              <Text
+                variant="body"
+                weight="regular"
+                className={`${
+                  isFolder ? 'text-foreground' : 'text-foreground/70'
+                } ${!isFolder ? 'ml-[18px]' : ''}`}
+              >
+                {node.name}
+              </Text>
             </span>
           </button>
           {isFolder && (
