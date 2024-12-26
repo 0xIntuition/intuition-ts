@@ -41,7 +41,7 @@ import StakeModal from '@components/stake/stake-modal'
 import TagsModal from '@components/tags/tags-modal'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getIdentityOrPending } from '@lib/services/identities'
-import { getPurchaseIntentsByAddress } from '@lib/services/phosphor'
+import { fetchRelicCounts } from '@lib/services/relic'
 import { getTags } from '@lib/services/tags'
 import {
   editProfileModalAtom,
@@ -72,7 +72,6 @@ import {
 import { fetchWrapper } from '@server/api'
 import { requireUser } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
-import { getRelicCount } from '@server/relics'
 import {
   BLOCK_EXPLORER_URL,
   CURRENT_ENV,
@@ -90,15 +89,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
   invariant(user.wallet?.address, 'User wallet not found')
   const userWallet = user.wallet?.address
 
-  // TODO: Remove this relic hold/mint count and points calculation when it is stored in BE.
-  const relicHoldCount = await getRelicCount(userWallet as `0x${string}`)
-
-  const userCompletedMints = await getPurchaseIntentsByAddress(
-    userWallet,
-    'CONFIRMED',
-  )
-
-  const relicMintCount = userCompletedMints.data?.total_results
+  const relicCounts = await fetchRelicCounts(userWallet.toLowerCase())
+  console.log('_layout.tsx - Relic counts from server:', relicCounts)
 
   const userObject = await fetchWrapper(request, {
     method: UsersService.getUserByWalletPublic,
@@ -201,8 +193,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
     vaultDetails,
     followClaim,
     isPending,
-    relicHoldCount: relicHoldCount.toString(),
-    relicMintCount,
+    relicHoldCount: relicCounts.holdCount.toString(),
+    relicMintCount: relicCounts.mintCount,
   })
 }
 
@@ -289,8 +281,8 @@ export default function Profile() {
   }
 
   // TODO: Remove this relic hold/mint count and points calculation when it is stored in BE.
-  const nftMintPoints = relicMintCount ? relicMintCount * 2000000 : 0
-  const nftHoldPoints = relicHoldCount ? +relicHoldCount * 250000 : 0
+  const nftMintPoints = relicMintCount * 2000000
+  const nftHoldPoints = parseInt(relicHoldCount) * 250000
   const totalNftPoints = nftMintPoints + nftHoldPoints
 
   const feePoints = calculatePointsFromFees(userTotals.total_protocol_fee_paid)

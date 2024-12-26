@@ -40,7 +40,7 @@ import StakeModal from '@components/stake/stake-modal'
 import TagsModal from '@components/tags/tags-modal'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getIdentityOrPending } from '@lib/services/identities'
-import { getPurchaseIntentsByAddress } from '@lib/services/phosphor'
+import { fetchRelicCounts } from '@lib/services/relic'
 import { getTags } from '@lib/services/tags'
 import {
   followModalAtom,
@@ -65,7 +65,6 @@ import { Outlet, useNavigate } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
-import { getRelicCount } from '@server/relics'
 import {
   BLOCK_EXPLORER_URL,
   CURRENT_ENV,
@@ -138,15 +137,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     return logger('No user totals found')
   }
 
-  // TODO: Remove this relic hold/mint count and points calculation when it is stored in BE.
-  const relicHoldCount = await getRelicCount(wallet as `0x${string}`)
-
-  const userCompletedMints = await getPurchaseIntentsByAddress(
-    wallet,
-    'CONFIRMED',
-  )
-
-  const relicMintCount = userCompletedMints.data?.total_results
+  const relicCounts = await fetchRelicCounts(wallet)
 
   let vaultDetails: VaultDetailsType | null = null
 
@@ -213,8 +204,8 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     followVaultDetails,
     vaultDetails,
     isPending,
-    relicHoldCount: relicHoldCount.toString(),
-    relicMintCount,
+    relicHoldCount: relicCounts.holdCount.toString(),
+    relicMintCount: relicCounts.mintCount,
   })
 }
 
@@ -265,7 +256,6 @@ export default function Profile() {
     }
   }, [saveListModalActive])
 
-  // TODO: Remove this relic hold/mint count and points calculation when it is stored in BE.
   const nftMintPoints = relicMintCount ? relicMintCount * 2000000 : 0
   const nftHoldPoints = relicHoldCount ? +relicHoldCount * 250000 : 0
   const totalNftPoints = nftMintPoints + nftHoldPoints
