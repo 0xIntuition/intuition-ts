@@ -21,10 +21,12 @@ import {
   Skeleton,
 } from '@0xintuition/1ui'
 
+import { useNavigate } from '@remix-run/react'
 import { motion } from 'framer-motion'
 import { MoreVertical } from 'lucide-react'
 
 type FileItem = {
+  id: string
   name: string
   path: string
   icon?: (typeof IconName)[keyof typeof IconName]
@@ -32,6 +34,7 @@ type FileItem = {
 }
 
 type Folder = {
+  id: string
   name: string
   path: string
   icon?: (typeof IconName)[keyof typeof IconName]
@@ -52,46 +55,72 @@ function FileExplorerItem({
   onSelect,
   selectedPath,
 }: FileExplorerItemProps) {
+  const navigate = useNavigate()
   const [isOpen, setIsOpen] = useState(true)
   const isSelected = selectedPath === node.path
   const isFolder = node.type === 'folder'
 
+  const handleClick = () => {
+    if (isFolder) {
+      setIsOpen(!isOpen)
+    } else {
+      // Navigate to item detail view
+      navigate(`/preferences/item/${node.id}`)
+    }
+  }
+
+  const handleGearClick = (e: React.MouseEvent) => {
+    e.stopPropagation() // Prevent folder toggle
+    navigate(`/preferences/folder/${node.id}`)
+  }
+
   return (
     <li>
       <div className="flex flex-col">
-        <button
-          onClick={() => {
-            if (isFolder) {
-              setIsOpen(!isOpen)
-            }
-          }}
-          className={`w-full text-left ${isSelected ? 'text-accent' : 'text-muted-foreground'}`}
-        >
-          <span className="flex items-center gap-1 py-0.5">
-            {isFolder && (
-              <motion.span
-                animate={{ rotate: isOpen ? 90 : 0 }}
-                transition={{ type: 'spring', bounce: 0, duration: 0.4 }}
-                className="flex"
-              >
-                <Icon
-                  name={IconName.chevronRight}
-                  className="size-3 text-muted-foreground/70"
-                />
-              </motion.span>
-            )}
+        <div className="group relative">
+          <button
+            onClick={handleClick}
+            className={`w-full text-left ${isSelected ? 'text-accent' : 'text-muted-foreground'}`}
+          >
+            <span className="flex items-center gap-1 py-0.5">
+              {isFolder && (
+                <motion.span
+                  animate={{ rotate: isOpen ? 90 : 0 }}
+                  transition={{ type: 'spring', bounce: 0, duration: 0.4 }}
+                  className="flex"
+                >
+                  <Icon
+                    name={IconName.chevronRight}
+                    className="size-3 text-muted-foreground/70"
+                  />
+                </motion.span>
+              )}
 
-            <Icon
-              name={
-                node.icon || (isFolder ? IconName.folder : IconName.fileText)
-              }
-              className={`size-4 ${
-                isFolder ? 'text-muted-foreground' : 'text-muted-foreground/50'
-              } ${!isFolder ? 'ml-[18px]' : ''}`}
-            />
-            <span className="text-xs">{node.name}</span>
-          </span>
-        </button>
+              <Icon
+                name={
+                  node.icon || (isFolder ? IconName.folder : IconName.fileText)
+                }
+                className={`size-4 ${
+                  isFolder
+                    ? 'text-muted-foreground'
+                    : 'text-muted-foreground/50'
+                } ${!isFolder ? 'ml-[18px]' : ''}`}
+              />
+              <span className="text-xs">{node.name}</span>
+            </span>
+          </button>
+          {isFolder && (
+            <button
+              onClick={handleGearClick}
+              className="absolute right-1 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity"
+            >
+              <Icon
+                name={IconName.settingsGear}
+                className="size-3 text-muted-foreground/70 hover:text-muted-foreground"
+              />
+            </button>
+          )}
+        </div>
         {isFolder && isOpen && (
           <motion.ul
             initial={{ height: 0 }}
