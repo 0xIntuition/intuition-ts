@@ -2,7 +2,7 @@ import * as React from 'react'
 
 import { Button, Icon, IconName, Text } from '@0xintuition/1ui'
 
-import { useParams } from '@remix-run/react'
+import { useParams, useSearchParams } from '@remix-run/react'
 
 import { preferencesTree } from '../_layout'
 
@@ -42,6 +42,9 @@ function getParentFolderName(path: string): string {
 
 export default function ItemView() {
   const { itemId } = useParams()
+  const [searchParams, setSearchParams] = useSearchParams()
+  const timeFilter = searchParams.get('timeFilter') || 'YTD'
+
   const item = React.useMemo(() => {
     if (!itemId) {
       return null
@@ -121,8 +124,9 @@ export default function ItemView() {
           {['1D', '1W', '1M', '3M', '1Y', 'YTD'].map((period) => (
             <button
               key={period}
-              className={`text-sm ${
-                period === 'YTD'
+              onClick={() => setSearchParams({ timeFilter: period })}
+              className={`text-sm transition-colors ${
+                period === timeFilter
                   ? 'text-[#E6B17E]'
                   : 'text-muted-foreground hover:text-foreground'
               }`}
