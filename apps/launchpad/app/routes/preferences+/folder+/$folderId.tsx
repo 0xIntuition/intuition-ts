@@ -1,6 +1,7 @@
 import * as React from 'react'
 
 import {
+  Button,
   cn,
   DropdownMenu,
   DropdownMenuContent,
@@ -9,7 +10,6 @@ import {
   Icon,
   IconName,
   Text,
-  TextVariant,
 } from '@0xintuition/1ui'
 
 import { useParams } from '@remix-run/react'
@@ -39,7 +39,7 @@ function ItemCard({
   return (
     <div
       className={cn(
-        'rounded-lg border border-border/10 bg-[#1C1C1C] p-6',
+        'rounded-lg border border-border/10 bg-gradient-to-b from-[#060504] to-[#101010]',
         className,
       )}
       {...props}
@@ -106,6 +106,16 @@ function HomeIcon() {
   )
 }
 
+function getParentFolderName(path: string): string {
+  const parts = path.split('/')
+  // Remove empty strings and current folder name
+  const filteredParts = parts.filter(Boolean)
+  if (filteredParts.length < 2) {
+    return ''
+  }
+  return filteredParts[filteredParts.length - 2]
+}
+
 export default function FolderView() {
   const { folderId } = useParams()
   const folder = React.useMemo(() => {
@@ -118,13 +128,13 @@ export default function FolderView() {
   if (!folder) {
     return (
       <div className="space-y-4">
-        <Text variant={TextVariant.heading1}>Folder Not Found</Text>
-        <Text variant={TextVariant.body}>
-          Could not find folder with ID: {folderId}
-        </Text>
+        <Text variant="heading1">Folder Not Found</Text>
+        <Text variant="body">Could not find folder with ID: {folderId}</Text>
       </div>
     )
   }
+
+  const parentFolderName = getParentFolderName(folder.path)
 
   return (
     <div className="space-y-6">
@@ -133,7 +143,7 @@ export default function FolderView() {
         <div className="flex items-center">
           <HomeIcon />
           <div className="flex items-center gap-2">
-            <FolderTag name="has_preference" />
+            <FolderTag name={parentFolderName} />
             <FolderTag name={folder.name} variant="brown" showCount />
           </div>
         </div>
@@ -151,16 +161,23 @@ export default function FolderView() {
 
       {/* Folder Card */}
       <ItemCard>
-        <div className="flex flex-col space-y-4">
+        <div className="flex flex-col">
           {/* Header */}
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between p-6">
             <div className="flex items-center gap-3">
-              <div className="size-8 rounded bg-black" />
-              <div className="flex items-center gap-3">
-                <Text variant={TextVariant.heading2}>{folder.name}</Text>
-                <span className="rounded bg-muted/50 px-2 py-0.5 text-xs text-muted-foreground">
-                  1337
-                </span>
+              <div className="size-8 rounded bg-muted/50" />
+              <div className="flex flex-col gap-2">
+                <Text variant="body" className="text-muted-foreground">
+                  {folder.name}
+                </Text>
+                <div className="flex items-center gap-3">
+                  <Text variant="headline" weight="regular">
+                    {folder.name}
+                  </Text>
+                  <span className="rounded bg-[#4D3D2D] px-2 py-0.5 text-sm text-[#E6B17E]">
+                    1337
+                  </span>
+                </div>
               </div>
             </div>
             <DropdownMenu>
@@ -173,22 +190,6 @@ export default function FolderView() {
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
-
-          {/* Position info */}
-          <div className="flex items-center justify-between border-t border-border/10 pt-4">
-            <div className="flex items-center gap-2">
-              <Text
-                variant={TextVariant.body}
-                className="text-muted-foreground"
-              >
-                Your Position
-              </Text>
-              <span className="font-medium">$0.0</span>
-            </div>
-            <div className="flex items-center gap-1 text-success">
-              <span>+0.0%</span>
-            </div>
-          </div>
         </div>
       </ItemCard>
 
@@ -198,16 +199,23 @@ export default function FolderView() {
           .filter((item) => item.type === 'item')
           .map((item: FileNode) => (
             <ItemCard key={item.id}>
-              <div className="flex flex-col space-y-4">
+              <div className="flex flex-col">
                 {/* Header */}
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between p-6">
                   <div className="flex items-center gap-3">
-                    <div className="size-8 rounded bg-black" />
-                    <div className="flex items-center gap-3">
-                      <Text variant={TextVariant.heading3}>{item.name}</Text>
-                      <span className="rounded bg-muted/50 px-2 py-0.5 text-xs text-muted-foreground">
-                        1337
-                      </span>
+                    <div className="size-8 rounded bg-muted/50" />
+                    <div className="flex flex-col gap-2">
+                      <Text variant="body" className="text-muted-foreground">
+                        {folder.name}
+                      </Text>
+                      <div className="flex items-center gap-3">
+                        <Text variant="headline" weight="regular">
+                          {item.name}
+                        </Text>
+                        <span className="rounded bg-[#4D3D2D] px-2 py-0.5 text-sm text-[#E6B17E]">
+                          1337
+                        </span>
+                      </div>
                     </div>
                   </div>
                   <DropdownMenu>
@@ -221,20 +229,39 @@ export default function FolderView() {
                   </DropdownMenu>
                 </div>
 
+                {/* Middle section with dotted line */}
+                <div className="py-16">
+                  <div className="border-t border-dashed border-border/10" />
+                </div>
+
                 {/* Position info */}
-                <div className="flex items-center justify-between border-t border-border/10 pt-4">
-                  <div className="flex items-center gap-2">
+                <div className="flex items-center justify-between bg-black px-6 py-4 rounded-b-lg">
+                  <div className="flex-col items-center gap-2">
                     <Text
-                      variant={TextVariant.body}
+                      variant="caption"
+                      weight="regular"
                       className="text-muted-foreground"
                     >
                       Your Position
                     </Text>
-                    <span className="font-medium">$0.0</span>
+                    <div className="flex items-center gap-2">
+                      <Text
+                        variant="headline"
+                        weight="medium"
+                        className="font-medium"
+                      >
+                        $0.0
+                      </Text>
+                      <Text
+                        variant="body"
+                        weight="medium"
+                        className="text-success"
+                      >
+                        +0.0%
+                      </Text>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-1 text-success">
-                    <span>+0.0%</span>
-                  </div>
+                  <Button variant="secondary">Main Action</Button>
                 </div>
               </div>
             </ItemCard>
