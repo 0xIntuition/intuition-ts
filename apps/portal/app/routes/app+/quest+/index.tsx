@@ -17,19 +17,22 @@ import {
 import { ErrorPage } from '@components/error-page'
 import ExploreHeader from '@components/explore/ExploreHeader'
 import { PointsEarnedCard } from '@components/points-card/points-card'
+import { QuestSetCard } from '@components/quest/quest-set-card'
 import { QuestSetProgressCard } from '@components/quest/quest-set-progress-card'
 import { ReferralCard } from '@components/referral-card/referral-card'
 import RelicPointCard from '@components/relic-point-card/relic-point-card'
-import { useRelicCounts } from '@lib/hooks/useRelicCounts'
+import { fetchRelicCounts } from '@lib/services/relic'
 import { calculatePointsFromFees, invariant } from '@lib/utils/misc'
 import { LoaderFunctionArgs } from '@remix-run/node'
-import { Await, useLoaderData } from '@remix-run/react'
+import { Await, Link, useLoaderData } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUserWallet } from '@server/auth'
 import { getQuestsProgress } from '@server/quest'
 import {
   BLOCK_EXPLORER_URL,
+  COMING_SOON_QUEST_SET,
   HEADER_BANNER_HELP_CENTER,
+  QUEST_LOG_DESCRIPTION,
   STANDARD_QUEST_SET,
 } from 'app/consts'
 import { isAddress } from 'viem'
@@ -37,6 +40,8 @@ import { isAddress } from 'viem'
 export async function loader({ request }: LoaderFunctionArgs) {
   const userWallet = await requireUserWallet(request)
   invariant(userWallet, 'Unauthorized')
+
+  const relicCounts = await fetchRelicCounts(userWallet.toLowerCase())
 
   const userProfile = await fetchWrapper(request, {
     method: UsersService.getUserByWalletPublic,
@@ -72,13 +77,18 @@ export async function loader({ request }: LoaderFunctionArgs) {
     userProfile,
     userTotals,
     inviteCodes: inviteCodes.invite_codes,
+    relicHoldCount: relicCounts.holdCount,
+    mintCount: relicCounts.mintCount,
   }
 }
 
 export default function Quests() {
-  const { userTotals, inviteCodes, userWallet, details } =
+  const { userTotals, inviteCodes, relicHoldCount, details, mintCount } =
     useLoaderData<typeof loader>()
-  const { mintCount, holdCount, totalNftPoints } = useRelicCounts(userWallet)
+
+  const nftMintPoints = mintCount * 2000000
+  const nftHoldPoints = relicHoldCount * 250000
+  const totalNftPoints = nftMintPoints + nftHoldPoints
 
   return (
     <div className="p-10 w-full max-w-7xl mx-auto flex flex-col gap-5 max-md:p-5 max-sm:p-2">
@@ -160,7 +170,7 @@ export default function Quests() {
             </div>
             <RelicPointCard
               relicsMintCount={mintCount}
-              relicsHoldCount={holdCount}
+              relicsHoldCount={relicHoldCount}
               relicsPoints={totalNftPoints}
             />
           </div>
@@ -181,6 +191,45 @@ export default function Quests() {
               )}
             </Await>
           </Suspense>
+        </div>
+        <div className="flex flex-col gap-10 max-md:gap-5">
+          <div className="space-y-5 max-md:space-y-3">
+            <Text variant="headline">Quest Log</Text>
+            <Text variant="body" className="text-foreground/70">
+              {QUEST_LOG_DESCRIPTION}
+            </Text>
+          </div>
+          <ul className="grid grid-cols-1 gap-10 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 max-md:gap-5">
+            <Suspense fallback={<Skeleton className="h-full w-full" />}>
+              <Await resolve={details}>
+                {(resolvedDetails) => (
+                  <Link to={STANDARD_QUEST_SET.navigatePath} prefetch="intent">
+                    <li className="col-span-1 h-full">
+                      <QuestSetCard
+                        imgSrc={STANDARD_QUEST_SET.imgSrc}
+                        title={STANDARD_QUEST_SET.title}
+                        description={STANDARD_QUEST_SET.description}
+                        numberQuests={resolvedDetails.numQuests}
+                        numberCompletedQuests={
+                          resolvedDetails.numCompletedQuests
+                        }
+                      />
+                    </li>
+                  </Link>
+                )}
+              </Await>
+            </Suspense>
+            <li className="col-span-1 h-full">
+              <QuestSetCard
+                disabled
+                imgSrc={COMING_SOON_QUEST_SET.imgSrc}
+                title={COMING_SOON_QUEST_SET.title}
+                description={COMING_SOON_QUEST_SET.description}
+                numberQuests={0}
+                numberCompletedQuests={0}
+              />
+            </li>
+          </ul>
         </div>
       </div>
     </div>
