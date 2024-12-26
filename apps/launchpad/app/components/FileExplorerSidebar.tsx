@@ -21,15 +21,25 @@ import {
   Skeleton,
 } from '@0xintuition/1ui'
 
-import { AnimatePresence, motion } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { MoreVertical } from 'lucide-react'
 
-type FileNode = {
+type FileItem = {
   name: string
-  icon?: (typeof IconName)[keyof typeof IconName]
-  nodes?: FileNode[]
   path: string
+  icon?: (typeof IconName)[keyof typeof IconName]
+  type: 'item'
 }
+
+type Folder = {
+  name: string
+  path: string
+  icon?: (typeof IconName)[keyof typeof IconName]
+  type: 'folder'
+  items: (Folder | FileItem)[]
+}
+
+type FileNode = Folder | FileItem
 
 interface FileExplorerItemProps {
   node: FileNode
@@ -42,27 +52,23 @@ function FileExplorerItem({
   onSelect,
   selectedPath,
 }: FileExplorerItemProps) {
-  console.log('FileExplorerItem rendering:', {
-    name: node.name,
-    hasNodes: !!node.nodes?.length,
-  })
   const [isOpen, setIsOpen] = useState(true)
   const isSelected = selectedPath === node.path
-  const hasChildren = node.nodes && node.nodes.length > 0
+  const isFolder = node.type === 'folder'
 
   return (
     <li>
       <div className="flex flex-col">
         <button
           onClick={() => {
-            if (hasChildren) {
+            if (isFolder) {
               setIsOpen(!isOpen)
             }
           }}
           className={`w-full text-left ${isSelected ? 'text-accent' : 'text-muted-foreground'}`}
         >
           <span className="flex items-center gap-1 py-0.5">
-            {hasChildren && (
+            {isFolder && (
               <motion.span
                 animate={{ rotate: isOpen ? 90 : 0 }}
                 transition={{ type: 'spring', bounce: 0, duration: 0.4 }}
@@ -77,18 +83,16 @@ function FileExplorerItem({
 
             <Icon
               name={
-                node.icon || (hasChildren ? IconName.folder : IconName.fileText)
+                node.icon || (isFolder ? IconName.folder : IconName.fileText)
               }
               className={`size-4 ${
-                hasChildren
-                  ? 'text-muted-foreground'
-                  : 'text-muted-foreground/50'
-              } ${!hasChildren ? 'ml-[18px]' : ''}`}
+                isFolder ? 'text-muted-foreground' : 'text-muted-foreground/50'
+              } ${!isFolder ? 'ml-[18px]' : ''}`}
             />
             <span className="text-xs">{node.name}</span>
           </span>
         </button>
-        {hasChildren && isOpen && (
+        {isFolder && isOpen && (
           <motion.ul
             initial={{ height: 0 }}
             animate={{ height: 'auto' }}
@@ -96,7 +100,7 @@ function FileExplorerItem({
             transition={{ type: 'spring', bounce: 0, duration: 0.4 }}
             className="pl-4 overflow-hidden"
           >
-            {node.nodes?.map((childNode) => (
+            {node.items.map((childNode) => (
               <FileExplorerItem
                 key={childNode.path}
                 node={childNode}
@@ -116,7 +120,7 @@ interface FileExplorerSidebarProps {
     name: string
     avatar: string
   }
-  items: FileNode[]
+  items: Folder[]
   onSelect?: (path: string) => void
   selectedPath?: string
 }
