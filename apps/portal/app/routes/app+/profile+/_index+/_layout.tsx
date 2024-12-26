@@ -41,7 +41,6 @@ import StakeModal from '@components/stake/stake-modal'
 import TagsModal from '@components/tags/tags-modal'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getIdentityOrPending } from '@lib/services/identities'
-import { fetchRelicCounts } from '@lib/services/relic'
 import { getTags } from '@lib/services/tags'
 import {
   editProfileModalAtom,
@@ -80,6 +79,7 @@ import {
   userIdentityRouteOptions,
 } from 'app/consts'
 import TwoPanelLayout from 'app/layouts/two-panel-layout'
+import { fetchRelicCounts } from 'app/lib/services/relic'
 import { VaultDetailsType } from 'app/types/vault'
 import { useAtom } from 'jotai'
 
