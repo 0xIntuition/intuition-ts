@@ -40,7 +40,6 @@ import { SegmentedNav } from '@components/segmented-nav'
 import StakeModal from '@components/stake/stake-modal'
 import TagsModal from '@components/tags/tags-modal'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
-import { useRelicCounts } from '@lib/hooks/useRelicCounts'
 import { getIdentityOrPending } from '@lib/services/identities'
 import { getTags } from '@lib/services/tags'
 import {
@@ -80,6 +79,7 @@ import {
   userIdentityRouteOptions,
 } from 'app/consts'
 import TwoPanelLayout from 'app/layouts/two-panel-layout'
+import { fetchRelicCounts } from 'app/lib/services/relic'
 import { VaultDetailsType } from 'app/types/vault'
 import { useAtom } from 'jotai'
 
@@ -88,6 +88,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
   invariant(user, 'User not found')
   invariant(user.wallet?.address, 'User wallet not found')
   const userWallet = user.wallet?.address
+
+  const relicCounts = await fetchRelicCounts(userWallet.toLowerCase())
 
   const userObject = await fetchWrapper(request, {
     method: UsersService.getUserByWalletPublic,
@@ -190,6 +192,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
     vaultDetails,
     followClaim,
     isPending,
+    relicHoldCount: relicCounts.holdCount,
+    relicMintCount: relicCounts.mintCount,
   })
 }
 
@@ -203,6 +207,8 @@ export interface ProfileLoaderData {
   vaultDetails: VaultDetailsType
   followClaim: ClaimPresenter
   isPending: boolean
+  relicMintCount: number
+  relicHoldCount: number
 }
 
 export default function Profile() {
@@ -215,9 +221,9 @@ export default function Profile() {
     userTotals,
     vaultDetails,
     isPending,
+    relicMintCount,
+    relicHoldCount,
   } = useLiveLoader<ProfileLoaderData>(['attest', 'create'])
-
-  const { totalNftPoints } = useRelicCounts(userWallet)
 
   const { user_assets, assets_sum } = vaultDetails ? vaultDetails : userIdentity
 
@@ -273,6 +279,11 @@ export default function Profile() {
     return null
   }
 
+  // TODO: Remove this relic hold/mint count and points calculation when it is stored in BE.
+  const nftMintPoints = relicMintCount * 2000000
+  const nftHoldPoints = relicHoldCount * 250000
+  const totalNftPoints = nftMintPoints + nftHoldPoints
+
   const feePoints = calculatePointsFromFees(userTotals.total_protocol_fee_paid)
 
   const totalPoints =
@@ -292,6 +303,7 @@ export default function Profile() {
         stats={{
           numberOfFollowers: userTotals.follower_count,
           numberOfFollowing: userTotals.followed_count,
+          // TODO: Remove this relic hold/mint count and points calculation when it is stored in BE.
           points: totalPoints,
         }}
         bio={userObject.description ?? ''}

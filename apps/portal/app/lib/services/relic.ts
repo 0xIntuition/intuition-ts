@@ -1,5 +1,3 @@
-import { useQuery } from '@tanstack/react-query'
-
 interface GraphQLResponse<T> {
   data?: T
   errors?: Array<{ message: string }>
@@ -21,6 +19,11 @@ interface GetMintCountQuery {
   voucherRedeemedEvents: {
     totalCount: number
   }
+}
+
+interface GetMintCountQueryVariables {
+  address: string
+  cutoff_timestamp: number
 }
 
 const GetRelicHoldingsDocument = {
@@ -47,6 +50,10 @@ interface GetRelicHoldingsQuery {
       totalCount: number
     }
   }
+}
+
+interface GetRelicHoldingsQueryVariables {
+  address: string
 }
 
 async function fetchGraphQL<T, V>(
@@ -76,31 +83,24 @@ async function fetchGraphQL<T, V>(
   return response.json()
 }
 
-export function useRelicCounts(address: string) {
+export async function fetchRelicCounts(address: string) {
   const cutoffTimestamp = 1735516799
 
-  const { data: mintCountData } = useQuery({
-    queryKey: ['relicMintCount', address, cutoffTimestamp],
-    queryFn: () =>
-      fetchGraphQL<
-        GetMintCountQuery,
-        { address: string; cutoff_timestamp: number }
-      >(GetMintCountDocument, {
+  const [mintCountData, holdingsData] = await Promise.all([
+    fetchGraphQL<GetMintCountQuery, GetMintCountQueryVariables>(
+      GetMintCountDocument,
+      {
         address,
         cutoff_timestamp: cutoffTimestamp,
-      }),
-  })
-
-  const { data: holdingsData } = useQuery({
-    queryKey: ['relicHoldCount', address],
-    queryFn: () =>
-      fetchGraphQL<GetRelicHoldingsQuery, { address: string }>(
-        GetRelicHoldingsDocument,
-        {
-          address,
-        },
-      ),
-  })
+      },
+    ),
+    fetchGraphQL<GetRelicHoldingsQuery, GetRelicHoldingsQueryVariables>(
+      GetRelicHoldingsDocument,
+      {
+        address,
+      },
+    ),
+  ])
 
   const mintCount = mintCountData?.data?.voucherRedeemedEvents?.totalCount ?? 0
   const holdCount = holdingsData?.data?.account?.tokens?.totalCount ?? 0

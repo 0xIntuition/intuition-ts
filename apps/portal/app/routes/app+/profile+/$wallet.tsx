@@ -39,7 +39,6 @@ import ShareModal from '@components/share-modal'
 import StakeModal from '@components/stake/stake-modal'
 import TagsModal from '@components/tags/tags-modal'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
-import { useRelicCounts } from '@lib/hooks/useRelicCounts'
 import { getIdentityOrPending } from '@lib/services/identities'
 import { getTags } from '@lib/services/tags'
 import {
@@ -74,6 +73,7 @@ import {
   userIdentityRouteOptions,
 } from 'app/consts'
 import TwoPanelLayout from 'app/layouts/two-panel-layout'
+import { fetchRelicCounts } from 'app/lib/services/relic'
 import { VaultDetailsType } from 'app/types/vault'
 import { useAtom } from 'jotai'
 
@@ -136,6 +136,8 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   if (!userTotals) {
     return logger('No user totals found')
   }
+
+  const relicCounts = await fetchRelicCounts(wallet.toLowerCase())
 
   let vaultDetails: VaultDetailsType | null = null
 
@@ -202,6 +204,8 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     followVaultDetails,
     vaultDetails,
     isPending,
+    relicHoldCount: relicCounts.holdCount,
+    relicMintCount: relicCounts.mintCount,
   })
 }
 
@@ -216,6 +220,8 @@ export default function Profile() {
     followVaultDetails,
     vaultDetails,
     isPending,
+    relicMintCount,
+    relicHoldCount,
   } = useLiveLoader<{
     wallet: string
     userWallet: string
@@ -226,11 +232,12 @@ export default function Profile() {
     followVaultDetails: VaultDetailsType
     vaultDetails: VaultDetailsType
     isPending: boolean
+    relicMintCount: number
+    relicHoldCount: number
   }>(['attest', 'create'])
   const navigate = useNavigate()
 
   const { user_assets, assets_sum } = vaultDetails ? vaultDetails : userIdentity
-  const { totalNftPoints } = useRelicCounts(wallet)
 
   const [stakeModalActive, setStakeModalActive] = useAtom(stakeModalAtom)
   const [tagsModalActive, setTagsModalActive] = useAtom(tagsModalAtom)
@@ -248,6 +255,10 @@ export default function Profile() {
       setSelectedTag(saveListModalActive.tag)
     }
   }, [saveListModalActive])
+
+  const nftMintPoints = relicMintCount ? relicMintCount * 2000000 : 0
+  const nftHoldPoints = relicHoldCount ? relicHoldCount * 250000 : 0
+  const totalNftPoints = nftMintPoints + nftHoldPoints
 
   const feePoints = calculatePointsFromFees(userTotals.total_protocol_fee_paid)
 

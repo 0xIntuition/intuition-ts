@@ -20,7 +20,6 @@ import { PointsEarnedCard } from '@components/points-card/points-card'
 import { QuestSetProgressCard } from '@components/quest/quest-set-progress-card'
 import { ReferralCard } from '@components/referral-card/referral-card'
 import RelicPointCard from '@components/relic-point-card/relic-point-card'
-import { useRelicCounts } from '@lib/hooks/useRelicCounts'
 import { calculatePointsFromFees, invariant } from '@lib/utils/misc'
 import { LoaderFunctionArgs } from '@remix-run/node'
 import { Await, useLoaderData } from '@remix-run/react'
@@ -32,11 +31,14 @@ import {
   HEADER_BANNER_HELP_CENTER,
   STANDARD_QUEST_SET,
 } from 'app/consts'
+import { fetchRelicCounts } from 'app/lib/services/relic'
 import { isAddress } from 'viem'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const userWallet = await requireUserWallet(request)
   invariant(userWallet, 'Unauthorized')
+
+  const relicCounts = await fetchRelicCounts(userWallet.toLowerCase())
 
   const userProfile = await fetchWrapper(request, {
     method: UsersService.getUserByWalletPublic,
@@ -72,13 +74,18 @@ export async function loader({ request }: LoaderFunctionArgs) {
     userProfile,
     userTotals,
     inviteCodes: inviteCodes.invite_codes,
+    relicHoldCount: relicCounts.holdCount,
+    mintCount: relicCounts.mintCount,
   }
 }
 
 export default function Quests() {
-  const { userTotals, inviteCodes, userWallet, details } =
+  const { userTotals, inviteCodes, mintCount, relicHoldCount, details } =
     useLoaderData<typeof loader>()
-  const { mintCount, holdCount, totalNftPoints } = useRelicCounts(userWallet)
+
+  const nftMintPoints = mintCount * 2000000
+  const nftHoldPoints = relicHoldCount * 250000
+  const totalNftPoints = nftMintPoints + nftHoldPoints
 
   return (
     <div className="p-10 w-full max-w-7xl mx-auto flex flex-col gap-5 max-md:p-5 max-sm:p-2">
@@ -160,7 +167,7 @@ export default function Quests() {
             </div>
             <RelicPointCard
               relicsMintCount={mintCount}
-              relicsHoldCount={holdCount}
+              relicsHoldCount={relicHoldCount}
               relicsPoints={totalNftPoints}
             />
           </div>
