@@ -5,26 +5,27 @@ interface GraphQLResponse<T> {
 
 const GetFeeTransfersDocument = {
   query: `
-    query GetFeeTransfers($address: String!, $cutoff_timestamp: numeric) {
-      before_cutoff: feeTranfers_aggregate(
-        where: { blockTimestamp: { _lte: $cutoff_timestamp }, senderId: { _eq: $address } }
-      ) {
-        aggregate {
-          sum {
-            amount
-          }
-        }
-      }
-      after_cutoff: feeTranfers_aggregate(
-        where: { blockTimestamp: { _gt: $cutoff_timestamp }, senderId: { _eq: $address } }
-      ) {
-        aggregate {
-          sum {
-            amount
-          }
-        }
-      }
+query GetFeeTransfers($address: String!, $cutoff_timestamp: bigint) {
+before_cutoff: fee_transfers_aggregate(
+  where: { block_timestamp: { _lte: $cutoff_timestamp }, sender_id: { _eq: $address } }
+) {
+  aggregate {
+    sum {
+      amount
     }
+  }
+}
+
+after_cutoff: fee_transfers_aggregate(
+  where: { block_timestamp: { _gt: $cutoff_timestamp }, sender_id: { _eq: $address } }
+) {
+  aggregate {
+    sum {
+      amount
+    }
+  }
+}
+}
   `,
 } as const
 
