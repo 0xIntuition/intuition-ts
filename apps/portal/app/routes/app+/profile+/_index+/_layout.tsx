@@ -54,7 +54,6 @@ import { getSpecialPredicate } from '@lib/utils/app'
 import logger from '@lib/utils/logger'
 import {
   calculatePercentageOfTvl,
-  calculatePointsFromFees,
   formatBalance,
   getAtomImage,
   getAtomLabel,
@@ -79,6 +78,7 @@ import {
   userIdentityRouteOptions,
 } from 'app/consts'
 import TwoPanelLayout from 'app/layouts/two-panel-layout'
+import { fetchProtocolFees } from 'app/lib/services/protocol'
 import { fetchRelicCounts } from 'app/lib/services/relic'
 import { VaultDetailsType } from 'app/types/vault'
 import { useAtom } from 'jotai'
@@ -89,7 +89,10 @@ export async function loader({ request }: LoaderFunctionArgs) {
   invariant(user.wallet?.address, 'User wallet not found')
   const userWallet = user.wallet?.address
 
-  const relicCounts = await fetchRelicCounts(userWallet.toLowerCase())
+  const [relicCounts, protocolFees] = await Promise.all([
+    fetchRelicCounts(userWallet.toLowerCase()),
+    fetchProtocolFees(userWallet.toLowerCase()),
+  ])
 
   const userObject = await fetchWrapper(request, {
     method: UsersService.getUserByWalletPublic,
@@ -194,6 +197,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     isPending,
     relicHoldCount: relicCounts.holdCount,
     relicMintCount: relicCounts.mintCount,
+    protocolFees,
   })
 }
 
@@ -209,6 +213,11 @@ export interface ProfileLoaderData {
   isPending: boolean
   relicMintCount: number
   relicHoldCount: number
+  protocolFees: {
+    beforeCutoffPoints: string
+    afterCutoffPoints: string
+    totalPoints: string
+  }
 }
 
 export default function Profile() {
@@ -223,6 +232,7 @@ export default function Profile() {
     isPending,
     relicMintCount,
     relicHoldCount,
+    protocolFees,
   } = useLiveLoader<ProfileLoaderData>(['attest', 'create'])
 
   const { user_assets, assets_sum } = vaultDetails ? vaultDetails : userIdentity
@@ -284,13 +294,11 @@ export default function Profile() {
   const nftHoldPoints = relicHoldCount * 250000
   const totalNftPoints = nftMintPoints + nftHoldPoints
 
-  const feePoints = calculatePointsFromFees(userTotals.total_protocol_fee_paid)
-
   const totalPoints =
     userTotals.referral_points +
     userTotals.quest_points +
     totalNftPoints +
-    feePoints
+    parseInt(protocolFees.totalPoints)
 
   const leftPanel = (
     <div className="flex-col justify-start items-start gap-5 inline-flex max-lg:w-full">

@@ -24,17 +24,14 @@ import { SegmentedNav } from '@components/segmented-nav'
 import TagsModal from '@components/tags/tags-modal'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getIdentityOrPending } from '@lib/services/identities'
-import { getPurchaseIntentsByAddress } from '@lib/services/phosphor'
 import { getTags } from '@lib/services/tags'
 import { imageModalAtom, tagsModalAtom } from '@lib/state/store'
 import { getSpecialPredicate } from '@lib/utils/app'
 import logger from '@lib/utils/logger'
-import { calculatePointsFromFees } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { Outlet } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { getVaultDetails } from '@server/multivault'
-import { getRelicCount } from '@server/relics'
 import {
   BLOCK_EXPLORER_URL,
   CURRENT_ENV,
@@ -42,6 +39,8 @@ import {
   readOnlyUserIdentityRouteOptions,
 } from 'app/consts'
 import TwoPanelLayout from 'app/layouts/two-panel-layout'
+import { fetchProtocolFees } from 'app/lib/services/protocol'
+import { fetchRelicCounts } from 'app/lib/services/relic'
 import { VaultDetailsType } from 'app/types/vault'
 import { useAtom } from 'jotai'
 
@@ -98,15 +97,10 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     return logger('No user totals found')
   }
 
-  // TODO: Remove this relic hold/mint count and points calculation when it is stored in BE.
-  const relicHoldCount = await getRelicCount(wallet as `0x${string}`)
-
-  const userCompletedMints = await getPurchaseIntentsByAddress(
-    wallet,
-    'CONFIRMED',
-  )
-
-  const relicMintCount = userCompletedMints.data?.total_results
+  const [relicCounts, protocolFees] = await Promise.all([
+    fetchRelicCounts(wallet.toLowerCase()),
+    fetchProtocolFees(wallet.toLowerCase()),
+  ])
 
   let vaultDetails: VaultDetailsType | null = null
 
@@ -170,51 +164,49 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     followVaultDetails,
     vaultDetails,
     isPending,
-    relicHoldCount: relicHoldCount.toString(),
-    relicMintCount,
+    relicHoldCount: relicCounts.holdCount,
+    relicMintCount: relicCounts.mintCount,
+    protocolFees,
   })
 }
 
 export default function ReadOnlyProfile() {
   const {
     wallet,
-    userWallet,
     userIdentity,
     tagClaims,
     userTotals,
     isPending,
     relicMintCount,
     relicHoldCount,
+    protocolFees,
   } = useLiveLoader<{
     wallet: string
-    userWallet: string
     userIdentity: IdentityPresenter
     tagClaims: ClaimPresenter[]
     userTotals: UserTotalsPresenter
-    followClaim: ClaimPresenter
-    followVaultDetails: VaultDetailsType
-    vaultDetails: VaultDetailsType
     isPending: boolean
     relicMintCount: number
-    relicHoldCount: string
-  }>(['attest', 'create'])
+    relicHoldCount: number
+    protocolFees: {
+      beforeCutoffPoints: string
+      afterCutoffPoints: string
+      totalPoints: string
+    }
+  }>(['attest'])
 
   const [tagsModalActive, setTagsModalActive] = useAtom(tagsModalAtom)
-
   const [imageModalActive, setImageModalActive] = useAtom(imageModalAtom)
 
-  // TODO: Remove this relic hold/mint count and points calculation when it is stored in BE.
   const nftMintPoints = relicMintCount ? relicMintCount * 2000000 : 0
-  const nftHoldPoints = relicHoldCount ? +relicHoldCount * 250000 : 0
+  const nftHoldPoints = relicHoldCount ? relicHoldCount * 250000 : 0
   const totalNftPoints = nftMintPoints + nftHoldPoints
-
-  const feePoints = calculatePointsFromFees(userTotals.total_protocol_fee_paid)
 
   const totalPoints =
     userTotals.referral_points +
     userTotals.quest_points +
     totalNftPoints +
-    feePoints
+    parseInt(protocolFees.totalPoints)
 
   const leftPanel = (
     <div className="flex-col justify-start items-start gap-5 inline-flex max-lg:w-full">
@@ -310,7 +302,7 @@ export default function ReadOnlyProfile() {
           <TagsModal
             identity={userIdentity}
             tagClaims={tagClaims}
-            userWallet={userWallet}
+            userWallet={wallet}
             open={tagsModalActive.isOpen}
             mode={tagsModalActive.mode}
             readOnly={tagsModalActive.readOnly}
