@@ -193,7 +193,7 @@ export default function ReadOnlyProfile() {
       afterCutoffPoints: string
       totalPoints: string
     }
-  }>(['attest'])
+  }>(['attest', 'create'])
 
   const [tagsModalActive, setTagsModalActive] = useAtom(tagsModalAtom)
   const [imageModalActive, setImageModalActive] = useAtom(imageModalAtom)
