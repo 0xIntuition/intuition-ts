@@ -176,13 +176,39 @@ export function LineChart({
       }
 
       // Add the line
-      svg
+      const path = svg
         .append('path')
         .datum(curve.points)
         .attr('fill', 'none')
         .attr('stroke', curve.color)
         .attr('stroke-width', 2)
-        .attr('d', line)
+
+      // Create interpolator with traveling wave effect
+      const interpolateY = (t: number) => {
+        return curve.points.map((point, i) => {
+          const normalizedX = point.x / (xScale.domain()[1] || 1)
+          // Wave that travels from left to right, with complete decay by t=1
+          const wave =
+            Math.sin(normalizedX * 20 - t * 12) * Math.exp(-t * 4) * 0.3
+          // Blend between wave effect and final position
+          const blend = Math.min(1, t * 1.2) // Ensures we reach exact position
+          return {
+            x: point.x,
+            y: point.y * (blend + (1 - blend) * (1 + wave * (point.y / yMax))),
+          }
+        })
+      }
+
+      // Animate!
+      path
+        .transition()
+        .duration(2000)
+        .ease(d3.easeQuadOut)
+        .tween('pathTween', () => {
+          return (t: number) => {
+            path.attr('d', line(interpolateY(t)))
+          }
+        })
     })
 
     // Add tooltip
