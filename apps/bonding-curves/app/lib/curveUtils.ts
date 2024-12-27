@@ -243,8 +243,8 @@ export async function generateCurvePoints(
 
     // 9. Convert to final {x, y} in JS number form
     const finalPoints: Point[] = finalBigPoints.map(({ x, y }) => ({
-      x: weiToNumber(x),
-      y: weiToNumber(y),
+      x: Number(x),
+      y: Number(y),
     }))
 
     console.log(`Final #points: ${finalPoints.length}`, finalPoints)
@@ -253,8 +253,8 @@ export async function generateCurvePoints(
     console.error('Error generating curve points:', err)
     // Return partial results, if any
     return bigPoints.map(({ x, y }) => ({
-      x: weiToNumber(x),
-      y: weiToNumber(y),
+      x: Number(x),
+      y: Number(y),
     }))
   }
 }
