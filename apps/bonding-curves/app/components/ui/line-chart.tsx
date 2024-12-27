@@ -7,6 +7,7 @@ import * as d3 from 'd3'
 interface Point {
   x: number
   y: number
+  previewPoint?: boolean
 }
 
 interface CurveData {
@@ -147,34 +148,6 @@ export function LineChart({
       .curve(d3.curveMonotoneX)
 
     data.forEach((curve) => {
-      if (totalAssets !== undefined) {
-        // Split data at totalAssets point
-        const basePoints = curve.points.filter((p) => p.x <= totalAssets)
-        const previewPoints = previewAmount
-          ? curve.points.filter(
-              (p) => p.x >= totalAssets && p.x <= totalAssets + previewAmount,
-            )
-          : []
-
-        // Add base area
-        svg
-          .append('path')
-          .datum(basePoints)
-          .attr('fill', curve.color)
-          .attr('fill-opacity', 0.3)
-          .attr('d', area)
-
-        // Add preview area if applicable
-        if (previewPoints.length > 0) {
-          svg
-            .append('path')
-            .datum(previewPoints)
-            .attr('fill', curve.color)
-            .attr('fill-opacity', 0.15)
-            .attr('d', area)
-        }
-      }
-
       // Add the line
       const path = svg
         .append('path')
@@ -183,32 +156,123 @@ export function LineChart({
         .attr('stroke', curve.color)
         .attr('stroke-width', 2)
 
-      // Create interpolator with traveling wave effect
-      const interpolateY = (t: number) => {
-        return curve.points.map((point, i) => {
-          const normalizedX = point.x / (xScale.domain()[1] || 1)
-          // Wave that travels from left to right, with complete decay by t=1
-          const wave =
-            Math.sin(normalizedX * 20 - t * 12) * Math.exp(-t * 4) * 0.3
-          // Blend between wave effect and final position
-          const blend = Math.min(1, t * 1.2) // Ensures we reach exact position
-          return {
-            x: point.x,
-            y: point.y * (blend + (1 - blend) * (1 + wave * (point.y / yMax))),
-          }
-        })
+      // Only animate on initial render, not during preview updates
+      if (!previewAmount) {
+        // Create interpolator with traveling wave effect
+        const interpolateY = (t: number) => {
+          return curve.points.map((point, i) => {
+            const normalizedX = point.x / (xScale.domain()[1] || 1)
+            // Wave that travels from left to right, with complete decay by t=1
+            const wave =
+              Math.sin(normalizedX * 20 - t * 12) * Math.exp(-t * 4) * 0.3
+            // Blend between wave effect and final position
+            const blend = Math.min(1, t * 1.2) // Ensures we reach exact position
+            return {
+              x: point.x,
+              y:
+                point.y * (blend + (1 - blend) * (1 + wave * (point.y / yMax))),
+            }
+          })
+        }
+
+        // Animate!
+        path
+          .transition()
+          .duration(2000)
+          .ease(d3.easeQuadOut)
+          .tween('pathTween', () => {
+            return (t: number) => {
+              path.attr('d', line(interpolateY(t)))
+            }
+          })
+      } else {
+        path.attr('d', line)
       }
 
-      // Animate!
-      path
-        .transition()
-        .duration(2000)
-        .ease(d3.easeQuadOut)
-        .tween('pathTween', () => {
-          return (t: number) => {
-            path.attr('d', line(interpolateY(t)))
+      // Add filled areas
+      if (totalAssets !== undefined) {
+        // Convert totalAssets to the same scale as the points
+        const scaledTotalAssets = totalAssets * 1e18
+        const scaledPreviewAmount = previewAmount
+          ? previewAmount * 1e18
+          : undefined
+
+        // Find the points that bracket our totalAssets value
+        const index = curve.points.findIndex((p) => p.x > scaledTotalAssets)
+        const point1 = index > 0 ? curve.points[index - 1] : curve.points[0]
+        const point2 =
+          curve.points[index] || curve.points[curve.points.length - 1]
+
+        // Interpolate the exact point at totalAssets
+        const t = (scaledTotalAssets - point1.x) / (point2.x - point1.x)
+        const interpolatedY = point1.y + t * (point2.y - point1.y)
+        const boundaryPoint = { x: scaledTotalAssets, y: interpolatedY }
+
+        // Create base points array with the interpolated boundary point
+        const basePoints = [
+          ...curve.points.filter((p) => p.x < scaledTotalAssets),
+          boundaryPoint,
+        ]
+
+        // Create preview points array if we have a preview amount
+        const previewPoints = scaledPreviewAmount
+          ? [
+              boundaryPoint,
+              ...curve.points.filter(
+                (p) =>
+                  p.x > scaledTotalAssets &&
+                  p.x <= scaledTotalAssets + scaledPreviewAmount,
+              ),
+            ]
+          : []
+
+        // If we have preview points, add a boundary point at the end
+        if (previewPoints.length > 0 && scaledPreviewAmount) {
+          const endX = scaledTotalAssets + scaledPreviewAmount
+          const endIndex = curve.points.findIndex((p) => p.x > endX)
+          if (endIndex > 0) {
+            const endPoint1 = curve.points[endIndex - 1]
+            const endPoint2 = curve.points[endIndex]
+            const endT = (endX - endPoint1.x) / (endPoint2.x - endPoint1.x)
+            const endY = endPoint1.y + endT * (endPoint2.y - endPoint1.y)
+            previewPoints.push({ x: endX, y: endY })
           }
+        }
+
+        console.log('Area Debug:', {
+          scaledTotalAssets,
+          scaledPreviewAmount,
+          basePointsCount: basePoints.length,
+          previewPointsCount: previewPoints.length,
+          boundaryPoint,
+          firstBasePoint: basePoints[0],
+          lastBasePoint: basePoints[basePoints.length - 1],
+          firstPreviewPoint: previewPoints[0],
+          lastPreviewPoint: previewPoints[previewPoints.length - 1],
         })
+
+        // Add base area (total assets)
+        if (basePoints.length >= 1) {
+          svg
+            .append('path')
+            .datum(basePoints)
+            .attr('class', 'area1')
+            .attr('fill', curve.color)
+            .attr('fill-opacity', 0.3)
+            .attr('d', area)
+        }
+
+        // Add preview area if applicable
+        if (previewPoints.length >= 2) {
+          svg
+            .append('path')
+            .datum(previewPoints)
+            .attr('class', 'area2')
+            .attr('fill', curve.color)
+            .attr('fill-opacity', 0.15)
+            .attr('d', area)
+        }
+      }
     })
 
     // Add tooltip
