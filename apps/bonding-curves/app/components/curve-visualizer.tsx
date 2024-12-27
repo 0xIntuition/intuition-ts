@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { Button, Input, Label, Text } from '@0xintuition/1ui'
 
+import { generateCurvePoints } from '~/lib/curveUtils'
 import { X } from 'lucide-react'
 import {
   createPublicClient,
@@ -187,88 +188,6 @@ export function CurveVisualizer() {
     event.target.value = ''
   }
 
-  const generateCurvePoints = useCallback(
-    async (address: string, abi: any[], currentMaxValue: number) => {
-      const points: Point[] = []
-      const numPoints = 50
-
-      try {
-        // Get max values in Wei
-        const maxAssets = (await publicClient.readContract({
-          address: address as `0x${string}`,
-          abi,
-          functionName: 'maxAssets',
-          args: [] as const,
-        })) as unknown as bigint
-
-        const maxShares = (await publicClient.readContract({
-          address: address as `0x${string}`,
-          abi,
-          functionName: 'maxShares',
-          args: [] as const,
-        })) as unknown as bigint
-
-        // Convert maxValue to Wei for comparison
-        const maxValueWei = parseEther(currentMaxValue.toString())
-
-        // Use the smaller of maxValueWei and maxAssets as our upper bound
-        const upperBoundWei = maxValueWei < maxAssets ? maxValueWei : maxAssets
-        const stepWei = upperBoundWei / BigInt(numPoints)
-
-        console.log('Generating points with:', {
-          maxAssets: formatEther(maxAssets),
-          maxShares: formatEther(maxShares),
-          upperBound: formatEther(upperBoundWei),
-          step: formatEther(stepWei),
-        })
-
-        // Add the origin point explicitly
-        points.push({
-          x: 0,
-          y: 0,
-        })
-
-        // Start from the first non-zero step
-        for (let i = 1n; i <= BigInt(numPoints); i++) {
-          const assetsWei = stepWei * i
-          if (assetsWei > maxAssets) break
-
-          try {
-            // Use previewDeposit with totalAssets=0 and totalShares=0 for plotting
-            const sharesWei = (await publicClient.readContract({
-              address: address as `0x${string}`,
-              abi,
-              functionName: 'previewDeposit',
-              args: [assetsWei, 0n, 0n] as const,
-            })) as unknown as bigint
-
-            if (sharesWei > maxShares) break
-
-            points.push({
-              x: Number(assetsWei),
-              y: Number(sharesWei),
-            })
-          } catch (err: any) {
-            if (
-              err.message?.includes('Assets exceed domain') ||
-              err.message?.includes('Shares exceed domain')
-            ) {
-              break
-            }
-            throw err
-          }
-        }
-
-        console.log('Generated points:', points)
-        return points
-      } catch (err) {
-        console.error('Error generating curve points:', err)
-        return points
-      }
-    },
-    [publicClient],
-  )
-
   const simulatePreview = useCallback(
     async (
       contract: DeployedContract,
@@ -424,6 +343,7 @@ export function CurveVisualizer() {
           contract.address,
           contract.abi,
           maxValue,
+          publicClient,
         )
         return {
           ...contract,
@@ -441,7 +361,7 @@ export function CurveVisualizer() {
     )
 
     setDeployedContracts(updatedCurves)
-  }, [deployedContracts, generateCurvePoints, maxValue])
+  }, [deployedContracts, generateCurvePoints, maxValue, publicClient])
 
   const handleMinMaxChange = useCallback(
     async (newMin: number, newMax: number) => {
@@ -461,6 +381,7 @@ export function CurveVisualizer() {
             contract.address,
             contract.abi,
             newMax,
+            publicClient,
           )
           return {
             ...contract,
@@ -481,7 +402,7 @@ export function CurveVisualizer() {
 
       setDeployedContracts(points)
     },
-    [deployedContracts, generateCurvePoints],
+    [deployedContracts, generateCurvePoints, publicClient],
   )
 
   const removeCurve = (id: string) => {
@@ -558,20 +479,27 @@ export function CurveVisualizer() {
           data.address,
           fileData.abi,
           maxValue,
+          publicClient,
         )
 
         // Get max values first
-        const maxAssets = (await publicClient.readContract({
-          address: data.address as `0x${string}`,
-          abi: fileData.abi,
-          functionName: 'MAX_ASSETS',
-        })) as bigint
+        const maxAssets = await publicClient
+          .readContract({
+            address: data.address as `0x${string}`,
+            abi: fileData.abi,
+            functionName: 'MAX_ASSETS',
+            args: [] as const,
+          })
+          .then((result) => BigInt(result as unknown as string))
 
-        const maxShares = (await publicClient.readContract({
-          address: data.address as `0x${string}`,
-          abi: fileData.abi,
-          functionName: 'MAX_SHARES',
-        })) as bigint
+        const maxShares = await publicClient
+          .readContract({
+            address: data.address as `0x${string}`,
+            abi: fileData.abi,
+            functionName: 'MAX_SHARES',
+            args: [] as const,
+          })
+          .then((result) => BigInt(result as unknown as string))
 
         setDeployedContracts((prev) => {
           if (prev.some((c) => c.address === data.address)) {
@@ -1027,6 +955,7 @@ export function CurveVisualizer() {
         selectedContract.address,
         selectedContract.abi,
         maxValue,
+        publicClient,
       )
 
       // Update both the contract state and constructor values
