@@ -2,12 +2,12 @@ import React from 'react'
 
 import { render } from '@testing-library/react'
 
-import { NetworkStats } from './NetworkStats'
+import { AggregatedMetrics } from './AggregatedMetrics'
 
-describe('NetworkStats', () => {
+describe('AggregatedMetrics', () => {
   it('should render appropriate element', () => {
     const { asFragment } = render(
-      <NetworkStats
+      <AggregatedMetrics
         tvl={420.69}
         atomsCount={4200}
         triplesCount={4200}

@@ -1,7 +1,7 @@
 import { cn } from 'styles'
 import { formatNumber } from 'utils'
 
-interface NetworkStatsProps extends React.HTMLAttributes<HTMLDivElement> {
+interface AggregatedMetricsProps extends React.HTMLAttributes<HTMLDivElement> {
   tvl: number
   atomsCount: number
   triplesCount: number
@@ -9,7 +9,7 @@ interface NetworkStatsProps extends React.HTMLAttributes<HTMLDivElement> {
   usersCount: number
 }
 
-export function NetworkStats({
+export function AggregatedMetrics({
   tvl,
   atomsCount,
   triplesCount,
@@ -17,7 +17,7 @@ export function NetworkStats({
   usersCount,
   className,
   ...props
-}: NetworkStatsProps) {
+}: AggregatedMetricsProps) {
   const stats = [
     { label: 'TVL', value: `${formatNumber(tvl, 2)} ETH` },
     { label: 'Atoms', value: formatNumber(atomsCount, 2) },

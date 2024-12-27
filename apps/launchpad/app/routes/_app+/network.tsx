@@ -1,5 +1,5 @@
 import {
-  NetworkStats,
+  AggregatedMetrics,
   PageHeader,
   Skeleton,
   Text,
@@ -19,6 +19,7 @@ import {
 } from '@0xintuition/graphql'
 
 import ActivityFeed from '@components/ActivityFeed'
+import ChapterProgress from '@components/ChapterProgress'
 import logger from '@lib/utils/logger'
 import { LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData, useSearchParams } from '@remix-run/react'
@@ -119,10 +120,17 @@ export default function Network() {
     <div className="flex-1 p-10 max-lg:p-6">
       <div className="mx-auto max-w-[1280px] flex flex-col gap-8">
         <PageHeader title="Network" lastUpdated={'3s'} />
+        <ChapterProgress
+          currentChapter={'Chapter I: Genesis'}
+          nextChapter={'Chapter II: Population'}
+          totalStages={4}
+          currentStage={1}
+          endTime={new Date(Date.now() + 172800000)}
+        />
         <div className="flex flex-col rounded-xl overflow-hidden theme-border">
           <Skeleton className="h-[695px] w-full animate-none rounded-b-none" />
           <div className="py-4 bg-gradient-to-b from-[#060504] to-[#101010]">
-            <NetworkStats
+            <AggregatedMetrics
               tvl={+formatUnits(stats?.contract_balance ?? 0, 18)}
               atomsCount={stats?.total_atoms ?? 0}
               triplesCount={stats?.total_triples ?? 0}
