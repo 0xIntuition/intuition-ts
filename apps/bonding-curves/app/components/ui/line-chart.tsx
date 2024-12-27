@@ -26,6 +26,13 @@ interface LineChartProps {
   previewAmount?: number
 }
 
+const formatScientific = (n: number): string => {
+  if (n === 0) return '0'
+  const exp = Math.floor(Math.log10(Math.abs(n)))
+  const mantissa = n / Math.pow(10, exp)
+  return `${mantissa.toFixed(2)}e${exp}`
+}
+
 export function LineChart({
   data,
   xLabel,
@@ -41,7 +48,7 @@ export function LineChart({
     // Clear previous chart
     d3.select(svgRef.current).selectAll('*').remove()
 
-    const margin = { top: 20, right: 30, bottom: 50, left: 60 }
+    const margin = { top: 20, right: 30, bottom: 50, left: 80 }
     const width = svgRef.current.clientWidth - margin.left - margin.right
     const height = svgRef.current.clientHeight - margin.top - margin.bottom
 
@@ -62,40 +69,67 @@ export function LineChart({
       ])
       .range([0, width])
 
+    // Get min and max y values
+    const yMin = 0
+    const yMax =
+      d3.max(
+        data.flatMap((curve) => curve.points),
+        (d) => d.y,
+      ) || 0
+
+    // Create y scale with proper domain
     const yScale = d3
       .scaleLinear()
-      .domain([
-        0,
-        d3.max(
-          data.flatMap((curve) => curve.points),
-          (d) => d.y,
-        ) || 0,
-      ])
+      .domain([yMin, yMax])
       .range([height, 0])
+      .nice()
 
-    // Add axes
+    // Add axes with scientific notation for both axes
     svg
       .append('g')
       .attr('transform', `translate(0,${height})`)
-      .call(d3.axisBottom(xScale))
+      .call(
+        d3
+          .axisBottom(xScale)
+          .tickFormat((d) => formatScientific(+d))
+          .ticks(5),
+      )
+      .selectAll('text')
+      .style('fill', 'white')
+      .style('font-size', '12px')
 
-    svg.append('g').call(d3.axisLeft(yScale))
+    // Add y-axis with scientific notation
+    svg
+      .append('g')
+      .call(
+        d3
+          .axisLeft(yScale)
+          .tickFormat((d) => formatScientific(+d))
+          .ticks(5),
+      )
+      .selectAll('text')
+      .style('fill', 'white')
+      .style('font-size', '12px')
 
-    // Add axis labels
+    // Add axis labels with proper positioning
     svg
       .append('text')
       .attr('text-anchor', 'middle')
       .attr('x', width / 2)
       .attr('y', height + margin.bottom - 10)
       .text(xLabel)
+      .style('fill', 'white')
+      .style('font-size', '14px')
 
     svg
       .append('text')
       .attr('text-anchor', 'middle')
       .attr('transform', 'rotate(-90)')
-      .attr('y', -margin.left + 20)
+      .attr('y', -margin.left + 30)
       .attr('x', -height / 2)
       .text(yLabel)
+      .style('fill', 'white')
+      .style('font-size', '14px')
 
     // Create line generator
     const line = d3
@@ -118,7 +152,7 @@ export function LineChart({
         const basePoints = curve.points.filter((p) => p.x <= totalAssets)
         const previewPoints = previewAmount
           ? curve.points.filter(
-              (p) => p.x > totalAssets && p.x <= totalAssets + previewAmount,
+              (p) => p.x >= totalAssets && p.x <= totalAssets + previewAmount,
             )
           : []
 
@@ -158,10 +192,12 @@ export function LineChart({
       .attr('class', 'tooltip')
       .style('position', 'absolute')
       .style('visibility', 'hidden')
-      .style('background-color', 'white')
-      .style('padding', '5px')
-      .style('border', '1px solid #ddd')
+      .style('background-color', '#333')
+      .style('color', '#fff')
+      .style('padding', '8px')
       .style('border-radius', '4px')
+      .style('font-size', '12px')
+      .style('box-shadow', '0 2px 4px rgba(0, 0, 0, 0.3)')
 
     const bisect = d3.bisector<Point, number>((d) => d.x).left
 
@@ -185,9 +221,7 @@ export function LineChart({
               .style('left', event.pageX + 10 + 'px')
               .style('top', event.pageY - 10 + 'px')
               .html(
-                `${curve.name}<br/>X: ${point.x.toFixed(4)}<br/>Y: ${point.y.toFixed(
-                  4,
-                )}`,
+                `<strong>${curve.name}</strong><br/>Assets: ${formatScientific(point.x)}<br/>Shares: ${formatScientific(point.y)}`,
               )
           }
         })

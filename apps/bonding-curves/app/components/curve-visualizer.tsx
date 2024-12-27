@@ -190,7 +190,7 @@ export function CurveVisualizer() {
   const generateCurvePoints = useCallback(
     async (address: string, abi: any[], currentMaxValue: number) => {
       const points: Point[] = []
-      const numPoints = 100
+      const numPoints = 50
 
       try {
         // Get max values in Wei
@@ -245,8 +245,8 @@ export function CurveVisualizer() {
             if (sharesWei > maxShares) break
 
             points.push({
-              x: parseFloat(formatEther(assetsWei)),
-              y: parseFloat(formatEther(sharesWei)),
+              x: Number(assetsWei),
+              y: Number(sharesWei),
             })
           } catch (err: any) {
             if (
