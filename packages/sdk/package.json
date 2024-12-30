@@ -1,6 +1,6 @@
 {
   "name": "@0xintuition/sdk",
-  "version": "0.2.1",
+  "version": "0.3.1",
   "description": "Backend SDK",
   "main": "src/index.js",
   "exports": {
@@ -21,9 +21,7 @@
     "url": "https://github.com/0xIntuition/intuition-ts",
     "directory": "packages/sdk"
   },
-  "dependencies": {
-    "@0xintuition/api": "workspace:^"
-  },
+  "dependencies": {},
   "devDependencies": {
     "typescript": "^5.4.5",
     "vite": "^5.2.11",
