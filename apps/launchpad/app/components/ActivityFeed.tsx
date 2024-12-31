@@ -57,15 +57,17 @@ function ActivityRow({ activity }: { activity: Events }) {
 
   const value =
     activity.type === 'Deposited'
-      ? activity.deposit?.shares_for_receiver
+      ? activity.deposit?.shares_for_receiver // #TODO: we should be showing assets here, but we only get shares. In addition, we should know the share price at the time of the deposit, otherwise we have to use the current share price which will skew the value, since we are going to show $USD.
       : activity.type === 'Redeemed'
         ? activity.redemption?.shares_redeemed_by_sender
         : null
 
+  // Basic required fields with fallbacks
   const timestamp = activity.block_timestamp
     ? new Date(parseInt(activity.block_timestamp.toString()) * 1000)
     : new Date()
 
+  // Get creator from either atom or triple
   const creator = activity.atom?.creator || activity.triple?.creator
 
   const dataType = activity.atom
@@ -94,7 +96,7 @@ function ActivityRow({ activity }: { activity: Events }) {
       </div>
 
       <div className="flex-1 min-w-0">
-        <div className="flex flex-wrap items-center gap-2 text-sm">
+        <div className="flex items-center gap-2 text-sm">
           <IdentityTag variant={Identity.user} imgSrc={creator?.image}>
             {creator?.label}
           </IdentityTag>
@@ -125,32 +127,28 @@ function ActivityRow({ activity }: { activity: Events }) {
             }
             icon={dataType === 'triple' ? 'claim' : 'fingerprint'}
           >
-            <Text className="max-w-[200px] sm:max-w-none">
-              <Trunctacular
-                value={
-                  activity.atom?.label ||
-                  [
-                    activity.triple?.subject?.label,
-                    activity.triple?.predicate?.label,
-                    activity.triple?.object?.label,
-                  ]
-                    .filter(Boolean)
-                    .join('')
-                }
-              />
+            <Text>
+              {activity.atom?.label ||
+                [
+                  activity.triple?.subject?.label,
+                  activity.triple?.predicate?.label,
+                  activity.triple?.object?.label,
+                ]
+                  .filter(Boolean)
+                  .join('')}
             </Text>
           </IdentityTag>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2 mt-1">
+        <div className="flex items-center gap-2 mt-1">
           <span className="text-xs text-muted-foreground">
             {formatDistanceToNow(timestamp, { addSuffix: true })}
           </span>
           <a
-            href={`${BLOCK_EXPLORER_URL}/tx/${formatTransactionHash(activity.transaction_hash)}`}
+            href={`${BLOCK_EXPLORER_URL}/tx/${formatTransactionHash(activity.transaction_hash)}`} //#TODO: this is not a transaction hash, I believe it's a block hash? It doesn't resolve to a transaction on basescan
             target="_blank"
             rel="noopener noreferrer"
-            className="text-xs text-accent hover:text-primary truncate max-w-[150px] sm:max-w-none"
+            className="text-xs text-accent hover:text-primary truncate"
           >
             <Trunctacular
               value={formatTransactionHash(activity.transaction_hash)}
@@ -183,10 +181,10 @@ const ActivityFeed = ({
   }
 
   return (
-    <div className="space-y-4 overflow-x-hidden">
+    <div className="space-y-4">
       <div className="flex items-center justify-between">
         <RealtimeSort />
-        <Button variant="secondary" size="sm" className="whitespace-nowrap">
+        <Button variant="secondary">
           <Filter className="w-4 h-4" />
           <Text>Filter</Text>
         </Button>
@@ -218,7 +216,6 @@ const RealtimeSort = ({ onSortChange }: RealtimeSortProps) => {
   return (
     <Button
       variant="text"
-      size="sm"
       className="flex items-center gap-2 text-sm text-accent hover:text-foreground"
       onClick={handleSortClick}
     >
