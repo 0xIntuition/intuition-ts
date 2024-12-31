@@ -20,6 +20,7 @@ import {
 
 import ActivityFeed from '@components/ActivityFeed'
 import ChapterProgress from '@components/ChapterProgress'
+import { ErrorPage } from '@components/ErrorPage'
 import logger from '@lib/utils/logger'
 import { LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData, useSearchParams } from '@remix-run/react'
@@ -64,6 +65,10 @@ export async function loader({ request }: LoaderFunctionArgs) {
       activityOffset,
     },
   }
+}
+
+export function ErrorBoundary() {
+  return <ErrorPage routeName="network" />
 }
 
 export default function Network() {
@@ -111,48 +116,47 @@ export default function Network() {
       ],
     },
   )
-  logger('eventsData', eventsData)
-  logger('systemStats', systemStats)
 
   const stats = systemStats?.stats[0]
 
   return (
-    <div className="flex-1 p-10 max-lg:p-6">
-      <div className="mx-auto max-w-[1280px] flex flex-col gap-8">
-        <PageHeader title="Network" lastUpdated={'3s'} />
-        <ChapterProgress
-          currentChapter={'Chapter I: Genesis'}
-          nextChapter={'Chapter II: Population'}
-          totalStages={4}
-          currentStage={1}
-          endTime={new Date(Date.now() + 172800000)}
-        />
-        <div className="flex flex-col rounded-xl overflow-hidden theme-border">
-          <Skeleton className="h-[695px] w-full animate-none rounded-b-none" />
-          <div className="py-4 bg-gradient-to-b from-[#060504] to-[#101010]">
-            <AggregatedMetrics
-              tvl={+formatUnits(stats?.contract_balance ?? 0, 18)}
-              atomsCount={stats?.total_atoms ?? 0}
-              triplesCount={stats?.total_triples ?? 0}
-              signalsCount={stats?.total_signals ?? 0}
-              usersCount={stats?.total_accounts ?? 0}
-            />
-          </div>
+    <>
+      <PageHeader title="Network" lastUpdated={'3s'} />
+      <ChapterProgress
+        currentChapter={'Chapter I: Genesis'}
+        nextChapter={'Chapter II: Population'}
+        totalStages={4}
+        currentStage={1}
+        endTime={new Date(Date.now() + 172800000)}
+      />
+      <div className="flex flex-col rounded-xl overflow-hidden theme-border">
+        <div className="relative w-full">
+          <Skeleton className="w-full aspect-[2.15/1] sm:aspect-[2.5/1] md:aspect-[3/1] rounded-b-none animate-none" />
         </div>
-        <div className="flex flex-col gap-4">
-          <Text variant={TextVariant.headline} weight={TextWeight.medium}>
-            Data Stream
-          </Text>
-          <ActivityFeed
-            activities={{
-              events: eventsData?.events || [],
-              total: {
-                aggregate: { count: eventsData?.total.aggregate?.count || 0 },
-              },
-            }}
+        <div className="py-4 bg-gradient-to-b from-[#060504] to-[#101010]">
+          <AggregatedMetrics
+            tvl={+formatUnits(stats?.contract_balance ?? 0, 18)}
+            atomsCount={stats?.total_atoms ?? 0}
+            triplesCount={stats?.total_triples ?? 0}
+            signalsCount={stats?.total_signals ?? 0}
+            usersCount={stats?.total_accounts ?? 0}
+            className="[&>div]:after:hidden sm:[&>div]:after:block"
           />
         </div>
       </div>
-    </div>
+      <div className="flex flex-col gap-4">
+        <Text variant={TextVariant.headline} weight={TextWeight.medium}>
+          Data Stream
+        </Text>
+        <ActivityFeed
+          activities={{
+            events: eventsData?.events || [],
+            total: {
+              aggregate: { count: eventsData?.total.aggregate?.count || 0 },
+            },
+          }}
+        />
+      </div>
+    </>
   )
 }

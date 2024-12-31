@@ -58,7 +58,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        <main className="relative ml-[16rem] flex min-h-screen w-[calc(100%-16rem)] flex-col antialiased bg-[#131313]">
+        <main className="relative flex min-h-screen flex-col antialiased bg-[#131313]">
           {children}
           <ScrollRestoration />
           <Scripts />
