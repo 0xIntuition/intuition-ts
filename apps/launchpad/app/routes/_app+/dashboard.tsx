@@ -1,10 +1,15 @@
+import { useState } from 'react'
+
 import { PageHeader } from '@0xintuition/1ui'
 
 import { ChapterProgressBanner } from '@components/ChapterProgressBanner'
 import { LevelProgress } from '@components/LevelProgress'
+import { OnboardingModal } from '@components/OnboardingModal/OnboardingModal'
 import { PortfolioStats } from '@components/PortfolioStats'
 
 export default function Index() {
+  const [showOnboarding, setShowOnboarding] = useState(true)
+
   const portfolioStats = {
     value: 0.0,
     change: 0.0,
@@ -26,6 +31,10 @@ export default function Index() {
 
   return (
     <>
+      <OnboardingModal
+        isOpen={showOnboarding}
+        onClose={() => setShowOnboarding(false)}
+      />
       <ChapterProgressBanner
         chapter={chapterProgress.chapter}
         progress={chapterProgress.progress}

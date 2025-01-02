@@ -460,6 +460,9 @@ importers:
       '@tanstack/react-query':
         specifier: ^5.32.0
         version: 5.45.0(react@18.3.1)
+      '@vidstack/react':
+        specifier: ^1.10.9
+        version: 1.11.22(@types/react@18.3.1)(react@18.3.1)
       class-variance-authority:
         specifier: ^0.7.0
         version: 0.7.0
@@ -484,6 +487,9 @@ importers:
       recharts:
         specifier: ^2.15.0
         version: 2.15.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      remix-utils:
+        specifier: ^7.6.0
+        version: 7.6.0(@remix-run/node@2.15.1(typescript@5.4.5))(@remix-run/react@2.15.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.4.5))(@remix-run/router@1.21.0)(is-ip@3.1.0)(react@18.3.1)(zod@3.23.8)
       tailwind-merge:
         specifier: ^2.3.0
         version: 2.3.0
@@ -33819,6 +33825,17 @@ snapshots:
       domain-functions: 2.6.0
       react: 18.3.1
       react-hook-form: 7.51.5(react@18.3.1)
+      zod: 3.23.8
+
+  remix-utils@7.6.0(@remix-run/node@2.15.1(typescript@5.4.5))(@remix-run/react@2.15.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.4.5))(@remix-run/router@1.21.0)(is-ip@3.1.0)(react@18.3.1)(zod@3.23.8):
+    dependencies:
+      type-fest: 4.20.0
+    optionalDependencies:
+      '@remix-run/node': 2.15.1(typescript@5.4.5)
+      '@remix-run/react': 2.15.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.4.5)
+      '@remix-run/router': 1.21.0
+      is-ip: 3.1.0
+      react: 18.3.1
       zod: 3.23.8
 
   remix-utils@7.6.0(@remix-run/node@2.9.2(typescript@5.4.5))(@remix-run/react@2.9.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.4.5))(@remix-run/router@1.21.0)(is-ip@3.1.0)(react@18.3.1)(zod@3.23.8):
