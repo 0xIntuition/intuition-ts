@@ -16,3 +16,37 @@ query GetTagsCustom($where: triples_bool_exp) {
     ...TripleMetadata
   }
 }
+
+query GetTagsSidebar($subjectId: numeric!, $predicateId: numeric!) {
+  triples(
+    where: {
+      _and: [
+        { subject_id: { _eq: $subjectId } }
+        { predicate_id: { _eq: $predicateId } }
+      ]
+    }
+    limit: 5
+  ) {
+    id
+    subject {
+      id
+      label
+    }
+    predicate {
+      id
+      label
+    }
+    object {
+      id
+      label
+      image
+      as_subject_triples {
+        id
+        object {
+          id
+          label
+        }
+      }
+    }
+  }
+}

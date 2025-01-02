@@ -13468,6 +13468,32 @@ export type GetTagsCustomQuery = {
   }>
 }
 
+export type GetTagsSidebarQueryVariables = Exact<{
+  subjectId: Scalars['numeric']['input']
+  predicateId: Scalars['numeric']['input']
+}>
+
+export type GetTagsSidebarQuery = {
+  __typename?: 'query_root'
+  triples: Array<{
+    __typename?: 'triples'
+    id: any
+    subject: { __typename?: 'atoms'; id: any; label?: string | null }
+    predicate: { __typename?: 'atoms'; id: any; label?: string | null }
+    object: {
+      __typename?: 'atoms'
+      id: any
+      label?: string | null
+      image?: string | null
+      as_subject_triples: Array<{
+        __typename?: 'triples'
+        id: any
+        object: { __typename?: 'atoms'; id: any; label?: string | null }
+      }>
+    }
+  }>
+}
+
 export type GetTriplesQueryVariables = Exact<{
   limit?: InputMaybe<Scalars['Int']['input']>
   offset?: InputMaybe<Scalars['Int']['input']>
@@ -19750,6 +19776,112 @@ useGetTagsCustomQuery.fetcher = (
 ) =>
   fetcher<GetTagsCustomQuery, GetTagsCustomQueryVariables>(
     GetTagsCustomDocument,
+    variables,
+    options,
+  )
+
+export const GetTagsSidebarDocument = `
+    query GetTagsSidebar($subjectId: numeric!, $predicateId: numeric!) {
+  triples(
+    where: {_and: [{subject_id: {_eq: $subjectId}}, {predicate_id: {_eq: $predicateId}}]}
+    limit: 5
+  ) {
+    id
+    subject {
+      id
+      label
+    }
+    predicate {
+      id
+      label
+    }
+    object {
+      id
+      label
+      image
+      as_subject_triples {
+        id
+        object {
+          id
+          label
+        }
+      }
+    }
+  }
+}
+    `
+
+export const useGetTagsSidebarQuery = <
+  TData = GetTagsSidebarQuery,
+  TError = unknown,
+>(
+  variables: GetTagsSidebarQueryVariables,
+  options?: Omit<
+    UseQueryOptions<GetTagsSidebarQuery, TError, TData>,
+    'queryKey'
+  > & {
+    queryKey?: UseQueryOptions<GetTagsSidebarQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useQuery<GetTagsSidebarQuery, TError, TData>({
+    queryKey: ['GetTagsSidebar', variables],
+    queryFn: fetcher<GetTagsSidebarQuery, GetTagsSidebarQueryVariables>(
+      GetTagsSidebarDocument,
+      variables,
+    ),
+    ...options,
+  })
+}
+
+useGetTagsSidebarQuery.document = GetTagsSidebarDocument
+
+useGetTagsSidebarQuery.getKey = (variables: GetTagsSidebarQueryVariables) => [
+  'GetTagsSidebar',
+  variables,
+]
+
+export const useInfiniteGetTagsSidebarQuery = <
+  TData = InfiniteData<GetTagsSidebarQuery>,
+  TError = unknown,
+>(
+  variables: GetTagsSidebarQueryVariables,
+  options: Omit<
+    UseInfiniteQueryOptions<GetTagsSidebarQuery, TError, TData>,
+    'queryKey'
+  > & {
+    queryKey?: UseInfiniteQueryOptions<
+      GetTagsSidebarQuery,
+      TError,
+      TData
+    >['queryKey']
+  },
+) => {
+  return useInfiniteQuery<GetTagsSidebarQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey: optionsQueryKey ?? ['GetTagsSidebar.infinite', variables],
+        queryFn: (metaData) =>
+          fetcher<GetTagsSidebarQuery, GetTagsSidebarQueryVariables>(
+            GetTagsSidebarDocument,
+            { ...variables, ...(metaData.pageParam ?? {}) },
+          )(),
+        ...restOptions,
+      }
+    })(),
+  )
+}
+
+useInfiniteGetTagsSidebarQuery.getKey = (
+  variables: GetTagsSidebarQueryVariables,
+) => ['GetTagsSidebar.infinite', variables]
+
+useGetTagsSidebarQuery.fetcher = (
+  variables: GetTagsSidebarQueryVariables,
+  options?: RequestInit['headers'],
+) =>
+  fetcher<GetTagsSidebarQuery, GetTagsSidebarQueryVariables>(
+    GetTagsSidebarDocument,
     variables,
     options,
   )
@@ -40750,6 +40882,200 @@ export const GetTagsCustom = {
                       {
                         kind: 'FragmentSpread',
                         name: { kind: 'Name', value: 'PositionFields' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export const GetTagsSidebar = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'GetTagsSidebar' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'subjectId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'numeric' },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'predicateId' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'numeric' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'triples' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: '_and' },
+                      value: {
+                        kind: 'ListValue',
+                        values: [
+                          {
+                            kind: 'ObjectValue',
+                            fields: [
+                              {
+                                kind: 'ObjectField',
+                                name: { kind: 'Name', value: 'subject_id' },
+                                value: {
+                                  kind: 'ObjectValue',
+                                  fields: [
+                                    {
+                                      kind: 'ObjectField',
+                                      name: { kind: 'Name', value: '_eq' },
+                                      value: {
+                                        kind: 'Variable',
+                                        name: {
+                                          kind: 'Name',
+                                          value: 'subjectId',
+                                        },
+                                      },
+                                    },
+                                  ],
+                                },
+                              },
+                            ],
+                          },
+                          {
+                            kind: 'ObjectValue',
+                            fields: [
+                              {
+                                kind: 'ObjectField',
+                                name: { kind: 'Name', value: 'predicate_id' },
+                                value: {
+                                  kind: 'ObjectValue',
+                                  fields: [
+                                    {
+                                      kind: 'ObjectField',
+                                      name: { kind: 'Name', value: '_eq' },
+                                      value: {
+                                        kind: 'Variable',
+                                        name: {
+                                          kind: 'Name',
+                                          value: 'predicateId',
+                                        },
+                                      },
+                                    },
+                                  ],
+                                },
+                              },
+                            ],
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: { kind: 'IntValue', value: '5' },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'subject' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'predicate' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'object' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'as_subject_triples' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'object' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'id' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'label' },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
                       },
                     ],
                   },
