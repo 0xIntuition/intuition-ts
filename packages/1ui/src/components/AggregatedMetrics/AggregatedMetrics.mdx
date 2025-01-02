@@ -1,31 +1,40 @@
 import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
 
-import * as NetworkStatsStories from './NetworkStats.stories'
+import * as AggregatedMetricsStories from './AggregatedMetrics.stories'
 
-<Meta of={NetworkStatsStories} />
+<Meta of={AggregatedMetricsStories} />
 
 <Title />
 
-#### Displays key network statistics in a grid layout.
+#### Displays aggregated metrics in a responsive grid layout.
 
 <Source
   dark
   language="tsx"
   code={`
-import { NetworkStats } from '@0xintuition/1ui'
+import { AggregatedMetrics } from '@0xintuition/1ui'
 
-<NetworkStats
-  tvl={133.345}
-  atomsCount={4200}
-  triplesCount={4200}
-  signalsCount={4200}
-  usersCount={4200}
+<AggregatedMetrics
+  metrics={[
+    { label: 'TVL', value: 133.345, suffix: 'ETH' },
+    { label: 'Atoms', value: 4200 },
+    { label: 'Triples', value: 4200 },
+    { label: 'Signals', value: 4200, hideOnMobile: true },
+    { label: 'Users', value: 4200 },
+  ]}
 />
 `} />
 
-<Canvas of={NetworkStatsStories.Default} sourceState="none" />
+<Canvas of={AggregatedMetricsStories.Default} sourceState="none" />
 
 ## Properties
+
+The component accepts an array of metric objects with the following properties:
+
+- `label`: The display label for the metric
+- `value`: The numeric value (number or string)
+- `suffix`: Optional suffix to append to the value (e.g. 'ETH')
+- `hideOnMobile`: Optional flag to hide the metric on mobile devices
 
 <Controls />
 
@@ -33,4 +42,4 @@ import { NetworkStats } from '@0xintuition/1ui'
 
 ### With Live Data
 
-<Canvas of={NetworkStatsStories.WithLiveData} sourceState="none" />
+<Canvas of={AggregatedMetricsStories.WithLiveData} sourceState="none" />

@@ -1,35 +1,22 @@
 import { cn } from 'styles'
 import { formatNumber } from 'utils'
 
+interface Metric {
+  label: string
+  value: number | string
+  hideOnMobile?: boolean
+  suffix?: string
+}
+
 interface AggregatedMetricsProps extends React.HTMLAttributes<HTMLDivElement> {
-  tvl: number
-  atomsCount: number
-  triplesCount: number
-  signalsCount: number
-  usersCount: number
+  metrics: Metric[]
 }
 
 export function AggregatedMetrics({
-  tvl,
-  atomsCount,
-  triplesCount,
-  signalsCount,
-  usersCount,
+  metrics,
   className,
   ...props
 }: AggregatedMetricsProps) {
-  const stats = [
-    { label: 'TVL', value: `${formatNumber(tvl, 2)} ETH` },
-    { label: 'Atoms', value: formatNumber(atomsCount, 2) },
-    { label: 'Triples', value: formatNumber(triplesCount, 2) },
-    {
-      label: 'Signals',
-      value: formatNumber(signalsCount, 2),
-      hideOnMobile: true,
-    },
-    { label: 'Users', value: formatNumber(usersCount, 2) },
-  ]
-
   return (
     <div
       className={cn(
@@ -38,20 +25,26 @@ export function AggregatedMetrics({
       )}
       {...props}
     >
-      {stats.map(({ label, value, hideOnMobile }, index) => (
-        <div
-          key={label}
-          className={cn(
-            'relative text-center px-12',
-            hideOnMobile && 'hidden lg:block',
-            index !== stats.length - 1 &&
-              'after:absolute after:right-0 after:inset-y-0 after:w-px after:bg-border/20',
-          )}
-        >
-          <div className="text-sm text-foreground/70">{label}</div>
-          <div className="text-2xl font-medium text-foreground">{value}</div>
-        </div>
-      ))}
+      {metrics.map(({ label, value, hideOnMobile, suffix }, index) => {
+        const formattedValue = typeof value === 'string' ? Number(value) : value
+        return (
+          <div
+            key={label}
+            className={cn(
+              'relative text-center px-12',
+              hideOnMobile && 'hidden lg:block',
+              index !== metrics.length - 1 &&
+                'after:absolute after:right-0 after:inset-y-0 after:w-px after:bg-border/20',
+            )}
+          >
+            <div className="text-sm text-foreground/70">{label}</div>
+            <div className="text-2xl font-medium text-foreground">
+              {formatNumber(formattedValue, 2)}
+              {suffix ? ` ${suffix}` : ''}
+            </div>
+          </div>
+        )
+      })}
     </div>
   )
 }

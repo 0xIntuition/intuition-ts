@@ -5,14 +5,16 @@ import { render } from '@testing-library/react'
 import { AggregatedMetrics } from './AggregatedMetrics'
 
 describe('AggregatedMetrics', () => {
-  it('should render appropriate element', () => {
+  it('should render metrics correctly', () => {
     const { asFragment } = render(
       <AggregatedMetrics
-        tvl={420.69}
-        atomsCount={4200}
-        triplesCount={4200}
-        signalsCount={4200}
-        usersCount={4200}
+        metrics={[
+          { label: 'TVL', value: 420.69, suffix: 'ETH' },
+          { label: 'Atoms', value: 4200 },
+          { label: 'Triples', value: 4200 },
+          { label: 'Signals', value: 4200, hideOnMobile: true },
+          { label: 'Users', value: 4200 },
+        ]}
       />,
     )
     expect(asFragment()).toMatchInlineSnapshot(`

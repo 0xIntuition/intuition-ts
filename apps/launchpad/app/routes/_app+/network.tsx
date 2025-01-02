@@ -135,11 +135,21 @@ export default function Network() {
         </div>
         <div className="py-4 bg-gradient-to-b from-[#060504] to-[#101010]">
           <AggregatedMetrics
-            tvl={+formatUnits(stats?.contract_balance ?? 0, 18)}
-            atomsCount={stats?.total_atoms ?? 0}
-            triplesCount={stats?.total_triples ?? 0}
-            signalsCount={stats?.total_signals ?? 0}
-            usersCount={stats?.total_accounts ?? 0}
+            metrics={[
+              {
+                label: 'TVL',
+                value: +formatUnits(stats?.contract_balance ?? 0, 18),
+                suffix: 'ETH',
+              },
+              { label: 'Atoms', value: stats?.total_atoms ?? 0 },
+              { label: 'Triples', value: stats?.total_triples ?? 0 },
+              {
+                label: 'Signals',
+                value: stats?.total_signals ?? 0,
+                hideOnMobile: true,
+              },
+              { label: 'Users', value: stats?.total_accounts ?? 0 },
+            ]}
             className="[&>div]:after:hidden sm:[&>div]:after:block"
           />
         </div>
