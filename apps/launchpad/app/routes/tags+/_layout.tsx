@@ -15,12 +15,28 @@ import { Outlet, useLocation } from '@remix-run/react'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
 
 import { FileExplorerSidebar } from '../../components/FileExplorerSidebar'
-import { FileNode } from '../preferences+/_layout'
+
+type FileItem = {
+  id: string
+  name: string
+  path: string
+  icon?: (typeof IconName)[keyof typeof IconName]
+  type: 'item'
+}
+
+type Folder = {
+  id: string
+  name: string
+  path: string
+  icon?: (typeof IconName)[keyof typeof IconName]
+  type: 'folder'
+  items: (Folder | FileItem)[]
+}
 
 // Transform function to convert triples to tree structure
 function transformTriplesToTree(
   triples: GetTagsSidebarQuery['triples'],
-): FileNode[] {
+): Folder[] {
   if (!triples?.length) {
     return []
   }
@@ -33,21 +49,25 @@ function transformTriplesToTree(
       name: predicate.label?.toLowerCase().replace(/ /g, '_') || '',
       path: `/tags/folder/${predicate.id}`,
       icon: IconName.folder,
-      type: 'folder' as const,
-      items: triples.map((triple) => ({
-        id: triple.object.id,
-        name: triple.object.label || '',
-        path: `/tags/folder/${triple.object.id}`,
-        icon: IconName.folder,
-        type: 'folder' as const,
-        items: triple.object.as_subject_triples.map((subTriple) => ({
-          id: subTriple.object.id,
-          name: subTriple.object.label || '',
-          path: `/tags/item/${subTriple.object.id}`,
-          icon: IconName.circle,
-          type: 'item' as const,
-        })),
-      })),
+      type: 'folder',
+      items: triples.map(
+        (triple): Folder => ({
+          id: triple.object.id,
+          name: triple.object.label || '',
+          path: `/tags/folder/${triple.object.id}`,
+          icon: IconName.folder,
+          type: 'folder',
+          items: triple.object.as_subject_triples.map(
+            (subTriple): FileItem => ({
+              id: subTriple.object.id,
+              name: subTriple.object.label || '',
+              path: `/tags/item/${subTriple.object.id}`,
+              icon: IconName.circle,
+              type: 'item',
+            }),
+          ),
+        }),
+      ),
     },
   ]
 }

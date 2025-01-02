@@ -1,0 +1,16 @@
+subject,predicate,object
+I,has_preference,ui_settings
+I,has_preference,interests
+I,has_preference,clothing
+I,has_preference,sports
+ui_settings,has_preference,dark_mode
+ui_settings,has_preference,light_mode
+interests,has_preference,crypto
+interests,has_preference,ai
+interests,has_preference,machine_learning
+interests,has_preference,nlp
+clothing,has_preference,shirt_size:medium
+clothing,has_preference,style:minimalist
+clothing,has_preference,color-scheme:fall
+sports,has_preference,surfing
+sports,has_preference,nfl 

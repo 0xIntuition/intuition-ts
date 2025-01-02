@@ -1,0 +1,17 @@
+@context,@type,name,description,image,url
+https://schema.org,Thing,has_preference,"A predicate indicating a user's preference or setting.",https://em-content.zobj.net/source/apple/391/gear_2699-fe0f.png,
+https://schema.org,Thing,ui_settings,"User interface configuration settings.",https://em-content.zobj.net/source/apple/391/control-knobs_1f39b-fe0f.png,
+https://schema.org,Thing,dark_mode,"Dark color theme preference for user interface.",https://em-content.zobj.net/source/apple/391/new-moon_1f311.png,
+https://schema.org,Thing,light_mode,"Light color theme preference for user interface.",https://em-content.zobj.net/source/apple/391/sun_2600-fe0f.png,
+https://schema.org,Thing,interests,"Categories of topics a user is interested in.",https://em-content.zobj.net/source/apple/391/sparkles_2728.png,
+https://schema.org,Thing,crypto,"Interest in cryptocurrency and blockchain technology.",https://em-content.zobj.net/source/apple/391/coin_1fa99.png,
+https://schema.org,Thing,ai,"Interest in artificial intelligence and machine learning.",https://em-content.zobj.net/source/apple/391/robot_1f916.png,
+https://schema.org,Thing,machine_learning,"Interest in machine learning algorithms and applications.",https://em-content.zobj.net/source/apple/391/brain_1f9e0.png,
+https://schema.org,Thing,nlp,"Interest in natural language processing.",https://em-content.zobj.net/source/apple/391/speech-balloon_1f4ac.png,
+https://schema.org,Thing,clothing,"Clothing preferences and settings.",https://em-content.zobj.net/source/apple/391/t-shirt_1f455.png,
+https://schema.org,Thing,shirt_size:medium,"Medium size preference for shirts.",https://em-content.zobj.net/source/apple/391/t-shirt_1f455.png,
+https://schema.org,Thing,style:minimalist,"Preference for minimalist clothing style.",https://em-content.zobj.net/source/apple/391/black-large-square_2b1b.png,
+https://schema.org,Thing,color-scheme:fall,"Preference for fall color schemes in clothing.",https://em-content.zobj.net/source/apple/391/fallen-leaf_1f342.png,
+https://schema.org,Thing,sports,"Sports preferences and interests.",https://em-content.zobj.net/source/apple/391/sports-medal_1f3c5.png,
+https://schema.org,Thing,surfing,"Interest in surfing.",https://em-content.zobj.net/source/apple/391/person-surfing_1f3c4.png,
+https://schema.org,Thing,nfl,"Interest in National Football League.",https://em-content.zobj.net/source/apple/391/american-football_1f3c8.png 
