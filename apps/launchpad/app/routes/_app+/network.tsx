@@ -1,7 +1,6 @@
 import {
   AggregatedMetrics,
   PageHeader,
-  Skeleton,
   Text,
   TextVariant,
   TextWeight,
@@ -20,6 +19,8 @@ import {
 
 import ActivityFeed from '@components/ActivityFeed'
 import ChapterProgress from '@components/ChapterProgress'
+import KnowledgeGraph from '@components/KnowledgeGraph/KnowledgeGraph'
+import graphData from '@components/KnowledgeGraph/mockData'
 import logger from '@lib/utils/logger'
 import { LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData, useSearchParams } from '@remix-run/react'
@@ -128,7 +129,7 @@ export default function Network() {
           endTime={new Date(Date.now() + 172800000)}
         />
         <div className="flex flex-col rounded-xl overflow-hidden theme-border">
-          <Skeleton className="h-[695px] w-full animate-none rounded-b-none" />
+          <KnowledgeGraph data={graphData} />
           <div className="py-4 bg-gradient-to-b from-[#060504] to-[#101010]">
             <AggregatedMetrics
               tvl={+formatUnits(stats?.contract_balance ?? 0, 18)}
