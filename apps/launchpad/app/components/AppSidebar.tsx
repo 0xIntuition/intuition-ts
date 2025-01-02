@@ -9,6 +9,9 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  Sheet,
+  SheetContent,
+  SheetTrigger,
   Sidebar,
   SidebarContent,
   SidebarGroup,
@@ -17,8 +20,9 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarRail,
+  SidebarTrigger,
   Skeleton,
+  useIsMobile,
 } from '@0xintuition/1ui'
 
 import { useLocation } from '@remix-run/react'
@@ -69,7 +73,7 @@ export function AppSidebar({
   ...props
 }: AppSidebarProps) {
   const isMinimal = variant === SidebarVariant.minimal
-
+  const isMobile = useIsMobile()
   const location = useLocation()
 
   const mainNavItems: NavItem[] = [
@@ -106,8 +110,8 @@ export function AppSidebar({
     { icon: Circle, label: 'Ecosystem', href: '#' },
   ]
 
-  return (
-    <Sidebar className="border-r border-border/10" {...props}>
+  const sidebarContent = (
+    <>
       <SidebarHeader className="px-5 py-3">
         <SidebarMenu>
           <SidebarMenuItem className="flex flex-row gap-3 px-4 py-3">
@@ -194,7 +198,29 @@ export function AppSidebar({
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarRail />
-    </Sidebar>
+    </>
+  )
+
+  return (
+    <>
+      {isMobile ? (
+        <Sheet>
+          <SheetTrigger asChild>
+            <SidebarTrigger />
+          </SheetTrigger>
+          <SheetContent side="left" className="w-[300px] p-0">
+            {sidebarContent}
+          </SheetContent>
+        </Sheet>
+      ) : (
+        <Sidebar
+          className="border-r border-border/10"
+          collapsible="icon"
+          {...props}
+        >
+          {sidebarContent}
+        </Sidebar>
+      )}
+    </>
   )
 }
