@@ -60,21 +60,21 @@ function FileExplorerItem({
   const navigate = useNavigate()
   const location = useLocation()
   const [isOpen, setIsOpen] = useState(true)
-  const isSelected = location.pathname === `/preferences/folder/${node.id}`
+  const isSelected = location.pathname === node.path
   const isFolder = node.type === 'folder'
 
   const handleClick = () => {
     if (isFolder) {
       setIsOpen(!isOpen)
+      navigate(node.path)
     } else {
-      // Navigate to item detail view
-      navigate(`/preferences/item/${node.id}`)
+      navigate(node.path)
     }
   }
 
   const handleGearClick = (e: React.MouseEvent) => {
     e.stopPropagation() // Prevent folder toggle
-    navigate(`/preferences/folder/${node.id}`)
+    navigate(node.path)
   }
 
   return (

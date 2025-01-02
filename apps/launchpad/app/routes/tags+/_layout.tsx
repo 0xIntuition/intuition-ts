@@ -28,19 +28,19 @@ function transformTriplesToTree(triples: GetTagsSidebarQuery['triples']) {
     {
       id: predicate.id,
       name: predicate.label?.toLowerCase().replace(/ /g, '_') || '',
-      path: `/tags/${predicate.id}`,
+      path: `/tags/folder/${predicate.id}`,
       icon: IconName.folder,
       type: 'folder' as const,
       items: triples.map((triple) => ({
         id: triple.object.id,
         name: triple.object.label || '',
-        path: `/tags/${predicate.id}/${triple.object.id}`,
+        path: `/tags/folder/${triple.object.id}`,
         icon: IconName.folder,
         type: 'folder' as const,
         items: triple.object.as_subject_triples.map((subTriple) => ({
           id: subTriple.object.id,
           name: subTriple.object.label || '',
-          path: `/tags/${predicate.id}/${triple.object.id}/${subTriple.object.id}`,
+          path: `/tags/item/${subTriple.object.id}`,
           icon: IconName.circle,
           type: 'item' as const,
         })),
