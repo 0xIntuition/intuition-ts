@@ -17,19 +17,7 @@ import {
 import { useParams } from '@remix-run/react'
 import { Globe, MoreVertical } from 'lucide-react'
 
-type FileNode = {
-  id: string
-  name: string
-  path: string
-  icon?: (typeof IconName)[keyof typeof IconName]
-  type: 'folder' | 'item'
-  items?: FileNode[]
-}
-
-type Folder = FileNode & {
-  type: 'folder'
-  items: FileNode[]
-}
+import { FileNode } from '../../preferences+/_layout'
 
 function ItemCard({
   children,
@@ -103,12 +91,13 @@ export default function TagFolderView() {
   const { folderId } = useParams()
 
   // TODO: Replace with actual data from your GraphQL query
-  const folder = {
-    id: folderId,
+  const folder: FileNode = {
+    id: folderId || '',
     name: 'Tag Folder',
     path: `/tags/folder/${folderId}`,
-    type: 'folder' as const,
-    items: [],
+    icon: IconName.folder,
+    type: 'folder',
+    items: [] as FileNode[],
   }
 
   const parentFolderName = getParentFolderName(folder.path)
@@ -198,8 +187,8 @@ export default function TagFolderView() {
       {/* Grid of items */}
       <div className="grid grid-cols-2 gap-8">
         {folder.items
-          .filter((item) => item.type === 'item')
-          .map((item: FileNode) => (
+          ?.filter((item) => item.type === 'item')
+          .map((item) => (
             <ItemCard key={item.id}>
               <div className="flex flex-col">
                 {/* Header */}

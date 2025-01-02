@@ -15,9 +15,12 @@ import { Outlet, useLocation } from '@remix-run/react'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
 
 import { FileExplorerSidebar } from '../../components/FileExplorerSidebar'
+import { FileNode } from '../preferences+/_layout'
 
 // Transform function to convert triples to tree structure
-function transformTriplesToTree(triples: GetTagsSidebarQuery['triples']) {
+function transformTriplesToTree(
+  triples: GetTagsSidebarQuery['triples'],
+): FileNode[] {
   if (!triples?.length) {
     return []
   }

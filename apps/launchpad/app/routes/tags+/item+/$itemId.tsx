@@ -4,14 +4,7 @@ import { Button, Icon, IconName, Text } from '@0xintuition/1ui'
 
 import { useParams, useSearchParams } from '@remix-run/react'
 
-type FileNode = {
-  id: string
-  name: string
-  path: string
-  icon?: (typeof IconName)[keyof typeof IconName]
-  type: 'folder' | 'item'
-  items?: FileNode[]
-}
+import { FileNode } from '../../preferences+/_layout'
 
 function getParentFolderName(path: string): string {
   const parts = path.split('/')
@@ -29,11 +22,12 @@ export default function TagItemView() {
   const timeFilter = searchParams.get('timeFilter') || 'YTD'
 
   // TODO: Replace with actual data from your GraphQL query
-  const item = {
-    id: itemId,
+  const item: FileNode = {
+    id: itemId || '',
     name: 'Tag Item',
     path: `/tags/item/${itemId}`,
-    type: 'item' as const,
+    icon: IconName.circle,
+    type: 'item',
   }
 
   const parentFolderName = getParentFolderName(item.path)
