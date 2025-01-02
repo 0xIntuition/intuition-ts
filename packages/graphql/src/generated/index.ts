@@ -12224,6 +12224,35 @@ export type GetListDetailsQuery = {
   }>
 }
 
+export type GetFeeTransfersQueryVariables = Exact<{
+  address: Scalars['String']['input']
+  cutoff_timestamp?: InputMaybe<Scalars['bigint']['input']>
+}>
+
+export type GetFeeTransfersQuery = {
+  __typename?: 'query_root'
+  before_cutoff: {
+    __typename?: 'fee_transfers_aggregate'
+    aggregate?: {
+      __typename?: 'fee_transfers_aggregate_fields'
+      sum?: {
+        __typename?: 'fee_transfers_sum_fields'
+        amount?: any | null
+      } | null
+    } | null
+  }
+  after_cutoff: {
+    __typename?: 'fee_transfers_aggregate'
+    aggregate?: {
+      __typename?: 'fee_transfers_aggregate_fields'
+      sum?: {
+        __typename?: 'fee_transfers_sum_fields'
+        amount?: any | null
+      } | null
+    } | null
+  }
+}
+
 export type GetPositionsQueryVariables = Exact<{
   limit?: InputMaybe<Scalars['Int']['input']>
   offset?: InputMaybe<Scalars['Int']['input']>
@@ -18865,6 +18894,104 @@ useGetListDetailsQuery.fetcher = (
 ) =>
   fetcher<GetListDetailsQuery, GetListDetailsQueryVariables>(
     GetListDetailsDocument,
+    variables,
+    options,
+  )
+
+export const GetFeeTransfersDocument = `
+    query GetFeeTransfers($address: String!, $cutoff_timestamp: bigint) {
+  before_cutoff: fee_transfers_aggregate(
+    where: {block_timestamp: {_lte: $cutoff_timestamp}, sender_id: {_eq: $address}}
+  ) {
+    aggregate {
+      sum {
+        amount
+      }
+    }
+  }
+  after_cutoff: fee_transfers_aggregate(
+    where: {block_timestamp: {_gt: $cutoff_timestamp}, sender_id: {_eq: $address}}
+  ) {
+    aggregate {
+      sum {
+        amount
+      }
+    }
+  }
+}
+    `
+
+export const useGetFeeTransfersQuery = <
+  TData = GetFeeTransfersQuery,
+  TError = unknown,
+>(
+  variables: GetFeeTransfersQueryVariables,
+  options?: Omit<
+    UseQueryOptions<GetFeeTransfersQuery, TError, TData>,
+    'queryKey'
+  > & {
+    queryKey?: UseQueryOptions<GetFeeTransfersQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useQuery<GetFeeTransfersQuery, TError, TData>({
+    queryKey: ['GetFeeTransfers', variables],
+    queryFn: fetcher<GetFeeTransfersQuery, GetFeeTransfersQueryVariables>(
+      GetFeeTransfersDocument,
+      variables,
+    ),
+    ...options,
+  })
+}
+
+useGetFeeTransfersQuery.document = GetFeeTransfersDocument
+
+useGetFeeTransfersQuery.getKey = (variables: GetFeeTransfersQueryVariables) => [
+  'GetFeeTransfers',
+  variables,
+]
+
+export const useInfiniteGetFeeTransfersQuery = <
+  TData = InfiniteData<GetFeeTransfersQuery>,
+  TError = unknown,
+>(
+  variables: GetFeeTransfersQueryVariables,
+  options: Omit<
+    UseInfiniteQueryOptions<GetFeeTransfersQuery, TError, TData>,
+    'queryKey'
+  > & {
+    queryKey?: UseInfiniteQueryOptions<
+      GetFeeTransfersQuery,
+      TError,
+      TData
+    >['queryKey']
+  },
+) => {
+  return useInfiniteQuery<GetFeeTransfersQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey: optionsQueryKey ?? ['GetFeeTransfers.infinite', variables],
+        queryFn: (metaData) =>
+          fetcher<GetFeeTransfersQuery, GetFeeTransfersQueryVariables>(
+            GetFeeTransfersDocument,
+            { ...variables, ...(metaData.pageParam ?? {}) },
+          )(),
+        ...restOptions,
+      }
+    })(),
+  )
+}
+
+useInfiniteGetFeeTransfersQuery.getKey = (
+  variables: GetFeeTransfersQueryVariables,
+) => ['GetFeeTransfers.infinite', variables]
+
+useGetFeeTransfersQuery.fetcher = (
+  variables: GetFeeTransfersQueryVariables,
+  options?: RequestInit['headers'],
+) =>
+  fetcher<GetFeeTransfersQuery, GetFeeTransfersQueryVariables>(
+    GetFeeTransfersDocument,
     variables,
     options,
   )
@@ -37231,6 +37358,199 @@ export const GetListDetails = {
                                   },
                                 ],
                               },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export const GetFeeTransfers = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'GetFeeTransfers' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'address' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'cutoff_timestamp' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'bigint' } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'before_cutoff' },
+            name: { kind: 'Name', value: 'fee_transfers_aggregate' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'block_timestamp' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: '_lte' },
+                            value: {
+                              kind: 'Variable',
+                              name: { kind: 'Name', value: 'cutoff_timestamp' },
+                            },
+                          },
+                        ],
+                      },
+                    },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'sender_id' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: '_eq' },
+                            value: {
+                              kind: 'Variable',
+                              name: { kind: 'Name', value: 'address' },
+                            },
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'aggregate' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'sum' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'amount' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'after_cutoff' },
+            name: { kind: 'Name', value: 'fee_transfers_aggregate' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'block_timestamp' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: '_gt' },
+                            value: {
+                              kind: 'Variable',
+                              name: { kind: 'Name', value: 'cutoff_timestamp' },
+                            },
+                          },
+                        ],
+                      },
+                    },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'sender_id' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: '_eq' },
+                            value: {
+                              kind: 'Variable',
+                              name: { kind: 'Name', value: 'address' },
+                            },
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'aggregate' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'sum' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'amount' },
                             },
                           ],
                         },
