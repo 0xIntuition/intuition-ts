@@ -28,19 +28,19 @@ function transformTriplesToTree(triples: GetTagsSidebarQuery['triples']) {
     {
       id: predicate.id,
       name: predicate.label?.toLowerCase().replace(/ /g, '_') || '',
-      path: `/preferences/folder/${predicate.id}`,
+      path: `/tags/${predicate.id}`,
       icon: IconName.folder,
       type: 'folder' as const,
       items: triples.map((triple) => ({
         id: triple.object.id,
         name: triple.object.label || '',
-        path: `/preferences/folder/${triple.object.id}`,
+        path: `/tags/${predicate.id}/${triple.object.id}`,
         icon: IconName.folder,
         type: 'folder' as const,
         items: triple.object.as_subject_triples.map((subTriple) => ({
           id: subTriple.object.id,
           name: subTriple.object.label || '',
-          path: `/preferences/item/${subTriple.object.id}`,
+          path: `/tags/${predicate.id}/${triple.object.id}/${subTriple.object.id}`,
           icon: IconName.circle,
           type: 'item' as const,
         })),
@@ -60,8 +60,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
       fetcher<GetTagsSidebarQuery, GetTagsSidebarQueryVariables>(
         GetTagsSidebarDocument,
         {
-          subjectId: 13,
-          predicateId: 4,
+          subjectId: 13, // Intuition
+          predicateId: 4, // has_tag
         },
       ),
   })
@@ -71,20 +71,20 @@ export async function loader({ request }: LoaderFunctionArgs) {
   }
 }
 
-export default function PreferencesLayout() {
+export default function TagsLayout() {
   const location = useLocation()
 
   const { data: triplesData } = useGetTagsSidebarQuery(
     {
-      subjectId: 13,
-      predicateId: 4,
+      subjectId: 13, // Intuition
+      predicateId: 4, // has_tag
     },
     {
       queryKey: ['get-tags-sidebar'],
     },
   )
 
-  const preferencesTree = React.useMemo(() => {
+  const tagsTree = React.useMemo(() => {
     if (!triplesData?.triples) {
       return []
     }
@@ -95,7 +95,7 @@ export default function PreferencesLayout() {
     <SidebarProvider>
       <div className="flex h-screen">
         <FileExplorerSidebar
-          items={preferencesTree}
+          items={tagsTree}
           selectedPath={location.pathname}
         />
         <main className="flex-1 overflow-auto p-6">
