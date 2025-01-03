@@ -45,6 +45,10 @@ export default defineConfig({
     }),
     tsconfigPaths(),
   ],
+  optimizeDeps: {
+    include: ['cytoscape'],
+    exclude: ['@0xintuition/1ui'],
+  },
   server: {
     port: 3000,
   },
@@ -57,9 +61,19 @@ export default defineConfig({
         return false
       }
     },
+    rollupOptions: {
+      external: ['cytoscape'],
+      output: {
+        globals: {
+          cytoscape: 'cytoscape',
+        },
+      },
+    },
   },
-  // add this back in once we bring Privy in -- likely still needed
-  // ssr: {
-  //   noExternal: ['@privy-io/react-auth', '@privy-io/wagmi'],
-  // },
+  resolve: {
+    dedupe: ['react', 'react-dom', 'cytoscape'],
+  },
+  ssr: {
+    noExternal: ['react-cytoscapejs'],
+  },
 })
