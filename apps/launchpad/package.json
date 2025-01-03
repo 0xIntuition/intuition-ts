@@ -17,6 +17,7 @@
   "dependencies": {
     "@0xintuition/1ui": "workspace:^",
     "@0xintuition/graphql": "workspace:^",
+    "@0xintuition/api": "workspace:^",
     "@popperjs/core": "^2.11.8",
     "@privy-io/react-auth": "^1.97.0",
     "@privy-io/wagmi": "^0.2.13",

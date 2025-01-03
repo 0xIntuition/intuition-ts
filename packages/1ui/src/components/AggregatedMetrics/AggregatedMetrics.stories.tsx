@@ -24,11 +24,13 @@ export const Default: Story = {
     ),
   ],
   args: {
-    tvl: 13.34,
-    atomsCount: 4200,
-    triplesCount: 4200,
-    signalsCount: 4200,
-    usersCount: 4200,
+    metrics: [
+      { label: 'TVL', value: 13.34, suffix: 'ETH' },
+      { label: 'Atoms', value: 4200 },
+      { label: 'Triples', value: 4200 },
+      { label: 'Signals', value: 4200, hideOnMobile: true },
+      { label: 'Users', value: 4200 },
+    ],
   },
 }
 
@@ -42,11 +44,24 @@ const SmartNetworkStats = () => {
 
   return (
     <AggregatedMetrics
-      tvl={systemStats?.stats?.[0]?.contract_balance || 0}
-      atomsCount={systemStats?.stats?.[0]?.total_atoms || 0}
-      triplesCount={systemStats?.stats?.[0]?.total_triples || 0}
-      signalsCount={systemStats?.stats?.[0]?.total_positions || 0}
-      usersCount={systemStats?.stats?.[0]?.total_accounts || 0}
+      metrics={[
+        {
+          label: 'TVL',
+          value: systemStats?.stats?.[0]?.contract_balance || 0,
+          suffix: 'ETH',
+        },
+        { label: 'Atoms', value: systemStats?.stats?.[0]?.total_atoms || 0 },
+        {
+          label: 'Triples',
+          value: systemStats?.stats?.[0]?.total_triples || 0,
+        },
+        {
+          label: 'Signals',
+          value: systemStats?.stats?.[0]?.total_positions || 0,
+          hideOnMobile: true,
+        },
+        { label: 'Users', value: systemStats?.stats?.[0]?.total_accounts || 0 },
+      ]}
     />
   )
 }
@@ -64,7 +79,7 @@ export const WithLiveData: Story = {
     docs: {
       description: {
         story:
-          'This example shows the NetworkStats component with live data fetched from the Intuition GraphQL API..',
+          'This example shows the AggregatedMetrics component with live data fetched from the Intuition GraphQL API.',
       },
     },
   },
