@@ -1,4 +1,4 @@
-import { GetFeeTransfersQuery } from '../generated'
+import { GetFeeTransfersQuery } from '@0xintuition/graphql'
 
 export const POINTS_CUTOFF_TIMESTAMP = 1733356800
 

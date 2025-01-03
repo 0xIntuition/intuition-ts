@@ -7,16 +7,18 @@ import {
 } from '@0xintuition/1ui'
 import { UsersService } from '@0xintuition/api'
 import {
-  calculateProtocolPoints,
   fetcher,
   GetFeeTransfersDocument,
   GetFeeTransfersQuery,
   GetFeeTransfersQueryVariables,
-  POINTS_CUTOFF_TIMESTAMP,
   useGetFeeTransfersQuery,
 } from '@0xintuition/graphql'
 
 import logger from '@lib/utils/logger'
+import {
+  calculateProtocolPoints,
+  POINTS_CUTOFF_TIMESTAMP,
+} from '@lib/utils/points'
 import { LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
