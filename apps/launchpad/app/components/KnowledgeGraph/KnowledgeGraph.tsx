@@ -13,20 +13,12 @@ import {
 } from '@0xintuition/1ui'
 
 import cytoscape from 'cytoscape'
-// Register Cytoscape extensions
-import cola from 'cytoscape-cola'
-import fcose from 'cytoscape-fcose'
-import popper from 'cytoscape-popper'
+// Import but don't register yet
 import CytoscapeComponent from 'react-cytoscapejs'
 import { createPortal } from 'react-dom'
 import { ClientOnly } from 'remix-utils/client-only'
 
 import { KnowledgeGraphData } from '../../types/knowledge-graph'
-
-// Register extensions
-cytoscape.use(cola)
-cytoscape.use(fcose)
-cytoscape.use(popper)
 
 interface KnowledgeGraphProps {
   data: KnowledgeGraphData
@@ -257,6 +249,70 @@ const getIdentityVariant = (type: string) => {
   }
 }
 
+interface CytoscapeGraphProps {
+  elements: cytoscape.ElementDefinition[]
+  stylesheet: cytoscape.Stylesheet[]
+  layout: cytoscape.LayoutOptions
+  onMount: (cy: cytoscape.Core) => void
+}
+
+// Lazy load extensions
+const loadExtensions = async () => {
+  if (typeof window === 'undefined') {
+    return
+  }
+
+  try {
+    const [colaModule, fcoseModule, popperModule] = await Promise.all([
+      import('cytoscape-cola'),
+      import('cytoscape-fcose'),
+      import('cytoscape-popper'),
+    ])
+
+    if (!cytoscape.prototype.hasInitialised) {
+      cytoscape.use(colaModule.default)
+      cytoscape.use(fcoseModule.default)
+      cytoscape.use(popperModule.default)
+      cytoscape.prototype.hasInitialised = true
+    }
+  } catch (error) {
+    console.error('Failed to load Cytoscape extensions:', error)
+  }
+}
+
+function CytoscapeGraph({
+  elements,
+  stylesheet,
+  layout,
+  onMount,
+}: CytoscapeGraphProps) {
+  const [isReady, setIsReady] = useState(false)
+
+  useEffect(() => {
+    loadExtensions()
+      .then(() => {
+        setIsReady(true)
+      })
+      .catch((error) => {
+        console.error('Failed to load Cytoscape extensions:', error)
+      })
+  }, [])
+
+  if (!isReady) {
+    return null // Or a loading spinner
+  }
+
+  return (
+    <CytoscapeComponent
+      elements={elements}
+      style={{ width: '100%', height: '100%' }}
+      stylesheet={stylesheet}
+      layout={layout}
+      cy={onMount}
+    />
+  )
+}
+
 export default function KnowledgeGraph({
   data,
   className,
@@ -466,12 +522,11 @@ export default function KnowledgeGraph({
       <div className={className}>
         <ClientOnly>
           {() => (
-            <CytoscapeComponent
+            <CytoscapeGraph
               elements={elements}
-              style={{ width: '100%', height: '100%' }}
               stylesheet={graphStyles}
               layout={layout}
-              cy={(cy: cytoscape.Core) => {
+              onMount={(cy: cytoscape.Core) => {
                 cyRef.current = cy
 
                 // Start animation after layout and set zoom once
