@@ -5,6 +5,7 @@ import {
   TextVariant,
   TextWeight,
 } from '@0xintuition/1ui'
+import { UsersService } from '@0xintuition/api'
 import {
   calculateProtocolPoints,
   fetcher,
@@ -20,6 +21,8 @@ import { LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
 import { fetchRelicCounts } from 'app/lib/services/relics'
+
+import { fetchWrapper } from '../../.server/api'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   logger('request', request)
@@ -44,15 +47,25 @@ export async function loader({ request }: LoaderFunctionArgs) {
     ),
   ])
 
+  // This is using legacy API. TODO: Update to use GraphQL when these are available.
+  const userTotals = await fetchWrapper({
+    method: UsersService.getUserTotals,
+    args: {
+      id: '0xB95ca3D3144e9d1DAFF0EE3d35a4488A4A5C9Fc5'.toLowerCase(),
+    },
+  })
+
   return {
     dehydratedState: dehydrate(queryClient),
     relicHoldCount: relicCounts.holdCount,
     mintCount: relicCounts.mintCount,
+    userTotals,
   }
 }
 
 export default function Points() {
-  const { relicHoldCount, mintCount } = useLoaderData<typeof loader>()
+  const { relicHoldCount, mintCount, userTotals } =
+    useLoaderData<typeof loader>()
   const { data: feeData } = useGetFeeTransfersQuery(
     {
       address: '0xB95ca3D3144e9d1DAFF0EE3d35a4488A4A5C9Fc5'.toLowerCase(),
@@ -77,13 +90,17 @@ export default function Points() {
           <div className="py-4 bg-gradient-to-b from-[#060504] to-[#101010]">
             <AggregatedMetrics
               metrics={[
-                { label: 'Portal', value: '0' },
+                { label: 'Portal', value: userTotals?.quest_points ?? '0' },
                 {
                   label: 'Protocol',
                   value: protocolPoints?.totalPoints ?? '0',
                 },
                 { label: 'NFT', value: totalNftPoints },
-                { label: 'Referrals', value: '0', hideOnMobile: true },
+                {
+                  label: 'Referrals',
+                  value: userTotals?.referral_points ?? '0',
+                  hideOnMobile: true,
+                },
                 { label: 'Community', value: '0' },
               ]}
             />

@@ -439,6 +439,9 @@ importers:
       '@0xintuition/1ui':
         specifier: workspace:^
         version: link:../../packages/1ui
+      '@0xintuition/api':
+        specifier: workspace:^
+        version: link:../../packages/api
       '@0xintuition/graphql':
         specifier: workspace:^
         version: link:../../packages/graphql
