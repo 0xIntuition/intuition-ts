@@ -1,7 +1,6 @@
 import {
   AggregatedMetrics,
   PageHeader,
-  Skeleton,
   Text,
   TextVariant,
   TextWeight,
@@ -21,11 +20,15 @@ import {
 import ActivityFeed from '@components/ActivityFeed'
 import ChapterProgress from '@components/ChapterProgress'
 import { ErrorPage } from '@components/ErrorPage'
+import KnowledgeGraph from '@components/KnowledgeGraph/KnowledgeGraph'
 import logger from '@lib/utils/logger'
 import { LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData, useSearchParams } from '@remix-run/react'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
+import { ClientOnly } from 'remix-utils/client-only'
 import { formatUnits } from 'viem'
+
+import { mockKnowledgeGraphData } from '../../data/mock-knowledge-graph'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   logger('request', request)
@@ -130,8 +133,15 @@ export default function Network() {
         endTime={new Date(Date.now() + 172800000)}
       />
       <div className="flex flex-col rounded-xl overflow-hidden theme-border">
-        <div className="relative w-full">
-          <Skeleton className="w-full aspect-[2.15/1] sm:aspect-[2.5/1] md:aspect-[3/1] rounded-b-none animate-none" />
+        <div className="relative w-full h-[400px]">
+          <ClientOnly>
+            {() => (
+              <KnowledgeGraph
+                data={mockKnowledgeGraphData}
+                className="w-full h-full"
+              />
+            )}
+          </ClientOnly>
         </div>
         <div className="py-4 bg-gradient-to-b from-[#060504] to-[#101010]">
           <AggregatedMetrics
