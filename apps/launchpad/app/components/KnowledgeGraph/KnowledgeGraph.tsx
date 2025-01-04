@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
 import {
   Claim,
@@ -13,20 +13,12 @@ import {
 } from '@0xintuition/1ui'
 
 import cytoscape from 'cytoscape'
-// Register Cytoscape extensions
-import cola from 'cytoscape-cola'
-import fcose from 'cytoscape-fcose'
-import popper from 'cytoscape-popper'
+// Import but don't register yet
 import CytoscapeComponent from 'react-cytoscapejs'
 import { createPortal } from 'react-dom'
 import { ClientOnly } from 'remix-utils/client-only'
 
 import { KnowledgeGraphData } from '../../types/knowledge-graph'
-
-// Register extensions
-cytoscape.use(cola)
-cytoscape.use(fcose)
-cytoscape.use(popper)
 
 interface KnowledgeGraphProps {
   data: KnowledgeGraphData
@@ -158,7 +150,7 @@ const graphStyles: cytoscape.Stylesheet[] = [
     },
   },
   {
-    selector: 'node:hover',
+    selector: 'node.hover',
     style: {
       'background-color': '#60a5fa',
       'border-color': '#93c5fd',
@@ -183,7 +175,7 @@ const graphStyles: cytoscape.Stylesheet[] = [
     },
   },
   {
-    selector: 'edge:hover',
+    selector: 'edge.hover',
     style: {
       'line-color': '#60a5fa',
       'target-arrow-color': '#60a5fa',
@@ -199,52 +191,48 @@ const graphStyles: cytoscape.Stylesheet[] = [
       },
       color: '#e2e8f0',
       'text-outline-width': 3,
+      'z-index': 998,
       'overlay-opacity': 0,
     },
   },
 ]
 
 const layout: cytoscape.LayoutOptions = {
-  name: 'cola',
+  name: 'fcose',
+  // Basic options
   animate: true,
   animationDuration: 2000,
   fit: false,
-  padding: 50,
-  nodeDimensionsIncludeLabels: false,
-  maxSimulationTime: 8000,
-  refresh: 1,
-  randomize: false,
-  avoidOverlap: true,
-  handleDisconnected: true,
-  convergenceThreshold: 0.001,
-  infinite: false,
-  // Cola-specific
-  edgeLength: (edge: cytoscape.EdgeSingular) => {
-    const stake = edge.data('triple')?.stake || 0
-    return 100 + (stake / 100) * 50
-  },
-  nodeSpacing: (node: cytoscape.NodeSingular) => {
+  padding: 200,
+  // Component handling
+  randomize: true, // Allow initial random positions
+  nodeDimensionsIncludeLabels: true,
+  uniformNodeDimensions: false,
+  packComponents: true, // Pack disconnected components
+  // Core layout options
+  quality: 'proof',
+  nodeRepulsion: (node: cytoscape.NodeSingular) => {
     const stake = node.data('atom')?.stake || 0
-    return 30 + (stake / 100) * 20
+    return 8000 + (stake / 100) * 2000 // Base repulsion + stake-based addition
   },
-  flow: undefined,
-  alignment: undefined,
-  gapInequalities: undefined,
-  centerGraph: true,
-  // Additional forces
-  jaccardEdgeLength: 200,
-  edgeSymDiffLength: 200,
-  edgeJaccardLength: 200,
-  unconstrIter: 50,
-  userConstIter: 50,
-  allConstIter: 50,
-  // Performance settings
-  maxNodeSpacing: 200,
-  gravity: 0.25,
-  numIter: 2500,
-  initialTemp: 500,
-  coolingFactor: 0.95,
-  minTemp: 1.0,
+  idealEdgeLength: (edge: cytoscape.EdgeSingular) => {
+    const stake = edge.data('triple')?.stake || 0
+    return 200 + (stake / 100) * 50 // Base length + stake-based addition
+  },
+  // Force parameters
+  edgeElasticity: 0.45,
+  nestingFactor: 0.1,
+  gravity: 0.25, // Light gravity to prevent extreme spreading
+  gravityRange: 3.8,
+  gravityCompound: 1.0,
+  gravityRangeCompound: 1.5,
+  // Performance
+  numIter: 7500,
+  initialEnergyOnIncremental: 0.5,
+  // Prevent overlapping
+  avoidOverlap: true,
+  avoidOverlapPadding: 10,
+  nodeSeparation: 200,
 }
 
 const getIdentityVariant = (type: string) => {
@@ -257,55 +245,264 @@ const getIdentityVariant = (type: string) => {
   }
 }
 
+interface CytoscapeGraphProps {
+  elements: cytoscape.ElementDefinition[]
+  stylesheet: cytoscape.Stylesheet[]
+  layout: cytoscape.LayoutOptions
+  onMount: (cy: cytoscape.Core) => void
+}
+
+// Lazy load extensions
+const loadExtensions = async () => {
+  if (typeof window === 'undefined') {
+    return
+  }
+
+  try {
+    // Load fcose first since we're using it for layout
+    const fcoseModule = await import('cytoscape-fcose')
+    if (!cytoscape.prototype.hasInitialised) {
+      cytoscape.use(fcoseModule.default)
+    }
+
+    // Load other extensions after
+    const [popperModule] = await Promise.all([import('cytoscape-popper')])
+
+    if (!cytoscape.prototype.hasInitialised) {
+      cytoscape.use(popperModule.default)
+      cytoscape.prototype.hasInitialised = true
+    }
+  } catch (error) {
+    console.error('Failed to load Cytoscape extensions:', error)
+    throw error
+  }
+}
+
+function CytoscapeGraph({
+  elements,
+  stylesheet,
+  layout,
+  onMount,
+}: CytoscapeGraphProps) {
+  const [isReady, setIsReady] = useState(false)
+  const [error, setError] = useState<Error | null>(null)
+
+  useEffect(() => {
+    console.log('Loading extensions...')
+    loadExtensions()
+      .then(() => {
+        console.log('Extensions loaded successfully')
+        setIsReady(true)
+      })
+      .catch((error) => {
+        console.error('Failed to load Cytoscape extensions:', error)
+        setError(error)
+      })
+  }, [])
+
+  if (error) {
+    return <div>Error loading graph: {error.message}</div>
+  }
+
+  if (!isReady) {
+    return <div>Loading graph...</div>
+  }
+
+  try {
+    return (
+      <CytoscapeComponent
+        elements={elements}
+        style={{ width: '100%', height: '100%' }}
+        stylesheet={stylesheet}
+        layout={layout}
+        cy={(cy) => {
+          console.log('Cytoscape instance mounted')
+          try {
+            onMount(cy)
+          } catch (error) {
+            console.error('Error in onMount callback:', error)
+            setError(error as Error)
+          }
+        }}
+      />
+    )
+  } catch (error) {
+    console.error('Error rendering CytoscapeComponent:', error)
+    return <div>Error rendering graph: {(error as Error).message}</div>
+  }
+}
+
 export default function KnowledgeGraph({
   data,
   className,
 }: KnowledgeGraphProps) {
   const cyRef = useRef<cytoscape.Core | null>(null)
   const [hoverState, setHoverState] = useState<HoverState | null>(null)
-  const animationFrameRef = useRef<number>()
+  const [error, setError] = useState<Error | null>(null)
 
-  console.log('Raw data:', {
-    atomsCount: data.atoms.length,
-    triplesCount: data.triples.length,
-    atoms: data.atoms,
-    triples: data.triples,
-  })
+  // Add error boundary
+  useEffect(() => {
+    const handleError = (event: ErrorEvent) => {
+      console.error('Global error caught:', event.error)
+      setError(event.error)
+    }
+    window.addEventListener('error', handleError)
+    return () => window.removeEventListener('error', handleError)
+  }, [])
 
-  // Transform data into Cytoscape format
-  const nodes = data.atoms.map((atom) => ({
-    group: 'nodes',
-    data: {
-      id: atom.id,
-      label: atom.label,
-      type: atom.type,
-      size: Math.max(40, Math.min(100, 40 + atom.stake / 20)),
-      image: atom.image,
-      atom,
-      zIndex: atom.type === 'Person' ? 3 : atom.type === 'Thing' ? 2 : 1,
-    },
-  }))
+  useEffect(() => {
+    try {
+      console.log('KnowledgeGraph mounted with data:', {
+        atomsCount: data.atoms.length,
+        triplesCount: data.triples.length,
+        atoms: data.atoms,
+        triples: data.triples,
+      })
+    } catch (err) {
+      console.error('Error logging data:', err)
+      setError(err as Error)
+    }
+  }, [data])
 
-  const edges = data.triples.map((triple) => ({
-    group: 'edges',
-    data: {
-      id: triple.id,
-      source: triple.subject_id,
-      target: triple.object_id,
-      label: triple.predicate.label,
-      width: Math.max(2, Math.min(8, 2 + triple.stake / 100)),
-      triple,
-    },
-  }))
+  // Transform data into Cytoscape format with error handling
+  const elements = useMemo(() => {
+    if (!data?.atoms || !data?.triples) {
+      console.error('Invalid data structure:', data)
+      return []
+    }
 
-  // Combine nodes and edges
-  const elements = [...nodes, ...edges]
+    try {
+      const nodes = data.atoms.map((atom) => ({
+        group: 'nodes' as const,
+        data: {
+          id: atom.id,
+          label: atom.label,
+          type: atom.type,
+          size: Math.max(40, Math.min(100, 40 + atom.stake / 20)),
+          image: atom.image,
+          atom,
+          zIndex: atom.type === 'Person' ? 3 : atom.type === 'Thing' ? 2 : 1,
+        },
+      }))
 
-  console.log('Transformed elements:', {
-    nodesCount: nodes.length,
-    edgesCount: edges.length,
-    elements,
-  })
+      const edges = data.triples.map((triple) => ({
+        group: 'edges' as const,
+        data: {
+          id: triple.id,
+          source: triple.subject_id,
+          target: triple.object_id,
+          label: triple.predicate.label,
+          width: Math.max(2, Math.min(8, 2 + triple.stake / 100)),
+          triple,
+        },
+      }))
+
+      console.log('Generated elements:', { nodes, edges })
+      return [...nodes, ...edges]
+    } catch (err) {
+      console.error('Error transforming data:', err)
+      setError(err as Error)
+      return []
+    }
+  }, [data])
+
+  if (error) {
+    return <div>Error: {error.message}</div>
+  }
+
+  const handleMount = (cy: cytoscape.Core) => {
+    try {
+      console.log('Setting up Cytoscape instance')
+      cyRef.current = cy
+
+      // Set initial zoom and center
+      cy.on('layoutstart', () => {
+        console.log('Layout starting')
+        cy.zoom(1.5)
+        cy.center()
+      })
+
+      cy.on('layoutstop', () => {
+        console.log('Layout complete')
+        cy.zoom(1.5)
+        cy.center()
+      })
+
+      // Set up event handlers after component is mounted
+      const handleMouseOver = (evt: CytoscapeEvent) => {
+        const target = evt.target
+        if (target.isNode()) {
+          target.addClass('hover')
+          target.connectedEdges().addClass('hover')
+        } else if (target.isEdge()) {
+          target.addClass('hover')
+          target.connectedNodes().addClass('hover')
+        }
+      }
+
+      const handleMouseOut = (evt: CytoscapeEvent) => {
+        const target = evt.target
+        if (target.isNode()) {
+          target.removeClass('hover')
+          target.connectedEdges().removeClass('hover')
+        } else if (target.isEdge()) {
+          target.removeClass('hover')
+          target.connectedNodes().removeClass('hover')
+        }
+      }
+
+      const handleClick = (evt: CytoscapeEvent, type: 'node' | 'edge') => {
+        const target = evt.target
+        // Get the rendered position in the viewport
+        const renderedPosition = target.renderedPosition()
+        const position = {
+          x: renderedPosition.x,
+          y: renderedPosition.y + (type === 'node' ? 20 : 10), // Offset to prevent overlap
+        }
+
+        console.log('Click event:', {
+          type,
+          position,
+          data: type === 'node' ? target.data('atom') : target.data('triple'),
+        })
+
+        if (type === 'node') {
+          setHoverState({
+            position,
+            type,
+            data: target.data('atom'),
+          })
+        } else {
+          setHoverState({
+            position,
+            type,
+            data: target.data('triple'),
+          })
+        }
+      }
+
+      // Enable dragging
+      cy.nodes().ungrabify(false)
+      cy.nodes().grabify()
+
+      cy.on('mouseover', 'node, edge', handleMouseOver)
+      cy.on('mouseout', 'node, edge', handleMouseOut)
+      cy.on('click', 'node', (evt: CytoscapeEvent) => handleClick(evt, 'node'))
+      cy.on('click', 'edge', (evt: CytoscapeEvent) => handleClick(evt, 'edge'))
+      cy.on('click', 'core', () => setHoverState(null))
+
+      // Return cleanup function
+      return () => {
+        cy.removeListener('mouseover')
+        cy.removeListener('mouseout')
+        cy.removeListener('click')
+        cy.removeListener('layoutstop')
+      }
+    } catch (error) {
+      console.error('Error in handleMount:', error)
+      setError(error as Error)
+    }
+  }
 
   const renderHoverContent = () => {
     if (!hoverState) {
@@ -423,119 +620,16 @@ export default function KnowledgeGraph({
     )
   }
 
-  // Add gentle floating animation
-  const animate = () => {
-    if (!cyRef.current) {
-      return
-    }
-
-    const zoom = cyRef.current.zoom()
-    // Scale factor increases as zoom decreases (1/zoom)
-    // Base amplitude of 0.5 pixels, scaling up to 2-3 pixels when zoomed out
-    const scaleFactor = Math.min(2 / zoom, 5)
-
-    cyRef.current.nodes().forEach((node: cytoscape.NodeSingular) => {
-      const pos = node.position()
-      const offset = {
-        x: Math.sin(Date.now() / 2000 + pos.x / 100) * scaleFactor,
-        y: Math.cos(Date.now() / 2000 + pos.y / 100) * scaleFactor,
-      }
-
-      node.animate({
-        position: { x: pos.x + offset.x, y: pos.y + offset.y },
-        duration: 1000,
-        easing: 'linear',
-        queue: false,
-      })
-    })
-
-    animationFrameRef.current = requestAnimationFrame(animate)
-  }
-
-  // Clean up animation on unmount
-  useEffect(() => {
-    return () => {
-      if (animationFrameRef.current) {
-        cancelAnimationFrame(animationFrameRef.current)
-      }
-    }
-  }, [])
-
   return (
     <>
       <div className={className}>
         <ClientOnly>
           {() => (
-            <CytoscapeComponent
+            <CytoscapeGraph
               elements={elements}
-              style={{ width: '100%', height: '100%' }}
               stylesheet={graphStyles}
               layout={layout}
-              cy={(cy: cytoscape.Core) => {
-                cyRef.current = cy
-
-                // Start animation after layout and set zoom once
-                cy.on('layoutstart', () => {
-                  // Set initial zoom before layout runs
-                  cy.zoom(1.5)
-                  cy.center()
-                })
-
-                cy.on('layoutstop', () => {
-                  // Ensure zoom stays at 1.5 after layout
-                  cy.zoom(1.5)
-                  cy.center()
-                  animate()
-                })
-
-                // Set up event handlers after component is mounted
-                const handleMouseOver = (
-                  evt: CytoscapeEvent,
-                  type: 'node' | 'edge',
-                ) => {
-                  const target = evt.target
-                  const position = {
-                    x: evt.renderedPosition.x,
-                    y: evt.renderedPosition.y,
-                  }
-
-                  if (type === 'node') {
-                    setHoverState({
-                      position,
-                      type,
-                      data: target.data('atom'),
-                    })
-                  } else {
-                    setHoverState({
-                      position,
-                      type,
-                      data: target.data('triple'),
-                    })
-                  }
-                }
-
-                const handleMouseOut = () => {
-                  setHoverState(null)
-                }
-
-                cy.on('mouseover', 'node', (evt: CytoscapeEvent) =>
-                  handleMouseOver(evt, 'node'),
-                )
-                cy.on('mouseover', 'edge', (evt: CytoscapeEvent) =>
-                  handleMouseOver(evt, 'edge'),
-                )
-                cy.on('mouseout', 'node, edge', handleMouseOut)
-
-                // Return cleanup function
-                return () => {
-                  cy.removeListener('mouseover')
-                  cy.removeListener('mouseout')
-                  cy.removeListener('layoutstop')
-                  if (animationFrameRef.current) {
-                    cancelAnimationFrame(animationFrameRef.current)
-                  }
-                }
-              }}
+              onMount={handleMount}
             />
           )}
         </ClientOnly>
@@ -543,18 +637,21 @@ export default function KnowledgeGraph({
       {hoverState &&
         createPortal(
           <div
-            className="absolute z-50 pointer-events-none"
+            className="fixed z-50 pointer-events-auto"
             style={{
-              left: hoverState.position.x,
-              top: hoverState.position.y,
+              left: `${hoverState.position.x}px`,
+              top: `${hoverState.position.y}px`,
+              transform: 'translate(-50%, 0)',
             }}
           >
-            <HoverCard open>
+            <HoverCard defaultOpen open>
               <HoverCardTrigger asChild>
                 <div />
               </HoverCardTrigger>
               <HoverCardContent
                 className={hoverState.type === 'node' ? 'w-80' : 'w-96'}
+                side="bottom"
+                align="center"
               >
                 {renderHoverContent()}
               </HoverCardContent>
