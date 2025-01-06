@@ -8,6 +8,7 @@ interface Point {
   x: number
   y: number
   previewPoint?: boolean
+  isRedeem?: boolean
 }
 
 interface CurveData {
@@ -17,6 +18,7 @@ interface CurveData {
   name: string
   totalAssets: number
   totalShares: number
+  previewPoints?: Point[]
 }
 
 interface LineChartProps {
@@ -264,11 +266,12 @@ export function LineChart({
 
         // Add preview area if applicable
         if (previewPoints.length >= 2) {
+          const isRedeem = previewPoints[0].isRedeem
           svg
             .append('path')
             .datum(previewPoints)
             .attr('class', 'area2')
-            .attr('fill', curve.color)
+            .attr('fill', isRedeem ? 'hsl(var(--destructive))' : curve.color)
             .attr('fill-opacity', 0.15)
             .attr('d', area)
         }

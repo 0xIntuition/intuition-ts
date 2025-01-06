@@ -7,6 +7,7 @@ export interface Point {
   userValue?: number
   previewPoint?: boolean
   previewValue?: number
+  isRedeem?: boolean
 }
 
 interface CurveConfig {
