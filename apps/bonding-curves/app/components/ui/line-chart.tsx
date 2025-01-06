@@ -64,7 +64,12 @@ export function LineChart({
     const defs = svg.append('defs')
 
     // Create base gradient template
-    const createGradient = (id: string, color: string, isPreview = false) => {
+    const createGradient = (
+      id: string,
+      color: string,
+      secondaryColor: string,
+      isPreview = false,
+    ) => {
       const gradient = defs
         .append('linearGradient')
         .attr('id', id)
@@ -73,12 +78,21 @@ export function LineChart({
         .attr('y1', '0%')
         .attr('y2', '100%')
 
+      // Top color with primary
       gradient
         .append('stop')
         .attr('offset', '0%')
         .attr('stop-color', color)
         .attr('stop-opacity', isPreview ? 0.5 : 0.4)
 
+      // Middle blend
+      gradient
+        .append('stop')
+        .attr('offset', '50%')
+        .attr('stop-color', secondaryColor)
+        .attr('stop-opacity', isPreview ? 0.35 : 0.25)
+
+      // Bottom fade
       gradient
         .append('stop')
         .attr('offset', '100%')
@@ -86,42 +100,56 @@ export function LineChart({
         .attr('stop-opacity', isPreview ? 0.2 : 0.1)
     }
 
-    // Create pattern for texture overlay
-    const pattern = defs
-      .append('pattern')
-      .attr('id', 'diagonalPattern')
-      .attr('patternUnits', 'userSpaceOnUse')
-      .attr('width', 8)
-      .attr('height', 8)
-      .attr('patternTransform', 'rotate(45)')
+    // Create pattern for texture overlay with dynamic color
+    const createPattern = (id: string, color: string) => {
+      const pattern = defs
+        .append('pattern')
+        .attr('id', id)
+        .attr('patternUnits', 'userSpaceOnUse')
+        .attr('width', 8)
+        .attr('height', 8)
+        .attr('patternTransform', 'rotate(45)')
 
-    pattern
-      .append('line')
-      .attr('x1', 0)
-      .attr('y1', 0)
-      .attr('x2', 0)
-      .attr('y2', 8)
-      .attr('stroke', '#fff')
-      .attr('stroke-width', 0.5)
-      .attr('stroke-opacity', 0.2)
+      pattern
+        .append('line')
+        .attr('x1', 0)
+        .attr('y1', 0)
+        .attr('x2', 0)
+        .attr('y2', 8)
+        .attr('stroke', color)
+        .attr('stroke-width', 0.5)
+        .attr('stroke-opacity', 0.3)
+    }
 
-    // Create glow filter
-    const filter = defs
-      .append('filter')
-      .attr('id', 'glow')
-      .attr('x', '-50%')
-      .attr('y', '-50%')
-      .attr('width', '200%')
-      .attr('height', '200%')
+    // Create patterns for different states
+    createPattern('basePattern', '#ffffff')
+    createPattern('depositPattern', '#00ff00')
+    createPattern('redeemPattern', '#ffff00')
 
-    filter
-      .append('feGaussianBlur')
-      .attr('stdDeviation', 2.5)
-      .attr('result', 'coloredBlur')
+    // Create glow filter with dynamic colors
+    const createGlowFilter = (id: string, color: string) => {
+      const filter = defs
+        .append('filter')
+        .attr('id', id)
+        .attr('x', '-50%')
+        .attr('y', '-50%')
+        .attr('width', '200%')
+        .attr('height', '200%')
 
-    const feMerge = filter.append('feMerge')
-    feMerge.append('feMergeNode').attr('in', 'coloredBlur')
-    feMerge.append('feMergeNode').attr('in', 'SourceGraphic')
+      filter
+        .append('feGaussianBlur')
+        .attr('stdDeviation', 2.5)
+        .attr('result', 'coloredBlur')
+
+      const feMerge = filter.append('feMerge')
+      feMerge.append('feMergeNode').attr('in', 'coloredBlur')
+      feMerge.append('feMergeNode').attr('in', 'SourceGraphic')
+    }
+
+    // Create glow filters for different states
+    createGlowFilter('baseGlow', '#ffffff')
+    createGlowFilter('depositGlow', '#00ff00')
+    createGlowFilter('redeemGlow', '#ffff00')
 
     // Create scales
     const xScale = d3
@@ -221,19 +249,30 @@ export function LineChart({
       .curve(d3.curveMonotoneX)
 
     data.forEach((curve) => {
-      // Create gradient for this curve
-      createGradient(`gradient-${curve.id}`, curve.color)
-      createGradient(`gradient-preview-${curve.id}`, curve.color, true)
+      // Create gradients with secondary colors
+      createGradient(`gradient-${curve.id}`, curve.color, '#ffffff') // Base: blue + white
+      createGradient(
+        `gradient-preview-${curve.id}`,
+        curve.color,
+        '#00ff00',
+        true,
+      ) // Deposit: blue + green
+      createGradient(
+        'gradient-preview-redeem',
+        'hsl(var(--destructive))',
+        '#ffff00',
+        true,
+      ) // Redeem: red + yellow
 
-      // Add the glow effect
+      // Add the glow effect with appropriate color
       svg
         .append('path')
         .datum(curve.points)
         .attr('fill', 'none')
-        .attr('stroke', curve.color)
+        .attr('stroke', '#ffffff')
         .attr('stroke-width', 4)
         .attr('stroke-opacity', 0.3)
-        .attr('filter', 'url(#glow)')
+        .attr('filter', 'url(#baseGlow)')
         .attr('d', line)
 
       // Add the main line with enhanced stroke
@@ -367,7 +406,7 @@ export function LineChart({
             .append('path')
             .datum(basePoints)
             .attr('class', 'area1-pattern')
-            .attr('fill', 'url(#diagonalPattern)')
+            .attr('fill', 'url(#basePattern)')
             .attr('d', area)
         }
 
@@ -378,10 +417,16 @@ export function LineChart({
             ? 'hsl(var(--destructive))'
             : curve.color
 
-          // Create preview gradient if it doesn't exist
-          if (isRedeem) {
-            createGradient('gradient-preview-redeem', previewColor, true)
-          }
+          // Add glow effect for preview area
+          svg
+            .append('path')
+            .datum(previewPoints)
+            .attr('fill', 'none')
+            .attr('stroke', isRedeem ? '#ffff00' : '#00ff00')
+            .attr('stroke-width', 3)
+            .attr('stroke-opacity', 0.4)
+            .attr('filter', isRedeem ? 'url(#redeemGlow)' : 'url(#depositGlow)')
+            .attr('d', line)
 
           svg
             .append('path')
@@ -400,7 +445,10 @@ export function LineChart({
             .append('path')
             .datum(previewPoints)
             .attr('class', 'area2-pattern')
-            .attr('fill', 'url(#diagonalPattern)')
+            .attr(
+              'fill',
+              isRedeem ? 'url(#redeemPattern)' : 'url(#depositPattern)',
+            )
             .attr('d', isRedeem ? redeemArea : area)
         }
       }
