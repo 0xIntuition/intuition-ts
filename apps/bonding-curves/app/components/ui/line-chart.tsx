@@ -149,6 +149,14 @@ export function LineChart({
       .y1((d) => yScale(d.y))
       .curve(d3.curveMonotoneX)
 
+    // Create redeem area generator
+    const redeemArea = d3
+      .area<Point>()
+      .x((d) => xScale(d.x))
+      .y0((d) => yScale(d.y)) // Start from the curve
+      .y1(height) // Fill down to the bottom
+      .curve(d3.curveMonotoneX)
+
     data.forEach((curve) => {
       // Add the line
       const path = svg
@@ -220,17 +228,29 @@ export function LineChart({
         const previewPoints = scaledPreviewAmount
           ? [
               boundaryPoint,
-              ...curve.points.filter(
-                (p) =>
-                  p.x > scaledTotalAssets &&
-                  p.x <= scaledTotalAssets + scaledPreviewAmount,
-              ),
+              ...(curve.previewPoints?.[0]?.isRedeem
+                ? curve.points
+                    .filter(
+                      (p) =>
+                        p.x < scaledTotalAssets &&
+                        p.x >=
+                          scaledTotalAssets - Math.abs(scaledPreviewAmount),
+                    )
+                    .reverse()
+                : curve.points.filter(
+                    (p) =>
+                      p.x > scaledTotalAssets &&
+                      p.x <= scaledTotalAssets + scaledPreviewAmount,
+                  )),
             ]
           : []
 
         // If we have preview points, add a boundary point at the end
         if (previewPoints.length > 0 && scaledPreviewAmount) {
-          const endX = scaledTotalAssets + scaledPreviewAmount
+          const isRedeem = curve.previewPoints?.[0]?.isRedeem
+          const endX =
+            scaledTotalAssets +
+            (isRedeem ? -Math.abs(scaledPreviewAmount) : scaledPreviewAmount)
           const endIndex = curve.points.findIndex((p) => p.x > endX)
           if (endIndex > 0) {
             const endPoint1 = curve.points[endIndex - 1]
@@ -266,14 +286,14 @@ export function LineChart({
 
         // Add preview area if applicable
         if (previewPoints.length >= 2) {
-          const isRedeem = previewPoints[0].isRedeem
+          const isRedeem = curve.previewPoints?.[0]?.isRedeem
           svg
             .append('path')
             .datum(previewPoints)
             .attr('class', 'area2')
             .attr('fill', isRedeem ? 'hsl(var(--destructive))' : curve.color)
             .attr('fill-opacity', 0.15)
-            .attr('d', area)
+            .attr('d', isRedeem ? redeemArea : area)
         }
       }
     })

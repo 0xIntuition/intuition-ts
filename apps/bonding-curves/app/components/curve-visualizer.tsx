@@ -197,7 +197,7 @@ export function CurveVisualizer() {
       amount: number,
       type: 'deposit' | 'mint' | 'withdraw' | 'redeem',
     ) => {
-      const amountWei = parseEther(amount.toString())
+      const amountWei = parseEther(amount.toFixed(18))
       const totalAssetsWei = contract.totalAssets
       const totalSharesWei = contract.totalShares
 
@@ -212,10 +212,9 @@ export function CurveVisualizer() {
               args: [amountWei, totalAssetsWei, totalSharesWei] as const,
             })
             result = BigInt(response as unknown as string)
-            console.log('result', result)
             return {
-              x: amount,
-              y: Number(formatEther(result)),
+              x: Number(formatEther(totalAssetsWei + amountWei)),
+              y: Number(formatEther(totalSharesWei + result)),
               previewPoint: true,
             }
           }
@@ -255,11 +254,19 @@ export function CurveVisualizer() {
               args: [amountWei, totalSharesWei, totalAssetsWei] as const,
             })
             result = BigInt(response as unknown as string)
-            return {
-              x: Number(formatEther(result)),
-              y: amount,
+            const previewPoint = {
+              x: Number(formatEther(totalAssetsWei - result)),
+              y: Number(formatEther(totalSharesWei - amountWei)),
               previewPoint: true,
             }
+            console.log('Redeem preview calculation:', {
+              totalAssetsWei: totalAssetsWei.toString(),
+              totalSharesWei: totalSharesWei.toString(),
+              amountWei: amountWei.toString(),
+              result: result.toString(),
+              previewPoint,
+            })
+            return previewPoint
           }
         }
       } catch (err) {
@@ -273,11 +280,14 @@ export function CurveVisualizer() {
   const handlePreview = useCallback(
     async (
       type: 'deposit' | 'mint' | 'withdraw' | 'redeem',
-      amount: number,
+      amountWei: bigint,
     ) => {
-      console.log('handlePreview called with:', { type, amount })
-      if (!selectedCurveId || amount <= 0) {
-        console.log('Early return due to:', { selectedCurveId, amount })
+      console.log('handlePreview called with:', {
+        type,
+        amountWei: amountWei.toString(),
+      })
+      if (!selectedCurveId || amountWei <= 0n) {
+        console.log('Early return due to:', { selectedCurveId, amountWei })
         return
       }
 
@@ -288,38 +298,13 @@ export function CurveVisualizer() {
       }
 
       try {
-        let previewPoint
-        let assetsToRedeem: bigint | undefined
-        if (type === 'redeem') {
-          // For redeem, we need to calculate assets returned
-          // Convert scientific notation to fixed decimal string
-          const fixedAmount = amount.toFixed(18)
-          console.log('Redeem fixedAmount:', fixedAmount)
-          const shares = parseEther(fixedAmount)
-          console.log('Redeem shares:', shares.toString())
-          const assets = await publicClient.readContract({
-            address: contract.address,
-            abi: contract.abi,
-            functionName: 'previewRedeem',
-            args: [shares, contract.totalShares, contract.totalAssets] as const,
-          })
-          assetsToRedeem = BigInt(assets.toString())
-          console.log('assetsToRedeem:', assetsToRedeem.toString())
-
-          previewPoint = {
-            x: Number(formatEther(contract.totalAssets - assetsToRedeem)),
-            y: Number(formatEther(contract.totalShares - shares)),
-            previewPoint: true,
-            isRedeem: true,
-          }
-          console.log('Redeem previewPoint:', previewPoint)
-        } else {
-          // For deposit, use existing simulatePreview logic
-          previewPoint = await simulatePreview(contract, amount, type)
-        }
-
-        if (!previewPoint) {
-          console.log('No previewPoint generated')
+        const previewPoints = await simulatePreview(
+          contract,
+          Number(formatEther(amountWei)),
+          type,
+        )
+        if (!previewPoints) {
+          console.log('No previewPoints generated')
           return
         }
 
@@ -330,48 +315,30 @@ export function CurveVisualizer() {
               const totalSharesNum = Number(formatEther(c.totalShares))
               console.log('Current totals:', { totalAssetsNum, totalSharesNum })
 
-              if (type === 'redeem' && assetsToRedeem) {
-                console.log('Setting up redeem preview with:', {
-                  assetsToRedeem: assetsToRedeem.toString(),
-                })
-                // For redeem, we want to show the area from totalAssets backwards
-                const update = {
-                  ...c,
-                  previewPoints: [
-                    {
-                      x: totalAssetsNum,
-                      y: totalSharesNum,
-                      previewPoint: true,
-                      isRedeem: true,
-                    },
-                    previewPoint,
-                  ],
-                  scaledPreviewAmount: -assetsToRedeem,
-                  scaledTotalAssets: c.totalAssets,
-                }
-                console.log(
-                  'Redeem contract update:',
-                  JSON.stringify({
-                    previewPoints: update.previewPoints,
-                    scaledPreviewAmount: update.scaledPreviewAmount.toString(),
-                  }),
-                )
-                return update
-              } else {
-                // For deposit, we want to show the area from totalAssets forwards
-                return {
-                  ...c,
-                  previewPoints: [
-                    {
-                      x: totalAssetsNum,
-                      y: totalSharesNum,
-                      previewPoint: true,
-                    },
-                    previewPoint,
-                  ],
-                  scaledPreviewAmount: parseEther(amount.toString()),
-                  scaledTotalAssets: c.totalAssets,
-                }
+              // For redeem, we want to use the assets we'll get back
+              const previewAmount =
+                type === 'redeem'
+                  ? parseEther((totalAssetsNum - previewPoints.x).toFixed(18))
+                  : amountWei
+
+              return {
+                ...c,
+                previewPoints: [
+                  {
+                    x: totalAssetsNum,
+                    y: totalSharesNum,
+                    previewPoint: true,
+                    isRedeem: type === 'redeem',
+                  },
+                  previewPoints && {
+                    x: previewPoints.x,
+                    y: previewPoints.y,
+                    previewPoint: true,
+                    isRedeem: type === 'redeem',
+                  },
+                ],
+                scaledPreviewAmount: previewAmount,
+                scaledTotalAssets: c.totalAssets,
               }
             }
             return c
@@ -381,7 +348,7 @@ export function CurveVisualizer() {
         console.error('Error in handlePreview:', err)
       }
     },
-    [selectedCurveId, deployedContracts, simulatePreview, publicClient],
+    [selectedCurveId, deployedContracts, simulatePreview],
   )
 
   const parseInputValue = (value: string): bigint => {
@@ -417,7 +384,7 @@ export function CurveVisualizer() {
       const amount = parseInputValue(value)
       setDepositAmount(() => amount)
       setRedeemAmount(() => 0n) // Clear redeem preview
-      handlePreview('deposit', Number(formatEther(amount)))
+      handlePreview('deposit', amount)
     },
     [handlePreview],
   )
@@ -436,7 +403,7 @@ export function CurveVisualizer() {
       console.log('Parsed amount:', amount.toString())
       setRedeemAmount(() => amount)
       setDepositAmount(() => 0n) // Clear deposit preview
-      handlePreview('redeem', Number(formatEther(amount)))
+      handlePreview('redeem', amount)
     },
     [handlePreview],
   )
