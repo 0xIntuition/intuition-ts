@@ -60,6 +60,69 @@ export function LineChart({
       .append('g')
       .attr('transform', `translate(${margin.left},${margin.top})`)
 
+    // Add SVG definitions for visual effects
+    const defs = svg.append('defs')
+
+    // Create base gradient template
+    const createGradient = (id: string, color: string, isPreview = false) => {
+      const gradient = defs
+        .append('linearGradient')
+        .attr('id', id)
+        .attr('x1', '0%')
+        .attr('x2', '0%')
+        .attr('y1', '0%')
+        .attr('y2', '100%')
+
+      gradient
+        .append('stop')
+        .attr('offset', '0%')
+        .attr('stop-color', color)
+        .attr('stop-opacity', isPreview ? 0.5 : 0.4)
+
+      gradient
+        .append('stop')
+        .attr('offset', '100%')
+        .attr('stop-color', color)
+        .attr('stop-opacity', isPreview ? 0.2 : 0.1)
+    }
+
+    // Create pattern for texture overlay
+    const pattern = defs
+      .append('pattern')
+      .attr('id', 'diagonalPattern')
+      .attr('patternUnits', 'userSpaceOnUse')
+      .attr('width', 8)
+      .attr('height', 8)
+      .attr('patternTransform', 'rotate(45)')
+
+    pattern
+      .append('line')
+      .attr('x1', 0)
+      .attr('y1', 0)
+      .attr('x2', 0)
+      .attr('y2', 8)
+      .attr('stroke', '#fff')
+      .attr('stroke-width', 0.5)
+      .attr('stroke-opacity', 0.2)
+
+    // Create glow filter
+    const filter = defs
+      .append('filter')
+      .attr('id', 'glow')
+      .attr('x', '-50%')
+      .attr('y', '-50%')
+      .attr('width', '200%')
+      .attr('height', '200%')
+
+    filter
+      .append('feGaussianBlur')
+      .attr('stdDeviation', 2.5)
+      .attr('result', 'coloredBlur')
+
+    const feMerge = filter.append('feMerge')
+    feMerge.append('feMergeNode').attr('in', 'coloredBlur')
+    feMerge.append('feMergeNode').attr('in', 'SourceGraphic')
+
     // Create scales
     const xScale = d3
       .scaleLinear()
@@ -158,13 +221,29 @@ export function LineChart({
       .curve(d3.curveMonotoneX)
 
     data.forEach((curve) => {
-      // Add the line
+      // Create gradient for this curve
+      createGradient(`gradient-${curve.id}`, curve.color)
+      createGradient(`gradient-preview-${curve.id}`, curve.color, true)
+
+      // Add the glow effect
+      svg
+        .append('path')
+        .datum(curve.points)
+        .attr('fill', 'none')
+        .attr('stroke', curve.color)
+        .attr('stroke-width', 4)
+        .attr('stroke-opacity', 0.3)
+        .attr('filter', 'url(#glow)')
+        .attr('d', line)
+
+      // Add the main line with enhanced stroke
       const path = svg
         .append('path')
         .datum(curve.points)
         .attr('fill', 'none')
         .attr('stroke', curve.color)
-        .attr('stroke-width', 2)
+        .attr('stroke-width', 1.5)
+        .attr('stroke-opacity', 0.8)
 
       // Only animate on initial render, not during preview updates
       if (!previewAmount) {
@@ -275,24 +354,53 @@ export function LineChart({
 
         // Add base area (total assets)
         if (basePoints.length >= 1) {
+          // Add base fill with gradient
           svg
             .append('path')
             .datum(basePoints)
             .attr('class', 'area1')
-            .attr('fill', curve.color)
-            .attr('fill-opacity', 0.3)
+            .attr('fill', `url(#gradient-${curve.id})`)
+            .attr('d', area)
+
+          // Add pattern overlay
+          svg
+            .append('path')
+            .datum(basePoints)
+            .attr('class', 'area1-pattern')
+            .attr('fill', 'url(#diagonalPattern)')
             .attr('d', area)
         }
 
         // Add preview area if applicable
         if (previewPoints.length >= 2) {
           const isRedeem = curve.previewPoints?.[0]?.isRedeem
+          const previewColor = isRedeem
+            ? 'hsl(var(--destructive))'
+            : curve.color
+
+          // Create preview gradient if it doesn't exist
+          if (isRedeem) {
+            createGradient('gradient-preview-redeem', previewColor, true)
+          }
+
           svg
             .append('path')
             .datum(previewPoints)
             .attr('class', 'area2')
-            .attr('fill', isRedeem ? 'hsl(var(--destructive))' : curve.color)
-            .attr('fill-opacity', 0.15)
+            .attr(
+              'fill',
+              isRedeem
+                ? 'url(#gradient-preview-redeem)'
+                : `url(#gradient-preview-${curve.id})`,
+            )
+            .attr('d', isRedeem ? redeemArea : area)
+
+          // Add pattern overlay for preview area
+          svg
+            .append('path')
+            .datum(previewPoints)
+            .attr('class', 'area2-pattern')
+            .attr('fill', 'url(#diagonalPattern)')
             .attr('d', isRedeem ? redeemArea : area)
         }
       }
