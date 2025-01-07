@@ -12,8 +12,8 @@ beforeAll(async () => {
   address = await deployAndInit()
   multiVault = new Multivault(
     {
-      public: publicClient,
-      wallet: walletClient,
+      publicClient,
+      walletClient,
     },
     address,
   )
