@@ -36,6 +36,27 @@ const formatScientific = (n: number): string => {
   return `${mantissa.toFixed(2)}e${exp}`
 }
 
+// Create evenly spaced points for edge highlights
+const createEdgePoints = (
+  points: Point[],
+  startX: number,
+  endX: number,
+  count = 10,
+): Point[] => {
+  const step = (endX - startX) / (count - 1)
+  return Array.from({ length: count }, (_, i) => {
+    const x = startX + step * i
+    // Find the closest existing points to interpolate y value
+    const idx = points.findIndex((p) => p.x > x)
+    if (idx === 0) return { x, y: points[0].y }
+    if (idx === -1) return { x, y: points[points.length - 1].y }
+    const p1 = points[idx - 1]
+    const p2 = points[idx]
+    const t = (x - p1.x) / (p2.x - p1.x)
+    return { x, y: p1.y + t * (p2.y - p1.y) }
+  })
+}
+
 export function LineChart({
   data,
   xLabel,
@@ -481,13 +502,17 @@ export function LineChart({
             .attr('fill', `url(#gradient-${curve.id})`)
             .attr('d', area)
 
-          // Add edge highlights
+          // Calculate fixed width for edge highlights (5% of total width)
+          const edgeWidth = (xScale.domain()[1] - xScale.domain()[0]) * 0.05
+
+          // Add edge highlights with evenly spaced points
           svg
             .append('path')
             .datum(
-              basePoints.slice(
-                0,
-                Math.max(2, Math.floor(basePoints.length * 0.05)),
+              createEdgePoints(
+                basePoints,
+                basePoints[0].x,
+                basePoints[0].x + edgeWidth,
               ),
             )
             .attr('fill', 'url(#highlight-base-left)')
@@ -496,8 +521,10 @@ export function LineChart({
           svg
             .append('path')
             .datum(
-              basePoints.slice(
-                -Math.max(2, Math.floor(basePoints.length * 0.05)),
+              createEdgePoints(
+                basePoints,
+                boundaryPoint.x - edgeWidth,
+                boundaryPoint.x,
               ),
             )
             .attr('fill', 'url(#highlight-base-right)')
@@ -515,10 +542,7 @@ export function LineChart({
         // Add preview area if applicable
         if (previewPoints.length >= 2) {
           const isRedeem = curve.previewPoints?.[0]?.isRedeem
-          const edgePoints = Math.max(
-            2,
-            Math.floor(previewPoints.length * 0.05),
-          )
+          const edgeWidth = (xScale.domain()[1] - xScale.domain()[0]) * 0.05
 
           if (isRedeem) {
             // Create redeem edge gradients
@@ -526,8 +550,8 @@ export function LineChart({
               const gradient = defs
                 .append('linearGradient')
                 .attr('id', id)
-                .attr('x1', isLeft ? '0%' : '100%')
-                .attr('x2', isLeft ? '100%' : '0%')
+                .attr('x1', isLeft ? '100%' : '0%')
+                .attr('x2', isLeft ? '0%' : '100%')
                 .attr('y1', '0%')
                 .attr('y2', '0%')
 
@@ -536,25 +560,25 @@ export function LineChart({
                   .append('stop')
                   .attr('offset', '0%')
                   .attr('stop-color', '#ffff00')
-                  .attr('stop-opacity', 0.0)
+                  .attr('stop-opacity', 0.5)
 
                 gradient
                   .append('stop')
                   .attr('offset', '100%')
                   .attr('stop-color', '#ffff00')
-                  .attr('stop-opacity', 0.5)
+                  .attr('stop-opacity', 0.0)
               } else {
                 gradient
                   .append('stop')
                   .attr('offset', '0%')
                   .attr('stop-color', '#ffff00')
-                  .attr('stop-opacity', 0.0)
+                  .attr('stop-opacity', 0.5)
 
                 gradient
                   .append('stop')
                   .attr('offset', '100%')
                   .attr('stop-color', '#ffff00')
-                  .attr('stop-opacity', 0.5)
+                  .attr('stop-opacity', 0.0)
               }
             }
 
@@ -570,16 +594,32 @@ export function LineChart({
               .attr('fill', 'url(#gradient-preview-redeem)')
               .attr('d', redeemArea)
 
-            // Add edge highlights
+            // Add edge highlights with evenly spaced points for redeem
+            const endX = boundaryPoint.x - (scaledPreviewAmount ?? 0)
+
+            // Right edge (at the boundary point)
             svg
               .append('path')
-              .datum(previewPoints.slice(0, edgePoints))
+              .datum(
+                createEdgePoints(
+                  [...previewPoints].reverse(), // Reverse points for correct y-value interpolation
+                  boundaryPoint.x - edgeWidth,
+                  boundaryPoint.x,
+                ),
+              )
               .attr('fill', 'url(#highlight-redeem-left)')
               .attr('d', redeemArea)
 
+            // Left edge (at the end point)
             svg
               .append('path')
-              .datum(previewPoints.slice(-edgePoints))
+              .datum(
+                createEdgePoints(
+                  [...previewPoints].reverse(), // Reverse points for correct y-value interpolation
+                  endX,
+                  endX + edgeWidth,
+                ),
+              )
               .attr('fill', 'url(#highlight-redeem-right)')
               .attr('d', redeemArea)
 
@@ -640,16 +680,23 @@ export function LineChart({
               .attr('fill', `url(#gradient-preview-${curve.id})`)
               .attr('d', area)
 
-            // Add edge highlights
+            // Add edge highlights with evenly spaced points
             svg
               .append('path')
-              .datum(previewPoints.slice(0, edgePoints))
+              .datum(
+                createEdgePoints(
+                  previewPoints,
+                  boundaryPoint.x,
+                  boundaryPoint.x + edgeWidth,
+                ),
+              )
               .attr('fill', 'url(#highlight-deposit-left)')
               .attr('d', area)
 
+            const endX = boundaryPoint.x + (scaledPreviewAmount ?? 0)
             svg
               .append('path')
-              .datum(previewPoints.slice(-edgePoints))
+              .datum(createEdgePoints(previewPoints, endX - edgeWidth, endX))
               .attr('fill', 'url(#highlight-deposit-right)')
               .attr('d', area)
 
