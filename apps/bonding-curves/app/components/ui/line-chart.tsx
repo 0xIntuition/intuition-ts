@@ -432,12 +432,75 @@ export function LineChart({
 
         // Add base area (total assets)
         if (basePoints.length >= 1) {
+          // Create base edge gradients
+          const createBaseEdgeGradient = (id: string, isLeft: boolean) => {
+            const gradient = defs
+              .append('linearGradient')
+              .attr('id', id)
+              .attr('x1', isLeft ? '0%' : '100%')
+              .attr('x2', isLeft ? '100%' : '0%')
+              .attr('y1', '0%')
+              .attr('y2', '0%')
+
+            if (isLeft) {
+              gradient
+                .append('stop')
+                .attr('offset', '0%')
+                .attr('stop-color', curve.color)
+                .attr('stop-opacity', 0.5)
+
+              gradient
+                .append('stop')
+                .attr('offset', '100%')
+                .attr('stop-color', curve.color)
+                .attr('stop-opacity', 0.0)
+            } else {
+              gradient
+                .append('stop')
+                .attr('offset', '0%')
+                .attr('stop-color', curve.color)
+                .attr('stop-opacity', 0.5)
+
+              gradient
+                .append('stop')
+                .attr('offset', '100%')
+                .attr('stop-color', curve.color)
+                .attr('stop-opacity', 0.0)
+            }
+          }
+
+          // Create gradients for both edges
+          createBaseEdgeGradient('highlight-base-left', true)
+          createBaseEdgeGradient('highlight-base-right', false)
+
           // Add base fill with gradient
           svg
             .append('path')
             .datum(basePoints)
             .attr('class', 'area1')
             .attr('fill', `url(#gradient-${curve.id})`)
+            .attr('d', area)
+
+          // Add edge highlights
+          svg
+            .append('path')
+            .datum(
+              basePoints.slice(
+                0,
+                Math.max(2, Math.floor(basePoints.length * 0.05)),
+              ),
+            )
+            .attr('fill', 'url(#highlight-base-left)')
+            .attr('d', area)
+
+          svg
+            .append('path')
+            .datum(
+              basePoints.slice(
+                -Math.max(2, Math.floor(basePoints.length * 0.05)),
+              ),
+            )
+            .attr('fill', 'url(#highlight-base-right)')
             .attr('d', area)
 
           // Add pattern overlay
@@ -458,16 +521,8 @@ export function LineChart({
           )
 
           if (isRedeem) {
-            // Add main preview area first (with normal gradient)
-            svg
-              .append('path')
-              .datum(previewPoints)
-              .attr('class', 'area2')
-              .attr('fill', 'url(#gradient-preview-redeem)')
-              .attr('d', redeemArea)
-
-            // Create edge highlight gradients
-            const createEdgeGradient = (id: string, isLeft: boolean) => {
+            // Create redeem edge gradients
+            const createRedeemEdgeGradient = (id: string, isLeft: boolean) => {
               const gradient = defs
                 .append('linearGradient')
                 .attr('id', id)
@@ -487,7 +542,7 @@ export function LineChart({
                   .append('stop')
                   .attr('offset', '100%')
                   .attr('stop-color', '#ffff00')
-                  .attr('stop-opacity', 0.4)
+                  .attr('stop-opacity', 0.5)
               } else {
                 gradient
                   .append('stop')
@@ -499,27 +554,33 @@ export function LineChart({
                   .append('stop')
                   .attr('offset', '100%')
                   .attr('stop-color', '#ffff00')
-                  .attr('stop-opacity', 0.4)
+                  .attr('stop-opacity', 0.5)
               }
             }
 
             // Create gradients for both edges
-            createEdgeGradient('highlight-left', true)
-            createEdgeGradient('highlight-right', false)
+            createRedeemEdgeGradient('highlight-redeem-left', true)
+            createRedeemEdgeGradient('highlight-redeem-right', false)
 
-            // Add edge highlights that will overlay the main area
-            // Left edge highlight
+            // Add main preview area first
+            svg
+              .append('path')
+              .datum(previewPoints)
+              .attr('class', 'area2')
+              .attr('fill', 'url(#gradient-preview-redeem)')
+              .attr('d', redeemArea)
+
+            // Add edge highlights
             svg
               .append('path')
               .datum(previewPoints.slice(0, edgePoints))
-              .attr('fill', 'url(#highlight-left)')
+              .attr('fill', 'url(#highlight-redeem-left)')
               .attr('d', redeemArea)
 
-            // Right edge highlight
             svg
               .append('path')
               .datum(previewPoints.slice(-edgePoints))
-              .attr('fill', 'url(#highlight-right)')
+              .attr('fill', 'url(#highlight-redeem-right)')
               .attr('d', redeemArea)
 
             // Add pattern overlay
@@ -530,7 +591,48 @@ export function LineChart({
               .attr('fill', 'url(#redeemPattern)')
               .attr('d', redeemArea)
           } else {
-            // Non-redeem preview area (unchanged)
+            // Create deposit edge gradients
+            const createDepositEdgeGradient = (id: string, isLeft: boolean) => {
+              const gradient = defs
+                .append('linearGradient')
+                .attr('id', id)
+                .attr('x1', isLeft ? '0%' : '100%')
+                .attr('x2', isLeft ? '100%' : '0%')
+                .attr('y1', '0%')
+                .attr('y2', '0%')
+
+              if (isLeft) {
+                gradient
+                  .append('stop')
+                  .attr('offset', '0%')
+                  .attr('stop-color', '#00ff00')
+                  .attr('stop-opacity', 0.5)
+
+                gradient
+                  .append('stop')
+                  .attr('offset', '100%')
+                  .attr('stop-color', '#00ff00')
+                  .attr('stop-opacity', 0.0)
+              } else {
+                gradient
+                  .append('stop')
+                  .attr('offset', '0%')
+                  .attr('stop-color', '#00ff00')
+                  .attr('stop-opacity', 0.5)
+
+                gradient
+                  .append('stop')
+                  .attr('offset', '100%')
+                  .attr('stop-color', '#00ff00')
+                  .attr('stop-opacity', 0.0)
+              }
+            }
+
+            // Create gradients for both edges
+            createDepositEdgeGradient('highlight-deposit-left', true)
+            createDepositEdgeGradient('highlight-deposit-right', false)
+
+            // Add main preview area
             svg
               .append('path')
               .datum(previewPoints)
@@ -538,6 +640,20 @@ export function LineChart({
               .attr('fill', `url(#gradient-preview-${curve.id})`)
               .attr('d', area)
 
+            // Add edge highlights
+            svg
+              .append('path')
+              .datum(previewPoints.slice(0, edgePoints))
+              .attr('fill', 'url(#highlight-deposit-left)')
+              .attr('d', area)
+
+            svg
+              .append('path')
+              .datum(previewPoints.slice(-edgePoints))
+              .attr('fill', 'url(#highlight-deposit-right)')
+              .attr('d', area)
+
+            // Add pattern overlay
             svg
               .append('path')
               .datum(previewPoints)
