@@ -40,12 +40,7 @@ export function AggregateIQ({ totalIQ }: AggregateIQProps) {
       transition={{ duration: 0.5 }}
       whileHover={{ y: -5 }}
     >
-      <Card
-        className="border-none overflow-hidden rounded-2xl shadow-pop-xl relative"
-        style={{
-          background: 'linear-gradient(135deg, #F5F5F5, #FFFFFF)',
-        }}
-      >
+      <Card className="theme-border rounded-lg overflow-hidden shadow-xl bg-background">
         <div className="absolute inset-0 bg-gradient-subtle opacity-70" />
         <div className="absolute inset-0 shadow-inner-pop" />
         <CardContent className="p-10 relative">
@@ -73,7 +68,8 @@ export function AggregateIQ({ totalIQ }: AggregateIQProps) {
             <span
               className="text-7xl font-bold tracking-tight"
               style={{
-                background: 'linear-gradient(to right, #2C2C2C, #D4A181)',
+                background:
+                  'linear-gradient(to right, var(--gradient-start, #E5E5E5), var(--gradient-end, #B88E6E))',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
                 textShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
