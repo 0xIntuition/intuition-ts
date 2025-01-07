@@ -69,56 +69,95 @@ export function LineChart({
       color: string,
       secondaryColor: string,
       isPreview = false,
+      isRedeem = false,
     ) => {
       const gradient = defs
         .append('linearGradient')
         .attr('id', id)
         .attr('x1', '0%')
-        .attr('x2', '0%')
+        .attr('x2', isRedeem ? '100%' : '0%')
         .attr('y1', '0%')
         .attr('y2', '100%')
 
-      // Top color with primary
-      gradient
-        .append('stop')
-        .attr('offset', '0%')
-        .attr('stop-color', color)
-        .attr('stop-opacity', isPreview ? 0.5 : 0.4)
+      if (isRedeem) {
+        // Edge-focused gradient for redeem
+        gradient
+          .append('stop')
+          .attr('offset', '0%')
+          .attr('stop-color', secondaryColor)
+          .attr('stop-opacity', 0.7)
 
-      // Middle blend
-      gradient
-        .append('stop')
-        .attr('offset', '50%')
-        .attr('stop-color', secondaryColor)
-        .attr('stop-opacity', isPreview ? 0.35 : 0.25)
+        gradient
+          .append('stop')
+          .attr('offset', '15%')
+          .attr('stop-color', color)
+          .attr('stop-opacity', 0.5)
 
-      // Bottom fade
-      gradient
-        .append('stop')
-        .attr('offset', '100%')
-        .attr('stop-color', color)
-        .attr('stop-opacity', isPreview ? 0.2 : 0.1)
+        gradient
+          .append('stop')
+          .attr('offset', '85%')
+          .attr('stop-color', color)
+          .attr('stop-opacity', 0.5)
+
+        gradient
+          .append('stop')
+          .attr('offset', '100%')
+          .attr('stop-color', secondaryColor)
+          .attr('stop-opacity', 0.7)
+      } else {
+        // Original vertical gradient for non-redeem
+        gradient
+          .append('stop')
+          .attr('offset', '0%')
+          .attr('stop-color', color)
+          .attr('stop-opacity', isPreview ? 0.5 : 0.4)
+
+        gradient
+          .append('stop')
+          .attr('offset', '50%')
+          .attr('stop-color', secondaryColor)
+          .attr('stop-opacity', isPreview ? 0.35 : 0.25)
+
+        gradient
+          .append('stop')
+          .attr('offset', '100%')
+          .attr('stop-color', color)
+          .attr('stop-opacity', isPreview ? 0.2 : 0.1)
+      }
     }
 
     // Create pattern for texture overlay with dynamic color
-    const createPattern = (id: string, color: string) => {
+    const createPattern = (id: string, color: string, isRedeem = false) => {
       const pattern = defs
         .append('pattern')
         .attr('id', id)
         .attr('patternUnits', 'userSpaceOnUse')
-        .attr('width', 8)
-        .attr('height', 8)
-        .attr('patternTransform', 'rotate(45)')
+        .attr('width', isRedeem ? 10 : 8)
+        .attr('height', isRedeem ? 10 : 8)
+        .attr('patternTransform', `rotate(45) ${isRedeem ? 'scale(1.2)' : ''}`)
 
-      pattern
-        .append('line')
-        .attr('x1', 0)
-        .attr('y1', 0)
-        .attr('x2', 0)
-        .attr('y2', 8)
-        .attr('stroke', color)
-        .attr('stroke-width', 0.5)
-        .attr('stroke-opacity', 0.3)
+      if (isRedeem) {
+        // Enhanced edge pattern for redeem
+        pattern
+          .append('line')
+          .attr('x1', 0)
+          .attr('y1', 0)
+          .attr('x2', 0)
+          .attr('y2', 10)
+          .attr('stroke', color)
+          .attr('stroke-width', 1.5)
+          .attr('stroke-opacity', 0.4)
+      } else {
+        pattern
+          .append('line')
+          .attr('x1', 0)
+          .attr('y1', 0)
+          .attr('x2', 0)
+          .attr('y2', 8)
+          .attr('stroke', color)
+          .attr('stroke-width', 0.5)
+          .attr('stroke-opacity', 0.3)
+      }
     }
 
     // Create patterns for different states
@@ -413,43 +452,109 @@ export function LineChart({
         // Add preview area if applicable
         if (previewPoints.length >= 2) {
           const isRedeem = curve.previewPoints?.[0]?.isRedeem
-          const previewColor = isRedeem
-            ? 'hsl(var(--destructive))'
-            : curve.color
+          const edgePoints = Math.max(
+            2,
+            Math.floor(previewPoints.length * 0.05),
+          )
 
-          // Add glow effect for preview area
+          if (isRedeem) {
+            // Add main preview area first (with normal gradient)
+            svg
+              .append('path')
+              .datum(previewPoints)
+              .attr('class', 'area2')
+              .attr('fill', 'url(#gradient-preview-redeem)')
+              .attr('d', redeemArea)
+
+            // Create edge highlight gradients
+            const createEdgeGradient = (id: string, isLeft: boolean) => {
+              const gradient = defs
+                .append('linearGradient')
+                .attr('id', id)
+                .attr('x1', isLeft ? '0%' : '100%')
+                .attr('x2', isLeft ? '100%' : '0%')
+                .attr('y1', '0%')
+                .attr('y2', '0%')
+
+              if (isLeft) {
+                gradient
+                  .append('stop')
+                  .attr('offset', '0%')
+                  .attr('stop-color', '#ffff00')
+                  .attr('stop-opacity', 0.0)
+
+                gradient
+                  .append('stop')
+                  .attr('offset', '100%')
+                  .attr('stop-color', '#ffff00')
+                  .attr('stop-opacity', 0.4)
+              } else {
+                gradient
+                  .append('stop')
+                  .attr('offset', '0%')
+                  .attr('stop-color', '#ffff00')
+                  .attr('stop-opacity', 0.0)
+
+                gradient
+                  .append('stop')
+                  .attr('offset', '100%')
+                  .attr('stop-color', '#ffff00')
+                  .attr('stop-opacity', 0.4)
+              }
+            }
+
+            // Create gradients for both edges
+            createEdgeGradient('highlight-left', true)
+            createEdgeGradient('highlight-right', false)
+
+            // Add edge highlights that will overlay the main area
+            // Left edge highlight
+            svg
+              .append('path')
+              .datum(previewPoints.slice(0, edgePoints))
+              .attr('fill', 'url(#highlight-left)')
+              .attr('d', redeemArea)
+
+            // Right edge highlight
+            svg
+              .append('path')
+              .datum(previewPoints.slice(-edgePoints))
+              .attr('fill', 'url(#highlight-right)')
+              .attr('d', redeemArea)
+
+            // Add pattern overlay
+            svg
+              .append('path')
+              .datum(previewPoints)
+              .attr('class', 'area2-pattern')
+              .attr('fill', 'url(#redeemPattern)')
+              .attr('d', redeemArea)
+          } else {
+            // Non-redeem preview area (unchanged)
+            svg
+              .append('path')
+              .datum(previewPoints)
+              .attr('class', 'area2')
+              .attr('fill', `url(#gradient-preview-${curve.id})`)
+              .attr('d', area)
+
+            svg
+              .append('path')
+              .datum(previewPoints)
+              .attr('class', 'area2-pattern')
+              .attr('fill', 'url(#depositPattern)')
+              .attr('d', area)
+          }
+
+          // Add subtle edge strokes for the curve
           svg
             .append('path')
             .datum(previewPoints)
             .attr('fill', 'none')
             .attr('stroke', isRedeem ? '#ffff00' : '#00ff00')
-            .attr('stroke-width', 3)
-            .attr('stroke-opacity', 0.4)
-            .attr('filter', isRedeem ? 'url(#redeemGlow)' : 'url(#depositGlow)')
+            .attr('stroke-width', isRedeem ? 2 : 1.5)
+            .attr('stroke-opacity', isRedeem ? 0.5 : 0.4)
             .attr('d', line)
-
-          svg
-            .append('path')
-            .datum(previewPoints)
-            .attr('class', 'area2')
-            .attr(
-              'fill',
-              isRedeem
-                ? 'url(#gradient-preview-redeem)'
-                : `url(#gradient-preview-${curve.id})`,
-            )
-            .attr('d', isRedeem ? redeemArea : area)
-
-          // Add pattern overlay for preview area
-          svg
-            .append('path')
-            .datum(previewPoints)
-            .attr('class', 'area2-pattern')
-            .attr(
-              'fill',
-              isRedeem ? 'url(#redeemPattern)' : 'url(#depositPattern)',
-            )
-            .attr('d', isRedeem ? redeemArea : area)
         }
       }
     })
