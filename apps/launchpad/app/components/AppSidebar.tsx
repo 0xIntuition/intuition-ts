@@ -9,6 +9,8 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  Icon,
+  IconName,
   Sheet,
   SheetContent,
   SheetTrigger,
@@ -35,6 +37,7 @@ import {
   Globe,
   Home,
   LayoutGrid,
+  Medal,
   MoreVertical,
   Upload,
 } from 'lucide-react'
@@ -107,6 +110,12 @@ export function AppSidebar({
       label: 'Rewards',
       href: '/rewards',
       isAccent: location.pathname === '/rewards',
+    },
+    {
+      icon: Medal,
+      label: 'Leaderboard',
+      href: '/leaderboard',
+      isAccent: location.pathname === '/leaderboard',
     },
   ]
 
