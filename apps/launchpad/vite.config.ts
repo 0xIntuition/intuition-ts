@@ -46,14 +46,7 @@ export default defineConfig({
     tsconfigPaths(),
   ],
   optimizeDeps: {
-    include: [
-      'cytoscape',
-      'cytoscape-cola',
-      'cytoscape-fcose',
-      'cytoscape-popper',
-      'react-cytoscapejs',
-    ],
-    exclude: ['@0xintuition/1ui'],
+    include: ['cytoscape', 'react-cytoscapejs'],
   },
   server: {
     port: 3000,
@@ -67,41 +60,11 @@ export default defineConfig({
         return false
       }
     },
-    rollupOptions: {
-      external: [],
-      output: {
-        manualChunks: {
-          cytoscape: ['cytoscape'],
-          'cytoscape-ext': [
-            'cytoscape-cola',
-            'cytoscape-fcose',
-            'cytoscape-popper',
-          ],
-          vendor: ['react', 'react-dom', 'react-cytoscapejs'],
-        },
-      },
-    },
-    modulePreload: {
-      polyfill: true,
-    },
+  },
+  ssr: {
+    noExternal: ['react-cytoscapejs', 'cytoscape'],
   },
   resolve: {
     dedupe: ['react', 'react-dom'],
-    mainFields: ['browser', 'module', 'main'],
-  },
-  ssr: {
-    noExternal: [
-      'react-cytoscapejs',
-      'cytoscape',
-      'cytoscape-cola',
-      'cytoscape-fcose',
-      'cytoscape-popper',
-    ],
-    optimizeDeps: {
-      disabled: false,
-    },
-  },
-  define: {
-    'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
   },
 })
