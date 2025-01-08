@@ -27,13 +27,6 @@ export function SkillRadarChart({ skills }: SkillRadarChartProps) {
     originalSkill: skill, // Store the original skill data for the click handler
   }))
 
-  const handleClick = (data: any) => {
-    if (data && data.payload && data.payload.originalSkill) {
-      setSelectedSkill(data.payload.originalSkill)
-      setIsModalOpen(true)
-    }
-  }
-
   return (
     <>
       <ChartContainer
@@ -78,13 +71,7 @@ export function SkillRadarChart({ skills }: SkillRadarChartProps) {
                 </g>
               )}
             />
-            <Radar
-              name="Skills"
-              dataKey="A"
-              stroke="var(--color-A)"
-              fill="pink"
-              fillOpacity={0.6}
-            />
+            <Radar name="Skills" dataKey="A" fill="#E6A068" fillOpacity={0.6} />
           </RadarChart>
         </ResponsiveContainer>
       </ChartContainer>

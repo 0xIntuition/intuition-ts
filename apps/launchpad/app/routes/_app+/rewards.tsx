@@ -1,20 +1,11 @@
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-  Button,
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from '@0xintuition/1ui'
+import { Avatar, Button } from '@0xintuition/1ui'
 
 import { AggregateIQ } from '@components/aggregate-iq'
 import { ErrorPage } from '@components/ErrorPage'
 import { SkillRadarChart } from '@components/skill-radar-chart'
 import { skills } from 'app/data/mock-rewards'
 import { motion } from 'framer-motion'
-import { ChevronRight, Link, Share2, Users } from 'lucide-react'
+import { ChevronRight } from 'lucide-react'
 
 export function ErrorBoundary() {
   return <ErrorPage routeName="rewards" />
@@ -30,7 +21,7 @@ export default function Rewards() {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="flex justify-between items-center bg-gradient-to-r from-dune-sand to-dune-tan rounded-2xl p-6 text-dune-stone shadow-pop-lg"
+        className="flex justify-between items-center bg-background/95 rounded-2xl p-6 text-palette-neutral-900 shadow-pop-lg"
       >
         <div>
           <motion.h1
