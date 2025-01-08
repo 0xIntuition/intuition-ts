@@ -48,4 +48,13 @@ export const skills: Skill[] = [
     description: 'Build and nurture web3 communities and DAOs.',
     recentAchievement: 'Founded a new DAO initiative',
   },
+  {
+    name: 'Analytics',
+    level: 1,
+    progress: 20,
+    pointsToNext: 5,
+    points: 180.0,
+    description: 'Analyze and interpret data from various web3 sources.',
+    recentAchievement: 'Created first data visualization dashboard',
+  },
 ]

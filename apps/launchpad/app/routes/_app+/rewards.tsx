@@ -11,6 +11,7 @@ import {
 
 import { AggregateIQ } from '@components/aggregate-iq'
 import { ErrorPage } from '@components/ErrorPage'
+import { SkillRadarChart } from '@components/skill-radar-chart'
 import { skills } from 'app/data/mock-rewards'
 import { motion } from 'framer-motion'
 import { ChevronRight, Link, Share2, Users } from 'lucide-react'
@@ -76,8 +77,11 @@ export default function Rewards() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
+          className="flex justify-center items-center"
         >
-          {/* <RadialSkillTree skills={skills} /> */}
+          <div className="w-full max-w-2xl">
+            <SkillRadarChart skills={skills} />
+          </div>
         </motion.div>
       </div>
     </div>
