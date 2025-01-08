@@ -21,7 +21,7 @@ export default function Rewards() {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="flex justify-between items-center bg-background/95 rounded-2xl p-6 text-palette-neutral-900 shadow-pop-lg"
+        className="flex justify-between items-center bg-background border border-border/10 rounded-lg p-6 text-palette-neutral-900 shadow-pop-lg"
       >
         <div>
           <motion.h1
@@ -51,7 +51,7 @@ export default function Rewards() {
       </motion.div>
       <AggregateIQ totalIQ={totalIQ} />
 
-      <div className="space-y-6">
+      <div className="space-y-6 bg-background border border-border/10 rounded-lg p-6">
         <div className="flex justify-between items-center">
           <h2 className="text-3xl font-bold">Your Skills</h2>
           <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>

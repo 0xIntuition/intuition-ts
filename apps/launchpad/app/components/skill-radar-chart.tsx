@@ -8,12 +8,34 @@ import {
   Radar,
   RadarChart,
   ResponsiveContainer,
+  Tooltip,
+  TooltipProps,
 } from 'recharts'
 
 import { SkillModal } from './skill-modal'
 
 interface SkillRadarChartProps {
   skills: Skill[]
+}
+
+interface ChartData {
+  subject: string
+  A: number
+  fullMark: number
+  originalSkill: Skill
+}
+
+const CustomTooltip = ({ active, payload }: TooltipProps<number, string>) => {
+  if (active && payload && payload.length) {
+    const data = payload[0].payload as ChartData
+    return (
+      <div className="bg-background border rounded-lg p-2 shadow-lg">
+        <p className="font-medium">{data.subject}</p>
+        <p className="text-sm text-muted-foreground">Points: {data.A}</p>
+      </div>
+    )
+  }
+  return null
 }
 
 export function SkillRadarChart({ skills }: SkillRadarChartProps) {
@@ -24,7 +46,7 @@ export function SkillRadarChart({ skills }: SkillRadarChartProps) {
     subject: skill.name,
     A: skill.points,
     fullMark: Math.max(...skills.map((s) => s.points)) * 1.2,
-    originalSkill: skill, // Store the original skill data for the click handler
+    originalSkill: skill,
   }))
 
   return (
@@ -56,8 +78,8 @@ export function SkillRadarChart({ skills }: SkillRadarChartProps) {
                     y={0}
                     dy={3}
                     textAnchor="middle"
-                    fill="currentColor"
-                    className="cursor-pointer"
+                    fill="#BA8461"
+                    className="cursor-pointer text-lg"
                     onClick={() => {
                       const skill = skills.find((s) => s.name === payload.value)
                       if (skill) {
@@ -71,7 +93,18 @@ export function SkillRadarChart({ skills }: SkillRadarChartProps) {
                 </g>
               )}
             />
-            <Radar name="Skills" dataKey="A" fill="#E6A068" fillOpacity={0.6} />
+            <Tooltip content={<CustomTooltip />} />
+            <Radar
+              name="Skills"
+              dataKey="A"
+              fill="#F59E11"
+              fillOpacity={0.6}
+              dot={{
+                r: 4,
+                fillOpacity: 1,
+                fill: '#F59E11',
+              }}
+            />
           </RadarChart>
         </ResponsiveContainer>
       </ChartContainer>
