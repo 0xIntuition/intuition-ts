@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect } from 'react'
 
 import { usePrivy, useWallets } from '@privy-io/react-auth'
-import { useNavigate } from '@remix-run/react'
+import { useRevalidator } from '@remix-run/react'
 
 interface AuthContextType {
   isReady: boolean
@@ -16,7 +16,7 @@ const AuthContext = createContext<AuthContextType | null>(null)
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const { ready: privyReady, authenticated, login, logout } = usePrivy()
   const { wallets } = useWallets()
-  const navigate = useNavigate()
+  const revalidator = useRevalidator()
 
   // Watch for wallet changes and update session
   useEffect(() => {
@@ -54,7 +54,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       await fetch('/actions/disconnect', { method: 'POST' })
       await logout()
-      navigate('.', { replace: true })
+      // Force the loader to re-run, which will check the session
+      revalidator.revalidate()
     } catch (error) {
       console.error('Failed to disconnect:', error)
     }
