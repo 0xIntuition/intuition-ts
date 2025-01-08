@@ -1,3 +1,5 @@
-export default function Index() {
-  return <div>Home Page</div>
+import { redirect } from '@remix-run/node'
+
+export async function loader() {
+  throw redirect('/dashboard')
 }

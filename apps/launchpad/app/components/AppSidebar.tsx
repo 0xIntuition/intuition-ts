@@ -30,6 +30,7 @@ import {
   Activity,
   Circle,
   FileText,
+  Gem,
   Github,
   Globe,
   Home,
@@ -100,6 +101,12 @@ export function AppSidebar({
       label: 'Network',
       href: '/network',
       isAccent: location.pathname === '/network',
+    },
+    {
+      icon: Gem,
+      label: 'Rewards',
+      href: '/rewards',
+      isAccent: location.pathname === '/rewards',
     },
   ]
 
