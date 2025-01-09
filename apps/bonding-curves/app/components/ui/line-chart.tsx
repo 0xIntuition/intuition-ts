@@ -30,6 +30,12 @@ interface LineChartProps {
   selectedCurveId?: string
 }
 
+interface SnapPoint {
+  x: number
+  y: number
+  curve: CurveData
+}
+
 const formatScientific = (n: number): string => {
   if (n === 0) return '0'
   const exp = Math.floor(Math.log10(Math.abs(n)))
@@ -67,6 +73,7 @@ export function LineChart({
   selectedCurveId,
 }: LineChartProps) {
   const svgRef = useRef<SVGSVGElement>(null)
+  const [stickyPoint, setStickyPoint] = React.useState<SnapPoint | null>(null)
 
   useEffect(() => {
     if (!svgRef.current || data.length === 0) return
@@ -85,6 +92,36 @@ export function LineChart({
 
     // Add SVG definitions for visual effects
     const defs = svg.append('defs')
+
+    // Create tooltip glow filter
+    const tooltipFilter = defs
+      .append('filter')
+      .attr('id', 'tooltip-glow')
+      .attr('x', '-50%')
+      .attr('y', '-50%')
+      .attr('width', '200%')
+      .attr('height', '200%')
+
+    tooltipFilter
+      .append('feGaussianBlur')
+      .attr('stdDeviation', '3')
+      .attr('result', 'coloredBlur')
+
+    tooltipFilter
+      .append('feFlood')
+      .attr('flood-color', '#fff')
+      .attr('result', 'color')
+
+    tooltipFilter
+      .append('feComposite')
+      .attr('in', 'color')
+      .attr('in2', 'coloredBlur')
+      .attr('operator', 'in')
+      .attr('result', 'glowColor')
+
+    const feMerge = tooltipFilter.append('feMerge')
+    feMerge.append('feMergeNode').attr('in', 'glowColor')
+    feMerge.append('feMergeNode').attr('in', 'SourceGraphic')
 
     // Create base gradient template
     const createGradient = (
@@ -692,6 +729,128 @@ export function LineChart({
       }
     })
 
+    // Add crosshair group
+    const crosshair = svg
+      .append('g')
+      .attr('class', 'crosshair')
+      .style('display', 'none')
+
+    // Add vertical line
+    crosshair
+      .append('line')
+      .attr('class', 'crosshair-vertical')
+      .attr('y1', 0)
+      .attr('y2', height)
+      .style('stroke', '#666')
+      .style('stroke-width', 1)
+      .style('stroke-dasharray', '3,3')
+
+    // Add horizontal line
+    crosshair
+      .append('line')
+      .attr('class', 'crosshair-horizontal')
+      .attr('x1', 0)
+      .attr('x2', width)
+      .style('stroke', '#666')
+      .style('stroke-width', 1)
+      .style('stroke-dasharray', '3,3')
+
+    // Function to find closest point on selected curve
+    const findClosestPoint = (mouseX: number): SnapPoint | null => {
+      if (!selectedCurveId) return null
+      const selectedCurve = data.find((c) => c.id === selectedCurveId)
+      if (!selectedCurve) return null
+
+      const index = bisect(selectedCurve.points, mouseX, 1)
+      const point = selectedCurve.points[index - 1]
+      if (!point) return null
+
+      return {
+        x: point.x,
+        y: point.y,
+        curve: selectedCurve,
+      }
+    }
+
+    // Function to update crosshair and tooltip position
+    const updateCrosshairAndTooltip = (
+      point: SnapPoint,
+      isSticky: boolean = false,
+    ) => {
+      const xPos = xScale(point.x)
+      const yPos = yScale(point.y)
+
+      // Update crosshair position
+      crosshair.style('display', 'block')
+      crosshair.select('.crosshair-vertical').attr('x1', xPos).attr('x2', xPos)
+
+      crosshair
+        .select('.crosshair-horizontal')
+        .attr('y1', yPos)
+        .attr('y2', yPos)
+
+      // Get SVG's position on the page
+      const svgRect = svgRef.current?.getBoundingClientRect()
+      if (!svgRect) return
+
+      // Find values for all curves at this x position
+      const tooltipContent = data
+        .map((curve) => {
+          const index = bisect(curve.points, point.x, 1)
+          const curvePoint = curve.points[index - 1]
+          if (!curvePoint) return null
+
+          const isSelected = curve.id === selectedCurveId
+          return `
+            <div style="
+              ${isSelected ? 'font-weight: bold; color: ' + curve.color : ''}
+              margin-bottom: 4px;
+            ">
+              <span style="color: ${curve.color}">●</span> ${curve.name}<br/>
+              Assets: ${formatScientific(curvePoint.x)}<br/>
+              Shares: ${formatScientific(curvePoint.y)}
+            </div>
+          `
+        })
+        .filter(Boolean)
+        .join('')
+
+      // Update tooltip content and styles
+      tooltip
+        .style('visibility', 'visible')
+        .html(tooltipContent)
+        .style('cursor', isSticky ? 'pointer' : 'default')
+        .style(
+          'border',
+          isSticky ? '1px solid rgba(255, 255, 255, 0.2)' : 'none',
+        )
+        .style('filter', isSticky ? 'url(#tooltip-glow)' : 'none')
+
+      // Get tooltip dimensions after content update
+      const tooltipNode = tooltip.node() as HTMLElement
+      const tooltipRect = tooltipNode.getBoundingClientRect()
+
+      // Calculate tooltip position relative to SVG and crosshair intersection
+      // Position tooltip in upper left quadrant, but ensure it stays within the SVG bounds
+      const tooltipX = Math.max(
+        svgRect.left + margin.left,
+        Math.min(
+          svgRect.left + margin.left + xPos - tooltipRect.width - 10,
+          svgRect.right - tooltipRect.width - margin.right,
+        ),
+      )
+      const tooltipY = Math.max(
+        svgRect.top + margin.top,
+        Math.min(
+          svgRect.top + margin.top + yPos - tooltipRect.height - 10,
+          svgRect.bottom - tooltipRect.height - margin.bottom,
+        ),
+      )
+
+      // Update tooltip position
+      tooltip.style('left', tooltipX + 'px').style('top', tooltipY + 'px')
+    }
+
     // Add tooltip
     const tooltip = d3
       .select('body')
@@ -705,6 +864,13 @@ export function LineChart({
       .style('border-radius', '4px')
       .style('font-size', '12px')
       .style('box-shadow', '0 2px 4px rgba(0, 0, 0, 0.3)')
+      .style('pointer-events', 'all')
+      .on('click', () => {
+        // Clear sticky point when clicking tooltip
+        setStickyPoint(null)
+        tooltip.style('visibility', 'hidden')
+        crosshair.style('display', 'none')
+      })
 
     const bisect = d3.bisector<Point, number>((d) => d.x).left
 
@@ -716,45 +882,52 @@ export function LineChart({
       .style('fill', 'none')
       .style('pointer-events', 'all')
       .on('mousemove', (event) => {
+        if (stickyPoint) return // Don't update if we have a sticky point
+
         const mouseX = xScale.invert(d3.pointer(event)[0])
-        let tooltipContent = ''
+        const snapPoint = findClosestPoint(mouseX)
 
-        data.forEach((curve) => {
-          const index = bisect(curve.points, mouseX, 1)
-          const point = curve.points[index - 1]
-
-          if (point) {
-            const isSelected = curve.id === selectedCurveId
-            tooltipContent += `
-              <div style="
-                ${isSelected ? 'font-weight: bold; color: ' + curve.color : ''}
-                margin-bottom: 4px;
-              ">
-                <span style="color: ${curve.color}">●</span> ${curve.name}<br/>
-                Assets: ${formatScientific(point.x)}<br/>
-                Shares: ${formatScientific(point.y)}
-              </div>
-            `
-          }
-        })
-
-        if (tooltipContent) {
-          tooltip
-            .style('visibility', 'visible')
-            .style('left', event.pageX + 10 + 'px')
-            .style('top', event.pageY - 10 + 'px')
-            .html(tooltipContent)
+        if (snapPoint) {
+          updateCrosshairAndTooltip(snapPoint)
+        } else {
+          crosshair.style('display', 'none')
+          tooltip.style('visibility', 'hidden')
         }
       })
       .on('mouseout', () => {
-        tooltip.style('visibility', 'hidden')
+        if (!stickyPoint) {
+          crosshair.style('display', 'none')
+          tooltip.style('visibility', 'hidden')
+        }
       })
+      .on('click', (event) => {
+        const mouseX = xScale.invert(d3.pointer(event)[0])
+        const snapPoint = findClosestPoint(mouseX)
+
+        if (snapPoint) {
+          setStickyPoint(snapPoint)
+          updateCrosshairAndTooltip(snapPoint, true)
+        }
+      })
+
+    // Update sticky point if it exists
+    if (stickyPoint) {
+      updateCrosshairAndTooltip(stickyPoint, true)
+    }
 
     // Cleanup function
     return () => {
       tooltip.remove()
     }
-  }, [data, xLabel, yLabel, totalAssets, previewAmount, selectedCurveId])
+  }, [
+    data,
+    xLabel,
+    yLabel,
+    totalAssets,
+    previewAmount,
+    selectedCurveId,
+    stickyPoint,
+  ])
 
   return (
     <svg
