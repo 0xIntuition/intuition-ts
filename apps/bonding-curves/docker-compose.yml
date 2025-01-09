@@ -1,0 +1,26 @@
+services:
+  anvil:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    ports:
+      - '8545:8545'
+    volumes:
+      - type: bind
+        source: ./contracts
+        target: /app/contracts
+      - type: bind
+        source: ./foundry.toml
+        target: /app/foundry.toml
+      - type: bind
+        source: ./lib
+        target: /app/lib
+    command: >
+      anvil
+      --host 0.0.0.0
+      --chain-id 31337
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:8545']
+      interval: 30s
+      timeout: 10s
+      retries: 5

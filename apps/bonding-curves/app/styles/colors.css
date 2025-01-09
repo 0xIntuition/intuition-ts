@@ -1,0 +1,35 @@
+:root {
+  --curve-color-1: hsl(221.2 83.2% 53.3%); /* Primary blue */
+  --curve-color-2: hsl(142.1 76.2% 36.3%); /* Forest green */
+  --curve-color-3: hsl(346.8 77.2% 49.8%); /* Rose red */
+  --curve-color-4: hsl(43.3 96.4% 56.3%); /* Golden yellow */
+  --curve-color-5: hsl(262.1 83.3% 57.8%); /* Royal purple */
+  --curve-color-6: hsl(20.5 90.2% 48.2%); /* Burnt orange */
+  --curve-color-7: hsl(189.5 94.5% 42.7%); /* Turquoise */
+  --curve-color-8: hsl(283.4 67.1% 50.4%); /* Magenta */
+}
+
+.curve-color-1 {
+  background-color: hsl(var(--curve-color-1));
+}
+.curve-color-2 {
+  background-color: hsl(var(--curve-color-2));
+}
+.curve-color-3 {
+  background-color: hsl(var(--curve-color-3));
+}
+.curve-color-4 {
+  background-color: hsl(var(--curve-color-4));
+}
+.curve-color-5 {
+  background-color: hsl(var(--curve-color-5));
+}
+.curve-color-6 {
+  background-color: hsl(var(--curve-color-6));
+}
+.curve-color-7 {
+  background-color: hsl(var(--curve-color-7));
+}
+.curve-color-8 {
+  background-color: hsl(var(--curve-color-8));
+}
