@@ -1,55 +1,13 @@
 services:
   - type: web
-    name: data-populator
+    name: bonding-curves
     env: docker
     region: oregon
     rootDir: .
-    dockerfilePath: ./apps/data-populator/Dockerfile
-    dockerContext: .
-    envVars:
-      - key: NODE_ENV
-        value: production
-      - key: PORT
-        value: 8080
-      - key: PINATA_JWT_KEY
-        sync: false
-      - key: PINATA_GATEWAY_KEY
-        sync: false
-      - key: IPFS_GATEWAY
-        sync: false
-      - key: PRIVATE_KEY
-        sync: false
-      - key: PRIVATE_KEY_DEV
-        sync: false
-      - key: ADDITIONAL_STAKE_ATOM
-        value: 100000000000
-      - key: ADDITIONAL_STAKE_TRIPLE
-        value: 100000000000
-      - key: CLOUDINARY_CLOUD_NAME
-        sync: false
-      - key: CLOUDINARY_API_KEY
-        sync: false
-      - key: CLOUDINARY_API_SECRET
-        sync: false
-      - key: SUPABASE_URL
-        sync: false
-      - key: SUPABASE_KEY
-        sync: false
-      - key: VITE_DEPLOY_ENV
-        sync: false
-      - key: VITE_ALCHEMY_API_KEY
-        sync: false
-      - key: ALCHEMY_API_KEY
-        sync: false
-      - key: VITE_ORIGIN_URL
-        value: https://portal.intuition.systems
-      - key: ORIGIN_URL
-        value: https://portal.intuition.systems
-      - key: PRIVY_APP_ID
-        sync: false
-      - key: PRIVY_AUTH_URL
-        sync: false
-      - key: PRIVY_APP_SECRET
-        sync: false
-      - key: PRIVY_VERIFICATION_KEY
-        sync: false
+    dockerfilePath: ./apps/bonding-curves/docker/Dockerfile
+    dockerContext: ./apps/bonding-curves
+    plan: starter
+    healthCheckPath: /
+    ports:
+      - port: 8545
+        protocol: tcp
