@@ -11,6 +11,7 @@ import { Providers } from './lib/providers'
 
 import './styles/globals.css'
 
+import { Toaster } from '@0xintuition/1ui'
 import { API_URL_DEV, configureClient } from '@0xintuition/graphql'
 
 // Configure GraphQL client at module initialization using the URLs from the package. For now, we should use the local URL for development
@@ -60,6 +61,7 @@ export default function App() {
       </head>
       <body>
         <main className="relative flex min-h-screen flex-col antialiased bg-background">
+          <Toaster position="top-right" />
           <Providers>
             <Outlet />
           </Providers>

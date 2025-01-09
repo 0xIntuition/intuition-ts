@@ -17,7 +17,8 @@ import {
   useIsMobile,
 } from '@0xintuition/1ui'
 
-import { AccountButton } from '@components/AccountButton'
+import { AccountButton } from '@components/account-button'
+import LoadingButton from '@components/loading-button'
 import { usePrivy } from '@privy-io/react-auth'
 import { useLocation } from '@remix-run/react'
 import {
@@ -33,7 +34,7 @@ import {
   Upload,
 } from 'lucide-react'
 
-import { ConnectButton } from './ConnectButton'
+import { ConnectButton } from './connect-button'
 
 export const SidebarVariant = {
   default: 'default',
@@ -249,7 +250,9 @@ export function AppSidebar({
             </svg>
           </SidebarMenuItem>
           <SidebarMenuItem>
-            {!ready ? null : authenticated && privyUser ? (
+            {!ready ? (
+              <LoadingButton />
+            ) : authenticated && privyUser ? (
               <AccountButton privyUser={privyUser} isMinimal={isMinimal} />
             ) : (
               <ConnectButton />

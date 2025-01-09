@@ -14,8 +14,7 @@ import {
   useGetFeeTransfersQuery,
 } from '@0xintuition/graphql'
 
-import { requireWallet } from '@lib/auth'
-import logger from '@lib/utils/logger'
+import { requireUser } from '@lib/server/auth'
 import { invariant } from '@lib/utils/misc'
 import {
   calculateProtocolPoints,
@@ -29,10 +28,10 @@ import { fetchRelicCounts } from 'app/lib/services/relics'
 import { fetchWrapper } from '../../.server/api'
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  const { wallet } = await requireWallet(request)
-  logger('wallet', wallet)
-  logger('request', request)
+  const user = await requireUser(request)
+  const wallet = user?.wallet?.address
 
+  invariant(user, 'User is required')
   invariant(wallet, 'Wallet is required')
   const queryClient = new QueryClient()
 

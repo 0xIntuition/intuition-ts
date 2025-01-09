@@ -1,8 +1,6 @@
 import React, { Suspense } from 'react'
 
-import { ErrorPage } from '@components/ErrorPage'
 import type { PrivyClientConfig } from '@privy-io/react-auth'
-import { isRouteErrorResponse, useRouteError } from '@remix-run/react'
 
 const PrivyProvider = React.lazy(() =>
   import('@privy-io/react-auth').then((mod) => ({
@@ -35,25 +33,5 @@ export function PrivyConfig({ children }: { children: React.ReactNode }) {
         {children}
       </PrivyProvider>
     </Suspense>
-  )
-}
-
-export function ErrorBoundary() {
-  const error = useRouteError()
-  let statusCode
-  let description =
-    'There was an error connecting to your wallet. Please try again.'
-
-  if (isRouteErrorResponse(error)) {
-    statusCode = error.status
-    description = error.data
-  }
-
-  return (
-    <ErrorPage
-      routeName="privy-provider"
-      statusCode={statusCode}
-      description={description}
-    />
   )
 }

@@ -3,13 +3,13 @@ import { Avatar, cn, IconName, SidebarMenuButton } from '@0xintuition/1ui'
 import { useAuth } from '@lib/providers/auth-provider'
 
 export function ConnectButton() {
-  const { isReady, connect, isLoading } = useAuth()
+  const { connect, isReady, isAuthenticated, isLoading } = useAuth()
 
   const handleConnect = async () => {
     await connect()
   }
 
-  if (!isReady) {
+  if (!isReady || isAuthenticated) {
     return null
   }
 
