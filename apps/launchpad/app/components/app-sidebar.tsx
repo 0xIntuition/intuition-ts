@@ -9,8 +9,6 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-  Icon,
-  IconName,
   Sheet,
   SheetContent,
   SheetTrigger,

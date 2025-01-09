@@ -2,8 +2,8 @@ import * as React from 'react'
 
 import { cn, SidebarInset, SidebarProvider } from '@0xintuition/1ui'
 
-import { AppSidebar } from '../AppSidebar'
-import { AppShellProvider, useAppShell } from './AppShellContext'
+import { AppSidebar } from '../app-sidebar'
+import { AppShellProvider, useAppShell } from './app-shell-context'
 import { BaseLayoutProps, layoutConfig } from './types'
 
 function LoadingSpinner() {

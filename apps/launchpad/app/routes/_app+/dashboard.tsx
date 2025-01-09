@@ -2,11 +2,11 @@ import { useState } from 'react'
 
 import { PageHeader } from '@0xintuition/1ui'
 
-import { ErrorPage } from '@components/ErrorPage'
-import { DashboardLayout } from '@components/layouts/DashboardLayout'
-import { LevelProgress } from '@components/LevelProgress'
-import { OnboardingModal } from '@components/OnboardingModal/OnboardingModal'
-import { PortfolioStats } from '@components/PortfolioStats'
+import { ErrorPage } from '@components/error-page'
+import { DashboardLayout } from '@components/layouts/dashboard-layout'
+import { LevelProgress } from '@components/level-progress'
+import { OnboardingModal } from '@components/onboarding-modal/onboarding-modal'
+import { PortfolioStats } from '@components/portfolio-stats'
 
 export function ErrorBoundary() {
   return <ErrorPage routeName="dashboard" />

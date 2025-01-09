@@ -4,7 +4,7 @@ import { IconName, SidebarProvider } from '@0xintuition/1ui'
 
 import { Outlet, useLocation } from '@remix-run/react'
 
-import { FileExplorerSidebar } from '../../components/FileExplorerSidebar'
+import { FileExplorerSidebar } from '../../components/file-explorer-sidebar'
 
 export const preferencesTree = [
   {
