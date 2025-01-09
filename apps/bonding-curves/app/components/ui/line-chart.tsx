@@ -762,12 +762,37 @@ export function LineChart({
       if (!selectedCurve) return null
 
       const index = bisect(selectedCurve.points, mouseX, 1)
-      const point = selectedCurve.points[index - 1]
-      if (!point) return null
+      if (index === 0) {
+        // If before first point, return first point
+        return {
+          x: selectedCurve.points[0].x,
+          y: selectedCurve.points[0].y,
+          curve: selectedCurve,
+        }
+      }
+      if (index >= selectedCurve.points.length) {
+        // If after last point, return last point
+        const lastPoint = selectedCurve.points[selectedCurve.points.length - 1]
+        return {
+          x: lastPoint.x,
+          y: lastPoint.y,
+          curve: selectedCurve,
+        }
+      }
+
+      // Get the two points we're between
+      const point1 = selectedCurve.points[index - 1]
+      const point2 = selectedCurve.points[index]
+
+      // Calculate the interpolation factor
+      const t = (mouseX - point1.x) / (point2.x - point1.x)
+
+      // Interpolate the y value
+      const interpolatedY = point1.y + t * (point2.y - point1.y)
 
       return {
-        x: point.x,
-        y: point.y,
+        x: mouseX,
+        y: interpolatedY,
         curve: selectedCurve,
       }
     }
@@ -797,8 +822,44 @@ export function LineChart({
       const tooltipContent = data
         .map((curve) => {
           const index = bisect(curve.points, point.x, 1)
-          const curvePoint = curve.points[index - 1]
-          if (!curvePoint) return null
+          if (index === 0) {
+            // If before first point, use first point
+            const firstPoint = curve.points[0]
+            return `
+              <div style="
+                ${curve.id === selectedCurveId ? 'font-weight: bold; color: ' + curve.color : ''}
+                margin-bottom: 4px;
+              ">
+                <span style="color: ${curve.color}">●</span> ${curve.name}<br/>
+                Assets: ${formatScientific(firstPoint.x)}<br/>
+                Shares: ${formatScientific(firstPoint.y)}
+              </div>
+            `
+          }
+          if (index >= curve.points.length) {
+            // If after last point, use last point
+            const lastPoint = curve.points[curve.points.length - 1]
+            return `
+              <div style="
+                ${curve.id === selectedCurveId ? 'font-weight: bold; color: ' + curve.color : ''}
+                margin-bottom: 4px;
+              ">
+                <span style="color: ${curve.color}">●</span> ${curve.name}<br/>
+                Assets: ${formatScientific(lastPoint.x)}<br/>
+                Shares: ${formatScientific(lastPoint.y)}
+              </div>
+            `
+          }
+
+          // Get the two points we're between
+          const point1 = curve.points[index - 1]
+          const point2 = curve.points[index]
+
+          // Calculate the interpolation factor
+          const t = (point.x - point1.x) / (point2.x - point1.x)
+
+          // Interpolate the y value
+          const interpolatedY = point1.y + t * (point2.y - point1.y)
 
           const isSelected = curve.id === selectedCurveId
           return `
@@ -807,8 +868,8 @@ export function LineChart({
               margin-bottom: 4px;
             ">
               <span style="color: ${curve.color}">●</span> ${curve.name}<br/>
-              Assets: ${formatScientific(curvePoint.x)}<br/>
-              Shares: ${formatScientific(curvePoint.y)}
+              Assets: ${formatScientific(point.x)}<br/>
+              Shares: ${formatScientific(interpolatedY)}
             </div>
           `
         })
