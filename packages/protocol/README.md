@@ -4,13 +4,13 @@
 
 ```typescript
 import { MultiVault } from '0xIntuition/protocol'
-import { createPublicClient, http } from 'viem'
+import { Chain, createPublicClient, http, PublicClient, Transport } from 'viem'
 import { base } from 'viem/chains'
 
 const publicClient = createPublicClient({
   chain: base,
   transport: http(),
-})
+}) as PublicClient<Transport, Chain>
 
 const walletClient = createWalletClient({
   chain: base,
