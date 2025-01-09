@@ -329,7 +329,7 @@ export function LineChart({
         .append('path')
         .datum(curve.points)
         .attr('fill', 'none')
-        .attr('stroke', '#ffffff')
+        .attr('stroke', curve.color)
         .attr('stroke-width', 4)
         .attr('stroke-opacity', 0.3)
         .attr('filter', 'url(#baseGlow)')
