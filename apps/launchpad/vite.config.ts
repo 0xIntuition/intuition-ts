@@ -45,14 +45,6 @@ export default defineConfig({
     }),
     tsconfigPaths(),
   ],
-  optimizeDeps: {
-    include: [
-      '@privy-io/react-auth',
-      '@privy-io/wagmi',
-      'cytoscape',
-      'react-cytoscapejs',
-    ],
-  },
   server: {
     port: 3000,
   },
@@ -70,14 +62,8 @@ export default defineConfig({
     noExternal: [
       '@privy-io/react-auth',
       '@privy-io/wagmi',
-      'viem',
-      'wagmi',
       'react-cytoscapejs',
       'cytoscape',
-      '@0xintuition/1ui',
     ],
-  },
-  resolve: {
-    dedupe: ['react', 'react-dom'],
   },
 })
