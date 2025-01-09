@@ -14,7 +14,8 @@ import {
   useGetFeeTransfersQuery,
 } from '@0xintuition/graphql'
 
-import logger from '@lib/utils/logger'
+import { requireUser } from '@lib/server/auth'
+import { invariant } from '@lib/utils/misc'
 import {
   calculateProtocolPoints,
   POINTS_CUTOFF_TIMESTAMP,
@@ -27,8 +28,11 @@ import { fetchRelicCounts } from 'app/lib/services/relics'
 import { fetchWrapper } from '../../.server/api'
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  logger('request', request)
+  const user = await requireUser(request)
+  const wallet = user?.wallet?.address
 
+  invariant(user, 'User is required')
+  invariant(wallet, 'Wallet is required')
   const queryClient = new QueryClient()
 
   await queryClient.prefetchQuery({
@@ -37,27 +41,26 @@ export async function loader({ request }: LoaderFunctionArgs) {
       fetcher<GetFeeTransfersQuery, GetFeeTransfersQueryVariables>(
         GetFeeTransfersDocument,
         {
-          address: '0xB95ca3D3144e9d1DAFF0EE3d35a4488A4A5C9Fc5'.toLowerCase(),
+          address: wallet.toLowerCase(),
           cutoff_timestamp: POINTS_CUTOFF_TIMESTAMP,
         },
       ),
   })
 
   const [relicCounts] = await Promise.all([
-    fetchRelicCounts(
-      '0xB95ca3D3144e9d1DAFF0EE3d35a4488A4A5C9Fc5'.toLowerCase(),
-    ),
+    fetchRelicCounts(wallet.toLowerCase()),
   ])
 
   // This is using legacy API. TODO: Update to use GraphQL when these are available.
   const userTotals = await fetchWrapper({
     method: UsersService.getUserTotals,
     args: {
-      id: '0xB95ca3D3144e9d1DAFF0EE3d35a4488A4A5C9Fc5'.toLowerCase(),
+      id: wallet.toLowerCase(),
     },
   })
 
   return {
+    wallet,
     dehydratedState: dehydrate(queryClient),
     relicHoldCount: relicCounts.holdCount,
     mintCount: relicCounts.mintCount,
@@ -66,11 +69,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export default function Points() {
-  const { relicHoldCount, mintCount, userTotals } =
+  const { wallet, relicHoldCount, mintCount, userTotals } =
     useLoaderData<typeof loader>()
   const { data: feeData } = useGetFeeTransfersQuery(
     {
-      address: '0xB95ca3D3144e9d1DAFF0EE3d35a4488A4A5C9Fc5'.toLowerCase(),
+      address: wallet.toLowerCase(),
       cutoff_timestamp: POINTS_CUTOFF_TIMESTAMP,
     },
     {

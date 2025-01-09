@@ -1,6 +1,3 @@
-import { API_URL_DEV, configureClient } from '@0xintuition/graphql'
-
-import Providers from '@components/providers'
 import {
   Links,
   Meta,
@@ -10,7 +7,12 @@ import {
   ScrollRestoration,
 } from '@remix-run/react'
 
+import { Providers } from './lib/providers'
+
 import './styles/globals.css'
+
+import { Toaster } from '@0xintuition/1ui'
+import { API_URL_DEV, configureClient } from '@0xintuition/graphql'
 
 // Configure GraphQL client at module initialization using the URLs from the package. For now, we should use the local URL for development
 // This can be updated to use the same environment approach that we use in Portal in the future, or leave up to the template user to configure however makes sense for their use case
@@ -48,7 +50,7 @@ export const meta: MetaFunction = () => {
   ]
 }
 
-export function Layout({ children }: { children: React.ReactNode }) {
+export default function App() {
   return (
     <html lang="en" data-theme="dark">
       <head>
@@ -58,21 +60,15 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        <main className="relative flex min-h-screen flex-col antialiased bg-[#131313]">
-          {children}
+        <main className="relative flex min-h-screen flex-col antialiased bg-background">
+          <Toaster position="top-right" />
+          <Providers>
+            <Outlet />
+          </Providers>
           <ScrollRestoration />
           <Scripts />
         </main>
       </body>
     </html>
-  )
-}
-
-export default function App() {
-  // TODO: Our Providers aren't wrapped with ClientOnly yet -- we can revisit the necessity once we bring Privy in
-  return (
-    <Providers>
-      <Outlet />
-    </Providers>
   )
 }

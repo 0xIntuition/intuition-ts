@@ -45,9 +45,6 @@ export default defineConfig({
     }),
     tsconfigPaths(),
   ],
-  optimizeDeps: {
-    include: ['cytoscape', 'react-cytoscapejs'],
-  },
   server: {
     port: 3000,
   },
@@ -62,9 +59,11 @@ export default defineConfig({
     },
   },
   ssr: {
-    noExternal: ['react-cytoscapejs', 'cytoscape'],
-  },
-  resolve: {
-    dedupe: ['react', 'react-dom'],
+    noExternal: [
+      '@privy-io/react-auth',
+      '@privy-io/wagmi',
+      'react-cytoscapejs',
+      'cytoscape',
+    ],
   },
 })
