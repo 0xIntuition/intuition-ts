@@ -27,6 +27,7 @@ interface LineChartProps {
   yLabel: string
   totalAssets?: number
   previewAmount?: number
+  selectedCurveId?: string
 }
 
 const formatScientific = (n: number): string => {
@@ -63,6 +64,7 @@ export function LineChart({
   yLabel,
   totalAssets,
   previewAmount,
+  selectedCurveId,
 }: LineChartProps) {
   const svgRef = useRef<SVGSVGElement>(null)
 
@@ -343,42 +345,10 @@ export function LineChart({
         .attr('stroke', curve.color)
         .attr('stroke-width', 1.5)
         .attr('stroke-opacity', 0.8)
-
-      // Only animate on initial render, not during preview updates
-      if (!previewAmount) {
-        // Create interpolator with traveling wave effect
-        const interpolateY = (t: number) => {
-          return curve.points.map((point, i) => {
-            const normalizedX = point.x / (xScale.domain()[1] || 1)
-            // Wave that travels from left to right, with complete decay by t=1
-            const wave =
-              Math.sin(normalizedX * 20 - t * 12) * Math.exp(-t * 4) * 0.3
-            // Blend between wave effect and final position
-            const blend = Math.min(1, t * 1.2) // Ensures we reach exact position
-            return {
-              x: point.x,
-              y:
-                point.y * (blend + (1 - blend) * (1 + wave * (point.y / yMax))),
-            }
-          })
-        }
-
-        // Animate!
-        path
-          .transition()
-          .duration(2000)
-          .ease(d3.easeQuadOut)
-          .tween('pathTween', () => {
-            return (t: number) => {
-              path.attr('d', line(interpolateY(t)))
-            }
-          })
-      } else {
-        path.attr('d', line)
-      }
+        .attr('d', line)
 
       // Add filled areas
-      if (totalAssets !== undefined) {
+      if (totalAssets !== undefined && curve.id === selectedCurveId) {
         // Convert totalAssets to the same scale as the points
         const scaledTotalAssets = totalAssets * 1e18
         const scaledPreviewAmount = previewAmount
@@ -771,7 +741,7 @@ export function LineChart({
     return () => {
       tooltip.remove()
     }
-  }, [data, xLabel, yLabel, totalAssets, previewAmount])
+  }, [data, xLabel, yLabel, totalAssets, previewAmount, selectedCurveId])
 
   return (
     <svg

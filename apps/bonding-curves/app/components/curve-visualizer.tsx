@@ -1183,6 +1183,7 @@ export function CurveVisualizer() {
                   )
                 : undefined
             }
+            selectedCurveId={selectedCurveId || undefined}
           />
         </div>
 
