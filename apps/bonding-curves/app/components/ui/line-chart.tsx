@@ -717,21 +717,34 @@ export function LineChart({
       .style('pointer-events', 'all')
       .on('mousemove', (event) => {
         const mouseX = xScale.invert(d3.pointer(event)[0])
+        let tooltipContent = ''
 
         data.forEach((curve) => {
           const index = bisect(curve.points, mouseX, 1)
           const point = curve.points[index - 1]
 
           if (point) {
-            tooltip
-              .style('visibility', 'visible')
-              .style('left', event.pageX + 10 + 'px')
-              .style('top', event.pageY - 10 + 'px')
-              .html(
-                `<strong>${curve.name}</strong><br/>Assets: ${formatScientific(point.x)}<br/>Shares: ${formatScientific(point.y)}`,
-              )
+            const isSelected = curve.id === selectedCurveId
+            tooltipContent += `
+              <div style="
+                ${isSelected ? 'font-weight: bold; color: ' + curve.color : ''}
+                margin-bottom: 4px;
+              ">
+                <span style="color: ${curve.color}">●</span> ${curve.name}<br/>
+                Assets: ${formatScientific(point.x)}<br/>
+                Shares: ${formatScientific(point.y)}
+              </div>
+            `
           }
         })
+
+        if (tooltipContent) {
+          tooltip
+            .style('visibility', 'visible')
+            .style('left', event.pageX + 10 + 'px')
+            .style('top', event.pageY - 10 + 'px')
+            .html(tooltipContent)
+        }
       })
       .on('mouseout', () => {
         tooltip.style('visibility', 'hidden')
