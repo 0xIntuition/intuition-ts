@@ -250,11 +250,7 @@ export function AppSidebar({
           </SidebarMenuItem>
           <SidebarMenuItem>
             {!ready ? null : authenticated && privyUser ? (
-              <AccountButton
-                authenticated={authenticated}
-                privyUser={privyUser}
-                isMinimal={isMinimal}
-              />
+              <AccountButton privyUser={privyUser} isMinimal={isMinimal} />
             ) : (
               <ConnectButton />
             )}

@@ -14,14 +14,12 @@ import { MoreVertical } from 'lucide-react'
 
 export function AccountButton({
   privyUser,
-  authenticated,
   isMinimal,
 }: {
   privyUser: User
-  authenticated: boolean
   isMinimal: boolean
 }) {
-  const { isReady, disconnect } = useAuth()
+  const { isReady, isAuthenticated, disconnect } = useAuth()
   const walletAddress = privyUser.wallet?.address ?? ''
 
   const { data: accountResult } = useGetAccountQuery(
@@ -37,7 +35,7 @@ export function AccountButton({
     ? `${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}`
     : ''
 
-  return isReady && authenticated && privyUser.wallet ? (
+  return isReady && isAuthenticated && privyUser.wallet ? (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <SidebarMenuButton size="lg" className="w-full gap-3 theme-border">
