@@ -1,4 +1,4 @@
-import { LeaderboardData } from "app/types/leaderboard";
+import { LeaderboardData } from 'app/types/leaderboard'
 
 export const users = {
   protocol: [

@@ -19,7 +19,7 @@ import {
   YAxis,
 } from 'recharts'
 
-import { TimeFilter, TimeFilterType } from './TimeFilter'
+import { TimeFilter, TimeFilterType } from './time-filter'
 
 export interface PortfolioStats {
   value: number

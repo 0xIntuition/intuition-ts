@@ -17,10 +17,10 @@ import {
   useGetStatsQuery,
 } from '@0xintuition/graphql'
 
-import ActivityFeed from '@components/ActivityFeed'
-import ChapterProgress from '@components/ChapterProgress'
-import { ErrorPage } from '@components/ErrorPage'
-import KnowledgeGraph from '@components/KnowledgeGraph/KnowledgeGraph'
+import ActivityFeed from '@components/activity-feed'
+import ChapterProgress from '@components/chapter-progress'
+import { ErrorPage } from '@components/error-page'
+import KnowledgeGraph from '@components/knowledge-graph/knowledge-graph'
 import logger from '@lib/utils/logger'
 import { LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData, useSearchParams } from '@remix-run/react'
