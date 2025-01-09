@@ -29,25 +29,25 @@
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 217.2 91.2% 59.8%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --background: 187 100% 3%;
+    --foreground: 187 40% 50%;
+    --card: 187 84% 4.9%;
+    --card-foreground: 187 40% 98%;
+    --popover: 187 84% 4.9%;
+    --popover-foreground: 187 40% 98%;
+    --primary: 187 91.2% 59.8%;
+    --primary-foreground: 187 47.4% 11.2%;
+    --secondary: 187 32.6% 17.5%;
+    --secondary-foreground: 187 40% 98%;
+    --muted: 187 32.6% 17.5%;
+    --muted-foreground: 187 20.2% 65.1%;
+    --accent: 187 32.6% 17.5%;
+    --accent-foreground: 187 40% 98%;
     --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 224.3 76.3% 48%;
+    --destructive-foreground: 187 40% 98%;
+    --border: 187 32.6% 17.5%;
+    --input: 187 32.6% 17.5%;
+    --ring: 187 76.3% 48%;
   }
 }
 
@@ -65,7 +65,7 @@
 
 /* Dark mode specific input styles */
 .dark input {
-  background-color: hsl(217.2 32.6% 17.5%);
-  color: hsl(210 40% 98%);
-  border-color: hsl(217.2 32.6% 17.5%);
+  background-color: hsl(187 32.6% 17.5%);
+  color: hsl(187 40% 98%);
+  border-color: hsl(187 32.6% 17.5%);
 }

@@ -819,62 +819,63 @@ export function LineChart({
       if (!svgRect) return
 
       // Find values for all curves at this x position
-      const tooltipContent = data
-        .map((curve) => {
-          const index = bisect(curve.points, point.x, 1)
-          if (index === 0) {
-            // If before first point, use first point
-            const firstPoint = curve.points[0]
+      const tooltipContent = `
+        <div style="margin-bottom: 8px;">
+          <strong>Assets:</strong> ${formatScientific(point.x)}
+        </div>
+        ${data
+          .map((curve) => {
+            const index = bisect(curve.points, point.x, 1)
+            if (index === 0) {
+              // If before first point, use first point
+              const firstPoint = curve.points[0]
+              return `
+                <div style="
+                  ${curve.id === selectedCurveId ? 'font-weight: bold; color: ' + curve.color : ''}
+                  margin-bottom: 4px;
+                ">
+                  <span style="color: ${curve.color}">●</span> ${curve.name}<br/>
+                  Shares: ${formatScientific(firstPoint.y)}
+                </div>
+              `
+            }
+            if (index >= curve.points.length) {
+              // If after last point, use last point
+              const lastPoint = curve.points[curve.points.length - 1]
+              return `
+                <div style="
+                  ${curve.id === selectedCurveId ? 'font-weight: bold; color: ' + curve.color : ''}
+                  margin-bottom: 4px;
+                ">
+                  <span style="color: ${curve.color}">●</span> ${curve.name}<br/>
+                  Shares: ${formatScientific(lastPoint.y)}
+                </div>
+              `
+            }
+
+            // Get the two points we're between
+            const point1 = curve.points[index - 1]
+            const point2 = curve.points[index]
+
+            // Calculate the interpolation factor
+            const t = (point.x - point1.x) / (point2.x - point1.x)
+
+            // Interpolate the y value
+            const interpolatedY = point1.y + t * (point2.y - point1.y)
+
+            const isSelected = curve.id === selectedCurveId
             return `
               <div style="
-                ${curve.id === selectedCurveId ? 'font-weight: bold; color: ' + curve.color : ''}
+                ${isSelected ? 'font-weight: bold; color: ' + curve.color : ''}
                 margin-bottom: 4px;
               ">
                 <span style="color: ${curve.color}">●</span> ${curve.name}<br/>
-                Assets: ${formatScientific(firstPoint.x)}<br/>
-                Shares: ${formatScientific(firstPoint.y)}
+                Shares: ${formatScientific(interpolatedY)}
               </div>
             `
-          }
-          if (index >= curve.points.length) {
-            // If after last point, use last point
-            const lastPoint = curve.points[curve.points.length - 1]
-            return `
-              <div style="
-                ${curve.id === selectedCurveId ? 'font-weight: bold; color: ' + curve.color : ''}
-                margin-bottom: 4px;
-              ">
-                <span style="color: ${curve.color}">●</span> ${curve.name}<br/>
-                Assets: ${formatScientific(lastPoint.x)}<br/>
-                Shares: ${formatScientific(lastPoint.y)}
-              </div>
-            `
-          }
-
-          // Get the two points we're between
-          const point1 = curve.points[index - 1]
-          const point2 = curve.points[index]
-
-          // Calculate the interpolation factor
-          const t = (point.x - point1.x) / (point2.x - point1.x)
-
-          // Interpolate the y value
-          const interpolatedY = point1.y + t * (point2.y - point1.y)
-
-          const isSelected = curve.id === selectedCurveId
-          return `
-            <div style="
-              ${isSelected ? 'font-weight: bold; color: ' + curve.color : ''}
-              margin-bottom: 4px;
-            ">
-              <span style="color: ${curve.color}">●</span> ${curve.name}<br/>
-              Assets: ${formatScientific(point.x)}<br/>
-              Shares: ${formatScientific(interpolatedY)}
-            </div>
-          `
-        })
-        .filter(Boolean)
-        .join('')
+          })
+          .filter(Boolean)
+          .join('')}`
 
       // Update tooltip content and styles
       tooltip
