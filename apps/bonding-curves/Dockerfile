@@ -1,3 +1,28 @@
+# Stage 1: Set up Anvil
+FROM ubuntu:22.04 AS anvil
+
+# Install dependencies
+RUN apt-get update && \
+    apt-get install -y curl build-essential git && \
+    rm -rf /var/lib/apt/lists/*
+
+# Install Foundry
+RUN curl -L https://foundry.paradigm.xyz | bash
+ENV PATH="/root/.foundry/bin:${PATH}"
+RUN foundryup
+
+WORKDIR /app
+
+# Copy lib and config from bonding-curves directory
+COPY ./lib/ /app/lib/
+COPY ./foundry.toml /app/foundry.toml
+COPY ./remappings.txt /app/remappings.txt
+
+# Create contracts directory and copy BaseCurve
+RUN mkdir -p /app/contracts
+COPY ./contracts/BaseCurve.sol /app/contracts/
+
+# Stage 2: Build and run the application
 FROM ubuntu:22.04
 
 # Install Node.js and build dependencies
@@ -8,10 +33,9 @@ RUN apt-get update && \
     npm install -g pnpm && \
     rm -rf /var/lib/apt/lists/*
 
-# Install Foundry
-RUN curl -L https://foundry.paradigm.xyz | bash
-ENV PATH="/root/.foundry/bin:${PATH}"
-RUN foundryup
+# Copy Anvil from first stage
+COPY --from=anvil /root/.foundry/bin/anvil /usr/local/bin/
+COPY --from=anvil /app /app/
 
 # Set up workspace
 WORKDIR /workspace
@@ -26,32 +50,12 @@ COPY . .
 WORKDIR /workspace
 RUN pnpm install
 
-# Set up Foundry files
-WORKDIR /workspace/apps/bonding-curves
-COPY lib/ ./lib/
-COPY foundry.toml ./foundry.toml
-COPY remappings.txt ./remappings.txt
-COPY contracts/ ./contracts/
-
 # Build the application
+WORKDIR /workspace/apps/bonding-curves
 RUN pnpm run build
-
-# Create start script
-RUN echo '#!/bin/bash\n\
-# Start Anvil in the background\n\
-anvil --host 0.0.0.0 --chain-id 31337 &\n\
-\n\
-# Wait for Anvil to be ready\n\
-until curl -s -o /dev/null http://localhost:8545; do\n\
-  echo "Waiting for Anvil to be ready..."\n\
-  sleep 1\n\
-done\n\
-\n\
-# Start the app\n\
-PORT=8080 pnpm start' > ./start.sh && \
-chmod +x ./start.sh
 
 # Expose ports
 EXPOSE 8080 8545
 
-CMD ["./start.sh"] 
+# Start both services
+CMD cd /app && anvil --host 0.0.0.0 --chain-id 31337 & cd /workspace/apps/bonding-curves && PORT=8080 pnpm start 
