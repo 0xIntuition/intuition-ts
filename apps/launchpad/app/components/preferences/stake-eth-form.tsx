@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { FormEvent, useState } from 'react'
 
 import { Button, Input, Label } from '@0xintuition/1ui'
 
@@ -11,7 +11,7 @@ export function StakeEthForm({
 }) {
   const [stakeAmount, setStakeAmount] = useState(currentStake.toString())
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     onStake(parseFloat(stakeAmount))
   }

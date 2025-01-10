@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { FormEvent, useState } from 'react'
 
 import {
   Button,
@@ -32,7 +32,7 @@ export function AddPreferenceForm({ onAddPreference }: AddPreferenceFormProps) {
   const [description, setDescription] = useState('')
   const [category, setCategory] = useState('')
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     onAddPreference({
       name,

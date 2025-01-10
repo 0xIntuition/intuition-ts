@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { FormEvent, useState } from 'react'
 
 import { Button, Input, ScrollArea } from '@0xintuition/1ui'
 
@@ -13,7 +13,7 @@ export function PreferenceChat({ preferenceName }: { preferenceName: string }) {
   ])
   const [newMessage, setNewMessage] = useState('')
 
-  const handleSendMessage = (e) => {
+  const handleSendMessage = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (newMessage.trim()) {
       setMessages([

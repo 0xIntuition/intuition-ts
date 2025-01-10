@@ -14,7 +14,7 @@ import {
   ScrollArea,
 } from '@0xintuition/1ui'
 
-import { AddPreferenceForm, AddPreferenceForm } from '@components/preferences/add-preference-form'
+import { AddPreferenceForm } from '@components/preferences/add-preference-form'
 import { PreferenceCard } from '@components/preferences/preference-card'
 import { PreferenceChat } from '@components/preferences/preference-chat'
 import { StakeEthForm } from '@components/preferences/stake-eth-form'
@@ -33,6 +33,23 @@ import {
   Zap,
 } from 'lucide-react'
 
+interface Category {
+  id: string
+  name: string
+}
+
+interface Preference {
+  id: number
+  name: string
+  app: string
+  description: string
+  category: string
+  icon?: { name: string }
+  userCount: number
+  ethStaked: number
+  mutualConnections: number
+}
+
 export async function loader() {
   return {
     preferences,
@@ -41,7 +58,10 @@ export async function loader() {
 }
 
 export default function PreferencesMarketplace() {
-  const { categories, preferences } = useLoaderData<typeof loader>()
+  const { categories, preferences } = useLoaderData<typeof loader>() as {
+    categories: Category[]
+    preferences: Preference[]
+  }
   const [searchQuery, setSearchQuery] = useState('')
 
   const [activeDialog, setActiveDialog] = useState<{
@@ -90,8 +110,6 @@ export default function PreferencesMarketplace() {
     logger('action')
     setActiveDialog(null)
   }
-
-  
 
   return (
     <>
@@ -205,9 +223,9 @@ export default function PreferencesMarketplace() {
             </DialogDescription>
           </DialogHeader>
           <StakeEthForm
-            onStake={(amount) => {
+            onStake={() => {
               if (activeDialog?.prefId) {
-                handleStakeEth(activeDialog.prefId, amount)
+                handleStakeEth()
               }
             }}
             currentStake={0}

@@ -1,13 +1,6 @@
-import {
-  Button,
-  cn,
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@0xintuition/1ui'
+import { Button, cn } from '@0xintuition/1ui'
 
-import { Coins, MessageSquare, MoreVertical, Users } from 'lucide-react'
+import { Coins, MessageSquare, Users } from 'lucide-react'
 
 interface PreferenceCardProps extends React.HTMLAttributes<HTMLDivElement> {
   name: string
