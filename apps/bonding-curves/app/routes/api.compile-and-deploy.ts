@@ -1,11 +1,11 @@
-import { NextResponse } from 'next/server'
+import { ActionFunctionArgs, json } from '@remix-run/node'
 import { writeFile } from 'fs/promises'
 import { exec } from 'child_process'
 import { promisify } from 'util'
 import path from 'path'
 import { createPublicClient, createWalletClient, http, Chain } from 'viem'
 import { promises as fs } from 'fs'
-import { prepareConstructorArgs, type ConstructorArgs } from '../../lib/contract-utils'
+import { prepareConstructorArgs, type ConstructorArgs } from '../lib/contract-utils'
 
 const execAsync = promisify(exec)
 
@@ -24,7 +24,7 @@ const localChain = {
   },
 } as const satisfies Chain
 
-export async function POST(request: Request) {
+export async function action({ request }: ActionFunctionArgs) {
   try {
     const formData = await request.formData()
     const file = formData.get('file') as File
@@ -34,7 +34,7 @@ export async function POST(request: Request) {
     const constructorArgs = constructorArgsStr ? JSON.parse(constructorArgsStr) as ConstructorArgs : undefined
 
     if (!file || !content) {
-      return NextResponse.json(
+      return json(
         { error: 'File and content are required' },
         { status: 400 }
       )
@@ -55,7 +55,7 @@ export async function POST(request: Request) {
       if (stderr) console.error('Compilation errors:', stderr)
     } catch (error) {
       console.error('Compilation failed:', error)
-      return NextResponse.json(
+      return json(
         { error: 'Contract compilation failed' },
         { status: 500 }
       )
@@ -86,12 +86,12 @@ export async function POST(request: Request) {
       // If we only need the ABI, return it
       if (getAbiOnly) {
         console.log('Returning ABI:', artifact.abi)
-        return NextResponse.json({ abi: artifact.abi })
+        return json({ abi: artifact.abi })
       }
 
     } catch (error) {
       console.error('Failed to read artifact:', error)
-      return NextResponse.json(
+      return json(
         { error: 'Failed to read contract artifact' },
         { status: 500 }
       )
@@ -127,19 +127,19 @@ export async function POST(request: Request) {
         throw new Error('No contract address in receipt')
       }
 
-      return NextResponse.json({ address: receipt.contractAddress })
+      return json({ address: receipt.contractAddress })
     } catch (error) {
       console.error('Deployment failed:', error)
-      return NextResponse.json(
+      return json(
         { error: 'Contract deployment failed' },
         { status: 500 }
       )
     }
   } catch (error) {
     console.error('Error:', error)
-    return NextResponse.json(
+    return json(
       { error: 'Failed to process request' },
       { status: 500 }
     )
   }
-} 
+}
