@@ -1,5 +1,26 @@
 # Stage 1: Set up Anvil
-FROM ./docker/Dockerfile AS anvil
+FROM ubuntu:22.04 AS anvil
+
+# Install dependencies
+RUN apt-get update && \
+    apt-get install -y curl build-essential git && \
+    rm -rf /var/lib/apt/lists/*
+
+# Install Foundry
+RUN curl -L https://foundry.paradigm.xyz | bash
+ENV PATH="/root/.foundry/bin:${PATH}"
+RUN foundryup
+
+WORKDIR /app
+
+# Copy lib and config
+COPY lib/ /app/lib/
+COPY foundry.toml /app/foundry.toml
+COPY remappings.txt /app/remappings.txt
+
+# Create contracts directory and copy BaseCurve
+RUN mkdir -p /app/contracts
+COPY contracts/BaseCurve.sol /app/contracts/
 
 # Stage 2: Build and run the application
 FROM ubuntu:22.04
