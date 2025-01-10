@@ -28,7 +28,7 @@ RUN apt-get update && \
     apt-get install -y curl build-essential git && \
     curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
     apt-get install -y nodejs && \
-    npm install -g pnpm@9.0.6 prettier @remix-run/dev && \
+    npm install -g pnpm@9.0.6 prettier && \
     rm -rf /var/lib/apt/lists/*
 
 # Copy Anvil from first stage
@@ -48,6 +48,7 @@ RUN pnpm install && \
     pnpm --filter "@0xintuition/1ui" install && \
     pnpm --filter "@0xintuition/1ui" run build && \
     pnpm --filter "@0xintuition/bonding-curves" install && \
+    pnpm --filter "@0xintuition/bonding-curves" add -D @remix-run/dev && \
     pnpm --filter "@0xintuition/bonding-curves" run build
 
 # Expose ports
