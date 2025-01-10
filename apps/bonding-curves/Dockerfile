@@ -41,8 +41,9 @@ COPY package.json pnpm-lock.yaml ./
 COPY packages packages/
 COPY apps apps/
 
-# Install all dependencies at workspace root and build all packages
-RUN pnpm install && pnpm -r build
+# Install dependencies and build packages
+RUN pnpm install && \
+    cd apps/bonding-curves && pnpm run build
 
 # Expose ports
 EXPOSE 8080 8545
