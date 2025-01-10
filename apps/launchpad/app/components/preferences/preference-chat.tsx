@@ -1,6 +1,6 @@
 import { FormEvent, useState } from 'react'
 
-import { Button, Input, ScrollArea } from '@0xintuition/1ui'
+import { Button, Input, ScrollArea, Text } from '@0xintuition/1ui'
 
 export function PreferenceChat({ preferenceName }: { preferenceName: string }) {
   const [messages, setMessages] = useState([
@@ -26,12 +26,18 @@ export function PreferenceChat({ preferenceName }: { preferenceName: string }) {
 
   return (
     <div className="h-[300px] flex flex-col">
-      <h3 className="text-lg font-semibold mb-2">{preferenceName} Chat</h3>
+      <Text variant="heading" weight="normal" className=" mb-2">
+        {preferenceName} Chat
+      </Text>
       <ScrollArea className="flex-grow mb-4 p-4 border rounded-md">
         {messages.map((message) => (
           <div key={message.id} className="mb-2">
-            <span className="font-bold">{message.user}: </span>
-            <span>{message.text}</span>
+            <Text variant="caption" weight="semibold">
+              {message.user}:{' '}
+            </Text>
+            <Text variant="caption" weight="normal">
+              {message.text}
+            </Text>
           </div>
         ))}
       </ScrollArea>
