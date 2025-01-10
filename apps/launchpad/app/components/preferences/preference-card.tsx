@@ -1,4 +1,4 @@
-import { Button, cn } from '@0xintuition/1ui'
+import { Button, cn, Text } from '@0xintuition/1ui'
 
 import { Coins, MessageSquare, Users } from 'lucide-react'
 
@@ -39,16 +39,28 @@ export function PreferenceCard({
         {/* Header */}
         <div className="flex items-center justify-between p-4">
           <div className="flex items-center gap-3">
-            <div className="size-8 rounded flex items-center justify-center">
+            <div className="size-6 rounded flex items-center justify-center">
               {icon}
             </div>
             <div className="flex flex-col gap-1.5">
-              <p className="text-sm text-muted-foreground/70">For {app}</p>
+              <Text
+                variant="body"
+                weight="normal"
+                className="text-foreground/70"
+              >
+                For {app}
+              </Text>
               <div className="flex items-center gap-3">
-                <h3 className="text-lg font-normal text-white">{name}</h3>
-                <span className="rounded-xl border border-border/10 px-2 py-0.5 text-sm text-[#E6B17E]">
+                <Text variant="bodyLarge" className="text-white">
+                  {name}
+                </Text>
+                <Text
+                  variant="caption"
+                  weight="normal"
+                  className="rounded-xl border border-border/10 px-2 py-0.5 text-[#E6B17E]"
+                >
                   {userCount}
-                </span>
+                </Text>
               </div>
             </div>
           </div>
@@ -56,9 +68,13 @@ export function PreferenceCard({
 
         {/* Middle section with description and stats */}
         <div>
-          <p className="text-sm text-muted-foreground/90 px-4 pb-4">
+          <Text
+            variant="caption"
+            weight="normal"
+            className="text-foreground/90 px-4 pb-4"
+          >
             {description}
-          </p>
+          </Text>
           {/* Dotted line */}
           <div className="py-4">
             <div className="border-t border-dashed border-border/10" />
@@ -67,15 +83,23 @@ export function PreferenceCard({
           <div className="flex justify-between items-center px-4 pb-4">
             <div className="flex items-center gap-2">
               <Users className="h-4 w-4 text-amber-500" />
-              <span className="text-sm text-muted-foreground/90">
+              <Text
+                variant="caption"
+                weight="normal"
+                className="text-foreground/90"
+              >
                 {userCount} users
-              </span>
+              </Text>
             </div>
             <div className="flex items-center gap-2">
               <Coins className="h-4 w-4 text-amber-500" />
-              <span className="text-sm text-muted-foreground/90">
+              <Text
+                variant="caption"
+                weight="normal"
+                className="text-foreground/90"
+              >
                 {ethStaked.toFixed(2)} ETH staked
-              </span>
+              </Text>
             </div>
           </div>
         </div>
@@ -83,7 +107,13 @@ export function PreferenceCard({
         {/* Position info */}
         <div className="flex items-center justify-between bg-black px-6 py-3 rounded-b-lg">
           <div className="flex-col items-start gap-2">
-            <p className="text-sm text-muted-foreground/70">Total Staked</p>
+            <Text
+              variant="caption"
+              weight="normal"
+              className="text-foreground/70"
+            >
+              Total Staked
+            </Text>
             <div className="flex items-center gap-2">
               <p className="text-lg font-medium text-white">
                 {ethStaked.toFixed(1)} ETH
