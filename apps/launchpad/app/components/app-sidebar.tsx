@@ -8,7 +8,6 @@ import {
   Sidebar,
   SidebarContent,
   SidebarGroup,
-  SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
   SidebarHeader,
@@ -307,7 +306,7 @@ export function AppSidebar({
                   )}
                 >
                   <a
-                    href="/marketplace/preferences"
+                    href="/marketplaces/preferences"
                     className="flex items-center gap-3"
                   >
                     <Settings className="h-4 w-4" />
