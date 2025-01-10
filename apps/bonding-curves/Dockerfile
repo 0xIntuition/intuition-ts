@@ -43,7 +43,10 @@ COPY apps apps/
 
 # Install dependencies and build packages
 RUN pnpm install && \
-    cd apps/bonding-curves && pnpm run build
+    cd apps/bonding-curves && \
+    pnpm install && \
+    pnpm add -g @remix-run/dev && \
+    pnpm run build
 
 # Expose ports
 EXPOSE 8080 8545
