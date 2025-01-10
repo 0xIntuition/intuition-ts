@@ -25,7 +25,7 @@ COPY contracts/ /app/contracts/
 COPY . .
 
 # Install dependencies and build
-RUN pnpm install --frozen-lockfile && \
+RUN pnpm install --no-frozen-lockfile && \
     pnpm run build
 
 # Create start script
