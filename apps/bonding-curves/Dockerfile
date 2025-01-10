@@ -39,12 +39,15 @@ COPY --from=anvil /app /app/
 WORKDIR /workspace
 COPY package.json pnpm-lock.yaml ./
 COPY packages packages/
-COPY apps apps/
 
-# Install dependencies and build packages
+# Build workspace packages first
 RUN pnpm install && \
-    cd apps/bonding-curves && \
-    pnpm install && \
+    cd packages/1ui && pnpm install && pnpm run build
+
+# Set up app
+COPY apps apps/
+WORKDIR /workspace/apps/bonding-curves
+RUN pnpm install && \
     pnpm add -g @remix-run/dev && \
     pnpm run build
 
