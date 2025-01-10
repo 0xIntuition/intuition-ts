@@ -37,13 +37,19 @@ COPY --from=anvil /app /app/
 
 # Set up workspace and copy all packages
 WORKDIR /workspace
-COPY package.json pnpm-lock.yaml ./
+COPY package.json pnpm-lock.yaml tsconfig.base.json ./
 COPY packages packages/
 
-# Build workspace packages in dependency order
-RUN pnpm install && \
-    cd packages/graphql && pnpm install && pnpm run build && \
-    cd ../1ui && pnpm install && pnpm run build
+# Install root dependencies first
+RUN pnpm install
+
+# Build graphql package with type generation skipped
+WORKDIR /workspace/packages/graphql
+RUN pnpm install && SKIP_TYPES=true pnpm run build
+
+# Build 1ui package
+WORKDIR /workspace/packages/1ui
+RUN pnpm install && pnpm run build
 
 # Set up app
 COPY apps apps/
