@@ -28,7 +28,7 @@ RUN apt-get update && \
     apt-get install -y curl build-essential git && \
     curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
     apt-get install -y nodejs && \
-    npm install -g pnpm && \
+    npm install -g pnpm@9.0.6 && \
     rm -rf /var/lib/apt/lists/*
 
 # Copy Anvil from first stage
