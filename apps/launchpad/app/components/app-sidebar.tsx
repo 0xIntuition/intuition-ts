@@ -15,6 +15,8 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarTrigger,
+  Text,
+  TextVariant,
   useIsMobile,
 } from '@0xintuition/1ui'
 
@@ -282,8 +284,15 @@ export function AppSidebar({
                     )}
                   >
                     <a href={item.href} className="flex items-center gap-3">
-                      <item.icon className="h-4 w-4" />
-                      {!isMinimal && <span>{item.label}</span>}
+                      <item.icon className="!h-5 !w-5" />
+                      {!isMinimal && (
+                        <Text
+                          variant={TextVariant.body}
+                          className="text-inherit"
+                        >
+                          {item.label}
+                        </Text>
+                      )}
                     </a>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -328,8 +337,15 @@ export function AppSidebar({
                     className={cn('w-full gap-3 py-3')}
                   >
                     <a href={item.href} className="flex items-center gap-3">
-                      <item.icon className="h-4 w-4" />
-                      {!isMinimal && <span>{item.label}</span>}
+                      <item.icon className="!h-5 !w-5" />
+                      {!isMinimal && (
+                        <Text
+                          variant={TextVariant.body}
+                          className="text-inherit"
+                        >
+                          {item.label}
+                        </Text>
+                      )}
                     </a>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -348,13 +364,16 @@ export function AppSidebar({
           <SheetTrigger asChild>
             <SidebarTrigger />
           </SheetTrigger>
-          <SheetContent side="left" className="w-[300px] p-0">
+          <SheetContent
+            side="left"
+            className="w-[300px] p-0 bg-gradient-to-r from-[#060504] to-[#101010]"
+          >
             {sidebarContent}
           </SheetContent>
         </Sheet>
       ) : (
         <Sidebar
-          className="border-r border-border/10"
+          className="border-r border-border/10 bg-gradient-to-r from-[#060504] to-[#101010]"
           collapsible="icon"
           {...props}
         >

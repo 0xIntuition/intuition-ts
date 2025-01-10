@@ -2,13 +2,19 @@ import { useMemo, useState } from 'react'
 
 import {
   Button,
+  ButtonSize,
+  ButtonVariant,
   Card,
   CardContent,
   CardHeader,
   cn,
   Icon,
+  Text,
+  TextVariant,
+  TextWeight,
 } from '@0xintuition/1ui'
 
+import { Share2 } from 'lucide-react'
 import {
   Area,
   AreaChart,
@@ -31,6 +37,7 @@ interface TimeSeriesData {
   timestamp: number
   value: number
   change: number
+  difference: number
 }
 
 interface PortfolioStatsProps {
@@ -65,12 +72,14 @@ const generateStaticYearData = (): TimeSeriesData[] => {
     const value = baseValue + noise
 
     const prevValue = data[data.length - 1]?.value || value
-    const change = ((value - prevValue) / prevValue) * 100
+    const difference = value - prevValue
+    const change = (difference / prevValue) * 100
 
     data.push({
       timestamp: date.getTime(),
       value,
       change,
+      difference,
     })
   }
 
@@ -89,12 +98,14 @@ const generateStaticYearData = (): TimeSeriesData[] => {
     const value = trendValue + hourlyNoise
 
     const prevValue = hourlyData[hourlyData.length - 1]?.value || value
-    const change = ((value - prevValue) / prevValue) * 100
+    const difference = value - prevValue
+    const change = (difference / prevValue) * 100
 
     hourlyData.push({
       timestamp: date.getTime(),
       value,
       change,
+      difference,
     })
   }
 
@@ -186,42 +197,48 @@ export function PortfolioStats({ stats }: PortfolioStatsProps) {
   }
 
   return (
-    <Card className="bg-background/5 border-border/10">
+    <Card className="rounded-lg border-none bg-gradient-to-br from-[#060504] to-[#101010] min-w-[480px]">
       <CardHeader className="flex flex-row items-center justify-between pb-2">
         <div className="flex items-center gap-2">
-          <h2 className="text-sm font-medium text-muted-foreground">
-            Portfolio
-          </h2>
+          <Text variant={TextVariant.bodyLarge}>Portfolio</Text>
         </div>
+        <Button variant={ButtonVariant.secondary} size={ButtonSize.iconXl}>
+          <Share2 className="h-4 w-4" />
+          <span className="sr-only">Share</span>
+        </Button>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
-            <span className="text-2xl font-medium">
+            <Text variant={TextVariant.heading4} weight={TextWeight.medium}>
               ${hoveredPoint?.value.toFixed(2) ?? stats.value.toFixed(2)}
-            </span>
-            <span
+            </Text>
+            <Text
+              variant={TextVariant.bodyLarge}
               className={cn(
-                'text-xs font-medium',
                 (hoveredPoint?.change ?? stats.change) >= 0
-                  ? 'text-green-500'
-                  : 'text-red-500',
+                  ? 'text-[#34C578]'
+                  : 'text-[#FF4A4A]',
               )}
             >
-              {(hoveredPoint?.change ?? stats.change) >= 0 ? '+' : ''}
-              {(hoveredPoint?.change ?? stats.change).toFixed(2)}%
-            </span>
+              {(hoveredPoint?.change ?? stats.change) >= 0 ? '+' : '-'}
+              <span className="mr-1">
+                {Math.abs(hoveredPoint?.difference ?? 0).toFixed(2)}
+              </span>
+              ({(hoveredPoint?.change ?? stats.change) >= 0 ? '+' : ''}
+              {(hoveredPoint?.change ?? stats.change).toFixed(2)}%)
+            </Text>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-sm text-[#E6A068]">
+            <Text variant={TextVariant.headline} className="text-accent">
               {stats.points} Points
-            </span>
+            </Text>
             <Button
               variant="text"
               size="icon"
-              className="h-5 w-5 text-[#E6A068]"
+              className="h-5 w-5 p-0 text-accent/70 hover:text-accent"
             >
-              <Icon name="arrows-repeat" className="h-4 w-4" />
+              <Icon name="arrows-repeat" className="!h-5 !w-5" />
               <span className="sr-only">Refresh</span>
             </Button>
           </div>
@@ -241,16 +258,8 @@ export function PortfolioStats({ stats }: PortfolioStatsProps) {
             >
               <defs>
                 <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
-                  <stop
-                    offset="0%"
-                    stopColor="rgb(59, 130, 246)"
-                    stopOpacity="0.5"
-                  />
-                  <stop
-                    offset="100%"
-                    stopColor="rgb(59, 130, 246)"
-                    stopOpacity="0"
-                  />
+                  <stop offset="0%" stopColor="#ba8461" stopOpacity="0.5" />
+                  <stop offset="100%" stopColor="#ba8461" stopOpacity="0" />
                 </linearGradient>
               </defs>
               <XAxis
@@ -269,7 +278,7 @@ export function PortfolioStats({ stats }: PortfolioStatsProps) {
               <Area
                 type="monotone"
                 dataKey="value"
-                stroke="rgb(59, 130, 246)"
+                stroke="#ba8461"
                 strokeWidth={1}
                 fill="url(#colorValue)"
                 isAnimationActive={false}

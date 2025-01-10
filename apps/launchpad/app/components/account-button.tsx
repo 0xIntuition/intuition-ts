@@ -5,6 +5,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
   SidebarMenuButton,
+  Text,
+  TextVariant,
 } from '@0xintuition/1ui'
 import { useGetAccountQuery } from '@0xintuition/graphql'
 
@@ -38,25 +40,28 @@ export function AccountButton({
   return isReady && isAuthenticated && privyUser.wallet ? (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <SidebarMenuButton size="lg" className="w-full gap-3 theme-border">
+        <SidebarMenuButton
+          size="lg"
+          className="w-full gap-3 theme-border bg-[#131313]"
+        >
           <Avatar
-            className="h-6 w-6 border border-border/10"
+            className="h-7 w-7 border border-border/10"
             name={walletAddress}
             src={avatarImage}
           />
           {!isMinimal && (
             <div className="flex flex-1 items-center justify-between">
-              <span className="text-sm font-medium">
+              <Text variant={TextVariant.body}>
                 {accountResult?.account?.label || displayAddress}
-              </span>
-              <MoreVertical className="h-4 w-4 text-muted-foreground/70" />
+              </Text>
+              <MoreVertical className="h-6 w-6 text-secondary/60" />
             </div>
           )}
         </SidebarMenuButton>
       </DropdownMenuTrigger>
       <DropdownMenuContent
         align="start"
-        className="w-[--radix-dropdown-menu-trigger-width]"
+        className="w-[--radix-dropdown-menu-trigger-width] bg-[#131313]"
       >
         <DropdownMenuItem>Profile</DropdownMenuItem>
         <DropdownMenuItem>Preferences</DropdownMenuItem>

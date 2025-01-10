@@ -50,25 +50,50 @@ export const meta: MetaFunction = () => {
   ]
 }
 
-export default function App() {
+export function Document({
+  children,
+  /* eslint-disable @typescript-eslint/no-unused-vars */
+  theme = 'system',
+}: {
+  children: React.ReactNode
+  gtmTrackingId?: string
+  theme?: string
+}) {
   return (
     <html lang="en" data-theme="dark">
       <head>
         <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"
+        />
         <Meta />
         <Links />
       </head>
       <body>
-        <main className="relative flex min-h-screen flex-col antialiased bg-background">
-          <Toaster position="top-right" />
-          <Providers>
-            <Outlet />
-          </Providers>
-          <ScrollRestoration />
-          <Scripts />
-        </main>
+        {children}
+        <ScrollRestoration />
+        <Scripts />
       </body>
     </html>
+  )
+}
+
+export default function App() {
+  return (
+    <Document>
+      <Toaster position="top-right" />
+      <Providers>
+        <AppLayout />
+      </Providers>
+    </Document>
+  )
+}
+
+export function AppLayout() {
+  return (
+    <main className="relative flex min-h-screen w-full flex-col justify-between antialiased">
+      <Outlet />
+    </main>
   )
 }

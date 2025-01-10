@@ -2,6 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  :root {
+    --accent: #ba8461 !important;
+    --green-500: #34c578 !important;
+  }
+
+  .dark {
+    --accent: #ba8461 !important;
+    --green-500: #34c578 !important;
+  }
+}
+
 html,
 body {
   overflow-x: hidden;

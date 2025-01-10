@@ -1,5 +1,6 @@
 import * as React from 'react'
 
+import { Text, TextVariant } from 'components/Text'
 import { cn } from 'styles'
 
 export interface PageHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -18,11 +19,11 @@ export function PageHeader({
   return (
     <div className={cn('flex flex-col gap-1', className)} {...props}>
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold">{title}</h1>
+        <Text variant={TextVariant.heading4}>{title}</Text>
         {lastUpdated && (
-          <span className="text-sm text-primary/70">
+          <Text variant={TextVariant.body} className="text-primary/70">
             Last Updated {lastUpdated} ago
-          </span>
+          </Text>
         )}
       </div>
       {subtitle && <p className="text-sm text-primary/70">{subtitle}</p>}

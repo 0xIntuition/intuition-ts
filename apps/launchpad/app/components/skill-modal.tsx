@@ -18,7 +18,7 @@ interface SkillModalProps {
   levels: SkillLevel[]
 }
 
-const LockIcon = () => (
+export const LockIcon = () => (
   <svg
     width="34"
     height="42"

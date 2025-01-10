@@ -22,19 +22,15 @@ function AppShellContent({ children, suspense = true }: AppShellContentProps) {
   const { layoutVariant, paddingVariant } = useAppShell()
 
   const content = (
-    <main className="flex min-h-screen flex-1 bg-[#131313] transition-all duration-200">
-      <div className="flex w-full flex-col">
-        <div
-          className={cn(
-            'flex flex-col w-full max-w-[1440px] mx-auto space-y-6',
-            layoutConfig.maxWidth[layoutVariant],
-            layoutConfig.padding[paddingVariant],
-          )}
-        >
-          {children}
-        </div>
-      </div>
-    </main>
+    <div
+      className={cn(
+        'flex flex-col w-full mx-auto space-y-6',
+        layoutConfig.maxWidth[layoutVariant],
+        layoutConfig.padding[paddingVariant],
+      )}
+    >
+      {children}
+    </div>
   )
 
   if (suspense) {
@@ -56,7 +52,7 @@ function AppShellInner({ children }: BaseLayoutProps) {
       }
     >
       <AppSidebar />
-      <SidebarInset>
+      <SidebarInset className="bg-[#131313]">
         <AppShellContent>{children}</AppShellContent>
       </SidebarInset>
     </SidebarProvider>

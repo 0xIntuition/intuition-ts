@@ -1,93 +1,178 @@
-import { Button, Card, CardContent, Progress } from '@0xintuition/1ui'
+import {
+  Card,
+  CardContent,
+  formatNumber,
+  Text,
+  TextVariant,
+} from '@0xintuition/1ui'
 
-import { Lock, Pause } from 'lucide-react'
+import { LockIcon } from '@components/skill-modal'
+import { Play } from 'lucide-react'
 
-export const LevelTier = {
-  NOVICE: 'NOVICE',
-  INTERMEDIATE: 'INTERMEDIATE',
-  ADVANCED: 'ADVANCED',
-  EXPERT: 'EXPERT',
-} as const
-
-export type LevelTierType = keyof typeof LevelTier
-
-export interface LevelProgress {
-  currentLevel: number
-  tier: LevelTierType
+interface Skill {
+  name: string
   points: number
-  requiredPoints: number
-  currentPoints: number
+}
+
+interface SkillLevel {
+  name: string
+  pointsThreshold: number
+  asset?: string // Optional asset to show instead of roman numeral
 }
 
 interface LevelProgressProps {
-  progress: LevelProgress
+  skill: Skill | null
+  levels: SkillLevel[]
 }
 
-export function LevelProgress({ progress }: LevelProgressProps) {
-  const progressPercentage =
-    (progress.currentPoints / progress.requiredPoints) * 100
+const romanNumerals = ['I', 'II', 'III', 'IV', 'V', 'VI']
+
+export function LevelProgress({ skill, levels }: LevelProgressProps) {
+  if (!skill) {
+    return null
+  }
+
+  const currentPoints = Math.floor(skill.points || 0)
+
+  // Find current level based on points
+  const currentLevel = levels.reduce((acc, level, index) => {
+    if (currentPoints >= level.pointsThreshold) {
+      return index
+    }
+    return acc
+  }, -1)
+
+  // Calculate progress percentage for current level
+  const nextLevelThreshold = levels[currentLevel + 1]?.pointsThreshold
+  const currentLevelThreshold = levels[currentLevel]?.pointsThreshold || 0
+  const progressPercentage = nextLevelThreshold
+    ? ((currentPoints - currentLevelThreshold) /
+        (nextLevelThreshold - currentLevelThreshold)) *
+      100
+    : 100
 
   return (
-    <Card className="bg-background/5 border-border/10">
-      <CardContent className="space-y-8 pt-6">
-        <div className="space-y-4">
+    <Card className="rounded-lg border-none bg-gradient-to-br from-[#060504] to-[#101010] min-w-[480px] px-10 py-12">
+      <CardContent className="space-y-8">
+        <div className="space-y-8">
+          {/* Header */}
           <div className="flex items-center justify-between">
-            <div className="space-y-1">
-              <div className="flex items-center gap-2">
-                <div className="h-8 w-8 rounded-full bg-background/10" />
-                <h3 className="text-lg font-medium">
-                  LEVEL {progress.currentLevel}: {progress.tier}
-                </h3>
+            <div className="flex items-center gap-4">
+              <div className="w-16 h-16 rounded-full primary-gradient-subtle" />
+              <div>
+                <div className="flex items-center gap-2">
+                  <Text
+                    variant="heading4"
+                    weight="normal"
+                    className="text-foreground"
+                  >
+                    Level {romanNumerals[currentLevel + 1]}:{' '}
+                    {levels[currentLevel + 1]?.name}
+                  </Text>
+                </div>
+                <Text
+                  variant="headline"
+                  weight="normal"
+                  className="text-accent"
+                >
+                  {formatNumber(currentPoints, 1)} Points
+                </Text>
               </div>
-              <p className="text-sm text-muted-foreground">
-                {progress.points.toLocaleString()} Points
-              </p>
             </div>
-            <div className="flex items-center gap-3">
-              <div className="flex items-center gap-1 text-muted-foreground">
-                <span className="text-sm">
-                  {progress.currentPoints.toLocaleString()}
-                </span>
-                <span className="text-xs">/</span>
-                <span className="text-sm">
-                  {progress.requiredPoints.toLocaleString()}
-                </span>
+            <div className="flex items-center gap-1.5 h-6">
+              <div className="relative h-full w-[263px] bg-gradient-to-b from-[#000000] to-[#FFFFFF]/10 rounded-full overflow-hidden p-0.5">
+                <div className="bg-[#191919] rounded-full h-full w-full overflow-hidden p-0.5">
+                  <div
+                    className="h-full bg-gradient-to-r from-[#017CC2] to-[#0F4BA5] transition-all duration-300 rounded-full"
+                    style={{
+                      width: `${Math.min(Math.max(progressPercentage, 0), 100)}%`,
+                    }}
+                  />
+                  <Text className="absolute inset-0 flex items-center justify-end text-xs text-primary/50 pr-4">
+                    {formatNumber(currentPoints - currentLevelThreshold, 1)} /{' '}
+                    {formatNumber(
+                      nextLevelThreshold - currentLevelThreshold,
+                      1,
+                    )}
+                  </Text>
+                </div>
               </div>
-              <Button variant="ghost" size="icon" className="h-6 w-6">
-                <Pause className="h-3.5 w-3.5" />
-              </Button>
+              <Play className="h-3 w-3 fill-primary/50 text-transparent" />
+              <div className="primary-gradient-subtle rounded-full h-10 w-10 items-center justify-center flex">
+                <Text
+                  variant={TextVariant.headline}
+                  className="font-serif text-primary/50"
+                >
+                  {romanNumerals[currentLevel + 1]}
+                </Text>
+              </div>
             </div>
           </div>
-          <Progress value={progressPercentage} className="h-2" />
-        </div>
 
-        <div className="grid grid-cols-6 gap-4">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="space-y-2 text-center">
-              <div
-                className={`mx-auto flex aspect-square w-16 items-center justify-center rounded-full border text-lg font-medium transition-colors
-                  ${
-                    i <= progress.currentLevel - 1
-                      ? 'border-primary bg-primary text-primary-foreground'
-                      : i === progress.currentLevel
-                        ? 'border-primary/50 bg-background/10 text-primary/50'
-                        : 'border-border/10 bg-background/5'
-                  }`}
-              >
-                {i <= progress.currentLevel - 1 ? (
-                  <span>{i + 1}</span>
-                ) : (
-                  <Lock className="h-4 w-4 text-muted-foreground" />
-                )}
-              </div>
-              <div className="space-y-0.5">
-                <div className="text-xs font-medium text-muted-foreground">
-                  NOVICE
+          {/* Level Progression */}
+          <div className="flex justify-between items-center gap-4">
+            {levels?.map((level, index) => (
+              <>
+                <div key={index} className="flex flex-col items-center gap-4">
+                  <div className="relative">
+                    <div
+                      className={`
+                        relative w-20 h-20 rounded-full flex items-center justify-center border-[6px] pointer-events-none primary-gradient-subtle
+                        ${index <= currentLevel ? 'border-[#34c578]' : ''}
+                        ${index === currentLevel + 1 ? 'border-[#191919]' : ''}
+                        ${index > currentLevel + 1 ? 'border-[#191919]' : ''}
+                      `}
+                    >
+                      {index <= currentLevel + 1 ? (
+                        <Text
+                          variant={TextVariant.heading3}
+                          className="font-serif text-center"
+                        >
+                          {level.asset || romanNumerals[index]}
+                        </Text>
+                      ) : (
+                        <div className="flex items-center justify-center w-full h-full p-5">
+                          <LockIcon />
+                        </div>
+                      )}
+                    </div>
+                    {index === currentLevel + 1 && (
+                      <svg
+                        className="absolute inset-0 w-20 h-20 -rotate-90"
+                        viewBox="0 0 100 100"
+                      >
+                        <circle
+                          className="text-blue-500"
+                          strokeWidth="6"
+                          stroke="currentColor"
+                          fill="transparent"
+                          r="48"
+                          cx="50"
+                          cy="50"
+                          strokeDasharray={`${progressPercentage * 3.02} 302`}
+                          strokeLinecap="round"
+                        />
+                      </svg>
+                    )}
+                  </div>
+                  <div className="flex flex-col items-center">
+                    <Text
+                      variant={TextVariant.body}
+                      className="uppercase font-serif"
+                    >
+                      {level.name}
+                    </Text>
+                    <Text className="text-accent font-serif">
+                      {formatNumber(level.pointsThreshold, 0)}
+                    </Text>
+                  </div>
                 </div>
-                <div className="text-xs text-muted-foreground">25K</div>
-              </div>
-            </div>
-          ))}
+                {index < levels.length - 1 && (
+                  <Play className="h-3 w-3 fill-primary/50 text-transparent" />
+                )}
+              </>
+            ))}
+          </div>
         </div>
       </CardContent>
     </Card>
