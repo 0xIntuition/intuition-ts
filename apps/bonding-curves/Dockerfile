@@ -48,7 +48,7 @@ RUN pnpm install && \
     pnpm --filter "@0xintuition/1ui" install && \
     pnpm --filter "@0xintuition/1ui" run build && \
     pnpm --filter "@0xintuition/bonding-curves" install && \
-    pnpm --filter "@0xintuition/bonding-curves" add -D @remix-run/dev && \
+    pnpm --filter "@0xintuition/bonding-curves" add -D @remix-run/dev @remix-run/node @remix-run/react @remix-run/serve @remix-run/server-runtime && \
     pnpm --filter "@0xintuition/bonding-curves" run build
 
 # Expose ports
