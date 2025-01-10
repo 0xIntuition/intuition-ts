@@ -13,14 +13,12 @@ RUN foundryup
 
 WORKDIR /app
 
-# Copy lib and config
-COPY lib/ /app/lib/
-COPY foundry.toml /app/foundry.toml
-COPY remappings.txt /app/remappings.txt
-
-# Create contracts directory and copy BaseCurve
+# Copy files exactly as they're mounted in docker-compose
+COPY ./lib/ /app/lib/
+COPY ./foundry.toml /app/foundry.toml
+COPY ./remappings.txt /app/remappings.txt
 RUN mkdir -p /app/contracts
-COPY contracts/BaseCurve.sol /app/contracts/
+COPY ./contracts/BaseCurve.sol /app/contracts/
 
 # Stage 2: Build and run the application
 FROM ubuntu:22.04
