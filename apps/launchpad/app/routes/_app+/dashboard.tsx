@@ -1,9 +1,8 @@
 import { useState } from 'react'
 
-import { PageHeader } from '@0xintuition/1ui'
+import { Card, PageHeader } from '@0xintuition/1ui'
 
 import { ErrorPage } from '@components/error-page'
-import { DashboardLayout } from '@components/layouts/dashboard-layout'
 import { LevelProgress } from '@components/level-progress'
 import { OnboardingModal } from '@components/onboarding-modal/onboarding-modal'
 import { PortfolioStats } from '@components/portfolio-stats'
@@ -21,27 +20,34 @@ export default function Index() {
     points: 0,
   }
 
-  const levelProgress = {
-    currentLevel: 1,
-    tier: 'NOVICE' as const,
+  const skill = {
+    name: 'Protocol',
     points: 25400,
-    requiredPoints: 42000,
-    currentPoints: 5200,
   }
 
   return (
-    <DashboardLayout>
+    <>
+      <PageHeader title="Dashboard" />
+      <PortfolioStats stats={portfolioStats} />
+      <LevelProgress
+        skill={skill}
+        levels={[
+          { name: 'Novice', pointsThreshold: 1000 },
+          { name: 'Apprentice', pointsThreshold: 5000 },
+          { name: 'Adept', pointsThreshold: 10000 },
+          { name: 'Expert', pointsThreshold: 20000 },
+          { name: 'Master', pointsThreshold: 35000 },
+          { name: 'Grandmaster', pointsThreshold: 50000 },
+        ]}
+      />
+      <div className="grid gap-6 md:grid-cols-2">
+        <Card className="h-[400px] rounded-lg border-none bg-gradient-to-br from-[#060504] to-[#101010] min-w-[480px]" />
+        <Card className="h-[400px] rounded-lg border-none bg-gradient-to-br from-[#060504] to-[#101010] min-w-[480px]" />
+      </div>
       <OnboardingModal
         isOpen={showOnboarding}
         onClose={() => setShowOnboarding(false)}
       />
-      <PageHeader title="Dashboard" />
-      <PortfolioStats stats={portfolioStats} />
-      <LevelProgress progress={levelProgress} />
-      <div className="grid gap-6 md:grid-cols-2">
-        <div className="h-[400px] rounded-xl bg-background/5 border border-border/10" />
-        <div className="h-[400px] rounded-xl bg-background/5 border border-border/10" />
-      </div>
-    </DashboardLayout>
+    </>
   )
 }

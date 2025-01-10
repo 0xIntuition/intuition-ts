@@ -40,7 +40,7 @@ export function AggregateIQ({ totalIQ }: AggregateIQProps) {
       transition={{ duration: 0.5 }}
       whileHover={{ y: -5 }}
     >
-      <Card className="rounded-lg overflow-hidden bg-background border border-border/10">
+      <Card className="rounded-lg overflow-hidden border-none bg-gradient-to-br from-[#060504] to-[#101010]">
         <div className="absolute inset-0 bg-gradient-subtle opacity-70" />
         <div className="absolute inset-0 shadow-inner-pop" />
         <CardContent className="p-10 relative">

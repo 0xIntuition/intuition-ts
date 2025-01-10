@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
 
+import { Card, Text } from '@0xintuition/1ui'
+
 import { Lock } from 'lucide-react'
 
 interface ChapterProgressProps {
@@ -44,37 +46,28 @@ export default function ChapterProgress({
   }, [endTime])
 
   return (
-    <div className="w-full p-6 rounded-lg bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <Card className="w-full p-6 rounded-lg border-none bg-gradient-to-br from-[#060504] to-[#101010]">
       <div className="flex justify-between items-start mb-6">
         <div className="space-y-2">
-          <h2 className="text-2xl font-semibold tracking-tight">
+          <Text className="text-2xl uppercase font-serif">
             {currentChapter}
-          </h2>
-          <p className="text-[#E6A068] theme-border rounded-lg px-2">
+          </Text>
+          <Text className="w-fit text-accent theme-border rounded-lg px-2">
             Next: {nextChapter}
-          </p>
+          </Text>
         </div>
-        <div className="text-[#E6A068] text-xl font-medium tabular-nums">
+        <div className="text-accent text-xl font-medium tabular-nums">
           {timeLeft}
         </div>
       </div>
 
       <div className="relative mt-8">
-        {/* Progress Line */}
-        <div className="absolute h-0.5 bg-muted w-full top-5" />
-        <div
-          className="absolute h-0.5 bg-blue-500 top-5 transition-all duration-500"
-          style={{ width: `${(currentStage / (totalStages - 1)) * 100}%` }}
-        />
-
         {/* Stage Indicators */}
-        <div className="relative flex justify-between">
+        <div className="flex justify-between">
           {Array.from({ length: totalStages }).map((_, index) => (
             <div
               key={index}
-              className={`w-10 h-10 rounded flex items-center justify-center z-10
-                ${index < currentStage ? 'bg-blue-500 text-white' : 'bg-background border border-border/10'}
-              `}
+              className={`w-10 h-10 rounded flex items-center justify-center z-10 text-primary primary-gradient-subtle border border-border/10`}
             >
               {index < 3 ? (
                 <span className="font-medium">{toRoman(index + 1)}</span>
@@ -84,8 +77,29 @@ export default function ChapterProgress({
             </div>
           ))}
         </div>
+        {/* Progress Line */}
+        <div className="flex p-4">
+          <div className="relative h-4 w-full bg-gradient-to-b from-[#000000] to-[#FFFFFF]/10 rounded-full overflow-hidden p-0.5">
+            <div className="bg-[#191919] rounded-full h-full w-full overflow-hidden p-0.5">
+              <div
+                className="h-full bg-gradient-to-r from-[#017CC2] to-[#0F4BA5] transition-all duration-300 rounded-full"
+                style={{
+                  width: `${(currentStage / (totalStages - 1)) * 100}%`,
+                }}
+              />
+              <Text className="absolute inset-0 flex items-center justify-between text-xs text-primary/50">
+                {Array.from({ length: totalStages }).map((_, index) => (
+                  <span
+                    key={index}
+                    className="w-1.5 h-1.5 rounded-full bg-primary"
+                  />
+                ))}
+              </Text>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
+    </Card>
   )
 }
 

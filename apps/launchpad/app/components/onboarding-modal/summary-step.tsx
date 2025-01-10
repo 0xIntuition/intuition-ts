@@ -29,7 +29,7 @@ export function SummaryStep({
           }
           return (
             <div key={topic.id} className="ml-4 mb-4">
-              <div className="text-blue-400">├── {topic.name}/</div>
+              <div className="text-accent">├── {topic.name}/</div>
               {selectedSubTopics.map((sub, i) => (
                 <div key={sub.id} className="ml-4 text-gray-400">
                   {i === selectedSubTopics.length - 1 ? '└──' : '├──'}{' '}

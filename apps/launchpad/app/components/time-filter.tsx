@@ -1,4 +1,6 @@
-import { Button } from '@0xintuition/1ui'
+import { Button, cn, Text, TextVariant } from '@0xintuition/1ui'
+
+import { Filter } from 'lucide-react'
 
 export const TIME_FILTER = {
   '1D': '1D',
@@ -18,18 +20,27 @@ interface TimeFilterProps {
 
 export function TimeFilter({ selected, onSelect }: TimeFilterProps) {
   return (
-    <div className="inline-flex items-center gap-1 rounded-md bg-background/5 p-1">
+    <div className="inline-flex items-center gap-5 rounded-md p-1">
       {Object.entries(TIME_FILTER).map(([key, value]) => (
         <Button
           key={key}
-          variant={selected === key ? 'secondary' : 'text'}
+          variant={selected === key ? 'accent' : 'text'}
           size="sm"
           onClick={() => onSelect(key as TimeFilterType)}
-          className="h-7 px-3 text-xs font-medium text-[#E6A068] data-[state=active]:text-foreground"
+          className={cn(
+            'h-7 p-2 rounded-lg hover:bg-accent/10',
+            selected === key && 'hover:bg-accent',
+          )}
         >
-          {value}
+          <Text
+            variant={TextVariant.bodyLarge}
+            className={cn('text-accent', selected === key && 'text-black')}
+          >
+            {value}
+          </Text>
         </Button>
       ))}
+      <Filter className="h-5 w-5 text-accent" />
     </div>
   )
 }

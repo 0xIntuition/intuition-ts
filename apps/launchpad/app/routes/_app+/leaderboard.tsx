@@ -48,11 +48,11 @@ export default function LeaderboardPage() {
               {users[category.id].slice(0, 1).map((user) => (
                 <div
                   key={user.rank}
-                  className="relative rounded-lg overflow-hidden bg-background border border-border/10"
+                  className="relative rounded-lg overflow-hidden border-none bg-gradient-to-br from-[#060504] to-[#101010]"
                 >
                   <div className="flex flex-wrap items-center gap-6 p-6">
                     <div className="flex flex-wrap items-center gap-6">
-                      <div className="text-4xl font-bold text-amber-500 px-4 py-1.5 bg-primary/5 rounded-lg">
+                      <div className="text-4xl font-bold text-accent px-4 py-1.5 bg-primary/5 rounded-lg">
                         1
                       </div>
                       <div className="relative">
@@ -90,7 +90,7 @@ export default function LeaderboardPage() {
               {users[category.id].slice(1, 5).map((user) => (
                 <Card
                   key={user.rank}
-                  className="bg-background border-border/10"
+                  className="border-none bg-gradient-to-br from-[#060504] to-[#101010]"
                 >
                   <CardContent className="p-6">
                     <div className="flex flex-col gap-4">
@@ -126,7 +126,7 @@ export default function LeaderboardPage() {
             </div>
 
             {/* Leaderboard Table */}
-            <Card className="bg-background border-border/10 overflow-hidden">
+            <Card className="border-none bg-gradient-to-br from-[#060504] to-[#101010] overflow-hidden">
               <CardContent className="p-0">
                 <div className="min-w-0 overflow-x-auto">
                   <div className="w-full min-w-[600px]">
@@ -139,7 +139,7 @@ export default function LeaderboardPage() {
                     {users[category.id].slice(5).map((user) => (
                       <div
                         key={user.rank}
-                        className="grid grid-cols-[80px_1fr_200px_120px] px-6 py-4 border-b border-border/10 items-center transition-colors text-center"
+                        className="grid grid-cols-[80px_1fr_200px_120px] px-6 py-4 border-b border-border/10 items-center transition-colors text-center last:border-b-0"
                       >
                         <div className="font-foreground/70">{user.rank}</div>
                         <div className="flex items-center gap-3 min-w-0 pl-10">

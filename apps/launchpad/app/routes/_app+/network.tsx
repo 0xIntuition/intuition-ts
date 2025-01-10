@@ -128,12 +128,12 @@ export default function Network() {
       <ChapterProgress
         currentChapter={'Chapter I: Genesis'}
         nextChapter={'Chapter II: Population'}
-        totalStages={4}
+        totalStages={7}
         currentStage={1}
         endTime={new Date(Date.now() + 172800000)}
       />
-      <div className="flex flex-col rounded-xl overflow-hidden theme-border">
-        <div className="relative w-full h-[400px]">
+      <div className="flex flex-col rounded-xl overflow-hidden">
+        <div className="relative w-full h-[400px] bg-gradient-to-b from-[#060504] to-[#101010]">
           <ClientOnly>
             {() => (
               <KnowledgeGraph
