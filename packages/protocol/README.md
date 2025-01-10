@@ -3,7 +3,8 @@
 ## Usage
 
 ```typescript
-import { Multivault } from '0xintuition/protocol'
+import { Multivault } from '@0xintuition/protocol'
+
 import { Chain, createPublicClient, http, PublicClient, Transport } from 'viem'
 import { base } from 'viem/chains'
 
