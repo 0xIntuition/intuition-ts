@@ -14,6 +14,7 @@ import {
   ScrollArea,
 } from '@0xintuition/1ui'
 
+import { AddPreferenceForm, AddPreferenceForm } from '@components/preferences/add-preference-form'
 import { PreferenceCard } from '@components/preferences/preference-card'
 import { PreferenceChat } from '@components/preferences/preference-chat'
 import { StakeEthForm } from '@components/preferences/stake-eth-form'
@@ -79,13 +80,18 @@ export default function PreferencesMarketplace() {
     }
   }
 
-  const handleStakeEth = (preferenceId: number, amount: number) => {
-    // setPreferences(preferences.map(pref =>
-    //   pref.id === preferenceId ? { ...pref, ethStaked: pref.ethStaked + amount } : pref
-    // ))
+  // Placeholders for now -- will implement with actual logic
+  const handleAddPreference = () => {
     logger('action')
     setActiveDialog(null)
   }
+
+  const handleStakeEth = () => {
+    logger('action')
+    setActiveDialog(null)
+  }
+
+  
 
   return (
     <>
@@ -140,6 +146,7 @@ export default function PreferencesMarketplace() {
                   Create a new preference to share with the community.
                 </DialogDescription>
               </DialogHeader>
+              <AddPreferenceForm onAddPreference={handleAddPreference} />
             </DialogContent>
           </Dialog>
         </div>
