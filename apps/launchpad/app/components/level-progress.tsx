@@ -146,7 +146,7 @@ export function LevelProgress({ skill, levels }: LevelProgressProps) {
                           strokeWidth="6"
                           stroke="currentColor"
                           fill="transparent"
-                          r="48"
+                          r="47"
                           cx="50"
                           cy="50"
                           strokeDasharray={`${progressPercentage * 3.02} 302`}
