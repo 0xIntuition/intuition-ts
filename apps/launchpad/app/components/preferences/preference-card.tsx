@@ -37,7 +37,7 @@ export function PreferenceCard({
   return (
     <div
       className={cn(
-        'rounded-lg border border-border/10 bg-gradient-to-b from-[#060504] to-[#101010] min-w-[480px]',
+        'rounded-lg  bg-gradient-to-b from-[#060504] to-[#101010] min-w-[480px]',
         className,
       )}
       {...props}
@@ -53,27 +53,25 @@ export function PreferenceCard({
               <p className="text-sm text-muted-foreground/70">For {app}</p>
               <div className="flex items-center gap-3">
                 <h3 className="text-lg font-normal text-white">{name}</h3>
-                <span className="rounded bg-[#4D3D2D] px-2 py-0.5 text-sm text-[#E6B17E]">
+                <span className="rounded-xl border border-border/10 px-2 py-0.5 text-sm text-[#E6B17E]">
                   {userCount}
                 </span>
               </div>
             </div>
           </div>
-          <DropdownMenu>
-            <DropdownMenuTrigger>
-              <MoreVertical className="size-4 text-muted-foreground/70" />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem>Share</DropdownMenuItem>
-              <DropdownMenuItem>Report</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
         </div>
 
         {/* Middle section with description and stats */}
-        <div className="px-4 pb-4">
-          <p className="text-sm text-muted-foreground/90 mb-4">{description}</p>
-          <div className="flex justify-between items-center">
+        <div>
+          <p className="text-sm text-muted-foreground/90 px-4 pb-4">
+            {description}
+          </p>
+          {/* Dotted line */}
+          <div className="py-4">
+            <div className="border-t border-dashed border-border/10" />
+          </div>
+
+          <div className="flex justify-between items-center px-4 pb-4">
             <div className="flex items-center gap-2">
               <Users className="h-4 w-4 text-amber-500" />
               <span className="text-sm text-muted-foreground/90">
@@ -87,11 +85,6 @@ export function PreferenceCard({
               </span>
             </div>
           </div>
-        </div>
-
-        {/* Dotted line */}
-        <div className="py-4">
-          <div className="border-t border-dashed border-border/10" />
         </div>
 
         {/* Position info */}

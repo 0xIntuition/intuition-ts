@@ -1,7 +1,10 @@
+import { useState, useState } from 'react'
+
 import {
   Button,
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogDescription,
   DialogHeader,
   DialogTitle,
@@ -11,10 +14,13 @@ import {
 } from '@0xintuition/1ui'
 
 import { PreferenceCard } from '@components/preferences/preference-card'
+import { PreferenceChat } from '@components/preferences/preference-chat'
+import { StakeEthForm } from '@components/preferences/stake-eth-form'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@components/ui/tabs'
 import { useLoaderData } from '@remix-run/react'
 import { categories, preferences } from 'app/data/mock-preferences'
 import { Bell, Palette, Plus, Shield, Smartphone, Zap } from 'lucide-react'
+import logger from '@lib/utils/logger'
 
 export async function loader() {
   return {
@@ -25,6 +31,12 @@ export async function loader() {
 
 export default function PreferencesMarketplace() {
   const { categories, preferences } = useLoaderData<typeof loader>()
+
+
+  const [activeDialog, setActiveDialog] = useState<{
+    type: 'stake' | 'chat'
+    prefId: number
+  } | null>(null)
 
   const getIconComponent = (iconName: string) => {
     switch (iconName) {
@@ -41,6 +53,14 @@ export default function PreferencesMarketplace() {
       default:
         return Palette
     }
+  }
+
+  const handleStakeEth = (preferenceId: number, amount: number) => {
+    // setPreferences(preferences.map(pref => 
+    //   pref.id === preferenceId ? { ...pref, ethStaked: pref.ethStaked + amount } : pref
+    // ))
+    logger('action')
+    setActiveDialog(null)
   }
 
   return (
@@ -102,8 +122,8 @@ export default function PreferencesMarketplace() {
                       userCount={pref.userCount}
                       ethStaked={pref.ethStaked}
                       mutualConnections={pref.mutualConnections}
-                      onStake={() => {}}
-                      onChat={() => {}}
+                      onStake={() => setActiveDialog({ type: 'stake', prefId: pref.id })}
+                      onChat={() => setActiveDialog({ type: 'chat', prefId: pref.id })}
                     />
                   )
                 })}
@@ -111,6 +131,46 @@ export default function PreferencesMarketplace() {
           </TabsContent>
         ))}
       </Tabs>
+      <Dialog
+        open={activeDialog?.type === 'stake'}
+        onOpenChange={() => setActiveDialog(null)}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Stake ETH</DialogTitle>
+            <DialogDescription>
+              Stake ETH on this preference to show your support.
+            </DialogDescription>
+          </DialogHeader>
+          <StakeEthForm
+            onStake={(amount) => {
+              if (activeDialog?.prefId) {
+                handleStakeEth(activeDialog.prefId, amount)
+              }
+            }}
+            currentStake={0}
+          />
+        </DialogContent>
+      </Dialog>
+
+      <Dialog
+        open={activeDialog?.type === 'chat'}
+        onOpenChange={() => setActiveDialog(null)}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Preference Chat</DialogTitle>
+            <DialogDescription>
+              Chat with others about this preference.
+            </DialogDescription>
+          </DialogHeader>
+          <PreferenceChat
+            preferenceName={
+              preferences.find((p) => p.id === activeDialog?.prefId)?.name || ''
+            }
+          />
+        </DialogContent>
+      </Dialog>
     </>
   )
 }
