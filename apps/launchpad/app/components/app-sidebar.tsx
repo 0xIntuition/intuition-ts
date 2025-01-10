@@ -9,6 +9,7 @@ import {
   SidebarContent,
   SidebarGroup,
   SidebarGroupContent,
+  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
@@ -31,6 +32,7 @@ import {
   Home,
   LayoutGrid,
   Medal,
+  Settings,
   Upload,
 } from 'lucide-react'
 
@@ -108,6 +110,10 @@ export function AppSidebar({
       isAccent: location.pathname === '/leaderboard',
     },
   ]
+
+  const isPreferencesActive = location.pathname.startsWith(
+    '/marketplaces/preferences',
+  )
 
   const footerNavItems: NavItem[] = [
     { icon: FileText, label: 'Developer Docs', href: '#' },
@@ -282,6 +288,32 @@ export function AppSidebar({
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+        <SidebarGroup>
+          <SidebarGroupLabel>Marketplaces</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  size="lg"
+                  asChild
+                  isActive={isPreferencesActive}
+                  className={cn(
+                    'w-full gap-3 py-3',
+                    isPreferencesActive ? 'text-accent' : undefined,
+                  )}
+                >
+                  <a
+                    href="/marketplaces/preferences"
+                    className="flex items-center gap-3"
+                  >
+                    <Settings className="h-4 w-4" />
+                    {!isMinimal && <span>Preferences</span>}
+                  </a>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
