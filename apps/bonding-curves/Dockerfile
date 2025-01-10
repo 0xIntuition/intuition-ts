@@ -46,7 +46,7 @@ RUN pnpm install
 
 # Build the application
 WORKDIR /workspace/apps/bonding-curves
-RUN pnpm run build
+RUN pnpm install && pnpm run build
 
 # Expose ports
 EXPOSE 8080 8545
