@@ -39,7 +39,7 @@
     "registry": "https://registry.npmjs.org/"
   },
   "dependencies": {
-    "viem": "2.21.8"
+    "viem": "2.22.6"
   },
   "devDependencies": {
     "@viem/anvil": "^0.0.10",
