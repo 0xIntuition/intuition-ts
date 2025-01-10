@@ -19,8 +19,8 @@ const localChain = {
     symbol: 'ETH',
   },
   rpcUrls: {
-    default: { http: [import.meta.env.ANVIL_RPC_URL || 'http://localhost:8545'] },
-    public: { http: [import.meta.env.ANVIL_RPC_URL || 'http://localhost:8545'] },
+    default: { http: ['http://localhost:8545'] },
+    public: { http: ['http://localhost:8545'] },
   },
 } as const satisfies Chain
 
@@ -49,12 +49,6 @@ export async function POST(request: Request) {
     await writeFile(filePath, content)
 
     try {
-      // Log environment info
-      console.log('Current working directory:', process.cwd())
-      console.log('Environment:', process.env)
-      console.log('User:', await execAsync('whoami'))
-      console.log('Forge version:', await execAsync('forge --version'))
-
       // Compile the contract
       const { stdout, stderr } = await execAsync('forge build')
       console.log('Compilation output:', stdout)
@@ -106,12 +100,12 @@ export async function POST(request: Request) {
     // Deploy the contract
     const publicClient = createPublicClient({
       chain: localChain,
-      transport: http(import.meta.env.ANVIL_RPC_URL || 'http://localhost:8545'),
+      transport: http('http://localhost:8545'),
     })
 
     const walletClient = createWalletClient({
       chain: localChain,
-      transport: http(import.meta.env.ANVIL_RPC_URL || 'http://localhost:8545'),
+      transport: http('http://localhost:8545'),
       account: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266', // Default Anvil account
     })
 
@@ -148,4 +142,4 @@ export async function POST(request: Request) {
       { status: 500 }
     )
   }
-}
+} 
