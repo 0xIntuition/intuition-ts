@@ -40,9 +40,10 @@ WORKDIR /workspace
 COPY package.json pnpm-lock.yaml ./
 COPY packages packages/
 
-# Build workspace packages first
+# Build workspace packages in dependency order
 RUN pnpm install && \
-    cd packages/1ui && pnpm install && pnpm run build
+    cd packages/graphql && pnpm install && pnpm run build && \
+    cd ../1ui && pnpm install && pnpm run build
 
 # Set up app
 COPY apps apps/
