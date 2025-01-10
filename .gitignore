@@ -21,3 +21,4 @@ act.sh
 /dist/
 **/dist/
 packages/*/dist/
+apps/bonding-curves/build/

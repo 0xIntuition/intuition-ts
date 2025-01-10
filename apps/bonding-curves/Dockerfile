@@ -32,18 +32,23 @@ COPY --from=anvil /app /app/
 # Install pnpm
 RUN npm install -g pnpm@9.0.6
 
-# Copy app files
-COPY package.json pnpm-lock.yaml ./
+# Copy workspace files first
+COPY package.json pnpm-workspace.yaml pnpm-lock.yaml ./
+COPY nx.json tsconfig.base.json .npmrc ./
 COPY packages ./packages
-COPY apps/bonding-curves ./app
+COPY apps ./apps
 
-# Install dependencies and build (following Render's Remix approach)
-RUN pnpm install --frozen-lockfile --production=false && \
-    pnpm run build && \
-    pnpm prune --prod
+# Install dependencies and build workspace packages
+RUN pnpm install --frozen-lockfile --production=false
+
+# Build the app (which will also build dependencies)
+RUN cd apps/bonding-curves && pnpm run build
+
+# Prune dev dependencies
+RUN pnpm prune --prod
 
 # Expose ports
 EXPOSE 8080 8545
 
 # Start both services
-CMD anvil --host 0.0.0.0 --chain-id 31337 & cd app && exec pnpm start 
+CMD anvil --host 0.0.0.0 --chain-id 31337 & cd apps/bonding-curves && exec pnpm start 
