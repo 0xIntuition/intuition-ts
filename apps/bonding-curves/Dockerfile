@@ -14,11 +14,11 @@ RUN foundryup
 WORKDIR /app
 
 # Copy files exactly as they're mounted in docker-compose
-COPY ./lib/ /app/lib/
-COPY ./foundry.toml /app/foundry.toml
-COPY ./remappings.txt /app/remappings.txt
+COPY apps/bonding-curves/lib/ /app/lib/
+COPY apps/bonding-curves/foundry.toml /app/foundry.toml
+COPY apps/bonding-curves/remappings.txt /app/remappings.txt
 RUN mkdir -p /app/contracts
-COPY ./contracts/BaseCurve.sol /app/contracts/
+COPY apps/bonding-curves/contracts/BaseCurve.sol /app/contracts/
 
 # Stage 2: Build and run the application
 FROM ubuntu:22.04
@@ -37,12 +37,12 @@ COPY --from=anvil /app /app/
 
 # Set up workspace
 WORKDIR /workspace
-COPY ../../package.json ../../pnpm-lock.yaml ./
-COPY ../../packages ./packages
+COPY package.json pnpm-lock.yaml ./
+COPY packages ./packages
 
 # Set up app
 WORKDIR /workspace/apps/bonding-curves
-COPY . .
+COPY apps/bonding-curves .
 
 # Install dependencies
 WORKDIR /workspace
