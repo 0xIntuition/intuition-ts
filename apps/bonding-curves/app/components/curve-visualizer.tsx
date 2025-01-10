@@ -146,7 +146,7 @@ export function CurveVisualizer() {
 
   const publicClient = createPublicClient({
     chain: foundry,
-    transport: http(process.env.ANVIL_RPC_URL || 'http://localhost:8545'),
+    transport: http(import.meta.env.ANVIL_RPC_URL || 'http://localhost:8545'),
   })
 
   const handleFileChange = async (

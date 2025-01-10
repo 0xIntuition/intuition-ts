@@ -7,7 +7,7 @@ import {
 } from 'viem'
 import { foundry } from 'viem/chains'
 
-const ANVIL_URL = process.env.ANVIL_RPC_URL || 'http://0.0.0.0:8545'
+const ANVIL_URL = import.meta.env.ANVIL_RPC_URL || 'http://0.0.0.0:8545'
 const ANVIL_ACCOUNT = '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266'
 
 const localFoundry = {

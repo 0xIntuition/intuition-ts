@@ -19,8 +19,8 @@ const localChain = {
     symbol: 'ETH',
   },
   rpcUrls: {
-    default: { http: [process.env.ANVIL_RPC_URL || 'http://localhost:8545'] },
-    public: { http: [process.env.ANVIL_RPC_URL || 'http://localhost:8545'] },
+    default: { http: [import.meta.env.ANVIL_RPC_URL || 'http://localhost:8545'] },
+    public: { http: [import.meta.env.ANVIL_RPC_URL || 'http://localhost:8545'] },
   },
 } as const satisfies Chain
 
@@ -100,12 +100,12 @@ export async function POST(request: Request) {
     // Deploy the contract
     const publicClient = createPublicClient({
       chain: localChain,
-      transport: http(process.env.ANVIL_RPC_URL || 'http://localhost:8545'),
+      transport: http(import.meta.env.ANVIL_RPC_URL || 'http://localhost:8545'),
     })
 
     const walletClient = createWalletClient({
       chain: localChain,
-      transport: http(process.env.ANVIL_RPC_URL || 'http://localhost:8545'),
+      transport: http(import.meta.env.ANVIL_RPC_URL || 'http://localhost:8545'),
       account: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266', // Default Anvil account
     })
 
