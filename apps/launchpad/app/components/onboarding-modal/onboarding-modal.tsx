@@ -147,7 +147,7 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
     <ClientOnly>
       {() => (
         <Dialog open={isOpen} onOpenChange={onClose}>
-          <DialogContent className="p-0 bg-[#0D0D0D] max-w-[640px] w-full">
+          <DialogContent className="p-0 bg-gradient-to-br from-[#060504] to-[#101010] max-w-[640px] w-full border-none">
             <div
               className={`transition-opacity duration-300 ${
                 isTransitioning ? 'opacity-0' : 'opacity-100'

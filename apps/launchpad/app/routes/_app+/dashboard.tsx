@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import { PageHeader } from '@0xintuition/1ui'
+import { Card, PageHeader } from '@0xintuition/1ui'
 
 import { ErrorPage } from '@components/error-page'
 import { LevelProgress } from '@components/level-progress'
@@ -41,8 +41,8 @@ export default function Index() {
         ]}
       />
       <div className="grid gap-6 md:grid-cols-2">
-        <div className="h-[400px] rounded-xl bg-background/5 border border-border/10" />
-        <div className="h-[400px] rounded-xl bg-background/5 border border-border/10" />
+        <Card className="h-[400px] rounded-lg border-none bg-gradient-to-br from-[#060504] to-[#101010] min-w-[480px]" />
+        <Card className="h-[400px] rounded-lg border-none bg-gradient-to-br from-[#060504] to-[#101010] min-w-[480px]" />
       </div>
       <OnboardingModal
         isOpen={showOnboarding}

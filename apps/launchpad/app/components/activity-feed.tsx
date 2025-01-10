@@ -14,7 +14,7 @@ import { Events, GetEventsQuery } from '@0xintuition/graphql'
 
 import { BLOCK_EXPLORER_URL } from '@consts/general'
 import { formatDistanceToNow } from 'date-fns'
-import { Badge, Filter, SortAsc, SortDesc } from 'lucide-react'
+import { Badge, SlidersHorizontal, SortAsc, SortDesc } from 'lucide-react'
 
 export type ActivityItem = {
   id: string
@@ -186,8 +186,8 @@ const ActivityFeed = ({
     <div className="space-y-4 overflow-x-hidden">
       <div className="flex items-center justify-between">
         <RealtimeSort />
-        <Button variant="secondary" size="sm" className="whitespace-nowrap">
-          <Filter className="w-4 h-4" />
+        <Button variant="secondary" className="whitespace-nowrap">
+          <SlidersHorizontal className="w-4 h-4" />
           <Text>Filter</Text>
         </Button>
       </div>

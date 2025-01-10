@@ -36,8 +36,8 @@ export function SubTopicsStep({
                 aria-label={`Select ${subTopic.name} from ${topic.name}`}
                 className={`flex items-center gap-4 rounded-lg border transition-colors w-[280px] h-[72px] ${
                   subTopic.selected
-                    ? 'border-blue-500 bg-blue-500/10'
-                    : 'border-[#1A1A1A] hover:border-blue-500/50'
+                    ? 'border-accent bg-accent/10'
+                    : 'border-[#1A1A1A] hover:border-accent'
                 }`}
               >
                 <div className="w-14 h-14 rounded bg-[#1A1A1A] flex-shrink-0 ml-1" />
