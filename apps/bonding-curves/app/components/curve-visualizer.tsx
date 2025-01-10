@@ -164,13 +164,24 @@ export function CurveVisualizer() {
       formData.append('file', file)
       formData.append('content', content)
 
+      console.log('Sending file to compile:', file.name)
       const compileResponse = await fetch('/api/compile', {
         method: 'POST',
         body: formData,
       })
+
+      if (!compileResponse.ok) {
+        const errorText = await compileResponse.text()
+        console.error('Compilation failed:', errorText)
+        setError(`Compilation failed: ${errorText}`)
+        return
+      }
+
       const compileData = await compileResponse.json()
+      console.log('Compilation response:', compileData)
 
       if (compileData.error) {
+        console.error('Compilation error:', compileData.error)
         setError(compileData.error)
         return
       }

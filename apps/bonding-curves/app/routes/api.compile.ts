@@ -33,6 +33,8 @@ export const action: ActionFunction = async ({ request }) => {
         // Remove StringUtils using statements
         .replace(/using\s+StringUtils\s+for\s+(?:u?int256);?\s*/g, '')
 
+      console.log('Processed content:', content.substring(0, 200) + '...')
+
       // Save to container and compile
       const escapedContent = content
         .replace(/"/g, '\\"')
@@ -41,25 +43,46 @@ export const action: ActionFunction = async ({ request }) => {
           'import {BaseCurve} from \\"./BaseCurve.sol\\";'
         )
 
-      await execAsync(`docker exec bonding-curves-anvil-1 bash -c "echo '${escapedContent}' > /app/contracts/${fileName}"`)
+      console.log('Checking if Docker container exists...')
+      try {
+        await execAsync('docker ps | grep bonding-curves-anvil-1')
+        console.log('Docker container found')
+      } catch (error) {
+        console.error('Docker container not found:', error)
+        return json({ error: 'Compilation environment not available' }, { status: 500 })
+      }
+
+      console.log('Writing file to container...')
+      try {
+        await execAsync(`docker exec bonding-curves-anvil-1 bash -c "echo '${escapedContent}' > /app/contracts/${fileName}"`)
+        console.log('File written successfully')
+      } catch (error) {
+        console.error('Failed to write file to container:', error)
+        return json({ error: 'Failed to prepare compilation environment' }, { status: 500 })
+      }
 
       // Compile using the remappings from the container's remappings.txt
+      console.log('Starting compilation...')
       let { stdout, stderr } = await execAsync('docker exec bonding-curves-anvil-1 forge build --force --sizes')
       console.log('Compilation output:', stdout)
       if (stderr) {
         console.error('Compilation errors:', stderr)
         return json({ error: 'Compilation failed', details: stderr }, { status: 400 })
       }
+      console.log('Compilation successful')
 
       // Get artifact
+      console.log('Reading artifact...')
       const contractName = path.parse(fileName).name
       const { stdout: artifactContent } = await execAsync(
         `docker exec bonding-curves-anvil-1 cat /app/out/${fileName}/${contractName}.json`
       )
+      console.log('Artifact read successfully')
 
       let artifact
       try {
         artifact = JSON.parse(artifactContent)
+        console.log('Artifact parsed successfully')
       } catch (error) {
         console.error('Failed to parse artifact:', error)
         return json({ error: 'Failed to read contract artifact' }, { status: 500 })
