@@ -35,21 +35,18 @@ RUN apt-get update && \
 COPY --from=anvil /root/.foundry/bin/anvil /usr/local/bin/
 COPY --from=anvil /app /app/
 
-# Set up workspace
+# Set up workspace and install root dependencies
 WORKDIR /workspace
 COPY package.json pnpm-lock.yaml ./
 COPY packages ./packages
+RUN pnpm install
 
-# Set up app
+# Set up app and install its dependencies
 WORKDIR /workspace/apps/bonding-curves
 COPY apps/bonding-curves .
-
-# Install dependencies
-WORKDIR /workspace
 RUN pnpm install
 
 # Build the application
-WORKDIR /workspace/apps/bonding-curves
 RUN pnpm run build
 
 # Expose ports
