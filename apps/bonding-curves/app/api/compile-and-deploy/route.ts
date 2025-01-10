@@ -49,6 +49,12 @@ export async function POST(request: Request) {
     await writeFile(filePath, content)
 
     try {
+      // Log environment info
+      console.log('Current working directory:', process.cwd())
+      console.log('Environment:', process.env)
+      console.log('User:', await execAsync('whoami'))
+      console.log('Forge version:', await execAsync('forge --version'))
+
       // Compile the contract
       const { stdout, stderr } = await execAsync('forge build')
       console.log('Compilation output:', stdout)
@@ -142,4 +148,4 @@ export async function POST(request: Request) {
       { status: 500 }
     )
   }
-} 
+}

@@ -9,19 +9,21 @@ const execAsync = promisify(exec)
 export const action: ActionFunction = async ({ request }) => {
   try {
     const formData = await request.formData()
-    const fileName = (formData.get('file') as File).name
-    let content = formData.get('content') as string
+    const file = formData.get('file') as File
+    const content = formData.get('content') as string
 
-    if (!fileName || !content) {
+    if (!file || !content) {
       return json(
         { error: 'File name and content are required' },
         { status: 400 }
       )
     }
 
+    const fileName = file.name
+
     try {
       // Remove immutable keywords from contract code
-      content = content
+      const processedContent = content
         // Remove IMMUTABLE while preserving immutable keyword
         .replace(/\bIMMUTABLE\b(?!\s+[a-zA-Z_])/g, '')
         // Remove console.sol import
@@ -33,10 +35,10 @@ export const action: ActionFunction = async ({ request }) => {
         // Remove StringUtils using statements
         .replace(/using\s+StringUtils\s+for\s+(?:u?int256);?\s*/g, '')
 
-      console.log('Processed content:', content.substring(0, 200) + '...')
+      console.log('Processed content:', processedContent.substring(0, 200) + '...')
 
       // Save to container and compile
-      const escapedContent = content
+      const escapedContent = processedContent
         .replace(/"/g, '\\"')
         .replace(
           /import\s*{BaseCurve}\s*from\s*([^"']\S+);/g,
@@ -90,7 +92,7 @@ export const action: ActionFunction = async ({ request }) => {
 
       // Find constructor and log for debugging
       const constructor = artifact.abi.find((item: any) => item.type === 'constructor')
-      // console.log('Found constructor:', constructor)
+      console.log('Found constructor:', constructor)
 
       // If no constructor found, return empty inputs array
       const constructorInputs = constructor?.inputs || []
