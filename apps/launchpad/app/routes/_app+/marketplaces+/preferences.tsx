@@ -1,14 +1,15 @@
-import { useState, useState } from 'react'
+import { useState } from 'react'
 
 import {
   Button,
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  EmptyStateCard,
+  Input,
   PageHeader,
   ScrollArea,
 } from '@0xintuition/1ui'
@@ -17,10 +18,19 @@ import { PreferenceCard } from '@components/preferences/preference-card'
 import { PreferenceChat } from '@components/preferences/preference-chat'
 import { StakeEthForm } from '@components/preferences/stake-eth-form'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@components/ui/tabs'
+import logger from '@lib/utils/logger'
 import { useLoaderData } from '@remix-run/react'
 import { categories, preferences } from 'app/data/mock-preferences'
-import { Bell, Palette, Plus, Shield, Smartphone, Zap } from 'lucide-react'
-import logger from '@lib/utils/logger'
+import {
+  Bell,
+  Palette,
+  Plus,
+  Search,
+  Shield,
+  Smartphone,
+  User,
+  Zap,
+} from 'lucide-react'
 
 export async function loader() {
   return {
@@ -31,12 +41,26 @@ export async function loader() {
 
 export default function PreferencesMarketplace() {
   const { categories, preferences } = useLoaderData<typeof loader>()
-
+  const [searchQuery, setSearchQuery] = useState('')
 
   const [activeDialog, setActiveDialog] = useState<{
     type: 'stake' | 'chat'
     prefId: number
   } | null>(null)
+
+  const filteredPreferences = (categoryId: string) => {
+    return preferences.filter((pref) => {
+      const matchesCategory =
+        categoryId === 'all' || pref.category === categoryId
+      const matchesSearch =
+        searchQuery.trim() === '' ||
+        pref.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        pref.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        pref.app.toLowerCase().includes(searchQuery.toLowerCase())
+
+      return matchesCategory && matchesSearch
+    })
+  }
 
   const getIconComponent = (iconName: string) => {
     switch (iconName) {
@@ -56,7 +80,7 @@ export default function PreferencesMarketplace() {
   }
 
   const handleStakeEth = (preferenceId: number, amount: number) => {
-    // setPreferences(preferences.map(pref => 
+    // setPreferences(preferences.map(pref =>
     //   pref.id === preferenceId ? { ...pref, ethStaked: pref.ethStaked + amount } : pref
     // ))
     logger('action')
@@ -65,7 +89,27 @@ export default function PreferencesMarketplace() {
 
   return (
     <>
-      <PageHeader title="Preferences Marketplace" />
+      <div className="flex justify-between items-center mb-6">
+        <PageHeader title="Preferences Marketplace" />
+        <div className="flex items-center gap-4">
+          <div className="relative">
+            <Search
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground"
+              size={16}
+            />
+            <Input
+              type="search"
+              placeholder="Search preferences..."
+              className="w-[300px] pl-9"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+          <Button variant="ghost" size="icon" className="border-none">
+            <User className="h-5 w-5" />
+          </Button>
+        </div>
+      </div>
       <Tabs defaultValue="all" className="w-full">
         <div className="flex justify-between items-center mb-6">
           <div className="relative">
@@ -103,13 +147,19 @@ export default function PreferencesMarketplace() {
         {categories.map((category) => (
           <TabsContent key={category.id} value={category.id}>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {preferences
-                .filter(
-                  (pref) =>
-                    category.id === 'all' || pref.category === category.id,
-                )
-                .map((pref) => {
-                  const IconComponent = getIconComponent(pref.icon.name)
+              {filteredPreferences(category.id).length === 0 ? (
+                <div className="col-span-2">
+                  <EmptyStateCard
+                    message={`No preferences found${
+                      searchQuery ? ` matching "${searchQuery}"` : ''
+                    } in ${category.name === 'All' ? 'any category' : category.name}`}
+                  />
+                </div>
+              ) : (
+                filteredPreferences(category.id).map((pref) => {
+                  const IconComponent = getIconComponent(
+                    pref.icon?.name || 'Palette',
+                  )
                   return (
                     <PreferenceCard
                       key={pref.id}
@@ -122,11 +172,16 @@ export default function PreferencesMarketplace() {
                       userCount={pref.userCount}
                       ethStaked={pref.ethStaked}
                       mutualConnections={pref.mutualConnections}
-                      onStake={() => setActiveDialog({ type: 'stake', prefId: pref.id })}
-                      onChat={() => setActiveDialog({ type: 'chat', prefId: pref.id })}
+                      onStake={() =>
+                        setActiveDialog({ type: 'stake', prefId: pref.id })
+                      }
+                      onChat={() =>
+                        setActiveDialog({ type: 'chat', prefId: pref.id })
+                      }
                     />
                   )
-                })}
+                })
+              )}
             </div>
           </TabsContent>
         ))}
