@@ -14,47 +14,36 @@ RUN foundryup
 WORKDIR /app
 
 # Copy files exactly as they're mounted in docker-compose
-COPY apps/bonding-curves/lib/ /app/lib/
-COPY apps/bonding-curves/foundry.toml /app/foundry.toml
-COPY apps/bonding-curves/remappings.txt /app/remappings.txt
+COPY lib/ /app/lib/
+COPY foundry.toml /app/foundry.toml
+COPY remappings.txt /app/remappings.txt
 RUN mkdir -p /app/contracts
-COPY apps/bonding-curves/contracts/BaseCurve.sol /app/contracts/
+COPY contracts/BaseCurve.sol /app/contracts/
 
 # Stage 2: Build and run the application
-FROM ubuntu:22.04
+FROM node:20
 
-# Install Node.js and build dependencies
-RUN apt-get update && \
-    apt-get install -y curl build-essential git && \
-    curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
-    apt-get install -y nodejs && \
-    npm install -g pnpm@9.0.6 prettier && \
-    rm -rf /var/lib/apt/lists/*
+WORKDIR /app
 
 # Copy Anvil from first stage
 COPY --from=anvil /root/.foundry/bin/anvil /usr/local/bin/
 COPY --from=anvil /app /app/
 
-# Set up workspace and copy all files
-WORKDIR /workspace
-COPY package.json pnpm-lock.yaml tsconfig.base.json ./
-COPY packages packages/
-COPY apps apps/
+# Install pnpm
+RUN npm install -g pnpm@9.0.6
 
-# Install dependencies and build all packages in order
-RUN pnpm install && \
-    SKIP_TYPES=true pnpm --filter "@0xintuition/graphql" install && \
-    SKIP_TYPES=true pnpm --filter "@0xintuition/graphql" run build && \
-    pnpm --filter "@0xintuition/1ui" install && \
-    pnpm --filter "@0xintuition/1ui" run build && \
-    pnpm --filter "@0xintuition/bonding-curves" install && \
-    cd /workspace/apps/bonding-curves && \
-    pnpm add -D @remix-run/dev @remix-run/node @remix-run/react @remix-run/serve @remix-run/server-runtime && \
-    pnpm add @remix-run/node && \
-    pnpm run build
+# Copy app files
+COPY package.json pnpm-lock.yaml ./
+COPY packages ./packages
+COPY apps/bonding-curves ./app
+
+# Install dependencies and build (following Render's Remix approach)
+RUN pnpm install --frozen-lockfile --production=false && \
+    pnpm run build && \
+    pnpm prune --prod
 
 # Expose ports
 EXPOSE 8080 8545
 
 # Start both services
-CMD cd /app && anvil --host 0.0.0.0 --chain-id 31337 & cd /workspace/apps/bonding-curves && PORT=8080 pnpm start 
+CMD anvil --host 0.0.0.0 --chain-id 31337 & cd app && exec pnpm start 
