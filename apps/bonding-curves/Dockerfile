@@ -13,20 +13,28 @@ RUN curl -L https://foundry.paradigm.xyz | bash
 ENV PATH="/root/.foundry/bin:${PATH}"
 RUN foundryup
 
-WORKDIR /app
+# Set up workspace
+WORKDIR /workspace
+COPY ../../package.json ../../pnpm-lock.yaml ./
+COPY ../../packages ./packages
 
-# Set up Foundry files (matching local bind mounts)
-COPY lib/ /app/lib/
-COPY foundry.toml /app/foundry.toml
-COPY remappings.txt /app/remappings.txt
-COPY contracts/ /app/contracts/
-
-# Copy application files
+# Set up app
+WORKDIR /workspace/apps/bonding-curves
 COPY . .
 
-# Install dependencies and build
-RUN pnpm install --no-frozen-lockfile && \
-    pnpm run build
+# Install dependencies
+WORKDIR /workspace
+RUN pnpm install
+
+# Set up Foundry files
+WORKDIR /workspace/apps/bonding-curves
+COPY lib/ ./lib/
+COPY foundry.toml ./foundry.toml
+COPY remappings.txt ./remappings.txt
+COPY contracts/ ./contracts/
+
+# Build the application
+RUN pnpm run build
 
 # Create start script
 RUN echo '#!/bin/bash\n\
@@ -40,10 +48,10 @@ until curl -s -o /dev/null http://localhost:8545; do\n\
 done\n\
 \n\
 # Start the app\n\
-PORT=8080 pnpm start' > /app/start.sh && \
-chmod +x /app/start.sh
+PORT=8080 pnpm start' > ./start.sh && \
+chmod +x ./start.sh
 
 # Expose ports
 EXPOSE 8080 8545
 
-CMD ["/app/start.sh"] 
+CMD ["./start.sh"] 
