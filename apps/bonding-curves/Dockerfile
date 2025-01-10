@@ -40,16 +40,12 @@ WORKDIR /workspace
 COPY package.json pnpm-lock.yaml tsconfig.base.json ./
 COPY packages packages/
 
-# Install root dependencies first
-RUN pnpm install
-
-# Build graphql package with type generation skipped
-WORKDIR /workspace/packages/graphql
-RUN pnpm install && SKIP_TYPES=true pnpm run build
-
-# Build 1ui package
-WORKDIR /workspace/packages/1ui
-RUN pnpm install && pnpm run build
+# Install dependencies and build packages in order
+RUN pnpm install && \
+    SKIP_TYPES=true pnpm --filter "@0xintuition/graphql" install && \
+    SKIP_TYPES=true pnpm --filter "@0xintuition/graphql" run build && \
+    pnpm --filter "@0xintuition/1ui" install && \
+    pnpm --filter "@0xintuition/1ui" run build
 
 # Set up app
 COPY apps apps/
