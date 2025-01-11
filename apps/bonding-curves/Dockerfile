@@ -48,11 +48,11 @@ RUN cd apps/bonding-curves && pnpm run build
 RUN pnpm prune --prod
 
 # Expose ports
-EXPOSE 8080 8545
+EXPOSE 10000 8545
 
 # Set production environment variables
 ENV ANVIL_RPC_URL=http://127.0.0.1:8545
-ENV PORT=8080
+ENV PORT=10000
 
 # Create startup script
 RUN echo '#!/bin/bash\n\
