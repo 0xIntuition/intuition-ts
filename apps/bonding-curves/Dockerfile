@@ -25,8 +25,8 @@ FROM node:20
 
 WORKDIR /app
 
-# Copy Anvil from first stage
-COPY --from=anvil /root/.foundry/bin/anvil /usr/local/bin/
+# Copy all Foundry binaries from first stage
+COPY --from=anvil /root/.foundry/bin/* /usr/local/bin/
 COPY --from=anvil /app /app/
 
 # Install pnpm
