@@ -69,11 +69,19 @@ export const action: ActionFunction = async ({ request }) => {
       }
 
       // Compile using forge
-      let { stdout, stderr } = await execAsync(getCommand('forge build --force --sizes'))
-      console.log('Compilation output:', stdout)
-      if (stderr) {
-        console.error('Compilation errors:', stderr)
-        return json({ error: 'Compilation failed', details: stderr }, { status: 400 })
+      let compileResult: { stdout: string; stderr: string }
+      if (isProduction) {
+        // In production, run forge directly
+        compileResult = await execAsync('forge build --force --sizes')
+      } else {
+        // In development, use Docker
+        compileResult = await execAsync(getCommand('forge build --force --sizes'))
+      }
+
+      console.log('Compilation output:', compileResult.stdout)
+      if (compileResult.stderr) {
+        console.error('Compilation errors:', compileResult.stderr)
+        return json({ error: 'Compilation failed', details: compileResult.stderr }, { status: 400 })
       }
 
       // Get artifact - note the path structure matches Forge's output
