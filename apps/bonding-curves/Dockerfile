@@ -50,5 +50,15 @@ RUN pnpm prune --prod
 # Expose ports
 EXPOSE 8080 8545
 
-# Start both services
-CMD anvil --host 0.0.0.0 --chain-id 31337 & cd apps/bonding-curves && exec pnpm start 
+# Set production environment variables
+ENV ANVIL_RPC_URL=http://127.0.0.1:8545
+ENV PORT=8080
+
+# Create startup script
+RUN echo '#!/bin/bash\n\
+anvil --host 0.0.0.0 --chain-id 31337 &\n\
+cd apps/bonding-curves && exec pnpm start\n\
+wait' > /app/start.sh && chmod +x /app/start.sh
+
+# Start services
+CMD ["/app/start.sh"] 
