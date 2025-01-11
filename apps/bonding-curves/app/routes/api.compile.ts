@@ -56,6 +56,10 @@ export const action: ActionFunction = async ({ request }) => {
           'import {BaseCurve} from \\"./BaseCurve.sol\\";'
         )
 
+      // Ensure output directory exists
+      const outDir = '/app/out'
+      await fs.mkdir(outDir, { recursive: true })
+
       if (isProduction) {
         // In production, write file directly
         await fs.writeFile(contractPath, content)
@@ -72,11 +76,11 @@ export const action: ActionFunction = async ({ request }) => {
         return json({ error: 'Compilation failed', details: stderr }, { status: 400 })
       }
 
-      // Get artifact
+      // Get artifact - note the path structure matches Forge's output
       const contractName = path.parse(fileName).name
-      const artifactPath = `/app/out/${fileName}/${contractName}.json`
-      let artifactContent: string
+      const artifactPath = `/app/out/${contractName}.sol/${contractName}.json`
 
+      let artifactContent: string
       if (isProduction) {
         // In production, read file directly
         artifactContent = await fs.readFile(artifactPath, 'utf-8')
