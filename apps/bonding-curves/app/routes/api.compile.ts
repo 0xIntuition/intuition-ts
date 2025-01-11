@@ -3,8 +3,22 @@ import type { ActionFunction } from '@remix-run/node'
 import { exec } from 'child_process'
 import { promisify } from 'util'
 import path from 'path'
+import fs from 'fs/promises'
 
 const execAsync = promisify(exec)
+
+// Helper to determine if we're running in production (Render)
+const isProduction = process.env.NODE_ENV === 'production'
+
+// Helper to get the correct command for the environment
+const getCommand = (cmd: string) => {
+  if (isProduction) {
+    // In production, run commands directly
+    return cmd
+  }
+  // In development, run commands through Docker
+  return `docker exec bonding-curves-anvil-1 ${cmd}`
+}
 
 export const action: ActionFunction = async ({ request }) => {
   try {
@@ -33,7 +47,8 @@ export const action: ActionFunction = async ({ request }) => {
         // Remove StringUtils using statements
         .replace(/using\s+StringUtils\s+for\s+(?:u?int256);?\s*/g, '')
 
-      // Save to container and compile
+      // Save contract content
+      const contractPath = `/app/contracts/${fileName}`
       const escapedContent = content
         .replace(/"/g, '\\"')
         .replace(
@@ -41,10 +56,16 @@ export const action: ActionFunction = async ({ request }) => {
           'import {BaseCurve} from \\"./BaseCurve.sol\\";'
         )
 
-      await execAsync(`docker exec bonding-curves-anvil-1 bash -c "echo '${escapedContent}' > /app/contracts/${fileName}"`)
+      if (isProduction) {
+        // In production, write file directly
+        await fs.writeFile(contractPath, content)
+      } else {
+        // In development, use Docker
+        await execAsync(`docker exec bonding-curves-anvil-1 bash -c "echo '${escapedContent}' > ${contractPath}"`)
+      }
 
-      // Compile using the remappings from the container's remappings.txt
-      let { stdout, stderr } = await execAsync('docker exec bonding-curves-anvil-1 forge build --force --sizes')
+      // Compile using forge
+      let { stdout, stderr } = await execAsync(getCommand('forge build --force --sizes'))
       console.log('Compilation output:', stdout)
       if (stderr) {
         console.error('Compilation errors:', stderr)
@@ -53,9 +74,17 @@ export const action: ActionFunction = async ({ request }) => {
 
       // Get artifact
       const contractName = path.parse(fileName).name
-      const { stdout: artifactContent } = await execAsync(
-        `docker exec bonding-curves-anvil-1 cat /app/out/${fileName}/${contractName}.json`
-      )
+      const artifactPath = `/app/out/${fileName}/${contractName}.json`
+      let artifactContent: string
+
+      if (isProduction) {
+        // In production, read file directly
+        artifactContent = await fs.readFile(artifactPath, 'utf-8')
+      } else {
+        // In development, use Docker
+        const { stdout } = await execAsync(getCommand(`cat ${artifactPath}`))
+        artifactContent = stdout
+      }
 
       let artifact
       try {
@@ -65,11 +94,7 @@ export const action: ActionFunction = async ({ request }) => {
         return json({ error: 'Failed to read contract artifact' }, { status: 500 })
       }
 
-      // Find constructor and log for debugging
       const constructor = artifact.abi.find((item: any) => item.type === 'constructor')
-      // console.log('Found constructor:', constructor)
-
-      // If no constructor found, return empty inputs array
       const constructorInputs = constructor?.inputs || []
       const needsConstructorArgs = constructorInputs.length > 0
 
@@ -87,9 +112,13 @@ export const action: ActionFunction = async ({ request }) => {
         { status: 500 }
       )
     } finally {
-      // Always clean up
+      // Clean up
       try {
-        await execAsync(`docker exec bonding-curves-anvil-1 rm /app/contracts/${fileName}`)
+        if (isProduction) {
+          await fs.unlink(`/app/contracts/${fileName}`).catch(() => { })
+        } else {
+          await execAsync(getCommand(`rm /app/contracts/${fileName}`)).catch(() => { })
+        }
       } catch (cleanupError) {
         console.error('Failed to clean up temporary file:', cleanupError)
       }
