@@ -1163,9 +1163,6 @@ importers:
 
   packages/graphql:
     dependencies:
-      '@0xintuition/api':
-        specifier: workspace:^
-        version: link:../api
       '@graphql-codegen/typescript-document-nodes':
         specifier: ^4.0.11
         version: 4.0.11(encoding@0.1.13)(graphql@16.9.0)
