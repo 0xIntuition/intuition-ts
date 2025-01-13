@@ -36,7 +36,18 @@ const commonGenerateOptions: Types.ConfiguredOutput = {
 const config: CodegenConfig = {
   overwrite: true,
   hooks: { afterAllFileWrite: ['prettier --write'] },
-  schema: process.env.HASURA_PROJECT_ENDPOINT || API_URL_DEV,
+  // Try local schema first, fall back to remote if needed
+  schema: [
+    './schema.graphql',
+    {
+      [API_URL_DEV]: {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },
+    },
+  ],
   ignoreNoDocuments: true,
   documents: ['**/*.graphql'],
   generates: {
