@@ -14,13 +14,19 @@ import {
   useGetListDetailsQuery,
 } from '@0xintuition/graphql'
 
+import ShareModal from '@components/share-modal'
 import { useGoBack } from '@lib/hooks/useGoBack'
+import { shareModalAtom } from '@lib/state/store'
 import logger from '@lib/utils/logger'
 import { useLoaderData } from '@remix-run/react'
+// import { requireUser } from '@server/auth'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
+import { useAtom } from 'jotai'
 
 export async function loader() {
   const queryClient = new QueryClient()
+  // const user = await requireUser(request)
+  // const wallet = user?.wallet?.address
 
   await queryClient.prefetchQuery({
     queryKey: ['get-list-details', { predicateId: 3, objectId: 620 }],
@@ -42,6 +48,7 @@ export async function loader() {
   })
 
   return {
+    // wallet,
     dehydratedState: dehydrate(queryClient),
   }
 }
@@ -63,6 +70,12 @@ export function ErrorBoundary() {
 export default function MiniGameOne() {
   const goBack = useGoBack({ fallbackRoute: '/minigames' })
   useLoaderData<typeof loader>()
+  const [shareModalActive, setShareModalActive] = useAtom(shareModalAtom)
+
+  const hasUserParam = location.search.includes('user=')
+  const fullPath = hasUserParam
+    ? `${location.pathname}${location.search}`
+    : `${location.pathname}${location.search}${location.search ? '&' : '?'}`
 
   const { data: listData } = useGetListDetailsQuery(
     {
@@ -102,7 +115,18 @@ export default function MiniGameOne() {
         </Button>
         <div className="flex flex-1 justify-between items-center">
           <PageHeader title={listData?.globalTriples[0].object.label ?? ''} />
-          <Button variant="secondary" className="border border-border/10">
+          <Button
+            variant="secondary"
+            className="border border-border/10"
+            onClick={() =>
+              setShareModalActive({
+                isOpen: true,
+                currentPath: fullPath,
+                title: listData?.globalTriples[0].object.label ?? '',
+                tvl: 0,
+              })
+            }
+          >
             <Icon name="square-arrow-top-right" className="h-4 w-4" />
             Share
           </Button>
@@ -133,6 +157,17 @@ export default function MiniGameOne() {
 
       {/* Space for table */}
       <div className="mt-6">{/* Table will go here */}</div>
+      <ShareModal
+        open={shareModalActive.isOpen}
+        onClose={() =>
+          setShareModalActive({
+            ...shareModalActive,
+            isOpen: false,
+          })
+        }
+        title={shareModalActive.title}
+        tvl={shareModalActive.tvl}
+      />
     </>
   )
 }
