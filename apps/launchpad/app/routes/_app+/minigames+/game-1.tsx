@@ -122,6 +122,8 @@ export default function MiniGameOne() {
               setShareModalActive({
                 isOpen: true,
                 currentPath: fullPath,
+                title: listData?.globalTriples[0].object.label ?? '',
+                tvl: 0,
               })
             }
           >
@@ -156,7 +158,6 @@ export default function MiniGameOne() {
       {/* Space for table */}
       <div className="mt-6">{/* Table will go here */}</div>
       <ShareModal
-        currentPath={fullPath}
         open={shareModalActive.isOpen}
         onClose={() =>
           setShareModalActive({
@@ -164,6 +165,8 @@ export default function MiniGameOne() {
             isOpen: false,
           })
         }
+        title={shareModalActive.title}
+        tvl={shareModalActive.tvl}
       />
     </>
   )

@@ -21,7 +21,13 @@ export function atomWithToggle(
 export const shareModalAtom = atom<{
   isOpen: boolean
   currentPath: string | null
+  title: string
+  tvl: number
+  percentageChange?: number
+  valueChange?: number
 }>({
   isOpen: false,
   currentPath: null,
+  title: '',
+  tvl: 0,
 })
