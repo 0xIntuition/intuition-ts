@@ -4,6 +4,7 @@ import autoprefixer from 'autoprefixer'
 import { flatRoutes } from 'remix-flat-routes'
 import tailwindcss from 'tailwindcss'
 import { defineConfig } from 'vite'
+import envOnly from 'vite-env-only'
 import tsconfigPaths from 'vite-tsconfig-paths'
 
 import { themePreset } from '../../packages/1ui/src/styles'
@@ -23,6 +24,7 @@ export default defineConfig({
     },
   },
   plugins: [
+    envOnly(),
     remix({
       future: {
         v3_fetcherPersist: true,

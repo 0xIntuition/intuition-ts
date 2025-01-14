@@ -31,6 +31,7 @@
     "@types/cytoscape": "^3.21.8",
     "@vidstack/react": "^1.10.9",
     "class-variance-authority": "^0.7.0",
+    "cloudinary": "^2.2.0",
     "cookie": "^0.6.0",
     "cytoscape": "^3.30.4",
     "cytoscape-cola": "^2.5.1",
@@ -47,7 +48,8 @@
     "remix-utils": "^7.6.0",
     "tailwind-merge": "^2.3.0",
     "viem": "^2.21.55",
-    "wagmi": "^2.5.20"
+    "wagmi": "^2.5.20",
+    "zod": "^3.23.4"
   },
   "devDependencies": {
     "@remix-run/dev": "^2.15.1",
@@ -67,6 +69,7 @@
     "tailwindcss": "^3.4.4",
     "typescript": "^5.1.6",
     "vite": "^5.1.0",
+    "vite-env-only": "^2.3.0",
     "vite-tsconfig-paths": "^4.2.1"
   },
   "engines": {

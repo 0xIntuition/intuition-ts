@@ -6,21 +6,15 @@ interface TopicsStepProps {
   topics: Topic[]
   onToggleTopic: (id: string) => void
   onNext: () => void
-  onBack: () => void
 }
 
-export function TopicsStep({
-  topics,
-  onToggleTopic,
-  onNext,
-  onBack,
-}: TopicsStepProps) {
+export function TopicsStep({ topics, onToggleTopic, onNext }: TopicsStepProps) {
   const hasSelection = topics.some((t) => t.selected)
 
   return (
-    <div className="p-8">
+    <div className="p-8 pb-24">
       <Text variant="headline" className="text-center mb-8">
-        What is your preferred Web3 Wallet?
+        What topics interest you?
       </Text>
       <div className="grid grid-cols-2 gap-4">
         {topics.map((topic) => (
@@ -35,25 +29,15 @@ export function TopicsStep({
                 : 'border-[#1A1A1A] hover:border-accent'
             }`}
           >
-            <div className="w-14 h-14 rounded bg-[#1A1A1A] flex-shrink-0 ml-1">
-              {topic.image && (
-                <img
-                  src={topic.image}
-                  alt={topic.name}
-                  className="w-full h-full object-cover rounded-lg"
-                />
-              )}
-            </div>
+            <div className="w-14 h-14 rounded bg-[#1A1A1A] flex-shrink-0 ml-1" />
             <div className="text-left">
+              <div className="text-sm text-[#666666] mb-1">{topic.type}</div>
               <div className="text-white text-base leading-5">{topic.name}</div>
             </div>
           </button>
         ))}
       </div>
-      <div className="flex justify-between mt-8">
-        <Button variant="secondary" onClick={onBack}>
-          Back
-        </Button>
+      <div className="absolute bottom-8 right-8">
         <Button
           variant="secondary"
           onClick={onNext}

@@ -31,7 +31,7 @@ export function IntroStep({ onNext }: IntroStepProps) {
           <track kind="captions" srcLang="en" label="English" />
         </video>
       </div>
-      <div className="flex flex-col gap-6 p-8">
+      <div className="flex flex-col gap-6 p-10">
         {videoError && (
           <Text variant="body" className="text-red-500">
             Error loading video. Please try again later.
