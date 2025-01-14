@@ -101,7 +101,7 @@ export default function MiniGameOne() {
           <Icon name="chevron-left" className="h-4 w-4" />
         </Button>
         <div className="flex flex-1 justify-between items-center">
-          <PageHeader title="Best Web3 Wallets" />
+          <PageHeader title={listData?.globalTriples[0].object.label ?? ''} />
           <Button variant="secondary" className="border border-border/10">
             <Icon name="square-arrow-top-right" className="h-4 w-4" />
             Share
