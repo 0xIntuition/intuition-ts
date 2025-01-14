@@ -18,13 +18,12 @@ import ShareModal from '@components/share-modal'
 import { useGoBack } from '@lib/hooks/useGoBack'
 import { shareModalAtom } from '@lib/state/store'
 import logger from '@lib/utils/logger'
-import { LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 // import { requireUser } from '@server/auth'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
 import { useAtom } from 'jotai'
 
-export async function loader({ request }: LoaderFunctionArgs) {
+export async function loader() {
   const queryClient = new QueryClient()
   // const user = await requireUser(request)
   // const wallet = user?.wallet?.address

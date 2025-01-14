@@ -1,29 +1,41 @@
+import { useEffect } from 'react'
+
 import {
   Dialog,
   DialogContent,
   DialogTitle,
-  DialogTitle,
   Icon,
   IconName,
   Text,
+  toast,
 } from '@0xintuition/1ui'
 
 import { useCopy } from '@lib/hooks/useCopy'
 
 export interface ShareModalProps {
-  currentPath: string
   open?: boolean
   onClose: () => void
 }
 
-function ShareModalContent({ currentPath }: ShareModalProps) {
+function ShareModalContent({ onClose, open }: ShareModalProps) {
   const { copy } = useCopy()
+
+  useEffect(() => {
+    if (open && typeof window !== 'undefined') {
+      copy(window.location.href)
+    }
+  }, [open])
+
+  const handleManualCopy = () => {
+    copy(window.location.href)
+    toast.success('Link copied to clipboard!')
+  }
 
   return (
     <DialogContent className="bg-background backdrop-blur-sm rounded-3xl shadow-2xl border border-neutral-800 flex flex-col px-0 pb-0">
       <div className="flex flex-col gap-4">
         <div className="flex justify-between items-start">
-          <DialogTitle className='px-8'>
+          <DialogTitle className="px-8">
             <Text className="text-neutral-400 text-lg">
               Best Crypto Wallets
             </Text>
@@ -55,9 +67,9 @@ function ShareModalContent({ currentPath }: ShareModalProps) {
           <Text className="text-neutral-500 text-sm">Powered by Intuition</Text>
         </div>
 
-        <div className="flex justify-between items-center  bg-[#0F0F0F] p-8">
+        <div className="flex justify-between items-center bg-[#0F0F0F] p-8">
           <button
-            onClick={() => copy(currentPath)}
+            onClick={handleManualCopy}
             className="bg-neutral-950 rounded-full border border-emerald-500/20 px-4 py-2 flex items-center gap-2 cursor-pointer hover:bg-neutral-900 transition-colors"
           >
             <Icon
@@ -72,7 +84,7 @@ function ShareModalContent({ currentPath }: ShareModalProps) {
               <Icon name={IconName.twitter} className="h-5 w-5" />
             </button>
             <button className="p-3 rounded-full bg-neutral-950 border border-neutral-800 hover:border-neutral-700 transition-colors">
-              <Icon name={IconName.twitter} className="h-5 w-5" />
+              <Icon name={IconName.farcaster} className="h-5 w-5" />
             </button>
           </div>
         </div>
@@ -81,11 +93,7 @@ function ShareModalContent({ currentPath }: ShareModalProps) {
   )
 }
 
-export default function ShareModal({
-  currentPath,
-  open,
-  onClose,
-}: ShareModalProps) {
+export default function ShareModal({ open, onClose }: ShareModalProps) {
   return (
     <Dialog
       open={open}
@@ -93,7 +101,7 @@ export default function ShareModal({
         onClose?.()
       }}
     >
-      <ShareModalContent currentPath={currentPath} onClose={onClose} />
+      <ShareModalContent onClose={onClose} open={open} />
     </Dialog>
   )
 }
