@@ -7,9 +7,9 @@ interface SearchProps {
 export function Search({ handleSearchChange }: SearchProps) {
   return (
     <Input
-      className="w-48 max-lg:w-full"
+      className="w-48 max-lg:w-full bg-transparent border-none text-lg"
       onChange={handleSearchChange}
-      placeholder="Search"
+      placeholder="Search atoms"
       startAdornment="magnifying-glass"
     />
   )
