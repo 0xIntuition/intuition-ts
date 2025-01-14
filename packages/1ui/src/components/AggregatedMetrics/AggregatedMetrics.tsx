@@ -4,6 +4,7 @@ import { formatNumber } from 'utils'
 interface Metric {
   label: string
   value: number | string
+  precision?: number
   hideOnMobile?: boolean
   suffix?: string
 }
@@ -25,26 +26,29 @@ export function AggregatedMetrics({
       )}
       {...props}
     >
-      {metrics.map(({ label, value, hideOnMobile, suffix }, index) => {
-        const formattedValue = typeof value === 'string' ? Number(value) : value
-        return (
-          <div
-            key={label}
-            className={cn(
-              'relative text-center px-12',
-              hideOnMobile && 'hidden lg:block',
-              index !== metrics.length - 1 &&
-                'after:absolute after:right-0 after:inset-y-0 after:w-px after:bg-border/20',
-            )}
-          >
-            <div className="text-sm text-foreground/70">{label}</div>
-            <div className="text-2xl font-medium text-foreground">
-              {formatNumber(formattedValue, 2)}
-              {suffix ? ` ${suffix}` : ''}
+      {metrics.map(
+        ({ label, value, hideOnMobile, suffix, precision }, index) => {
+          const formattedValue =
+            typeof value === 'string' ? Number(value) : value
+          return (
+            <div
+              key={label}
+              className={cn(
+                'relative text-center px-12',
+                hideOnMobile && 'hidden lg:block',
+                index !== metrics.length - 1 &&
+                  'after:absolute after:right-0 after:inset-y-0 after:w-px after:bg-border/20',
+              )}
+            >
+              <div className="text-sm text-foreground/70">{label}</div>
+              <div className="text-2xl font-medium text-foreground">
+                {formatNumber(formattedValue, precision)}
+                {suffix ? ` ${suffix}` : ''}
+              </div>
             </div>
-          </div>
-        )
-      })}
+          )
+        },
+      )}
     </div>
   )
 }
