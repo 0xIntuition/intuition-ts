@@ -5,6 +5,7 @@ import { TransactionStateType } from 'app/types/transaction'
 export interface OnboardingModalProps {
   isOpen: boolean
   onClose: () => void
+  // TODO: Add object ID once we figure out how this is being accessed, so that we don't have to hardcode it in the component.
 }
 
 export interface Topic {
