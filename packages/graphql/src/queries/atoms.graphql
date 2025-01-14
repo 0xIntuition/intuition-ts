@@ -109,3 +109,15 @@ query GetAtom($id: numeric!) {
     ...AtomTriple
   }
 }
+
+query GetAtomByData($data: String!) {
+  atoms(where: { data: { _eq: $data } }) {
+    ...AtomMetadata
+    ...AtomTxn
+    ...AtomVaultDetails
+    creator {
+      ...AccountMetadata
+    }
+    ...AtomTriple
+  }
+}

@@ -1,3 +1,5 @@
+import { IPFS_GATEWAY_URL } from '@consts/general'
+
 import { ChainEnv, DEFAULT_CHAIN_ENV } from './environment'
 import logger from './logger'
 
@@ -130,3 +132,5 @@ export const getSpecialPredicate = (
   }
   return specialPredicates[chainEnv as ChainEnv]
 }
+
+export const ipfsUrl = (hash: string) => `${IPFS_GATEWAY_URL}/ipfs/${hash}`
