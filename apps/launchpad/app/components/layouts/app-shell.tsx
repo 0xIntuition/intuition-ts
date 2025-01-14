@@ -46,7 +46,7 @@ function AppShellContent({ children, suspense = true }: AppShellContentProps) {
 function AppShellInner({ children }: BaseLayoutProps) {
   return (
     <div className="flex flex-col min-h-screen">
-      <StatsBar chapter="Chapter I: Genesis" remainingTime="1d 23h 56m 56s" />
+      <StatsBar />
       <div className="flex-1 pt-[52px]">
         <SidebarProvider
           style={
