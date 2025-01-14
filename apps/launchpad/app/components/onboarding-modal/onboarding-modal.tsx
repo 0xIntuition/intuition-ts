@@ -36,8 +36,18 @@ interface OnboardingModalProps {
 }
 
 export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
-  const [currentStep, setCurrentStep] = useState<Step>(STEPS.INTRO)
-  const [selectedWallet, setSelectedWallet] = useState<string | null>(null)
+  const [state, setState] = useState<OnboardingState>(INITIAL_STATE)
+  const [topics, setTopics] = useState<Topic[]>([])
+  const [isTransitioning, setIsTransitioning] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [lastTxHash, setLastTxHash] = useState<string | undefined>(undefined)
+  const [searchTerm, setSearchTerm] = useState('')
+  const { state: txState, dispatch } = useGenericTxState<
+    TransactionStateType,
+    TransactionActionType
+  >(transactionReducer, initialTxState)
+  const [validationErrors, setValidationErrors] = useState<string[]>([])
+  const [showErrors, setShowErrors] = useState(false)
 
   const publicClient = usePublicClient()
   const queryClient = useQueryClient()
@@ -48,10 +58,15 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
   const walletBalance = useGetWalletBalance(userWallet as `0x${string}`)
 
   // Fetch wallet list
-  const { data: listData } = useGetListDetailsQuery(
+  const { data: listData, isLoading: isLoadingList } = useGetListDetailsQuery(
     {
       tagPredicateId: getSpecialPredicate(CURRENT_ENV).tagPredicate.id,
       globalWhere: {
+        subject: {
+          label: {
+            _ilike: searchTerm ? `%${searchTerm}%` : undefined,
+          },
+        },
         predicate_id: {
           _eq: getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId,
         },
@@ -66,6 +81,7 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
         {
           predicateId: getSpecialPredicate(CURRENT_ENV).tagPredicate.id,
           objectId: getSpecialPredicate(CURRENT_ENV).web3Wallet.vaultId,
+          searchTerm,
         },
       ],
     },
@@ -104,6 +120,13 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
     [],
   )
 
+  // Initial state setup when modal opens
+  useEffect(() => {
+    if (isOpen) {
+      setState(INITIAL_STATE)
+    }
+  }, [isOpen])
+
   // Update topics when list data changes
   useEffect(() => {
     if (!listData?.globalTriples) {
@@ -118,12 +141,10 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
       selected: false,
     }))
     setTopics(newTopics)
-    setState(INITIAL_STATE)
 
     // Cleanup on unmount/hot reload
     return () => {
       setTopics([])
-      setState(INITIAL_STATE)
     }
   }, [listData?.globalTriples])
 
@@ -168,19 +189,67 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
     setSelectedWallet(walletId)
   }
 
+  useEffect(() => {
+    if (isOpen) {
+      setIsLoading(false)
+      setShowErrors(false)
+      setValidationErrors([])
+    }
+  }, [isOpen, dispatch])
+
+  const handleSearchChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setSearchTerm(event.target.value)
+    },
+    [],
+  )
+
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="p-0 bg-gradient-to-br from-[#060504] to-[#101010] max-w-[640px] w-full border-none">
-        {currentStep === STEPS.INTRO && <IntroStep onNext={handleNext} />}
-        {currentStep === STEPS.TOPICS && (
-          <TopicsStep
-            onNext={handleNext}
-            onBack={handleBack}
-            selectedWallet={selectedWallet}
-            onSelectWallet={handleSelectWallet}
-          />
-        )}
-      </DialogContent>
-    </Dialog>
+    <ClientOnly>
+      {() => (
+        <Dialog open={isOpen} onOpenChange={handleClose}>
+          <DialogContent className="p-0 bg-gradient-to-br from-[#060504] to-[#101010] max-w-[640px] w-full border-none">
+            <div
+              className={`transition-opacity duration-300 ${
+                isTransitioning ? 'opacity-0' : 'opacity-100'
+              }`}
+            >
+              {state.currentStep === STEPS.INTRO && (
+                <IntroStep onNext={handleNext} />
+              )}
+
+              {state.currentStep === STEPS.TOPICS && (
+                <TopicsStep
+                  topics={topics}
+                  isLoadingList={isLoadingList}
+                  onToggleTopic={toggleTopic}
+                  onNext={handleNext}
+                  onBack={handleBack}
+                  onSearchChange={handleSearchChange}
+                />
+              )}
+
+              {state.currentStep === STEPS.STAKE && state.selectedTopic && (
+                <StakeStep
+                  selectedTopic={state.selectedTopic}
+                  ticks={state.ticks}
+                  val={val}
+                  walletBalance={walletBalance}
+                  onTicksChange={(ticks: number) =>
+                    setState((prev) => ({ ...prev, ticks }))
+                  }
+                  onStake={handleStakeButtonClick}
+                  onBack={handleBack}
+                  isLoading={isLoading || isLoadingVault}
+                  validationErrors={validationErrors}
+                  showErrors={showErrors}
+                  txState={txState}
+                />
+              )}
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
+    </ClientOnly>
   )
 }
