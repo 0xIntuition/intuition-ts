@@ -5,6 +5,7 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLoaderData,
 } from '@remix-run/react'
 
 import { Providers } from './lib/providers'
@@ -14,11 +15,23 @@ import './styles/globals.css'
 import { Toaster } from '@0xintuition/1ui'
 import { API_URL_DEV, configureClient } from '@0xintuition/graphql'
 
+import { json, LoaderFunctionArgs } from '@remix-run/node'
+import { setupAPI } from '@server/auth'
+import { getEnv } from '@server/env'
+
 // Configure GraphQL client at module initialization using the URLs from the package. For now, we should use the local URL for development
 // This can be updated to use the same environment approach that we use in Portal in the future, or leave up to the template user to configure however makes sense for their use case
 configureClient({
   apiUrl: API_URL_DEV,
 })
+
+export async function loader({ request }: LoaderFunctionArgs) {
+  setupAPI(request)
+
+  return json({
+    env: getEnv(),
+  })
+}
 
 export const meta: MetaFunction = () => {
   return [
@@ -56,7 +69,6 @@ export function Document({
   theme = 'system',
 }: {
   children: React.ReactNode
-  gtmTrackingId?: string
   theme?: string
 }) {
   return (
@@ -80,10 +92,12 @@ export function Document({
 }
 
 export default function App() {
+  const { env } = useLoaderData<typeof loader>()
+
   return (
-    <Document>
+    <Document theme="dark">
       <Toaster position="top-right" />
-      <Providers>
+      <Providers env={env}>
         <AppLayout />
       </Providers>
     </Document>

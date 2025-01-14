@@ -16,7 +16,14 @@ const privyConfig: PrivyClientConfig = {
   },
 }
 
-export function PrivyConfig({ children }: { children: React.ReactNode }) {
+interface PrivyConfigProps {
+  children: React.ReactNode
+  env?: {
+    PRIVY_APP_ID: string
+  }
+}
+
+export function PrivyConfig({ children, env }: PrivyConfigProps) {
   return (
     <Suspense
       fallback={
@@ -26,8 +33,7 @@ export function PrivyConfig({ children }: { children: React.ReactNode }) {
       }
     >
       <PrivyProvider
-        appId="clvcwhbx3082nypes1173q3wd"
-        clientId="client-WY2kRkuZcyjbMMefCFndHwN87sf6qbxK1zfseTx3Gp2mC"
+        appId={env?.PRIVY_APP_ID ?? 'clvcwhbx3082nypes1173q3wd'}
         config={privyConfig}
       >
         {children}

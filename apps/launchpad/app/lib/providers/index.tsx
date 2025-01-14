@@ -13,9 +13,16 @@ const queryClient = new QueryClient({
   },
 })
 
-export function Providers({ children }: { children: React.ReactNode }) {
+interface ProvidersProps {
+  children: React.ReactNode
+  env?: {
+    PRIVY_APP_ID: string
+  }
+}
+
+export function Providers({ children, env }: ProvidersProps) {
   return (
-    <PrivyConfig>
+    <PrivyConfig env={env}>
       <QueryClientProvider client={queryClient}>
         <WagmiProvider config={wagmiConfig}>
           <AuthProvider>{children}</AuthProvider>
