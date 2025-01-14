@@ -3,6 +3,7 @@ import * as React from 'react'
 import { cn, SidebarInset, SidebarProvider } from '@0xintuition/1ui'
 
 import { AppSidebar } from '../app-sidebar'
+import { StatsBar } from '../stats-bar'
 import { AppShellProvider, useAppShell } from './app-shell-context'
 import { BaseLayoutProps, layoutConfig } from './types'
 
@@ -44,18 +45,23 @@ function AppShellContent({ children, suspense = true }: AppShellContentProps) {
 
 function AppShellInner({ children }: BaseLayoutProps) {
   return (
-    <SidebarProvider
-      style={
-        {
-          '--sidebar-width': '16rem',
-        } as React.CSSProperties
-      }
-    >
-      <AppSidebar />
-      <SidebarInset className="bg-[#131313]">
-        <AppShellContent>{children}</AppShellContent>
-      </SidebarInset>
-    </SidebarProvider>
+    <div className="flex flex-col min-h-screen">
+      <StatsBar />
+      <div className="flex-1 pt-[52px]">
+        <SidebarProvider
+          style={
+            {
+              '--sidebar-width': '16rem',
+            } as React.CSSProperties
+          }
+        >
+          <AppSidebar />
+          <SidebarInset className="bg-[#131313]">
+            <AppShellContent>{children}</AppShellContent>
+          </SidebarInset>
+        </SidebarProvider>
+      </div>
+    </div>
   )
 }
 
