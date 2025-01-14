@@ -15,7 +15,7 @@ import './styles/globals.css'
 import { Toaster } from '@0xintuition/1ui'
 import { API_URL_DEV, configureClient } from '@0xintuition/graphql'
 
-import { json, LoaderFunctionArgs } from '@remix-run/node'
+import { json } from '@remix-run/node'
 import { setupAPI } from '@server/auth'
 import { getEnv } from '@server/env'
 
@@ -25,8 +25,8 @@ configureClient({
   apiUrl: API_URL_DEV,
 })
 
-export async function loader({ request }: LoaderFunctionArgs) {
-  setupAPI(request)
+export async function loader() {
+  setupAPI()
 
   return json({
     env: getEnv(),
