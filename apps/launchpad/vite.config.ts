@@ -66,6 +66,7 @@ export default defineConfig({
       '@privy-io/wagmi',
       'react-cytoscapejs',
       'cytoscape',
+      'react-dropzone',
     ],
   },
 })
