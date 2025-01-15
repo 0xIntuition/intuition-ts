@@ -1,51 +1,47 @@
 import { Button, Text } from '@0xintuition/1ui'
 
-import { Topic } from './types'
-
 interface TopicsStepProps {
-  topics: Topic[]
-  onToggleTopic: (id: string) => void
   onNext: () => void
   onBack: () => void
+  selectedWallet: string | null
+  onSelectWallet: (walletId: string) => void
 }
 
+const WALLETS = [
+  { id: 'metamask', name: 'MetaMask' },
+  { id: 'coinbase', name: 'Coinbase Wallet' },
+  { id: 'rainbow', name: 'Rainbow' },
+  { id: 'trust', name: 'Trust Wallet' },
+]
+
 export function TopicsStep({
-  topics,
-  onToggleTopic,
   onNext,
   onBack,
+  selectedWallet,
+  onSelectWallet,
 }: TopicsStepProps) {
-  const hasSelection = topics.some((t) => t.selected)
-
   return (
     <div className="p-8">
       <Text variant="headline" className="text-center mb-8">
         What is your preferred Web3 Wallet?
       </Text>
       <div className="grid grid-cols-2 gap-4">
-        {topics.map((topic) => (
+        {WALLETS.map((wallet) => (
           <button
-            key={topic.id}
-            onClick={() => onToggleTopic(topic.id)}
-            aria-pressed={topic.selected}
-            aria-label={`Select ${topic.name} category`}
+            key={wallet.id}
+            onClick={() => onSelectWallet(wallet.id)}
+            aria-pressed={selectedWallet === wallet.id}
             className={`flex items-center gap-4 rounded-lg border transition-colors w-[280px] h-[72px] ${
-              topic.selected
+              selectedWallet === wallet.id
                 ? 'border-accent bg-accent/10'
                 : 'border-[#1A1A1A] hover:border-accent'
             }`}
           >
-            <div className="w-14 h-14 rounded bg-[#1A1A1A] flex-shrink-0 ml-1">
-              {topic.image && (
-                <img
-                  src={topic.image}
-                  alt={topic.name}
-                  className="w-full h-full object-cover rounded-lg"
-                />
-              )}
-            </div>
+            <div className="w-14 h-14 rounded bg-[#1A1A1A] flex-shrink-0 ml-1" />
             <div className="text-left">
-              <div className="text-white text-base leading-5">{topic.name}</div>
+              <Text variant="body" className="text-white">
+                {wallet.name}
+              </Text>
             </div>
           </button>
         ))}
@@ -58,7 +54,7 @@ export function TopicsStep({
           variant="secondary"
           onClick={onNext}
           className="bg-[#1A1A1A]"
-          disabled={!hasSelection}
+          disabled={!selectedWallet}
         >
           Next
         </Button>
