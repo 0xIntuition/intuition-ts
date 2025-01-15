@@ -3,7 +3,6 @@ import {
   ButtonSize,
   ButtonVariant,
   cn,
-  formatWalletAddress,
   Icon,
   IconName,
 } from '@0xintuition/1ui'
@@ -26,8 +25,8 @@ interface DepositFormProps {
   minDeposit: string
   isSubmitting?: boolean
   atomData: Atom
-  ipfsCid: string
-  isLoadingCost?: boolean
+  ipfsUri: string
+  isLoadingConfig?: boolean
   onBack?: () => void
 }
 
@@ -37,8 +36,8 @@ export function DepositForm({
   minDeposit,
   isSubmitting,
   atomData,
-  ipfsCid,
-  isLoadingCost,
+  ipfsUri,
+  isLoadingConfig,
   onBack,
 }: DepositFormProps) {
   const { address } = useAccount()
@@ -47,15 +46,15 @@ export function DepositForm({
   const { data: existingAtomData, isLoading: isCheckingAtom } =
     useGetAtomByDataQuery(
       {
-        data: ipfsCid,
+        data: ipfsUri,
       },
       {
-        queryKey: ['get-atom', { id: ipfsCid }],
+        queryKey: ['get-atom', { id: ipfsUri }],
       },
     )
 
   console.log('existingAtomData', existingAtomData)
-  const atomExists = existingAtomData?.atoms?.[0]?.data === ipfsCid
+  const atomExists = existingAtomData?.atoms?.[0]?.data === ipfsUri
   const existingAtomId = existingAtomData?.atoms?.[0]?.id
 
   const form = useForm<DepositFormData>({
@@ -124,11 +123,11 @@ export function DepositForm({
                     <span className="text-muted-foreground">Document: </span>
                     <a
                       className="text-accent flex items-center gap-1"
-                      href={ipfsUrl(ipfsCid)}
+                      href={ipfsUrl(ipfsUri)}
                       target="_blank"
                       rel="noreferrer"
                     >
-                      ipfs://{formatWalletAddress(ipfsCid)}
+                      {ipfsUri}
                       <Icon
                         name={IconName.squareArrowTopRight}
                         className="w-4 h-4"
@@ -183,7 +182,7 @@ export function DepositForm({
                   name="amount"
                   label="Deposit Amount"
                   placeholder={`Min. ${minDeposit} ETH`}
-                  disabled={!!isLoadingCost || atomExists}
+                  disabled={!!isLoadingConfig || atomExists}
                 />
 
                 <div className="flex items-center justify-between gap-4 text-sm">
@@ -201,7 +200,7 @@ export function DepositForm({
                         type="button"
                         variant={ButtonVariant.secondary}
                         onClick={handleSetMin}
-                        disabled={isLoadingCost || atomExists}
+                        disabled={isLoadingConfig || atomExists}
                       >
                         Min
                       </Button>
@@ -209,7 +208,7 @@ export function DepositForm({
                         type="button"
                         variant={ButtonVariant.secondary}
                         onClick={handleSetMax}
-                        disabled={isLoadingCost || !balance || atomExists}
+                        disabled={isLoadingConfig || !balance || atomExists}
                       >
                         Max
                       </Button>
@@ -236,7 +235,7 @@ export function DepositForm({
               type="submit"
               size={ButtonSize.md}
               disabled={
-                isSubmitting || isLoadingCost || isCheckingAtom || atomExists
+                isSubmitting || isLoadingConfig || isCheckingAtom || atomExists
               }
               className="min-w-32"
             >

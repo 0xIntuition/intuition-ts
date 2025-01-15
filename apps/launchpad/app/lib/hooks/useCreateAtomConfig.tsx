@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 
-export type CreateIdentityConfigData = {
+export type CreateAtomConfigData = {
   vaultId: string
   atomCost: string
   atomCreationFee: string
@@ -11,8 +11,8 @@ export type CreateIdentityConfigData = {
   minDeposit: string
 }
 
-export function useCreateIdentityConfig() {
-  return useQuery<CreateIdentityConfigData>({
+export function useCreateAtomConfig() {
+  return useQuery<CreateAtomConfigData>({
     queryKey: ['create-config'],
     queryFn: async () => {
       const response = await fetch('/resources/create')

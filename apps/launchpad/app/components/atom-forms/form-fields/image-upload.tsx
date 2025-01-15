@@ -34,7 +34,7 @@ export function FormImageUpload<T extends FieldValues>({
     const formData = new FormData()
     formData.append('file', file)
 
-    const response = await fetch(`/api/upload-image`, {
+    const response = await fetch(`/actions/upload-image`, {
       method: 'POST',
       body: formData,
     })

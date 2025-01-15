@@ -6,12 +6,12 @@ import {
   getTripleCost,
 } from '@server/multivault'
 
-export type CreateClaimLoaderData = {
+export type CreateTripleLoaderData = {
   vaultId: string
-  fees: CreateClaimFeesType
+  fees: CreateTripleFeesType
 }
 
-export type CreateClaimFeesType = {
+export type CreateTripleFeesType = {
   tripleCost: string
   tripleCreationFee: string
   atomDepositFractionOnCreation: string
@@ -50,6 +50,6 @@ export async function loader() {
       entryFee: entryFee.toString(),
       protocolFee: protocolFee.toString(),
       feeDenominator: feeDenominator.toString(),
-    } as CreateClaimFeesType,
-  } as CreateClaimLoaderData)
+    } as CreateTripleFeesType,
+  } as CreateTripleLoaderData)
 }

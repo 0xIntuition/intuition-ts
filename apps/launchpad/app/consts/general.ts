@@ -8,7 +8,7 @@ export const CURRENT_ENV: ChainEnv =
   (import.meta.env.VITE_DEPLOY_ENV as ChainEnv) || 'development'
 
 export const DEFAULT_CHAIN_ID =
-  CURRENT_ENV === 'development' ? baseSepolia.id.toString() : base.id.toString()
+  CURRENT_ENV === 'development' ? baseSepolia.id : base.id
 
 export const DEFAULT_VERIFIER = function (): void {
   throw new Error('verify function must be implemented')

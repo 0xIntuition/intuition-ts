@@ -133,4 +133,7 @@ export const getSpecialPredicate = (
   return specialPredicates[chainEnv as ChainEnv]
 }
 
-export const ipfsUrl = (hash: string) => `${IPFS_GATEWAY_URL}/ipfs/${hash}`
+export const ipfsUrl = (hash: string) => {
+  const cleanHash = hash.replace('ipfs://', '')
+  return `${IPFS_GATEWAY_URL}/${cleanHash}`
+}

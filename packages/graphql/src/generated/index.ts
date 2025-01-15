@@ -2,6 +2,8 @@ import {
   InfiniteData,
   useInfiniteQuery,
   UseInfiniteQueryOptions,
+  useMutation,
+  UseMutationOptions,
   useQuery,
   UseQueryOptions,
 } from '@tanstack/react-query'
@@ -9437,6 +9439,18 @@ export type VaultFieldsForTripleFragment = {
   }>
 }
 
+export type PinThingMutationVariables = Exact<{
+  name: Scalars['String']['input']
+  description?: InputMaybe<Scalars['String']['input']>
+  image?: InputMaybe<Scalars['String']['input']>
+  url?: InputMaybe<Scalars['String']['input']>
+}>
+
+export type PinThingMutation = {
+  __typename?: 'mutation_root'
+  pinThing?: { __typename?: 'PinOutput'; uri?: string | null } | null
+}
+
 export type GetAccountsQueryVariables = Exact<{
   limit?: InputMaybe<Scalars['Int']['input']>
   offset?: InputMaybe<Scalars['Int']['input']>
@@ -16311,6 +16325,52 @@ export const VaultFieldsForTripleFragmentDoc = `
   ...VaultFilteredPositions
 }
     `
+export const PinThingDocument = `
+    mutation pinThing($name: String!, $description: String, $image: String, $url: String) {
+  pinThing(
+    thing: {description: $description, image: $image, name: $name, url: $url}
+  ) {
+    uri
+  }
+}
+    `
+
+export const usePinThingMutation = <TError = unknown, TContext = unknown>(
+  options?: UseMutationOptions<
+    PinThingMutation,
+    TError,
+    PinThingMutationVariables,
+    TContext
+  >,
+) => {
+  return useMutation<
+    PinThingMutation,
+    TError,
+    PinThingMutationVariables,
+    TContext
+  >({
+    mutationKey: ['pinThing'],
+    mutationFn: (variables?: PinThingMutationVariables) =>
+      fetcher<PinThingMutation, PinThingMutationVariables>(
+        PinThingDocument,
+        variables,
+      )(),
+    ...options,
+  })
+}
+
+usePinThingMutation.getKey = () => ['pinThing']
+
+usePinThingMutation.fetcher = (
+  variables: PinThingMutationVariables,
+  options?: RequestInit['headers'],
+) =>
+  fetcher<PinThingMutation, PinThingMutationVariables>(
+    PinThingDocument,
+    variables,
+    options,
+  )
+
 export const GetAccountsDocument = `
     query GetAccounts($limit: Int, $offset: Int, $orderBy: [accounts_order_by!], $where: accounts_bool_exp, $claimsLimit: Int, $claimsOffset: Int, $claimsWhere: claims_bool_exp, $positionsLimit: Int, $positionsOffset: Int, $positionsWhere: positions_bool_exp) {
   accounts(limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
@@ -26192,6 +26252,108 @@ export const VaultFieldsForTriple = {
                   kind: 'FragmentSpread',
                   name: { kind: 'Name', value: 'PositionFields' },
                 },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export const PinThing = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'mutation',
+      name: { kind: 'Name', value: 'pinThing' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'name' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'description' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'image' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'url' } },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'pinThing' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'thing' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'description' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'description' },
+                      },
+                    },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'image' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'image' },
+                      },
+                    },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'name' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'name' },
+                      },
+                    },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'url' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'url' },
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'uri' } },
               ],
             },
           },
