@@ -6,30 +6,44 @@ interface MinigameCardProps {
   className?: string
   onStart: () => void
   game: Minigame
+  hideCTA?: boolean
 }
 
-export function MinigameCard({ className, onStart, game }: MinigameCardProps) {
+export function MinigameCard({
+  className,
+  onStart,
+  game,
+  hideCTA = false,
+}: MinigameCardProps) {
   return (
     <Card
       className={`relative h-[400px] rounded-lg border-none bg-gradient-to-br from-[#060504] to-[#101010] min-w-[480px] ${className}`}
     >
       <div className="absolute inset-0 flex flex-col justify-between p-8">
         <div className="space-y-2">
-          <Text className="text-2xl font-bold text-white">{game.title}</Text>
-          <Text className="text-neutral-400">
+          <Text variant="headline" weight="medium" className="text-foreground">
+            {game.title}
+          </Text>
+          <Text variant="body" weight="medium" className="text-foreground/70">
             {game.totalAtoms.toLocaleString()} atoms •{' '}
             {game.totalUsers.toLocaleString()} users
           </Text>
         </div>
 
-        <div className="flex flex-col items-center">
-          <Button onClick={onStart} variant="primary" size="lg">
-            Earn {game.points} Points
-          </Button>
-        </div>
+        {!hideCTA && (
+          <div className="flex flex-col items-center">
+            <Button onClick={onStart} variant="primary" size="lg">
+              Earn {game.points} Points
+            </Button>
+          </div>
+        )}
 
         <div className="flex justify-start">
-          <Text className="text-4xl font-bold text-white">
+          <Text
+            variant="heading5"
+            weight="semibold"
+            className="text-foreground"
+          >
             ${game.totalEarned.toFixed(1)}
           </Text>
         </div>
