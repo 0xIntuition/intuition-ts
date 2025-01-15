@@ -18,6 +18,14 @@ export function atomWithToggle(
   return anAtom
 }
 
+export const onboardingModalAtom = atom<{
+  isOpen: boolean
+  gameId: string | null
+}>({
+  isOpen: false,
+  gameId: null,
+})
+
 export const shareModalAtom = atom<{
   isOpen: boolean
   currentPath: string | null
