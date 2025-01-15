@@ -108,7 +108,7 @@ export default function MiniGameOne() {
         <Button
           variant="ghost"
           size="icon"
-          className="border-none text-foreground-muted"
+          className="border-none bg-background-muted"
           onClick={goBack}
         >
           <Icon name="chevron-left" className="h-4 w-4" />
