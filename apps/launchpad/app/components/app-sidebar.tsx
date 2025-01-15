@@ -82,46 +82,25 @@ export function AppSidebar({
       isAccent: location.pathname === '/',
     },
     {
-      icon: LayoutGrid,
-      label: 'Dashboard',
-      href: '/dashboard',
-      isAccent: location.pathname === '/dashboard',
-    },
-    {
-      icon: Globe,
-      label: 'Discover',
-      href: '/discover',
-      isAccent: location.pathname === '/discover',
-    },
-    {
       icon: Activity,
       label: 'Network',
       href: '/network',
       isAccent: location.pathname === '/network',
     },
-    {
-      icon: Gem,
-      label: 'Rewards',
-      href: '/rewards',
-      isAccent: location.pathname === '/rewards',
-    },
-    {
-      icon: Medal,
-      label: 'Leaderboard',
-      href: '/leaderboard',
-      isAccent: location.pathname === '/leaderboard',
-    },
   ]
 
-  const isPreferencesActive = location.pathname.startsWith(
-    '/marketplaces/preferences',
-  )
-
   const footerNavItems: NavItem[] = [
-    { icon: FileText, label: 'Developer Docs', href: '#' },
-    { icon: Github, label: 'Github', href: '#' },
-    { icon: Upload, label: 'Bulk Uploader', href: '#' },
-    { icon: Circle, label: 'Ecosystem', href: '#' },
+    {
+      icon: FileText,
+      label: 'Developer Docs',
+      href: 'https://tech.docs.intuition.systems',
+    },
+    { icon: Github, label: 'GitHub', href: 'https://github.com/0xIntuition' },
+    {
+      icon: Upload,
+      label: 'Bulk Uploader',
+      href: 'https://upload.intuition.systems',
+    },
   ]
 
   const sidebarContent = (
@@ -297,32 +276,6 @@ export function AppSidebar({
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-        <SidebarGroup>
-          <SidebarGroupLabel>Marketplaces</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton
-                  size="lg"
-                  asChild
-                  isActive={isPreferencesActive}
-                  className={cn(
-                    'w-full gap-3 py-3',
-                    isPreferencesActive ? 'text-accent' : undefined,
-                  )}
-                >
-                  <a
-                    href="/marketplaces/preferences"
-                    className="flex items-center gap-3"
-                  >
-                    <Settings className="h-4 w-4" />
-                    {!isMinimal && <span>Preferences</span>}
-                  </a>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
