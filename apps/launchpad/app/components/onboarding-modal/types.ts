@@ -1,5 +1,6 @@
 import { GetTripleQuery } from '@0xintuition/graphql'
 
+import { Step } from '@components/onboarding-modal/constants'
 import { TransactionStateType } from 'app/types/transaction'
 
 export interface OnboardingModalProps {
@@ -17,7 +18,7 @@ export interface Topic {
 }
 
 export interface OnboardingState {
-  currentStep: number
+  currentStep: Step
   selectedTopic?: Topic
   ticks: number
 }

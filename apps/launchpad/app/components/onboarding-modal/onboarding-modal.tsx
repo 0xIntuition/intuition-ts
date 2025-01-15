@@ -1,6 +1,7 @@
-import { useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
-import { Dialog, DialogContent } from '@0xintuition/1ui'
+import { Dialog, DialogContent, toast } from '@0xintuition/1ui'
+import { GetTripleQuery, useGetListDetailsQuery } from '@0xintuition/graphql'
 
 import StakeToast from '@components/onboarding-modal/stake-toast'
 import {
@@ -26,13 +27,23 @@ import {
   TransactionActionType,
   TransactionStateType,
 } from '../../types/transaction'
-import { STEPS } from './constants'
+import { Step, STEPS } from './constants'
 import { IntroStep } from './intro-step'
+import { StakeStep } from './stake-step'
 import { TopicsStep } from './topics-step'
+import { OnboardingModalProps, OnboardingState, Topic } from './types'
 
-interface OnboardingModalProps {
-  isOpen: boolean
-  onClose: () => void
+const STORAGE_KEY = 'onboarding-progress'
+
+const initialTxState: TransactionStateType = {
+  status: 'idle',
+  txHash: undefined,
+  error: undefined,
+}
+
+const INITIAL_STATE: OnboardingState = {
+  currentStep: STEPS.INTRO,
+  ticks: 1,
 }
 
 export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
@@ -172,21 +183,205 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
           currentStep: STEPS.STAKE,
         }))
       }
-      return prev
-    })
-  }
+    } else {
+      handleTransition((prev) => ({
+        ...prev,
+        currentStep: (prev.currentStep + 1) as Step,
+      }))
+    }
+  }, [state.currentStep, topics, handleTransition])
 
-  const handleBack = () => {
-    setCurrentStep((prev) => {
-      if (prev === STEPS.TOPICS) {
-        return STEPS.INTRO
+  const handleBack = useCallback(() => {
+    handleTransition((prev) => ({
+      ...prev,
+      currentStep: (prev.currentStep - 1) as Step,
+    }))
+  }, [handleTransition])
+
+  const toggleTopic = useCallback((id: string) => {
+    setTopics((currentTopics) => {
+      return currentTopics.map((topic) => ({
+        ...topic,
+        selected: topic.id === id,
+      }))
+    })
+  }, [])
+
+  const handleAction = async () => {
+    if (!privyUser?.wallet?.address || !state.selectedTopic?.triple) {
+      console.log('Missing required dependencies')
+      return
+    }
+
+    try {
+      const txHash = await stake({
+        val,
+        userWallet: privyUser?.wallet?.address,
+        vaultId: state.selectedTopic?.triple?.vault_id ?? '',
+        triple: state.selectedTopic?.triple,
+        conviction_price: vaultDetails?.conviction_price,
+        mode: 'deposit',
+        contract,
+      })
+
+      if (publicClient && txHash) {
+        dispatch({ type: 'TRANSACTION_PENDING' })
+        const receipt = await publicClient.waitForTransactionReceipt({
+          hash: txHash,
+        })
+
+        dispatch({
+          type: 'TRANSACTION_COMPLETE',
+          txHash,
+          txReceipt: receipt,
+        })
+
+        await queryClient.refetchQueries({
+          queryKey: [
+            'get-vault-details',
+            contract,
+            state.selectedTopic?.triple?.vault_id,
+            state.selectedTopic?.triple?.counter_vault_id,
+          ],
+        })
+        onClose()
       }
-      return prev
-    })
+    } catch (error) {
+      dispatch({
+        type: 'TRANSACTION_ERROR',
+        error: 'Error processing transaction',
+      })
+    }
   }
 
-  const handleSelectWallet = (walletId: string) => {
-    setSelectedWallet(walletId)
+  const action = handleAction
+
+  useEffect(() => {
+    if (isError) {
+      reset()
+      setIsLoading(false)
+    }
+  }, [isError, reset])
+
+  useEffect(() => {
+    let assets = ''
+    const receipt = txReceipt
+    const action = 'Deposited'
+
+    type BuyArgs = {
+      sender: Address
+      receiver?: Address
+      owner?: Address
+      senderAssetsAfterTotalFees: bigint
+      sharesForReceiver: bigint
+      entryFee: bigint
+      id: bigint
+    }
+
+    type SellArgs = {
+      sender: Address
+      receiver?: Address
+      owner?: Address
+      shares: bigint
+      assetsForReceiver: bigint
+      exitFee: bigint
+      id: bigint
+    }
+
+    type EventLogArgs = BuyArgs | SellArgs
+
+    if (
+      txReceipt &&
+      receipt?.logs[0].data &&
+      receipt?.transactionHash !== lastTxHash
+    ) {
+      const decodedLog = decodeEventLog({
+        abi: multivaultAbi,
+        data: receipt?.logs[0].data,
+        topics: receipt?.logs[0].topics,
+      })
+
+      const topics = decodedLog as unknown as {
+        eventName: string
+        args: EventLogArgs
+      }
+
+      if (
+        topics.args.sender === (privyUser?.wallet?.address as `0x${string}`)
+      ) {
+        assets = (topics.args as BuyArgs).senderAssetsAfterTotalFees.toString()
+
+        toast.custom(() => (
+          <StakeToast
+            action={action}
+            assets={assets}
+            txHash={txReceipt.transactionHash}
+          />
+        ))
+        setLastTxHash(txReceipt.transactionHash)
+      }
+    }
+  }, [txReceipt, privyUser?.wallet?.address, reset, lastTxHash])
+
+  useEffect(() => {
+    if (awaitingWalletConfirmation) {
+      dispatch({ type: 'APPROVE_TRANSACTION' })
+    }
+    if (awaitingOnChainConfirmation) {
+      dispatch({ type: 'TRANSACTION_PENDING' })
+    }
+    if (isError) {
+      dispatch({
+        type: 'TRANSACTION_ERROR',
+        error: 'Error processing transaction',
+      })
+    }
+  }, [
+    awaitingWalletConfirmation,
+    awaitingOnChainConfirmation,
+    isError,
+    dispatch,
+  ])
+
+  useEffect(() => {
+    setIsLoading(
+      !!awaitingWalletConfirmation ||
+        !!awaitingOnChainConfirmation ||
+        txState.status === 'confirm' ||
+        txState.status === 'transaction-pending' ||
+        txState.status === 'transaction-confirmed' ||
+        txState.status === 'approve-transaction' ||
+        txState.status === 'awaiting' ||
+        isLoadingVault,
+    )
+  }, [
+    isLoadingVault,
+    awaitingWalletConfirmation,
+    awaitingOnChainConfirmation,
+    txState.status,
+  ])
+
+  const handleStakeButtonClick = async () => {
+    if (+val < +min_deposit || +val > +walletBalance) {
+      setShowErrors(true)
+      return
+    }
+    action()
+  }
+
+  useEffect(() => {
+    dispatch({ type: 'START_TRANSACTION' })
+  }, [location])
+
+  const handleClose = () => {
+    onClose()
+    setIsLoading(false)
+    setShowErrors(false)
+    setValidationErrors([])
+    setTimeout(() => {
+      dispatch({ type: 'START_TRANSACTION' })
+      reset()
+    }, 500)
   }
 
   useEffect(() => {

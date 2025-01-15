@@ -1,6 +1,7 @@
 export const STEPS = {
   INTRO: 1,
   TOPICS: 2,
+  STAKE: 3,
 } as const
 
 export type Step = (typeof STEPS)[keyof typeof STEPS]

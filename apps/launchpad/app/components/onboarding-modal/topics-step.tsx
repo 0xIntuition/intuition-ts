@@ -17,13 +17,6 @@ interface TopicsStepProps {
   onSearchChange: (event: React.ChangeEvent<HTMLInputElement>) => void
 }
 
-const WALLETS = [
-  { id: 'metamask', name: 'MetaMask' },
-  { id: 'coinbase', name: 'Coinbase Wallet' },
-  { id: 'rainbow', name: 'Rainbow' },
-  { id: 'trust', name: 'Trust Wallet' },
-]
-
 export function TopicsStep({
   topics,
   isLoadingList,
