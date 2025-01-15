@@ -1,5 +1,3 @@
-import { PageHeader } from '@0xintuition/1ui'
-
 import { ErrorPage } from '@components/error-page'
 import { MinigameCardWrapper } from '@components/minigame-card-wrapper'
 import { OnboardingModal } from '@components/onboarding-modal/onboarding-modal'
@@ -24,7 +22,6 @@ export default function Index() {
 
   return (
     <>
-      <PageHeader title="Dashboard" />
       <div className="grid gap-6 md:grid-cols-2">
         <MinigameCardWrapper
           gameId={mockMinigames[0].id}
