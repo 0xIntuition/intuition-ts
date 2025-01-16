@@ -131,6 +131,10 @@ export default function MiniGameOne() {
     )
   })
 
+  // Calculate total users and TVL
+  const totalUsers = tableData.reduce((sum, item) => sum + item.users, 0)
+  const totalTVL = tableData.reduce((sum, item) => sum + item.assets, 0)
+
   const handleStartOnboarding = (gameId: string) => {
     setOnboardingModal({ isOpen: true, gameId })
   }
@@ -167,7 +171,7 @@ export default function MiniGameOne() {
                   isOpen: true,
                   currentPath: fullPath,
                   title: listData?.globalTriples[0].object.label ?? '',
-                  tvl: 0,
+                  tvl: totalTVL,
                 })
               }
             >
@@ -184,7 +188,7 @@ export default function MiniGameOne() {
           metrics={[
             {
               label: 'TVL',
-              value: 0,
+              value: totalTVL,
               suffix: 'ETH',
             },
             {
@@ -193,7 +197,7 @@ export default function MiniGameOne() {
             },
             {
               label: 'Users',
-              value: 0,
+              value: totalUsers,
             },
           ]}
           className="[&>div]:after:hidden sm:[&>div]:after:block"

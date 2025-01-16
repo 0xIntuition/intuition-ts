@@ -4,30 +4,14 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from '@0xintuition/1ui'
 
-import { Row } from '@tanstack/react-table'
 import { MoreHorizontal } from 'lucide-react'
 
-import { thingSchema } from './schema/thing'
-
-interface DataTableRowActionsProps<TData> {
-  row: Row<TData>
-}
-
-export function DataTableRowActions<TData>({
-  row,
-}: DataTableRowActionsProps<TData>) {
-  const thing = thingSchema.parse(row.original)
-
+export function DataTableRowActions() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>

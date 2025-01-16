@@ -244,6 +244,9 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
     }))
     updateStepStatus(STEPS.STAKE, 'completed')
     updateStepStatus(STEPS.REWARD, 'current')
+    queryClient.invalidateQueries({
+      queryKey: ['get-list-details', { predicateId: 3, objectId: 620 }],
+    })
   }
 
   console.log('listData', listData)
