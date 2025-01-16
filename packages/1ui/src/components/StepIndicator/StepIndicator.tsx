@@ -1,12 +1,11 @@
 import * as React from 'react'
 
-import { Text, TextVariant } from 'components/Text'
-
 import { cn } from '../../styles'
 import { Button, ButtonProps, ButtonVariant } from '../Button'
 import { Icon, IconName } from '../Icon'
+import { Step, StepStatus } from './Step'
 
-export type StepStatus = 'upcoming' | 'current' | 'completed'
+export type { StepStatus }
 
 export type Step<T = string> = {
   id: T
@@ -48,54 +47,22 @@ export function StepIndicator<T = string>({
 }: StepIndicatorProps<T>) {
   const StepIndicatorContent = (
     <div
-      className="flex items-center justify-center space-x-1"
+      className="flex items-center justify-between space-x-1 w-3/4"
       role="navigation"
       aria-label="Step progress"
     >
       {steps.map((step, index) => (
         <React.Fragment key={String(step.id)}>
-          <button
-            type="button"
-            role="tab"
-            className={cn('flex items-center', {
-              'cursor-pointer':
-                step.status === 'completed' || step.status === 'current',
-            })}
+          <Step
+            step={index + 1}
+            label={step.label}
+            status={step.status}
             onClick={() => onStepClick(step.id)}
-          >
-            <div
-              className={cn(
-                'flex items-center justify-center w-5 h-5 rounded-full border',
-                {
-                  'bg-accent border-accent text-accent-foreground':
-                    step.status === 'completed',
-                  'border-accent bg-accent/10 text-accent':
-                    step.status === 'current',
-                  'border-[#1A1A1A] text-muted-foreground':
-                    step.status === 'upcoming',
-                },
-              )}
-            >
-              {step.status === 'completed' ? (
-                <Icon name={IconName.checkmark} className="h-2.5 w-2.5" />
-              ) : (
-                <Text variant={TextVariant.body}>{index + 1}</Text>
-              )}
-            </div>
-            <Text
-              variant={TextVariant.body}
-              className={cn('ml-1.5', {
-                'text-primary font-medium': step.status === 'current',
-                'text-muted-foreground': step.status !== 'current',
-              })}
-            >
-              {step.label}
-            </Text>
-          </button>
+          />
           {index < steps.length - 1 && (
             <Icon
               name={IconName.chevronRight}
-              className={cn('h-3 w-3', {
+              className={cn('h-4 w-4', {
                 'text-primary': step.status === 'completed',
                 'text-border/50': step.status !== 'completed',
               })}

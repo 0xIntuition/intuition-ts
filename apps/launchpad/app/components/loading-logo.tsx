@@ -1,12 +1,15 @@
 import React from 'react'
 
+import { cn } from '@0xintuition/1ui'
+
 interface LoadingLogoProps {
   size?: number
+  className?: string
 }
 
-const LoadingLogo: React.FC<LoadingLogoProps> = ({ size = 300 }) => {
+const LoadingLogo: React.FC<LoadingLogoProps> = ({ size = 300, className }) => {
   return (
-    <div className="animate-pulse-slow">
+    <div className={cn('animate-pulse-slow', className)}>
       <svg
         width={size}
         height={size}
