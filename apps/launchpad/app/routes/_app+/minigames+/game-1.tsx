@@ -16,6 +16,8 @@ import {
 
 import { OnboardingModal } from '@components/onboarding-modal/onboarding-modal'
 import ShareModal from '@components/share-modal'
+import { columns } from '@components/ui/table/columns'
+import { DataTable } from '@components/ui/table/data-table'
 import { mockMinigames } from '@lib/data/mock-minigames'
 import { useGoBack } from '@lib/hooks/useGoBack'
 import { onboardingModalAtom, shareModalAtom } from '@lib/state/store'
@@ -97,6 +99,26 @@ export default function MiniGameOne() {
     },
   )
 
+  logger(listData?.globalTriples)
+  // Transform the data for the table
+  const tableData =
+    listData?.globalTriples?.map((triple) => {
+      // Debug log to see the image data
+      logger('Triple data:', {
+        id: triple.id,
+        subject: triple.subject,
+        image: triple.subject.image,
+      })
+
+      return {
+        id: triple.id,
+        image: triple.subject.image || '',
+        name: triple.subject.label || 'Untitled Entry',
+        users: 25, // Placeholder for now
+        assets: 3.73, // Placeholder for now
+      }
+    }) || []
+
   // Log each triple's shares for debugging
   listData?.globalTriples?.forEach((triple, index) => {
     logger(
@@ -175,7 +197,9 @@ export default function MiniGameOne() {
       </div>
 
       {/* Space for table */}
-      <div className="mt-6">{/* Table will go here */}</div>
+      <div className="mt-6">
+        <DataTable columns={columns} data={tableData} />
+      </div>
       <ShareModal
         open={shareModalActive.isOpen}
         onClose={() =>
