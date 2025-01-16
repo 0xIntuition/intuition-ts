@@ -1,38 +1,55 @@
 import { GetTripleQuery } from '@0xintuition/graphql'
 
-import { Step } from '@components/onboarding-modal/constants'
-import { TransactionStateType } from 'app/types/transaction'
+import { TransactionStateType } from '../../types/transaction'
 
-export interface OnboardingModalProps {
-  isOpen: boolean
-  onClose: () => void
-  // TODO: Add object ID once we figure out how this is being accessed, so that we don't have to hardcode it in the component.
+export const STEPS = {
+  TOPICS: 'topics',
+  STAKE: 'stake',
+  REWARD: 'reward',
+} as const
+
+export type StepId = (typeof STEPS)[keyof typeof STEPS]
+export type StepStatus = 'upcoming' | 'current' | 'completed'
+
+export type Step = {
+  id: StepId
+  label: string
+  status: StepStatus
 }
 
 export interface Topic {
   id: string
   name: string
   image?: string
+  triple?: GetTripleQuery['triple']
   selected: boolean
-  triple: GetTripleQuery['triple']
+}
+
+export interface NewAtomMetadata {
+  name: string
+  image?: string
+  vaultId: string
 }
 
 export interface OnboardingState {
-  currentStep: Step
-  selectedTopic?: Topic
+  currentStep: StepId
   ticks: number
+  selectedTopic?: Topic
+  newAtomMetadata?: NewAtomMetadata
+}
+
+export interface OnboardingModalProps {
+  isOpen?: boolean
+  onClose: () => void
 }
 
 export interface StakeStepProps {
   selectedTopic: Topic
-  ticks: number
-  val: string
-  walletBalance: string
-  onTicksChange: (ticks: number) => void
-  onStake: () => Promise<void>
-  onBack: () => void
+  newAtomMetadata?: NewAtomMetadata
+  predicateId: string
+  objectId: string
+  setTxState: (txState: TransactionStateType) => void
+  onStakingSuccess: () => void
   isLoading: boolean
-  validationErrors: string[]
-  showErrors: boolean
-  txState: TransactionStateType
+  setIsLoading: (isLoading: boolean) => void
 }

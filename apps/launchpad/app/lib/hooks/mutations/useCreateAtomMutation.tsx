@@ -3,14 +3,14 @@ import { useCreateAtom } from '@lib/hooks/useCreateAtom'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Abi, parseUnits } from 'viem'
 
-interface CreateMutationParams {
+interface CreateAtomMutationParams {
   val: string
   contract: string
   userWallet: string
   uri: string
 }
 
-export function useCreateMutation(contract: string) {
+export function useCreateAtomMutation(contract: string) {
   const queryClient = useQueryClient()
   const createAtom = useCreateAtom()
 
@@ -25,7 +25,7 @@ export function useCreateMutation(contract: string) {
 
   return {
     ...useMutation({
-      mutationFn: async (params: CreateMutationParams) => {
+      mutationFn: async (params: CreateAtomMutationParams) => {
         const { val, uri } = params
         const parsedValue = parseUnits(val === '' ? '0' : val, 18)
         console.log('val', val)

@@ -1,32 +1,36 @@
 import { useState } from 'react'
 
-import { Button, Text, TextVariant } from '@0xintuition/1ui'
+import {
+  Avatar,
+  Button,
+  IconName,
+  ScrollArea,
+  Text,
+  TextVariant,
+} from '@0xintuition/1ui'
 
 import CreateAtomModal from '@components/create-atom-modal'
 import LoadingLogo from '@components/loading-logo'
 import { Search } from '@components/search'
 
-import { Topic } from './types'
+import { NewAtomMetadata, Topic } from './types'
 
 interface TopicsStepProps {
   topics: Topic[]
   isLoadingList: boolean
   onToggleTopic: (id: string) => void
-  onNext: () => void
-  onBack: () => void
   onSearchChange: (event: React.ChangeEvent<HTMLInputElement>) => void
+  onCreationSuccess: (metadata: NewAtomMetadata) => void
 }
 
 export function TopicsStep({
   topics,
   isLoadingList,
   onToggleTopic,
-  onNext,
-  onBack,
   onSearchChange,
+  onCreationSuccess,
 }: TopicsStepProps) {
   const [isOpen, setIsOpen] = useState(false)
-  const hasSelection = topics.some((t) => t.selected)
 
   return (
     <>
@@ -37,42 +41,47 @@ export function TopicsStep({
           </Text>
           <Search handleSearchChange={onSearchChange} />
           {isLoadingList ? (
-            <div className="flex justify-center items-center h-full animate-spin">
+            <div className="flex justify-center items-center h-[350px] animate-spin">
               <LoadingLogo size={50} />
             </div>
           ) : topics.length > 0 ? (
-            <div className="grid grid-cols-2 gap-4">
-              {topics.map((topic) => (
-                <button
-                  key={topic.id}
-                  onClick={() => onToggleTopic(topic.id)}
-                  aria-pressed={topic.selected}
-                  aria-label={`Select ${topic.name} category`}
-                  className={`flex items-center gap-4 rounded-lg border transition-colors w-[280px] h-[72px] ${
-                    topic.selected
-                      ? 'border-accent bg-accent/10'
-                      : 'border-[#1A1A1A] hover:border-accent'
-                  }`}
-                >
-                  <div className="w-14 h-14 rounded bg-[#1A1A1A] flex-shrink-0 ml-1">
-                    {topic.image && (
-                      <img
-                        src={topic.image}
-                        alt={topic.name}
-                        className="w-full h-full object-cover rounded-lg"
-                      />
-                    )}
-                  </div>
-                  <div className="text-left">
-                    <div className="text-white text-base leading-5">
-                      {topic.name}
-                    </div>
-                  </div>
-                </button>
-              ))}
-            </div>
+            <ScrollArea className="h-[350px]">
+              <div className="flex justify-center">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-4 justify-items-center w-full">
+                  {topics.map((topic) => (
+                    <button
+                      key={topic.id}
+                      onClick={() => onToggleTopic(topic.id)}
+                      aria-pressed={topic.selected}
+                      aria-label={`Select ${topic.name} category`}
+                      className={`flex items-center gap-4 rounded-lg border transition-colors w-full md:w-[280px] h-[72px] ${
+                        topic.selected
+                          ? 'border-accent bg-accent/10'
+                          : 'border-[#1A1A1A] hover:border-accent'
+                      }`}
+                    >
+                      <div className="w-14 h-14 rounded bg-[#1A1A1A] flex-shrink-0 ml-1">
+                        {topic.image && (
+                          <Avatar
+                            src={topic.image}
+                            name={topic.name}
+                            icon={IconName.wallet}
+                            className="w-full h-full object-cover rounded-lg"
+                          />
+                        )}
+                      </div>
+                      <div className="text-left">
+                        <div className="text-white text-base leading-5">
+                          {topic.name}
+                        </div>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </ScrollArea>
           ) : (
-            <div className="flex flex-col gap-2 justify-center items-center h-full w-full">
+            <div className="flex flex-col gap-2 justify-center items-center h-[350px] w-full">
               <Text variant={TextVariant.bodyLarge}>No atoms found.</Text>
               <div className="flex flex-row gap-2 items-center">
                 <Text
@@ -88,21 +97,12 @@ export function TopicsStep({
             </div>
           )}
         </div>
-        <div className="flex justify-between mt-8">
-          <Button variant="secondary" onClick={onBack}>
-            Back
-          </Button>
-          <Button
-            variant="secondary"
-            onClick={onNext}
-            className="bg-[#1A1A1A]"
-            disabled={!hasSelection}
-          >
-            Next
-          </Button>
-        </div>
       </div>
-      <CreateAtomModal isOpen={isOpen} onClose={() => setIsOpen(false)} />
+      <CreateAtomModal
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        onCreationSuccess={onCreationSuccess}
+      />
     </>
   )
 }
