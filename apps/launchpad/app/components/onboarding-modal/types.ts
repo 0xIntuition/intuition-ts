@@ -4,6 +4,7 @@ import { TransactionStateType } from '../../types/transaction'
 
 export const STEPS = {
   TOPICS: 'topics',
+  CREATE: 'create',
   STAKE: 'stake',
   REWARD: 'reward',
 } as const
@@ -36,6 +37,7 @@ export interface OnboardingState {
   ticks: number
   selectedTopic?: Topic
   newAtomMetadata?: NewAtomMetadata
+  showCreateStep?: boolean
 }
 
 export interface OnboardingModalProps {

@@ -14,6 +14,7 @@ import { useQueryClient } from '@tanstack/react-query'
 import { ClientOnly } from 'remix-utils/client-only'
 
 import { TransactionStateType } from '../../types/transaction'
+import { CreateStep } from './create-step'
 import { RewardStep } from './reward-step'
 import { StakeStep } from './stake-step'
 import { TopicsStep } from './topics-step'
@@ -30,7 +31,8 @@ import {
 const STORAGE_KEY = 'onboarding-progress'
 
 const STEPS_CONFIG: Step[] = [
-  { id: STEPS.TOPICS, label: 'Select Wallet', status: 'current' },
+  { id: STEPS.TOPICS, label: 'Select', status: 'current' },
+  { id: STEPS.CREATE, label: 'Create', status: 'upcoming' },
   { id: STEPS.STAKE, label: 'Stake', status: 'upcoming' },
   { id: STEPS.REWARD, label: 'Reward', status: 'upcoming' },
 ]
@@ -38,6 +40,7 @@ const STEPS_CONFIG: Step[] = [
 const INITIAL_STATE: OnboardingState = {
   currentStep: STEPS.TOPICS,
   ticks: 1,
+  showCreateStep: false,
 }
 
 export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
@@ -130,6 +133,13 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
     }))
     setTopics(newTopics)
 
+    setSteps((prev) => {
+      if (newTopics.length > 0) {
+        return prev.filter((step) => step.id !== STEPS.CREATE)
+      }
+      return prev
+    })
+
     return () => {
       setTopics([])
     }
@@ -176,19 +186,34 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
         updateStepStatus(STEPS.TOPICS, 'completed')
         updateStepStatus(STEPS.STAKE, 'current')
       }
+    } else if (state.currentStep === STEPS.CREATE) {
+      handleTransition((prev) => ({
+        ...prev,
+        currentStep: STEPS.STAKE,
+      }))
+      updateStepStatus(STEPS.CREATE, 'completed')
+      updateStepStatus(STEPS.STAKE, 'current')
     }
   }, [state.currentStep, topics, handleTransition])
 
   const handleBack = useCallback(() => {
     if (state.currentStep === STEPS.STAKE) {
+      const previousStep = state.showCreateStep ? STEPS.CREATE : STEPS.TOPICS
+      handleTransition((prev) => ({
+        ...prev,
+        currentStep: previousStep,
+      }))
+      updateStepStatus(previousStep, 'current')
+      updateStepStatus(STEPS.STAKE, 'upcoming')
+    } else if (state.currentStep === STEPS.CREATE) {
       handleTransition((prev) => ({
         ...prev,
         currentStep: STEPS.TOPICS,
       }))
       updateStepStatus(STEPS.TOPICS, 'current')
-      updateStepStatus(STEPS.STAKE, 'upcoming')
+      updateStepStatus(STEPS.CREATE, 'upcoming')
     }
-  }, [state.currentStep, handleTransition])
+  }, [state.currentStep, state.showCreateStep, handleTransition])
 
   const toggleTopic = useCallback((id: string) => {
     setTopics((currentTopics) => {
@@ -265,9 +290,33 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
           ?.globalTriples[0] as unknown as GetTripleQuery['triple'],
       },
     }))
-    updateStepStatus(STEPS.TOPICS, 'completed')
+    updateStepStatus(STEPS.CREATE, 'completed')
     updateStepStatus(STEPS.STAKE, 'current')
   }
+
+  const handleCreateClick = useCallback(() => {
+    setSteps((prev) => {
+      const createStep = STEPS_CONFIG.find((step) => step.id === STEPS.CREATE)
+      if (!prev.some((step) => step.id === STEPS.CREATE) && createStep) {
+        const topicsIndex = prev.findIndex((step) => step.id === STEPS.TOPICS)
+        return [
+          ...prev.slice(0, topicsIndex + 1),
+          createStep,
+          ...prev.slice(topicsIndex + 1),
+        ]
+      }
+      return prev
+    })
+
+    handleTransition((prev) => ({
+      ...prev,
+      currentStep: STEPS.CREATE,
+      showCreateStep: true,
+    }))
+
+    updateStepStatus(STEPS.TOPICS, 'completed')
+    updateStepStatus(STEPS.CREATE, 'current')
+  }, [handleTransition])
 
   return (
     <ClientOnly>
@@ -285,8 +334,12 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
                   isLoadingList={isLoadingList}
                   onToggleTopic={toggleTopic}
                   onSearchChange={handleSearchChange}
-                  onCreationSuccess={onCreationSuccess}
+                  onCreateClick={handleCreateClick}
                 />
+              )}
+
+              {state.currentStep === STEPS.CREATE && (
+                <CreateStep onCreationSuccess={onCreationSuccess} />
               )}
 
               {state.currentStep === STEPS.STAKE && state.selectedTopic && (
@@ -328,16 +381,19 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
                         : undefined
                   }
                   onBack={
-                    state.currentStep === STEPS.STAKE ? handleBack : undefined
+                    state.currentStep === STEPS.STAKE ||
+                    state.currentStep === STEPS.CREATE
+                      ? handleBack
+                      : undefined
                   }
                   disableNext={
                     state.currentStep === STEPS.TOPICS
                       ? !topics.some((t) => t.selected)
                       : state.currentStep === STEPS.STAKE
-                        ? txState?.status !== 'transaction-confirmed'
-                        : false
+                        ? txState?.status !== 'idle'
+                        : state.currentStep === STEPS.CREATE
                   }
-                  disableBack={isLoading}
+                  disableBack={isLoading || txState?.status !== 'idle'}
                   customNextButton={
                     state.currentStep === STEPS.REWARD
                       ? { content: 'Finish' }
