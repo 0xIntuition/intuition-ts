@@ -14,13 +14,18 @@ import {
   useGetListDetailsQuery,
 } from '@0xintuition/graphql'
 
+import { AtomDetailsModal } from '@components/atom-details-modal'
 import { OnboardingModal } from '@components/onboarding-modal/onboarding-modal'
 import ShareModal from '@components/share-modal'
 import { columns } from '@components/ui/table/columns'
 import { DataTable } from '@components/ui/table/data-table'
 import { mockMinigames } from '@lib/data/mock-minigames'
 import { useGoBack } from '@lib/hooks/useGoBack'
-import { onboardingModalAtom, shareModalAtom } from '@lib/state/store'
+import {
+  atomDetailsModalAtom,
+  onboardingModalAtom,
+  shareModalAtom,
+} from '@lib/state/store'
 import logger from '@lib/utils/logger'
 import { useLoaderData } from '@remix-run/react'
 // import { requireUser } from '@server/auth'
@@ -77,6 +82,7 @@ export default function MiniGameOne() {
   useLoaderData<typeof loader>()
   const [shareModalActive, setShareModalActive] = useAtom(shareModalAtom)
   const [onboardingModal, setOnboardingModal] = useAtom(onboardingModalAtom)
+  const [atomDetailsModal, setAtomDetailsModal] = useAtom(atomDetailsModalAtom)
 
   const hasUserParam = location.search.includes('user=')
   const fullPath = hasUserParam
@@ -143,6 +149,10 @@ export default function MiniGameOne() {
     setOnboardingModal({ isOpen: false, gameId: null })
   }
 
+  const handleRowClick = (id: number) => {
+    setAtomDetailsModal({ isOpen: true, atomId: id })
+  }
+
   return (
     <>
       <div className="flex items-center gap-4 mb-6">
@@ -206,7 +216,11 @@ export default function MiniGameOne() {
 
       {/* Space for table */}
       <div className="mt-6">
-        <DataTable columns={columns} data={tableData} />
+        <DataTable
+          columns={columns}
+          data={tableData}
+          onRowClick={handleRowClick}
+        />
       </div>
       <ShareModal
         open={shareModalActive.isOpen}
@@ -222,6 +236,11 @@ export default function MiniGameOne() {
       <OnboardingModal
         isOpen={onboardingModal.isOpen}
         onClose={handleCloseOnboarding}
+      />
+      <AtomDetailsModal
+        isOpen={atomDetailsModal.isOpen}
+        onClose={() => setAtomDetailsModal({ isOpen: false, atomId: 0 })}
+        atomId={atomDetailsModal.atomId}
       />
     </>
   )

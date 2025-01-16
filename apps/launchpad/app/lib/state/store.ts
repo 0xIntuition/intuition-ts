@@ -39,3 +39,11 @@ export const shareModalAtom = atom<{
   title: '',
   tvl: 0,
 })
+
+export const atomDetailsModalAtom = atom<{
+  isOpen: boolean
+  atomId: number
+}>({
+  isOpen: false,
+  atomId: 0,
+})
