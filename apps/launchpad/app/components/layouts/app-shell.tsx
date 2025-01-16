@@ -23,14 +23,16 @@ function AppShellContent({ children, suspense = true }: AppShellContentProps) {
   const { layoutVariant, paddingVariant } = useAppShell()
 
   const content = (
-    <div
-      className={cn(
-        'flex flex-col w-full mx-auto space-y-6',
-        layoutConfig.maxWidth[layoutVariant],
-        layoutConfig.padding[paddingVariant],
-      )}
-    >
-      {children}
+    <div className="flex justify-center w-full max-w-screen-xl mx-auto">
+      <div
+        className={cn(
+          'flex flex-col w-full space-y-6',
+          layoutConfig.maxWidth[layoutVariant],
+          layoutConfig.padding[paddingVariant],
+        )}
+      >
+        {children}
+      </div>
     </div>
   )
 

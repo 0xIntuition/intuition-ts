@@ -5,31 +5,27 @@ export interface BaseLayoutProps {
   fillWidth?: boolean
 }
 
-export type LayoutVariant = 'default' | 'narrow' | 'wide'
-export type PaddingVariant = 'default' | 'none' | 'compact'
+export type LayoutVariant = 'default' | 'narrow'
+export type PaddingVariant = 'default' | 'narrow'
 
 export interface LayoutConfig {
   maxWidth: {
     default: string
     narrow: string
-    wide: string
   }
   padding: {
     default: string
-    none: string
-    compact: string
+    narrow: string
   }
 }
 
-export const layoutConfig: LayoutConfig = {
+export const layoutConfig = {
   maxWidth: {
-    default: 'max-w-[1280px]',
-    narrow: 'max-w-md',
-    wide: 'max-w-[1440px]',
+    default: 'max-w-[1200px]',
+    narrow: 'max-w-5xl',
   },
   padding: {
-    default: 'px-4 sm:px-6 lg:px-8 py-6',
-    none: 'p-0',
-    compact: 'p-4',
+    default: 'px-8 py-6',
+    narrow: 'px-4 py-4',
   },
-}
+} as const

@@ -37,8 +37,8 @@ export function AppShellProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (isMobile) {
       setIsSidebarOpen(false)
-      setLayoutVariant('wide')
-      setPaddingVariant('compact')
+      setLayoutVariant('narrow')
+      setPaddingVariant('default')
     } else {
       setIsSidebarOpen(true)
       setLayoutVariant('default')
