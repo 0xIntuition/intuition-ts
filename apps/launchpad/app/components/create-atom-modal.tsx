@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 import {
   Dialog,
@@ -27,14 +27,14 @@ import {
   ThingForm,
 } from '@components/atom-forms/forms'
 import { StepIndicator } from '@components/atom-forms/step-indicator'
+import { NewAtomMetadata } from '@components/onboarding-modal/types'
 import { TransactionState } from '@components/transaction-state'
 import { MIN_DEPOSIT, MULTIVAULT_CONTRACT_ADDRESS } from '@consts/general'
 import { multivaultAbi } from '@lib/abis/multivault'
-import { useCreateMutation } from '@lib/hooks/mutations/useCreateMutation'
+import { useCreateAtomMutation } from '@lib/hooks/mutations/useCreateAtomMutation'
 import { useCreateAtomConfig } from '@lib/hooks/useCreateAtomConfig'
 import { ipfsUrl } from '@lib/utils/app'
 import { usePrivy } from '@privy-io/react-auth'
-import { Link } from '@remix-run/react'
 import { ClientOnly } from 'remix-utils/client-only'
 import { Address, decodeEventLog, formatUnits, toHex } from 'viem'
 import { usePublicClient } from 'wagmi'
@@ -71,11 +71,13 @@ const INITIAL_STEPS: Step[] = [
 export interface CreateIdentityModalProps {
   isOpen?: boolean
   onClose: () => void
+  onCreationSuccess: (metadata: NewAtomMetadata) => void
 }
 
 export default function CreateIdentityModal({
   isOpen,
   onClose,
+  onCreationSuccess,
 }: CreateIdentityModalProps) {
   const [currentStep, setCurrentStep] = useState('metadata')
   const [steps, setSteps] = useState<Step[]>(INITIAL_STEPS)
@@ -107,7 +109,9 @@ export default function CreateIdentityModal({
     isSuccess,
     isError,
     reset,
-  } = useCreateMutation(MULTIVAULT_CONTRACT_ADDRESS)
+  } = useCreateAtomMutation(MULTIVAULT_CONTRACT_ADDRESS)
+
+  console.log('txReceipt', txReceipt)
 
   const updateStepStatus = (stepId: string, status: StepStatus) => {
     setSteps((prev) =>
@@ -217,7 +221,50 @@ export default function CreateIdentityModal({
     // If we have a hash, we're at least in progress
     if (transactionHash) {
       if (isSuccess) {
-        toast.success('Transaction complete')
+        type AtomCreatedArgs = {
+          creator: Address
+          atomWallet: Address
+          atomData: string
+          vaultID: bigint
+        }
+
+        if (
+          txReceipt &&
+          txReceipt?.logs[0].data &&
+          txReceipt?.transactionHash !== lastTxHash
+        ) {
+          const decodedLog = decodeEventLog({
+            abi: multivaultAbi,
+            data: txReceipt?.logs[2].data,
+            topics: txReceipt?.logs[2].topics,
+          })
+
+          const event = decodedLog as unknown as {
+            eventName: string
+            args: AtomCreatedArgs
+          }
+
+          if (
+            event.eventName === 'AtomCreated' &&
+            event.args.creator === (wallet?.address as `0x${string}`)
+          ) {
+            const vaultId = event.args.vaultID.toString()
+
+            onCreationSuccess({
+              name: atomData?.name ?? '',
+              image: atomData?.image ?? '',
+              vaultId,
+            })
+
+            toast.custom(() => (
+              <CreateAtomToast
+                id={vaultId}
+                txHash={txReceipt.transactionHash}
+              />
+            ))
+            setLastTxHash(txReceipt.transactionHash)
+          }
+        }
         return TransactionStatus.complete
       }
       if (isError) {
@@ -238,44 +285,6 @@ export default function CreateIdentityModal({
     // Default initial state
     return TransactionStatus.awaiting
   }
-
-  useEffect(() => {
-    type AtomCreatedArgs = {
-      creator: Address
-      atomWallet: Address
-      atomData: string
-      vaultID: bigint
-    }
-
-    if (
-      txReceipt &&
-      txReceipt?.logs[0].data &&
-      txReceipt?.transactionHash !== lastTxHash
-    ) {
-      const decodedLog = decodeEventLog({
-        abi: multivaultAbi,
-        data: txReceipt?.logs[0].data,
-        topics: txReceipt?.logs[0].topics,
-      })
-
-      const event = decodedLog as unknown as {
-        eventName: string
-        args: AtomCreatedArgs
-      }
-
-      if (
-        event.eventName === 'AtomCreated' &&
-        event.args.creator === (wallet?.address as `0x${string}`)
-      ) {
-        const vaultId = event.args.vaultID.toString()
-
-        toast.custom(() => (
-          <CreateAtomToast id={vaultId} txHash={txReceipt.transactionHash} />
-        ))
-        setLastTxHash(txReceipt.transactionHash)
-      }
-    }
-  }, [txReceipt, wallet, reset, lastTxHash])
 
   const renderCurrentStep = () => {
     switch (currentStep) {
@@ -314,14 +323,6 @@ export default function CreateIdentityModal({
               txHash={transactionHash as `0x${string}`}
               type="transaction"
               ipfsLink={ipfsUri ? ipfsUrl(ipfsUri) : undefined}
-              successButton={
-                <Link
-                  to="/app/atoms"
-                  className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500"
-                >
-                  View My Atoms
-                </Link>
-              }
               errorButton={
                 <button
                   onClick={() => {

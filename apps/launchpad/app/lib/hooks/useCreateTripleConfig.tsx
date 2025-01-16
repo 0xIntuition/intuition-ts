@@ -5,9 +5,9 @@ export function useCreateTripleConfig() {
   return useQuery<CreateTripleLoaderData>({
     queryKey: ['create-triple-config'],
     queryFn: async () => {
-      const response = await fetch('/resources/create-claim')
+      const response = await fetch('/resources/create-triple')
       if (!response.ok) {
-        throw new Error('Failed to fetch create claim config')
+        throw new Error('Failed to fetch create triple config')
       }
       return response.json()
     },

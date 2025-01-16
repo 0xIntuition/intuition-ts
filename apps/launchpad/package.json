@@ -48,6 +48,7 @@
     "react-dom": "^18.2.0",
     "react-dropzone": "^14.3.5",
     "react-hook-form": "^7.54.2",
+    "react-rewards": "^2.0.4",
     "recharts": "^2.15.0",
     "remix-utils": "^7.6.0",
     "tailwind-merge": "^2.3.0",
