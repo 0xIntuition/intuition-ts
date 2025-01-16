@@ -13,7 +13,7 @@ interface AtomDetailsModalProps {
   onClose: () => void
   atomId: number
   data?: {
-    id: number
+    id: string
     image: string
     name: string
     list: string

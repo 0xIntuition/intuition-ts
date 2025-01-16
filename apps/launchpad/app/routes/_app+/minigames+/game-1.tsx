@@ -109,7 +109,7 @@ export default function MiniGameOne() {
   logger(listData?.globalTriples)
 
   interface TableRowData {
-    id: number
+    id: string
     image: string
     name: string
     list: string
@@ -123,8 +123,8 @@ export default function MiniGameOne() {
       // Debug log to see the image data
       console.log('Triple data:', triple)
 
-      const rowData: TableRowData = {
-        id: Number(triple.id),
+      const tableRow: TableRowData = {
+        id: String(triple.id),
         image: triple.subject.image || '',
         name: triple.subject.label || 'Untitled Entry',
         list: triple.object.label || 'Untitled List',
@@ -135,8 +135,8 @@ export default function MiniGameOne() {
         ),
       }
 
-      console.log('Row data:', rowData)
-      return rowData
+      console.log('Row data:', tableRow)
+      return tableRow
     }) || []
 
   // Log each triple's shares for debugging
@@ -160,7 +160,7 @@ export default function MiniGameOne() {
   }
 
   const handleRowClick = (id: number) => {
-    const rowData = tableData.find((row) => Number(row.id) === id)
+    const rowData = tableData.find((row) => row.id === String(id))
     console.log('Clicked row data:', rowData)
 
     if (rowData) {

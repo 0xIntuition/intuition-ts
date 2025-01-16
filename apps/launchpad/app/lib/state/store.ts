@@ -44,7 +44,7 @@ export const atomDetailsModalAtom = atom<{
   isOpen: boolean
   atomId: number
   data?: {
-    id: number
+    id: string
     image: string
     name: string
     list: string

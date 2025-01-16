@@ -67,7 +67,7 @@ export function AtomDetailsCard({
             weight="normal"
             className="text-foreground/90 px-4 pb-4"
           >
-            This is the atom for this list entry.
+            Created by {creator}
           </Text> */}
           {/* Dotted line */}
           <div className="py-4">
