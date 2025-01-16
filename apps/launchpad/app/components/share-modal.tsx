@@ -13,8 +13,11 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@0xintuition/1ui'
+import { useGetListDetailsQuery } from '@0xintuition/graphql'
 
+import { CURRENT_ENV } from '@consts/general'
 import { useCopy } from '@lib/hooks/useCopy'
+import { getSpecialPredicate } from '@lib/utils/app'
 
 export interface ShareModalProps {
   open?: boolean
@@ -59,6 +62,30 @@ function ShareModalContent({
     window.open(farcasterUrl, '_blank')
   }
 
+  // Fetch wallet list
+  const { data: listData } = useGetListDetailsQuery(
+    {
+      tagPredicateId: getSpecialPredicate(CURRENT_ENV).tagPredicate.id,
+      globalWhere: {
+        predicate_id: {
+          _eq: getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId,
+        },
+        object_id: {
+          _eq: getSpecialPredicate(CURRENT_ENV).web3Wallet.vaultId,
+        },
+      },
+    },
+    {
+      queryKey: [
+        'get-list-details',
+        {
+          predicateId: getSpecialPredicate(CURRENT_ENV).tagPredicate.id,
+          objectId: getSpecialPredicate(CURRENT_ENV).web3Wallet.vaultId,
+        },
+      ],
+    },
+  )
+
   return (
     <DialogContent className="bg-background backdrop-blur-sm rounded-3xl shadow-2xl border border-neutral-800 flex flex-col px-0 pb-0">
       <div className="flex flex-col gap-4">
@@ -84,13 +111,29 @@ function ShareModalContent({
           </div>
         </div>
 
-        <div className="grid grid-cols-4 grid-rows-2 gap-4 px-8">
-          {Array.from({ length: 8 }).map((_, i) => (
-            <div
-              key={i}
-              className="aspect-square rounded-2xl bg-neutral-800/50"
-            />
-          ))}
+        <div className="h-[200px] overflow-y-auto px-8">
+          <div className="grid grid-cols-4 gap-4">
+            {listData?.globalTriples?.map((triple) => (
+              <div
+                key={triple.vault_id}
+                className="aspect-square rounded-2xl bg-neutral-800/50 p-3 flex flex-col items-center justify-center"
+              >
+                {triple.subject.image ? (
+                  <img
+                    src={triple.subject.image}
+                    alt={triple.subject.label ?? ''}
+                    className="w-full h-full object-cover rounded-xl"
+                  />
+                ) : (
+                  <div className="w-full h-full rounded-xl bg-neutral-900 flex items-center justify-center">
+                    <Text className="text-neutral-500 text-sm">
+                      {triple.subject.label ?? 'No label'}
+                    </Text>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
 
         <div className="flex justify-end pr-8">
