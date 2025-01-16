@@ -107,26 +107,36 @@ export default function MiniGameOne() {
   )
 
   logger(listData?.globalTriples)
+
+  interface TableRowData {
+    id: number
+    image: string
+    name: string
+    list: string
+    users: number
+    assets: number
+  }
+
   // Transform the data for the table
-  const tableData =
+  const tableData: TableRowData[] =
     listData?.globalTriples?.map((triple) => {
       // Debug log to see the image data
-      logger('Triple data:', {
-        id: triple.id,
-        subject: triple.subject,
-        image: triple.subject.image,
-      })
+      console.log('Triple data:', triple)
 
-      return {
-        id: triple.id,
+      const rowData: TableRowData = {
+        id: Number(triple.id),
         image: triple.subject.image || '',
         name: triple.subject.label || 'Untitled Entry',
+        list: triple.object.label || 'Untitled List',
         users: Number(triple.vault?.positions_aggregate?.aggregate?.count ?? 0),
         assets: +formatUnits(
           triple.vault?.positions_aggregate?.aggregate?.sum?.shares ?? 0,
           18,
         ),
       }
+
+      console.log('Row data:', rowData)
+      return rowData
     }) || []
 
   // Log each triple's shares for debugging
@@ -150,7 +160,16 @@ export default function MiniGameOne() {
   }
 
   const handleRowClick = (id: number) => {
-    setAtomDetailsModal({ isOpen: true, atomId: id })
+    const rowData = tableData.find((row) => Number(row.id) === id)
+    console.log('Clicked row data:', rowData)
+
+    if (rowData) {
+      setAtomDetailsModal({
+        isOpen: true,
+        atomId: id,
+        data: rowData,
+      })
+    }
   }
 
   return (
@@ -239,8 +258,11 @@ export default function MiniGameOne() {
       />
       <AtomDetailsModal
         isOpen={atomDetailsModal.isOpen}
-        onClose={() => setAtomDetailsModal({ isOpen: false, atomId: 0 })}
+        onClose={() =>
+          setAtomDetailsModal({ isOpen: false, atomId: 0, data: undefined })
+        }
         atomId={atomDetailsModal.atomId}
+        data={atomDetailsModal.data}
       />
     </>
   )

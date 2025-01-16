@@ -10,6 +10,7 @@ type TableItem = {
   id: string
   image: string
   name: string
+  list?: string
   users: number
   assets: number
 }

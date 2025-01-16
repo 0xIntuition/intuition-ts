@@ -43,7 +43,16 @@ export const shareModalAtom = atom<{
 export const atomDetailsModalAtom = atom<{
   isOpen: boolean
   atomId: number
+  data?: {
+    id: number
+    image: string
+    name: string
+    list: string
+    users: number
+    assets: number
+  }
 }>({
   isOpen: false,
   atomId: 0,
+  data: undefined,
 })
