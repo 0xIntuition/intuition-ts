@@ -1,6 +1,7 @@
-import { Button, Icon } from '@0xintuition/1ui'
+import { Icon } from '@0xintuition/1ui'
 
 import { ColumnDef } from '@tanstack/react-table'
+import { ArrowUpDown, X as CloseX } from 'lucide-react'
 
 import { DataTableColumnHeader } from './data-table-column-header'
 
@@ -40,10 +41,7 @@ export const columns: ColumnDef<TableItem>[] = [
           }}
         >
           <span>Entries</span>
-          <div className="flex flex-col -space-y-1">
-            <Icon name="arrow-up" className="h-3 w-3" />
-            <Icon name="arrow-down" className="h-3 w-3" />
-          </div>
+          <ArrowUpDown className="h-4 w-4" />
         </button>
       </div>
     ),
@@ -101,16 +99,11 @@ export const columns: ColumnDef<TableItem>[] = [
       return (
         <div className="flex items-center justify-end gap-2 pr-6">
           <div className="flex items-center gap-2 px-3 py-1.5 bg-[#1C1C1C] rounded-lg">
-            <Icon name="arrow-up" className="h-4 w-4" />
+            <Icon name="arrow-up" className="h-5 w-5" />
           </div>
-          <Button
-            variant="ghost"
-            size="icon"
-            disabled
-            className="h-8 w-8 rounded-lg bg-[#E11D48] hover:bg-[#E11D48]"
-          >
-            <Icon name="x" className="h-4 w-4 text-white" />
-          </Button>
+          <div className="flex items-center justify-center h-8 w-8 rounded-lg bg-destructive">
+            <CloseX className="h-5 w-5 text-white" />
+          </div>
         </div>
       )
     },
