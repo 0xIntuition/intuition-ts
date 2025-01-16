@@ -9,7 +9,6 @@ import {
   SidebarContent,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
@@ -24,19 +23,7 @@ import { AccountButton } from '@components/account-button'
 import LoadingButton from '@components/loading-button'
 import { usePrivy } from '@privy-io/react-auth'
 import { useLocation } from '@remix-run/react'
-import {
-  Activity,
-  Circle,
-  FileText,
-  Gem,
-  Github,
-  Globe,
-  Home,
-  LayoutGrid,
-  Medal,
-  Settings,
-  Upload,
-} from 'lucide-react'
+import { Activity, FileText, Github, Home, Upload } from 'lucide-react'
 
 import { ConnectButton } from './connect-button'
 
@@ -79,7 +66,7 @@ export function AppSidebar({
       icon: Home,
       label: 'Home',
       href: '/',
-      isAccent: location.pathname === '/',
+      isAccent: location.pathname === '/' || location.pathname === '/dashboard',
     },
     {
       icon: Activity,
