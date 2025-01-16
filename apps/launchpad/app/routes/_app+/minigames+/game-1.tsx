@@ -14,9 +14,11 @@ import {
   useGetListDetailsQuery,
 } from '@0xintuition/graphql'
 
+import { OnboardingModal } from '@components/onboarding-modal/onboarding-modal'
 import ShareModal from '@components/share-modal'
+import { mockMinigames } from '@lib/data/mock-minigames'
 import { useGoBack } from '@lib/hooks/useGoBack'
-import { shareModalAtom } from '@lib/state/store'
+import { onboardingModalAtom, shareModalAtom } from '@lib/state/store'
 import logger from '@lib/utils/logger'
 import { useLoaderData } from '@remix-run/react'
 // import { requireUser } from '@server/auth'
@@ -71,6 +73,7 @@ export default function MiniGameOne() {
   const goBack = useGoBack({ fallbackRoute: '/minigames' })
   useLoaderData<typeof loader>()
   const [shareModalActive, setShareModalActive] = useAtom(shareModalAtom)
+  const [onboardingModal, setOnboardingModal] = useAtom(onboardingModalAtom)
 
   const hasUserParam = location.search.includes('user=')
   const fullPath = hasUserParam
@@ -102,6 +105,14 @@ export default function MiniGameOne() {
     )
   })
 
+  const handleStartOnboarding = (gameId: string) => {
+    setOnboardingModal({ isOpen: true, gameId })
+  }
+
+  const handleCloseOnboarding = () => {
+    setOnboardingModal({ isOpen: false, gameId: null })
+  }
+
   return (
     <>
       <div className="flex items-center gap-4 mb-6">
@@ -115,21 +126,29 @@ export default function MiniGameOne() {
         </Button>
         <div className="flex flex-1 justify-between items-center">
           <PageHeader title={listData?.globalTriples[0].object.label ?? ''} />
-          <Button
-            variant="secondary"
-            className="border border-border/10"
-            onClick={() =>
-              setShareModalActive({
-                isOpen: true,
-                currentPath: fullPath,
-                title: listData?.globalTriples[0].object.label ?? '',
-                tvl: 0,
-              })
-            }
-          >
-            <Icon name="square-arrow-top-right" className="h-4 w-4" />
-            Share
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="primary"
+              onClick={() => handleStartOnboarding(mockMinigames[0].id)}
+            >
+              Play Again
+            </Button>
+            <Button
+              variant="secondary"
+              className="border border-border/10"
+              onClick={() =>
+                setShareModalActive({
+                  isOpen: true,
+                  currentPath: fullPath,
+                  title: listData?.globalTriples[0].object.label ?? '',
+                  tvl: 0,
+                })
+              }
+            >
+              <Icon name="square-arrow-top-right" className="h-4 w-4" />
+              Share
+            </Button>
+          </div>
         </div>
       </div>
 
@@ -167,6 +186,10 @@ export default function MiniGameOne() {
         }
         title={shareModalActive.title}
         tvl={shareModalActive.tvl}
+      />
+      <OnboardingModal
+        isOpen={onboardingModal.isOpen}
+        onClose={handleCloseOnboarding}
       />
     </>
   )
