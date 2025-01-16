@@ -26,9 +26,10 @@ import {
 
 import { DataTablePagination } from './data-table-pagination'
 
-interface DataTableProps<TData, TValue> {
+interface DataTableProps<TData extends { id: string | number }, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
+  onRowClick?: (id: number) => void
 }
 
 const getCommonPinningStyles = <T,>(
@@ -54,9 +55,10 @@ const getCommonPinningStyles = <T,>(
   }
 }
 
-export function DataTable<TData, TValue>({
+export function DataTable<TData extends { id: string | number }, TValue>({
   columns,
   data,
+  onRowClick,
 }: DataTableProps<TData, TValue>) {
   const [columnResizeMode] = React.useState<ColumnResizeMode>('onChange')
   const [sorting, setSorting] = React.useState<SortingState>([
@@ -148,8 +150,9 @@ export function DataTable<TData, TValue>({
                 table.getRowModel().rows.map((row) => (
                   <TableRow
                     key={row.id}
-                    className="border-b border-border/10 hover:bg-[#101010] transition-colors"
+                    className="border-b border-border/10 hover:bg-[#101010] transition-colors cursor-pointer"
                     data-state={row.getIsSelected() && 'selected'}
+                    onClick={() => onRowClick?.(Number(row.original.id))}
                   >
                     {row.getVisibleCells().map((cell) => (
                       <TableCell

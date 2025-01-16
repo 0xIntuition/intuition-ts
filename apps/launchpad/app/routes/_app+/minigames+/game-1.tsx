@@ -14,13 +14,18 @@ import {
   useGetListDetailsQuery,
 } from '@0xintuition/graphql'
 
+import { AtomDetailsModal } from '@components/atom-details-modal'
 import { OnboardingModal } from '@components/onboarding-modal/onboarding-modal'
 import ShareModal from '@components/share-modal'
 import { columns } from '@components/ui/table/columns'
 import { DataTable } from '@components/ui/table/data-table'
 import { mockMinigames } from '@lib/data/mock-minigames'
 import { useGoBack } from '@lib/hooks/useGoBack'
-import { onboardingModalAtom, shareModalAtom } from '@lib/state/store'
+import {
+  atomDetailsModalAtom,
+  onboardingModalAtom,
+  shareModalAtom,
+} from '@lib/state/store'
 import logger from '@lib/utils/logger'
 import { useLoaderData } from '@remix-run/react'
 // import { requireUser } from '@server/auth'
@@ -77,6 +82,7 @@ export default function MiniGameOne() {
   useLoaderData<typeof loader>()
   const [shareModalActive, setShareModalActive] = useAtom(shareModalAtom)
   const [onboardingModal, setOnboardingModal] = useAtom(onboardingModalAtom)
+  const [atomDetailsModal, setAtomDetailsModal] = useAtom(atomDetailsModalAtom)
 
   const hasUserParam = location.search.includes('user=')
   const fullPath = hasUserParam
@@ -101,26 +107,36 @@ export default function MiniGameOne() {
   )
 
   logger(listData?.globalTriples)
+
+  interface TableRowData {
+    id: string
+    image: string
+    name: string
+    list: string
+    users: number
+    assets: number
+  }
+
   // Transform the data for the table
-  const tableData =
+  const tableData: TableRowData[] =
     listData?.globalTriples?.map((triple) => {
       // Debug log to see the image data
-      logger('Triple data:', {
-        id: triple.id,
-        subject: triple.subject,
-        image: triple.subject.image,
-      })
+      console.log('Triple data:', triple)
 
-      return {
-        id: triple.id,
+      const tableRow: TableRowData = {
+        id: String(triple.id),
         image: triple.subject.image || '',
         name: triple.subject.label || 'Untitled Entry',
+        list: triple.object.label || 'Untitled List',
         users: Number(triple.vault?.positions_aggregate?.aggregate?.count ?? 0),
         assets: +formatUnits(
           triple.vault?.positions_aggregate?.aggregate?.sum?.shares ?? 0,
           18,
         ),
       }
+
+      console.log('Row data:', tableRow)
+      return tableRow
     }) || []
 
   // Log each triple's shares for debugging
@@ -141,6 +157,19 @@ export default function MiniGameOne() {
 
   const handleCloseOnboarding = () => {
     setOnboardingModal({ isOpen: false, gameId: null })
+  }
+
+  const handleRowClick = (id: number) => {
+    const rowData = tableData.find((row) => row.id === String(id))
+    console.log('Clicked row data:', rowData)
+
+    if (rowData) {
+      setAtomDetailsModal({
+        isOpen: true,
+        atomId: id,
+        data: rowData,
+      })
+    }
   }
 
   return (
@@ -206,7 +235,11 @@ export default function MiniGameOne() {
 
       {/* Space for table */}
       <div className="mt-6">
-        <DataTable columns={columns} data={tableData} />
+        <DataTable
+          columns={columns}
+          data={tableData}
+          onRowClick={handleRowClick}
+        />
       </div>
       <ShareModal
         open={shareModalActive.isOpen}
@@ -222,6 +255,14 @@ export default function MiniGameOne() {
       <OnboardingModal
         isOpen={onboardingModal.isOpen}
         onClose={handleCloseOnboarding}
+      />
+      <AtomDetailsModal
+        isOpen={atomDetailsModal.isOpen}
+        onClose={() =>
+          setAtomDetailsModal({ isOpen: false, atomId: 0, data: undefined })
+        }
+        atomId={atomDetailsModal.atomId}
+        data={atomDetailsModal.data}
       />
     </>
   )
