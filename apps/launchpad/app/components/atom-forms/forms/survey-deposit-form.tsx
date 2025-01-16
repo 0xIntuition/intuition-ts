@@ -10,7 +10,6 @@ import { useGetAtomByDataQuery } from '@0xintuition/graphql'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ipfsUrl } from '@lib/utils/app'
-import { Link } from '@remix-run/react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { useAccount, useBalance } from 'wagmi'
 
@@ -52,7 +51,6 @@ export function SurveyDepositForm({
 
   console.log('existingAtomData', existingAtomData)
   const atomExists = existingAtomData?.atoms?.[0]?.data === ipfsUri
-  const existingAtomId = existingAtomData?.atoms?.[0]?.id
 
   const form = useForm<DepositFormData>({
     resolver: zodResolver(createDepositSchema(minDeposit, balance?.value)),
@@ -67,7 +65,7 @@ export function SurveyDepositForm({
       <form
         id="deposit-form"
         onSubmit={form.handleSubmit(onSubmit)}
-        className="flex flex-col h-full"
+        className="flex flex-col min-h-[300px]"
       >
         <div className="flex flex-col flex-1 min-h-0 space-y-6">
           <div className="flex flex-col gap-1 flex-shrink-0">
@@ -133,18 +131,6 @@ export function SurveyDepositForm({
                           This atom already exists on the network
                         </p>
                       </div>
-                      <Link to={`/app/atoms/${existingAtomId}`}>
-                        <Button
-                          variant={ButtonVariant.successOutline}
-                          size={ButtonSize.default}
-                        >
-                          View Atom
-                          <Icon
-                            name={IconName.squareArrowTopRight}
-                            className="ml-1 w-4 h-4"
-                          />
-                        </Button>
-                      </Link>
                     </div>
                   </div>
                 )}

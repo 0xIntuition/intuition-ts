@@ -3,6 +3,7 @@ import { useState } from 'react'
 import {
   Card,
   CardHeader,
+  StepIndicator,
   toast,
   TransactionStatus,
   TransactionStatusType,
@@ -24,7 +25,6 @@ import {
   ThingForm,
 } from '@components/atom-forms/forms'
 import { SurveyDepositForm } from '@components/atom-forms/forms/survey-deposit-form'
-import { StepIndicator } from '@components/atom-forms/step-indicator'
 import { SurveyFormContainer } from '@components/atom-forms/survey-form-container'
 import { NewAtomMetadata } from '@components/onboarding-modal/types'
 import { TransactionState } from '@components/transaction-state'
@@ -61,9 +61,9 @@ type Step = {
 }
 
 const INITIAL_STEPS: Step[] = [
-  { id: 'metadata', label: 'Publish Data', status: 'current' },
-  { id: 'deposit', label: 'Select Deposit', status: 'upcoming' },
-  { id: 'create', label: 'Create Atom', status: 'upcoming' },
+  { id: 'metadata', label: 'Publish', status: 'current' },
+  { id: 'review', label: 'Review', status: 'upcoming' },
+  { id: 'create', label: 'Create', status: 'upcoming' },
 ]
 
 export interface CreateStepProps {
@@ -145,9 +145,9 @@ export function CreateStep({ onCreationSuccess }: CreateStepProps) {
       console.log('Entering metadata step')
       updateStepStatus('metadata', 'completed')
 
-      // Move to deposit step
-      updateStepStatus('deposit', 'current')
-      setCurrentStep('deposit')
+      // Move to review step
+      updateStepStatus('review', 'current')
+      setCurrentStep('review')
     } catch (error) {
       // TODO: Error handled by mutation onError
     }
@@ -187,7 +187,7 @@ export function CreateStep({ onCreationSuccess }: CreateStepProps) {
         //   hash: txHash,
         // })
         setTransactionHash(txHash)
-        updateStepStatus('deposit', 'completed')
+        updateStepStatus('review', 'completed')
         updateStepStatus('create', 'current')
       }
     } catch (error) {
@@ -201,7 +201,7 @@ export function CreateStep({ onCreationSuccess }: CreateStepProps) {
           errorMessage = 'Transaction rejected'
         }
         toast.error(errorMessage)
-        setCurrentStep('deposit')
+        setCurrentStep('review')
         return
       }
     } finally {
@@ -288,7 +288,7 @@ export function CreateStep({ onCreationSuccess }: CreateStepProps) {
             defaultValues={atomData || undefined} // Pass the existing data
           />
         )
-      case 'deposit':
+      case 'review':
         if (atomData && ipfsUri) {
           return (
             <SurveyDepositForm
@@ -309,7 +309,7 @@ export function CreateStep({ onCreationSuccess }: CreateStepProps) {
         return null
       case 'create':
         return (
-          <div className="h-full w-full">
+          <div className="w-full h-full">
             <TransactionState
               status={getTransactionStatus()}
               txHash={transactionHash as `0x${string}`}
@@ -318,8 +318,8 @@ export function CreateStep({ onCreationSuccess }: CreateStepProps) {
               errorButton={
                 <button
                   onClick={() => {
-                    updateStepStatus('deposit', 'current')
-                    setCurrentStep('deposit')
+                    updateStepStatus('review', 'current')
+                    setCurrentStep('review')
                   }}
                   className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md hover:bg-red-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-red-500"
                 >
@@ -338,11 +338,7 @@ export function CreateStep({ onCreationSuccess }: CreateStepProps) {
     <Card className="w-full h-full flex flex-col pb-4 border-none bg-transparent">
       <CardHeader className="border-b border-border/10 pb-5 flex-shrink-0">
         <div className="w-full px-5">
-          <StepIndicator
-            steps={steps}
-            currentStep={currentStep}
-            onStepClick={handleStepClick}
-          />
+          <StepIndicator steps={steps} onStepClick={handleStepClick} />
         </div>
       </CardHeader>
       <div className="flex-1 min-h-0 p-4 overflow-y-hidden">

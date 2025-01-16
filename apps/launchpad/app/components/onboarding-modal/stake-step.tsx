@@ -60,9 +60,19 @@ export function StakeStep({
   const { data: vaultDetails, isLoading: isLoadingVault } = useGetVaultDetails(
     contract,
     selectedTopic?.triple?.vault_id,
-    selectedTopic?.triple?.counter_vault_id,
+    !newAtomMetadata && selectedTopic?.triple?.counter_vault_id,
+    {
+      queryKey: [
+        'get-vault-details',
+        contract,
+        selectedTopic?.triple?.vault_id,
+        !newAtomMetadata && selectedTopic?.triple?.counter_vault_id,
+      ],
+      enabled: !!selectedTopic?.triple?.vault_id,
+    },
   )
-  const { data: tripleConfig } = useCreateTripleConfig()
+  const { data: tripleConfig, isLoading: isLoadingCreateTripleConfig } =
+    useCreateTripleConfig()
   const tripleCost = tripleConfig
     ? formatUnits(BigInt(tripleConfig?.fees.tripleCost), 18)
     : 0
@@ -283,6 +293,26 @@ export function StakeStep({
     dispatch,
   ])
 
+  console.log('isLoadingCreateTripleConfig', isLoadingCreateTripleConfig)
+  console.log('isLoadingVault', isLoadingVault)
+  console.log(
+    'stakeAwaitingWalletConfirmation',
+    stakeAwaitingWalletConfirmation,
+  )
+  console.log(
+    'stakeAwaitingOnChainConfirmation',
+    stakeAwaitingOnChainConfirmation,
+  )
+  console.log(
+    'createTripleAwaitingWalletConfirmation',
+    createTripleAwaitingWalletConfirmation,
+  )
+  console.log(
+    'createTripleAwaitingOnChainConfirmation',
+    createTripleAwaitingOnChainConfirmation,
+  )
+  console.log('txState.status', txState.status)
+
   useEffect(() => {
     setIsLoading(
       !!stakeAwaitingWalletConfirmation ||
@@ -294,7 +324,8 @@ export function StakeStep({
         txState.status === 'transaction-confirmed' ||
         txState.status === 'approve-transaction' ||
         txState.status === 'awaiting' ||
-        isLoadingVault,
+        isLoadingVault ||
+        isLoadingCreateTripleConfig,
     )
   }, [
     isLoadingVault,
@@ -303,6 +334,7 @@ export function StakeStep({
     createTripleAwaitingWalletConfirmation,
     createTripleAwaitingOnChainConfirmation,
     txState.status,
+    isLoadingCreateTripleConfig,
   ])
 
   const handleStakeButtonClick = async () => {
@@ -352,7 +384,7 @@ export function StakeStep({
       <div
         className={`flex w-full items-center gap-4 rounded-lg border transition-colors h-[72px] border-[#1A1A1A]`}
       >
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 w-full">
           <div className="w-14 h-14 rounded bg-[#1A1A1A] flex-shrink-0 ml-1">
             {(newAtomMetadata?.image || selectedTopic?.image) && (
               <img
@@ -416,7 +448,7 @@ export function StakeStep({
             onClick={handleStakeButtonClick}
             disabled={isLoading}
           >
-            {isLoading || txState.status === 'transaction-pending' ? (
+            {isLoading ? (
               <>
                 <Loader2 className="animate-spin h-4 w-4" /> Processing...
               </>

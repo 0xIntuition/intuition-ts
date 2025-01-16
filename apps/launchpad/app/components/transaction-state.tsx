@@ -35,7 +35,7 @@ export function TransactionState({
 }: TransactionStateProps) {
   return (
     <>
-      <div className="flex flex-col items-center justify-center m-auto h-full flex-grow">
+      <div className="flex flex-col items-center justify-center m-auto h-[300px] flex-grow">
         <div
           className={cn(
             'flex flex-col m-auto justify-center items-center h-full',

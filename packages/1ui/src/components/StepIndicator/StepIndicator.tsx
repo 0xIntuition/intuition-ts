@@ -47,7 +47,7 @@ export function StepIndicator<T = string>({
 }: StepIndicatorProps<T>) {
   const StepIndicatorContent = (
     <div
-      className="flex items-center justify-between space-x-1 w-3/4"
+      className="flex items-center md:justify-between space-x-2 w-full px-8"
       role="navigation"
       aria-label="Step progress"
     >
@@ -79,29 +79,30 @@ export function StepIndicator<T = string>({
 
   return (
     <div className={cn('flex items-center gap-6 w-full', className)}>
-      <div className="flex-none">
-        {onBack &&
-          (customBackButton ? (
-            <Button
-              variant={ButtonVariant.secondary}
-              {...customBackButton.props}
-              onClick={onBack}
-              disabled={disableBack}
-              className={cn(customBackButton.props?.className)}
-            >
-              {customBackButton.content}
-            </Button>
-          ) : (
-            <Button
-              onClick={onBack}
-              disabled={disableBack}
-              variant={ButtonVariant.secondary}
-            >
-              Back
-            </Button>
-          ))}
+      <div className={`flex-none ${!onBack && 'opacity-0'}`}>
+        {customBackButton ? (
+          <Button
+            variant={ButtonVariant.secondary}
+            {...customBackButton.props}
+            onClick={onBack}
+            disabled={disableBack}
+            className={cn(customBackButton.props?.className)}
+          >
+            {customBackButton.content}
+          </Button>
+        ) : (
+          <Button
+            onClick={onBack}
+            disabled={disableBack}
+            variant={ButtonVariant.secondary}
+          >
+            Back
+          </Button>
+        )}
       </div>
-      <div className="flex-1 flex justify-center">{StepIndicatorContent}</div>
+      <div className="flex-1 flex w-full justify-between">
+        {StepIndicatorContent}
+      </div>
       <div className="flex-none">
         {onNext &&
           (customNextButton ? (

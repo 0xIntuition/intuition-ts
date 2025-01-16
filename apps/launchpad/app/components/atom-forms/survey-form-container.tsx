@@ -57,9 +57,12 @@ export function SurveyFormContainer({
             disabled={!!isLoading}
           >
             {isLoading && (
-              <Icon name={IconName.inProgress} className="animate-spin" />
+              <Icon
+                name={IconName.inProgress}
+                className="h-4 w-4 animate-spin"
+              />
             )}
-            {isLoading ? 'Creating...' : `Create ${selectedType}`}
+            {isLoading ? 'Publishing...' : `Publish to IPFS`}
           </Button>
         </div>
       </div>
