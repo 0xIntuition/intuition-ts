@@ -18,9 +18,11 @@ export const columns: ColumnDef<TableItem>[] = [
   {
     id: 'position',
     header: '',
-    cell: ({ row }) => {
+    cell: ({ table, row }) => {
       return (
-        <div className="w-12 pl-6 text-muted-foreground">{row.index + 1}</div>
+        <div className="w-12 pl-6 text-muted-foreground">
+          {table.getSortedRowModel().rows.findIndex((r) => r.id === row.id) + 1}
+        </div>
       )
     },
     size: 48,
@@ -75,16 +77,17 @@ export const columns: ColumnDef<TableItem>[] = [
       return <div className="text-right pr-12">{row.getValue('users')}</div>
     },
     size: 120,
+    sortDescFirst: true,
   },
   {
     accessorKey: 'assets',
     header: ({ column }) => (
-      <div className="flex justify-end">
+      <div className="flex justify-end pr-6">
         <DataTableColumnHeader column={column} title="Assets" />
       </div>
     ),
     cell: ({ row }) => {
-      return <div className="text-right pr-12">${row.getValue('assets')}</div>
+      return <div className="text-right pr-6">{row.getValue('assets')} ETH</div>
     },
     size: 120,
   },

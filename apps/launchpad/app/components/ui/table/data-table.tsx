@@ -1,8 +1,6 @@
 import React, { CSSProperties } from 'react'
 
 import {
-  Button,
-  Icon,
   Table,
   TableBody,
   TableCell,
@@ -61,7 +59,12 @@ export function DataTable<TData, TValue>({
   data,
 }: DataTableProps<TData, TValue>) {
   const [columnResizeMode] = React.useState<ColumnResizeMode>('onChange')
-  const [sorting, setSorting] = React.useState<SortingState>([])
+  const [sorting, setSorting] = React.useState<SortingState>([
+    {
+      id: 'users',
+      desc: true,
+    },
+  ])
 
   const table = useReactTable({
     data,

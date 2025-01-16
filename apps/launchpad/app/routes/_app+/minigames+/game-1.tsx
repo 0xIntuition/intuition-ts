@@ -26,6 +26,7 @@ import { useLoaderData } from '@remix-run/react'
 // import { requireUser } from '@server/auth'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
 import { useAtom } from 'jotai'
+import { formatUnits } from 'viem'
 
 export async function loader() {
   const queryClient = new QueryClient()
@@ -114,8 +115,11 @@ export default function MiniGameOne() {
         id: triple.id,
         image: triple.subject.image || '',
         name: triple.subject.label || 'Untitled Entry',
-        users: 25, // Placeholder for now
-        assets: 3.73, // Placeholder for now
+        users: Number(triple.vault?.positions_aggregate?.aggregate?.count ?? 0),
+        assets: +formatUnits(
+          triple.vault?.positions_aggregate?.aggregate?.sum?.shares ?? 0,
+          18,
+        ),
       }
     }) || []
 
