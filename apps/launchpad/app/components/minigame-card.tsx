@@ -1,6 +1,7 @@
 import { Button, Card, Text } from '@0xintuition/1ui'
 
 import type { Minigame } from '@lib/types/minigame'
+import { useNavigate } from '@remix-run/react'
 
 interface MinigameCardProps {
   className?: string
@@ -15,6 +16,8 @@ export function MinigameCard({
   game,
   hideCTA = false,
 }: MinigameCardProps) {
+  const navigate = useNavigate()
+
   return (
     <Card
       className={`relative h-[400px] rounded-lg border-none bg-gradient-to-br from-[#060504] to-[#101010] min-w-[480px] ${className}`}
@@ -38,7 +41,7 @@ export function MinigameCard({
           </div>
         )}
 
-        <div className="flex justify-start">
+        <div className="flex justify-between">
           <Text
             variant="heading5"
             weight="semibold"
@@ -46,6 +49,12 @@ export function MinigameCard({
           >
             ${game.totalEarned.toFixed(1)}
           </Text>
+          <Button
+            variant="secondary"
+            onClick={() => navigate('/minigames/game-1')}
+          >
+            View Game List
+          </Button>
         </div>
       </div>
     </Card>

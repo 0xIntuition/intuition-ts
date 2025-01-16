@@ -475,6 +475,9 @@ importers:
       '@tanstack/react-query':
         specifier: ^5.32.0
         version: 5.45.0(react@18.3.1)
+      '@tanstack/react-table':
+        specifier: ^8.20.6
+        version: 8.20.6(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@types/cookie':
         specifier: ^0.6.0
         version: 0.6.0
@@ -6640,6 +6643,13 @@ packages:
     peerDependencies:
       react: ^18.0.0
 
+  '@tanstack/react-table@8.20.6':
+    resolution: {integrity: sha512-w0jluT718MrOKthRcr2xsjqzx+oEM7B7s/XXyfs19ll++hlId3fjTm+B2zrR3ijpANpkzBAr15j1XGVOMxpggQ==}
+    engines: {node: '>=12'}
+    peerDependencies:
+      react: '>=16.8'
+      react-dom: '>=16.8'
+
   '@tanstack/react-virtual@3.11.2':
     resolution: {integrity: sha512-OuFzMXPF4+xZgx8UzJha0AieuMihhhaWG0tCqpp6tDzlFwOmNBPYMuLOtMJ1Tr4pXLHmgjcWhG6RlknY2oNTdQ==}
     peerDependencies:
@@ -6651,6 +6661,10 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
+
+  '@tanstack/table-core@8.20.5':
+    resolution: {integrity: sha512-P9dF7XbibHph2PFRz8gfBKEXEY/HJPOhym8CHmjF8y3q5mWpKx9xtZapXQUWCgkqvsK0R46Azuz+VaxD4Xl+Tg==}
+    engines: {node: '>=12'}
 
   '@tanstack/virtual-core@3.11.2':
     resolution: {integrity: sha512-vTtpNt7mKCiZ1pwU9hfKPhpdVO2sVzFQsxoVBGtOSHxlrRRzYr8iQ2TlwbAcRYCcEiZ9ECAM8kBzH0v2+VzfKw==}
@@ -24340,6 +24354,12 @@ snapshots:
       '@tanstack/query-core': 5.45.0
       react: 18.3.1
 
+  '@tanstack/react-table@8.20.6(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      '@tanstack/table-core': 8.20.5
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+
   '@tanstack/react-virtual@3.11.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@tanstack/virtual-core': 3.11.2
@@ -24351,6 +24371,8 @@ snapshots:
       '@tanstack/virtual-core': 3.5.1
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
+
+  '@tanstack/table-core@8.20.5': {}
 
   '@tanstack/virtual-core@3.11.2': {}
 
