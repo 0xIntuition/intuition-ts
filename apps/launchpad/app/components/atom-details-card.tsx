@@ -92,7 +92,7 @@ export function AtomDetailsCard({
                 weight="normal"
                 className="text-foreground/90"
               >
-                {ethStaked.toFixed(3)} ETH staked
+                {ethStaked.toFixed(4)} ETH staked
               </Text>
             </div>
           </div>
