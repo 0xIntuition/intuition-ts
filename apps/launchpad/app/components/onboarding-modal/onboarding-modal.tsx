@@ -10,6 +10,8 @@ import { GetTripleQuery, useGetListDetailsQuery } from '@0xintuition/graphql'
 
 import { CURRENT_ENV } from '@consts/general'
 import { getSpecialPredicate } from '@lib/utils/app'
+import logger from '@lib/utils/logger'
+import { usePrivy } from '@privy-io/react-auth'
 import { useQueryClient } from '@tanstack/react-query'
 import { ClientOnly } from 'remix-utils/client-only'
 
@@ -44,6 +46,10 @@ const INITIAL_STATE: OnboardingState = {
 }
 
 export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
+  const queryClient = useQueryClient()
+  const { user: privyUser } = usePrivy()
+  const userWallet = privyUser?.wallet?.address
+
   const [state, setState] = useState<OnboardingState>(INITIAL_STATE)
   const [topics, setTopics] = useState<Topic[]>([])
   const [isTransitioning, setIsTransitioning] = useState(false)
@@ -51,12 +57,11 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
   const [searchTerm, setSearchTerm] = useState('')
   const [steps, setSteps] = useState<Step[]>(STEPS_CONFIG)
   const [txState, setTxState] = useState<TransactionStateType>()
+
   const predicateId =
     getSpecialPredicate(CURRENT_ENV).tagPredicate.id.toString()
   const objectId =
     getSpecialPredicate(CURRENT_ENV).web3Wallet.vaultId.toString()
-
-  const queryClient = useQueryClient()
 
   const { data: listData, isLoading: isLoadingList } = useGetListDetailsQuery(
     {
@@ -262,6 +267,40 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
     [steps, state.currentStep, handleTransition],
   )
 
+  const awardPoints = (accountId: string, redirectUrl?: string) => {
+    const formRef = document.createElement('form')
+    formRef.method = 'post'
+    formRef.action = '/actions/reward-points'
+
+    const accountIdInput = document.createElement('input')
+    accountIdInput.type = 'hidden'
+    accountIdInput.name = 'accountId'
+    accountIdInput.value = accountId
+
+    const typeInput = document.createElement('input')
+    typeInput.type = 'hidden'
+    typeInput.name = 'type'
+    typeInput.value = 'minigame1'
+
+    if (redirectUrl) {
+      const redirectUrlInput = document.createElement('input')
+      redirectUrlInput.type = 'hidden'
+      redirectUrlInput.name = 'redirectUrl'
+      redirectUrlInput.value = redirectUrl
+      formRef.appendChild(redirectUrlInput)
+    }
+
+    formRef.appendChild(accountIdInput)
+    formRef.appendChild(typeInput)
+    document.body.appendChild(formRef)
+    formRef.submit()
+    document.body.removeChild(formRef)
+  }
+
+  useEffect(() => {
+    logger('Form submitted')
+  }, [])
+
   const onStakingSuccess = () => {
     handleTransition((prev) => ({
       ...prev,
@@ -269,9 +308,11 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
     }))
     updateStepStatus(STEPS.SIGNAL, 'completed')
     updateStepStatus(STEPS.REWARD, 'current')
-    queryClient.invalidateQueries({
-      queryKey: ['get-list-details', { predicateId: 3, objectId: 620 }],
-    })
+
+    if (!userWallet) {
+      logger('Missing userWallet')
+      return
+    }
   }
 
   console.log('listData', listData)
@@ -364,6 +405,9 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
                     selectedTopic={state.selectedTopic}
                     newAtomMetadata={state.newAtomMetadata}
                     txHash={txState.txHash}
+                    userWallet={userWallet}
+                    awardPoints={awardPoints}
+                    redirectUrl="/minigames/game-1"
                   />
                 )}
             </div>

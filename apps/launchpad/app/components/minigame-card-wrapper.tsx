@@ -1,7 +1,9 @@
 import { useMinigameData } from '@lib/hooks/useMinigameData'
 import type { Minigame } from '@lib/types/minigame'
+import logger from '@lib/utils/logger'
 import { usePrivy } from '@privy-io/react-auth'
 
+import { usePoints } from '../lib/hooks/usePoints'
 import { AuthCover } from './auth-cover'
 import { MinigameCard } from './minigame-card'
 
@@ -16,13 +18,17 @@ export function MinigameCardWrapper({
   onStart,
   className,
 }: MinigameCardWrapperProps) {
-  const { authenticated } = usePrivy()
+  const { authenticated, user } = usePrivy()
   const gameData = useMinigameData(gameId)
+  const userWallet = user?.wallet?.address?.toLowerCase()
+  const { data: points } = usePoints(userWallet)
+
+  logger('Points data:', points)
 
   const game: Minigame = {
     id: gameId,
     title: gameData.title,
-    points: gameData.points,
+    points: points?.minigame1 || 0,
     totalAtoms: gameData.atoms,
     totalUsers: gameData.users,
     totalEarned: gameData.totalEarned,

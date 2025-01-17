@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 
 import { BLOCK_EXPLORER_URL } from '@consts/general'
+import { useQueryClient } from '@tanstack/react-query'
 import { useReward } from 'react-rewards'
 
 import { NewAtomMetadata, Topic } from './types'
@@ -10,9 +11,20 @@ interface RewardStepProps {
   selectedTopic: Topic
   newAtomMetadata?: NewAtomMetadata
   txHash?: string
+  userWallet?: string
+  awardPoints?: (accountId: string, redirectUrl?: string) => void
+  redirectUrl?: string
 }
 
-export function RewardStep({ isOpen, selectedTopic, txHash }: RewardStepProps) {
+export function RewardStep({
+  isOpen,
+  selectedTopic,
+  txHash,
+  userWallet,
+  awardPoints,
+  redirectUrl,
+}: RewardStepProps) {
+  const queryClient = useQueryClient()
   const { reward } = useReward('rewardId', 'confetti', {
     lifetime: 1000,
     elementCount: 100,
@@ -26,12 +38,21 @@ export function RewardStep({ isOpen, selectedTopic, txHash }: RewardStepProps) {
     },
   })
   const [hasRewardAnimated, setHasRewardAnimated] = useState(false)
+  const [hasAwardedPoints, setHasAwardedPoints] = useState(false)
 
   useEffect(() => {
     if (isOpen && !hasRewardAnimated) {
       const timer = setTimeout(() => {
         reward()
-        setHasRewardAnimated(true)
+        // Award points when animation starts if we haven't already
+        if (!hasAwardedPoints && userWallet && awardPoints) {
+          awardPoints(userWallet.toLowerCase(), redirectUrl)
+          // Invalidate points query to force a refresh
+          queryClient.invalidateQueries({
+            queryKey: ['account-points', userWallet.toLowerCase()],
+          })
+          setHasAwardedPoints(true)
+        }
       }, 500)
 
       return () => clearTimeout(timer)
@@ -39,8 +60,18 @@ export function RewardStep({ isOpen, selectedTopic, txHash }: RewardStepProps) {
 
     if (!isOpen) {
       setHasRewardAnimated(false)
+      setHasAwardedPoints(false)
     }
-  }, [isOpen, hasRewardAnimated, reward])
+  }, [
+    isOpen,
+    hasRewardAnimated,
+    hasAwardedPoints,
+    reward,
+    userWallet,
+    awardPoints,
+    redirectUrl,
+    queryClient,
+  ])
 
   return (
     <div className="p-8">
