@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 
 import { BLOCK_EXPLORER_URL } from '@consts/general'
+import { useQueryClient } from '@tanstack/react-query'
 import { useReward } from 'react-rewards'
 
 import { NewAtomMetadata, Topic } from './types'
@@ -23,6 +24,7 @@ export function RewardStep({
   awardPoints,
   redirectUrl,
 }: RewardStepProps) {
+  const queryClient = useQueryClient()
   const { reward } = useReward('rewardId', 'confetti', {
     lifetime: 1000,
     elementCount: 100,
@@ -45,6 +47,10 @@ export function RewardStep({
         // Award points when animation starts if we haven't already
         if (!hasAwardedPoints && userWallet && awardPoints) {
           awardPoints(userWallet.toLowerCase(), redirectUrl)
+          // Invalidate points query to force a refresh
+          queryClient.invalidateQueries({
+            queryKey: ['account-points', userWallet.toLowerCase()],
+          })
           setHasAwardedPoints(true)
         }
       }, 500)
@@ -64,6 +70,7 @@ export function RewardStep({
     userWallet,
     awardPoints,
     redirectUrl,
+    queryClient,
   ])
 
   return (

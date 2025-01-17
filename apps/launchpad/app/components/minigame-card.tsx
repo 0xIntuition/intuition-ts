@@ -36,19 +36,19 @@ export function MinigameCard({
         {!hideCTA && (
           <div className="flex flex-col items-center">
             <Button onClick={onStart} variant="primary" size="lg">
-              Earn {game.points} Points
+              Earn Points
             </Button>
           </div>
         )}
 
-        <div className="flex justify-between">
-          <Text
-            variant="heading5"
-            weight="semibold"
-            className="text-foreground"
-          >
-            ${game.totalEarned.toFixed(1)}
-          </Text>
+        <div className="flex justify-between items-center">
+          {game.points > 0 ? (
+            <Text variant="body" weight="semibold" className="text-green-500">
+              {game.points} points earned!
+            </Text>
+          ) : (
+            <div />
+          )}
           <Button
             variant="secondary"
             onClick={() => navigate('/minigames/game-1')}
