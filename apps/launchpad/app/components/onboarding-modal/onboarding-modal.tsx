@@ -16,7 +16,7 @@ import { ClientOnly } from 'remix-utils/client-only'
 import { TransactionStateType } from '../../types/transaction'
 import { CreateStep } from './create-step'
 import { RewardStep } from './reward-step'
-import { StakeStep } from './stake-step'
+import { SignalStep } from './signal-step'
 import { TopicsStep } from './topics-step'
 import {
   NewAtomMetadata,
@@ -33,7 +33,7 @@ const STORAGE_KEY = 'onboarding-progress'
 const STEPS_CONFIG: Step[] = [
   { id: STEPS.TOPICS, label: 'Select', status: 'current' },
   { id: STEPS.CREATE, label: 'Create', status: 'upcoming' },
-  { id: STEPS.STAKE, label: 'Stake', status: 'upcoming' },
+  { id: STEPS.SIGNAL, label: 'Signal', status: 'upcoming' },
   { id: STEPS.REWARD, label: 'Reward', status: 'upcoming' },
 ]
 
@@ -181,30 +181,30 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
         handleTransition((prev) => ({
           ...prev,
           selectedTopic,
-          currentStep: STEPS.STAKE,
+          currentStep: STEPS.SIGNAL,
         }))
         updateStepStatus(STEPS.TOPICS, 'completed')
-        updateStepStatus(STEPS.STAKE, 'current')
+        updateStepStatus(STEPS.SIGNAL, 'current')
       }
     } else if (state.currentStep === STEPS.CREATE) {
       handleTransition((prev) => ({
         ...prev,
-        currentStep: STEPS.STAKE,
+        currentStep: STEPS.SIGNAL,
       }))
       updateStepStatus(STEPS.CREATE, 'completed')
-      updateStepStatus(STEPS.STAKE, 'current')
+      updateStepStatus(STEPS.SIGNAL, 'current')
     }
   }, [state.currentStep, topics, handleTransition])
 
   const handleBack = useCallback(() => {
-    if (state.currentStep === STEPS.STAKE) {
+    if (state.currentStep === STEPS.SIGNAL) {
       const previousStep = state.showCreateStep ? STEPS.CREATE : STEPS.TOPICS
       handleTransition((prev) => ({
         ...prev,
         currentStep: previousStep,
       }))
       updateStepStatus(previousStep, 'current')
-      updateStepStatus(STEPS.STAKE, 'upcoming')
+      updateStepStatus(STEPS.SIGNAL, 'upcoming')
     } else if (state.currentStep === STEPS.CREATE) {
       handleTransition((prev) => ({
         ...prev,
@@ -267,7 +267,7 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
       ...prev,
       currentStep: STEPS.REWARD,
     }))
-    updateStepStatus(STEPS.STAKE, 'completed')
+    updateStepStatus(STEPS.SIGNAL, 'completed')
     updateStepStatus(STEPS.REWARD, 'current')
     queryClient.invalidateQueries({
       queryKey: ['get-list-details', { predicateId: 3, objectId: 620 }],
@@ -279,7 +279,7 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
   const onCreationSuccess = (metadata: NewAtomMetadata) => {
     handleTransition((prev) => ({
       ...prev,
-      currentStep: STEPS.STAKE,
+      currentStep: STEPS.SIGNAL,
       newAtomMetadata: metadata,
       selectedTopic: {
         id: metadata.vaultId,
@@ -291,7 +291,7 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
       },
     }))
     updateStepStatus(STEPS.CREATE, 'completed')
-    updateStepStatus(STEPS.STAKE, 'current')
+    updateStepStatus(STEPS.SIGNAL, 'current')
   }
 
   const handleCreateClick = useCallback(() => {
@@ -342,8 +342,8 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
                 <CreateStep onCreationSuccess={onCreationSuccess} />
               )}
 
-              {state.currentStep === STEPS.STAKE && state.selectedTopic && (
-                <StakeStep
+              {state.currentStep === STEPS.SIGNAL && state.selectedTopic && (
+                <SignalStep
                   selectedTopic={state.selectedTopic}
                   newAtomMetadata={state.newAtomMetadata}
                   predicateId={predicateId}
@@ -381,7 +381,7 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
                         : undefined
                   }
                   onBack={
-                    state.currentStep === STEPS.STAKE ||
+                    state.currentStep === STEPS.SIGNAL ||
                     state.currentStep === STEPS.CREATE
                       ? handleBack
                       : undefined
@@ -389,8 +389,8 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
                   disableNext={
                     state.currentStep === STEPS.TOPICS
                       ? !topics.some((t) => t.selected)
-                      : state.currentStep === STEPS.STAKE
-                        ? txState?.status !== 'idle'
+                      : state.currentStep === STEPS.SIGNAL
+                        ? txState?.status !== 'complete'
                         : state.currentStep === STEPS.CREATE
                   }
                   disableBack={isLoading || txState?.status !== 'idle'}

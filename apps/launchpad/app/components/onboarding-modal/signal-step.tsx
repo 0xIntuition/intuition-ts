@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 
 import { Badge, Button, Icon, Text, TextVariant, toast } from '@0xintuition/1ui'
 
-import StakeToast from '@components/onboarding-modal/stake-toast'
+import SignalToast from '@components/onboarding-modal/signal-toast'
 import { MIN_DEPOSIT, MULTIVAULT_CONTRACT_ADDRESS } from '@consts/general'
 import { multivaultAbi } from '@lib/abis/multivault'
 import { useCreateTripleMutation } from '@lib/hooks/mutations/useCreateTripleMutation'
@@ -15,14 +15,14 @@ import {
   useGenericTxState,
 } from '@lib/hooks/useTransactionReducer'
 import { usePrivy } from '@privy-io/react-auth'
-import { useLocation } from '@remix-run/react'
+import { Link, useLocation } from '@remix-run/react'
 import { useQueryClient } from '@tanstack/react-query'
 import { TransactionActionType, TransactionStateType } from 'app/types'
-import { ArrowBigDown, ArrowBigUp, Loader2 } from 'lucide-react'
+import { ArrowBigDown, ArrowBigUp, Book, Loader2 } from 'lucide-react'
 import { Address, decodeEventLog, formatUnits } from 'viem'
 import { usePublicClient } from 'wagmi'
 
-import { StakeStepProps } from './types'
+import { SignalStepProps } from './types'
 
 const initialTxState: TransactionStateType = {
   status: 'idle',
@@ -30,7 +30,7 @@ const initialTxState: TransactionStateType = {
   error: undefined,
 }
 
-export function StakeStep({
+export function SignalStep({
   selectedTopic,
   newAtomMetadata,
   predicateId,
@@ -39,7 +39,7 @@ export function StakeStep({
   onStakingSuccess,
   isLoading,
   setIsLoading,
-}: StakeStepProps) {
+}: SignalStepProps) {
   const [ticks, setTicks] = useState(1)
   const [lastTxHash, setLastTxHash] = useState<string | undefined>(undefined)
   const [validationErrors, setValidationErrors] = useState<string[]>([])
@@ -262,7 +262,7 @@ export function StakeStep({
         assets = (topics.args as BuyArgs).senderAssetsAfterTotalFees.toString()
 
         toast.custom(() => (
-          <StakeToast
+          <SignalToast
             action={action}
             assets={assets}
             txHash={stakeTxReceipt.transactionHash}
@@ -375,12 +375,29 @@ export function StakeStep({
 
   return (
     <div className="flex flex-col gap-4 p-8">
-      <Text variant="headline" className="text-center mb-8">
-        Stake on {newAtomMetadata?.name ?? selectedTopic?.triple?.subject.label}{' '}
-        {/* {selectedTopic?.triple?.predicate.label}{' '}
+      <div className="flex flex-col gap-2 mb-8">
+        <Text variant="headline" className="font-semibold">
+          Signal {newAtomMetadata?.name ?? selectedTopic?.triple?.subject.label}{' '}
+          as your preferred wallet
+          {/* {selectedTopic?.triple?.predicate.label}{' '}
         {selectedTopic?.triple?.object.label} */}
-      </Text>
-
+        </Text>
+        <Text
+          variant={TextVariant.footnote}
+          className="text-primary/70 flex flex-row gap-1 items-center"
+        >
+          <Book className="h-4 w-4 text-primary/70" />
+          Learn how signals shape your preferences in our{' '}
+          <Link
+            to="https://tech.docs.intuition.systems/primitives-signal"
+            target="_blank"
+            rel="noreferrer"
+            className="text-primary font-semibold hover:text-accent"
+          >
+            documentation
+          </Link>
+        </Text>
+      </div>
       <div
         className={`flex w-full items-center gap-4 rounded-lg border transition-colors h-[72px] border-[#1A1A1A]`}
       >

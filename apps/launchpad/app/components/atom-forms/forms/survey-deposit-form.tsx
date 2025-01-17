@@ -10,6 +10,8 @@ import { useGetAtomByDataQuery } from '@0xintuition/graphql'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ipfsUrl } from '@lib/utils/app'
+import { Link } from '@remix-run/react'
+import { Book } from 'lucide-react'
 import { FormProvider, useForm } from 'react-hook-form'
 import { useAccount, useBalance } from 'wagmi'
 
@@ -70,8 +72,18 @@ export function SurveyDepositForm({
         <div className="flex flex-col flex-1 min-h-0 space-y-6">
           <div className="flex flex-col gap-1 flex-shrink-0">
             <h3 className="text-xl font-semibold">Ready to Create Your Atom</h3>
-            <p className="text-sm text-muted-foreground">
-              Review your atom details to get started
+            <p className="flex flex-row gap-1 text-sm text-muted-foreground items-center">
+              <Book className="h-4 w-4 text-primary/70" />
+              Review your atom details before creating it on Intuition. Learn
+              more in our{' '}
+              <Link
+                to="https://tech.docs.intuition.systems/primitives-atom"
+                target="_blank"
+                rel="noreferrer"
+                className="text-primary font-semibold hover:text-accent"
+              >
+                documentation
+              </Link>
             </p>
           </div>
 

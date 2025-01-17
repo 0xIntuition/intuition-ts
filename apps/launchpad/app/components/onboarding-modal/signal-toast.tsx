@@ -9,7 +9,7 @@ interface ToastProps {
   assets: string
   txHash: string
 }
-export default function StakeToast({ action, assets, txHash }: ToastProps) {
+export default function SignalToast({ action, assets, txHash }: ToastProps) {
   return (
     <div
       className={cn(

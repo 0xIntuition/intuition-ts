@@ -2,6 +2,9 @@ import { useState } from 'react'
 
 import { Button, ButtonSize, Icon, IconName } from '@0xintuition/1ui'
 
+import { Link } from '@remix-run/react'
+import { Book } from 'lucide-react'
+
 import { getAtomForm } from './registry'
 import { Atom } from './types'
 
@@ -32,9 +35,18 @@ export function SurveyFormContainer({
         <div className="flex items-start justify-between gap-4 pb-5">
           <div className="space-y-1">
             <h2 className="text-xl font-semibold">Publish Web3 Wallet Atom</h2>
-            <div className="text-sm text-muted-foreground">
-              Fill out the form to publish the atom metadata for your Web3
-              Wallet to IPFS.
+            <div className="flex flex-row gap-1 text-sm text-muted-foreground items-center">
+              <Book className="h-4 w-4 text-primary/70" />
+              Fill out the form to publish the atom metadata to IPFS. Learn more
+              in our{' '}
+              <Link
+                to="https://tech.docs.intuition.systems/primitives-atom"
+                target="_blank"
+                rel="noreferrer"
+                className="text-primary font-semibold hover:text-accent"
+              >
+                documentation
+              </Link>
             </div>
           </div>
         </div>
