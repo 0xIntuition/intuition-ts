@@ -12,7 +12,7 @@ import { CURRENT_ENV } from '@consts/general'
 import { getSpecialPredicate } from '@lib/utils/app'
 import logger from '@lib/utils/logger'
 import { usePrivy } from '@privy-io/react-auth'
-import { useFetcher } from '@remix-run/react'
+import { Form, useNavigate } from '@remix-run/react'
 import { useQueryClient } from '@tanstack/react-query'
 import { ClientOnly } from 'remix-utils/client-only'
 
@@ -57,9 +57,9 @@ const INITIAL_STATE: OnboardingState = {
 
 export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
   const queryClient = useQueryClient()
-  const fetcher = useFetcher<PointsResponse>()
   const { user: privyUser } = usePrivy()
   const userWallet = privyUser?.wallet?.address
+  const navigate = useNavigate()
 
   const [state, setState] = useState<OnboardingState>(INITIAL_STATE)
   const [topics, setTopics] = useState<Topic[]>([])
@@ -279,27 +279,38 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
   )
 
   const awardPoints = (accountId: string, redirectUrl?: string) => {
-    const formData = new FormData()
-    formData.append('accountId', accountId)
-    formData.append('type', 'minigame1')
+    const formRef = document.createElement('form')
+    formRef.method = 'post'
+    formRef.action = '/actions/reward-points'
+
+    const accountIdInput = document.createElement('input')
+    accountIdInput.type = 'hidden'
+    accountIdInput.name = 'accountId'
+    accountIdInput.value = accountId
+
+    const typeInput = document.createElement('input')
+    typeInput.type = 'hidden'
+    typeInput.name = 'type'
+    typeInput.value = 'minigame1'
+
     if (redirectUrl) {
-      formData.append('redirectUrl', redirectUrl)
+      const redirectUrlInput = document.createElement('input')
+      redirectUrlInput.type = 'hidden'
+      redirectUrlInput.name = 'redirectUrl'
+      redirectUrlInput.value = redirectUrl
+      formRef.appendChild(redirectUrlInput)
     }
-    fetcher.submit(formData, {
-      method: 'post',
-      action: '/actions/reward-points',
-    })
+
+    formRef.appendChild(accountIdInput)
+    formRef.appendChild(typeInput)
+    document.body.appendChild(formRef)
+    formRef.submit()
+    document.body.removeChild(formRef)
   }
 
   useEffect(() => {
-    logger('Fetcher state:', fetcher.state)
-    logger('Fetcher data:', fetcher.data)
-
-    if (fetcher.state === 'idle' && fetcher.data?.success) {
-      logger('Points updated successfully')
-      // Redirect will be handled by the action response
-    }
-  }, [fetcher.state, fetcher.data])
+    logger('Form submitted')
+  }, [])
 
   const onStakingSuccess = () => {
     handleTransition((prev) => ({

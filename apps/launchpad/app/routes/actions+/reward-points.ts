@@ -142,10 +142,9 @@ export async function action({ request }: ActionFunctionArgs) {
     const result = await upsertPoints(accountId.toString(), pointsAllocation)
     logger('upsert result:', result)
 
-    // If redirectUrl is provided, redirect after successful points update
+    // If redirectUrl is provided, redirect to it
     if (redirectUrl && typeof redirectUrl === 'string') {
-      logger('redirecting to:', redirectUrl)
-      throw redirect(redirectUrl)
+      return redirect(redirectUrl)
     }
 
     return { success: true, data: result }
