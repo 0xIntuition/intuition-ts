@@ -22,7 +22,7 @@ import {
 import { AccountButton } from '@components/account-button'
 import LoadingButton from '@components/loading-button'
 import { usePrivy } from '@privy-io/react-auth'
-import { useLocation } from '@remix-run/react'
+import { Link, useLocation } from '@remix-run/react'
 import { Activity, FileText, Github, Home, Upload } from 'lucide-react'
 
 import { ConnectButton } from './connect-button'
@@ -45,6 +45,7 @@ export interface NavItem {
   href: string
   isActive?: boolean
   isAccent?: boolean
+  isExternal?: boolean
 }
 
 interface AppSidebarProps extends SidebarProps {
@@ -81,14 +82,44 @@ export function AppSidebar({
       icon: FileText,
       label: 'Developer Docs',
       href: 'https://tech.docs.intuition.systems',
+      isExternal: true,
     },
-    { icon: Github, label: 'GitHub', href: 'https://github.com/0xIntuition' },
+    {
+      icon: Github,
+      label: 'GitHub',
+      href: 'https://github.com/0xIntuition',
+      isExternal: true,
+    },
     {
       icon: Upload,
       label: 'Bulk Uploader',
       href: 'https://upload.intuition.systems',
+      isExternal: true,
     },
   ]
+
+  const renderNavLink = (item: NavItem) => {
+    const content = (
+      <>
+        <item.icon className="!h-5 !w-5" />
+        {!isMinimal && (
+          <Text variant={TextVariant.body} className="text-inherit">
+            {item.label}
+          </Text>
+        )}
+      </>
+    )
+
+    return item.isExternal ? (
+      <a href={item.href} className="flex items-center gap-3">
+        {content}
+      </a>
+    ) : (
+      <Link to={item.href} className="flex items-center gap-3">
+        {content}
+      </Link>
+    )
+  }
 
   const sidebarContent = (
     <>
@@ -249,17 +280,7 @@ export function AppSidebar({
                       item.isAccent ? 'text-accent' : undefined,
                     )}
                   >
-                    <a href={item.href} className="flex items-center gap-3">
-                      <item.icon className="!h-5 !w-5" />
-                      {!isMinimal && (
-                        <Text
-                          variant={TextVariant.body}
-                          className="text-inherit"
-                        >
-                          {item.label}
-                        </Text>
-                      )}
-                    </a>
+                    {renderNavLink(item)}
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
@@ -276,17 +297,7 @@ export function AppSidebar({
                     asChild
                     className={cn('w-full gap-3 py-3')}
                   >
-                    <a href={item.href} className="flex items-center gap-3">
-                      <item.icon className="!h-5 !w-5" />
-                      {!isMinimal && (
-                        <Text
-                          variant={TextVariant.body}
-                          className="text-inherit"
-                        >
-                          {item.label}
-                        </Text>
-                      )}
-                    </a>
+                    {renderNavLink(item)}
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}

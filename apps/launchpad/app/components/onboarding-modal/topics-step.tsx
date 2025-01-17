@@ -48,7 +48,7 @@ export function TopicsStep({
         <Search handleSearchChange={onSearchChange} />
         {isLoadingList ? (
           <div className="flex flex-col gap-4 justify-center items-center h-[350px]">
-            <LoadingLogo size={50} className="animate-spin" />
+            <LoadingLogo size={50} />
             <div className="flex flex-col items-center gap-1">
               <Text variant={TextVariant.bodyLarge}>Loading your atoms...</Text>
               <Text
