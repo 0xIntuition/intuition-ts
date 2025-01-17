@@ -10,6 +10,9 @@ import { GetTripleQuery, useGetListDetailsQuery } from '@0xintuition/graphql'
 
 import { CURRENT_ENV } from '@consts/general'
 import { getSpecialPredicate } from '@lib/utils/app'
+import logger from '@lib/utils/logger'
+import { usePrivy } from '@privy-io/react-auth'
+import { useFetcher } from '@remix-run/react'
 import { useQueryClient } from '@tanstack/react-query'
 import { ClientOnly } from 'remix-utils/client-only'
 
@@ -28,6 +31,15 @@ import {
   Topic,
 } from './types'
 
+interface PointsResponse {
+  success: boolean
+  data?: {
+    account_id: string
+    minigame1: number
+  }
+  error?: string
+}
+
 const STORAGE_KEY = 'onboarding-progress'
 
 const STEPS_CONFIG: Step[] = [
@@ -44,6 +56,11 @@ const INITIAL_STATE: OnboardingState = {
 }
 
 export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
+  const queryClient = useQueryClient()
+  const fetcher = useFetcher<PointsResponse>()
+  const { user: privyUser } = usePrivy()
+  const userWallet = privyUser?.wallet?.address
+
   const [state, setState] = useState<OnboardingState>(INITIAL_STATE)
   const [topics, setTopics] = useState<Topic[]>([])
   const [isTransitioning, setIsTransitioning] = useState(false)
@@ -51,12 +68,11 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
   const [searchTerm, setSearchTerm] = useState('')
   const [steps, setSteps] = useState<Step[]>(STEPS_CONFIG)
   const [txState, setTxState] = useState<TransactionStateType>()
+
   const predicateId =
     getSpecialPredicate(CURRENT_ENV).tagPredicate.id.toString()
   const objectId =
     getSpecialPredicate(CURRENT_ENV).web3Wallet.vaultId.toString()
-
-  const queryClient = useQueryClient()
 
   const { data: listData, isLoading: isLoadingList } = useGetListDetailsQuery(
     {
@@ -262,6 +278,37 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
     [steps, state.currentStep, handleTransition],
   )
 
+  const awardPoints = useCallback(
+    (accountId: string, redirectUrl?: string) => {
+      logger('Submitting points update...')
+      const formData = new FormData()
+      formData.append('accountId', accountId)
+      formData.append('type', 'minigame1')
+      if (redirectUrl) {
+        formData.append('redirectUrl', redirectUrl)
+      }
+
+      fetcher.submit(formData, {
+        method: 'post',
+        action: '/actions/reward-points',
+      })
+    },
+    [fetcher],
+  )
+
+  useEffect(() => {
+    logger('Fetcher state:', fetcher.state)
+    logger('Fetcher data:', fetcher.data)
+
+    if (fetcher.state === 'idle' && fetcher.data?.success) {
+      logger('Points updated successfully')
+      // Don't invalidate queries here since we don't need to refresh the list
+      // queryClient.invalidateQueries({
+      //   queryKey: ['get-list-details', { predicateId, objectId }],
+      // })
+    }
+  }, [fetcher.state, fetcher.data])
+
   const onStakingSuccess = () => {
     handleTransition((prev) => ({
       ...prev,
@@ -269,9 +316,11 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
     }))
     updateStepStatus(STEPS.STAKE, 'completed')
     updateStepStatus(STEPS.REWARD, 'current')
-    queryClient.invalidateQueries({
-      queryKey: ['get-list-details', { predicateId: 3, objectId: 620 }],
-    })
+
+    if (!userWallet) {
+      logger('Missing userWallet')
+      return
+    }
   }
 
   console.log('listData', listData)
@@ -364,6 +413,8 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
                     selectedTopic={state.selectedTopic}
                     newAtomMetadata={state.newAtomMetadata}
                     txHash={txState.txHash}
+                    userWallet={userWallet}
+                    awardPoints={awardPoints}
                   />
                 )}
             </div>
