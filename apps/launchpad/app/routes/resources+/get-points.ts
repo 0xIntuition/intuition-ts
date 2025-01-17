@@ -1,4 +1,3 @@
-import { error } from 'console'
 import process from 'process'
 
 import type { LoaderFunctionArgs, TypedResponse } from '@remix-run/node'
@@ -31,7 +30,7 @@ const GetAccountPointsQuery = gql`
 `
 
 if (process.env.HASURA_POINTS_ENDPOINT === undefined) {
-  throw error('Endpoint not defined')
+  throw new Error('Endpoint not defined')
 }
 
 const client = new GraphQLClient(process.env.HASURA_POINTS_ENDPOINT)
