@@ -278,23 +278,18 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
     [steps, state.currentStep, handleTransition],
   )
 
-  const awardPoints = useCallback(
-    (accountId: string, redirectUrl?: string) => {
-      logger('Submitting points update...')
-      const formData = new FormData()
-      formData.append('accountId', accountId)
-      formData.append('type', 'minigame1')
-      if (redirectUrl) {
-        formData.append('redirectUrl', redirectUrl)
-      }
-
-      fetcher.submit(formData, {
-        method: 'post',
-        action: '/actions/reward-points',
-      })
-    },
-    [fetcher],
-  )
+  const awardPoints = (accountId: string, redirectUrl?: string) => {
+    const formData = new FormData()
+    formData.append('accountId', accountId)
+    formData.append('type', 'minigame1')
+    if (redirectUrl) {
+      formData.append('redirectUrl', redirectUrl)
+    }
+    fetcher.submit(formData, {
+      method: 'post',
+      action: '/actions/reward-points',
+    })
+  }
 
   useEffect(() => {
     logger('Fetcher state:', fetcher.state)
@@ -302,10 +297,7 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
 
     if (fetcher.state === 'idle' && fetcher.data?.success) {
       logger('Points updated successfully')
-      // Don't invalidate queries here since we don't need to refresh the list
-      // queryClient.invalidateQueries({
-      //   queryKey: ['get-list-details', { predicateId, objectId }],
-      // })
+      // Redirect will be handled by the action response
     }
   }, [fetcher.state, fetcher.data])
 
@@ -415,6 +407,7 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
                     txHash={txState.txHash}
                     userWallet={userWallet}
                     awardPoints={awardPoints}
+                    redirectUrl="/minigames/game-1"
                   />
                 )}
             </div>

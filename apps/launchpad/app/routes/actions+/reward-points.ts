@@ -144,7 +144,8 @@ export async function action({ request }: ActionFunctionArgs) {
 
     // If redirectUrl is provided, redirect after successful points update
     if (redirectUrl && typeof redirectUrl === 'string') {
-      return redirect(redirectUrl)
+      logger('redirecting to:', redirectUrl)
+      throw redirect(redirectUrl)
     }
 
     return { success: true, data: result }
