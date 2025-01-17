@@ -5,7 +5,7 @@ import { TransactionStateType } from '../../types/transaction'
 export const STEPS = {
   TOPICS: 'topics',
   CREATE: 'create',
-  STAKE: 'stake',
+  SIGNAL: 'signal',
   REWARD: 'reward',
 } as const
 
@@ -45,7 +45,7 @@ export interface OnboardingModalProps {
   onClose: () => void
 }
 
-export interface StakeStepProps {
+export interface SignalStepProps {
   selectedTopic: Topic
   newAtomMetadata?: NewAtomMetadata
   predicateId: string
