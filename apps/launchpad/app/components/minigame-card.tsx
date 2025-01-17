@@ -8,6 +8,7 @@ interface MinigameCardProps {
   onStart: () => void
   game: Minigame
   hideCTA?: boolean
+  isLoading?: boolean
 }
 
 export function MinigameCard({
@@ -15,6 +16,7 @@ export function MinigameCard({
   onStart,
   game,
   hideCTA = false,
+  isLoading = false,
 }: MinigameCardProps) {
   const navigate = useNavigate()
 
@@ -35,8 +37,18 @@ export function MinigameCard({
 
         {!hideCTA && (
           <div className="flex flex-col items-center">
-            <Button onClick={onStart} variant="primary" size="lg">
-              Earn 200 IQ Points
+            <Button
+              onClick={onStart}
+              variant="primary"
+              size="lg"
+              className="min-w-[200px]"
+              disabled={isLoading}
+            >
+              {isLoading
+                ? 'Loading...'
+                : game.points > 0
+                  ? 'Play Again'
+                  : 'Earn 200 IQ Points'}
             </Button>
           </div>
         )}
