@@ -47,7 +47,7 @@ describe('AggregatedMetrics', () => {
             <div
               class="text-2xl font-medium text-foreground"
             >
-              4.20k
+              4.20K
             </div>
           </div>
           <div
@@ -61,7 +61,7 @@ describe('AggregatedMetrics', () => {
             <div
               class="text-2xl font-medium text-foreground"
             >
-              4.20k
+              4.20K
             </div>
           </div>
           <div
@@ -75,7 +75,7 @@ describe('AggregatedMetrics', () => {
             <div
               class="text-2xl font-medium text-foreground"
             >
-              4.20k
+              4.20K
             </div>
           </div>
           <div
@@ -89,7 +89,7 @@ describe('AggregatedMetrics', () => {
             <div
               class="text-2xl font-medium text-foreground"
             >
-              4.20k
+              4.20K
             </div>
           </div>
         </div>

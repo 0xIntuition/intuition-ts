@@ -150,6 +150,7 @@ export default function Network() {
                 label: 'TVL',
                 value: +formatUnits(stats?.contract_balance ?? 0, 18),
                 suffix: 'ETH',
+                precision: 2,
               },
               { label: 'Atoms', value: stats?.total_atoms ?? 0 },
               { label: 'Triples', value: stats?.total_triples ?? 0 },
