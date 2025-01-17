@@ -53,7 +53,7 @@ export const meta: MetaFunction = () => {
     },
     {
       name: 'twitter:title',
-      content: 'Intuition Explorer',
+      content: 'Intuition Launchpad',
     },
     {
       name: 'twitter:description',
