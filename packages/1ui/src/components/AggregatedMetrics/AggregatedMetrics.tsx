@@ -30,6 +30,9 @@ export function AggregatedMetrics({
         ({ label, value, hideOnMobile, suffix, precision }, index) => {
           const formattedValue =
             typeof value === 'string' ? Number(value) : value
+          const shouldForceDecimals = formattedValue >= 1000
+          const effectivePrecision = shouldForceDecimals ? 2 : precision ?? 0
+
           return (
             <div
               key={label}
@@ -42,7 +45,7 @@ export function AggregatedMetrics({
             >
               <div className="text-sm text-foreground/70">{label}</div>
               <div className="text-2xl font-medium text-foreground">
-                {formatNumber(formattedValue, precision ?? 0)}
+                {formatNumber(formattedValue, effectivePrecision)}
                 {suffix ? ` ${suffix}` : ''}
               </div>
             </div>
