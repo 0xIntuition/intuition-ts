@@ -1,3 +1,5 @@
+import { Card } from '@0xintuition/1ui'
+
 import { useMinigameData } from '@lib/hooks/useMinigameData'
 import type { Minigame } from '@lib/types/minigame'
 import logger from '@lib/utils/logger'
@@ -5,33 +7,44 @@ import { usePrivy } from '@privy-io/react-auth'
 
 import { usePoints } from '../lib/hooks/usePoints'
 import { AuthCover } from './auth-cover'
+import LoadingLogo from './loading-logo'
 import { MinigameCard } from './minigame-card'
 
-interface MinigameCardWrapperProps {
-  gameId: string
+interface MinigameCardProps {
   onStart: () => void
   className?: string
 }
 
-export function MinigameCardWrapper({
-  gameId,
-  onStart,
-  className,
-}: MinigameCardWrapperProps) {
-  const { authenticated, user } = usePrivy()
-  const gameData = useMinigameData(gameId)
-  const userWallet = user?.wallet?.address?.toLowerCase()
-  const { data: points } = usePoints(userWallet)
+function LoadingCard() {
+  return (
+    <div className="relative">
+      <Card className="h-[400px] rounded-lg border-none bg-gradient-to-br from-[#060504] to-[#101010] min-w-[480px] blur-sm brightness-50"></Card>
+      <div className="absolute inset-0 flex items-center justify-center">
+        <LoadingLogo size={100} />
+      </div>
+    </div>
+  )
+}
 
-  logger('Points data:', points)
+export function MinigameCardWrapper({ onStart, className }: MinigameCardProps) {
+  const { ready, authenticated, user } = usePrivy()
+  const { isLoading: isGameDataLoading, ...gameData } = useMinigameData()
+  const userWallet = user?.wallet?.address?.toLowerCase()
+  const { data: points, isLoading: isPointsLoading } = usePoints(userWallet)
+
+  logger(gameData)
+
+  if (!ready || isGameDataLoading || isPointsLoading) {
+    return <LoadingCard />
+  }
 
   const game: Minigame = {
-    id: gameId,
+    id: 'game-1',
     title: gameData.title,
     points: points?.minigame1 || 0,
     totalAtoms: gameData.atoms,
-    totalUsers: gameData.users,
-    totalEarned: gameData.totalEarned,
+    totalUsers: gameData.totalUsers,
+    totalEarned: points?.minigame1 || 0,
   }
 
   return (
