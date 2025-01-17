@@ -1,7 +1,7 @@
 import { error } from 'console'
 import process from 'process'
 
-import { type LoaderFunctionArgs } from '@remix-run/node'
+import type { LoaderFunctionArgs, TypedResponse } from '@remix-run/node'
 import { gql, GraphQLClient } from 'graphql-request'
 
 interface PointsRecord {
@@ -36,12 +36,18 @@ if (process.env.HASURA_POINTS_ENDPOINT === undefined) {
 
 const client = new GraphQLClient(process.env.HASURA_POINTS_ENDPOINT)
 
-export async function loader({ request }: LoaderFunctionArgs) {
+export async function loader({
+  request,
+}: LoaderFunctionArgs): Promise<
+  TypedResponse<{ points: PointsRecord | null }>
+> {
   const url = new URL(request.url)
   const accountId = url.searchParams.get('accountId')
 
   if (!accountId) {
-    return { points: null }
+    return new Response(JSON.stringify({ points: null }), {
+      headers: { 'Content-Type': 'application/json' },
+    })
   }
 
   const data = await client.request<GetAccountPointsResponse>(
@@ -51,5 +57,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     },
   )
 
-  return { points: data.points_by_pk }
+  return new Response(JSON.stringify({ points: data.points_by_pk }), {
+    headers: { 'Content-Type': 'application/json' },
+  })
 }

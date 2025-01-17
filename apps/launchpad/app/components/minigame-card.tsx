@@ -36,16 +36,21 @@ export function MinigameCard({
         {!hideCTA && (
           <div className="flex flex-col items-center">
             <Button onClick={onStart} variant="primary" size="lg">
-              Earn Points
+              Earn 200 IQ Points
             </Button>
           </div>
         )}
 
         <div className="flex justify-between items-center">
           {game.points > 0 ? (
-            <Text variant="body" weight="semibold" className="text-green-500">
-              {game.points} points earned!
-            </Text>
+            <div className="flex items-baseline gap-2">
+              <span className="text-xl font-bold bg-gradient-to-r from-[#34C578] to-[#00FF94] bg-clip-text text-transparent">
+                {game.points}
+              </span>
+              <span className="text-md font-semibold text-muted-foreground">
+                IQ Earned
+              </span>
+            </div>
           ) : (
             <div />
           )}

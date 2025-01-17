@@ -12,7 +12,6 @@ import { CURRENT_ENV } from '@consts/general'
 import { getSpecialPredicate } from '@lib/utils/app'
 import logger from '@lib/utils/logger'
 import { usePrivy } from '@privy-io/react-auth'
-import { Form, useNavigate } from '@remix-run/react'
 import { useQueryClient } from '@tanstack/react-query'
 import { ClientOnly } from 'remix-utils/client-only'
 
@@ -30,15 +29,6 @@ import {
   STEPS,
   Topic,
 } from './types'
-
-interface PointsResponse {
-  success: boolean
-  data?: {
-    account_id: string
-    minigame1: number
-  }
-  error?: string
-}
 
 const STORAGE_KEY = 'onboarding-progress'
 
@@ -59,7 +49,6 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
   const queryClient = useQueryClient()
   const { user: privyUser } = usePrivy()
   const userWallet = privyUser?.wallet?.address
-  const navigate = useNavigate()
 
   const [state, setState] = useState<OnboardingState>(INITIAL_STATE)
   const [topics, setTopics] = useState<Topic[]>([])
