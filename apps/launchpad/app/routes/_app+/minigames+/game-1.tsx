@@ -219,6 +219,7 @@ export default function MiniGameOne() {
               label: 'TVL',
               value: totalTVL,
               suffix: 'ETH',
+              precision: 2,
             },
             {
               label: 'Atoms',
