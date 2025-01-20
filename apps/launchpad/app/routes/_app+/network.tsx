@@ -18,10 +18,8 @@ import {
 } from '@0xintuition/graphql'
 
 import ActivityFeed from '@components/activity-feed'
-import ChapterProgress from '@components/chapter-progress'
 import { ErrorPage } from '@components/error-page'
 import KnowledgeGraph from '@components/knowledge-graph/knowledge-graph'
-import logger from '@lib/utils/logger'
 import { LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData, useSearchParams } from '@remix-run/react'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
@@ -31,8 +29,6 @@ import { formatUnits } from 'viem'
 import { mockKnowledgeGraphData } from '../../data/mock-knowledge-graph'
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  logger('request', request)
-
   const url = new URL(request.url)
   const activityLimit = parseInt(url.searchParams.get('activityLimit') || '10')
   const activityOffset = parseInt(url.searchParams.get('activityOffset') || '0')
@@ -125,13 +121,6 @@ export default function Network() {
   return (
     <>
       <PageHeader title="Network" lastUpdated={'3s'} />
-      <ChapterProgress
-        currentChapter={'Chapter I: Genesis'}
-        nextChapter={'Chapter II: Population'}
-        totalStages={7}
-        currentStage={1}
-        endTime={new Date(Date.now() + 172800000)}
-      />
       <div className="flex flex-col rounded-xl overflow-hidden">
         <div className="relative w-full h-[400px] bg-gradient-to-b from-[#060504] to-[#101010]">
           <ClientOnly>

@@ -111,8 +111,6 @@ export default function CreateIdentityModal({
     reset,
   } = useCreateAtomMutation(MULTIVAULT_CONTRACT_ADDRESS)
 
-  console.log('txReceipt', txReceipt)
-
   const updateStepStatus = (stepId: string, status: StepStatus) => {
     setSteps((prev) =>
       prev.map((step) => (step.id === stepId ? { ...step, status } : step)),
@@ -150,7 +148,6 @@ export default function CreateIdentityModal({
       })
       setIpfsUri(result.pinThing?.uri ?? null)
       setAtomData(data)
-      console.log('Entering metadata step')
       updateStepStatus('metadata', 'completed')
 
       // Move to deposit step
@@ -160,9 +157,6 @@ export default function CreateIdentityModal({
       // TODO: Error handled by mutation onError
     }
   }
-
-  console.log('atomCost', atomCost)
-  console.log('minDeposit', minDeposit)
 
   const handleDepositSubmit = async (data: DepositFormData) => {
     try {
@@ -178,7 +172,6 @@ export default function CreateIdentityModal({
       // Don't update step status yet
       // Just move to create step to show transaction UI
       setCurrentStep('create')
-      console.log('data.amount', data.amount)
 
       // Wait for transaction to be initiated
       const txHash = await createAtom({
