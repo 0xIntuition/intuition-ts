@@ -124,6 +124,9 @@ export function AppSidebar({
   }
 
   const isQuestionsActive = location.pathname.startsWith('/quests/questions')
+  const isPreferencesActive = location.pathname.startsWith(
+    '/quests/preferences',
+  )
 
   const sidebarContent = (
     <>
@@ -326,6 +329,22 @@ export function AppSidebar({
                     <Icon name="book" className="h-4 w-4" />
                     {!isMinimal && <span>Questions</span>}
                   </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  asChild
+                  disabled
+                  isActive={isPreferencesActive}
+                  className={cn(
+                    'w-full gap-3 py-0 opacity-50',
+                    isPreferencesActive ? 'text-accent' : undefined,
+                  )}
+                >
+                  <div className="flex items-center gap-3">
+                    <Icon name="settings-gear" className="h-4 w-4" />
+                    {!isMinimal && <span>Preferences (Coming Soon)</span>}
+                  </div>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             </SidebarMenu>
