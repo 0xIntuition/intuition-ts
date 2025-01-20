@@ -77,7 +77,6 @@ export function FormImageUpload<T extends FieldValues>({
     maxFiles: 1,
     disabled: isUploading,
   })
-  console.log('value', value)
 
   return (
     <div className="space-y-2">

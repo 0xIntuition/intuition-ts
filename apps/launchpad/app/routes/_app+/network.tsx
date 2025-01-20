@@ -21,7 +21,6 @@ import ActivityFeed from '@components/activity-feed'
 import ChapterProgress from '@components/chapter-progress'
 import { ErrorPage } from '@components/error-page'
 import KnowledgeGraph from '@components/knowledge-graph/knowledge-graph'
-import logger from '@lib/utils/logger'
 import { LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData, useSearchParams } from '@remix-run/react'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
@@ -31,8 +30,6 @@ import { formatUnits } from 'viem'
 import { mockKnowledgeGraphData } from '../../data/mock-knowledge-graph'
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  logger('request', request)
-
   const url = new URL(request.url)
   const activityLimit = parseInt(url.searchParams.get('activityLimit') || '10')
   const activityOffset = parseInt(url.searchParams.get('activityOffset') || '0')

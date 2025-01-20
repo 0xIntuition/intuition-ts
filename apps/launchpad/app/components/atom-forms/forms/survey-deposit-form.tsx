@@ -51,7 +51,6 @@ export function SurveyDepositForm({
       },
     )
 
-  console.log('existingAtomData', existingAtomData)
   const atomExists = existingAtomData?.atoms?.[0]?.data === ipfsUri
 
   const form = useForm<DepositFormData>({

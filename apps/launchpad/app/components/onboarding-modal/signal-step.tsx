@@ -84,13 +84,6 @@ export function SignalStep({
       ? (ticks * +min_deposit + +tripleCost).toString()
       : (ticks * +min_deposit).toString()
 
-  console.log('val', val)
-  console.log('newAtomMetadata', newAtomMetadata)
-  console.log('selectedTopic', selectedTopic)
-  console.log('tripleConfig', tripleConfig)
-  console.log('tripleCost', tripleCost)
-  console.log('min_deposit', min_deposit)
-
   const {
     mutateAsync: stake,
     txReceipt: stakeTxReceipt,
@@ -110,15 +103,11 @@ export function SignalStep({
   } = useCreateTripleMutation(contract)
 
   const handleAction = async () => {
-    console.log('newAtomMetadata', newAtomMetadata)
-    console.log('tripleCost', tripleCost)
     if (newAtomMetadata && tripleCost) {
       if (!privyUser?.wallet?.address) {
-        console.log('Missing required dependencies')
         return
       }
 
-      console.log('val in handleAction', val)
       try {
         const txHash = await createTriple({
           val,
@@ -155,7 +144,6 @@ export function SignalStep({
       }
     } else {
       if (!privyUser?.wallet?.address || !selectedTopic?.triple) {
-        console.log('Missing required dependencies')
         return
       }
 
@@ -293,26 +281,6 @@ export function SignalStep({
     dispatch,
   ])
 
-  console.log('isLoadingCreateTripleConfig', isLoadingCreateTripleConfig)
-  console.log('isLoadingVault', isLoadingVault)
-  console.log(
-    'stakeAwaitingWalletConfirmation',
-    stakeAwaitingWalletConfirmation,
-  )
-  console.log(
-    'stakeAwaitingOnChainConfirmation',
-    stakeAwaitingOnChainConfirmation,
-  )
-  console.log(
-    'createTripleAwaitingWalletConfirmation',
-    createTripleAwaitingWalletConfirmation,
-  )
-  console.log(
-    'createTripleAwaitingOnChainConfirmation',
-    createTripleAwaitingOnChainConfirmation,
-  )
-  console.log('txState.status', txState.status)
-
   useEffect(() => {
     setIsLoading(
       !!stakeAwaitingWalletConfirmation ||
@@ -369,9 +337,6 @@ export function SignalStep({
   if (!userWallet) {
     return null
   }
-
-  console.log('newAtomMetadata', newAtomMetadata)
-  console.log('selectedTopic', selectedTopic)
 
   return (
     <div className="flex flex-col gap-4 p-8">

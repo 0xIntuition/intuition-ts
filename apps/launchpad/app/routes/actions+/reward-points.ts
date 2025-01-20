@@ -1,4 +1,3 @@
-import logger from '@lib/utils/logger'
 import { invariant } from '@lib/utils/misc'
 import type { ActionFunctionArgs } from '@remix-run/node'
 import { redirect } from '@remix-run/node'
@@ -138,9 +137,7 @@ export async function action({ request }: ActionFunctionArgs) {
   }
 
   try {
-    logger('upserting points for account', accountId)
     const result = await upsertPoints(accountId.toString(), pointsAllocation)
-    logger('upsert result:', result)
 
     // If redirectUrl is provided, redirect to it
     if (redirectUrl && typeof redirectUrl === 'string') {
@@ -152,7 +149,6 @@ export async function action({ request }: ActionFunctionArgs) {
     if (error instanceof Response) {
       throw error
     }
-    console.error('Error updating points:', error)
     return { success: false, error: 'Failed to update points' }
   }
 }

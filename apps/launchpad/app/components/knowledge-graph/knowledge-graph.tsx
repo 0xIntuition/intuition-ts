@@ -12,6 +12,7 @@ import {
   ValueDisplay,
 } from '@0xintuition/1ui'
 
+import logger from '@lib/utils/logger'
 import cytoscape from 'cytoscape'
 // Import but don't register yet
 import CytoscapeComponent from 'react-cytoscapejs'
@@ -288,10 +289,8 @@ function CytoscapeGraph({
   const [error, setError] = useState<Error | null>(null)
 
   useEffect(() => {
-    console.log('Loading extensions...')
     loadExtensions()
       .then(() => {
-        console.log('Extensions loaded successfully')
         setIsReady(true)
       })
       .catch((error) => {
@@ -316,7 +315,6 @@ function CytoscapeGraph({
         stylesheet={stylesheet}
         layout={layout}
         cy={(cy) => {
-          console.log('Cytoscape instance mounted')
           try {
             onMount(cy)
           } catch (error) {
@@ -352,12 +350,12 @@ export default function KnowledgeGraph({
 
   useEffect(() => {
     try {
-      console.log('KnowledgeGraph mounted with data:', {
+      logger('KnowledgeGraph mounted with data:', {
         atomsCount: data.atoms.length,
         triplesCount: data.triples.length,
         atoms: data.atoms,
         triples: data.triples,
-      })
+      }) // can remove logger once we add more logic to this try/catch
     } catch (err) {
       console.error('Error logging data:', err)
       setError(err as Error)

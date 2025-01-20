@@ -315,8 +315,6 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
     }
   }
 
-  console.log('listData', listData)
-
   const onCreationSuccess = (metadata: NewAtomMetadata) => {
     handleTransition((prev) => ({
       ...prev,
