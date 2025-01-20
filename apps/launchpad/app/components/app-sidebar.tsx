@@ -2,6 +2,7 @@ import * as React from 'react'
 
 import {
   cn,
+  Icon,
   Sheet,
   SheetContent,
   SheetTrigger,
@@ -9,6 +10,7 @@ import {
   SidebarContent,
   SidebarGroup,
   SidebarGroupContent,
+  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
@@ -120,6 +122,8 @@ export function AppSidebar({
       </Link>
     )
   }
+
+  const isQuestionsActive = location.pathname.startsWith('/quests/questions')
 
   const sidebarContent = (
     <>
@@ -272,11 +276,11 @@ export function AppSidebar({
               {mainNavItems.map((item) => (
                 <SidebarMenuItem key={item.label}>
                   <SidebarMenuButton
-                    size="lg"
+                    // size="lg"
                     asChild
                     isActive={activeItem === item.label}
                     className={cn(
-                      'w-full gap-3 py-3',
+                      'w-full gap-3',
                       item.isAccent ? 'text-accent' : undefined,
                     )}
                   >
@@ -287,13 +291,52 @@ export function AppSidebar({
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+        <SidebarGroup>
+          <SidebarGroupLabel>Quests</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  asChild
+                  isActive={location.pathname === '/quests'}
+                  className={cn(
+                    'w-full gap-3 py-0',
+                    location.pathname === '/quests' ? 'text-accent' : undefined,
+                  )}
+                >
+                  <Link to="/quests" className="flex items-center gap-3">
+                    <Icon name="crystal-ball" className="h-4 w-4" />
+                    {!isMinimal && <span>Overview</span>}
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  asChild
+                  isActive={isQuestionsActive}
+                  className={cn(
+                    'w-full gap-3 py-0',
+                    isQuestionsActive ? 'text-accent' : undefined,
+                  )}
+                >
+                  <Link
+                    to="/quests/questions"
+                    className="flex items-center gap-3"
+                  >
+                    <Icon name="book" className="h-4 w-4" />
+                    {!isMinimal && <span>Questions</span>}
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
         <SidebarGroup className="mt-auto mb-3">
           <SidebarGroupContent>
             <SidebarMenu>
               {footerNavItems.map((item) => (
                 <SidebarMenuItem key={item.label}>
                   <SidebarMenuButton
-                    size="lg"
                     asChild
                     className={cn('w-full gap-3 py-3')}
                   >
