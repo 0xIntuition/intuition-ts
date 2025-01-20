@@ -5,4 +5,5 @@ export interface Minigame {
   totalAtoms: number
   totalUsers: number
   totalEarned: number
+  resultsLink: string
 }

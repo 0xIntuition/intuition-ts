@@ -1,7 +1,6 @@
 import { Card } from '@0xintuition/1ui'
 
 import { useMinigameData } from '@lib/hooks/useMinigameData'
-import type { Minigame } from '@lib/types/minigame'
 import logger from '@lib/utils/logger'
 import { usePrivy } from '@privy-io/react-auth'
 
@@ -38,14 +37,8 @@ export function MinigameCardWrapper({ onStart, className }: MinigameCardProps) {
     return <LoadingCard />
   }
 
-  const game: Minigame = {
-    id: 'game-1',
-    title: gameData.title,
-    points: points?.minigame1 || 0,
-    totalAtoms: gameData.atoms,
-    totalUsers: gameData.totalUsers,
-    totalEarned: points?.minigame1 || 0,
-  }
+  const gamePoints = points?.minigame1 || 0
+  const resultsLink = '/quests/questions/question/1'
 
   return (
     <AuthCover
@@ -53,10 +46,14 @@ export function MinigameCardWrapper({ onStart, className }: MinigameCardProps) {
       className={className}
     >
       <MinigameCard
-        game={game}
+        title={gameData.title}
+        description={`${gameData.atoms.toLocaleString()} atoms • ${gameData.totalUsers.toLocaleString()} users`}
+        points={gamePoints}
         onStart={onStart}
         className="w-full"
         hideCTA={!authenticated}
+        isLoading={isGameDataLoading || isPointsLoading}
+        resultsLink={resultsLink}
       />
     </AuthCover>
   )
