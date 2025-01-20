@@ -47,20 +47,18 @@ function AppShellContent({ children, suspense = true }: AppShellContentProps) {
 function AppShellInner({ children }: BaseLayoutProps) {
   return (
     <div className="flex flex-col min-h-screen">
-      <div className="flex-1 pt-[52px]">
-        <SidebarProvider
-          style={
-            {
-              '--sidebar-width': '16rem',
-            } as React.CSSProperties
-          }
-        >
-          <AppSidebar />
-          <SidebarInset className="bg-[#131313]">
-            <AppShellContent>{children}</AppShellContent>
-          </SidebarInset>
-        </SidebarProvider>
-      </div>
+      <SidebarProvider
+        style={
+          {
+            '--sidebar-width': '16rem',
+          } as React.CSSProperties
+        }
+      >
+        <AppSidebar />
+        <SidebarInset className="bg-[#131313]">
+          <AppShellContent>{children}</AppShellContent>
+        </SidebarInset>
+      </SidebarProvider>
     </div>
   )
 }

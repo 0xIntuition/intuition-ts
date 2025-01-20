@@ -18,7 +18,6 @@ import {
 } from '@0xintuition/graphql'
 
 import ActivityFeed from '@components/activity-feed'
-import ChapterProgress from '@components/chapter-progress'
 import { ErrorPage } from '@components/error-page'
 import KnowledgeGraph from '@components/knowledge-graph/knowledge-graph'
 import { LoaderFunctionArgs } from '@remix-run/node'
@@ -122,13 +121,6 @@ export default function Network() {
   return (
     <>
       <PageHeader title="Network" lastUpdated={'3s'} />
-      <ChapterProgress
-        currentChapter={'Chapter I: Genesis'}
-        nextChapter={'Chapter II: Population'}
-        totalStages={7}
-        currentStage={1}
-        endTime={new Date(Date.now() + 172800000)}
-      />
       <div className="flex flex-col rounded-xl overflow-hidden">
         <div className="relative w-full h-[400px] bg-gradient-to-b from-[#060504] to-[#101010]">
           <ClientOnly>
