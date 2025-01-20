@@ -200,30 +200,29 @@ const graphStyles: cytoscape.Stylesheet[] = [
 const layout: cytoscape.LayoutOptions = {
   name: 'fcose',
   // Basic options
-  animate: true,
-  animationDuration: 2000,
+  animate: false,
   fit: false,
   padding: 200,
   // Component handling
-  randomize: true, // Allow initial random positions
+  randomize: true,
   nodeDimensionsIncludeLabels: true,
   uniformNodeDimensions: false,
-  packComponents: true, // Pack disconnected components
+  packComponents: true,
   // Core layout options
   quality: 'proof',
   nodeRepulsion: (node: cytoscape.NodeSingular) => {
     const stake = node.data('atom')?.stake || 0
-    return 8000 + (stake / 100) * 2000 // Base repulsion + stake-based addition
+    return 8000 + (stake / 100) * 2000 // Reduced base repulsion and stake multiplier
   },
   idealEdgeLength: (edge: cytoscape.EdgeSingular) => {
     const stake = edge.data('triple')?.stake || 0
-    return 200 + (stake / 100) * 50 // Base length + stake-based addition
+    return 200 + (stake / 100) * 50 // Reduced base length and stake multiplier
   },
   // Force parameters
   edgeElasticity: 0.45,
   nestingFactor: 0.1,
-  gravity: 0.25, // Light gravity to prevent extreme spreading
-  gravityRange: 3.8,
+  gravity: 0.25, // Increased gravity to pull nodes closer
+  gravityRange: 3.8, // Reduced range
   gravityCompound: 1.0,
   gravityRangeCompound: 1.5,
   // Performance
@@ -232,7 +231,7 @@ const layout: cytoscape.LayoutOptions = {
   // Prevent overlapping
   avoidOverlap: true,
   avoidOverlapPadding: 10,
-  nodeSeparation: 200,
+  nodeSeparation: 150, // Reduced separation
 }
 
 const getIdentityVariant = (type: string) => {
@@ -252,6 +251,68 @@ interface CytoscapeGraphProps {
   onMount: (cy: cytoscape.Core) => void
 }
 
+function CytoscapeGraph({
+  elements,
+  stylesheet,
+  layout,
+  onMount,
+}: CytoscapeGraphProps) {
+  const cyRef = useRef<cytoscape.Core | null>(null)
+  const [isReady, setIsReady] = useState(false)
+
+  // Load extensions first
+  useEffect(() => {
+    loadExtensions()
+      .then(() => {
+        setIsReady(true)
+      })
+      .catch(console.error)
+  }, [])
+
+  // Handle layout and data initialization
+  useEffect(() => {
+    if (isReady && cyRef.current && elements.length > 0) {
+      const cy = cyRef.current
+
+      // Reset the layout when elements change
+      cy.elements().remove()
+      cy.add(elements)
+
+      // Run layout
+      const layoutInstance = cy.layout(layout)
+      layoutInstance.run()
+
+      // Set up layout completion handler
+      cy.one('layoutstop', () => {
+        cy.zoom(0.8)
+        cy.center()
+      })
+
+      return () => {
+        layoutInstance.stop()
+      }
+    }
+  }, [isReady, elements, layout])
+
+  if (!isReady) {
+    return null
+  }
+
+  return (
+    <CytoscapeComponent
+      elements={[]} // Start empty, we'll add elements after mount
+      stylesheet={stylesheet}
+      layout={layout}
+      cy={(cy) => {
+        cyRef.current = cy
+        onMount(cy)
+      }}
+      wheelSensitivity={0.2}
+      className="w-full h-full"
+    />
+  )
+}
+
 // Lazy load extensions
 const loadExtensions = async () => {
   if (typeof window === 'undefined') {
@@ -261,74 +322,16 @@ const loadExtensions = async () => {
   try {
     // Load fcose first since we're using it for layout
     const fcoseModule = await import('cytoscape-fcose')
-    if (!cytoscape.prototype.hasInitialised) {
-      cytoscape.use(fcoseModule.default)
-    }
+    cytoscape.use(fcoseModule.default)
 
     // Load other extensions after
     const [popperModule] = await Promise.all([import('cytoscape-popper')])
+    cytoscape.use(popperModule.default)
 
-    if (!cytoscape.prototype.hasInitialised) {
-      cytoscape.use(popperModule.default)
-      cytoscape.prototype.hasInitialised = true
-    }
+    return Promise.resolve()
   } catch (error) {
     console.error('Failed to load Cytoscape extensions:', error)
     throw error
-  }
-}
-
-function CytoscapeGraph({
-  elements,
-  stylesheet,
-  layout,
-  onMount,
-}: CytoscapeGraphProps) {
-  const [isReady, setIsReady] = useState(false)
-  const [error, setError] = useState<Error | null>(null)
-
-  useEffect(() => {
-    console.log('Loading extensions...')
-    loadExtensions()
-      .then(() => {
-        console.log('Extensions loaded successfully')
-        setIsReady(true)
-      })
-      .catch((error) => {
-        console.error('Failed to load Cytoscape extensions:', error)
-        setError(error)
-      })
-  }, [])
-
-  if (error) {
-    return <div>Error loading graph: {error.message}</div>
-  }
-
-  if (!isReady) {
-    return <div>Loading graph...</div>
-  }
-
-  try {
-    return (
-      <CytoscapeComponent
-        elements={elements}
-        style={{ width: '100%', height: '100%' }}
-        stylesheet={stylesheet}
-        layout={layout}
-        cy={(cy) => {
-          console.log('Cytoscape instance mounted')
-          try {
-            onMount(cy)
-          } catch (error) {
-            console.error('Error in onMount callback:', error)
-            setError(error as Error)
-          }
-        }}
-      />
-    )
-  } catch (error) {
-    console.error('Error rendering CytoscapeComponent:', error)
-    return <div>Error rendering graph: {(error as Error).message}</div>
   }
 }
 
@@ -372,19 +375,31 @@ export default function KnowledgeGraph({
     }
 
     try {
-      const nodes = data.atoms.map((atom) => ({
-        group: 'nodes' as const,
-        data: {
-          id: atom.id,
-          label: atom.label,
-          type: atom.type,
-          size: Math.max(40, Math.min(100, 40 + atom.stake / 20)),
-          image: atom.image,
-          atom,
-          zIndex: atom.type === 'Person' ? 3 : atom.type === 'Thing' ? 2 : 1,
-        },
-      }))
+      const nodes = data.atoms
+        .filter(
+          (atom) =>
+            // Include only if it's used as a subject or object in any triple
+            data.triples.some(
+              (triple) =>
+                triple.subject_id === atom.id || triple.object_id === atom.id,
+            ) &&
+            // AND make sure it's not used as a predicate in any triple
+            !data.triples.some((triple) => triple.predicate_id === atom.id),
+        )
+        .map((atom) => ({
+          group: 'nodes' as const,
+          data: {
+            id: atom.id,
+            label: atom.label,
+            type: atom.type,
+            size: Math.max(40, Math.min(100, 40 + atom.stake / 20)),
+            image: atom.image,
+            atom,
+            zIndex: atom.type === 'Person' ? 3 : atom.type === 'Thing' ? 2 : 1,
+          },
+        }))
 
+      // Only include the core triple relationships, excluding participation edges
       const edges = data.triples.map((triple) => ({
         group: 'edges' as const,
         data: {
@@ -415,17 +430,43 @@ export default function KnowledgeGraph({
       console.log('Setting up Cytoscape instance')
       cyRef.current = cy
 
-      // Set initial zoom and center
-      cy.on('layoutstart', () => {
-        console.log('Layout starting')
-        cy.zoom(1.5)
-        cy.center()
+      // Set initial zoom and center immediately
+      cy.zoom(1.5)
+
+      // Calculate weighted center based on node stakes and positions
+      const calculateWeightedCenter = () => {
+        const nodes = cy.nodes()
+        let totalWeight = 0
+        let weightedX = 0
+        let weightedY = 0
+
+        nodes.forEach((node: cytoscape.NodeSingular) => {
+          const position = node.position()
+          const weight = node.data('atom')?.stake || 1
+          totalWeight += weight
+          weightedX += position.x * weight
+          weightedY += position.y * weight
+        })
+
+        return {
+          x: weightedX / totalWeight,
+          y: weightedY / totalWeight,
+        }
+      }
+
+      // Center on weighted position after layout
+      cy.on('layoutstop', () => {
+        const weightedCenter = calculateWeightedCenter()
+        cy.center({
+          x: weightedCenter.x,
+          y: weightedCenter.y,
+        })
+        console.log('Layout complete, centered on weighted position')
       })
 
+      // Remove layout event handlers since we don't want animation
       cy.on('layoutstop', () => {
         console.log('Layout complete')
-        cy.zoom(1.5)
-        cy.center()
       })
 
       // Set up event handlers after component is mounted
@@ -565,24 +606,24 @@ export default function KnowledgeGraph({
       <div className="flex flex-col gap-4">
         <Claim
           subject={{
-            variant: getIdentityVariant(triple.subject.type),
-            label: triple.subject.label,
-            imgSrc: triple.subject.image,
-            id: triple.subject.id,
-            description: triple.subject.value?.thing?.description,
+            variant: getIdentityVariant(triple.subject?.type || 'Thing'),
+            label: triple.subject?.label || 'Unknown',
+            imgSrc: triple.subject?.image,
+            id: triple.subject?.id || '',
+            description: triple.subject?.value?.thing?.description,
           }}
           predicate={{
-            variant: getIdentityVariant(triple.predicate.type),
-            label: triple.predicate.label,
-            imgSrc: triple.predicate.image,
-            id: triple.predicate.id,
+            variant: getIdentityVariant(triple.predicate?.type || 'Thing'),
+            label: triple.predicate?.label || 'Unknown',
+            imgSrc: triple.predicate?.image,
+            id: triple.predicate?.id || '',
           }}
           object={{
-            variant: getIdentityVariant(triple.object.type),
-            label: triple.object.label,
-            imgSrc: triple.object.image,
-            id: triple.object.id,
-            description: triple.object.value?.thing?.description,
+            variant: getIdentityVariant(triple.object?.type || 'Thing'),
+            label: triple.object?.label || 'Unknown',
+            imgSrc: triple.object?.image,
+            id: triple.object?.id || '',
+            description: triple.object?.value?.thing?.description,
           }}
         />
         <div className="flex flex-col gap-2">
@@ -593,25 +634,25 @@ export default function KnowledgeGraph({
             <div className="text-sm">
               <div className="text-muted-foreground">For Shares</div>
               <ValueDisplay className="mt-1">
-                {triple.vault?.total_shares || '0'}
+                {triple.vault?.total_shares?.toString() || '0'}
               </ValueDisplay>
             </div>
             <div className="text-sm">
               <div className="text-muted-foreground">Against Shares</div>
               <ValueDisplay className="mt-1">
-                {triple.counter_vault?.total_shares || '0'}
+                {triple.counter_vault?.total_shares?.toString() || '0'}
               </ValueDisplay>
             </div>
             <div className="text-sm">
               <div className="text-muted-foreground">For Positions</div>
               <ValueDisplay className="mt-1">
-                {triple.vault?.position_count.toString() || '0'}
+                {triple.vault?.position_count?.toString() || '0'}
               </ValueDisplay>
             </div>
             <div className="text-sm">
               <div className="text-muted-foreground">Against Positions</div>
               <ValueDisplay className="mt-1">
-                {triple.counter_vault?.position_count.toString() || '0'}
+                {triple.counter_vault?.position_count?.toString() || '0'}
               </ValueDisplay>
             </div>
           </div>
