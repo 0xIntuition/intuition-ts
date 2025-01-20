@@ -1,4 +1,4 @@
-import type { Minigame } from '../types/minigame'
+import type { Minigame } from '@lib/types/minigame'
 
 export const mockMinigames: Minigame[] = [
   {
@@ -8,5 +8,6 @@ export const mockMinigames: Minigame[] = [
     totalAtoms: 237,
     totalUsers: 58,
     totalEarned: 0.0,
+    resultsLink: '/quests/questions/question/1',
   },
 ]

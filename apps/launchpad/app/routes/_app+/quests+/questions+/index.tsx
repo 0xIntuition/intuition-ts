@@ -69,7 +69,7 @@ export default function Quests() {
                   weight="medium"
                   className="text-foreground"
                 >
-                  Minigame Two
+                  Question Two
                 </Text>
                 <Text
                   variant="body"
