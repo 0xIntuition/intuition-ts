@@ -19,7 +19,6 @@ import { OnboardingModal } from '@components/onboarding-modal/onboarding-modal'
 import ShareModal from '@components/share-modal'
 import { columns } from '@components/ui/table/columns'
 import { DataTable } from '@components/ui/table/data-table'
-import { mockMinigames } from '@lib/data/mock-minigames'
 import { useGoBack } from '@lib/hooks/useGoBack'
 import {
   atomDetailsModalAtom,
@@ -151,10 +150,6 @@ export default function MiniGameOne() {
   const totalUsers = tableData.reduce((sum, item) => sum + item.users, 0)
   const totalTVL = tableData.reduce((sum, item) => sum + item.assets, 0)
 
-  const handleStartOnboarding = (gameId: string) => {
-    setOnboardingModal({ isOpen: true, gameId })
-  }
-
   const handleCloseOnboarding = () => {
     setOnboardingModal({ isOpen: false, gameId: null })
   }
@@ -186,12 +181,6 @@ export default function MiniGameOne() {
         <div className="flex flex-1 justify-between items-center">
           <PageHeader title={listData?.globalTriples[0].object.label ?? ''} />
           <div className="flex items-center gap-2">
-            <Button
-              variant="primary"
-              onClick={() => handleStartOnboarding(mockMinigames[0].id)}
-            >
-              Play Again
-            </Button>
             <Button
               variant="secondary"
               className="border border-border/10"
