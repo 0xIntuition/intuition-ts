@@ -7,6 +7,7 @@ import { MIN_DEPOSIT, MULTIVAULT_CONTRACT_ADDRESS } from '@consts/general'
 import { multivaultAbi } from '@lib/abis/multivault'
 import { useCreateTripleMutation } from '@lib/hooks/mutations/useCreateTripleMutation'
 import { useStakeMutation } from '@lib/hooks/mutations/useStakeMutation'
+import { useGetMultiVaultConfig } from '@lib/hooks/useGetMultiVaultConfig'
 import { useGetVaultDetails } from '@lib/hooks/useGetVaultDetails'
 import { useGetWalletBalance } from '@lib/hooks/useGetWalletBalance'
 import {
@@ -15,8 +16,7 @@ import {
 } from '@lib/hooks/useTransactionReducer'
 import { usePrivy } from '@privy-io/react-auth'
 import { Link, useLocation } from '@remix-run/react'
-import { getMultiVaultConfig } from '@server/multivault'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQueryClient } from '@tanstack/react-query'
 import { TransactionActionType, TransactionStateType } from 'app/types'
 import { ArrowBigDown, ArrowBigUp, Book, Loader2 } from 'lucide-react'
 import { Address, decodeEventLog } from 'viem'
@@ -72,10 +72,8 @@ export function SignalStep({
     },
   )
 
-  const { data: multiVaultConfig } = useQuery({
-    queryKey: ['get-multivault-config'],
-    queryFn: () => getMultiVaultConfig(MULTIVAULT_CONTRACT_ADDRESS),
-  })
+  const { data: multiVaultConfig, isLoading: isLoadingMultiVaultConfig } =
+    useGetMultiVaultConfig(contract)
 
   const tripleCost = multiVaultConfig
     ? multiVaultConfig?.formatted_triple_cost
@@ -292,6 +290,7 @@ export function SignalStep({
         !!stakeAwaitingOnChainConfirmation ||
         !!createTripleAwaitingWalletConfirmation ||
         !!createTripleAwaitingOnChainConfirmation ||
+        isLoadingMultiVaultConfig ||
         txState.status === 'confirm' ||
         txState.status === 'transaction-pending' ||
         txState.status === 'transaction-confirmed' ||
@@ -301,6 +300,7 @@ export function SignalStep({
     )
   }, [
     isLoadingVault,
+    isLoadingMultiVaultConfig,
     stakeAwaitingWalletConfirmation,
     stakeAwaitingOnChainConfirmation,
     createTripleAwaitingWalletConfirmation,
