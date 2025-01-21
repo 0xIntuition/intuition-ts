@@ -7,7 +7,6 @@ import { MIN_DEPOSIT, MULTIVAULT_CONTRACT_ADDRESS } from '@consts/general'
 import { multivaultAbi } from '@lib/abis/multivault'
 import { useCreateTripleMutation } from '@lib/hooks/mutations/useCreateTripleMutation'
 import { useStakeMutation } from '@lib/hooks/mutations/useStakeMutation'
-import { useCreateTripleConfig } from '@lib/hooks/useCreateTripleConfig'
 import { useGetVaultDetails } from '@lib/hooks/useGetVaultDetails'
 import { useGetWalletBalance } from '@lib/hooks/useGetWalletBalance'
 import {
@@ -16,10 +15,11 @@ import {
 } from '@lib/hooks/useTransactionReducer'
 import { usePrivy } from '@privy-io/react-auth'
 import { Link, useLocation } from '@remix-run/react'
-import { useQueryClient } from '@tanstack/react-query'
+import { getMultiVaultConfig } from '@server/multivault'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { TransactionActionType, TransactionStateType } from 'app/types'
 import { ArrowBigDown, ArrowBigUp, Book, Loader2 } from 'lucide-react'
-import { Address, decodeEventLog, formatUnits } from 'viem'
+import { Address, decodeEventLog } from 'viem'
 import { usePublicClient } from 'wagmi'
 
 import { SignalStepProps } from './types'
@@ -71,14 +71,19 @@ export function SignalStep({
       enabled: !!selectedTopic?.triple?.vault_id,
     },
   )
-  const { data: tripleConfig, isLoading: isLoadingCreateTripleConfig } =
-    useCreateTripleConfig()
-  const tripleCost = tripleConfig
-    ? formatUnits(BigInt(tripleConfig?.fees.tripleCost), 18)
+
+  const { data: multiVaultConfig } = useQuery({
+    queryKey: ['get-multivault-config'],
+    queryFn: () => getMultiVaultConfig(MULTIVAULT_CONTRACT_ADDRESS),
+  })
+
+  const tripleCost = multiVaultConfig
+    ? multiVaultConfig?.formatted_triple_cost
     : 0
-  const min_deposit = vaultDetails
-    ? formatUnits(BigInt(vaultDetails?.min_deposit), 18)
+  const min_deposit = multiVaultConfig
+    ? multiVaultConfig?.formatted_min_deposit
     : MIN_DEPOSIT
+
   const val =
     newAtomMetadata && min_deposit && tripleCost
       ? (ticks * +min_deposit + +tripleCost).toString()
@@ -292,8 +297,7 @@ export function SignalStep({
         txState.status === 'transaction-confirmed' ||
         txState.status === 'approve-transaction' ||
         txState.status === 'awaiting' ||
-        isLoadingVault ||
-        isLoadingCreateTripleConfig,
+        isLoadingVault,
     )
   }, [
     isLoadingVault,
@@ -302,7 +306,6 @@ export function SignalStep({
     createTripleAwaitingWalletConfirmation,
     createTripleAwaitingOnChainConfirmation,
     txState.status,
-    isLoadingCreateTripleConfig,
   ])
 
   const handleStakeButtonClick = async () => {
