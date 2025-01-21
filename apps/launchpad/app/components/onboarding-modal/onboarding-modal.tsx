@@ -179,6 +179,16 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
     }
   }, [isOpen, queryClient])
 
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.paddingRight = 'var(--removed-body-scroll-bar-size)'
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.paddingRight = ''
+      document.body.style.overflow = ''
+    }
+  }, [isOpen])
+
   const handleNext = useCallback(() => {
     if (state.currentStep === STEPS.TOPICS) {
       const selectedTopic = topics.find((topic) => topic.selected)
@@ -405,7 +415,6 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
                     txHash={txState.txHash}
                     userWallet={userWallet}
                     awardPoints={awardPoints}
-                    redirectUrl="/minigames/game-1"
                   />
                 )}
             </div>

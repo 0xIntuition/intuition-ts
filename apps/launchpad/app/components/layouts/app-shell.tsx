@@ -6,22 +6,12 @@ import { AppSidebar } from '../app-sidebar'
 import { AppShellProvider, useAppShell } from './app-shell-context'
 import { BaseLayoutProps, layoutConfig } from './types'
 
-function LoadingSpinner() {
-  return (
-    <div className="flex h-screen items-center justify-center">
-      <div className="h-8 w-8 animate-spin rounded-full border-4 border-accent border-t-transparent" />
-    </div>
-  )
-}
+interface AppShellContentProps extends BaseLayoutProps {}
 
-interface AppShellContentProps extends BaseLayoutProps {
-  suspense?: boolean
-}
-
-function AppShellContent({ children, suspense = true }: AppShellContentProps) {
+function AppShellContent({ children }: AppShellContentProps) {
   const { layoutVariant, paddingVariant } = useAppShell()
 
-  const content = (
+  return (
     <div className="flex justify-center w-full max-w-screen-xl mx-auto">
       <div
         className={cn(
@@ -34,14 +24,6 @@ function AppShellContent({ children, suspense = true }: AppShellContentProps) {
       </div>
     </div>
   )
-
-  if (suspense) {
-    return (
-      <React.Suspense fallback={<LoadingSpinner />}>{content}</React.Suspense>
-    )
-  }
-
-  return content
 }
 
 function AppShellInner({ children }: BaseLayoutProps) {
