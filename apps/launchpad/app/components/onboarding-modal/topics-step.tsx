@@ -9,6 +9,7 @@ import {
 
 import LoadingLogo from '@components/loading-logo'
 import { Search } from '@components/search'
+import { QUESTIONS_METADATA } from '@lib/utils/constants'
 import { Book } from 'lucide-react'
 
 import { Topic } from './types'
@@ -34,14 +35,14 @@ export function TopicsStep({
         <div className="flex items-start justify-between gap-4 pb-5">
           <div className="space-y-1">
             <Text variant="headline" className="font-semibold">
-              What is your preferred Web3 Wallet?
+              {QUESTIONS_METADATA.ONE.title}
             </Text>
             <Text
               variant={TextVariant.footnote}
               className="text-primary/70 flex flex-row gap-1 items-center"
             >
               <Book className="h-4 w-4 text-primary/70" />
-              Select your preferred wallet from the list below.
+              {QUESTIONS_METADATA.ONE.description}
             </Text>
           </div>
         </div>

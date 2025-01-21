@@ -5,6 +5,7 @@ import {
   Card,
   Icon,
   PageHeader,
+  Text,
 } from '@0xintuition/1ui'
 import {
   fetcher,
@@ -28,9 +29,10 @@ import {
   onboardingModalAtom,
   shareModalAtom,
 } from '@lib/state/store'
+import { QUESTIONS_METADATA } from '@lib/utils/constants'
 import logger from '@lib/utils/logger'
 import { usePrivy } from '@privy-io/react-auth'
-import { useLoaderData } from '@remix-run/react'
+import { useLoaderData, useParams } from '@remix-run/react'
 // import { requireUser } from '@server/auth'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
 import { useAtom } from 'jotai'
@@ -115,6 +117,11 @@ export default function MiniGameOne() {
 
   logger(listData?.globalTriples)
 
+  const { id } = useParams()
+  const questionData =
+    QUESTIONS_METADATA[id?.toUpperCase() as keyof typeof QUESTIONS_METADATA] ||
+    QUESTIONS_METADATA.ONE
+
   interface TableRowData {
     id: string
     image: string
@@ -128,7 +135,6 @@ export default function MiniGameOne() {
   const tableData: TableRowData[] =
     listData?.globalTriples?.map((triple) => {
       // Debug log to see the image data
-      console.log('Triple data:', triple)
 
       const tableRow: TableRowData = {
         id: String(triple.id),
@@ -142,7 +148,6 @@ export default function MiniGameOne() {
         ),
       }
 
-      console.log('Row data:', tableRow)
       return tableRow
     }) || []
 
@@ -194,7 +199,9 @@ export default function MiniGameOne() {
           >
             <Icon name="chevron-left" className="h-4 w-4" />
           </Button>
-          <PageHeader title="Quest: Questions -- Crypto Wallets - Results" />
+          <div className="flex flex-1 justify-between items-center">
+            <PageHeader title="Quest: Question One" />
+          </div>
         </div>
         <div className="flex items-center justify-center h-[400px]">
           <LoadingLogo size={100} />
@@ -215,8 +222,7 @@ export default function MiniGameOne() {
           <Icon name="chevron-left" className="h-4 w-4" />
         </Button>
         <div className="flex flex-1 justify-between items-center">
-          {/* <PageHeader title={listData?.globalTriples[0].object.label ?? ''} /> */}
-          <PageHeader title="Quest: Questions -- Crypto Wallets - Results" />
+          <PageHeader title="Quest: Question One" />
           <div className="flex items-center gap-2">
             <Button
               variant="secondary"
@@ -241,13 +247,18 @@ export default function MiniGameOne() {
         <div className="relative">
           <Card className="h-[400px] border-none bg-gradient-to-br from-[#060504] to-[#101010] min-w-[480px]">
             <div className="absolute inset-0 flex flex-col justify-center items-center">
+              <div className="space-y-2 items-center pb-8">
+                <Text variant="heading3" className="text-foreground">
+                  {questionData.title}
+                </Text>
+              </div>
               <AuthCover>
                 <Button
                   variant="primary"
                   size="lg"
                   onClick={gamePoints > 0 ? undefined : handleStartOnboarding}
                 >
-                  {gamePoints > 0 ? 'Already Completed' : 'Earn 200 IQ Points'}
+                  {gamePoints > 0 ? '200 IQ Earned' : 'Earn 200 IQ Points'}
                 </Button>
               </AuthCover>
             </div>
