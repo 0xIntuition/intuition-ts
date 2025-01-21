@@ -6,6 +6,7 @@
   :root {
     --accent: #ba8461 !important;
     --green-500: #34c578 !important;
+    --removed-body-scroll-bar-size: 15px;
   }
 
   .dark {

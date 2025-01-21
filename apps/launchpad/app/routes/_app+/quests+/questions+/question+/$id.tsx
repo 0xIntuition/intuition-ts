@@ -253,13 +253,24 @@ export default function MiniGameOne() {
                 </Text>
               </div>
               <AuthCover>
-                <Button
-                  variant="primary"
-                  size="lg"
-                  onClick={gamePoints > 0 ? undefined : handleStartOnboarding}
-                >
-                  {gamePoints > 0 ? '200 IQ Earned' : 'Earn 200 IQ Points'}
-                </Button>
+                {gamePoints > 0 ? (
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-xl font-bold bg-gradient-to-r from-[#34C578] to-[#00FF94] bg-clip-text text-transparent">
+                      200
+                    </span>
+                    <span className="text-md font-semibold text-muted-foreground">
+                      IQ Earned
+                    </span>
+                  </div>
+                ) : (
+                  <Button
+                    variant="primary"
+                    size="lg"
+                    onClick={handleStartOnboarding}
+                  >
+                    Earn 200 IQ Points
+                  </Button>
+                )}
               </AuthCover>
             </div>
           </Card>
