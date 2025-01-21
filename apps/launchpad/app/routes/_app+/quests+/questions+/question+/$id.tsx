@@ -89,7 +89,7 @@ export default function MiniGameOne() {
   const [onboardingModal, setOnboardingModal] = useAtom(onboardingModalAtom)
   const [atomDetailsModal, setAtomDetailsModal] = useAtom(atomDetailsModalAtom)
 
-  const { user: privyUser } = usePrivy()
+  const { user: privyUser, authenticated } = usePrivy()
   const userWallet = privyUser?.wallet?.address?.toLowerCase()
   const { data: points, isLoading: isPointsLoading } = usePoints(userWallet)
 
@@ -173,7 +173,6 @@ export default function MiniGameOne() {
 
   const handleRowClick = (id: number) => {
     const rowData = tableData.find((row) => row.id === String(id))
-    console.log('Clicked row data:', rowData)
 
     if (rowData) {
       setAtomDetailsModal({
@@ -252,7 +251,7 @@ export default function MiniGameOne() {
                   {questionData.title}
                 </Text>
               </div>
-              <AuthCover>
+              <AuthCover buttonContainerClassName="h-full flex items-center justify-center w-full">
                 {gamePoints > 0 ? (
                   <div className="flex items-baseline gap-2">
                     <span className="text-xl font-bold bg-gradient-to-r from-[#34C578] to-[#00FF94] bg-clip-text text-transparent">
@@ -263,13 +262,15 @@ export default function MiniGameOne() {
                     </span>
                   </div>
                 ) : (
-                  <Button
-                    variant="primary"
-                    size="lg"
-                    onClick={handleStartOnboarding}
-                  >
-                    Earn 200 IQ Points
-                  </Button>
+                  authenticated && (
+                    <Button
+                      variant="primary"
+                      size="lg"
+                      onClick={handleStartOnboarding}
+                    >
+                      Earn 200 IQ Points
+                    </Button>
+                  )
                 )}
               </AuthCover>
             </div>
