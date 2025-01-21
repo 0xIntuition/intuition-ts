@@ -15,17 +15,21 @@ import {
 } from '@0xintuition/graphql'
 
 import { AtomDetailsModal } from '@components/atom-details-modal'
+import { AuthCover } from '@components/auth-cover'
+import LoadingLogo from '@components/loading-logo'
 import { OnboardingModal } from '@components/onboarding-modal/onboarding-modal'
 import ShareModal from '@components/share-modal'
 import { columns } from '@components/ui/table/columns'
 import { DataTable } from '@components/ui/table/data-table'
 import { useGoBack } from '@lib/hooks/useGoBack'
+import { usePoints } from '@lib/hooks/usePoints'
 import {
   atomDetailsModalAtom,
   onboardingModalAtom,
   shareModalAtom,
 } from '@lib/state/store'
 import logger from '@lib/utils/logger'
+import { usePrivy } from '@privy-io/react-auth'
 import { useLoaderData } from '@remix-run/react'
 // import { requireUser } from '@server/auth'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
@@ -82,6 +86,10 @@ export default function MiniGameOne() {
   const [shareModalActive, setShareModalActive] = useAtom(shareModalAtom)
   const [onboardingModal, setOnboardingModal] = useAtom(onboardingModalAtom)
   const [atomDetailsModal, setAtomDetailsModal] = useAtom(atomDetailsModalAtom)
+
+  const { user: privyUser } = usePrivy()
+  const userWallet = privyUser?.wallet?.address?.toLowerCase()
+  const { data: points, isLoading: isPointsLoading } = usePoints(userWallet)
 
   const hasUserParam = location.search.includes('user=')
   const fullPath = hasUserParam
@@ -150,6 +158,10 @@ export default function MiniGameOne() {
   const totalUsers = tableData.reduce((sum, item) => sum + item.users, 0)
   const totalTVL = tableData.reduce((sum, item) => sum + item.assets, 0)
 
+  const handleStartOnboarding = () => {
+    setOnboardingModal({ isOpen: true, gameId: 'minigame1' })
+  }
+
   const handleCloseOnboarding = () => {
     setOnboardingModal({ isOpen: false, gameId: null })
   }
@@ -167,6 +179,30 @@ export default function MiniGameOne() {
     }
   }
 
+  const gamePoints = points?.minigame1 || 0
+  const isLoading = isPointsLoading || !listData
+
+  if (isLoading) {
+    return (
+      <>
+        <div className="flex items-center gap-4 mb-6">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="border-none bg-background-muted"
+            onClick={goBack}
+          >
+            <Icon name="chevron-left" className="h-4 w-4" />
+          </Button>
+          <PageHeader title="Quest: Questions -- Crypto Wallets - Results" />
+        </div>
+        <div className="flex items-center justify-center h-[400px]">
+          <LoadingLogo size={100} />
+        </div>
+      </>
+    )
+  }
+
   return (
     <>
       <div className="flex items-center gap-4 mb-6">
@@ -179,7 +215,8 @@ export default function MiniGameOne() {
           <Icon name="chevron-left" className="h-4 w-4" />
         </Button>
         <div className="flex flex-1 justify-between items-center">
-          <PageHeader title={listData?.globalTriples[0].object.label ?? ''} />
+          {/* <PageHeader title={listData?.globalTriples[0].object.label ?? ''} /> */}
+          <PageHeader title="Quest: Questions -- Crypto Wallets - Results" />
           <div className="flex items-center gap-2">
             <Button
               variant="secondary"
@@ -201,7 +238,21 @@ export default function MiniGameOne() {
       </div>
 
       <div className="py-4 bg-gradient-to-b from-[#060504] to-[#101010] rounded-xl">
-        <Card className="h-[400px] border-none bg-gradient-to-br from-[#060504] to-[#101010] min-w-[480px]" />
+        <div className="relative">
+          <Card className="h-[400px] border-none bg-gradient-to-br from-[#060504] to-[#101010] min-w-[480px]">
+            <div className="absolute inset-0 flex flex-col justify-center items-center">
+              <AuthCover>
+                <Button
+                  variant="primary"
+                  size="lg"
+                  onClick={gamePoints > 0 ? undefined : handleStartOnboarding}
+                >
+                  {gamePoints > 0 ? 'Already Completed' : 'Earn 200 IQ Points'}
+                </Button>
+              </AuthCover>
+            </div>
+          </Card>
+        </div>
         <AggregatedMetrics
           metrics={[
             {
