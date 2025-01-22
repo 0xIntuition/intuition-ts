@@ -230,7 +230,7 @@ export default function MiniGameOne() {
                 setShareModalActive({
                   isOpen: true,
                   currentPath: fullPath,
-                  title: listData?.globalTriples[0].object.label ?? '',
+                  title: listData?.globalTriples[0].object.label ?? '', // TODO: Change this to use the quest name from the metadata once it's added to the points API
                   tvl: totalTVL,
                 })
               }

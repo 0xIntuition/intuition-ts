@@ -1,4 +1,4 @@
-import { Icon } from '@0xintuition/1ui'
+import { Icon, IconName } from '@0xintuition/1ui'
 
 import { ColumnDef } from '@tanstack/react-table'
 import { ArrowUpDown, Users } from 'lucide-react'
@@ -52,14 +52,17 @@ export const columns: ColumnDef<TableItem>[] = [
       const image = row.original.image
       return (
         <div className="flex items-center gap-3 pl-6">
-          {image ? (
+          {image && image !== 'null' ? (
             <img
               src={image}
               alt={row.getValue('name')}
               className="w-8 h-8 rounded-full object-cover"
             />
           ) : (
-            <div className="w-8 h-8 rounded-full bg-background-muted" />
+            <Icon
+              name={IconName.fingerprint}
+              className="w-8 h-8 text-primary/40"
+            />
           )}
           <span className="font-medium">{row.getValue('name')}</span>
         </div>

@@ -35,7 +35,7 @@ function ShareModalContent({
   percentageChange = 0,
   valueChange = 0,
 }: ShareModalProps) {
-  const { copy } = useCopy()
+  const { copy, copied } = useCopy()
 
   useEffect(() => {
     if (open && typeof window !== 'undefined') {
@@ -86,6 +86,8 @@ function ShareModalContent({
     },
   )
 
+  console.log('listData', listData)
+
   return (
     <DialogContent className="bg-background backdrop-blur-sm rounded-3xl shadow-2xl border border-neutral-800 flex flex-col px-0 pb-0">
       <div className="flex flex-col gap-4">
@@ -106,9 +108,6 @@ function ShareModalContent({
               </Text>
             )}
           </div>
-          <div className="w-12 h-12 rounded-full bg-neutral-800 overflow-hidden">
-            {/* Avatar placeholder */}
-          </div>
         </div>
 
         <div className="h-[200px] overflow-y-auto px-8">
@@ -118,7 +117,7 @@ function ShareModalContent({
                 key={triple.vault_id}
                 className="aspect-square rounded-2xl bg-neutral-800/50 p-3 flex flex-col items-center justify-center"
               >
-                {triple.subject.image ? (
+                {triple.subject.image && triple.subject.image !== 'null' ? (
                   <img
                     src={triple.subject.image}
                     alt={triple.subject.label ?? ''}
@@ -126,9 +125,10 @@ function ShareModalContent({
                   />
                 ) : (
                   <div className="w-full h-full rounded-xl bg-neutral-900 flex items-center justify-center">
-                    <Text className="text-neutral-500 text-sm">
-                      {triple.subject.label ?? 'No label'}
-                    </Text>
+                    <Icon
+                      name={IconName.fingerprint}
+                      className="w-12 h-12 text-primary/40"
+                    />
                   </div>
                 )}
               </div>
@@ -146,13 +146,17 @@ function ShareModalContent({
               <TooltipTrigger asChild>
                 <button
                   onClick={handleManualCopy}
-                  className="bg-neutral-950 rounded-full border border-emerald-500/20 px-4 py-2 flex items-center gap-2 cursor-pointer hover:bg-neutral-900 transition-colors"
+                  className="bg-neutral-950 rounded-full border border-neutral-800 px-4 py-2 flex items-center gap-2 cursor-pointer hover:bg-neutral-900 transition-colors"
                 >
                   <Icon
-                    name={IconName.checkmark}
-                    className="h-5 w-5 text-emerald-500"
+                    name={copied ? IconName.checkmark : IconName.copy}
+                    className={`h-5 w-5 ${copied ? 'text-emerald-500' : 'text-neutral-400'}`}
                   />
-                  <Text className="text-emerald-500">Copied!</Text>
+                  <Text
+                    className={copied ? 'text-emerald-500' : 'text-neutral-400'}
+                  >
+                    {copied ? 'Copied!' : 'Copy'}
+                  </Text>
                 </button>
               </TooltipTrigger>
               <TooltipContent>
