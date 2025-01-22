@@ -36,20 +36,20 @@ export function AtomDetailsCard({
             <div className="size-6 rounded flex items-center justify-center">
               {icon}
             </div>
-            <div className="flex flex-col gap-1.5">
+            <div className="flex flex-col ">
               <Text
-                variant="body"
+                variant="footnote"
                 weight="normal"
                 className="text-foreground/70"
               >
-                For {list}
+                {list}
               </Text>
               <div className="flex items-center gap-3">
-                <Text variant="bodyLarge" className="text-white">
+                <Text variant="headline" weight="medium" className="text-white">
                   {name}
                 </Text>
                 <Text
-                  variant="caption"
+                  variant="body"
                   weight="normal"
                   className="rounded-xl border border-border/10 px-2 py-0.5 text-[#E6B17E]"
                 >
@@ -78,7 +78,7 @@ export function AtomDetailsCard({
             <div className="flex items-center gap-2">
               <Users className="h-4 w-4 text-amber-500" />
               <Text
-                variant="caption"
+                variant="body"
                 weight="normal"
                 className="text-foreground/90"
               >
@@ -88,7 +88,7 @@ export function AtomDetailsCard({
             <div className="flex items-center gap-2">
               <Coins className="h-4 w-4 text-green-500" />
               <Text
-                variant="caption"
+                variant="body"
                 weight="normal"
                 className="text-foreground/90"
               >

@@ -1,10 +1,4 @@
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  Icon,
-  Text,
-} from '@0xintuition/1ui'
+import { Dialog, DialogContent, DialogTitle, Icon } from '@0xintuition/1ui'
 
 import { AtomDetailsCard } from './atom-details-card'
 
@@ -47,13 +41,9 @@ export function AtomDetailsModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[600px]">
-        <DialogTitle className="px-8">
-          <Text className="text-neutral-400 text-lg">Atom {atomId}</Text>
-        </DialogTitle>
-        <div className="px-6 py-6">
-          <AtomDetailsCard {...cardData} />
-        </div>
+      <DialogContent className="sm:max-w-[600px] rounded-lg bg-gradient-to-b from-[#060504] to-[#101010] min-w-[480px]">
+        <DialogTitle className="justify-end" />
+        <AtomDetailsCard {...cardData} className="bg-transparent" />
       </DialogContent>
     </Dialog>
   )

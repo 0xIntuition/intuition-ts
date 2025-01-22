@@ -1,7 +1,7 @@
 import { Icon } from '@0xintuition/1ui'
 
 import { ColumnDef } from '@tanstack/react-table'
-import { ArrowUpDown, X as CloseX } from 'lucide-react'
+import { ArrowUpDown, Users } from 'lucide-react'
 
 import { DataTableColumnHeader } from './data-table-column-header'
 
@@ -75,7 +75,12 @@ export const columns: ColumnDef<TableItem>[] = [
       </div>
     ),
     cell: ({ row }) => {
-      return <div className="text-right pr-12">{row.getValue('users')}</div>
+      return (
+        <div className="pr-10 flex justify-end items-center gap-1">
+          <Users className="w-4 h-4" />
+          {row.getValue('users')}
+        </div>
+      )
     },
     size: 120,
     sortDescFirst: true,
@@ -88,30 +93,35 @@ export const columns: ColumnDef<TableItem>[] = [
       </div>
     ),
     cell: ({ row }) => {
-      return <div className="text-right pr-6">{row.getValue('assets')} ETH</div>
-    },
-    size: 120,
-  },
-  {
-    id: 'signal',
-    header: ({ column }) => (
-      <div className="flex justify-end pr-6">
-        <DataTableColumnHeader column={column} title="Signal" />
-      </div>
-    ),
-    cell: () => {
       return (
-        <div className="flex items-center justify-end gap-2 pr-6">
-          <div className="flex items-center gap-2 px-3 py-1.5 bg-[#1C1C1C] rounded-lg">
-            <Icon name="arrow-up" className="h-5 w-5" />
-          </div>
-          <div className="flex items-center justify-center h-8 w-8 rounded-lg bg-destructive">
-            <CloseX className="h-5 w-5 text-white" />
-          </div>
+        <div className="pr-10 flex justify-end items-center gap-0.5">
+          {Number(row.getValue('assets')).toFixed(6)}
+          <Icon name="eth" className="w-4 h-4" />
         </div>
       )
     },
-    enableSorting: false,
-    size: 180,
+    size: 120,
   },
+  // {
+  //   id: 'signal',
+  //   header: ({ column }) => (
+  //     <div className="flex justify-end pr-6">
+  //       <DataTableColumnHeader column={column} title="Signal" />
+  //     </div>
+  //   ),
+  //   cell: () => {
+  //     return (
+  //       <div className="flex items-center justify-end gap-2 pr-6">
+  //         <div className="flex items-center gap-2 px-3 py-1.5 bg-[#1C1C1C] rounded-lg">
+  //           <Icon name="arrow-up" className="h-5 w-5" />
+  //         </div>
+  //         <div className="flex items-center justify-center h-8 w-8 rounded-lg bg-destructive">
+  //           <CloseX className="h-5 w-5 text-white" />
+  //         </div>
+  //       </div>
+  //     )
+  //   },
+  //   enableSorting: false,
+  //   size: 180,
+  // },
 ]
