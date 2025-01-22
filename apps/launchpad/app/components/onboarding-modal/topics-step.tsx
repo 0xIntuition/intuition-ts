@@ -9,7 +9,7 @@ import {
 
 import LoadingLogo from '@components/loading-logo'
 import { Search } from '@components/search'
-import { QUESTIONS_METADATA } from '@lib/utils/constants'
+import { useQuestionData } from '@lib/hooks/useQuestionData'
 import { Book } from 'lucide-react'
 
 import { Topic } from './types'
@@ -29,20 +29,28 @@ export function TopicsStep({
   onSearchChange,
   onCreateClick,
 }: TopicsStepProps) {
+  const {
+    title,
+    description,
+    isLoading: isQuestionLoading,
+  } = useQuestionData({
+    questionId: 1,
+  })
+
   return (
     <div className="p-8">
       <div className="flex flex-col gap-8">
         <div className="flex items-start justify-between gap-4 pb-5">
           <div className="space-y-1">
             <Text variant="headline" className="font-semibold">
-              {QUESTIONS_METADATA.ONE.title}
+              {isQuestionLoading ? 'Loading...' : title}
             </Text>
             <Text
               variant={TextVariant.footnote}
               className="text-primary/70 flex flex-row gap-1 items-center"
             >
               <Book className="h-4 w-4 text-primary/70" />
-              {QUESTIONS_METADATA.ONE.description}
+              {isQuestionLoading ? 'Loading...' : description}
             </Text>
           </div>
         </div>
