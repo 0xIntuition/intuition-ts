@@ -1,10 +1,19 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 
 import { BLOCK_EXPLORER_URL } from '@consts/general'
-import { useQueryClient } from '@tanstack/react-query'
 import { useReward } from 'react-rewards'
 
 import { NewAtomMetadata, Topic } from './types'
+
+const REWARD_CONFIG = {
+  lifetime: 1000,
+  elementCount: 100,
+  startVelocity: 25,
+  zIndex: 1000,
+  spread: 100,
+  colors: ['#34C578'],
+  position: 'absolute',
+}
 
 interface RewardStepProps {
   isOpen: boolean
@@ -24,54 +33,28 @@ export function RewardStep({
   awardPoints,
   redirectUrl,
 }: RewardStepProps) {
-  const queryClient = useQueryClient()
-  const { reward } = useReward('rewardId', 'confetti', {
-    lifetime: 1000,
-    elementCount: 100,
-    startVelocity: 25,
-    zIndex: 1000,
-    spread: 100,
-    colors: ['#34C578'],
-    position: 'absolute',
-    onAnimationComplete: () => {
-      setHasRewardAnimated(true)
-    },
-  })
-  const [hasRewardAnimated, setHasRewardAnimated] = useState(false)
-  const [hasAwardedPoints, setHasAwardedPoints] = useState(false)
+  const { reward: triggerReward } = useReward(
+    'rewardId',
+    'confetti',
+    REWARD_CONFIG,
+  )
 
   useEffect(() => {
-    if (isOpen && !hasRewardAnimated) {
-      const timer = setTimeout(() => {
-        reward()
-        // Award points when animation starts if we haven't already
-        if (!hasAwardedPoints && userWallet && awardPoints) {
-          awardPoints(userWallet.toLowerCase(), redirectUrl)
-          // Invalidate points query to force a refresh
-          queryClient.invalidateQueries({
-            queryKey: ['account-points', userWallet.toLowerCase()],
-          })
-          setHasAwardedPoints(true)
-        }
+    let timer: NodeJS.Timeout
+
+    if (isOpen && userWallet && awardPoints) {
+      timer = setTimeout(() => {
+        triggerReward()
+        awardPoints(userWallet.toLowerCase(), redirectUrl)
       }, 500)
-
-      return () => clearTimeout(timer)
     }
 
-    if (!isOpen) {
-      setHasRewardAnimated(false)
-      setHasAwardedPoints(false)
+    return () => {
+      if (timer) {
+        clearTimeout(timer)
+      }
     }
-  }, [
-    isOpen,
-    hasRewardAnimated,
-    hasAwardedPoints,
-    reward,
-    userWallet,
-    awardPoints,
-    redirectUrl,
-    queryClient,
-  ])
+  }, [isOpen, userWallet, awardPoints, redirectUrl, triggerReward])
 
   return (
     <div className="p-8">

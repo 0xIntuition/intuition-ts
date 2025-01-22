@@ -308,6 +308,27 @@ export function SignalStep({
     txState.status,
   ])
 
+  console.log('isLoading', isLoading)
+  console.log('txState.status', txState.status)
+  console.log(
+    'stakeAwaitingWalletConfirmation',
+    stakeAwaitingWalletConfirmation,
+  )
+  console.log(
+    'stakeAwaitingOnChainConfirmation',
+    stakeAwaitingOnChainConfirmation,
+  )
+  console.log(
+    'createTripleAwaitingWalletConfirmation',
+    createTripleAwaitingWalletConfirmation,
+  )
+  console.log(
+    'createTripleAwaitingOnChainConfirmation',
+    createTripleAwaitingOnChainConfirmation,
+  )
+  console.log('isLoadingMultiVaultConfig', isLoadingMultiVaultConfig)
+  console.log('isLoadingVault', isLoadingVault)
+
   const handleStakeButtonClick = async () => {
     const errors = []
 

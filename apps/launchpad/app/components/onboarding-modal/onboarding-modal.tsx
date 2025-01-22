@@ -12,6 +12,7 @@ import { CURRENT_ENV } from '@consts/general'
 import { getSpecialPredicate } from '@lib/utils/app'
 import logger from '@lib/utils/logger'
 import { usePrivy } from '@privy-io/react-auth'
+import { useNavigate } from '@remix-run/react'
 import { useQueryClient } from '@tanstack/react-query'
 import { ClientOnly } from 'remix-utils/client-only'
 
@@ -49,6 +50,7 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
   const queryClient = useQueryClient()
   const { user: privyUser } = usePrivy()
   const userWallet = privyUser?.wallet?.address
+  const navigate = useNavigate()
 
   const [state, setState] = useState<OnboardingState>(INITIAL_STATE)
   const [topics, setTopics] = useState<Topic[]>([])
@@ -277,34 +279,39 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
     [steps, state.currentStep, handleTransition],
   )
 
-  const awardPoints = (accountId: string, redirectUrl?: string) => {
-    const formRef = document.createElement('form')
-    formRef.method = 'post'
-    formRef.action = '/actions/reward-points'
+  const awardPoints = async (accountId: string, redirectUrl?: string) => {
+    try {
+      setIsLoading(true)
+      const formData = new FormData()
+      formData.append('accountId', accountId)
+      formData.append('type', 'minigame1')
+      if (redirectUrl) {
+        formData.append('redirectUrl', redirectUrl)
+      }
 
-    const accountIdInput = document.createElement('input')
-    accountIdInput.type = 'hidden'
-    accountIdInput.name = 'accountId'
-    accountIdInput.value = accountId
+      const response = await fetch('/actions/reward-points', {
+        method: 'POST',
+        body: formData,
+      })
 
-    const typeInput = document.createElement('input')
-    typeInput.type = 'hidden'
-    typeInput.name = 'type'
-    typeInput.value = 'minigame1'
+      if (!response.ok) {
+        throw new Error('Failed to award points')
+      }
 
-    if (redirectUrl) {
-      const redirectUrlInput = document.createElement('input')
-      redirectUrlInput.type = 'hidden'
-      redirectUrlInput.name = 'redirectUrl'
-      redirectUrlInput.value = redirectUrl
-      formRef.appendChild(redirectUrlInput)
+      queryClient.invalidateQueries({
+        queryKey: ['account-points', userWallet?.toLowerCase()],
+      })
+
+      if (redirectUrl) {
+        await new Promise((resolve) => setTimeout(resolve, 3000))
+        onClose()
+        navigate(redirectUrl)
+      }
+    } catch (error) {
+      logger('Error awarding points:', error)
+    } finally {
+      setIsLoading(false)
     }
-
-    formRef.appendChild(accountIdInput)
-    formRef.appendChild(typeInput)
-    document.body.appendChild(formRef)
-    formRef.submit()
-    document.body.removeChild(formRef)
   }
 
   useEffect(() => {
@@ -415,6 +422,7 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
                     txHash={txState.txHash}
                     userWallet={userWallet}
                     awardPoints={awardPoints}
+                    redirectUrl="/quests/questions/question/1"
                   />
                 )}
             </div>
