@@ -18,10 +18,11 @@ import { usePrivy } from '@privy-io/react-auth'
 import { Link, useLocation } from '@remix-run/react'
 import { useQueryClient } from '@tanstack/react-query'
 import { TransactionActionType, TransactionStateType } from 'app/types'
-import { ArrowBigDown, ArrowBigUp, Book, Loader2 } from 'lucide-react'
+import { ArrowBigDown, ArrowBigUp, Book } from 'lucide-react'
 import { Address, decodeEventLog } from 'viem'
 import { usePublicClient } from 'wagmi'
 
+import SubmitButton from '../submit-button'
 import { SignalStepProps } from './types'
 
 const initialTxState: TransactionStateType = {
@@ -449,19 +450,12 @@ export function SignalStep({
               {(+walletBalance).toFixed(2)} ETH
             </Text>
           </Badge>
-          <Button
-            variant="primary"
+          <SubmitButton
+            loading={isLoading}
             onClick={handleStakeButtonClick}
-            disabled={isLoading}
-          >
-            {isLoading ? (
-              <>
-                <Loader2 className="animate-spin h-4 w-4" /> Processing...
-              </>
-            ) : (
-              `Stake ${Number(val).toFixed(5)} ETH`
-            )}
-          </Button>
+            buttonText={`Stake ${Number(val).toFixed(5)} ETH`}
+            loadingText={'Processing...'}
+          />
         </div>
       </div>
     </div>
