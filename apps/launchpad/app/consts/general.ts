@@ -49,6 +49,8 @@ export const IPFS_GATEWAY_URL = 'https://ipfs.io/ipfs'
 
 // Routes
 export const GET_VAULT_DETAILS_RESOURCE_ROUTE = '/resources/get-vault-details'
+export const GET_MULTIVAULT_CONFIG_RESOURCE_ROUTE =
+  '/resources/get-vault-config'
 
 // SPECIAL ATOMS
 

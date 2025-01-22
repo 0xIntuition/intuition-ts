@@ -1,6 +1,5 @@
 import { invariant } from '@lib/utils/misc'
 import type { ActionFunctionArgs } from '@remix-run/node'
-import { redirect } from '@remix-run/node'
 import { gql, GraphQLClient } from 'graphql-request'
 
 interface PointsRecord {
@@ -125,7 +124,6 @@ export async function action({ request }: ActionFunctionArgs) {
   const formData = await request.formData()
   const accountId = formData.get('accountId')
   const type = formData.get('type')
-  const redirectUrl = formData.get('redirectUrl')
 
   invariant(accountId, 'accountId is required')
   invariant(type, 'type is required')
@@ -138,11 +136,6 @@ export async function action({ request }: ActionFunctionArgs) {
 
   try {
     const result = await upsertPoints(accountId.toString(), pointsAllocation)
-
-    // If redirectUrl is provided, redirect to it
-    if (redirectUrl && typeof redirectUrl === 'string') {
-      return redirect(redirectUrl)
-    }
 
     return { success: true, data: result }
   } catch (error) {

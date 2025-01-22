@@ -10,10 +10,10 @@ export async function loader({ request }: LoaderFunctionArgs) {
   }
 
   try {
-    const vaultDetails = await getMultiVaultConfig(contract)
-    return json(vaultDetails)
+    const multivaultConfig = await getMultiVaultConfig(contract)
+    return json(multivaultConfig)
   } catch (error) {
-    console.error('Vault details error:', error)
-    return json({ error: 'Failed to fetch vault details' }, { status: 500 })
+    console.error('Multivault config error:', error)
+    return json({ error: 'Failed to fetch multivault config' }, { status: 500 })
   }
 }
