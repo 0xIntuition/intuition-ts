@@ -1,7 +1,6 @@
-import process from 'process'
-
+import { pointsClient } from '@lib/graphql/client'
 import type { LoaderFunctionArgs, TypedResponse } from '@remix-run/node'
-import { gql, GraphQLClient } from 'graphql-request'
+import { gql } from 'graphql-request'
 
 interface PointsRecord {
   account_id: string
@@ -29,12 +28,6 @@ const GetAccountPointsQuery = gql`
   }
 `
 
-if (process.env.HASURA_POINTS_ENDPOINT === undefined) {
-  throw new Error('Endpoint not defined')
-}
-
-const client = new GraphQLClient(process.env.HASURA_POINTS_ENDPOINT)
-
 export async function loader({
   request,
 }: LoaderFunctionArgs): Promise<
@@ -49,7 +42,7 @@ export async function loader({
     })
   }
 
-  const data = await client.request<GetAccountPointsResponse>(
+  const data = await pointsClient.request<GetAccountPointsResponse>(
     GetAccountPointsQuery,
     {
       account_id: accountId,

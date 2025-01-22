@@ -24,12 +24,12 @@ import { columns } from '@components/ui/table/columns'
 import { DataTable } from '@components/ui/table/data-table'
 import { useGoBack } from '@lib/hooks/useGoBack'
 import { usePoints } from '@lib/hooks/usePoints'
+import { useQuestionData } from '@lib/hooks/useQuestionData'
 import {
   atomDetailsModalAtom,
   onboardingModalAtom,
   shareModalAtom,
 } from '@lib/state/store'
-import { QUESTIONS_METADATA } from '@lib/utils/constants'
 import logger from '@lib/utils/logger'
 import { usePrivy } from '@privy-io/react-auth'
 import { useLoaderData, useParams } from '@remix-run/react'
@@ -118,9 +118,15 @@ export default function MiniGameOne() {
   logger(listData?.globalTriples)
 
   const { id } = useParams()
-  const questionData =
-    QUESTIONS_METADATA[id?.toUpperCase() as keyof typeof QUESTIONS_METADATA] ||
-    QUESTIONS_METADATA.ONE
+  const {
+    title,
+    description,
+    enabled,
+    pointAwardAmount,
+    isLoading: isQuestionLoading,
+  } = useQuestionData({
+    questionId: parseInt(id || '1', 10),
+  })
 
   interface TableRowData {
     id: string
@@ -134,8 +140,6 @@ export default function MiniGameOne() {
   // Transform the data for the table
   const tableData: TableRowData[] =
     listData?.globalTriples?.map((triple) => {
-      // Debug log to see the image data
-
       const tableRow: TableRowData = {
         id: String(triple.id),
         image: triple.subject.image || '',
@@ -184,7 +188,7 @@ export default function MiniGameOne() {
   }
 
   const gamePoints = points?.minigame1 || 0
-  const isLoading = isPointsLoading || !listData
+  const isLoading = isPointsLoading || !listData || isQuestionLoading
 
   if (isLoading) {
     return (
@@ -199,7 +203,7 @@ export default function MiniGameOne() {
             <Icon name="chevron-left" className="h-4 w-4" />
           </Button>
           <div className="flex flex-1 justify-between items-center">
-            <PageHeader title="Quest: Question One" />
+            <PageHeader title={`Quest: ${title}`} />
           </div>
         </div>
         <div className="flex items-center justify-center h-[400px]">
@@ -221,7 +225,7 @@ export default function MiniGameOne() {
           <Icon name="chevron-left" className="h-4 w-4" />
         </Button>
         <div className="flex flex-1 justify-between items-center">
-          <PageHeader title="Quest: Question One" />
+          <PageHeader title={`Quest: ${title}`} />
           <div className="flex items-center gap-2">
             <Button
               variant="secondary"
@@ -248,14 +252,17 @@ export default function MiniGameOne() {
             <div className="absolute inset-0 flex flex-col justify-center items-center">
               <div className="space-y-2 items-center pb-8">
                 <Text variant="heading3" className="text-foreground">
-                  {questionData.title}
+                  {title}
+                </Text>
+                <Text variant="body" className="text-foreground/70">
+                  {description}
                 </Text>
               </div>
               <AuthCover buttonContainerClassName="h-full flex items-center justify-center w-full">
                 {gamePoints > 0 ? (
                   <div className="flex items-baseline gap-2">
                     <span className="text-xl font-bold bg-gradient-to-r from-[#34C578] to-[#00FF94] bg-clip-text text-transparent">
-                      200
+                      {gamePoints}
                     </span>
                     <span className="text-md font-semibold text-muted-foreground">
                       IQ Earned
@@ -267,8 +274,9 @@ export default function MiniGameOne() {
                       variant="primary"
                       size="lg"
                       onClick={handleStartOnboarding}
+                      disabled={!enabled}
                     >
-                      Earn 200 IQ Points
+                      Earn {pointAwardAmount} IQ Points
                     </Button>
                   )
                 )}
@@ -276,6 +284,7 @@ export default function MiniGameOne() {
             </div>
           </Card>
         </div>
+
         <AggregatedMetrics
           metrics={[
             {
