@@ -87,7 +87,31 @@ export const action: ActionFunction = async ({ request }) => {
         let compileResult: { stdout: string; stderr: string }
         if (isProduction) {
           // Run forge with explicit output path and verbose logging
+          console.log('Running forge build...')
           compileResult = await execAsync(`forge build --force --sizes --out ${outDir} -vvv`)
+          console.log('Forge build complete')
+
+          // Log the contents of the output directory after compilation
+          try {
+            const { stdout: treeOutput } = await execAsync(`tree ${outDir}`)
+            console.log('Output directory tree:', treeOutput)
+          } catch (error) {
+            console.error('Failed to run tree command:', error)
+            // Fallback to ls if tree isn't available
+            const { stdout: lsOutput } = await execAsync(`ls -R ${outDir}`)
+            console.log('Output directory listing:', lsOutput)
+          }
+
+          // Check if the contract was actually compiled
+          try {
+            const { stdout: grepOutput } = await execAsync(`grep -r "ProgressiveCurve" ${outDir}`)
+            console.log('Grep for ProgressiveCurve:', grepOutput)
+          } catch (error) {
+            console.error('Failed to grep for ProgressiveCurve:', error)
+            // Log the contents of build-info directly
+            const buildInfoContent = await fs.readdir(`${outDir}/build-info`)
+            console.log('Build info contents:', buildInfoContent)
+          }
         } else {
           compileResult = await execAsync(getCommand('forge build --force --sizes'))
         }
