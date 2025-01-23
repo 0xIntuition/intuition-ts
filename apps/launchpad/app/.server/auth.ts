@@ -1,7 +1,7 @@
 import { OpenAPI } from '@0xintuition/api'
 
 import logger from '@lib/utils/logger'
-import { getAuthHeaders } from '@lib/utils/misc'
+import { combineHeaders, getAuthHeaders } from '@lib/utils/misc'
 import { User } from '@privy-io/server-auth'
 import { redirect } from '@remix-run/node'
 
@@ -95,4 +95,18 @@ export async function handlePrivyRedirect({
   if (!accessToken || !sessionToken) {
     throw redirect(redirectTo)
   }
+}
+
+export async function logout(
+  {
+    redirectTo = '/',
+  }: {
+    redirectTo?: string
+  },
+  responseInit?: ResponseInit,
+) {
+  throw redirect(redirectTo, {
+    ...responseInit,
+    headers: combineHeaders(responseInit?.headers),
+  })
 }

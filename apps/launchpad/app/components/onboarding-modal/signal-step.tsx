@@ -337,9 +337,7 @@ export function SignalStep({
       errors.push(`Minimum stake is ${min_deposit} ETH`)
     }
     if (+val > +walletBalance) {
-      errors.push(
-        `Insufficient balance. You have ${(+walletBalance).toFixed(2)} ETH`,
-      )
+      errors.push(`Insufficient balance`)
     }
 
     if (errors.length > 0) {
