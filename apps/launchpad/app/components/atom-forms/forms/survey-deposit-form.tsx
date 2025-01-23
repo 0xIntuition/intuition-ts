@@ -8,6 +8,7 @@ import {
 } from '@0xintuition/1ui'
 import { useGetAtomByDataQuery } from '@0xintuition/graphql'
 
+import SubmitButton from '@components/submit-button'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ipfsUrl } from '@lib/utils/app'
 import { Link } from '@remix-run/react'
@@ -161,19 +162,16 @@ export function SurveyDepositForm({
             >
               Back
             </Button>
-            <Button
-              type="submit"
-              size={ButtonSize.md}
+            <SubmitButton
               disabled={
                 isSubmitting || isLoadingConfig || isCheckingAtom || atomExists
               }
               className="min-w-32"
-            >
-              {isSubmitting && (
-                <Icon name={IconName.inProgress} className="animate-spin" />
-              )}
-              {isSubmitting ? 'Creating...' : 'Create Atom'}
-            </Button>
+              buttonText="Create Atom"
+              loadingText="Creating..."
+              loading={isSubmitting || isLoadingConfig || isCheckingAtom}
+              onClick={() => form.handleSubmit(onSubmit)}
+            />
           </div>
         </div>
       </form>

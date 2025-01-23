@@ -41,7 +41,14 @@ const SubmitButton: React.FC<SubmitButtonProps> = ({
     <Button
       variant="primary"
       disabled={loading || disabled}
-      onClick={correctChain ? onClick : handleSwitch}
+      onClick={(e) => {
+        if (correctChain) {
+          onClick()
+        } else {
+          e.preventDefault()
+          handleSwitch()
+        }
+      }}
       className={className}
     >
       {loading ? (
