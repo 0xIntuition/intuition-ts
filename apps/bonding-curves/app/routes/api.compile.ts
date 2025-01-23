@@ -80,10 +80,14 @@ export const action: ActionFunction = async ({ request }) => {
           await execAsync(`docker exec bonding-curves-anvil-1 bash -c "echo '${escapedContent}' > ${contractPath}"`)
         }
 
+        // Log contract file contents and location before compilation
+        console.log('Contract path:', contractPath)
+        console.log('Contract directory contents:', await fs.readdir(contractsDir))
+
         let compileResult: { stdout: string; stderr: string }
         if (isProduction) {
-          // Run forge with explicit output path
-          compileResult = await execAsync(`forge build --force --sizes --out ${outDir}`)
+          // Run forge with explicit output path and verbose logging
+          compileResult = await execAsync(`forge build --force --sizes --out ${outDir} -vvv`)
         } else {
           compileResult = await execAsync(getCommand('forge build --force --sizes'))
         }
