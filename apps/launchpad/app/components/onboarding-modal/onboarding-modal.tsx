@@ -226,6 +226,20 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
       }))
       updateStepStatus(previousStep, 'current')
       updateStepStatus(STEPS.SIGNAL, 'upcoming')
+
+      if (previousStep === STEPS.TOPICS) {
+        setSearchTerm('')
+        queryClient.refetchQueries({
+          queryKey: [
+            'get-list-details',
+            {
+              predicateId,
+              objectId,
+              searchTerm: '',
+            },
+          ],
+        })
+      }
     } else if (state.currentStep === STEPS.CREATE) {
       handleTransition((prev) => ({
         ...prev,
@@ -233,8 +247,27 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
       }))
       updateStepStatus(STEPS.TOPICS, 'current')
       updateStepStatus(STEPS.CREATE, 'upcoming')
+
+      setSearchTerm('')
+      queryClient.refetchQueries({
+        queryKey: [
+          'get-list-details',
+          {
+            predicateId,
+            objectId,
+            searchTerm: '',
+          },
+        ],
+      })
     }
-  }, [state.currentStep, state.showCreateStep, handleTransition])
+  }, [
+    state.currentStep,
+    state.showCreateStep,
+    handleTransition,
+    queryClient,
+    predicateId,
+    objectId,
+  ])
 
   const toggleTopic = useCallback((id: string) => {
     setTopics((currentTopics) => {
@@ -378,6 +411,8 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
     updateStepStatus(STEPS.CREATE, 'current')
   }, [handleTransition])
 
+  logger('txState.status', txState?.status)
+
   return (
     <ClientOnly>
       {() => (
@@ -456,7 +491,9 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
                         ? txState?.status !== 'complete'
                         : state.currentStep === STEPS.CREATE
                   }
-                  disableBack={isLoading || txState?.status !== 'idle'}
+                  disableBack={
+                    isLoading || (txState?.status && txState?.status !== 'idle')
+                  }
                   customNextButton={
                     state.currentStep === STEPS.REWARD
                       ? { content: 'Finish' }
