@@ -283,15 +283,12 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
     [steps, state.currentStep, handleTransition],
   )
 
-  const awardPoints = async (accountId: string, redirectUrl?: string) => {
+  const awardPoints = async (accountId: string) => {
     try {
       setIsLoading(true)
       const formData = new FormData()
       formData.append('accountId', accountId)
       formData.append('type', 'minigame1')
-      if (redirectUrl) {
-        formData.append('redirectUrl', redirectUrl)
-      }
 
       const response = await fetch('/actions/reward-points', {
         method: 'POST',
@@ -305,18 +302,17 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
       queryClient.invalidateQueries({
         queryKey: ['account-points', userWallet?.toLowerCase()],
       })
-
-      if (redirectUrl) {
-        await new Promise((resolve) => setTimeout(resolve, 3000))
-        onClose()
-        navigate(redirectUrl)
-      }
     } catch (error) {
       logger('Error awarding points:', error)
     } finally {
       setIsLoading(false)
     }
   }
+
+  const handleFinish = useCallback(() => {
+    onClose()
+    navigate('/quests/questions/question/1')
+  }, [navigate, onClose])
 
   useEffect(() => {
     logger('Form submitted')
@@ -426,7 +422,6 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
                     txHash={txState.txHash}
                     userWallet={userWallet}
                     awardPoints={awardPoints}
-                    redirectUrl="/quests/questions/question/1"
                   />
                 )}
             </div>
@@ -440,7 +435,7 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
                     state.currentStep !== STEPS.REWARD
                       ? handleNext
                       : state.currentStep === STEPS.REWARD
-                        ? onClose
+                        ? handleFinish
                         : undefined
                   }
                   onBack={
