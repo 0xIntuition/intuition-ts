@@ -76,83 +76,78 @@ export const action: ActionFunction = async ({ request }) => {
           // Log current working directory
           const { stdout: pwdOutput } = await execAsync('pwd')
           console.log('Current working directory:', pwdOutput)
-
-          let compileResult: { stdout: string; stderr: string }
-          if (isProduction) {
-            // Run forge with explicit output path
-            compileResult = await execAsync(`forge build --force --sizes --out ${outDir}`)
-          } else {
-            await execAsync(`docker exec bonding-curves-anvil-1 bash -c "echo '${escapedContent}' > ${contractPath}"`)
-            compileResult = await execAsync(getCommand('forge build --force --sizes'))
-          }
-
-          // Log directory contents and permissions for debugging
-          const { stdout: lsOutput } = await execAsync(`ls -la ${outDir}`)
-          console.log('Output directory permissions:', lsOutput)
-
-          console.log('Compilation output:', compileResult.stdout)
-          if (compileResult.stderr) {
-            console.error('Compilation errors:', compileResult.stderr)
-            return json({ error: 'Compilation failed', details: compileResult.stderr }, { status: 400 })
-          }
-
-          // Get artifact - note the path structure matches Forge's output
-          const contractName = path.parse(fileName).name
-          const artifactPath = `/app/out/${contractName}.sol/${contractName}.json`
-
-          let artifactContent: string
-          if (isProduction) {
-            // In production, read file directly
-            artifactContent = await fs.readFile(artifactPath, 'utf-8')
-          } else {
-            // In development, use Docker
-            const { stdout } = await execAsync(getCommand(`cat ${artifactPath}`))
-            artifactContent = stdout
-          }
-
-          let artifact
-          try {
-            artifact = JSON.parse(artifactContent)
-          } catch (error) {
-            console.error('Failed to parse artifact:', error)
-            return json({ error: 'Failed to read contract artifact' }, { status: 500 })
-          }
-
-          const constructor = artifact.abi.find((item: any) => item.type === 'constructor')
-          const constructorInputs = constructor?.inputs || []
-          const needsConstructorArgs = constructorInputs.length > 0
-
-          return json({
-            abi: artifact.abi,
-            bytecode: artifact.bytecode.object,
-            constructorInputs,
-            needsConstructorArgs
-          })
-
-        } catch (error) {
-          console.error('Failed to set up directories:', error)
-          return json(
-            { error: 'Failed to set up directories' },
-            { status: 500 }
-          )
-        } finally {
-          // Clean up
-          try {
-            if (isProduction) {
-              await fs.unlink(`/app/contracts/${fileName}`).catch(() => { })
-            } else {
-              await execAsync(getCommand(`rm /app/contracts/${fileName}`)).catch(() => { })
-            }
-          } catch (cleanupError) {
-            console.error('Failed to clean up temporary file:', cleanupError)
-          }
+        } else {
+          await execAsync(`docker exec bonding-curves-anvil-1 bash -c "echo '${escapedContent}' > ${contractPath}"`)
         }
+
+        let compileResult: { stdout: string; stderr: string }
+        if (isProduction) {
+          // Run forge with explicit output path
+          compileResult = await execAsync(`forge build --force --sizes --out ${outDir}`)
+        } else {
+          compileResult = await execAsync(getCommand('forge build --force --sizes'))
+        }
+
+        // Log directory contents and permissions for debugging
+        const { stdout: lsOutput } = await execAsync(`ls -la ${outDir}`)
+        console.log('Output directory permissions:', lsOutput)
+
+        console.log('Compilation output:', compileResult.stdout)
+        if (compileResult.stderr) {
+          console.error('Compilation errors:', compileResult.stderr)
+          return json({ error: 'Compilation failed', details: compileResult.stderr }, { status: 400 })
+        }
+
+        // Get artifact - note the path structure matches Forge's output
+        const contractName = path.parse(fileName).name
+        const artifactPath = `/app/out/${contractName}.sol/${contractName}.json`
+
+        let artifactContent: string
+        if (isProduction) {
+          // In production, read file directly
+          artifactContent = await fs.readFile(artifactPath, 'utf-8')
+        } else {
+          // In development, use Docker
+          const { stdout } = await execAsync(getCommand(`cat ${artifactPath}`))
+          artifactContent = stdout
+        }
+
+        let artifact
+        try {
+          artifact = JSON.parse(artifactContent)
+        } catch (error) {
+          console.error('Failed to parse artifact:', error)
+          return json({ error: 'Failed to read contract artifact' }, { status: 500 })
+        }
+
+        const constructor = artifact.abi.find((item: any) => item.type === 'constructor')
+        const constructorInputs = constructor?.inputs || []
+        const needsConstructorArgs = constructorInputs.length > 0
+
+        return json({
+          abi: artifact.abi,
+          bytecode: artifact.bytecode.object,
+          constructorInputs,
+          needsConstructorArgs
+        })
+
       } catch (error) {
         console.error('Failed to set up directories:', error)
         return json(
           { error: 'Failed to set up directories' },
           { status: 500 }
         )
+      } finally {
+        // Clean up
+        try {
+          if (isProduction) {
+            await fs.unlink(`/app/contracts/${fileName}`).catch(() => { })
+          } else {
+            await execAsync(getCommand(`rm /app/contracts/${fileName}`)).catch(() => { })
+          }
+        } catch (cleanupError) {
+          console.error('Failed to clean up temporary file:', cleanupError)
+        }
       }
     } catch (error) {
       console.error('Compilation failed:', error)
