@@ -62,88 +62,97 @@ export const action: ActionFunction = async ({ request }) => {
 
       try {
         // Create directories if they don't exist and set permissions
-        await fs.mkdir(outDir, { recursive: true, mode: 0o755 })
+        await fs.mkdir(outDir, { recursive: true, mode: 0o777 }) // Full permissions for testing
         await fs.mkdir(contractsDir, { recursive: true, mode: 0o755 })
 
         // Set permissions on the contract file
         if (isProduction) {
           await fs.writeFile(contractPath, content)
-          // Ensure forge can read the contract file
           await fs.chmod(contractPath, 0o644)
-        } else {
-          await execAsync(`docker exec bonding-curves-anvil-1 bash -c "echo '${escapedContent}' > ${contractPath}"`)
-        }
 
-        // Compile using forge
-        let compileResult: { stdout: string; stderr: string }
-        if (isProduction) {
-          // In production, run forge directly
-          compileResult = await execAsync('forge build --force --sizes')
-        } else {
-          // In development, use Docker
-          compileResult = await execAsync(getCommand('forge build --force --sizes'))
-        }
+          // Ensure the output directory is writable by forge
+          await fs.chmod(outDir, 0o777)
 
-        // Log directory contents for debugging
-        console.log('Contract directory contents:', await fs.readdir(contractsDir))
-        console.log('Output directory contents:', await fs.readdir(outDir))
+          // Log current working directory
+          const { stdout: pwdOutput } = await execAsync('pwd')
+          console.log('Current working directory:', pwdOutput)
 
-        console.log('Compilation output:', compileResult.stdout)
-        if (compileResult.stderr) {
-          console.error('Compilation errors:', compileResult.stderr)
-          return json({ error: 'Compilation failed', details: compileResult.stderr }, { status: 400 })
-        }
+          let compileResult: { stdout: string; stderr: string }
+          if (isProduction) {
+            // Run forge with explicit output path
+            compileResult = await execAsync(`forge build --force --sizes --out ${outDir}`)
+          } else {
+            await execAsync(`docker exec bonding-curves-anvil-1 bash -c "echo '${escapedContent}' > ${contractPath}"`)
+            compileResult = await execAsync(getCommand('forge build --force --sizes'))
+          }
 
-        // Get artifact - note the path structure matches Forge's output
-        const contractName = path.parse(fileName).name
-        const artifactPath = `/app/out/${contractName}.sol/${contractName}.json`
+          // Log directory contents and permissions for debugging
+          const { stdout: lsOutput } = await execAsync(`ls -la ${outDir}`)
+          console.log('Output directory permissions:', lsOutput)
 
-        let artifactContent: string
-        if (isProduction) {
-          // In production, read file directly
-          artifactContent = await fs.readFile(artifactPath, 'utf-8')
-        } else {
-          // In development, use Docker
-          const { stdout } = await execAsync(getCommand(`cat ${artifactPath}`))
-          artifactContent = stdout
-        }
+          console.log('Compilation output:', compileResult.stdout)
+          if (compileResult.stderr) {
+            console.error('Compilation errors:', compileResult.stderr)
+            return json({ error: 'Compilation failed', details: compileResult.stderr }, { status: 400 })
+          }
 
-        let artifact
-        try {
-          artifact = JSON.parse(artifactContent)
+          // Get artifact - note the path structure matches Forge's output
+          const contractName = path.parse(fileName).name
+          const artifactPath = `/app/out/${contractName}.sol/${contractName}.json`
+
+          let artifactContent: string
+          if (isProduction) {
+            // In production, read file directly
+            artifactContent = await fs.readFile(artifactPath, 'utf-8')
+          } else {
+            // In development, use Docker
+            const { stdout } = await execAsync(getCommand(`cat ${artifactPath}`))
+            artifactContent = stdout
+          }
+
+          let artifact
+          try {
+            artifact = JSON.parse(artifactContent)
+          } catch (error) {
+            console.error('Failed to parse artifact:', error)
+            return json({ error: 'Failed to read contract artifact' }, { status: 500 })
+          }
+
+          const constructor = artifact.abi.find((item: any) => item.type === 'constructor')
+          const constructorInputs = constructor?.inputs || []
+          const needsConstructorArgs = constructorInputs.length > 0
+
+          return json({
+            abi: artifact.abi,
+            bytecode: artifact.bytecode.object,
+            constructorInputs,
+            needsConstructorArgs
+          })
+
         } catch (error) {
-          console.error('Failed to parse artifact:', error)
-          return json({ error: 'Failed to read contract artifact' }, { status: 500 })
+          console.error('Failed to set up directories:', error)
+          return json(
+            { error: 'Failed to set up directories' },
+            { status: 500 }
+          )
+        } finally {
+          // Clean up
+          try {
+            if (isProduction) {
+              await fs.unlink(`/app/contracts/${fileName}`).catch(() => { })
+            } else {
+              await execAsync(getCommand(`rm /app/contracts/${fileName}`)).catch(() => { })
+            }
+          } catch (cleanupError) {
+            console.error('Failed to clean up temporary file:', cleanupError)
+          }
         }
-
-        const constructor = artifact.abi.find((item: any) => item.type === 'constructor')
-        const constructorInputs = constructor?.inputs || []
-        const needsConstructorArgs = constructorInputs.length > 0
-
-        return json({
-          abi: artifact.abi,
-          bytecode: artifact.bytecode.object,
-          constructorInputs,
-          needsConstructorArgs
-        })
-
       } catch (error) {
         console.error('Failed to set up directories:', error)
         return json(
           { error: 'Failed to set up directories' },
           { status: 500 }
         )
-      } finally {
-        // Clean up
-        try {
-          if (isProduction) {
-            await fs.unlink(`/app/contracts/${fileName}`).catch(() => { })
-          } else {
-            await execAsync(getCommand(`rm /app/contracts/${fileName}`)).catch(() => { })
-          }
-        } catch (cleanupError) {
-          console.error('Failed to clean up temporary file:', cleanupError)
-        }
       }
     } catch (error) {
       console.error('Compilation failed:', error)
