@@ -48,10 +48,10 @@ export async function loader({ request }: LoaderFunctionArgs) {
     tagPredicateId: 3,
     globalWhere: {
       predicate_id: {
-        _eq: 3,
+        _eq: getSpecialPredicate(CURRENT_ENV).tagPredicate.id,
       },
       object_id: {
-        _eq: 620,
+        _eq: getSpecialPredicate(CURRENT_ENV).web3Wallet.id,
       },
     },
   }
@@ -64,10 +64,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   await queryClient.setQueryData(['get-list-details', variables], listData)
 
   const { origin } = new URL(request.url)
-  const ogImageUrl = `${origin}/resources/create-og?id=${620}&type=list`
-
-  logger('ogImageUrl data in loader', ogImageUrl)
-  logger('listData', listData)
+  const ogImageUrl = `${origin}/resources/create-og?id=${getSpecialPredicate(CURRENT_ENV).web3Wallet.id}&type=list`
 
   return {
     dehydratedState: dehydrate(queryClient),
@@ -82,7 +79,6 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
   }
 
   const { objectResult, ogImageUrl } = data
-  logger('ogImageUrl data in meta', ogImageUrl)
 
   return [
     {

@@ -60,35 +60,6 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     )
   }
 
-  // else if (type === 'claim') {
-  //   if (type === 'claim') {
-  //     const { claim } = await getClaim(request, id)
-
-  //     if (!claim) {
-  //       throw new Response('Not Found', { status: 404 })
-  //     }
-
-  //     const stringifiedClaim = `${claim.subject?.display_name} - ${claim.predicate?.display_name} - ${claim.object?.display_name}`
-  //     title = stringifiedClaim ?? 'Intuition Explorer'
-  //     holdersFor = claim.for_num_positions
-  //     holdersAgainst = claim.against_num_positions
-  //     tvlFor = +formatBalance(BigInt(claim.for_assets_sum ?? 0), 18)
-  //     tvlAgainst = +formatBalance(BigInt(claim.against_assets_sum ?? 0), 18)
-  //   }
-  // } else if (type === 'identity') {
-  //   const { identity, isPending } = await getIdentityOrPending(request, id)
-
-  //   if (!identity) {
-  //     throw new Response('Not Found', { status: 404 })
-  //   }
-
-  //   title = identity.display_name ?? 'Intuition Explorer'
-  //   holders = isPending ? 'Pending' : identity.num_positions
-  //   tvl = isPending
-  //     ? 'Pending'
-  //     : +formatBalance(BigInt(identity.assets_sum), 18)
-  // }
-
   const png = await createOGImage(
     title ?? 'Intuition Launchpad',
     type,
