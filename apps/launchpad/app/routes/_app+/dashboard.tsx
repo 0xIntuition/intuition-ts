@@ -43,9 +43,9 @@ function MinigameSkeleton() {
 export default function Index() {
   const [onboardingModal, setOnboardingModal] = useAtom(onboardingModalAtom)
 
-  const handleStartOnboarding = (gameId: string) => {
-    setOnboardingModal({ isOpen: true, gameId })
-  }
+  // const handleStartOnboarding = (gameId: string) => {
+  //   setOnboardingModal({ isOpen: true, gameId })
+  // }
 
   const handleCloseOnboarding = () => {
     setOnboardingModal({ isOpen: false, gameId: null })
@@ -54,12 +54,12 @@ export default function Index() {
   return (
     <>
       <div className="grid gap-6 md:grid-cols-2">
-        <Suspense fallback={<MinigameSkeleton />}>
+        {/* <Suspense fallback={<MinigameSkeleton />}>
           <MinigameCardWrapper
             questionId={1}
             onStart={() => handleStartOnboarding(mockMinigames[0].id)}
           />
-        </Suspense>
+        </Suspense> */}
 
         <div className="relative">
           <Card className="h-[400px] rounded-lg border-none bg-gradient-to-br from-[#060504] to-[#101010] min-w-[480px] blur-sm brightness-50">

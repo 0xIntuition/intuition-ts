@@ -1,5 +1,9 @@
 import { WagmiProvider } from '@privy-io/wagmi'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import {
+  HydrationBoundary,
+  QueryClient,
+  QueryClientProvider,
+} from '@tanstack/react-query'
 
 import { wagmiConfig } from '../utils/wagmi'
 import { AuthProvider } from './auth-provider'
@@ -18,14 +22,19 @@ interface ProvidersProps {
   env?: {
     PRIVY_APP_ID: string
   }
+  dehydratedState?: unknown
 }
 
-export function Providers({ children, env }: ProvidersProps) {
+export function Providers({ children, env, dehydratedState }: ProvidersProps) {
   return (
     <PrivyConfig env={env}>
       <QueryClientProvider client={queryClient}>
         <WagmiProvider config={wagmiConfig}>
-          <AuthProvider>{children}</AuthProvider>
+          <AuthProvider>
+            <HydrationBoundary state={dehydratedState}>
+              {children}
+            </HydrationBoundary>
+          </AuthProvider>
         </WagmiProvider>
       </QueryClientProvider>
     </PrivyConfig>
