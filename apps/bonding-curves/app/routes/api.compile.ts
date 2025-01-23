@@ -56,84 +56,101 @@ export const action: ActionFunction = async ({ request }) => {
           'import {BaseCurve} from \\"./BaseCurve.sol\\";'
         )
 
-      // Ensure output directory exists
+      // Ensure output directory exists with correct permissions
       const outDir = '/app/out'
-      await fs.mkdir(outDir, { recursive: true })
+      const contractsDir = '/app/contracts'
 
-      if (isProduction) {
-        // In production, write file directly
-        await fs.writeFile(contractPath, content)
-      } else {
-        // In development, use Docker
-        await execAsync(`docker exec bonding-curves-anvil-1 bash -c "echo '${escapedContent}' > ${contractPath}"`)
-      }
-
-      // Compile using forge
-      let compileResult: { stdout: string; stderr: string }
-      if (isProduction) {
-        // In production, run forge directly
-        compileResult = await execAsync('forge build --force --sizes')
-      } else {
-        // In development, use Docker
-        compileResult = await execAsync(getCommand('forge build --force --sizes'))
-      }
-
-      console.log('Compilation output:', compileResult.stdout)
-      if (compileResult.stderr) {
-        console.error('Compilation errors:', compileResult.stderr)
-        return json({ error: 'Compilation failed', details: compileResult.stderr }, { status: 400 })
-      }
-
-      // Get artifact - note the path structure matches Forge's output
-      const contractName = path.parse(fileName).name
-      const artifactPath = `/app/out/${contractName}.sol/${contractName}.json`
-
-      let artifactContent: string
-      if (isProduction) {
-        // In production, read file directly
-        artifactContent = await fs.readFile(artifactPath, 'utf-8')
-      } else {
-        // In development, use Docker
-        const { stdout } = await execAsync(getCommand(`cat ${artifactPath}`))
-        artifactContent = stdout
-      }
-
-      let artifact
       try {
-        artifact = JSON.parse(artifactContent)
+        // Create directories if they don't exist and set permissions
+        await fs.mkdir(outDir, { recursive: true, mode: 0o755 })
+        await fs.mkdir(contractsDir, { recursive: true, mode: 0o755 })
+
+        // Set permissions on the contract file
+        if (isProduction) {
+          await fs.writeFile(contractPath, content)
+          // Ensure forge can read the contract file
+          await fs.chmod(contractPath, 0o644)
+        } else {
+          await execAsync(`docker exec bonding-curves-anvil-1 bash -c "echo '${escapedContent}' > ${contractPath}"`)
+        }
+
+        // Compile using forge
+        let compileResult: { stdout: string; stderr: string }
+        if (isProduction) {
+          // In production, run forge directly
+          compileResult = await execAsync('forge build --force --sizes')
+        } else {
+          // In development, use Docker
+          compileResult = await execAsync(getCommand('forge build --force --sizes'))
+        }
+
+        // Log directory contents for debugging
+        console.log('Contract directory contents:', await fs.readdir(contractsDir))
+        console.log('Output directory contents:', await fs.readdir(outDir))
+
+        console.log('Compilation output:', compileResult.stdout)
+        if (compileResult.stderr) {
+          console.error('Compilation errors:', compileResult.stderr)
+          return json({ error: 'Compilation failed', details: compileResult.stderr }, { status: 400 })
+        }
+
+        // Get artifact - note the path structure matches Forge's output
+        const contractName = path.parse(fileName).name
+        const artifactPath = `/app/out/${contractName}.sol/${contractName}.json`
+
+        let artifactContent: string
+        if (isProduction) {
+          // In production, read file directly
+          artifactContent = await fs.readFile(artifactPath, 'utf-8')
+        } else {
+          // In development, use Docker
+          const { stdout } = await execAsync(getCommand(`cat ${artifactPath}`))
+          artifactContent = stdout
+        }
+
+        let artifact
+        try {
+          artifact = JSON.parse(artifactContent)
+        } catch (error) {
+          console.error('Failed to parse artifact:', error)
+          return json({ error: 'Failed to read contract artifact' }, { status: 500 })
+        }
+
+        const constructor = artifact.abi.find((item: any) => item.type === 'constructor')
+        const constructorInputs = constructor?.inputs || []
+        const needsConstructorArgs = constructorInputs.length > 0
+
+        return json({
+          abi: artifact.abi,
+          bytecode: artifact.bytecode.object,
+          constructorInputs,
+          needsConstructorArgs
+        })
+
       } catch (error) {
-        console.error('Failed to parse artifact:', error)
-        return json({ error: 'Failed to read contract artifact' }, { status: 500 })
+        console.error('Failed to set up directories:', error)
+        return json(
+          { error: 'Failed to set up directories' },
+          { status: 500 }
+        )
+      } finally {
+        // Clean up
+        try {
+          if (isProduction) {
+            await fs.unlink(`/app/contracts/${fileName}`).catch(() => { })
+          } else {
+            await execAsync(getCommand(`rm /app/contracts/${fileName}`)).catch(() => { })
+          }
+        } catch (cleanupError) {
+          console.error('Failed to clean up temporary file:', cleanupError)
+        }
       }
-
-      const constructor = artifact.abi.find((item: any) => item.type === 'constructor')
-      const constructorInputs = constructor?.inputs || []
-      const needsConstructorArgs = constructorInputs.length > 0
-
-      return json({
-        abi: artifact.abi,
-        bytecode: artifact.bytecode.object,
-        constructorInputs,
-        needsConstructorArgs
-      })
-
     } catch (error) {
       console.error('Compilation failed:', error)
       return json(
         { error: error instanceof Error ? error.message : 'Contract compilation failed' },
         { status: 500 }
       )
-    } finally {
-      // Clean up
-      try {
-        if (isProduction) {
-          await fs.unlink(`/app/contracts/${fileName}`).catch(() => { })
-        } else {
-          await execAsync(getCommand(`rm /app/contracts/${fileName}`)).catch(() => { })
-        }
-      } catch (cleanupError) {
-        console.error('Failed to clean up temporary file:', cleanupError)
-      }
     }
   } catch (error) {
     console.error('Error:', error)
