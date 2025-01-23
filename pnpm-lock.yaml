@@ -472,6 +472,9 @@ importers:
       '@remix-run/serve':
         specifier: ^2.15.1
         version: 2.15.1(typescript@5.4.5)
+      '@resvg/resvg-js':
+        specifier: ^2.6.2
+        version: 2.6.2
       '@tanstack/react-query':
         specifier: ^5.32.0
         version: 5.45.0(react@18.3.1)
@@ -550,6 +553,9 @@ importers:
       remix-utils:
         specifier: ^7.6.0
         version: 7.6.0(@remix-run/node@2.15.1(typescript@5.4.5))(@remix-run/react@2.15.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.4.5))(@remix-run/router@1.21.0)(is-ip@3.1.0)(react@18.3.1)(zod@3.23.8)
+      satori:
+        specifier: ^0.10.14
+        version: 0.10.14
       tailwind-merge:
         specifier: ^2.3.0
         version: 2.3.0
