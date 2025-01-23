@@ -34,40 +34,92 @@ import {
 import { getSpecialPredicate } from '@lib/utils/app'
 import logger from '@lib/utils/logger'
 import { usePrivy } from '@privy-io/react-auth'
+import type { LoaderFunctionArgs, MetaFunction } from '@remix-run/node'
 import { useLoaderData, useParams } from '@remix-run/react'
 // import { requireUser } from '@server/auth'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
 import { useAtom } from 'jotai'
 import { formatUnits } from 'viem'
 
-export async function loader() {
+export async function loader({ request }: LoaderFunctionArgs) {
   const queryClient = new QueryClient()
-  // const user = await requireUser(request)
-  // const wallet = user?.wallet?.address
 
-  await queryClient.prefetchQuery({
-    queryKey: ['get-list-details', { predicateId: 3, objectId: 620 }],
-    queryFn: () =>
-      fetcher<GetListDetailsQuery, GetListDetailsQueryVariables>(
-        GetListDetailsDocument,
-        {
-          tagPredicateId: 3,
-          globalWhere: {
-            predicate_id: {
-              _eq: 3,
-            },
-            object_id: {
-              _eq: 620,
-            },
-          },
-        },
-      ),
-  })
+  const variables = {
+    tagPredicateId: 3,
+    globalWhere: {
+      predicate_id: {
+        _eq: 3,
+      },
+      object_id: {
+        _eq: 620,
+      },
+    },
+  }
+
+  const listData = await fetcher<
+    GetListDetailsQuery,
+    GetListDetailsQueryVariables
+  >(GetListDetailsDocument, variables)()
+
+  await queryClient.setQueryData(['get-list-details', variables], listData)
+
+  const { origin } = new URL(request.url)
+  const ogImageUrl = `${origin}/resources/create-og?id=${620}&type=list`
+
+  logger('ogImageUrl data in loader', ogImageUrl)
+  logger('listData', listData)
 
   return {
-    // wallet,
     dehydratedState: dehydrate(queryClient),
+    ogImageUrl,
+    objectResult: listData?.globalTriples[0]?.object,
   }
+}
+
+export const meta: MetaFunction<typeof loader> = ({ data }) => {
+  if (!data) {
+    return []
+  }
+
+  const { objectResult, ogImageUrl } = data
+  logger('ogImageUrl data in meta', ogImageUrl)
+
+  return [
+    {
+      title: objectResult ? objectResult.label : 'Error | Intuition Launchpad',
+    },
+    {
+      name: 'description',
+      content: `Intuition is an ecosystem of technologies composing a universal and permissionless knowledge graph, capable of handling both objective facts and subjective opinions - delivering superior data for intelligences across the spectrum, from human to artificial.`,
+    },
+    {
+      property: 'og-title',
+      name: objectResult ? objectResult.label : 'Error | Intuition Launchpad',
+    },
+    {
+      property: 'og:image',
+      content: ogImageUrl,
+    },
+    { property: 'og:site_name', content: 'Intuition Launchpad' },
+    { property: 'og:locale', content: 'en_US' },
+    {
+      name: 'twitter:image',
+      content: ogImageUrl,
+    },
+    {
+      name: 'twitter:card',
+      content: 'summary_large_image',
+    },
+    {
+      name: 'twitter:title',
+      content: `Intuition Launchpad | ${objectResult ? objectResult.label : ''}`,
+    },
+    {
+      name: 'twitter:description',
+      content: 'Bringing trust to trustless systems.',
+    },
+    { name: 'twitter:site', content: '@0xIntuition' },
+  ]
 }
 
 export function ErrorBoundary() {
