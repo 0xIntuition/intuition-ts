@@ -56,6 +56,7 @@ export default function Quests() {
       <div className="grid gap-6 md:grid-cols-2">
         <Suspense fallback={<QuestsSkeleton />}>
           <MinigameCardWrapper
+            questionId={1}
             onStart={() => handleStartOnboarding(mockMinigames[0].id)}
           />
         </Suspense>

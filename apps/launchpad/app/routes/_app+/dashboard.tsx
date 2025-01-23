@@ -56,6 +56,7 @@ export default function Index() {
       <div className="grid gap-6 md:grid-cols-2">
         <Suspense fallback={<MinigameSkeleton />}>
           <MinigameCardWrapper
+            questionId={1}
             onStart={() => handleStartOnboarding(mockMinigames[0].id)}
           />
         </Suspense>
