@@ -65,6 +65,10 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
   const objectId =
     getSpecialPredicate(CURRENT_ENV).web3Wallet.vaultId.toString()
 
+  logger('current env', CURRENT_ENV)
+  logger('predicateId', predicateId)
+  logger('objectId', objectId)
+
   const { data: listData, isLoading: isLoadingList } = useGetListDetailsQuery(
     {
       tagPredicateId: predicateId,

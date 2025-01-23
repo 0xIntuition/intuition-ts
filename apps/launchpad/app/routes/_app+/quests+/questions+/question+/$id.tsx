@@ -22,6 +22,7 @@ import { OnboardingModal } from '@components/onboarding-modal/onboarding-modal'
 import ShareModal from '@components/share-modal'
 import { columns } from '@components/ui/table/columns'
 import { DataTable } from '@components/ui/table/data-table'
+import { CURRENT_ENV } from '@consts/general'
 import { useGoBack } from '@lib/hooks/useGoBack'
 import { usePoints } from '@lib/hooks/usePoints'
 import { useQuestionData } from '@lib/hooks/useQuestionData'
@@ -30,6 +31,7 @@ import {
   onboardingModalAtom,
   shareModalAtom,
 } from '@lib/state/store'
+import { getSpecialPredicate } from '@lib/utils/app'
 import logger from '@lib/utils/logger'
 import { usePrivy } from '@privy-io/react-auth'
 import { useLoaderData, useParams } from '@remix-run/react'
@@ -98,15 +100,20 @@ export default function MiniGameOne() {
     ? `${location.pathname}${location.search}`
     : `${location.pathname}${location.search}${location.search ? '&' : '?'}`
 
+  const predicateId =
+    getSpecialPredicate(CURRENT_ENV).tagPredicate.id.toString()
+  const objectId =
+    getSpecialPredicate(CURRENT_ENV).web3Wallet.vaultId.toString()
+
   const { data: listData } = useGetListDetailsQuery(
     {
-      tagPredicateId: 3,
+      tagPredicateId: predicateId,
       globalWhere: {
         predicate_id: {
-          _eq: 3,
+          _eq: predicateId,
         },
         object_id: {
-          _eq: 620,
+          _eq: objectId,
         },
       },
     },
