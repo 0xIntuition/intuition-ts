@@ -12,12 +12,6 @@ export default function PrivyLogout({ wallet }: { wallet: string }) {
   const logoutTimeoutRef = useRef<NodeJS.Timeout | null>(null)
   const hasInitialized = useRef(false)
 
-  console.log('address', address)
-  console.log('wallet', wallet)
-  console.log('isConnected', isConnected)
-  console.log('authenticated', authenticated)
-  console.log('ready', ready)
-
   useEffect(() => {
     let mounted = true
     const handleLogout = async () => {
