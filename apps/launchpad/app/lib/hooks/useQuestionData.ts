@@ -1,5 +1,7 @@
 import { useGetListDetailsQuery } from '@0xintuition/graphql'
 
+import { CURRENT_ENV } from '@consts/general'
+import { getSpecialPredicate } from '@lib/utils/app'
 import logger from '@lib/utils/logger'
 import { useQuery } from '@tanstack/react-query'
 
@@ -7,21 +9,24 @@ interface UseQuestionDataProps {
   questionId: number
 }
 
+const predicateId = getSpecialPredicate(CURRENT_ENV).tagPredicate.id.toString()
+const objectId = getSpecialPredicate(CURRENT_ENV).web3Wallet.vaultId.toString()
+
 export function useQuestionData({ questionId }: UseQuestionDataProps) {
   const { data: listData, isLoading: isLoadingList } = useGetListDetailsQuery(
     {
-      tagPredicateId: 3,
+      tagPredicateId: predicateId,
       globalWhere: {
         predicate_id: {
-          _eq: 3,
+          _eq: predicateId,
         },
         object_id: {
-          _eq: 620,
+          _eq: objectId,
         },
       },
     },
     {
-      queryKey: ['get-list-details', { predicateId: 3, objectId: 620 }],
+      queryKey: ['get-list-details', { predicateId, objectId }],
     },
   )
 
