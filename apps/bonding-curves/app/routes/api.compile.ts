@@ -88,7 +88,7 @@ export const action: ActionFunction = async ({ request }) => {
         if (isProduction) {
           // Run forge with explicit output path and verbose logging
           console.log('Running forge build...')
-          compileResult = await execAsync(`forge build --force --sizes --out ${outDir} -vvv`)
+          compileResult = await execAsync(`forge build --force --sizes --out ${outDir} --contracts /app/contracts --lib /app/lib -vvv`)
           console.log('Forge build complete')
 
           // Log the contents of the output directory after compilation
