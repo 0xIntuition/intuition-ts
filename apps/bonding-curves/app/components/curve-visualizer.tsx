@@ -5,6 +5,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { Button, Input, Label, Text } from '@0xintuition/1ui'
 
 import { generateCurvePoints } from '~/lib/curveUtils'
+import html2canvas from 'html2canvas'
 import { X } from 'lucide-react'
 import {
   createPublicClient,
@@ -1063,6 +1064,130 @@ export function CurveVisualizer() {
     [selectedCurveId],
   )
 
+  const handleScreenshot = useCallback(async () => {
+    const contentArea = document.querySelector<HTMLDivElement>(
+      '.flex.flex-col.gap-4 > .flex.flex-col.gap-4.rounded-lg.border.border-border.p-4',
+    )
+    if (!contentArea) return
+
+    try {
+      const rect = contentArea.getBoundingClientRect()
+      const appBg = window.getComputedStyle(document.body).backgroundColor
+
+      // Render at 8x scale
+      const scale = 8
+      const canvas = await html2canvas(contentArea, {
+        backgroundColor: 'transparent',
+        scale: scale,
+        logging: false,
+        useCORS: true,
+        allowTaint: true,
+        foreignObjectRendering: true,
+        width: rect.width + scale, // scale of 1 is off by 1 px
+        height: rect.height + scale,
+        x: -rect.left,
+        y: -rect.top,
+        onclone: (clonedDoc) => {
+          const clonedContent = clonedDoc.querySelector<HTMLElement>(
+            '.flex.flex-col.gap-4 > .flex.flex-col.gap-4.rounded-lg.border.border-border.p-4',
+          )
+          if (clonedContent) {
+            // Set the background color on the content area
+            clonedContent.style.backgroundColor = appBg
+            clonedContent.style.position = 'relative'
+            clonedContent.style.width = `${rect.width}px`
+            clonedContent.style.height = `${rect.height}px`
+
+            // Fix Browse button styling
+            const fileInput = clonedContent.querySelector('input[type="file"]')
+            if (fileInput instanceof HTMLElement) {
+              fileInput.style.opacity = '1'
+              fileInput.style.cursor = 'pointer'
+            }
+
+            // Ensure all child elements maintain their positions
+            clonedContent.querySelectorAll('*').forEach((el) => {
+              if (el instanceof HTMLElement) {
+                const originalEl = document.querySelector(
+                  `[data-testid="${el.dataset.testid}"]`,
+                )
+                if (originalEl) {
+                  const originalRect = originalEl.getBoundingClientRect()
+                  const relativeTop = originalRect.top - rect.top
+                  const relativeLeft = originalRect.left - rect.left
+                  el.style.position = 'absolute'
+                  el.style.top = `${relativeTop}px`
+                  el.style.left = `${relativeLeft}px`
+                }
+              }
+            })
+
+            // Make tooltips visible
+            clonedContent
+              .querySelectorAll('[role="tooltip"]')
+              .forEach((tooltip) => {
+                if (tooltip instanceof HTMLElement) {
+                  tooltip.style.visibility = 'visible'
+                  tooltip.style.opacity = '1'
+                  tooltip.style.display = 'block'
+                }
+              })
+
+            // Ensure SVG elements are visible
+            clonedContent.querySelectorAll('svg').forEach((svg) => {
+              if (svg instanceof SVGElement) {
+                svg.style.visibility = 'visible'
+                svg.style.opacity = '1'
+              }
+            })
+          }
+        },
+      })
+
+      // Create a new canvas at 2x scale for the final output
+      const finalScale = 2
+      const outputCanvas = document.createElement('canvas')
+      outputCanvas.width = rect.width * finalScale
+      outputCanvas.height = rect.height * finalScale
+      const ctx = outputCanvas.getContext('2d')
+
+      if (ctx) {
+        // Enable image smoothing for better antialiasing
+        ctx.imageSmoothingEnabled = true
+        ctx.imageSmoothingQuality = 'high'
+
+        // Draw the high-res canvas onto the smaller output canvas
+        ctx.drawImage(
+          canvas,
+          0,
+          0,
+          canvas.width,
+          canvas.height,
+          0,
+          0,
+          outputCanvas.width,
+          outputCanvas.height,
+        )
+      }
+
+      // Use the downscaled canvas for the blob
+      outputCanvas.toBlob(async (blob) => {
+        if (!blob) return
+        try {
+          await navigator.clipboard.write([
+            new ClipboardItem({
+              'image/png': blob,
+            }),
+          ])
+        } catch (err) {
+          console.error('Error copying to clipboard:', err)
+        }
+      }, 'image/png')
+    } catch (err) {
+      console.error('Error creating screenshot:', err)
+    }
+  }, [])
+
   // Cleanup on unmount
   useEffect(() => {
     return () => {
@@ -1074,11 +1199,9 @@ export function CurveVisualizer() {
 
   return (
     <div className="flex flex-col gap-4">
-      <div>
-        <Text variant="heading2">Bonding Curve Visualizer</Text>
-        <Text variant="body" className="text-muted-foreground">
-          Upload and compare multiple bonding curve implementations
-        </Text>
+      <div className="flex justify-between items-center">
+        <div></div>
+        <Button onClick={handleScreenshot}>Copy to Clipboard</Button>
       </div>
 
       <div className="flex flex-col gap-4 rounded-lg border border-border p-4">

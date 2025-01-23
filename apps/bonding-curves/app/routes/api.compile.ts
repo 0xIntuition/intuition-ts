@@ -62,11 +62,11 @@ export const action: ActionFunction = async ({ request }) => {
 
       try {
         // Create directories if they don't exist and set permissions
-        await fs.mkdir(outDir, { recursive: true, mode: 0o777 }) // Full permissions for testing
-        await fs.mkdir(contractsDir, { recursive: true, mode: 0o755 })
-
-        // Set permissions on the contract file
         if (isProduction) {
+          await fs.mkdir(outDir, { recursive: true, mode: 0o777 }) // Full permissions for testing
+          await fs.mkdir(contractsDir, { recursive: true, mode: 0o755 })
+
+          // Set permissions on the contract file
           await fs.writeFile(contractPath, content)
           await fs.chmod(contractPath, 0o644)
 
@@ -76,13 +76,14 @@ export const action: ActionFunction = async ({ request }) => {
           // Log current working directory
           const { stdout: pwdOutput } = await execAsync('pwd')
           console.log('Current working directory:', pwdOutput)
-        } else {
-          await execAsync(`docker exec bonding-curves-anvil-1 bash -c "echo '${escapedContent}' > ${contractPath}"`)
-        }
 
-        // Log contract file contents and location before compilation
-        console.log('Contract path:', contractPath)
-        console.log('Contract directory contents:', await fs.readdir(contractsDir))
+          // Log contract file contents and location before compilation
+          console.log('Contract path:', contractPath)
+          console.log('Contract directory contents:', await fs.readdir(contractsDir))
+        } else {
+          // In development, only create directories in Docker
+          await execAsync(`docker exec bonding-curves-anvil-1 bash -c "mkdir -p /app/contracts /app/out && echo '${escapedContent}' > /app/contracts/${fileName}"`)
+        }
 
         let compileResult: { stdout: string; stderr: string }
         if (isProduction) {
@@ -117,8 +118,10 @@ export const action: ActionFunction = async ({ request }) => {
         }
 
         // Log directory contents and permissions for debugging
-        const { stdout: lsOutput } = await execAsync(`ls -la ${outDir}`)
-        console.log('Output directory permissions:', lsOutput)
+        if (isProduction) {
+          const { stdout: lsOutput } = await execAsync(`ls -la ${outDir}`)
+          console.log('Output directory permissions:', lsOutput)
+        }
 
         console.log('Compilation output:', compileResult.stdout)
         if (compileResult.stderr) {

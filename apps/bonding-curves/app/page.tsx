@@ -2,6 +2,8 @@
 
 import { CurveVisualizer } from './components/curve-visualizer'
 
+// This may be unused
+
 export default function Page() {
   return (
     <div className="min-h-screen bg-background">

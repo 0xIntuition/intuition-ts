@@ -18,9 +18,12 @@ export default function Index() {
       <div className="container mx-auto py-10">
         <div className="flex flex-col gap-6">
           <div className="flex flex-col gap-2">
-            <h1 className="text-4xl font-bold">Bonding Curves</h1>
+            <h1 className="text-4xl font-bold">
+              Intuition Bonding Curve Visualizer
+            </h1>
             <p className="text-muted-foreground">
-              Upload and visualize your custom bonding curve implementations
+              Upload and visualize any bonding curve contract compatible with
+              Intuition Protocol.
             </p>
           </div>
           <CurveVisualizer />
