@@ -23,7 +23,9 @@ const multivault = new Multivault({
   walletClient,
 })
 
-const { vaultId, events } = await multivault.createAtom('hello')
+const { vaultId, events } = await multivault.createAtom(
+  'ipfs://bafkreiafo3goi2szvfn7lqlkralj727mq5jjptxh53em4c4vary6dmnpp4'
+)
 
 console.log(events)
 ```
