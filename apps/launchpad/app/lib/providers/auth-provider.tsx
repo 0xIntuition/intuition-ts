@@ -2,6 +2,7 @@ import { createContext, useContext, useState } from 'react'
 
 import { toast } from '@0xintuition/1ui'
 
+import logger from '@lib/utils/logger'
 import { useLogin, useLogout, usePrivy } from '@privy-io/react-auth'
 import { useRevalidator } from '@remix-run/react'
 
@@ -22,8 +23,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(false)
 
   const { login } = useLogin({
-    onComplete: (user, isNewUser) => {
-      console.log('Login complete:', { user, isNewUser })
+    onComplete: (params) => {
+      logger('Login complete:', params)
       setIsLoading(false)
       toast.success('Wallet Connected')
     },
@@ -35,7 +36,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   })
   const { logout } = useLogout({
     onSuccess: () => {
-      console.log('User logged out')
       setIsLoading(false)
       toast.warning('Wallet Disconnected')
     },
