@@ -32,6 +32,7 @@ export function AtomDetailsModal({
       <Icon name="circles-three" className="h-6 w-6" />
     ),
     atomId,
+    listClaim: true, // TODO: Add handling for regular atoms (not in a list)
     userCount: data?.users ?? 0,
     ethStaked: data?.assets ?? 0,
     mutualConnections: 0, // Placeholder for now

@@ -1,12 +1,14 @@
-import { cn, Text } from '@0xintuition/1ui'
+import { Button, ButtonVariant, cn, Text } from '@0xintuition/1ui'
 
-import { Coins, Users } from 'lucide-react'
+import { PORTAL_URL } from '@consts/general'
+import { Coins, ExternalLink, Users } from 'lucide-react'
 
 interface AtomDetailsCardProps extends React.HTMLAttributes<HTMLDivElement> {
   name: string
   list?: string
   icon: React.ReactNode
   atomId: number
+  listClaim: boolean
   userCount: number
   ethStaked: number
 }
@@ -16,6 +18,7 @@ export function AtomDetailsCard({
   list,
   icon,
   atomId,
+  listClaim = true, // TODO: Add handling for regular atoms (not in a list)
   userCount,
   ethStaked,
   className,
@@ -58,6 +61,16 @@ export function AtomDetailsCard({
               </div>
             </div>
           </div>
+          <a
+            href={`${PORTAL_URL}/${listClaim ? 'claim' : 'identity'}/${atomId}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Button variant={ButtonVariant.secondary}>
+              <ExternalLink className="h-4 w-4" />
+              View on Portal
+            </Button>
+          </a>
         </div>
 
         {/* Middle section with description and stats */}

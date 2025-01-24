@@ -45,6 +45,11 @@ export const BLOCK_EXPLORER_URL =
     ? 'https://sepolia.basescan.org'
     : 'https://basescan.org'
 
+export const PORTAL_URL =
+  CURRENT_ENV === 'development'
+    ? 'https://dev.portal.intuition.systems/readonly'
+    : 'https://beta.portal.intuition.systems/readonly'
+
 export const IPFS_GATEWAY_URL = 'https://ipfs.io/ipfs'
 
 // Routes
