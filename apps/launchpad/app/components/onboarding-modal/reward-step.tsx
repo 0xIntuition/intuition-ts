@@ -1,19 +1,9 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 import { BLOCK_EXPLORER_URL } from '@consts/general'
 import { useReward } from 'react-rewards'
 
 import { NewAtomMetadata, Topic } from './types'
-
-const REWARD_CONFIG = {
-  lifetime: 1000,
-  elementCount: 100,
-  startVelocity: 25,
-  zIndex: 1000,
-  spread: 100,
-  colors: ['#34C578'],
-  position: 'absolute',
-}
 
 interface RewardStepProps {
   isOpen: boolean
@@ -33,33 +23,64 @@ export function RewardStep({
   awardPoints,
   redirectUrl,
 }: RewardStepProps) {
-  const { reward: triggerReward } = useReward(
-    'rewardId',
-    'confetti',
-    REWARD_CONFIG,
-  )
+  const [rewardReady, setRewardReady] = useState(false)
+  const [hasRewardAnimated, setHasRewardAnimated] = useState(false)
+  const [hasAwardedPoints, setHasAwardedPoints] = useState(false)
+  const [confettiTriggered, setConfettiTriggered] = useState(false)
+
+  const { reward: triggerReward } = useReward('rewardId', 'confetti', {
+    lifetime: 1000,
+    elementCount: 100,
+    startVelocity: 25,
+    zIndex: 1000,
+    spread: 100,
+    colors: ['#34C578'],
+    position: 'absolute',
+    onAnimationComplete: () => {
+      setHasRewardAnimated(true)
+      setConfettiTriggered(false)
+    },
+  })
 
   useEffect(() => {
-    let timer: NodeJS.Timeout
+    // Only run this once when the component mounts and conditions are met
+    const shouldAwardPoints =
+      isOpen && !hasAwardedPoints && userWallet && awardPoints
 
-    if (isOpen && userWallet && awardPoints) {
-      timer = setTimeout(() => {
+    if (shouldAwardPoints) {
+      setHasAwardedPoints(true)
+      awardPoints(userWallet.toLowerCase(), redirectUrl)
+    }
+  }, [isOpen, hasAwardedPoints, userWallet, awardPoints, redirectUrl])
+
+  useEffect(() => {
+    if (isOpen && !hasRewardAnimated && rewardReady && !confettiTriggered) {
+      const timer = setTimeout(() => {
+        setConfettiTriggered(true)
         triggerReward()
-        awardPoints(userWallet.toLowerCase(), redirectUrl)
       }, 500)
+
+      return () => clearTimeout(timer)
     }
 
-    return () => {
-      if (timer) {
-        clearTimeout(timer)
-      }
+    if (!isOpen) {
+      setHasRewardAnimated(false)
+      setHasAwardedPoints(false)
+      setConfettiTriggered(false)
     }
-  }, [isOpen, userWallet, awardPoints, redirectUrl, triggerReward])
+  }, [isOpen, hasRewardAnimated, rewardReady, confettiTriggered, triggerReward])
 
   return (
     <div className="p-8">
       <div className="flex flex-col items-center space-y-6">
-        <span id="rewardId" />
+        <span
+          id="rewardId"
+          ref={(el) => {
+            if (el && !rewardReady) {
+              setRewardReady(true)
+            }
+          }}
+        />
         <div className="w-16 h-16 rounded-full bg-green-500/10 flex items-center justify-center">
           <svg
             className="w-8 h-8 text-green-500"

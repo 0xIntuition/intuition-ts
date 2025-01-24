@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { startTransition, useCallback, useEffect, useState } from 'react'
 
 import {
   Dialog,
@@ -65,10 +65,6 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
   const objectId =
     getSpecialPredicate(CURRENT_ENV).web3Wallet.vaultId.toString()
 
-  logger('current env', CURRENT_ENV)
-  logger('predicateId', predicateId)
-  logger('objectId', objectId)
-
   const { data: listData, isLoading: isLoadingList } = useGetListDetailsQuery(
     {
       tagPredicateId: predicateId,
@@ -115,20 +111,16 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
 
   const handleTransition = useCallback(
     (updateFn: (prev: OnboardingState) => OnboardingState) => {
-      setIsTransitioning(true)
-      setTimeout(() => {
-        setState(updateFn)
-        setIsTransitioning(false)
-      }, 300)
+      setState((prev) => {
+        setIsTransitioning(true)
+        setTimeout(() => {
+          setIsTransitioning(false)
+        }, 300)
+        return updateFn(prev)
+      })
     },
     [],
   )
-
-  useEffect(() => {
-    if (isOpen) {
-      setState(INITIAL_STATE)
-    }
-  }, [isOpen])
 
   useEffect(() => {
     if (!listData?.globalTriples) {
@@ -161,17 +153,11 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
   }, [state, topics])
 
   useEffect(() => {
-    if (!isOpen) {
-      const MODAL_ANIMATION_DURATION = 300
-      setTimeout(() => {
-        setState(INITIAL_STATE)
-      }, MODAL_ANIMATION_DURATION)
-    }
-  }, [isOpen])
-
-  useEffect(() => {
     if (isOpen) {
+      setState(INITIAL_STATE)
       setSearchTerm('')
+      setIsTransitioning(false)
+
       queryClient.refetchQueries({
         queryKey: [
           'get-list-details',
@@ -182,18 +168,29 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
           },
         ],
       })
-    }
-  }, [isOpen, queryClient])
 
-  useEffect(() => {
-    if (isOpen) {
       document.body.style.paddingRight = 'var(--removed-body-scroll-bar-size)'
       document.body.style.overflow = 'hidden'
     } else {
       document.body.style.paddingRight = ''
       document.body.style.overflow = ''
+
+      const MODAL_ANIMATION_DURATION = 300
+      const timer = setTimeout(() => {
+        setState(INITIAL_STATE)
+        setSearchTerm('')
+        setIsTransitioning(false)
+      }, MODAL_ANIMATION_DURATION)
+
+      return () => clearTimeout(timer)
     }
-  }, [isOpen])
+  }, [isOpen, queryClient, predicateId, objectId])
+
+  useEffect(() => {
+    if (txState?.status) {
+      logger('txState.status changed:', txState.status)
+    }
+  }, [txState?.status])
 
   const handleNext = useCallback(() => {
     if (state.currentStep === STEPS.TOPICS) {
@@ -285,11 +282,14 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
     [],
   )
 
-  const updateStepStatus = (stepId: StepId, status: Step['status']) => {
-    setSteps((prev) =>
-      prev.map((step) => (step.id === stepId ? { ...step, status } : step)),
-    )
-  }
+  const updateStepStatus = useCallback(
+    (stepId: StepId, status: Step['status']) => {
+      setSteps((prev) =>
+        prev.map((step) => (step.id === stepId ? { ...step, status } : step)),
+      )
+    },
+    [],
+  )
 
   const handleStepClick = useCallback(
     (stepId: StepId) => {
@@ -347,23 +347,32 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
     navigate('/quests/questions/question/1')
   }, [navigate, onClose])
 
-  useEffect(() => {
-    logger('Form submitted')
-  }, [])
+  const onStakingSuccess = useCallback(() => {
+    startTransition(() => {
+      setSteps((prev) => {
+        const newSteps = prev.map((step) => {
+          if (step.id === STEPS.SIGNAL) {
+            return { ...step, status: 'completed' as const }
+          }
+          if (step.id === STEPS.REWARD) {
+            return { ...step, status: 'current' as const }
+          }
+          return step
+        })
+        return newSteps
+      })
 
-  const onStakingSuccess = () => {
-    handleTransition((prev) => ({
-      ...prev,
-      currentStep: STEPS.REWARD,
-    }))
-    updateStepStatus(STEPS.SIGNAL, 'completed')
-    updateStepStatus(STEPS.REWARD, 'current')
+      handleTransition((prev) => ({
+        ...prev,
+        currentStep: STEPS.REWARD,
+      }))
+    })
 
     if (!userWallet) {
       logger('Missing userWallet')
       return
     }
-  }
+  }, [handleTransition, userWallet])
 
   const onCreationSuccess = (metadata: NewAtomMetadata) => {
     handleTransition((prev) => ({
@@ -406,8 +415,6 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
     updateStepStatus(STEPS.TOPICS, 'completed')
     updateStepStatus(STEPS.CREATE, 'current')
   }, [handleTransition])
-
-  logger('txState.status', txState?.status)
 
   return (
     <ClientOnly>
