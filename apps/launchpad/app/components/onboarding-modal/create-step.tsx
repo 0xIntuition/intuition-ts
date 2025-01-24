@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 import {
   Card,
@@ -108,10 +108,6 @@ export function CreateStep({ onCreationSuccess }: CreateStepProps) {
     reset,
   } = useCreateAtomMutation(MULTIVAULT_CONTRACT_ADDRESS)
 
-  useEffect(() => {
-    console.log('State updated:', { validationErrors, showErrors })
-  }, [validationErrors, showErrors])
-
   const updateStepStatus = (stepId: string, status: StepStatus) => {
     setSteps((prev) =>
       prev.map((step) => (step.id === stepId ? { ...step, status } : step)),
@@ -161,22 +157,12 @@ export function CreateStep({ onCreationSuccess }: CreateStepProps) {
   }
 
   const handleDepositSubmit = async (data: DepositFormData) => {
-    console.log('handleDepositSubmit called with data:', data)
     try {
       const totalAmount = (
         +formatUnits(BigInt(atomCost ?? '0'), 18) + +data.amount
       ).toString()
 
-      console.log('Debug validation:', {
-        totalAmount,
-        balance: balance?.formatted,
-        atomCost: atomCost ? formatUnits(BigInt(atomCost), 18) : null,
-        dataAmount: data.amount,
-        isGreaterThan: +totalAmount > +(balance?.formatted ?? '0'),
-      })
-
       if (+totalAmount > +(balance?.formatted ?? '0')) {
-        console.log('Setting validation errors')
         setValidationErrors(['Insufficient balance'])
         setShowErrors(true)
         return
@@ -309,12 +295,6 @@ export function CreateStep({ onCreationSuccess }: CreateStepProps) {
         )
       case 'review':
         if (atomData && ipfsUri) {
-          console.log('Debug error display:', {
-            showErrors,
-            validationErrors,
-            currentStep,
-          })
-
           return (
             <SurveyDepositForm
               onSubmit={handleDepositSubmit}
