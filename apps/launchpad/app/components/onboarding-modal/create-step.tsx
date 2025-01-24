@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import {
   Card,
@@ -35,7 +35,7 @@ import { useCreateAtomConfig } from '@lib/hooks/useCreateAtomConfig'
 import { ipfsUrl } from '@lib/utils/app'
 import { usePrivy } from '@privy-io/react-auth'
 import { Address, decodeEventLog, formatUnits, toHex } from 'viem'
-import { usePublicClient } from 'wagmi'
+import { useBalance, usePublicClient } from 'wagmi'
 
 // Register all form types
 registerAtomForm('Thing', {
@@ -78,6 +78,8 @@ export function CreateStep({ onCreationSuccess }: CreateStepProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [transactionHash, setTransactionHash] = useState<string | null>(null)
   const [lastTxHash, setLastTxHash] = useState<string | null>(null)
+  const [validationErrors, setValidationErrors] = useState<string[]>([])
+  const [showErrors, setShowErrors] = useState(false)
 
   const { mutateAsync: pinThing, isPending } = usePinThingMutation({
     onError: (error) => {
@@ -88,6 +90,9 @@ export function CreateStep({ onCreationSuccess }: CreateStepProps) {
 
   const { user: privyUser } = usePrivy()
   const { wallet } = privyUser ?? {}
+  const { data: balance } = useBalance({
+    address: wallet?.address as `0x${string}`,
+  })
   const publicClient = usePublicClient()
   const { data: createAtomConfig, isLoading: isLoadingConfig } =
     useCreateAtomConfig()
@@ -102,6 +107,10 @@ export function CreateStep({ onCreationSuccess }: CreateStepProps) {
     isError,
     reset,
   } = useCreateAtomMutation(MULTIVAULT_CONTRACT_ADDRESS)
+
+  useEffect(() => {
+    console.log('State updated:', { validationErrors, showErrors })
+  }, [validationErrors, showErrors])
 
   const updateStepStatus = (stepId: string, status: StepStatus) => {
     setSteps((prev) =>
@@ -152,7 +161,31 @@ export function CreateStep({ onCreationSuccess }: CreateStepProps) {
   }
 
   const handleDepositSubmit = async (data: DepositFormData) => {
+    console.log('handleDepositSubmit called with data:', data)
     try {
+      const totalAmount = (
+        +formatUnits(BigInt(atomCost ?? '0'), 18) + +data.amount
+      ).toString()
+
+      console.log('Debug validation:', {
+        totalAmount,
+        balance: balance?.formatted,
+        atomCost: atomCost ? formatUnits(BigInt(atomCost), 18) : null,
+        dataAmount: data.amount,
+        isGreaterThan: +totalAmount > +(balance?.formatted ?? '0'),
+      })
+
+      if (+totalAmount > +(balance?.formatted ?? '0')) {
+        console.log('Setting validation errors')
+        setValidationErrors(['Insufficient balance'])
+        setShowErrors(true)
+        return
+      }
+
+      // Reset validation state when proceeding
+      setValidationErrors([])
+      setShowErrors(false)
+
       setIsSubmitting(true)
       if (!ipfsUri) {
         throw new Error('IPFS CID not found')
@@ -162,24 +195,16 @@ export function CreateStep({ onCreationSuccess }: CreateStepProps) {
         throw new Error('Atom cost not found')
       }
 
-      // Don't update step status yet
-      // Just move to create step to show transaction UI
       setCurrentStep('create')
 
-      // Wait for transaction to be initiated
       const txHash = await createAtom({
-        val:
-          (+formatUnits(BigInt(atomCost), 18) + +data.amount).toString() ?? '0',
+        val: totalAmount,
         uri: toHex(ipfsUri),
         contract: MULTIVAULT_CONTRACT_ADDRESS,
         userWallet: wallet?.address as `0x${string}`,
       })
 
-      // Only update step status after transaction is successfully initiated
       if (publicClient && txHash) {
-        // const receipt = await publicClient.waitForTransactionReceipt({
-        //   hash: txHash,
-        // })
         setTransactionHash(txHash)
         updateStepStatus('review', 'completed')
         updateStepStatus('create', 'current')
@@ -279,15 +304,20 @@ export function CreateStep({ onCreationSuccess }: CreateStepProps) {
           <SurveyFormContainer
             onSubmit={handleMetadataSubmit}
             isLoading={isPending}
-            defaultValues={atomData || undefined} // Pass the existing data
+            defaultValues={atomData || undefined}
           />
         )
       case 'review':
         if (atomData && ipfsUri) {
+          console.log('Debug error display:', {
+            showErrors,
+            validationErrors,
+            currentStep,
+          })
+
           return (
             <SurveyDepositForm
               onSubmit={handleDepositSubmit}
-              // minDeposit={atomCost?.formatted ?? '0.1'}
               minDeposit={
                 (minDeposit && formatUnits(BigInt(minDeposit), 18)) ??
                 MIN_DEPOSIT
@@ -297,6 +327,8 @@ export function CreateStep({ onCreationSuccess }: CreateStepProps) {
               ipfsUri={ipfsUri}
               isLoadingConfig={isLoadingConfig}
               onBack={() => setCurrentStep('metadata')}
+              validationErrors={validationErrors}
+              showErrors={showErrors}
             />
           )
         }

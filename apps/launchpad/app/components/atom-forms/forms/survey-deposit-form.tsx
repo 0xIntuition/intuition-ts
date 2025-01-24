@@ -5,6 +5,7 @@ import {
   cn,
   Icon,
   IconName,
+  Text,
 } from '@0xintuition/1ui'
 import { useGetAtomByDataQuery } from '@0xintuition/graphql'
 
@@ -14,7 +15,6 @@ import { ipfsUrl } from '@lib/utils/app'
 import { Link } from '@remix-run/react'
 import { Book } from 'lucide-react'
 import { FormProvider, useForm } from 'react-hook-form'
-import { useAccount, useBalance } from 'wagmi'
 
 import { Atom, createDepositSchema, DepositFormData } from '../types'
 
@@ -27,6 +27,8 @@ interface SurveyDepositFormProps {
   ipfsUri: string
   isLoadingConfig?: boolean
   onBack?: () => void
+  validationErrors?: string[]
+  showErrors?: boolean
 }
 
 export function SurveyDepositForm({
@@ -38,10 +40,9 @@ export function SurveyDepositForm({
   ipfsUri,
   isLoadingConfig,
   onBack,
+  validationErrors = [],
+  showErrors = false,
 }: SurveyDepositFormProps) {
-  const { address } = useAccount()
-  const { data: balance } = useBalance({ address })
-
   const { data: existingAtomData, isLoading: isCheckingAtom } =
     useGetAtomByDataQuery(
       {
@@ -55,7 +56,7 @@ export function SurveyDepositForm({
   const atomExists = existingAtomData?.atoms?.[0]?.data === ipfsUri
 
   const form = useForm<DepositFormData>({
-    resolver: zodResolver(createDepositSchema(minDeposit, balance?.value)),
+    resolver: zodResolver(createDepositSchema(minDeposit)),
     defaultValues: {
       amount: minDeposit,
       ...defaultValues,
@@ -66,8 +67,8 @@ export function SurveyDepositForm({
     <FormProvider {...form}>
       <form
         id="deposit-form"
-        onSubmit={form.handleSubmit(onSubmit)}
         className="flex flex-col min-h-[300px]"
+        onSubmit={(e) => e.preventDefault()}
       >
         <div className="flex flex-col flex-1 min-h-0 space-y-6">
           <div className="flex flex-col gap-1 flex-shrink-0">
@@ -150,28 +151,46 @@ export function SurveyDepositForm({
             </div>
           </div>
 
-          <div className="flex justify-between items-center pt-5 flex-shrink-0">
-            <Button
-              type="button"
-              variant={
-                atomExists ? ButtonVariant.primary : ButtonVariant.secondary
-              }
-              size={ButtonSize.md}
-              onClick={onBack}
-              className={cn(onBack ? 'visible' : 'hidden', 'rounded-full')}
-            >
-              Back
-            </Button>
-            <SubmitButton
-              disabled={
-                isSubmitting || isLoadingConfig || isCheckingAtom || atomExists
-              }
-              className="min-w-32"
-              buttonText="Create Atom"
-              loadingText="Creating..."
-              loading={isSubmitting || isLoadingConfig || isCheckingAtom}
-              onClick={() => form.handleSubmit(onSubmit)}
-            />
+          <div className="flex flex-col justify-between items-center pt-5 flex-shrink-0 gap-4">
+            {showErrors && validationErrors.length > 0 && (
+              <div className="flex flex-col gap-2 w-full">
+                {validationErrors.map((error, index) => (
+                  <Text key={index} className="text-destructive text-sm">
+                    {error}
+                  </Text>
+                ))}
+              </div>
+            )}
+
+            <div className="flex justify-between items-center w-full">
+              <Button
+                type="button"
+                variant={
+                  atomExists ? ButtonVariant.primary : ButtonVariant.secondary
+                }
+                size={ButtonSize.md}
+                onClick={onBack}
+                className={cn(onBack ? 'visible' : 'hidden', 'rounded-full')}
+              >
+                Back
+              </Button>
+              <SubmitButton
+                disabled={
+                  isSubmitting ||
+                  isLoadingConfig ||
+                  isCheckingAtom ||
+                  atomExists
+                }
+                className="min-w-32"
+                buttonText="Create Atom"
+                loadingText="Creating..."
+                loading={isSubmitting || isLoadingConfig || isCheckingAtom}
+                onClick={() => {
+                  console.log('Submit button clicked')
+                  form.handleSubmit(onSubmit)()
+                }}
+              />
+            </div>
           </div>
         </div>
       </form>

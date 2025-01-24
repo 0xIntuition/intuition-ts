@@ -57,7 +57,7 @@ export function DepositForm({
   const existingAtomId = existingAtomData?.atoms?.[0]?.id
 
   const form = useForm<DepositFormData>({
-    resolver: zodResolver(createDepositSchema(minDeposit, balance?.value)),
+    resolver: zodResolver(createDepositSchema(minDeposit)),
     defaultValues: {
       amount: minDeposit,
       ...defaultValues,
