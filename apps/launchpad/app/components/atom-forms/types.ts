@@ -41,7 +41,7 @@ export type ThingAtom = z.infer<typeof thingAtomSchema>
 export type OrganizationAtom = z.infer<typeof organizationAtomSchema>
 export type Atom = z.infer<typeof atomSchema>
 
-export const createDepositSchema = (minDeposit: string, balance?: bigint) =>
+export const createDepositSchema = (minDeposit: string) =>
   z.object({
     amount: z
       .string()
@@ -59,19 +59,20 @@ export const createDepositSchema = (minDeposit: string, balance?: bigint) =>
             return false
           }
 
-          if (balance && amount > balance) {
-            ctx.addIssue({
-              code: z.ZodIssueCode.custom,
-              message: `Insufficient balance`,
-            })
-            return false
-          }
+          // TODO: Figure out why validation isn't working in this block
+          // if (balance && amount > balance) {
+          //   ctx.addIssue({
+          //     code: z.ZodIssueCode.custom,
+          //     message: `Insufficient balance`,
+          //   })
+          //   return false
+          // }
 
           return true
-        } catch {
+        } catch (e) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
-            message: 'Invalid ETH amount',
+            message: 'Invalid amount',
           })
           return false
         }
