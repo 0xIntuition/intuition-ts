@@ -26,7 +26,7 @@ import { dehydrate, QueryClient } from '@tanstack/react-query'
 import { ClientOnly } from 'remix-utils/client-only'
 import { formatUnits } from 'viem'
 
-import { mockKnowledgeGraphData } from '../../data/mock-knowledge-graph'
+import { mockKnowledgeGraphData } from '../../lib/data/mock-knowledge-graph'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url)

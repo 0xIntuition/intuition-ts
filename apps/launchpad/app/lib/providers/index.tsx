@@ -21,6 +21,7 @@ interface ProvidersProps {
   children: React.ReactNode
   env?: {
     PRIVY_APP_ID: string
+    PRIVY_CLIENT_ID: string
   }
   dehydratedState?: unknown
 }

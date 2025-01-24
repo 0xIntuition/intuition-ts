@@ -1,4 +1,4 @@
-import { KnowledgeGraphData } from '../types/knowledge-graph'
+import { KnowledgeGraphData } from '../../types/knowledge-graph'
 import {
   generateAtoms,
   generatePredicates,

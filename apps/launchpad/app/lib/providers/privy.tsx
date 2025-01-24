@@ -20,6 +20,7 @@ interface PrivyConfigProps {
   children: React.ReactNode
   env?: {
     PRIVY_APP_ID: string
+    PRIVY_CLIENT_ID: string
   }
 }
 
@@ -34,6 +35,10 @@ export function PrivyConfig({ children, env }: PrivyConfigProps) {
     >
       <PrivyProvider
         appId={env?.PRIVY_APP_ID ?? 'clvcwhbx3082nypes1173q3wd'}
+        clientId={
+          env?.PRIVY_CLIENT_ID ??
+          'WY2kRkuZcyjbMMefCFndHwN87sf6qbxK1zfseTx3Gp2mC'
+        }
         config={privyConfig}
       >
         {children}

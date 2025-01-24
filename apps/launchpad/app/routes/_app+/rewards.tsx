@@ -3,7 +3,7 @@ import { Avatar, Button } from '@0xintuition/1ui'
 import { AggregateIQ } from '@components/aggregate-iq'
 import { ErrorPage } from '@components/error-page'
 import { SkillRadarChart } from '@components/skill-radar-chart'
-import { skills } from 'app/data/mock-rewards'
+import { skills } from '@lib/data/mock-rewards'
 import { motion } from 'framer-motion'
 import { ChevronRight } from 'lucide-react'
 
