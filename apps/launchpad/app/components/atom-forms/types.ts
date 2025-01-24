@@ -59,6 +59,15 @@ export const createDepositSchema = (minDeposit: string) =>
             return false
           }
 
+          // TODO: Figure out why validation isn't working in this block
+          // if (balance && amount > balance) {
+          //   ctx.addIssue({
+          //     code: z.ZodIssueCode.custom,
+          //     message: `Insufficient balance`,
+          //   })
+          //   return false
+          // }
+
           return true
         } catch (e) {
           ctx.addIssue({
