@@ -23,9 +23,15 @@ export const verifyPrivyAccessToken = async (
   return verifiedClaims
 }
 
-export const getPrivyUserById = async (id: string): Promise<User> => {
+export const getPrivyUserById = async (req: Request): Promise<User> => {
   const privy = getPrivyClient()
-  const user = await privy.getUser(id)
+  const cookies = parse(req.headers.get('Cookie') ?? '')
+  const idToken = cookies['privy-id-token']
+
+  if (!idToken) {
+    throw new Error('No identity token found')
+  }
+  const user = await privy.getUser({ idToken })
   return user
 }
 

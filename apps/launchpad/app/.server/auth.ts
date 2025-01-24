@@ -30,8 +30,11 @@ export async function getUserId(request: Request): Promise<string | null> {
 }
 
 export async function getUser(request: Request): Promise<User | null> {
-  const userId = await getUserId(request)
-  return userId ? await getPrivyUserById(userId) : null
+  try {
+    return await getPrivyUserById(request)
+  } catch (error) {
+    return null
+  }
 }
 
 export async function getUserWallet(request: Request): Promise<string | null> {
