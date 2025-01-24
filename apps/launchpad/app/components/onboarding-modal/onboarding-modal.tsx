@@ -60,34 +60,10 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
   const [steps, setSteps] = useState<Step[]>(STEPS_CONFIG)
   const [txState, setTxState] = useState<TransactionStateType>()
 
-  // Debug logging for state changes
-  useEffect(() => {
-    logger('Debug - State changed:', { currentStep: state.currentStep })
-  }, [state])
-
-  useEffect(() => {
-    logger('Debug - Topics changed:', topics.length)
-  }, [topics])
-
-  useEffect(() => {
-    logger(
-      'Debug - Steps changed:',
-      steps.map((s) => `${s.id}:${s.status}`).join(', '),
-    )
-  }, [steps])
-
-  useEffect(() => {
-    logger('Debug - TxState changed:', txState?.status)
-  }, [txState])
-
   const predicateId =
     getSpecialPredicate(CURRENT_ENV).tagPredicate.id.toString()
   const objectId =
     getSpecialPredicate(CURRENT_ENV).web3Wallet.vaultId.toString()
-
-  logger('current env', CURRENT_ENV)
-  logger('predicateId', predicateId)
-  logger('objectId', objectId)
 
   const { data: listData, isLoading: isLoadingList } = useGetListDetailsQuery(
     {
@@ -135,7 +111,6 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
 
   const handleTransition = useCallback(
     (updateFn: (prev: OnboardingState) => OnboardingState) => {
-      logger('Debug - handleTransition called')
       setState((prev) => {
         setIsTransitioning(true)
         setTimeout(() => {
@@ -309,7 +284,6 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
 
   const updateStepStatus = useCallback(
     (stepId: StepId, status: Step['status']) => {
-      logger('Debug - updateStepStatus called:', { stepId, status })
       setSteps((prev) =>
         prev.map((step) => (step.id === stepId ? { ...step, status } : step)),
       )
@@ -374,8 +348,6 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
   }, [navigate, onClose])
 
   const onStakingSuccess = useCallback(() => {
-    logger('Debug - onStakingSuccess called')
-
     startTransition(() => {
       setSteps((prev) => {
         const newSteps = prev.map((step) => {
