@@ -10,7 +10,8 @@ interface AtomDetailsCardProps extends React.HTMLAttributes<HTMLDivElement> {
   atomId: number
   listClaim: boolean
   userCount: number
-  ethStaked: number
+  tvl: number
+  position?: number
 }
 
 export function AtomDetailsCard({
@@ -20,7 +21,7 @@ export function AtomDetailsCard({
   atomId,
   listClaim = true, // TODO: Add handling for regular atoms (not in a list)
   userCount,
-  ethStaked,
+  tvl,
   className,
   ...props
 }: AtomDetailsCardProps) {
@@ -105,7 +106,7 @@ export function AtomDetailsCard({
                 weight="normal"
                 className="text-foreground/90"
               >
-                {ethStaked.toFixed(4)} ETH staked
+                {tvl.toFixed(4)} ETH TVL
               </Text>
             </div>
           </div>

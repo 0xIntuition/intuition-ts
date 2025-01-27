@@ -4,7 +4,7 @@ import { multivaultAbi } from '@lib/abis/multivault'
 import { useDepositAtom } from '@lib/hooks/useDepositAtom'
 import { useRedeemAtom } from '@lib/hooks/useRedeemAtom'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { Abi, formatUnits, parseUnits } from 'viem'
+import { Abi, parseUnits } from 'viem'
 
 interface StakeMutationParams {
   val: string
@@ -14,7 +14,6 @@ interface StakeMutationParams {
   vaultId: string
   triple?: GetTripleQuery['triple']
   atom?: GetAtomQuery['atom']
-  conviction_price?: string
 }
 
 export function useStakeMutation(contract: string, mode: 'deposit' | 'redeem') {
@@ -35,7 +34,7 @@ export function useStakeMutation(contract: string, mode: 'deposit' | 'redeem') {
   return {
     ...useMutation({
       mutationFn: async (params: StakeMutationParams) => {
-        const { val, userWallet, vaultId, triple, conviction_price } = params
+        const { val, userWallet, vaultId, triple } = params
         const parsedValue = parseUnits(val === '' ? '0' : val, 18)
         const actionType = mode === 'deposit' ? 'buy' : 'sell'
 
@@ -54,17 +53,7 @@ export function useStakeMutation(contract: string, mode: 'deposit' | 'redeem') {
             actionType === 'buy'
               ? [userWallet as `0x${string}`, vaultId]
               : [
-                  parseUnits(
-                    val === ''
-                      ? '0'
-                      : (
-                          Number(val) /
-                          Number(
-                            formatUnits(BigInt(conviction_price || '0'), 18),
-                          )
-                        ).toString(),
-                    18,
-                  ),
+                  parseUnits(val === '' ? '0' : (val ?? '0').toString(), 18),
                   userWallet as `0x${string}`,
                   vaultId,
                 ],

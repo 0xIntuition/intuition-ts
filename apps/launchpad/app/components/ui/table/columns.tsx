@@ -1,7 +1,11 @@
-import { Icon, IconName } from '@0xintuition/1ui'
+import { useState } from 'react'
 
+import { Button, Icon, IconName } from '@0xintuition/1ui'
+import { GetAtomQuery, GetTripleQuery } from '@0xintuition/graphql'
+
+import { SignalModal } from '@components/signal-modal/signal-modal'
 import { ColumnDef } from '@tanstack/react-table'
-import { Users } from 'lucide-react'
+import { ArrowBigDown, ArrowBigUp, Users } from 'lucide-react'
 
 import { DataTableColumnHeader } from './data-table-column-header'
 
@@ -12,7 +16,70 @@ type TableItem = {
   name: string
   list?: string
   users: number
-  assets: number
+  tvl: number
+  position?: number
+  vaultId: string
+  atom?: GetAtomQuery['atom']
+  triple?: GetTripleQuery['triple']
+}
+
+interface SignalCellProps {
+  vaultId: string
+  triple?: GetTripleQuery['triple']
+  atom?: GetAtomQuery['atom']
+}
+
+function SignalCell({ vaultId, atom, triple }: SignalCellProps) {
+  const [isSignalModalOpen, setIsSignalModalOpen] = useState(false)
+  const [signalMode, setSignalMode] = useState<'deposit' | 'redeem'>('deposit')
+
+  const handleSignal = (mode: 'deposit' | 'redeem', e: React.MouseEvent) => {
+    e.stopPropagation()
+    setSignalMode(mode)
+    setIsSignalModalOpen(true)
+  }
+
+  const handleClose = () => {
+    // Lock table clicks and close modal
+    // @ts-ignore - Added by DataTable
+    window.__lockTableClicks?.()
+    // Use setTimeout to ensure state updates don't conflict
+    setTimeout(() => {
+      setIsSignalModalOpen(false)
+      // Lock again after state update
+      // @ts-ignore - Added by DataTable
+      window.__lockTableClicks?.()
+    }, 0)
+  }
+
+  return (
+    <>
+      <div className="flex items-center justify-end gap-2 pr-6">
+        <Button
+          variant="text"
+          className="p-2"
+          onClick={(e) => handleSignal('deposit', e)}
+        >
+          <ArrowBigUp className="text-success fill-success" />
+        </Button>
+        <Button
+          variant="text"
+          className="p-2"
+          onClick={(e) => handleSignal('redeem', e)}
+        >
+          <ArrowBigDown className="text-destructive fill-destructive" />
+        </Button>
+      </div>
+      <SignalModal
+        isOpen={isSignalModalOpen}
+        onClose={handleClose}
+        vaultId={vaultId}
+        atom={atom}
+        triple={triple}
+        mode={signalMode}
+      />
+    </>
+  )
 }
 
 export const columns: ColumnDef<TableItem>[] = [
@@ -77,42 +144,56 @@ export const columns: ColumnDef<TableItem>[] = [
     sortDescFirst: true,
   },
   {
-    accessorKey: 'assets',
+    accessorKey: 'tvl',
     header: ({ column }) => (
       <div className="flex justify-end pr-6">
-        <DataTableColumnHeader column={column} title="Assets" />
+        <DataTableColumnHeader column={column} title="TVL" />
       </div>
     ),
     cell: ({ row }) => {
       return (
         <div className="pr-10 flex justify-end items-center gap-0.5">
-          {Number(row.getValue('assets')).toFixed(6)}
+          {Number(row.getValue('tvl')).toFixed(6)}
           <Icon name="eth" className="w-4 h-4" />
         </div>
       )
     },
     size: 120,
   },
-  // {
-  //   id: 'signal',
-  //   header: ({ column }) => (
-  //     <div className="flex justify-end pr-6">
-  //       <DataTableColumnHeader column={column} title="Signal" />
-  //     </div>
-  //   ),
-  //   cell: () => {
-  //     return (
-  //       <div className="flex items-center justify-end gap-2 pr-6">
-  //         <div className="flex items-center gap-2 px-3 py-1.5 bg-[#1C1C1C] rounded-lg">
-  //           <Icon name="arrow-up" className="h-5 w-5" />
-  //         </div>
-  //         <div className="flex items-center justify-center h-8 w-8 rounded-lg bg-destructive">
-  //           <CloseX className="h-5 w-5 text-white" />
-  //         </div>
-  //       </div>
-  //     )
-  //   },
-  //   enableSorting: false,
-  //   size: 180,
-  // },
+  {
+    accessorKey: 'position',
+    header: ({ column }) => (
+      <div className="flex justify-end pr-6">
+        <DataTableColumnHeader column={column} title="Position" />
+      </div>
+    ),
+    cell: ({ row }) => {
+      return (
+        <div className="pr-10 flex justify-end items-center gap-0.5">
+          {Number(row.getValue('position')).toFixed(6)}
+          <Icon name="eth" className="w-4 h-4" />
+        </div>
+      )
+    },
+    size: 120,
+  },
+  {
+    id: 'signal',
+    header: ({ column }) => (
+      <div className="flex justify-center items-center">
+        <DataTableColumnHeader column={column} title="Signal" />
+      </div>
+    ),
+    cell: ({ row }) => {
+      console.log(row.original.triple)
+      return (
+        <SignalCell
+          vaultId={row.original.vaultId}
+          triple={row.original.triple}
+        />
+      )
+    },
+    enableSorting: false,
+    size: 120,
+  },
 ]

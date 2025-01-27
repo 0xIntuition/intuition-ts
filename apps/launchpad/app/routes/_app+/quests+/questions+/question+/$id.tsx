@@ -12,14 +12,15 @@ import {
   GetListDetailsDocument,
   GetListDetailsQuery,
   GetListDetailsQueryVariables,
+  GetTripleQuery,
   useGetListDetailsQuery,
 } from '@0xintuition/graphql'
 
 import { AtomDetailsModal } from '@components/atom-details-modal'
 import { AuthCover } from '@components/auth-cover'
 import LoadingLogo from '@components/loading-logo'
-import { OnboardingModal } from '@components/onboarding-modal/onboarding-modal'
 import ShareModal from '@components/share-modal'
+import { OnboardingModal } from '@components/survey-modal/survey-modal'
 import { columns } from '@components/ui/table/columns'
 import { DataTable } from '@components/ui/table/data-table'
 import { CURRENT_ENV } from '@consts/general'
@@ -185,23 +186,35 @@ export default function MiniGameOne() {
 
   interface TableRowData {
     id: string
+    triple: GetTripleQuery['triple']
     image: string
     name: string
     list: string
+    vaultId: string
+    counterVaultId: string
     users: number
-    assets: number
+    tvl: number
+    position?: number
   }
 
+  console.log('listData?.globalTriples', listData?.globalTriples)
   // Transform the data for the table
   const tableData: TableRowData[] =
     listData?.globalTriples?.map((triple) => {
       const tableRow: TableRowData = {
         id: String(triple.id),
+        triple: triple as unknown as GetTripleQuery['triple'],
         image: triple.subject.image || '',
         name: triple.subject.label || 'Untitled Entry',
         list: triple.object.label || 'Untitled List',
+        vaultId: triple.vault_id,
+        counterVaultId: triple.counter_vault_id,
         users: Number(triple.vault?.positions_aggregate?.aggregate?.count ?? 0),
-        assets: +formatUnits(
+        tvl: +formatUnits(
+          triple.vault?.positions_aggregate?.aggregate?.sum?.shares ?? 0,
+          18,
+        ),
+        position: +formatUnits(
           triple.vault?.positions_aggregate?.aggregate?.sum?.shares ?? 0,
           18,
         ),
@@ -220,7 +233,7 @@ export default function MiniGameOne() {
 
   // Calculate total users and TVL
   const totalUsers = tableData.reduce((sum, item) => sum + item.users, 0)
-  const totalTVL = tableData.reduce((sum, item) => sum + item.assets, 0)
+  const totalTVL = tableData.reduce((sum, item) => sum + item.tvl, 0)
 
   const handleStartOnboarding = () => {
     setOnboardingModal({ isOpen: true, gameId: 'minigame1' })

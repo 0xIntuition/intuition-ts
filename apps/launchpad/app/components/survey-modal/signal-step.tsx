@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 
 import { Badge, Button, Icon, Text, TextVariant, toast } from '@0xintuition/1ui'
 
-import SignalToast from '@components/onboarding-modal/signal-toast'
+import SignalToast from '@components/survey-modal/signal-toast'
 import { MIN_DEPOSIT, MULTIVAULT_CONTRACT_ADDRESS } from '@consts/general'
 import { multivaultAbi } from '@lib/abis/multivault'
 import { useCreateTripleMutation } from '@lib/hooks/mutations/useCreateTripleMutation'

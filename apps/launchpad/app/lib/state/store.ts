@@ -49,7 +49,8 @@ export const atomDetailsModalAtom = atom<{
     name: string
     list: string
     users: number
-    assets: number
+    tvl: number
+    position?: number
   }
 }>({
   isOpen: false,
