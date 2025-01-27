@@ -232,6 +232,7 @@ export default function MiniGameOne() {
     currentSharePrice?: number
   }
 
+  console.log('listData?.globalTriples', listData?.globalTriples)
   // Transform the data for the table
   const tableData: TableRowData[] =
     listData?.globalTriples?.map((triple) => {
