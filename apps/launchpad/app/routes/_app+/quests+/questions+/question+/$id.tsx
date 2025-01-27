@@ -303,7 +303,7 @@ export default function MiniGameOne() {
   listData?.globalTriples?.forEach((triple, index) => {
     logger(
       `Triple ${index} shares:`,
-      triple.vault?.positions_aggregate?.aggregate?.sum?.shares,
+      triple.vault?.allPositions?.aggregate?.sum?.shares,
     )
   })
 

@@ -200,6 +200,22 @@ query GetListDetailsWithPosition(
             shares
           }
         }
+        shares
+      }
+    }
+    counter_vault {
+      total_shares
+      current_share_price
+      allPositions: positions_aggregate {
+        ...PositionAggregateFields
+      }
+      positions(where: { account_id: { _eq: $address } }) {
+        account {
+          id
+          label
+          image
+        }
+        shares
       }
       positions(where: { account_id: { _eq: $address } }) {
         account {
@@ -402,6 +418,22 @@ query GetListDetailsWithUser(
             shares
           }
         }
+        shares
+      }
+    }
+    counter_vault {
+      total_shares
+      current_share_price
+      allPositions: positions_aggregate {
+        ...PositionAggregateFields
+      }
+      positions(where: { account_id: { _eq: $address } }) {
+        account {
+          id
+          label
+          image
+        }
+        shares
       }
       positions(where: { account_id: { _eq: $address } }) {
         account {
