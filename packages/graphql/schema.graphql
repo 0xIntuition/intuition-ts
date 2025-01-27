@@ -1701,7 +1701,7 @@ type atoms {
     """
     where: signals_bool_exp
   ): signals_aggregate!
-  transaction_hash: bytea!
+  transaction_hash: String!
   type: atom_type!
   """
   An object relationship
@@ -1825,7 +1825,7 @@ input atoms_bool_exp {
   label: String_comparison_exp
   signals: signals_bool_exp
   signals_aggregate: signals_aggregate_bool_exp
-  transaction_hash: bytea_comparison_exp
+  transaction_hash: String_comparison_exp
   type: atom_type_comparison_exp
   value: atom_values_bool_exp
   value_id: numeric_comparison_exp
@@ -1846,6 +1846,7 @@ type atoms_max_fields {
   id: numeric
   image: String
   label: String
+  transaction_hash: String
   type: atom_type
   value_id: numeric
   vault_id: numeric
@@ -1864,6 +1865,7 @@ input atoms_max_order_by {
   id: order_by
   image: order_by
   label: order_by
+  transaction_hash: order_by
   type: order_by
   value_id: order_by
   vault_id: order_by
@@ -1882,6 +1884,7 @@ type atoms_min_fields {
   id: numeric
   image: String
   label: String
+  transaction_hash: String
   type: atom_type
   value_id: numeric
   vault_id: numeric
@@ -1900,6 +1903,7 @@ input atoms_min_order_by {
   id: order_by
   image: order_by
   label: order_by
+  transaction_hash: order_by
   type: order_by
   value_id: order_by
   vault_id: order_by
@@ -2088,7 +2092,7 @@ input atoms_stream_cursor_value_input {
   id: numeric
   image: String
   label: String
-  transaction_hash: bytea
+  transaction_hash: String
   type: atom_type
   value_id: numeric
   vault_id: numeric
@@ -2394,23 +2398,6 @@ aggregate variance on columns
 """
 type books_variance_fields {
   id: Float
-}
-
-scalar bytea
-
-"""
-Boolean expression to compare columns of type "bytea". All fields are combined with logical 'AND'.
-"""
-input bytea_comparison_exp {
-  _eq: bytea
-  _gt: bytea
-  _gte: bytea
-  _in: [bytea!]
-  _is_null: Boolean
-  _lt: bytea
-  _lte: bytea
-  _neq: bytea
-  _nin: [bytea!]
 }
 
 """
@@ -3227,7 +3214,7 @@ type deposits {
     """
     where: signals_bool_exp
   ): signals_aggregate!
-  transaction_hash: bytea!
+  transaction_hash: String!
   """
   An object relationship
   """
@@ -3354,7 +3341,7 @@ input deposits_bool_exp {
   shares_for_receiver: numeric_comparison_exp
   signals: signals_bool_exp
   signals_aggregate: signals_aggregate_bool_exp
-  transaction_hash: bytea_comparison_exp
+  transaction_hash: String_comparison_exp
   vault: vaults_bool_exp
   vault_id: numeric_comparison_exp
 }
@@ -3372,6 +3359,7 @@ type deposits_max_fields {
   sender_assets_after_total_fees: numeric
   sender_id: String
   shares_for_receiver: numeric
+  transaction_hash: String
   vault_id: numeric
 }
 
@@ -3388,6 +3376,7 @@ input deposits_max_order_by {
   sender_assets_after_total_fees: order_by
   sender_id: order_by
   shares_for_receiver: order_by
+  transaction_hash: order_by
   vault_id: order_by
 }
 
@@ -3404,6 +3393,7 @@ type deposits_min_fields {
   sender_assets_after_total_fees: numeric
   sender_id: String
   shares_for_receiver: numeric
+  transaction_hash: String
   vault_id: numeric
 }
 
@@ -3420,6 +3410,7 @@ input deposits_min_order_by {
   sender_assets_after_total_fees: order_by
   sender_id: order_by
   shares_for_receiver: order_by
+  transaction_hash: order_by
   vault_id: order_by
 }
 
@@ -3640,7 +3631,7 @@ input deposits_stream_cursor_value_input {
   sender_assets_after_total_fees: numeric
   sender_id: String
   shares_for_receiver: numeric
-  transaction_hash: bytea
+  transaction_hash: String
   vault_id: numeric
 }
 
@@ -3792,7 +3783,7 @@ type events {
   """
   redemption: redemptions
   redemption_id: String
-  transaction_hash: bytea!
+  transaction_hash: String!
   """
   An object relationship
   """
@@ -3892,7 +3883,7 @@ input events_bool_exp {
   id: String_comparison_exp
   redemption: redemptions_bool_exp
   redemption_id: String_comparison_exp
-  transaction_hash: bytea_comparison_exp
+  transaction_hash: String_comparison_exp
   triple: triples_bool_exp
   triple_id: numeric_comparison_exp
   type: event_type_comparison_exp
@@ -3909,6 +3900,7 @@ type events_max_fields {
   fee_transfer_id: String
   id: String
   redemption_id: String
+  transaction_hash: String
   triple_id: numeric
   type: event_type
 }
@@ -3924,6 +3916,7 @@ input events_max_order_by {
   fee_transfer_id: order_by
   id: order_by
   redemption_id: order_by
+  transaction_hash: order_by
   triple_id: order_by
   type: order_by
 }
@@ -3939,6 +3932,7 @@ type events_min_fields {
   fee_transfer_id: String
   id: String
   redemption_id: String
+  transaction_hash: String
   triple_id: numeric
   type: event_type
 }
@@ -3954,6 +3948,7 @@ input events_min_order_by {
   fee_transfer_id: order_by
   id: order_by
   redemption_id: order_by
+  transaction_hash: order_by
   triple_id: order_by
   type: order_by
 }
@@ -4110,7 +4105,7 @@ input events_stream_cursor_value_input {
   fee_transfer_id: String
   id: String
   redemption_id: String
-  transaction_hash: bytea
+  transaction_hash: String
   triple_id: numeric
   type: event_type
 }
@@ -4263,7 +4258,7 @@ type fee_transfers {
   """
   sender: accounts
   sender_id: String!
-  transaction_hash: bytea!
+  transaction_hash: String!
 }
 
 """
@@ -4354,7 +4349,7 @@ input fee_transfers_bool_exp {
   receiver_id: String_comparison_exp
   sender: accounts_bool_exp
   sender_id: String_comparison_exp
-  transaction_hash: bytea_comparison_exp
+  transaction_hash: String_comparison_exp
 }
 
 """
@@ -4367,6 +4362,7 @@ type fee_transfers_max_fields {
   id: String
   receiver_id: String
   sender_id: String
+  transaction_hash: String
 }
 
 """
@@ -4379,6 +4375,7 @@ input fee_transfers_max_order_by {
   id: order_by
   receiver_id: order_by
   sender_id: order_by
+  transaction_hash: order_by
 }
 
 """
@@ -4391,6 +4388,7 @@ type fee_transfers_min_fields {
   id: String
   receiver_id: String
   sender_id: String
+  transaction_hash: String
 }
 
 """
@@ -4403,6 +4401,7 @@ input fee_transfers_min_order_by {
   id: order_by
   receiver_id: order_by
   sender_id: order_by
+  transaction_hash: order_by
 }
 
 """
@@ -4533,7 +4532,7 @@ input fee_transfers_stream_cursor_value_input {
   id: String
   receiver_id: String
   sender_id: String
-  transaction_hash: bytea
+  transaction_hash: String
 }
 
 """
@@ -7094,7 +7093,7 @@ type redemptions {
     """
     where: signals_bool_exp
   ): signals_aggregate!
-  transaction_hash: bytea!
+  transaction_hash: String!
   """
   An object relationship
   """
@@ -7203,7 +7202,7 @@ input redemptions_bool_exp {
   shares_redeemed_by_sender: numeric_comparison_exp
   signals: signals_bool_exp
   signals_aggregate: signals_aggregate_bool_exp
-  transaction_hash: bytea_comparison_exp
+  transaction_hash: String_comparison_exp
   vault: vaults_bool_exp
   vault_id: numeric_comparison_exp
 }
@@ -7221,6 +7220,7 @@ type redemptions_max_fields {
   sender_id: String
   sender_total_shares_in_vault: numeric
   shares_redeemed_by_sender: numeric
+  transaction_hash: String
   vault_id: numeric
 }
 
@@ -7237,6 +7237,7 @@ input redemptions_max_order_by {
   sender_id: order_by
   sender_total_shares_in_vault: order_by
   shares_redeemed_by_sender: order_by
+  transaction_hash: order_by
   vault_id: order_by
 }
 
@@ -7253,6 +7254,7 @@ type redemptions_min_fields {
   sender_id: String
   sender_total_shares_in_vault: numeric
   shares_redeemed_by_sender: numeric
+  transaction_hash: String
   vault_id: numeric
 }
 
@@ -7269,6 +7271,7 @@ input redemptions_min_order_by {
   sender_id: order_by
   sender_total_shares_in_vault: order_by
   shares_redeemed_by_sender: order_by
+  transaction_hash: order_by
   vault_id: order_by
 }
 
@@ -7449,7 +7452,7 @@ input redemptions_stream_cursor_value_input {
   sender_id: String
   sender_total_shares_in_vault: numeric
   shares_redeemed_by_sender: numeric
-  transaction_hash: bytea
+  transaction_hash: String
   vault_id: numeric
 }
 
@@ -7585,7 +7588,7 @@ type signals {
   """
   redemption: redemptions
   redemption_id: String
-  transaction_hash: bytea!
+  transaction_hash: String!
   """
   An object relationship
   """
@@ -7687,7 +7690,7 @@ input signals_bool_exp {
   id: String_comparison_exp
   redemption: redemptions_bool_exp
   redemption_id: String_comparison_exp
-  transaction_hash: bytea_comparison_exp
+  transaction_hash: String_comparison_exp
   triple: triples_bool_exp
   triple_id: numeric_comparison_exp
 }
@@ -7708,6 +7711,7 @@ type signals_max_fields {
   deposit_id: String
   id: String
   redemption_id: String
+  transaction_hash: String
   triple_id: numeric
 }
 
@@ -7723,6 +7727,7 @@ input signals_max_order_by {
   deposit_id: order_by
   id: order_by
   redemption_id: order_by
+  transaction_hash: order_by
   triple_id: order_by
 }
 
@@ -7738,6 +7743,7 @@ type signals_min_fields {
   deposit_id: String
   id: String
   redemption_id: String
+  transaction_hash: String
   triple_id: numeric
 }
 
@@ -7753,6 +7759,7 @@ input signals_min_order_by {
   deposit_id: order_by
   id: order_by
   redemption_id: order_by
+  transaction_hash: order_by
   triple_id: order_by
 }
 
@@ -7915,7 +7922,7 @@ input signals_stream_cursor_value_input {
   deposit_id: String
   id: String
   redemption_id: String
-  transaction_hash: bytea
+  transaction_hash: String
   triple_id: numeric
 }
 
@@ -10239,7 +10246,7 @@ type triples {
   """
   subject: atoms!
   subject_id: numeric!
-  transaction_hash: bytea!
+  transaction_hash: String!
   """
   An object relationship
   """
@@ -10352,7 +10359,7 @@ input triples_bool_exp {
   signals_aggregate: signals_aggregate_bool_exp
   subject: atoms_bool_exp
   subject_id: numeric_comparison_exp
-  transaction_hash: bytea_comparison_exp
+  transaction_hash: String_comparison_exp
   vault: vaults_bool_exp
   vault_id: numeric_comparison_exp
 }
@@ -10369,6 +10376,7 @@ type triples_max_fields {
   object_id: numeric
   predicate_id: numeric
   subject_id: numeric
+  transaction_hash: String
   vault_id: numeric
 }
 
@@ -10384,6 +10392,7 @@ input triples_max_order_by {
   object_id: order_by
   predicate_id: order_by
   subject_id: order_by
+  transaction_hash: order_by
   vault_id: order_by
 }
 
@@ -10399,6 +10408,7 @@ type triples_min_fields {
   object_id: numeric
   predicate_id: numeric
   subject_id: numeric
+  transaction_hash: String
   vault_id: numeric
 }
 
@@ -10414,6 +10424,7 @@ input triples_min_order_by {
   object_id: order_by
   predicate_id: order_by
   subject_id: order_by
+  transaction_hash: order_by
   vault_id: order_by
 }
 
@@ -10597,7 +10608,7 @@ input triples_stream_cursor_value_input {
   object_id: numeric
   predicate_id: numeric
   subject_id: numeric
-  transaction_hash: bytea
+  transaction_hash: String
   vault_id: numeric
 }
 
