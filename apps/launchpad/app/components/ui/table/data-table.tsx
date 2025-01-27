@@ -151,7 +151,6 @@ export function DataTable<TData extends { id: string | number }, TValue>({
                   <TableRow
                     key={row.id}
                     className="border-b border-border/10 hover:bg-[#101010] transition-colors cursor-pointer"
-                    data-state={row.getIsSelected() && 'selected'}
                     onClick={() => onRowClick?.(Number(row.original.id))}
                   >
                     {row.getVisibleCells().map((cell) => (
