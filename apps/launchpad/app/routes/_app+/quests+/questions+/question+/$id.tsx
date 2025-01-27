@@ -37,6 +37,7 @@ import logger from '@lib/utils/logger'
 import { usePrivy } from '@privy-io/react-auth'
 import type { LoaderFunctionArgs, MetaFunction } from '@remix-run/node'
 import { useLoaderData, useParams } from '@remix-run/react'
+import { getUser } from '@server/auth'
 // import { requireUser } from '@server/auth'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
 import { useAtom } from 'jotai'
@@ -45,8 +46,11 @@ import { formatUnits } from 'viem'
 export async function loader({ request }: LoaderFunctionArgs) {
   const queryClient = new QueryClient()
 
+  const user = await getUser(request)
+
   const variables = {
     tagPredicateId: 3,
+    address: user?.wallet?.address.toLowerCase(),
     globalWhere: {
       predicate_id: {
         _eq: getSpecialPredicate(CURRENT_ENV).tagPredicate.id,
@@ -209,13 +213,13 @@ export default function MiniGameOne() {
         list: triple.object.label || 'Untitled List',
         vaultId: triple.vault_id,
         counterVaultId: triple.counter_vault_id,
-        users: Number(triple.vault?.positions_aggregate?.aggregate?.count ?? 0),
+        users: Number(triple.vault?.allPositions?.aggregate?.count ?? 0),
         tvl: +formatUnits(
-          triple.vault?.positions_aggregate?.aggregate?.sum?.shares ?? 0,
+          triple.vault?.allPositions?.aggregate?.sum?.shares ?? 0,
           18,
         ),
         position: +formatUnits(
-          triple.vault?.positions_aggregate?.aggregate?.sum?.shares ?? 0,
+          triple.vault?.allPositions?.aggregate?.sum?.shares ?? 0,
           18,
         ),
       }
@@ -227,7 +231,7 @@ export default function MiniGameOne() {
   listData?.globalTriples?.forEach((triple, index) => {
     logger(
       `Triple ${index} shares:`,
-      triple.vault?.positions_aggregate?.aggregate?.sum?.shares,
+      triple.vault?.allPositions?.aggregate?.sum?.shares,
     )
   })
 

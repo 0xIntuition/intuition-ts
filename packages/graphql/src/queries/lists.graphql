@@ -48,6 +48,7 @@ query GetListDetails(
   $globalWhere: triples_bool_exp
   $userWhere: triples_bool_exp
   $tagPredicateId: numeric
+  $address: String
 ) {
   globalTriplesAggregate: triples_aggregate(where: $globalWhere) {
     aggregate {
@@ -108,13 +109,33 @@ query GetListDetails(
       type
     }
     vault {
-      positions_aggregate {
-        aggregate {
-          count
-          sum {
-            shares
-          }
+      total_shares
+      current_share_price
+      allPositions: positions_aggregate {
+        ...PositionAggregateFields
+      }
+      positions(where: { account_id: { _eq: $address } }) {
+        account {
+          id
+          label
+          image
         }
+        shares
+      }
+    }
+    counter_vault {
+      total_shares
+      current_share_price
+      allPositions: positions_aggregate {
+        ...PositionAggregateFields
+      }
+      positions(where: { account_id: { _eq: $address } }) {
+        account {
+          id
+          label
+          image
+        }
+        shares
       }
     }
   }
@@ -177,13 +198,33 @@ query GetListDetails(
       type
     }
     vault {
-      positions_aggregate {
-        aggregate {
-          count
-          sum {
-            shares
-          }
+      total_shares
+      current_share_price
+      allPositions: positions_aggregate {
+        ...PositionAggregateFields
+      }
+      positions(where: { account_id: { _eq: $address } }) {
+        account {
+          id
+          label
+          image
         }
+        shares
+      }
+    }
+    counter_vault {
+      total_shares
+      current_share_price
+      allPositions: positions_aggregate {
+        ...PositionAggregateFields
+      }
+      positions(where: { account_id: { _eq: $address } }) {
+        account {
+          id
+          label
+          image
+        }
+        shares
       }
     }
   }
