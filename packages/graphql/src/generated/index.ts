@@ -41,7 +41,6 @@ export type Scalars = {
   account_type: { input: any; output: any }
   atom_type: { input: any; output: any }
   bigint: { input: any; output: any }
-  bytea: { input: any; output: any }
   event_type: { input: any; output: any }
   float8: { input: any; output: any }
   jsonb: { input: any; output: any }
