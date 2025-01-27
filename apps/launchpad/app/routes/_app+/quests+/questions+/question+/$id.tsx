@@ -213,13 +213,13 @@ export default function MiniGameOne() {
         list: triple.object.label || 'Untitled List',
         vaultId: triple.vault_id,
         counterVaultId: triple.counter_vault_id,
-        users: Number(triple.vault?.allPositions?.aggregate?.count ?? 0),
+        users: Number(triple.vault?.positions_aggregate?.aggregate?.count ?? 0),
         tvl: +formatUnits(
-          triple.vault?.allPositions?.aggregate?.sum?.shares ?? 0,
+          triple.vault?.positions_aggregate?.aggregate?.sum?.shares ?? 0,
           18,
         ),
         position: +formatUnits(
-          triple.vault?.allPositions?.aggregate?.sum?.shares ?? 0,
+          triple.vault?.positions_aggregate?.aggregate?.sum?.shares ?? 0,
           18,
         ),
       }
