@@ -63,9 +63,6 @@ export function AccountButton({
         align="start"
         className="w-[--radix-dropdown-menu-trigger-width] bg-[#131313]"
       >
-        <DropdownMenuItem>Profile</DropdownMenuItem>
-        <DropdownMenuItem>Preferences</DropdownMenuItem>
-        <DropdownMenuItem>Settings</DropdownMenuItem>
         <DropdownMenuItem onClick={disconnect}>Disconnect</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
