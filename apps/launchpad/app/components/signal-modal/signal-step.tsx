@@ -14,6 +14,7 @@ import {
   transactionReducer,
   useGenericTxState,
 } from '@lib/hooks/useTransactionReducer'
+import logger from '@lib/utils/logger'
 import { usePrivy } from '@privy-io/react-auth'
 import { Link, useLocation } from '@remix-run/react'
 import { useQueryClient } from '@tanstack/react-query'
@@ -120,12 +121,6 @@ export function SignalStep({
       return
     }
 
-    console.log('mode', mode)
-    console.log('val', val)
-    console.log('min_deposit', min_deposit)
-    console.log('walletBalance', walletBalance)
-    console.log('userConviction', userConviction)
-
     try {
       const txHash = await stake({
         val: mode === 'deposit' ? val : userConviction ?? '0',
@@ -149,11 +144,10 @@ export function SignalStep({
           txReceipt: receipt,
         })
 
-        await queryClient.refetchQueries({
-          queryKey: ['get-vault-details', contract, vaultId, counterVaultId],
-        })
-
         onStakingSuccess()
+        logger('invalidating queries')
+        await new Promise((resolve) => setTimeout(resolve, 3000)) // 1 second delay
+        await queryClient.invalidateQueries()
       }
     } catch (error) {
       dispatch({

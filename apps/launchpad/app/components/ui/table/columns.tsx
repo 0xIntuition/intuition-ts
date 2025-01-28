@@ -1,7 +1,12 @@
 import { useState } from 'react'
 
 import { Button, Icon, IconName } from '@0xintuition/1ui'
-import { GetAtomQuery, GetTripleQuery } from '@0xintuition/graphql'
+import {
+  GetAtomQuery,
+  GetListDetailsQuery,
+  GetListDetailsWithUserQuery,
+  GetTripleQuery,
+} from '@0xintuition/graphql'
 
 import { SignalModal } from '@components/signal-modal/signal-modal'
 import { ColumnDef } from '@tanstack/react-table'
@@ -20,12 +25,16 @@ type TableItem = {
   position?: number
   vaultId: string
   atom?: GetAtomQuery['atom']
-  triple?: GetTripleQuery['triple']
+  triple?:
+    | GetListDetailsWithUserQuery['globalTriples'][number]
+    | GetListDetailsQuery['globalTriples'][number]
 }
 
 interface SignalCellProps {
   vaultId: string
-  triple?: GetTripleQuery['triple']
+  triple?:
+    | GetListDetailsWithUserQuery['globalTriples'][number]
+    | GetListDetailsQuery['globalTriples'][number]
   atom?: GetAtomQuery['atom']
 }
 
@@ -75,7 +84,7 @@ function SignalCell({ vaultId, atom, triple }: SignalCellProps) {
         onClose={handleClose}
         vaultId={vaultId}
         atom={atom}
-        triple={triple}
+        triple={triple as GetTripleQuery['triple']}
         mode={signalMode}
       />
     </>
@@ -151,9 +160,10 @@ export const columns: ColumnDef<TableItem>[] = [
       </div>
     ),
     cell: ({ row }) => {
+      const tvl = row.getValue('tvl')
       return (
         <div className="pr-10 flex justify-end items-center gap-0.5">
-          {Number(row.getValue('tvl')).toFixed(6)}
+          {tvl ? Number(tvl).toFixed(4) : '0'}
           <Icon name="eth" className="w-4 h-4" />
         </div>
       )
@@ -161,16 +171,17 @@ export const columns: ColumnDef<TableItem>[] = [
     size: 120,
   },
   {
-    accessorKey: 'position',
+    accessorKey: 'userPosition',
     header: ({ column }) => (
       <div className="flex justify-end pr-6">
         <DataTableColumnHeader column={column} title="Position" />
       </div>
     ),
     cell: ({ row }) => {
+      const position = row.getValue('userPosition')
       return (
         <div className="pr-10 flex justify-end items-center gap-0.5">
-          {Number(row.getValue('position')).toFixed(6)}
+          {position ? Number(position).toFixed(4) : '0'}
           <Icon name="eth" className="w-4 h-4" />
         </div>
       )
@@ -185,7 +196,6 @@ export const columns: ColumnDef<TableItem>[] = [
       </div>
     ),
     cell: ({ row }) => {
-      console.log(row.original.triple)
       return (
         <SignalCell
           vaultId={row.original.vaultId}

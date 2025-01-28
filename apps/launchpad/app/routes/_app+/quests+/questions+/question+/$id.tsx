@@ -9,11 +9,14 @@ import {
 } from '@0xintuition/1ui'
 import {
   fetcher,
-  GetListDetailsDocument,
-  GetListDetailsQuery,
-  GetListDetailsQueryVariables,
-  GetTripleQuery,
-  useGetListDetailsQuery,
+  GetListDetailsWithPositionDocument,
+  GetListDetailsWithPositionQuery,
+  GetListDetailsWithPositionQueryVariables,
+  GetListDetailsWithUserDocument,
+  GetListDetailsWithUserQuery,
+  GetListDetailsWithUserQueryVariables,
+  useGetListDetailsWithPositionQuery,
+  useGetListDetailsWithUserQuery,
 } from '@0xintuition/graphql'
 
 import { AtomDetailsModal } from '@components/atom-details-modal'
@@ -53,18 +56,16 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const objectId =
     getSpecialPredicate(CURRENT_ENV).web3Wallet.vaultId.toString()
 
-  const userWallet = user?.wallet?.address?.toLowerCase()
+  const userWallet = user?.wallet?.address.toLowerCase()
 
-  console.log('userWallet', userWallet)
-
-  const variables: GetListDetailsQueryVariables = {
+  const variables: GetListDetailsWithPositionQueryVariables = {
     tagPredicateId: predicateId,
     globalWhere: {
       predicate_id: {
-        _eq: getSpecialPredicate(CURRENT_ENV).tagPredicate.id,
+        _eq: predicateId,
       },
       object_id: {
-        _eq: getSpecialPredicate(CURRENT_ENV).web3Wallet.id,
+        _eq: objectId,
       },
     },
     ...(userWallet && {
@@ -72,18 +73,27 @@ export async function loader({ request }: LoaderFunctionArgs) {
     }),
   }
 
-  const listData = await fetcher<
-    GetListDetailsQuery,
-    GetListDetailsQueryVariables
-  >(GetListDetailsDocument, variables)()
+  let listData
+  if (userWallet) {
+    listData = await fetcher<
+      GetListDetailsWithUserQuery,
+      GetListDetailsWithUserQueryVariables
+    >(GetListDetailsWithUserDocument, variables)()
+  } else {
+    listData = await fetcher<
+      GetListDetailsWithPositionQuery,
+      GetListDetailsWithPositionQueryVariables
+    >(GetListDetailsWithPositionDocument, variables)()
+  }
 
   await queryClient.setQueryData(['get-list-details', variables], listData)
 
   const { origin } = new URL(request.url)
-  const ogImageUrl = `${origin}/resources/create-og?id=${getSpecialPredicate(CURRENT_ENV).web3Wallet.id}&type=list`
+  const ogImageUrl = `${origin}/resources/create-og?id=${objectId}&type=list`
 
   return {
     dehydratedState: dehydrate(queryClient),
+    userWallet,
     ogImageUrl,
     objectResult: listData?.globalTriples[0]?.object,
   }
@@ -150,16 +160,13 @@ export function ErrorBoundary() {
 
 export default function MiniGameOne() {
   const goBack = useGoBack({ fallbackRoute: '/minigames' })
-  useLoaderData<typeof loader>()
+  const { userWallet } = useLoaderData<typeof loader>()
   const [shareModalActive, setShareModalActive] = useAtom(shareModalAtom)
   const [onboardingModal, setOnboardingModal] = useAtom(onboardingModalAtom)
   const [atomDetailsModal, setAtomDetailsModal] = useAtom(atomDetailsModalAtom)
 
-  const { user: privyUser, authenticated } = usePrivy()
-  const userWallet = privyUser?.wallet?.address?.toLowerCase()
+  const { authenticated } = usePrivy()
   const { data: points, isLoading: isPointsLoading } = usePoints(userWallet)
-
-  console.log('userWallet', userWallet)
 
   const hasUserParam = location.search.includes('user=')
   const fullPath = hasUserParam
@@ -171,27 +178,32 @@ export default function MiniGameOne() {
   const objectId =
     getSpecialPredicate(CURRENT_ENV).web3Wallet.vaultId.toString()
 
-  const { data: listData } = useGetListDetailsQuery(
-    {
-      tagPredicateId: predicateId,
-      globalWhere: {
-        predicate_id: {
-          _eq: predicateId,
-        },
-        object_id: {
-          _eq: objectId,
-        },
+  const variables = {
+    tagPredicateId: predicateId,
+    globalWhere: {
+      predicate_id: {
+        _eq: predicateId,
       },
-      ...(userWallet && {
-        address: userWallet,
-      }),
+      object_id: {
+        _eq: objectId,
+      },
     },
+    ...(userWallet && {
+      address: userWallet,
+    }),
+  }
+
+  const { data: withUserData } = useGetListDetailsWithUserQuery(variables, {
+    enabled: !!userWallet,
+  })
+  const { data: withoutUserData } = useGetListDetailsWithPositionQuery(
+    variables,
     {
-      queryKey: ['get-list-details', { predicateId: 3, objectId: 620 }],
+      enabled: !userWallet,
     },
   )
 
-  logger(listData?.globalTriples)
+  const listData = userWallet ? withUserData : withoutUserData
 
   const { id } = useParams()
   const {
@@ -206,7 +218,9 @@ export default function MiniGameOne() {
 
   interface TableRowData {
     id: string
-    triple: GetTripleQuery['triple']
+    triple:
+      | GetListDetailsWithUserQuery['globalTriples'][number]
+      | GetListDetailsWithPositionQuery['globalTriples'][number]
     image: string
     name: string
     list: string
@@ -214,30 +228,29 @@ export default function MiniGameOne() {
     counterVaultId: string
     users: number
     tvl: number
-    position?: number
+    userPosition?: number
   }
 
-  console.log('listData?.globalTriples', listData?.globalTriples)
   // Transform the data for the table
   const tableData: TableRowData[] =
     listData?.globalTriples?.map((triple) => {
       const tableRow: TableRowData = {
         id: String(triple.id),
-        triple: triple as unknown as GetTripleQuery['triple'],
+        triple,
         image: triple.subject.image || '',
         name: triple.subject.label || 'Untitled Entry',
         list: triple.object.label || 'Untitled List',
         vaultId: triple.vault_id,
         counterVaultId: triple.counter_vault_id,
         users: Number(triple.vault?.positions_aggregate?.aggregate?.count ?? 0),
-        tvl: +formatUnits(
-          triple.vault?.positions_aggregate?.aggregate?.sum?.shares ?? 0,
-          18,
-        ),
-        position: +formatUnits(
-          triple.vault?.positions_aggregate?.aggregate?.sum?.shares ?? 0,
-          18,
-        ),
+        tvl:
+          +formatUnits(
+            triple.vault?.positions_aggregate?.aggregate?.sum?.shares ?? 0,
+            18,
+          ) * +formatUnits(triple.vault?.current_share_price ?? 0, 18),
+        userPosition:
+          +formatUnits(triple.vault?.positions?.[0]?.shares ?? 0, 18) *
+          +formatUnits(triple.vault?.current_share_price ?? 0, 18),
       }
 
       return tableRow
@@ -247,7 +260,7 @@ export default function MiniGameOne() {
   listData?.globalTriples?.forEach((triple, index) => {
     logger(
       `Triple ${index} shares:`,
-      triple.vault?.allPositions?.aggregate?.sum?.shares,
+      triple.vault?.positions_aggregate?.aggregate?.sum?.shares,
     )
   })
 

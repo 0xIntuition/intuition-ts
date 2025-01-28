@@ -2,7 +2,6 @@ import { GetAtomQuery, GetTripleQuery } from '@0xintuition/graphql'
 
 export const STEPS = {
   SIGNAL: 'signal',
-  PROCESSING: 'processing',
   FINISHED: 'finished',
 } as const
 

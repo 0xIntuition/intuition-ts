@@ -23,12 +23,12 @@ import {
   GetAtomDocument,
   GetAtomQuery,
   GetAtomQueryVariables,
-  GetListDetailsDocument,
-  GetListDetailsQuery,
-  GetListDetailsQueryVariables,
+  GetListDetailsWithUserDocument,
+  GetListDetailsWithUserQuery,
+  GetListDetailsWithUserQueryVariables,
   useGetAccountQuery,
   useGetAtomQuery,
-  useGetListDetailsQuery,
+  useGetListDetailsWithUserQuery,
 } from '@0xintuition/graphql'
 
 import { ErrorPage } from '@components/error-page'
@@ -194,14 +194,14 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
       { id, tagPredicateId: parseInt(predicateId) },
     ],
     queryFn: () =>
-      fetcher<GetListDetailsQuery, GetListDetailsQueryVariables>(
-        GetListDetailsDocument,
-        {
-          globalWhere,
-          userWhere,
-          tagPredicateId: parseInt(predicateId),
-        },
-      )(),
+      fetcher<
+        GetListDetailsWithUserQuery,
+        GetListDetailsWithUserQueryVariables
+      >(GetListDetailsWithUserDocument, {
+        globalWhere,
+        userWhere,
+        tagPredicateId: parseInt(predicateId),
+      })(),
   })
 
   if (paramWallet) {
@@ -223,13 +223,13 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
         { additionalUserWhere, tagPredicateId: parseInt(predicateId) },
       ],
       queryFn: () =>
-        fetcher<GetListDetailsQuery, GetListDetailsQueryVariables>(
-          GetListDetailsDocument,
-          {
-            userWhere: additionalUserWhere,
-            tagPredicateId: parseInt(predicateId),
-          },
-        )(),
+        fetcher<
+          GetListDetailsWithUserQuery,
+          GetListDetailsWithUserQueryVariables
+        >(GetListDetailsWithUserDocument, {
+          userWhere: additionalUserWhere,
+          tagPredicateId: parseInt(predicateId),
+        })(),
     })
   }
 
@@ -277,7 +277,7 @@ export default function ListOverview() {
     isLoading: isLoadingTriples,
     isError: isErrorTriples,
     error: errorTriples,
-  } = useGetListDetailsQuery(
+  } = useGetListDetailsWithUserQuery(
     {
       globalWhere: initialParams.globalWhere,
       userWhere: initialParams.userWhere,
@@ -299,7 +299,7 @@ export default function ListOverview() {
     isLoading: isLoadingAdditionalTriples,
     isError: isErrorAdditionalTriples,
     error: errorAdditionalTriples,
-  } = useGetListDetailsQuery(
+  } = useGetListDetailsWithUserQuery(
     additionalQueryAddress
       ? {
           userWhere: initialParams.additionalUserWhere,

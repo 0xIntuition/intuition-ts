@@ -44,11 +44,83 @@ query GetListItems($predicateId: numeric, $objectId: numeric) {
 # GetListDetails query for List Details page
 ## Combines the aggregates and nodes within since we don't need pagination on the tags yet
 ## If we do, we'd need to paginate the triples and tags separately and split
-query GetListDetails(
+query GetListDetails($globalWhere: triples_bool_exp, $tagPredicateId: numeric) {
+  globalTriplesAggregate: triples_aggregate(where: $globalWhere) {
+    aggregate {
+      count
+    }
+  }
+  globalTriples: triples(where: $globalWhere) {
+    id
+    vault_id
+    counter_vault_id
+    subject {
+      id
+      vault_id
+      label
+      wallet_id
+      image
+      type
+      tags: as_subject_triples_aggregate(
+        where: { predicate_id: { _eq: $tagPredicateId } }
+      ) {
+        nodes {
+          object {
+            label
+            vault_id
+            taggedIdentities: as_object_triples_aggregate {
+              nodes {
+                subject {
+                  label
+                  vault_id
+                }
+                vault_id
+              }
+              aggregate {
+                count
+              }
+            }
+          }
+        }
+        aggregate {
+          count
+        }
+      }
+    }
+    object {
+      id
+      vault_id
+      label
+      wallet_id
+      image
+      type
+    }
+    predicate {
+      id
+      vault_id
+      label
+      wallet_id
+      image
+      type
+    }
+    vault {
+      current_share_price
+      positions_aggregate {
+        aggregate {
+          count
+          sum {
+            shares
+          }
+        }
+      }
+    }
+  }
+}
+
+query GetListDetailsWithPosition(
   $globalWhere: triples_bool_exp
-  $userWhere: triples_bool_exp
   $tagPredicateId: numeric
-  $address: String = null
+  $address: String
 ) {
   globalTriplesAggregate: triples_aggregate(where: $globalWhere) {
     aggregate {
@@ -109,7 +181,92 @@ query GetListDetails(
       type
     }
     vault {
-      total_shares
+      current_share_price
+      positions_aggregate {
+        aggregate {
+          count
+          sum {
+            shares
+          }
+        }
+      }
+      positions(where: { account_id: { _eq: $address } }) {
+        account {
+          id
+          label
+          image
+        }
+        shares
+      }
+    }
+  }
+}
+
+query GetListDetailsWithUser(
+  $globalWhere: triples_bool_exp
+  $userWhere: triples_bool_exp
+  $tagPredicateId: numeric
+  $address: String
+) {
+  globalTriplesAggregate: triples_aggregate(where: $globalWhere) {
+    aggregate {
+      count
+    }
+  }
+  globalTriples: triples(where: $globalWhere) {
+    id
+    vault_id
+    counter_vault_id
+    subject {
+      id
+      vault_id
+      label
+      wallet_id
+      image
+      type
+      tags: as_subject_triples_aggregate(
+        where: { predicate_id: { _eq: $tagPredicateId } }
+      ) {
+        nodes {
+          object {
+            label
+            vault_id
+            taggedIdentities: as_object_triples_aggregate {
+              nodes {
+                subject {
+                  label
+                  vault_id
+                }
+                vault_id
+              }
+              aggregate {
+                count
+              }
+            }
+          }
+        }
+        aggregate {
+          count
+        }
+      }
+    }
+    object {
+      id
+      vault_id
+      label
+      wallet_id
+      image
+      type
+    }
+    predicate {
+      id
+      vault_id
+      label
+      wallet_id
+      image
+      type
+    }
+    vault {
       current_share_price
       allPositions: positions_aggregate {
         ...PositionAggregateFields
@@ -124,7 +281,6 @@ query GetListDetails(
       }
     }
     counter_vault {
-      total_shares
       current_share_price
       allPositions: positions_aggregate {
         ...PositionAggregateFields
@@ -198,7 +354,6 @@ query GetListDetails(
       type
     }
     vault {
-      total_shares
       current_share_price
       allPositions: positions_aggregate {
         ...PositionAggregateFields
@@ -213,7 +368,6 @@ query GetListDetails(
       }
     }
     counter_vault {
-      total_shares
       current_share_price
       allPositions: positions_aggregate {
         ...PositionAggregateFields

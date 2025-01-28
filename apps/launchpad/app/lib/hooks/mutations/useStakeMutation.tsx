@@ -3,7 +3,7 @@ import { GetAtomQuery, GetTripleQuery } from '@0xintuition/graphql'
 import { multivaultAbi } from '@lib/abis/multivault'
 import { useDepositAtom } from '@lib/hooks/useDepositAtom'
 import { useRedeemAtom } from '@lib/hooks/useRedeemAtom'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
 import { Abi, parseUnits } from 'viem'
 
 interface StakeMutationParams {
@@ -17,7 +17,6 @@ interface StakeMutationParams {
 }
 
 export function useStakeMutation(contract: string, mode: 'deposit' | 'redeem') {
-  const queryClient = useQueryClient()
   const depositHook = useDepositAtom(contract)
   const redeemHook = useRedeemAtom(contract)
 
@@ -58,22 +57,6 @@ export function useStakeMutation(contract: string, mode: 'deposit' | 'redeem') {
                   vaultId,
                 ],
           value: actionType === 'buy' ? parsedValue : undefined,
-        })
-      },
-      onSuccess: async (_, variables) => {
-        await queryClient.invalidateQueries({
-          predicate: (query) => {
-            const [key, contract, vaultId, counterVaultId] = query.queryKey
-            return (
-              (key === 'get-vault-details' && // TODO: This doesn't seem to be working at the moment, but it's not a big deal. We can figure it out later.
-                contract === variables.contract &&
-                vaultId === variables.vaultId &&
-                counterVaultId === variables.triple?.counter_vault_id) ||
-              key === 'get-stats' ||
-              key === 'get-triple' ||
-              key === 'get-vault-details' // TODO: Remove this once we figure out the issue with the above queryKey for get-vault-details.
-            )
-          },
         })
       },
     }),
