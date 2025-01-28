@@ -8,6 +8,7 @@ interface MinigameCardProps {
   title: string
   description: string
   points: number
+  pointAwardAmount: number
   hideCTA?: boolean
   isLoading?: boolean
   resultsLink?: string
@@ -19,6 +20,7 @@ export function MinigameCard({
   title,
   description,
   points,
+  pointAwardAmount,
   hideCTA = false,
   isLoading = false,
   resultsLink,
@@ -40,31 +42,50 @@ export function MinigameCard({
         </div>
 
         {!hideCTA && (
-          <div className="flex flex-col items-center">
+          <div className="flex flex-col gap-4 items-center justify-between">
+            {points <= 0 && (
+              <Button
+                onClick={() => onStart()}
+                variant="primary"
+                size="lg"
+                className="min-w-[200px]"
+                disabled={isLoading}
+              >
+                {isLoading ? 'Loading...' : 'Answer Question'}
+              </Button>
+            )}
             <Button
-              onClick={points > 0 ? () => navigate(resultsLink || '') : onStart}
-              variant="primary"
+              onClick={() => navigate(resultsLink || '')}
+              variant="secondary"
               size="lg"
-              className="min-w-[200px]"
+              className="min-w-[200px] rounded-full"
               disabled={isLoading}
             >
-              {isLoading
-                ? 'Loading...'
-                : points > 0
-                  ? 'View Results'
-                  : 'Earn 200 IQ Points'}
+              See Results
             </Button>
           </div>
         )}
 
         <div className="flex justify-end items-center">
-          {points > 0 && (
+          {points > 0 ? (
             <div className="flex items-baseline gap-2">
               <span className="text-xl font-bold bg-gradient-to-r from-[#34C578] to-[#00FF94] bg-clip-text text-transparent">
                 {points}
               </span>
               <span className="text-md font-semibold text-muted-foreground">
                 IQ Earned
+              </span>
+            </div>
+          ) : (
+            <div className="flex items-baseline gap-2">
+              <span className="text-md font-semibold text-muted-foreground">
+                Earn
+              </span>
+              <span className="text-xl font-bold bg-gradient-to-r from-[#34C578] to-[#00FF94] bg-clip-text text-transparent">
+                {pointAwardAmount}
+              </span>
+              <span className="text-md font-semibold text-muted-foreground">
+                IQ Points
               </span>
             </div>
           )}
