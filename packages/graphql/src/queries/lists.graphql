@@ -48,7 +48,7 @@ query GetListDetails(
   $globalWhere: triples_bool_exp
   $userWhere: triples_bool_exp
   $tagPredicateId: numeric
-  $address: String
+  $address: String = null
 ) {
   globalTriplesAggregate: triples_aggregate(where: $globalWhere) {
     aggregate {

@@ -19111,7 +19111,7 @@ useGetListItemsQuery.fetcher = (
   )
 
 export const GetListDetailsDocument = `
-    query GetListDetails($globalWhere: triples_bool_exp, $userWhere: triples_bool_exp, $tagPredicateId: numeric, $address: String) {
+    query GetListDetails($globalWhere: triples_bool_exp, $userWhere: triples_bool_exp, $tagPredicateId: numeric, $address: String = null) {
   globalTriplesAggregate: triples_aggregate(where: $globalWhere) {
     aggregate {
       count
@@ -37826,6 +37826,7 @@ export const GetListDetails = {
             name: { kind: 'Name', value: 'address' },
           },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+          defaultValue: { kind: 'NullValue' },
         },
       ],
       selectionSet: {

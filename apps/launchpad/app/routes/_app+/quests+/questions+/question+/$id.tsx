@@ -48,9 +48,17 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   const user = await getUser(request)
 
-  const variables = {
-    tagPredicateId: 3,
-    address: user?.wallet?.address.toLowerCase(),
+  const predicateId =
+    getSpecialPredicate(CURRENT_ENV).tagPredicate.id.toString()
+  const objectId =
+    getSpecialPredicate(CURRENT_ENV).web3Wallet.vaultId.toString()
+
+  const userWallet = user?.wallet?.address?.toLowerCase()
+
+  console.log('userWallet', userWallet)
+
+  const variables: GetListDetailsQueryVariables = {
+    tagPredicateId: predicateId,
     globalWhere: {
       predicate_id: {
         _eq: getSpecialPredicate(CURRENT_ENV).tagPredicate.id,
@@ -59,6 +67,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
         _eq: getSpecialPredicate(CURRENT_ENV).web3Wallet.id,
       },
     },
+    ...(userWallet && {
+      address: userWallet,
+    }),
   }
 
   const listData = await fetcher<
@@ -148,6 +159,8 @@ export default function MiniGameOne() {
   const userWallet = privyUser?.wallet?.address?.toLowerCase()
   const { data: points, isLoading: isPointsLoading } = usePoints(userWallet)
 
+  console.log('userWallet', userWallet)
+
   const hasUserParam = location.search.includes('user=')
   const fullPath = hasUserParam
     ? `${location.pathname}${location.search}`
@@ -169,6 +182,9 @@ export default function MiniGameOne() {
           _eq: objectId,
         },
       },
+      ...(userWallet && {
+        address: userWallet,
+      }),
     },
     {
       queryKey: ['get-list-details', { predicateId: 3, objectId: 620 }],
