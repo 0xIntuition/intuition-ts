@@ -89,7 +89,7 @@ export function AppSidebar({
     {
       iconName: 'file-text',
       label: 'Learn More',
-      href: 'https://tech.docs.intuition.systems',
+      href: 'https://docs.intuition.systems',
       isExternal: true,
     },
     {
