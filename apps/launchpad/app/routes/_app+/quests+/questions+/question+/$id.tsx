@@ -167,6 +167,8 @@ export default function MiniGameOne() {
   const { authenticated } = usePrivy()
   const { data: points, isLoading: isPointsLoading } = usePoints(userWallet)
 
+  console.log('userWallet', userWallet)
+
   const hasUserParam = location.search.includes('user=')
   const fullPath = hasUserParam
     ? `${location.pathname}${location.search}`
@@ -186,6 +188,9 @@ export default function MiniGameOne() {
       object_id: {
         _eq: objectId,
       },
+      ...(userWallet && {
+        address: userWallet,
+      }),
     },
     address: userWallet ?? ZERO_ADDRESS,
   }

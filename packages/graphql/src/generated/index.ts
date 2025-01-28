@@ -39663,6 +39663,7 @@ export const GetListDetailsWithUser = {
             name: { kind: 'Name', value: 'address' },
           },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+          defaultValue: { kind: 'NullValue' },
         },
       ],
       selectionSet: {
