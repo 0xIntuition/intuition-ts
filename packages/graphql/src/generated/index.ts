@@ -12267,7 +12267,6 @@ export type GetListItemsQuery = {
 export type GetListDetailsQueryVariables = Exact<{
   globalWhere?: InputMaybe<Triples_Bool_Exp>
   tagPredicateId?: InputMaybe<Scalars['numeric']['input']>
-  address?: InputMaybe<Scalars['String']['input']>
 }>
 
 export type GetListDetailsQuery = {
@@ -12369,7 +12368,6 @@ export type GetListDetailsQuery = {
     } | null
     counter_vault?: {
       __typename?: 'vaults'
-      total_shares: any
       current_share_price: any
       allPositions: {
         __typename?: 'positions_aggregate'
@@ -39656,15 +39654,6 @@ export const GetListDetailsWithUser = {
           },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'numeric' } },
         },
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'address' },
-          },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
-          defaultValue: { kind: 'NullValue' },
-        },
       ],
       selectionSet: {
         kind: 'SelectionSet',
@@ -40757,10 +40746,6 @@ export const GetListDetailsWithUser = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'total_shares' },
-                      },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'current_share_price' },

@@ -167,8 +167,6 @@ export default function MiniGameOne() {
   const { authenticated } = usePrivy()
   const { data: points, isLoading: isPointsLoading } = usePoints(userWallet)
 
-  console.log('userWallet', userWallet)
-
   const hasUserParam = location.search.includes('user=')
   const fullPath = hasUserParam
     ? `${location.pathname}${location.search}`
@@ -188,9 +186,6 @@ export default function MiniGameOne() {
       object_id: {
         _eq: objectId,
       },
-      ...(userWallet && {
-        address: userWallet,
-      }),
     },
     address: userWallet ?? ZERO_ADDRESS,
   }
@@ -237,7 +232,6 @@ export default function MiniGameOne() {
     currentSharePrice?: number
   }
 
-  console.log('listData?.globalTriples', listData?.globalTriples)
   // Transform the data for the table
   const tableData: TableRowData[] =
     listData?.globalTriples?.map((triple) => {
@@ -308,7 +302,7 @@ export default function MiniGameOne() {
   listData?.globalTriples?.forEach((triple, index) => {
     logger(
       `Triple ${index} shares:`,
-      triple.vault?.allPositions?.aggregate?.sum?.shares,
+      triple.vault?.positions_aggregate?.aggregate?.sum?.shares,
     )
   })
 

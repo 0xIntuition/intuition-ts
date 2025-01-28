@@ -121,7 +121,7 @@ function SignalCell({
         onClose={handleClose}
         vaultId={vaultId}
         atom={atom}
-        triple={triple}
+        triple={triple as GetTripleQuery['triple']}
         mode={signalMode}
       />
     </>
