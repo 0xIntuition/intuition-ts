@@ -258,7 +258,7 @@ export default function MiniGameOne() {
             <Icon name="chevron-left" className="h-4 w-4" />
           </Button>
           <div className="flex flex-1 justify-between items-center">
-            <PageHeader title={`Quest: ${title}`} />
+            <PageHeader title={`Intuition Questions Module: Question ${id}`} />
           </div>
         </div>
         <div className="flex items-center justify-center h-[400px]">
@@ -280,7 +280,7 @@ export default function MiniGameOne() {
           <Icon name="chevron-left" className="h-4 w-4" />
         </Button>
         <div className="flex flex-1 justify-between items-center">
-          <PageHeader title={`Quest: ${title}`} />
+          <PageHeader title={`Intuition Questions Module: Question ${id}`} />
           <div className="flex items-center gap-2">
             <Button
               variant="secondary"
