@@ -11,7 +11,6 @@ import {
   SidebarContent,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
@@ -66,10 +65,16 @@ export function AppSidebar({
 
   const mainNavItems: NavItem[] = [
     {
-      iconName: 'home-door',
-      label: 'Home',
-      href: '/',
-      isAccent: location.pathname === '/' || location.pathname === '/dashboard',
+      iconName: 'crystal-ball',
+      label: 'Quests',
+      href: '/quests/',
+      isAccent: location.pathname === '/quests/',
+    },
+    {
+      iconName: 'book',
+      label: 'Questions',
+      href: '/quests/questions',
+      isAccent: location.pathname.startsWith('/quests/questions'),
     },
     {
       iconName: 'circle-arrow',
@@ -122,11 +127,6 @@ export function AppSidebar({
       </Link>
     )
   }
-
-  const isQuestionsActive = location.pathname.startsWith('/quests/questions')
-  const isPreferencesActive = location.pathname.startsWith(
-    '/quests/preferences',
-  )
 
   const sidebarContent = (
     <>
@@ -291,62 +291,6 @@ export function AppSidebar({
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-        <SidebarGroup>
-          <SidebarGroupLabel>Quests</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton
-                  asChild
-                  isActive={location.pathname === '/quests'}
-                  className={cn(
-                    'w-full gap-3 py-0',
-                    location.pathname === '/quests' ? 'text-accent' : undefined,
-                  )}
-                >
-                  <Link to="/quests" className="flex items-center gap-3">
-                    <Icon name="crystal-ball" className="h-4 w-4" />
-                    {!isMinimal && <span>Overview</span>}
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton
-                  asChild
-                  isActive={isQuestionsActive}
-                  className={cn(
-                    'w-full gap-3 py-0',
-                    isQuestionsActive ? 'text-accent' : undefined,
-                  )}
-                >
-                  <Link
-                    to="/quests/questions"
-                    className="flex items-center gap-3"
-                  >
-                    <Icon name="book" className="h-4 w-4" />
-                    {!isMinimal && <span>Questions</span>}
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton
-                  asChild
-                  disabled
-                  isActive={isPreferencesActive}
-                  className={cn(
-                    'w-full gap-3 py-0 opacity-50',
-                    isPreferencesActive ? 'text-accent' : undefined,
-                  )}
-                >
-                  <div className="flex items-center gap-3">
-                    <Icon name="settings-gear" className="h-4 w-4" />
-                    {!isMinimal && <span>Preferences (Coming Soon)</span>}
-                  </div>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

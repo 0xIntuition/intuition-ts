@@ -37,6 +37,7 @@ export function MinigameCardWrapper({
       questionId,
     },
   )
+  logger('questionData', questionData)
   const userWallet = user?.wallet?.address?.toLowerCase()
   const { data: points, isLoading: isPointsLoading } = usePoints(userWallet)
 
@@ -58,6 +59,7 @@ export function MinigameCardWrapper({
         title={questionData.title}
         description={`${questionData.atoms.toLocaleString()} atoms • ${questionData.totalUsers.toLocaleString()} users`}
         points={gamePoints}
+        pointAwardAmount={questionData.pointAwardAmount}
         onStart={onStart}
         className="w-full"
         hideCTA={!authenticated}
