@@ -3,6 +3,7 @@ import * as React from 'react'
 import {
   cn,
   Icon,
+  IconNameType,
   Sheet,
   SheetContent,
   SheetTrigger,
@@ -25,7 +26,6 @@ import { AccountButton } from '@components/account-button'
 import LoadingButton from '@components/loading-button'
 import { usePrivy } from '@privy-io/react-auth'
 import { Link, useLocation } from '@remix-run/react'
-import { Activity, FileText, Github, Home, Upload } from 'lucide-react'
 
 import { ConnectButton } from './connect-button'
 
@@ -42,7 +42,7 @@ export interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 export interface NavItem {
-  icon: React.ElementType
+  iconName: IconNameType
   label: string
   href: string
   isActive?: boolean
@@ -66,13 +66,13 @@ export function AppSidebar({
 
   const mainNavItems: NavItem[] = [
     {
-      icon: Home,
+      iconName: 'home-door',
       label: 'Home',
       href: '/',
       isAccent: location.pathname === '/' || location.pathname === '/dashboard',
     },
     {
-      icon: Activity,
+      iconName: 'circle-arrow',
       label: 'Network',
       href: '/network',
       isAccent: location.pathname === '/network',
@@ -81,21 +81,21 @@ export function AppSidebar({
 
   const footerNavItems: NavItem[] = [
     {
-      icon: FileText,
-      label: 'Developer Docs',
+      iconName: 'discord',
+      label: 'Join Our Community',
+      href: 'https://discord.com/invite/0xintuition',
+      isExternal: true,
+    },
+    {
+      iconName: 'file-text',
+      label: 'Learn More',
       href: 'https://tech.docs.intuition.systems',
       isExternal: true,
     },
     {
-      icon: Github,
-      label: 'GitHub',
-      href: 'https://github.com/0xIntuition',
-      isExternal: true,
-    },
-    {
-      icon: Upload,
-      label: 'Bulk Uploader',
-      href: 'https://upload.intuition.systems',
+      iconName: 'circle-question-mark',
+      label: 'Contact Us',
+      href: 'https://tech.docs.intuition.systems/contact-us',
       isExternal: true,
     },
   ]
@@ -103,7 +103,7 @@ export function AppSidebar({
   const renderNavLink = (item: NavItem) => {
     const content = (
       <>
-        <item.icon className="!h-5 !w-5" />
+        <Icon name={item.iconName} className="!h-5 !w-5" />
         {!isMinimal && (
           <Text variant={TextVariant.body} className="text-inherit">
             {item.label}
