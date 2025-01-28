@@ -303,7 +303,7 @@ export default function MiniGameOne() {
 
       <div className="py-4 bg-gradient-to-b from-[#060504] to-[#101010] rounded-xl">
         <div className="relative">
-          <Card className="h-[400px] border-none bg-gradient-to-br from-[#060504] to-[#101010] min-w-[480px]">
+          <Card className="border-none bg-gradient-to-br from-[#060504] to-[#101010] min-w-[480px] min-h-80">
             <div className="absolute inset-0 flex flex-col justify-center items-center">
               <div className="space-y-2 items-center pb-8">
                 <Text variant="heading3" className="text-foreground">
