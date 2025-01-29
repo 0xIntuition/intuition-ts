@@ -330,6 +330,25 @@ query GetListDetailsWithUser(
         shares
       }
     }
+    counter_vault {
+      current_share_price
+      positions_aggregate {
+        aggregate {
+          count
+          sum {
+            shares
+          }
+        }
+      }
+      positions(where: { account_id: { _eq: $address } }) {
+        account {
+          id
+          label
+          image
+        }
+        shares
+      }
+    }
   }
 }
 
