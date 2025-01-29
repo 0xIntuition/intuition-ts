@@ -11,8 +11,9 @@ export const QUESTIONS_METADATA = {
 
 export const QUESTS = [
   {
-    title: 'What are your preferences?',
-    description: 'Answer questions about your preferences to earn IQ!',
+    title: 'Questions',
+    description:
+      'Answer questions and stake to earn IQ and see how others voted!',
     link: '/quests/questions',
     enabled: true,
     index: 1,

@@ -285,6 +285,7 @@ export function AppSidebar({
                     className={cn(
                       'w-full gap-3',
                       item.isAccent ? 'text-accent' : undefined,
+                      item.label === 'Questions' ? 'pl-9' : undefined,
                     )}
                   >
                     {renderNavLink(item)}
