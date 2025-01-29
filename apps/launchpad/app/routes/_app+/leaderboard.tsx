@@ -8,7 +8,7 @@ import {
 } from '@0xintuition/1ui'
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@components/ui/tabs'
-import { users } from 'app/data/mock-leaderboard'
+import { users } from '@lib/data/mock-leaderboard'
 import { Brain } from 'lucide-react'
 
 const categories = [

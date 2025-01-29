@@ -1,4 +1,4 @@
-import { Atom, AtomType, KnowledgeGraphData } from '../types/knowledge-graph'
+import { Atom, AtomType, KnowledgeGraphData } from '../../types/knowledge-graph'
 
 // Categories for generating realistic data
 const categories = {

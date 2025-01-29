@@ -12,7 +12,7 @@ import {
   Textarea,
 } from '@0xintuition/1ui'
 
-import { categories } from 'app/data/mock-preferences'
+import { categories } from '@lib/data/mock-preferences'
 
 interface AddPreferenceFormProps {
   onAddPreference: (preference: {

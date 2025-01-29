@@ -19,9 +19,9 @@ import { PreferenceCard } from '@components/preferences/preference-card'
 import { PreferenceChat } from '@components/preferences/preference-chat'
 import { StakeEthForm } from '@components/preferences/stake-eth-form'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@components/ui/tabs'
+import { categories, preferences } from '@lib/data/mock-preferences'
 import logger from '@lib/utils/logger'
 import { useLoaderData } from '@remix-run/react'
-import { categories, preferences } from 'app/data/mock-preferences'
 import {
   Bell,
   Palette,
