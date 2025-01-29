@@ -508,8 +508,13 @@ query GetListDetailsWithUser(
     }
     counter_vault {
       current_share_price
-      allPositions: positions_aggregate {
-        ...PositionAggregateFields
+      positions_aggregate {
+        aggregate {
+          count
+          sum {
+            shares
+          }
+        }
       }
       positions(where: { account_id: { _eq: $address } }) {
         account {

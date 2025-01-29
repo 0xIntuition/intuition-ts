@@ -134,3 +134,134 @@ query GetTriplesWithPositions(
     }
   }
 }
+
+fragment TripleCore on triples {
+  id
+  vault_id
+  counter_vault_id
+}
+
+fragment TripleEntities on triples {
+  subject {
+    id
+    vault_id
+    label
+    wallet_id
+    image
+    type
+  }
+  predicate {
+    id
+    vault_id
+    label
+    wallet_id
+    image
+    type
+  }
+  object {
+    id
+    vault_id
+    label
+    wallet_id
+    image
+    type
+  }
+}
+
+fragment TripleVaultBase on vaults {
+  current_share_price
+  total_shares
+  position_count
+  positions_aggregate {
+    aggregate {
+      count
+      sum {
+        shares
+      }
+    }
+  }
+}
+
+fragment TripleVaultWithPosition on vaults {
+  ...TripleVaultBase
+  positions(where: { account_id: { _eq: $address } }) {
+    account {
+      id
+      label
+      image
+    }
+    shares
+  }
+}
+
+fragment TripleVaults on triples {
+  vault {
+    ...TripleVaultBase
+  }
+  counter_vault {
+    ...TripleVaultBase
+  }
+}
+
+fragment TripleVaultsWithPositions on triples {
+  vault {
+    ...TripleVaultWithPosition
+  }
+  counter_vault {
+    ...TripleVaultWithPosition
+  }
+}
+
+fragment TripleTags on triples {
+  subject {
+    tags: as_subject_triples_aggregate(
+      where: { predicate_id: { _eq: $tagPredicateId } }
+    ) {
+      nodes {
+        object {
+          label
+          vault_id
+          taggedIdentities: as_object_triples_aggregate {
+            nodes {
+              subject {
+                label
+                vault_id
+              }
+              vault_id
+            }
+            aggregate {
+              count
+            }
+          }
+        }
+      }
+      aggregate {
+        count
+      }
+    }
+  }
+}
+
+fragment TripleComplete on triples {
+  ...TripleCore
+  ...TripleEntities
+  ...TripleVaults
+  creator {
+    ...AccountMetadata
+  }
+}
+
+fragment TripleCompleteWithTags on triples {
+  ...TripleComplete
+  ...TripleTags
+}
+
+fragment TripleCompleteWithPositions on triples {
+  ...TripleComplete
+  ...TripleVaultsWithPositions
+}
+
+fragment TripleCompleteWithTagsAndPositions on triples {
+  ...TripleCompleteWithTags
+  ...TripleVaultsWithPositions
+}
