@@ -1,7 +1,7 @@
 import { Icon, IconName } from '@0xintuition/1ui'
 
 import { ColumnDef } from '@tanstack/react-table'
-import { ArrowUpDown, Users } from 'lucide-react'
+import { Users } from 'lucide-react'
 
 import { DataTableColumnHeader } from './data-table-column-header'
 
@@ -31,21 +31,9 @@ export const columns: ColumnDef<TableItem>[] = [
   },
   {
     accessorKey: 'name',
-    header: ({ column }) => (
-      <div className="flex items-center gap-3 pl-6">
-        <button
-          className="flex items-center gap-2"
-          onClick={() => column.toggleSorting()}
-          tabIndex={0}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-              column.toggleSorting()
-            }
-          }}
-        >
-          <span>Entries</span>
-          <ArrowUpDown className="h-4 w-4" />
-        </button>
+    header: () => (
+      <div className="flex items-center gap-3 pl-2">
+        <span>Entries</span>
       </div>
     ),
     cell: ({ row }) => {

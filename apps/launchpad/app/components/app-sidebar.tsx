@@ -3,6 +3,7 @@ import * as React from 'react'
 import {
   cn,
   Icon,
+  IconNameType,
   Sheet,
   SheetContent,
   SheetTrigger,
@@ -10,7 +11,6 @@ import {
   SidebarContent,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
@@ -25,7 +25,6 @@ import { AccountButton } from '@components/account-button'
 import LoadingButton from '@components/loading-button'
 import { usePrivy } from '@privy-io/react-auth'
 import { Link, useLocation } from '@remix-run/react'
-import { Activity, FileText, Github, Home, Upload } from 'lucide-react'
 
 import { ConnectButton } from './connect-button'
 
@@ -42,7 +41,7 @@ export interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 export interface NavItem {
-  icon: React.ElementType
+  iconName: IconNameType
   label: string
   href: string
   isActive?: boolean
@@ -66,13 +65,19 @@ export function AppSidebar({
 
   const mainNavItems: NavItem[] = [
     {
-      icon: Home,
-      label: 'Home',
-      href: '/',
-      isAccent: location.pathname === '/' || location.pathname === '/dashboard',
+      iconName: 'crystal-ball',
+      label: 'Quests',
+      href: '/quests/',
+      isAccent: location.pathname === '/quests/',
     },
     {
-      icon: Activity,
+      iconName: 'book',
+      label: 'Questions',
+      href: '/quests/questions',
+      isAccent: location.pathname.startsWith('/quests/questions'),
+    },
+    {
+      iconName: 'circle-arrow',
       label: 'Network',
       href: '/network',
       isAccent: location.pathname === '/network',
@@ -81,21 +86,21 @@ export function AppSidebar({
 
   const footerNavItems: NavItem[] = [
     {
-      icon: FileText,
-      label: 'Developer Docs',
-      href: 'https://tech.docs.intuition.systems',
+      iconName: 'discord',
+      label: 'Join Our Community',
+      href: 'https://discord.com/invite/0xintuition',
       isExternal: true,
     },
     {
-      icon: Github,
-      label: 'GitHub',
-      href: 'https://github.com/0xIntuition',
+      iconName: 'file-text',
+      label: 'Learn More',
+      href: 'https://docs.intuition.systems',
       isExternal: true,
     },
     {
-      icon: Upload,
-      label: 'Bulk Uploader',
-      href: 'https://upload.intuition.systems',
+      iconName: 'circle-question-mark',
+      label: 'Contact Us',
+      href: 'https://tech.docs.intuition.systems/contact-us',
       isExternal: true,
     },
   ]
@@ -103,7 +108,7 @@ export function AppSidebar({
   const renderNavLink = (item: NavItem) => {
     const content = (
       <>
-        <item.icon className="!h-5 !w-5" />
+        <Icon name={item.iconName} className="!h-5 !w-5" />
         {!isMinimal && (
           <Text variant={TextVariant.body} className="text-inherit">
             {item.label}
@@ -122,11 +127,6 @@ export function AppSidebar({
       </Link>
     )
   }
-
-  const isQuestionsActive = location.pathname.startsWith('/quests/questions')
-  const isPreferencesActive = location.pathname.startsWith(
-    '/quests/preferences',
-  )
 
   const sidebarContent = (
     <>
@@ -291,62 +291,6 @@ export function AppSidebar({
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-        <SidebarGroup>
-          <SidebarGroupLabel>Quests</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton
-                  asChild
-                  isActive={location.pathname === '/quests'}
-                  className={cn(
-                    'w-full gap-3 py-0',
-                    location.pathname === '/quests' ? 'text-accent' : undefined,
-                  )}
-                >
-                  <Link to="/quests" className="flex items-center gap-3">
-                    <Icon name="crystal-ball" className="h-4 w-4" />
-                    {!isMinimal && <span>Overview</span>}
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton
-                  asChild
-                  isActive={isQuestionsActive}
-                  className={cn(
-                    'w-full gap-3 py-0',
-                    isQuestionsActive ? 'text-accent' : undefined,
-                  )}
-                >
-                  <Link
-                    to="/quests/questions"
-                    className="flex items-center gap-3"
-                  >
-                    <Icon name="book" className="h-4 w-4" />
-                    {!isMinimal && <span>Questions</span>}
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton
-                  asChild
-                  disabled
-                  isActive={isPreferencesActive}
-                  className={cn(
-                    'w-full gap-3 py-0 opacity-50',
-                    isPreferencesActive ? 'text-accent' : undefined,
-                  )}
-                >
-                  <div className="flex items-center gap-3">
-                    <Icon name="settings-gear" className="h-4 w-4" />
-                    {!isMinimal && <span>Preferences (Coming Soon)</span>}
-                  </div>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
