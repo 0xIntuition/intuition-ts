@@ -6,3 +6,34 @@ services:
     rootDir: .
     dockerfilePath: ./apps/launchpad/Dockerfile
     dockerContext: .
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: ALCHEMY_BASE_RPC_URL
+        sync: false
+      - key: ALCHEMY_BASE_SEPOLIA_RPC_URL
+        sync: false
+      - key: ALCHEMY_MAINNET_RPC_URL
+        sync: false
+      - key: API_KEY
+        sync: false
+      - key: API_URL
+        sync: false
+      - key: HASURA_POINTS_ENDPOINT
+        sync: false
+      - key: HASURA_POINTS_SECRET
+        sync: false
+      - key: HASURA_PROJECT_ENDPOINT
+        sync: false
+      - key: PRIVY_APP_ID
+        sync: false
+      - key: PRIVY_APP_SECRET
+        sync: false
+      - key: PRIVY_VERIFICATION_KEY
+        sync: false
+      - key: WALLETCONNECT_PROJECT_ID
+        sync: false
+      - key: ORIGIN_URL
+        sync: false
+      - key: VITE_DEPLOY_ENV
+        sync: false
