@@ -11,8 +11,8 @@ interface StakeMutationParams {
   contract: string
   userWallet: string
   vaultId: string
-  atom?: AtomType
-  triple?: TripleType
+  atom?: AtomType | null
+  triple?: TripleType | null
 }
 
 export function useStakeMutation(contract: string, mode: 'deposit' | 'redeem') {

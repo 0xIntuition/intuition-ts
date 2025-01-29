@@ -8,7 +8,6 @@ import { multivaultAbi } from '@lib/abis/multivault'
 import { useCreateTripleMutation } from '@lib/hooks/mutations/useCreateTripleMutation'
 import { useStakeMutation } from '@lib/hooks/mutations/useStakeMutation'
 import { useGetMultiVaultConfig } from '@lib/hooks/useGetMultiVaultConfig'
-import { useGetVaultDetails } from '@lib/hooks/useGetVaultDetails'
 import { useGetWalletBalance } from '@lib/hooks/useGetWalletBalance'
 import {
   transactionReducer,
@@ -57,21 +56,6 @@ export function SignalStep({
     TransactionStateType,
     TransactionActionType
   >(transactionReducer, initialTxState)
-
-  const { data: vaultDetails, isLoading: isLoadingVault } = useGetVaultDetails(
-    contract,
-    selectedTopic?.triple?.vault_id,
-    !newAtomMetadata && selectedTopic?.triple?.counter_vault_id,
-    {
-      queryKey: [
-        'get-vault-details',
-        contract,
-        selectedTopic?.triple?.vault_id,
-        !newAtomMetadata && selectedTopic?.triple?.counter_vault_id,
-      ],
-      enabled: !!selectedTopic?.triple?.vault_id,
-    },
-  )
 
   const { data: multiVaultConfig, isLoading: isLoadingMultiVaultConfig } =
     useGetMultiVaultConfig(contract)
@@ -155,9 +139,8 @@ export function SignalStep({
         const txHash = await stake({
           val,
           userWallet: privyUser?.wallet?.address,
-          vaultId: selectedTopic?.triple?.vault_id ?? '',
+          vaultId: selectedTopic?.triple?.vault_id.toString() ?? '',
           triple: selectedTopic?.triple,
-          conviction_price: vaultDetails?.conviction_price,
           mode: 'deposit',
           contract,
         })
@@ -296,11 +279,9 @@ export function SignalStep({
         txState.status === 'transaction-pending' ||
         txState.status === 'transaction-confirmed' ||
         txState.status === 'approve-transaction' ||
-        txState.status === 'awaiting' ||
-        isLoadingVault,
+        txState.status === 'awaiting',
     )
   }, [
-    isLoadingVault,
     isLoadingMultiVaultConfig,
     stakeAwaitingWalletConfirmation,
     stakeAwaitingOnChainConfirmation,
@@ -308,27 +289,6 @@ export function SignalStep({
     createTripleAwaitingOnChainConfirmation,
     txState.status,
   ])
-
-  console.log('isLoading', isLoading)
-  console.log('txState.status', txState.status)
-  console.log(
-    'stakeAwaitingWalletConfirmation',
-    stakeAwaitingWalletConfirmation,
-  )
-  console.log(
-    'stakeAwaitingOnChainConfirmation',
-    stakeAwaitingOnChainConfirmation,
-  )
-  console.log(
-    'createTripleAwaitingWalletConfirmation',
-    createTripleAwaitingWalletConfirmation,
-  )
-  console.log(
-    'createTripleAwaitingOnChainConfirmation',
-    createTripleAwaitingOnChainConfirmation,
-  )
-  console.log('isLoadingMultiVaultConfig', isLoadingMultiVaultConfig)
-  console.log('isLoadingVault', isLoadingVault)
 
   const handleStakeButtonClick = async () => {
     const errors = []

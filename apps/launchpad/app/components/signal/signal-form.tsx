@@ -20,8 +20,8 @@ import SignalReview from './signal-review'
 
 interface SignalFormProps {
   userWallet: string
-  triple?: TripleType
-  atom?: AtomType
+  triple?: TripleType | null
+  atom?: AtomType | null
   shares: string
   current_share_price: string
   user_assets: string

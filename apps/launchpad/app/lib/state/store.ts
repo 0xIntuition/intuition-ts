@@ -1,5 +1,3 @@
-import { GetAtomQuery } from '@0xintuition/graphql'
-
 import { AtomType, TripleType, VaultDetailsType } from 'app/types'
 import type { WritableAtom } from 'jotai'
 import { atom, createStore } from 'jotai'
@@ -69,7 +67,8 @@ export const atomDetailsModalAtom = atom<{
     name: string
     list: string
     users: number
-    tvl: number
+    forTvl: number
+    againstTvl: number
     position?: number
   }
 }>({

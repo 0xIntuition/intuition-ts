@@ -226,10 +226,12 @@ export default function MiniGameOne() {
     vaultId: string
     counterVaultId: string
     users: number
-    tvl: number
+    forTvl: number
+    againstTvl: number
     userPosition?: number
     positionDirection?: 'for' | 'against'
     userWallet?: string
+    currentSharePrice: number
   }
 
   // Transform the data for the table
@@ -244,11 +246,17 @@ export default function MiniGameOne() {
         vaultId: triple.vault_id,
         counterVaultId: triple.counter_vault_id,
         users: Number(triple.vault?.positions_aggregate?.aggregate?.count ?? 0),
-        tvl:
+        forTvl:
           +formatUnits(
             triple.vault?.positions_aggregate?.aggregate?.sum?.shares ?? 0,
             18,
           ) * +formatUnits(triple.vault?.current_share_price ?? 0, 18),
+        againstTvl:
+          +formatUnits(
+            triple.counter_vault?.positions_aggregate?.aggregate?.sum?.shares ??
+              0,
+            18,
+          ) * +formatUnits(triple.counter_vault?.current_share_price ?? 0, 18),
         userPosition:
           +formatUnits(triple.vault?.positions?.[0]?.shares ?? 0, 18) *
           +formatUnits(triple.vault?.current_share_price ?? 0, 18),
@@ -258,6 +266,7 @@ export default function MiniGameOne() {
             : triple.counter_vault_id === objectId
               ? 'against'
               : undefined,
+        currentSharePrice: triple.vault?.current_share_price ?? 0,
       }
 
       return tableRow
@@ -273,8 +282,9 @@ export default function MiniGameOne() {
 
   // Calculate total users and TVL
   const totalUsers = tableData.reduce((sum, item) => sum + item.users, 0)
-  const totalTVL = tableData.reduce((sum, item) => sum + item.tvl, 0)
-
+  const forTvl = tableData.reduce((sum, item) => sum + item.forTvl, 0)
+  const againstTvl = tableData.reduce((sum, item) => sum + item.againstTvl, 0)
+  const totalTvl = forTvl + againstTvl
   const handleStartOnboarding = () => {
     setOnboardingModal({ isOpen: true, gameId: 'minigame1' })
   }
@@ -343,7 +353,7 @@ export default function MiniGameOne() {
                   isOpen: true,
                   currentPath: fullPath,
                   title: listData?.globalTriples[0].object.label ?? '', // TODO: Change this to use the quest name from the metadata once it's added to the points API
-                  tvl: totalTVL,
+                  tvl: totalTvl,
                 })
               }
             >
@@ -397,7 +407,7 @@ export default function MiniGameOne() {
           metrics={[
             {
               label: 'TVL',
-              value: totalTVL,
+              value: totalTvl,
               suffix: 'ETH',
               precision: 2,
             },

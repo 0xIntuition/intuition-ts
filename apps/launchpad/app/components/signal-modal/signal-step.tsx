@@ -369,26 +369,29 @@ export function SignalStep({
         </div>
 
         {mode === 'deposit' && (
-          <div className="flex flex-col gap-2 w-full">
-            <div className="flex items-center gap-2 justify-end">
-              <Button
-                variant="text"
-                onClick={() => setTicks(Math.max(1, ticks - 1))}
-                disabled={ticks <= 1 || isLoading}
-                className="text-destructive fill-destructive disabled:text-destructive/30 disabled:fill-destructive/30"
-              >
-                <ArrowBigDown className="text-inherit fill-inherit" />
-              </Button>
+          <div className="flex flex-col gap-2 w-full pr-6">
+            <div className="flex items-center justify-end">
               <Text variant="title" className="w-8 text-center">
                 {ticks}
               </Text>
-              <Button
-                variant="text"
-                onClick={() => setTicks(ticks + 1)}
-                disabled={isLoading}
-              >
-                <ArrowBigUp className="text-success fill-success" />
-              </Button>
+              <div className="flex flex-col">
+                <Button
+                  variant="text"
+                  onClick={() => setTicks(ticks + 1)}
+                  disabled={isLoading}
+                  className="h-6 p-0"
+                >
+                  <ArrowBigUp className="text-success fill-success h-5 w-5" />
+                </Button>
+                <Button
+                  variant="text"
+                  onClick={() => setTicks(Math.max(1, ticks - 1))}
+                  disabled={ticks <= 1 || isLoading}
+                  className="h-6 p-0 disabled:opacity-30"
+                >
+                  <ArrowBigDown className="text-destructive fill-destructive h-5 w-5" />
+                </Button>
+              </div>
             </div>
           </div>
         )}

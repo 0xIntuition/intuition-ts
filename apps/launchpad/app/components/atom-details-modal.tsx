@@ -12,7 +12,8 @@ interface AtomDetailsModalProps {
     name: string
     list: string
     users: number
-    tvl: number
+    forTvl: number
+    againstTvl: number
     position?: number
   }
 }
@@ -35,7 +36,9 @@ export function AtomDetailsModal({
     atomId,
     listClaim: true, // TODO: Add handling for regular atoms (not in a list)
     userCount: data?.users ?? 0,
-    tvl: data?.tvl ?? 0,
+    forTvl: data?.forTvl ?? 0,
+    againstTvl: data?.againstTvl ?? 0,
+    tvl: (data?.forTvl ?? 0) + (data?.againstTvl ?? 0),
     position: data?.position ?? 0,
     mutualConnections: 0, // Placeholder for now
     onStake: () => console.log('Stake clicked'),

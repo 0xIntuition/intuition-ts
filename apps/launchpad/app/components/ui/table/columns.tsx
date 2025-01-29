@@ -5,18 +5,19 @@ import {
   ButtonVariant,
   ClaimPosition,
   ClaimPositionType,
-  cn,
   Icon,
   IconName,
 } from '@0xintuition/1ui'
 
+import {
+  SignalButton,
+  StakeButtonVariant,
+} from '@components/signal-modal/signal-button'
 import { SignalModal } from '@components/signal-modal/signal-modal'
 import { MIN_DEPOSIT } from '@consts/general'
-import { stakeModalAtom } from '@lib/state/store'
 import { ColumnDef } from '@tanstack/react-table'
 import { AtomType, TripleType } from 'app/types'
-import { useAtom } from 'jotai'
-import { ArrowBigDown, ArrowBigUp, Users } from 'lucide-react'
+import { ArrowBigDown, ArrowBigUp } from 'lucide-react'
 
 import { DataTableColumnHeader } from './data-table-column-header'
 
@@ -27,20 +28,17 @@ export type TableItem = {
   name: string
   list?: string
   users: number
-  tvl: number
+  forTvl: number
+  againstTvl: number
   userPosition?: number
   positionDirection?: ClaimPositionType
   vaultId: string
   atom?: AtomType
   triple?: TripleType
-  userWallet: string
-  contract: string
 }
 
 interface SignalCellProps {
   vaultId: string
-  userWallet: string
-  contract: string
   triple?: TripleType
   atom?: AtomType
   userPosition?: number
@@ -57,8 +55,7 @@ function SignalCell({
   const [isSignalModalOpen, setIsSignalModalOpen] = useState(false)
   const [signalMode, setSignalMode] = useState<'deposit' | 'redeem'>('deposit')
 
-  const handleSignal = (mode: 'deposit' | 'redeem', e: React.MouseEvent) => {
-    e.stopPropagation()
+  const handleSignal = (mode: 'deposit' | 'redeem') => {
     setSignalMode(mode)
     setIsSignalModalOpen(true)
   }
@@ -78,23 +75,37 @@ function SignalCell({
   return (
     <>
       <div className="flex items-center justify-end gap-2 pr-6">
-        <Button
-          variant={ButtonVariant.ghost}
-          className="py-0.5 px-2 gap-1 h-9 w-12 rounded-xl disabled:bg-primary/5 disabled:border-primary/20 disabled:text-primary/20 text-success border-success/50 bg-success/10"
+        <SignalButton
+          variant={StakeButtonVariant.claimFor}
+          numPositions={
+            positionDirection === ClaimPosition.claimFor
+              ? Number(((userPosition ?? 0) / +MIN_DEPOSIT).toFixed(0))
+              : 0
+          }
+          direction={ClaimPosition.claimFor}
+          positionDirection={positionDirection}
           disabled={positionDirection === ClaimPosition.claimAgainst}
-          onClick={(e) => handleSignal('deposit', e)}
-        >
-          <ArrowBigUp className="w-5 h-5 fill-success" />
-          {((userPosition ?? 0) / +MIN_DEPOSIT).toFixed(0)}
-        </Button>
+          onClick={() => handleSignal('deposit')}
+        />
+        {/* <SignalButton
+          variant={StakeButtonVariant.claimAgainst}
+          numPositions={
+            positionDirection === ClaimPosition.claimAgainst
+              ? Number(((userPosition ?? 0) / +MIN_DEPOSIT).toFixed(0))
+              : 0
+          }
+          direction={ClaimPosition.claimAgainst}
+          positionDirection={positionDirection}
+          disabled={positionDirection === ClaimPosition.claimFor}
+          onClick={() => handleSignal('redeem')}
+        /> */}
         <Button
           variant={ButtonVariant.ghost}
-          className="py-0.5 px-2 gap-1 h-9 w-12 rounded-xl disabled:bg-primary/5 disabled:border-primary/20 disabled:text-primary/20 text-destructive border-destructive/50 bg-destructive/10"
-          disabled={positionDirection === ClaimPosition.claimFor}
-          onClick={(e) => handleSignal('deposit', e)}
+          className="py-0.5 px-2 gap-1 h-9 w-9 rounded-xl bg-destructive/10 border-destructive/30 hover:bg-destructive/20 hover:border-destructive/50 hover:text-destructive text-destructive fill-destructive"
+          disabled={userPosition === 0}
+          onClick={() => handleSignal('redeem')}
         >
-          <ArrowBigDown className="w-5 h-5 fill-destructive" />
-          {triple?.counter_vault?.positions_aggregate?.aggregate?.count}
+          <Icon name="arrow-box-left" className="w-5 h-5" />
         </Button>
       </div>
       <SignalModal
@@ -160,10 +171,19 @@ export const columns: ColumnDef<TableItem>[] = [
       </div>
     ),
     cell: ({ row }) => {
+      const forTvl = row.original.forTvl
+      const againstTvl = row.original.againstTvl
+      const netTicks = (Number(forTvl) - Number(againstTvl)) / +MIN_DEPOSIT
+
       return (
         <div className="pr-10 flex justify-end items-center gap-1">
-          <Users className="w-4 h-4" />
-          {row.getValue('users')}
+          {netTicks !== 0 &&
+            (netTicks > 0 ? (
+              <ArrowBigUp className="w-4 h-4 fill-success text-success" />
+            ) : (
+              <ArrowBigDown className="w-4 h-4 fill-destructive text-destructive" />
+            ))}
+          {Math.abs(netTicks).toFixed(0)}
         </div>
       )
     },
@@ -178,11 +198,14 @@ export const columns: ColumnDef<TableItem>[] = [
       </div>
     ),
     cell: ({ row }) => {
-      const tvl = row.getValue('tvl')
+      const forTvl = row.original.forTvl
+      const againstTvl = row.original.againstTvl
+      const tvl = Number(forTvl) + Number(againstTvl)
+
       return (
         <div className="pr-10 flex justify-end items-center gap-0.5">
           {tvl ? Number(tvl).toFixed(4) : '0'}
-          <Icon name="eth" className="w-4 h-4" />
+          <Icon name="eth" className="w-3 h-3" />
         </div>
       )
     },
@@ -196,7 +219,7 @@ export const columns: ColumnDef<TableItem>[] = [
       </div>
     ),
     cell: ({ row }) => {
-      const position = row.getValue('userPosition')
+      const position = row.original.userPosition
       const positionDirection = row.original.positionDirection
       return (
         <SignalCell
@@ -204,38 +227,36 @@ export const columns: ColumnDef<TableItem>[] = [
           triple={row.original.triple}
           userPosition={position as number}
           positionDirection={positionDirection}
-          userWallet={row.original.userWallet}
-          contract={row.original.contract}
         />
       )
     },
     enableSorting: false,
     size: 120,
   },
-  {
-    accessorKey: 'userPosition',
-    header: ({ column }) => (
-      <div className="flex justify-end pr-6">
-        <DataTableColumnHeader column={column} title="Position" />
-      </div>
-    ),
-    cell: ({ row }) => {
-      const position = row.getValue('userPosition')
-      const positionDirection = row.original.positionDirection
-      return (
-        <div
-          className={cn(
-            'pr-10 flex justify-end items-center gap-0.5',
-            positionDirection === ClaimPosition.claimFor && 'text-success',
-            positionDirection === ClaimPosition.claimAgainst &&
-              'text-destructive',
-          )}
-        >
-          {position ? (Number(position) / +MIN_DEPOSIT).toFixed(0) : '0'}
-          <Icon name="eth" className="w-4 h-4" />
-        </div>
-      )
-    },
-    size: 120,
-  },
+  // {
+  //   accessorKey: 'userPosition',
+  //   header: ({ column }) => (
+  //     <div className="flex justify-end pr-6">
+  //       <DataTableColumnHeader column={column} title="Position" />
+  //     </div>
+  //   ),
+  //   cell: ({ row }) => {
+  //     const position = row.getValue('userPosition')
+  //     const positionDirection = row.original.positionDirection
+  //     return (
+  //       <div
+  //         className={cn(
+  //           'pr-10 flex justify-end items-center gap-0.5',
+  //           positionDirection === ClaimPosition.claimFor && 'text-success',
+  //           positionDirection === ClaimPosition.claimAgainst &&
+  //             'text-destructive',
+  //         )}
+  //       >
+  //         {position ? (Number(position) / +MIN_DEPOSIT).toFixed(0) : '0'}
+  //         <Icon name="eth" className="w-4 h-4" />
+  //       </div>
+  //     )
+  //   },
+  //   size: 120,
+  // },
 ]

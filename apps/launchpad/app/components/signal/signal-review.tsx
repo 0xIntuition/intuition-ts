@@ -35,8 +35,8 @@ interface SignalReviewProps {
   state: TransactionStateType
   isError?: boolean
   modalType: 'atom' | 'triple' | null | undefined
-  triple?: TripleType
-  atom?: AtomType
+  triple?: TripleType | null
+  atom?: AtomType | null
   vaultDetails?: VaultDetailsType
 }
 
@@ -199,7 +199,8 @@ export default function SignalReview({
                           size="default"
                           subject={{
                             variant:
-                              triple?.subject?.type === ('Account' || 'Default')
+                              triple?.subject?.type === 'Account' ||
+                              triple?.subject?.type === 'Default'
                                 ? Identity.user
                                 : Identity.nonUser,
                             label: getAtomLabel(triple?.subject),
@@ -211,8 +212,8 @@ export default function SignalReview({
                           }}
                           predicate={{
                             variant:
-                              triple?.predicate?.type ===
-                              ('Account' || 'Default')
+                              triple?.predicate?.type === 'Account' ||
+                              triple?.predicate?.type === 'Default'
                                 ? Identity.user
                                 : Identity.nonUser,
                             label: getAtomLabel(triple?.predicate),
@@ -224,7 +225,8 @@ export default function SignalReview({
                           }}
                           object={{
                             variant:
-                              triple?.object?.type === ('Account' || 'Default')
+                              triple?.object?.type === 'Account' ||
+                              triple?.object?.type === 'Default'
                                 ? Identity.user
                                 : Identity.nonUser,
                             label: getAtomLabel(triple?.object),
@@ -240,7 +242,7 @@ export default function SignalReview({
                         <IdentityTag
                           imgSrc={atom?.image}
                           variant={
-                            atom?.type === ('Account' || 'Default')
+                            atom?.type === 'Account' || atom?.type === 'Default'
                               ? Identity.user
                               : Identity.nonUser
                           }
@@ -298,7 +300,8 @@ export default function SignalReview({
                         <IdentityTag
                           size="default"
                           variant={
-                            triple?.subject?.type === ('Account' || 'Default')
+                            triple?.subject?.type === 'Account' ||
+                            triple?.subject?.type === 'Default'
                               ? Identity.user
                               : Identity.nonUser
                           }
@@ -323,7 +326,8 @@ export default function SignalReview({
                         <IdentityTag
                           size="default"
                           variant={
-                            triple?.predicate?.type === ('Account' || 'Default')
+                            triple?.predicate?.type === 'Account' ||
+                            triple?.predicate?.type === 'Default'
                               ? Identity.user
                               : Identity.nonUser
                           }
@@ -348,7 +352,8 @@ export default function SignalReview({
                         <IdentityTag
                           size="default"
                           variant={
-                            triple?.object?.type === ('Account' || 'Default')
+                            triple?.object?.type === 'Account' ||
+                            triple?.object?.type === 'Default'
                               ? Identity.user
                               : Identity.nonUser
                           }
@@ -388,7 +393,7 @@ export default function SignalReview({
                       <Text variant="base">
                         Standard fees apply to this transaction. See{' '}
                         <Link
-                          to={PATHS.HELP}
+                          to={'https://tech.docs.intuition.systems/fees/'}
                           target="_blank"
                           prefetch="intent"
                           className="underline"

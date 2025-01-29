@@ -62,8 +62,8 @@ interface SignalModalProps {
   vaultDetailsProp?: VaultDetailsType
   onClose?: () => void
   onSuccess?: (args: {
-    atom?: AtomType
-    triple?: TripleType
+    atom?: AtomType | null
+    triple?: TripleType | null
     vaultDetails?: VaultDetailsType
     direction?: 'for' | 'against'
   }) => void
