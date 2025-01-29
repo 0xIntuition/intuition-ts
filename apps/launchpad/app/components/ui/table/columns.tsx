@@ -35,6 +35,7 @@ export type TableItem = {
   userPosition?: number
   positionDirection?: ClaimPositionType
   vaultId: string
+  currentSharePrice?: number
   atom?: AtomType
   triple?: TripleType
 }
@@ -81,7 +82,7 @@ function SignalCell({
           variant={StakeButtonVariant.claimFor}
           numPositions={
             positionDirection === ClaimPosition.claimFor
-              ? Number(((userPosition ?? 0) / +MIN_DEPOSIT).toFixed(0))
+              ? Math.ceil((userPosition ?? 0) / +MIN_DEPOSIT)
               : 0
           }
           direction={ClaimPosition.claimFor}
@@ -168,42 +169,46 @@ export const columns: ColumnDef<TableItem>[] = [
   {
     accessorKey: 'upvotes',
     header: ({ column }) => (
-      <div className="flex justify-end">
-        <DataTableColumnHeader column={column} title="Upvotes" />
+      <div className="flex justify-center">
+        <DataTableColumnHeader
+          column={column}
+          title="Upvotes"
+          className="p-0"
+        />
       </div>
     ),
     cell: ({ row }) => {
       const upvotes = row.original.upvotes
+      const roundedUpVotes = Math.ceil(upvotes)
 
       return (
-        <div className="pr-10 flex justify-end items-center gap-1">
+        <div className="flex justify-center items-center gap-1">
           <ArrowBigUp className="w-4 h-4 fill-success text-success" />
-          {Math.abs(upvotes).toFixed(0)}
+          {roundedUpVotes}
         </div>
       )
     },
-    size: 120,
+    size: 20,
     sortDescFirst: true,
   },
-  // #TODO: Add downvotes when staking against is implemented
   // {
   //   accessorKey: 'downvotes',
   //   header: ({ column }) => (
-  //     <div className="flex justify-end">
+  //     <div className="flex justify-center">
   //       <DataTableColumnHeader column={column} title="Downvotes" />
   //     </div>
   //   ),
   //   cell: ({ row }) => {
   //     const downvotes = row.original.downvotes
-
+  //     const roundedDownVotes = Math.ceil(downvotes)
   //     return (
-  //       <div className="pr-10 flex justify-end items-center gap-1">
-  //         {Math.abs(downvotes).toFixed(0)}
+  //       <div className="flex justify-center items-center gap-1">
+  //         {roundedDownVotes}
   //         <ArrowBigDown className="w-4 h-4 fill-destructive text-destructive" />
   //       </div>
   //     )
   //   },
-  //   size: 120,
+  //   size: 20,
   //   sortDescFirst: true,
   // },
   {
@@ -235,12 +240,13 @@ export const columns: ColumnDef<TableItem>[] = [
       </div>
     ),
     cell: ({ row }) => {
-      const position = row.original.userPosition
+      const position = row.original.userPosition ?? 0
       const positionDirection = row.original.positionDirection
       return (
         <SignalCell
           vaultId={row.original.vaultId}
           triple={row.original.triple}
+          atom={row.original.atom}
           userPosition={position as number}
           positionDirection={positionDirection}
         />

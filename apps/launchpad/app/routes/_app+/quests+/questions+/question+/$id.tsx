@@ -233,7 +233,7 @@ export default function MiniGameOne() {
     userPosition?: number
     positionDirection?: 'for' | 'against'
     userWallet?: string
-    currentSharePrice: number
+    currentSharePrice?: number
   }
 
   // Transform the data for the table
@@ -248,23 +248,21 @@ export default function MiniGameOne() {
         vaultId: triple.vault_id,
         counterVaultId: triple.counter_vault_id,
         users: Number(triple.vault?.positions_aggregate?.aggregate?.count ?? 0),
-        upvotes: Math.ceil(
+        upvotes:
           (+formatUnits(
             triple.vault?.positions_aggregate?.aggregate?.sum?.shares ?? 0,
             18,
           ) *
             +formatUnits(triple.vault?.current_share_price ?? 0, 18)) /
-            +MIN_DEPOSIT,
-        ),
-        downvotes: Math.ceil(
+          +MIN_DEPOSIT,
+        downvotes:
           (+formatUnits(
             triple.counter_vault?.positions_aggregate?.aggregate?.sum?.shares ??
               0,
             18,
           ) *
             +formatUnits(triple.counter_vault?.current_share_price ?? 0, 18)) /
-            +MIN_DEPOSIT,
-        ),
+          +MIN_DEPOSIT,
         forTvl:
           +formatUnits(
             triple.vault?.positions_aggregate?.aggregate?.sum?.shares ?? 0,
@@ -277,15 +275,28 @@ export default function MiniGameOne() {
             18,
           ) * +formatUnits(triple.counter_vault?.current_share_price ?? 0, 18),
         userPosition:
-          +formatUnits(triple.vault?.positions?.[0]?.shares ?? 0, 18) *
-          +formatUnits(triple.vault?.current_share_price ?? 0, 18),
+          triple.vault?.positions?.[0]?.shares > 0
+            ? +formatUnits(triple.vault?.positions?.[0]?.shares ?? 0, 18) *
+              +formatUnits(triple.vault?.current_share_price ?? 0, 18)
+            : triple.counter_vault?.positions?.[0]?.shares > 0
+              ? +formatUnits(
+                  triple.counter_vault?.positions?.[0]?.shares ?? 0,
+                  18,
+                ) *
+                +formatUnits(triple.counter_vault?.current_share_price ?? 0, 18)
+              : 0,
         positionDirection:
           triple.vault?.positions?.[0]?.shares > 0
             ? 'for'
             : triple.counter_vault_id === objectId
               ? 'against'
               : undefined,
-        currentSharePrice: triple.vault?.current_share_price ?? 0,
+        currentSharePrice:
+          triple.vault?.positions?.[0]?.shares > 0
+            ? +formatUnits(triple.vault?.current_share_price, 18)
+            : triple.counter_vault_id === objectId
+              ? +formatUnits(triple.counter_vault?.current_share_price, 18)
+              : undefined,
       }
 
       return tableRow
