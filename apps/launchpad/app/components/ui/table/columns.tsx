@@ -1,44 +1,59 @@
 import { useState } from 'react'
 
-import { Button, Icon, IconName } from '@0xintuition/1ui'
 import {
-  GetAtomQuery,
-  GetListDetailsQuery,
-  GetListDetailsWithUserQuery,
-  GetTripleQuery,
-} from '@0xintuition/graphql'
+  Button,
+  ButtonVariant,
+  ClaimPosition,
+  ClaimPositionType,
+  cn,
+  Icon,
+  IconName,
+} from '@0xintuition/1ui'
 
 import { SignalModal } from '@components/signal-modal/signal-modal'
+import { MIN_DEPOSIT } from '@consts/general'
+import { stakeModalAtom } from '@lib/state/store'
 import { ColumnDef } from '@tanstack/react-table'
+import { AtomType, TripleType } from 'app/types'
+import { useAtom } from 'jotai'
 import { ArrowBigDown, ArrowBigUp, Users } from 'lucide-react'
 
 import { DataTableColumnHeader } from './data-table-column-header'
 
 // Define the type for our data
-type TableItem = {
+export type TableItem = {
   id: string
   image: string
   name: string
   list?: string
   users: number
   tvl: number
-  position?: number
+  userPosition?: number
+  positionDirection?: ClaimPositionType
   vaultId: string
-  atom?: GetAtomQuery['atom']
-  triple?:
-    | GetListDetailsWithUserQuery['globalTriples'][number]
-    | GetListDetailsQuery['globalTriples'][number]
+  atom?: AtomType
+  triple?: TripleType
+  userWallet: string
+  contract: string
 }
 
 interface SignalCellProps {
   vaultId: string
-  triple?:
-    | GetListDetailsWithUserQuery['globalTriples'][number]
-    | GetListDetailsQuery['globalTriples'][number]
-  atom?: GetAtomQuery['atom']
+  userWallet: string
+  contract: string
+  triple?: TripleType
+  atom?: AtomType
+  userPosition?: number
+  positionDirection?: ClaimPositionType
 }
 
-function SignalCell({ vaultId, atom, triple }: SignalCellProps) {
+function SignalCell({
+  vaultId,
+  atom,
+  triple,
+  userPosition,
+  positionDirection,
+}: SignalCellProps) {
   const [isSignalModalOpen, setIsSignalModalOpen] = useState(false)
   const [signalMode, setSignalMode] = useState<'deposit' | 'redeem'>('deposit')
 
@@ -60,23 +75,26 @@ function SignalCell({ vaultId, atom, triple }: SignalCellProps) {
       window.__lockTableClicks?.()
     }, 0)
   }
-
   return (
     <>
       <div className="flex items-center justify-end gap-2 pr-6">
         <Button
-          variant="text"
-          className="p-2"
+          variant={ButtonVariant.ghost}
+          className="py-0.5 px-2 gap-1 h-9 w-12 rounded-xl disabled:bg-primary/5 disabled:border-primary/20 disabled:text-primary/20 text-success border-success/50 bg-success/10"
+          disabled={positionDirection === ClaimPosition.claimAgainst}
           onClick={(e) => handleSignal('deposit', e)}
         >
-          <ArrowBigUp className="text-success fill-success" />
+          <ArrowBigUp className="w-5 h-5 fill-success" />
+          {((userPosition ?? 0) / +MIN_DEPOSIT).toFixed(0)}
         </Button>
         <Button
-          variant="text"
-          className="p-2"
-          onClick={(e) => handleSignal('redeem', e)}
+          variant={ButtonVariant.ghost}
+          className="py-0.5 px-2 gap-1 h-9 w-12 rounded-xl disabled:bg-primary/5 disabled:border-primary/20 disabled:text-primary/20 text-destructive border-destructive/50 bg-destructive/10"
+          disabled={positionDirection === ClaimPosition.claimFor}
+          onClick={(e) => handleSignal('deposit', e)}
         >
-          <ArrowBigDown className="text-destructive fill-destructive" />
+          <ArrowBigDown className="w-5 h-5 fill-destructive" />
+          {triple?.counter_vault?.positions_aggregate?.aggregate?.count}
         </Button>
       </div>
       <SignalModal
@@ -84,7 +102,7 @@ function SignalCell({ vaultId, atom, triple }: SignalCellProps) {
         onClose={handleClose}
         vaultId={vaultId}
         atom={atom}
-        triple={triple as GetTripleQuery['triple']}
+        triple={triple}
         mode={signalMode}
       />
     </>
@@ -171,6 +189,30 @@ export const columns: ColumnDef<TableItem>[] = [
     size: 120,
   },
   {
+    id: 'signal',
+    header: ({ column }) => (
+      <div className="flex justify-center items-center">
+        <DataTableColumnHeader column={column} title="Signal" />
+      </div>
+    ),
+    cell: ({ row }) => {
+      const position = row.getValue('userPosition')
+      const positionDirection = row.original.positionDirection
+      return (
+        <SignalCell
+          vaultId={row.original.vaultId}
+          triple={row.original.triple}
+          userPosition={position as number}
+          positionDirection={positionDirection}
+          userWallet={row.original.userWallet}
+          contract={row.original.contract}
+        />
+      )
+    },
+    enableSorting: false,
+    size: 120,
+  },
+  {
     accessorKey: 'userPosition',
     header: ({ column }) => (
       <div className="flex justify-end pr-6">
@@ -179,31 +221,21 @@ export const columns: ColumnDef<TableItem>[] = [
     ),
     cell: ({ row }) => {
       const position = row.getValue('userPosition')
+      const positionDirection = row.original.positionDirection
       return (
-        <div className="pr-10 flex justify-end items-center gap-0.5">
-          {position ? Number(position).toFixed(4) : '0'}
+        <div
+          className={cn(
+            'pr-10 flex justify-end items-center gap-0.5',
+            positionDirection === ClaimPosition.claimFor && 'text-success',
+            positionDirection === ClaimPosition.claimAgainst &&
+              'text-destructive',
+          )}
+        >
+          {position ? (Number(position) / +MIN_DEPOSIT).toFixed(0) : '0'}
           <Icon name="eth" className="w-4 h-4" />
         </div>
       )
     },
-    size: 120,
-  },
-  {
-    id: 'signal',
-    header: ({ column }) => (
-      <div className="flex justify-center items-center">
-        <DataTableColumnHeader column={column} title="Signal" />
-      </div>
-    ),
-    cell: ({ row }) => {
-      return (
-        <SignalCell
-          vaultId={row.original.vaultId}
-          triple={row.original.triple}
-        />
-      )
-    },
-    enableSorting: false,
     size: 120,
   },
 ]

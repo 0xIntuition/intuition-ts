@@ -43,6 +43,7 @@ import { useLoaderData, useParams } from '@remix-run/react'
 import { getUser } from '@server/auth'
 // import { requireUser } from '@server/auth'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
+import { TripleType } from 'app/types'
 import { useAtom } from 'jotai'
 import { formatUnits } from 'viem'
 
@@ -218,9 +219,7 @@ export default function MiniGameOne() {
 
   interface TableRowData {
     id: string
-    triple:
-      | GetListDetailsWithUserQuery['globalTriples'][number]
-      | GetListDetailsWithPositionQuery['globalTriples'][number]
+    triple: TripleType
     image: string
     name: string
     list: string
@@ -229,6 +228,8 @@ export default function MiniGameOne() {
     users: number
     tvl: number
     userPosition?: number
+    positionDirection?: 'for' | 'against'
+    userWallet?: string
   }
 
   // Transform the data for the table
@@ -236,7 +237,7 @@ export default function MiniGameOne() {
     listData?.globalTriples?.map((triple) => {
       const tableRow: TableRowData = {
         id: String(triple.id),
-        triple,
+        triple: triple as TripleType,
         image: triple.subject.image || '',
         name: triple.subject.label || 'Untitled Entry',
         list: triple.object.label || 'Untitled List',
@@ -251,6 +252,12 @@ export default function MiniGameOne() {
         userPosition:
           +formatUnits(triple.vault?.positions?.[0]?.shares ?? 0, 18) *
           +formatUnits(triple.vault?.current_share_price ?? 0, 18),
+        positionDirection:
+          triple.vault?.positions?.[0]?.shares > 0
+            ? 'for'
+            : triple.counter_vault_id === objectId
+              ? 'against'
+              : undefined,
       }
 
       return tableRow

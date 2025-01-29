@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 
 import { Badge, Button, Icon, Text, TextVariant, toast } from '@0xintuition/1ui'
-import { GetAtomQuery, GetTripleQuery } from '@0xintuition/graphql'
 
 import SignalToast from '@components/survey-modal/signal-toast'
 import { MIN_DEPOSIT, MULTIVAULT_CONTRACT_ADDRESS } from '@consts/general'
@@ -19,8 +18,10 @@ import { usePrivy } from '@privy-io/react-auth'
 import { Link, useLocation } from '@remix-run/react'
 import { useQueryClient } from '@tanstack/react-query'
 import {
+  AtomType,
   TransactionActionType,
   TransactionStateType,
+  TripleType,
   VaultDetailsType,
 } from 'app/types'
 import { ArrowBigDown, ArrowBigUp, Book } from 'lucide-react'
@@ -38,8 +39,8 @@ const initialTxState: TransactionStateType = {
 export interface SignalStepProps {
   vaultId: string
   counterVaultId?: string
-  atom?: GetAtomQuery['atom']
-  triple?: GetTripleQuery['triple']
+  atom?: AtomType
+  triple?: TripleType
   vaultDetailsProp?: VaultDetailsType
   setTxState: (txState: TransactionStateType) => void
   onStakingSuccess: () => void
@@ -315,11 +316,24 @@ export function SignalStep({
   return (
     <div className="flex flex-col gap-4 p-8">
       <div className="flex flex-col gap-2 mb-8">
-        <Text variant="headline" className="font-semibold">
-          {mode === 'deposit'
-            ? `Signal ${atom?.label ?? triple?.subject.label} as your preferred wallet`
-            : `Redeem all shares from ${atom?.label ?? triple?.subject.label}`}
-        </Text>
+        <div className="flex flex-row items-center justify-between">
+          <Text variant="headline" className="font-semibold">
+            {mode === 'deposit'
+              ? `Signal ${atom?.label ?? triple?.subject.label} as your preferred wallet`
+              : `Redeem all shares from ${atom?.label ?? triple?.subject.label}`}
+          </Text>
+          {mode === 'deposit' && (
+            <Badge className="flex items-center gap-1 px-2">
+              <Icon name="wallet" className="h-4 w-4 text-secondary/50" />
+              <Text
+                variant={TextVariant.caption}
+                className="text-nowrap text-secondary/50"
+              >
+                {(+walletBalance).toFixed(2)} ETH
+              </Text>
+            </Badge>
+          )}
+        </div>
         {mode === 'deposit' && (
           <Text
             variant={TextVariant.footnote}
@@ -361,8 +375,9 @@ export function SignalStep({
                 variant="text"
                 onClick={() => setTicks(Math.max(1, ticks - 1))}
                 disabled={ticks <= 1 || isLoading}
+                className="text-destructive fill-destructive disabled:text-destructive/30 disabled:fill-destructive/30"
               >
-                <ArrowBigDown className="text-destructive fill-destructive" />
+                <ArrowBigDown className="text-inherit fill-inherit" />
               </Button>
               <Text variant="title" className="w-8 text-center">
                 {ticks}
@@ -389,19 +404,8 @@ export function SignalStep({
         </div>
       )}
 
-      <div className="flex justify-end mt-8">
-        <div className="flex flex-row gap-2">
-          {mode === 'deposit' && (
-            <Badge className="flex items-center gap-1 px-2">
-              <Icon name="wallet" className="h-4 w-4 text-secondary/50" />
-              <Text
-                variant={TextVariant.caption}
-                className="text-nowrap text-secondary/50"
-              >
-                {(+walletBalance).toFixed(2)} ETH
-              </Text>
-            </Badge>
-          )}
+      <div className="flex flex-row gap-2 justify-end mt-8">
+        <div className="flex flex-col gap-2">
           <SubmitButton
             loading={isLoading}
             onClick={handleStakeButtonClick}
@@ -412,6 +416,17 @@ export function SignalStep({
             }
             loadingText={'Processing...'}
           />
+          <Text variant="caption" className="text-end text-primary/70">
+            Standard fees apply.{' '}
+            <Link
+              to="https://tech.docs.intuition.systems/fees"
+              target="_blank"
+              rel="noreferrer"
+              className="text-primary font-semibold hover:text-accent"
+            >
+              Learn more
+            </Link>
+          </Text>
         </div>
       </div>
     </div>

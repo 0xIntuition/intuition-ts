@@ -1,3 +1,6 @@
+import { GetAtomQuery } from '@0xintuition/graphql'
+
+import { AtomType, TripleType, VaultDetailsType } from 'app/types'
 import type { WritableAtom } from 'jotai'
 import { atom, createStore } from 'jotai'
 
@@ -17,6 +20,23 @@ export function atomWithToggle(
   )
   return anAtom
 }
+
+export type StakeModalState = {
+  isOpen: boolean
+  id: string | null
+  direction?: 'for' | 'against'
+  modalType?: 'atom' | 'triple'
+  mode?: 'deposit' | 'redeem'
+  triple?: TripleType
+  atom?: AtomType
+  vaultDetails?: VaultDetailsType
+  vaultId?: string | number
+}
+
+export const stakeModalAtom = atom<StakeModalState>({
+  isOpen: false,
+  id: null,
+})
 
 export const onboardingModalAtom = atom<{
   isOpen: boolean

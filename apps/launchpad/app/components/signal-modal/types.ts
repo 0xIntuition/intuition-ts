@@ -1,4 +1,4 @@
-import { GetAtomQuery, GetTripleQuery } from '@0xintuition/graphql'
+import { AtomType, TripleType } from 'app/types'
 
 export const STEPS = {
   SIGNAL: 'signal',
@@ -25,6 +25,6 @@ export interface SignalModalProps {
   onClose: (e?: React.MouseEvent) => void
   vaultId: string
   mode: 'deposit' | 'redeem'
-  atom?: GetAtomQuery['atom']
-  triple?: GetTripleQuery['triple']
+  atom?: AtomType
+  triple?: TripleType
 }

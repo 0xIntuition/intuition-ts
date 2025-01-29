@@ -1,9 +1,8 @@
-import { GetAtomQuery, GetTripleQuery } from '@0xintuition/graphql'
-
 import { multivaultAbi } from '@lib/abis/multivault'
 import { useDepositAtom } from '@lib/hooks/useDepositAtom'
 import { useRedeemAtom } from '@lib/hooks/useRedeemAtom'
 import { useMutation } from '@tanstack/react-query'
+import { AtomType, TripleType } from 'app/types'
 import { Abi, parseUnits } from 'viem'
 
 interface StakeMutationParams {
@@ -12,8 +11,8 @@ interface StakeMutationParams {
   contract: string
   userWallet: string
   vaultId: string
-  triple?: GetTripleQuery['triple']
-  atom?: GetAtomQuery['atom']
+  atom?: AtomType
+  triple?: TripleType
 }
 
 export function useStakeMutation(contract: string, mode: 'deposit' | 'redeem') {
