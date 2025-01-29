@@ -26,7 +26,7 @@ import ShareModal from '@components/share-modal'
 import { OnboardingModal } from '@components/survey-modal/survey-modal'
 import { columns } from '@components/ui/table/columns'
 import { DataTable } from '@components/ui/table/data-table'
-import { CURRENT_ENV } from '@consts/general'
+import { CURRENT_ENV, MIN_DEPOSIT } from '@consts/general'
 import { useGoBack } from '@lib/hooks/useGoBack'
 import { usePoints } from '@lib/hooks/usePoints'
 import { useQuestionData } from '@lib/hooks/useQuestionData'
@@ -226,6 +226,8 @@ export default function MiniGameOne() {
     vaultId: string
     counterVaultId: string
     users: number
+    upvotes: number
+    downvotes: number
     forTvl: number
     againstTvl: number
     userPosition?: number
@@ -246,6 +248,23 @@ export default function MiniGameOne() {
         vaultId: triple.vault_id,
         counterVaultId: triple.counter_vault_id,
         users: Number(triple.vault?.positions_aggregate?.aggregate?.count ?? 0),
+        upvotes: Math.ceil(
+          (+formatUnits(
+            triple.vault?.positions_aggregate?.aggregate?.sum?.shares ?? 0,
+            18,
+          ) *
+            +formatUnits(triple.vault?.current_share_price ?? 0, 18)) /
+            +MIN_DEPOSIT,
+        ),
+        downvotes: Math.ceil(
+          (+formatUnits(
+            triple.counter_vault?.positions_aggregate?.aggregate?.sum?.shares ??
+              0,
+            18,
+          ) *
+            +formatUnits(triple.counter_vault?.current_share_price ?? 0, 18)) /
+            +MIN_DEPOSIT,
+        ),
         forTvl:
           +formatUnits(
             triple.vault?.positions_aggregate?.aggregate?.sum?.shares ?? 0,

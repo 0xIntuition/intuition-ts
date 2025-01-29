@@ -64,7 +64,7 @@ export function DataTable<TData extends { id: string | number }, TValue>({
   const [columnResizeMode] = React.useState<ColumnResizeMode>('onChange')
   const [sorting, setSorting] = React.useState<SortingState>([
     {
-      id: 'users',
+      id: 'upvotes',
       desc: true,
     },
   ])

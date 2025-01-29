@@ -17,7 +17,7 @@ import { SignalModal } from '@components/signal-modal/signal-modal'
 import { MIN_DEPOSIT } from '@consts/general'
 import { ColumnDef } from '@tanstack/react-table'
 import { AtomType, TripleType } from 'app/types'
-import { ArrowBigDown, ArrowBigUp } from 'lucide-react'
+import { ArrowBigUp } from 'lucide-react'
 
 import { DataTableColumnHeader } from './data-table-column-header'
 
@@ -30,6 +30,8 @@ export type TableItem = {
   users: number
   forTvl: number
   againstTvl: number
+  upvotes: number
+  downvotes: number
   userPosition?: number
   positionDirection?: ClaimPositionType
   vaultId: string
@@ -164,32 +166,46 @@ export const columns: ColumnDef<TableItem>[] = [
     size: 480,
   },
   {
-    accessorKey: 'users',
+    accessorKey: 'upvotes',
     header: ({ column }) => (
       <div className="flex justify-end">
-        <DataTableColumnHeader column={column} title="Users" />
+        <DataTableColumnHeader column={column} title="Upvotes" />
       </div>
     ),
     cell: ({ row }) => {
-      const forTvl = row.original.forTvl
-      const againstTvl = row.original.againstTvl
-      const netTicks = (Number(forTvl) - Number(againstTvl)) / +MIN_DEPOSIT
+      const upvotes = row.original.upvotes
 
       return (
         <div className="pr-10 flex justify-end items-center gap-1">
-          {netTicks !== 0 &&
-            (netTicks > 0 ? (
-              <ArrowBigUp className="w-4 h-4 fill-success text-success" />
-            ) : (
-              <ArrowBigDown className="w-4 h-4 fill-destructive text-destructive" />
-            ))}
-          {Math.abs(netTicks).toFixed(0)}
+          <ArrowBigUp className="w-4 h-4 fill-success text-success" />
+          {Math.abs(upvotes).toFixed(0)}
         </div>
       )
     },
     size: 120,
     sortDescFirst: true,
   },
+  // #TODO: Add downvotes when staking against is implemented
+  // {
+  //   accessorKey: 'downvotes',
+  //   header: ({ column }) => (
+  //     <div className="flex justify-end">
+  //       <DataTableColumnHeader column={column} title="Downvotes" />
+  //     </div>
+  //   ),
+  //   cell: ({ row }) => {
+  //     const downvotes = row.original.downvotes
+
+  //     return (
+  //       <div className="pr-10 flex justify-end items-center gap-1">
+  //         {Math.abs(downvotes).toFixed(0)}
+  //         <ArrowBigDown className="w-4 h-4 fill-destructive text-destructive" />
+  //       </div>
+  //     )
+  //   },
+  //   size: 120,
+  //   sortDescFirst: true,
+  // },
   {
     accessorKey: 'tvl',
     header: ({ column }) => (
