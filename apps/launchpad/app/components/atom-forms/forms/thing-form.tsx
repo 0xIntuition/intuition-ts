@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FormProvider, useForm } from 'react-hook-form'
 
-import { FormImageUpload, FormInput, FormTextarea } from '../form-fields'
+import { FormInput, FormTextarea } from '../form-fields'
 import { ThingAtom, thingAtomSchema } from '../types'
 
 interface ThingFormProps {
@@ -26,7 +26,7 @@ export function ThingForm({ onSubmit, defaultValues }: ThingFormProps) {
         className="space-y-2.5"
       >
         <FormInput name="name" label="Name" placeholder="Enter name" />
-        <FormImageUpload name="image" label="Image" control={form.control} />
+        {/* <FormImageUpload name="image" label="Image" control={form.control} /> */}
         <FormTextarea
           name="description"
           label="Description"
