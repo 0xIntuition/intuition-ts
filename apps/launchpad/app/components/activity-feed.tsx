@@ -66,7 +66,16 @@ function ActivityRow({ activity }: { activity: Events }) {
     ? new Date(parseInt(activity.block_timestamp.toString()) * 1000)
     : new Date()
 
-  const creator = activity.atom?.creator || activity.triple?.creator
+  let creator
+  if (activity.type === 'Deposited') {
+    creator = activity.deposit?.receiver?.label
+  } else if (activity.type === 'Redeemed') {
+    creator = activity.redemption?.receiver?.label
+  } else if (activity.type === 'AtomCreated') {
+    creator = activity.atom?.creator?.label
+  } else if (activity.type === 'TripleCreated') {
+    creator = activity.triple?.creator?.label
+  }
 
   const dataType = activity.atom
     ? 'atom'
@@ -95,8 +104,8 @@ function ActivityRow({ activity }: { activity: Events }) {
 
       <div className="flex-1 min-w-0">
         <div className="flex flex-wrap items-center gap-2 text-sm">
-          <IdentityTag variant={Identity.user} imgSrc={creator?.image}>
-            {creator?.label}
+          <IdentityTag variant={Identity.user} imgSrc={''}>
+            {creator}
           </IdentityTag>
           <span className="text-muted-foreground">
             {activity.type.toLowerCase()}
@@ -119,7 +128,8 @@ function ActivityRow({ activity }: { activity: Events }) {
             variant={
               dataType === 'triple'
                 ? Identity.user
-                : activity.atom?.type === ('Default' || 'Account')
+                : activity.atom?.type === 'Default' ||
+                    activity.atom?.type === 'Account'
                   ? Identity.user
                   : Identity.nonUser
             }

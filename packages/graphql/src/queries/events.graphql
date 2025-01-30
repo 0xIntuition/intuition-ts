@@ -109,6 +109,12 @@ query GetEvents(
       sender_id
       sender {
         id
+        label
+      }
+      receiver_id
+      receiver {
+        id
+        label
       }
       shares_for_receiver
       sender_assets_after_total_fees
@@ -130,6 +136,12 @@ query GetEvents(
       sender_id
       sender {
         id
+        label
+      }
+      receiver_id
+      receiver {
+        id
+        label
       }
     }
   }

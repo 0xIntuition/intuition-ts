@@ -10993,9 +10993,11 @@ export type GetEventsQuery = {
     deposit?: {
       __typename?: 'deposits'
       sender_id: string
+      receiver_id: string
       shares_for_receiver: any
       sender_assets_after_total_fees: any
-      sender?: { __typename?: 'accounts'; id: string } | null
+      sender?: { __typename?: 'accounts'; id: string; label: string } | null
+      receiver: { __typename?: 'accounts'; id: string; label: string }
       vault: {
         __typename?: 'vaults'
         total_shares: any
@@ -11016,7 +11018,9 @@ export type GetEventsQuery = {
     redemption?: {
       __typename?: 'redemptions'
       sender_id: string
-      sender?: { __typename?: 'accounts'; id: string } | null
+      receiver_id: string
+      sender?: { __typename?: 'accounts'; id: string; label: string } | null
+      receiver: { __typename?: 'accounts'; id: string; label: string }
     } | null
   }>
 }
@@ -18164,6 +18168,12 @@ export const GetEventsDocument = `
       sender_id
       sender {
         id
+        label
+      }
+      receiver_id
+      receiver {
+        id
+        label
       }
       shares_for_receiver
       sender_assets_after_total_fees
@@ -18185,6 +18195,12 @@ export const GetEventsDocument = `
       sender_id
       sender {
         id
+        label
+      }
+      receiver_id
+      receiver {
+        id
+        label
       }
     }
   }
@@ -33911,6 +33927,31 @@ export const GetEvents = {
                               kind: 'Field',
                               name: { kind: 'Name', value: 'id' },
                             },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'label' },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'receiver_id' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'receiver' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'label' },
+                            },
                           ],
                         },
                       },
@@ -34057,6 +34098,31 @@ export const GetEvents = {
                             {
                               kind: 'Field',
                               name: { kind: 'Name', value: 'id' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'label' },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'receiver_id' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'receiver' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'label' },
                             },
                           ],
                         },
