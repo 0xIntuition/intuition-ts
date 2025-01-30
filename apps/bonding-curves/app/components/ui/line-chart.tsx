@@ -123,108 +123,6 @@ export function LineChart({
     feMerge.append('feMergeNode').attr('in', 'glowColor')
     feMerge.append('feMergeNode').attr('in', 'SourceGraphic')
 
-    // Create base gradient template
-    const createGradient = (
-      id: string,
-      color: string,
-      secondaryColor: string,
-      isPreview = false,
-      isRedeem = false,
-    ) => {
-      const gradient = defs
-        .append('linearGradient')
-        .attr('id', id)
-        .attr('x1', '0%')
-        .attr('x2', isRedeem ? '100%' : '0%')
-        .attr('y1', '0%')
-        .attr('y2', '100%')
-
-      if (isRedeem) {
-        // Edge-focused gradient for redeem
-        gradient
-          .append('stop')
-          .attr('offset', '0%')
-          .attr('stop-color', secondaryColor)
-          .attr('stop-opacity', 0.7)
-
-        gradient
-          .append('stop')
-          .attr('offset', '15%')
-          .attr('stop-color', color)
-          .attr('stop-opacity', 0.5)
-
-        gradient
-          .append('stop')
-          .attr('offset', '85%')
-          .attr('stop-color', color)
-          .attr('stop-opacity', 0.5)
-
-        gradient
-          .append('stop')
-          .attr('offset', '100%')
-          .attr('stop-color', secondaryColor)
-          .attr('stop-opacity', 0.7)
-      } else {
-        // Original vertical gradient for non-redeem
-        gradient
-          .append('stop')
-          .attr('offset', '0%')
-          .attr('stop-color', color)
-          .attr('stop-opacity', isPreview ? 0.5 : 0.4)
-
-        gradient
-          .append('stop')
-          .attr('offset', '50%')
-          .attr('stop-color', secondaryColor)
-          .attr('stop-opacity', isPreview ? 0.35 : 0.25)
-
-        gradient
-          .append('stop')
-          .attr('offset', '100%')
-          .attr('stop-color', color)
-          .attr('stop-opacity', isPreview ? 0.2 : 0.1)
-      }
-    }
-
-    // Create pattern for texture overlay with dynamic color
-    const createPattern = (id: string, color: string, isRedeem = false) => {
-      const pattern = defs
-        .append('pattern')
-        .attr('id', id)
-        .attr('patternUnits', 'userSpaceOnUse')
-        .attr('width', isRedeem ? 10 : 8)
-        .attr('height', isRedeem ? 10 : 8)
-        .attr('patternTransform', `rotate(45) ${isRedeem ? 'scale(1.2)' : ''}`)
-
-      if (isRedeem) {
-        // Enhanced edge pattern for redeem
-        pattern
-          .append('line')
-          .attr('x1', 0)
-          .attr('y1', 0)
-          .attr('x2', 0)
-          .attr('y2', 10)
-          .attr('stroke', color)
-          .attr('stroke-width', 1.5)
-          .attr('stroke-opacity', 0.4)
-      } else {
-        pattern
-          .append('line')
-          .attr('x1', 0)
-          .attr('y1', 0)
-          .attr('x2', 0)
-          .attr('y2', 8)
-          .attr('stroke', color)
-          .attr('stroke-width', 0.5)
-          .attr('stroke-opacity', 0.3)
-      }
-    }
-
-    // Create patterns for different states
-    createPattern('basePattern', '#ffffff')
-    createPattern('depositPattern', '#00ff00')
-    createPattern('redeemPattern', '#ffff00')
-
     // Create glow filter with dynamic colors
     const createGlowFilter = (id: string, color: string) => {
       const filter = defs
@@ -347,7 +245,109 @@ export function LineChart({
       .y1(height) // Fill down to the bottom
       .curve(d3.curveMonotoneX)
 
+    // Create base gradient template
+    const createGradient = (
+      id: string,
+      color: string,
+      secondaryColor: string,
+      isPreview = false,
+      isRedeem = false,
+    ) => {
+      const gradient = defs
+        .append('linearGradient')
+        .attr('id', id)
+        .attr('x1', '0%')
+        .attr('x2', isRedeem ? '100%' : '0%')
+        .attr('y1', '0%')
+        .attr('y2', '100%')
+
+      if (isRedeem) {
+        // Edge-focused gradient for redeem
+        gradient
+          .append('stop')
+          .attr('offset', '0%')
+          .attr('stop-color', secondaryColor)
+          .attr('stop-opacity', 0.7)
+
+        gradient
+          .append('stop')
+          .attr('offset', '15%')
+          .attr('stop-color', color)
+          .attr('stop-opacity', 0.5)
+
+        gradient
+          .append('stop')
+          .attr('offset', '85%')
+          .attr('stop-color', color)
+          .attr('stop-opacity', 0.5)
+
+        gradient
+          .append('stop')
+          .attr('offset', '100%')
+          .attr('stop-color', secondaryColor)
+          .attr('stop-opacity', 0.7)
+      } else {
+        // Original vertical gradient for non-redeem
+        gradient
+          .append('stop')
+          .attr('offset', '0%')
+          .attr('stop-color', color)
+          .attr('stop-opacity', isPreview ? 0.5 : 0.4)
+
+        gradient
+          .append('stop')
+          .attr('offset', '50%')
+          .attr('stop-color', secondaryColor)
+          .attr('stop-opacity', isPreview ? 0.35 : 0.25)
+
+        gradient
+          .append('stop')
+          .attr('offset', '100%')
+          .attr('stop-color', color)
+          .attr('stop-opacity', isPreview ? 0.2 : 0.1)
+      }
+    }
+
+    // Create pattern for texture overlay with dynamic color
+    const createPattern = (id: string, color: string, isRedeem = false) => {
+      const pattern = defs
+        .append('pattern')
+        .attr('id', id)
+        .attr('patternUnits', 'userSpaceOnUse')
+        .attr('width', isRedeem ? 10 : 8)
+        .attr('height', isRedeem ? 10 : 8)
+        .attr('patternTransform', `rotate(45) ${isRedeem ? 'scale(1.2)' : ''}`)
+
+      if (isRedeem) {
+        // Enhanced edge pattern for redeem
+        pattern
+          .append('line')
+          .attr('x1', 0)
+          .attr('y1', 0)
+          .attr('x2', 0)
+          .attr('y2', 10)
+          .attr('stroke', color)
+          .attr('stroke-width', 1.5)
+          .attr('stroke-opacity', 0.4)
+      } else {
+        pattern
+          .append('line')
+          .attr('x1', 0)
+          .attr('y1', 0)
+          .attr('x2', 0)
+          .attr('y2', 8)
+          .attr('stroke', color)
+          .attr('stroke-width', 0.5)
+          .attr('stroke-opacity', 0.3)
+      }
+    }
+
     data.forEach((curve) => {
+      // Create patterns for this curve
+      createPattern(`basePattern-${curve.id}`, curve.color)
+      createPattern(`depositPattern-${curve.id}`, '#00ff00')
+      createPattern(`redeemPattern-${curve.id}`, '#ffff00', true)
+
       // Create gradients with secondary colors
       createGradient(`gradient-${curve.id}`, curve.color, '#ffffff') // Base: blue + white
       createGradient(
@@ -357,7 +357,7 @@ export function LineChart({
         true,
       ) // Deposit: blue + green
       createGradient(
-        'gradient-preview-redeem',
+        `gradient-preview-redeem-${curve.id}`,
         'hsl(var(--destructive))',
         '#ffff00',
         true,
@@ -542,7 +542,7 @@ export function LineChart({
             .append('path')
             .datum(basePoints)
             .attr('class', 'area1-pattern')
-            .attr('fill', 'url(#basePattern)')
+            .attr('fill', `url(#basePattern-${curve.id})`)
             .attr('d', area)
         }
 
@@ -598,7 +598,7 @@ export function LineChart({
               .append('path')
               .datum(previewPoints)
               .attr('class', 'area2')
-              .attr('fill', 'url(#gradient-preview-redeem)')
+              .attr('fill', 'url(#gradient-preview-redeem-${curve.id})')
               .attr('d', redeemArea)
 
             // Add edge highlights with evenly spaced points for redeem
@@ -635,7 +635,7 @@ export function LineChart({
               .append('path')
               .datum(previewPoints)
               .attr('class', 'area2-pattern')
-              .attr('fill', 'url(#redeemPattern)')
+              .attr('fill', `url(#redeemPattern-${curve.id})`)
               .attr('d', redeemArea)
           } else {
             // Create deposit edge gradients
@@ -712,7 +712,7 @@ export function LineChart({
               .append('path')
               .datum(previewPoints)
               .attr('class', 'area2-pattern')
-              .attr('fill', 'url(#depositPattern)')
+              .attr('fill', `url(#depositPattern-${curve.id})`)
               .attr('d', area)
           }
 
