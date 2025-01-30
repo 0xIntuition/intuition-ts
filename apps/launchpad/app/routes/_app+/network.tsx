@@ -145,7 +145,7 @@ export default function Network() {
       </div>
       <div className="flex flex-col gap-4">
         <Text variant={TextVariant.headline} weight={TextWeight.medium}>
-          Data Stream
+          Recent Activity
         </Text>
         <ActivityFeed
           activities={{
