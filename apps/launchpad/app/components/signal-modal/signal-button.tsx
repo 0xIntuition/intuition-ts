@@ -14,7 +14,7 @@ import { cva, VariantProps } from 'class-variance-authority'
 import { ArrowBigDown, ArrowBigUp } from 'lucide-react'
 
 export const StakeButtonVariant = {
-  identity: 'identity',
+  neutral: 'neutral',
   claimFor: 'claimFor',
   claimAgainst: 'claimAgainst',
 }
@@ -24,7 +24,7 @@ const stakeButtonVariants = cva(
   {
     variants: {
       variant: {
-        [StakeButtonVariant.identity]:
+        [StakeButtonVariant.neutral]:
           'bg-primary/10 border-primary/30 hover:bg-primary/20 hover:border-primary/60 text-secondary',
         [StakeButtonVariant.claimFor]:
           'bg-success/10 border-success/30 hover:bg-success/20 hover:border-success/50 hover:text-success text-success fill-success disabled:fill-transparent',
@@ -33,13 +33,13 @@ const stakeButtonVariants = cva(
       },
       positionDirection: {
         [ClaimPosition.claimFor]:
-          'text-success fill-success bg-success/10 border-success/30 hover:border-success/30',
+          'text-success fill-success bg-success/10 border-success/30 hover:border-success/30 hover:bg-success/20 hover:text-success',
         [ClaimPosition.claimAgainst]:
-          'text-destructive fill-destructive bg-destructive/10 border-destructive/30 hover:border-destructive/30',
+          'text-destructive fill-destructive bg-destructive/10 border-destructive/30 hover:border-destructive/30 hover:bg-destructive/20 hover:text-destructive',
       },
     },
     defaultVariants: {
-      variant: StakeButtonVariant.identity,
+      variant: StakeButtonVariant.neutral,
     },
   },
 )

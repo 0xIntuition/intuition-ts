@@ -9,16 +9,13 @@ import {
   IconName,
 } from '@0xintuition/1ui'
 
-import {
-  SignalButton,
-  StakeButtonVariant,
-} from '@components/signal-modal/signal-button'
+import { SignalButton } from '@components/signal-modal/signal-button'
 import { SignalModal } from '@components/signal-modal/signal-modal'
 import { MIN_DEPOSIT } from '@consts/general'
 import { usePrivy } from '@privy-io/react-auth'
 import { ColumnDef } from '@tanstack/react-table'
 import { AtomType, TripleType } from 'app/types'
-import { ArrowBigUp } from 'lucide-react'
+import { ArrowBigDown, ArrowBigUp } from 'lucide-react'
 
 import { DataTableColumnHeader } from './data-table-column-header'
 
@@ -82,34 +79,18 @@ function SignalCell({
     <>
       <div className="flex items-center justify-end gap-2 pr-6">
         <SignalButton
-          variant={StakeButtonVariant.claimFor}
-          numPositions={
-            positionDirection === ClaimPosition.claimFor
-              ? Math.ceil((userPosition ?? 0) / +MIN_DEPOSIT)
-              : 0
-          }
-          direction={ClaimPosition.claimFor}
+          variant={positionDirection}
+          numPositions={Math.ceil((userPosition ?? 0) / +MIN_DEPOSIT)}
+          direction={positionDirection}
           positionDirection={positionDirection}
           disabled={
             positionDirection === ClaimPosition.claimAgainst || !userWallet
           }
           onClick={() => handleSignal('deposit')}
         />
-        {/* <SignalButton
-          variant={StakeButtonVariant.claimAgainst}
-          numPositions={
-            positionDirection === ClaimPosition.claimAgainst
-              ? Number(((userPosition ?? 0) / +MIN_DEPOSIT).toFixed(0))
-              : 0
-          }
-          direction={ClaimPosition.claimAgainst}
-          positionDirection={positionDirection}
-          disabled={positionDirection === ClaimPosition.claimFor}
-          onClick={() => handleSignal('redeem')}
-        /> */}
         <Button
           variant={ButtonVariant.ghost}
-          className="py-0.5 px-2 gap-1 h-9 w-9 rounded-xl bg-destructive/10 border-destructive/30 hover:bg-destructive/20 hover:border-destructive/50 hover:text-destructive text-destructive fill-destructive disabled:opacity-50"
+          className="py-0.5 px-2 gap-1 h-9 w-9 rounded-xl bg-warning/10 border-warning/30 hover:bg-warning/20 hover:border-warning/50 hover:text-warning text-warning fill-warning"
           disabled={userPosition === 0}
           onClick={() => handleSignal('redeem')}
         >
@@ -122,7 +103,12 @@ function SignalCell({
         vaultId={vaultId}
         atom={atom}
         triple={triple}
-        mode={signalMode}
+        initialTicks={
+          positionDirection === ClaimPosition.claimFor
+            ? Math.ceil((userPosition ?? 0) / +MIN_DEPOSIT)
+            : 0
+        }
+        isSimplifiedRedeem={signalMode === 'redeem'}
       />
     </>
   )
@@ -196,26 +182,26 @@ export const columns: ColumnDef<TableItem>[] = [
     size: 20,
     sortDescFirst: true,
   },
-  // {
-  //   accessorKey: 'downvotes',
-  //   header: ({ column }) => (
-  //     <div className="flex justify-center">
-  //       <DataTableColumnHeader column={column} title="Downvotes" />
-  //     </div>
-  //   ),
-  //   cell: ({ row }) => {
-  //     const downvotes = row.original.downvotes
-  //     const roundedDownVotes = Math.ceil(downvotes)
-  //     return (
-  //       <div className="flex justify-center items-center gap-1">
-  //         {roundedDownVotes}
-  //         <ArrowBigDown className="w-4 h-4 fill-destructive text-destructive" />
-  //       </div>
-  //     )
-  //   },
-  //   size: 20,
-  //   sortDescFirst: true,
-  // },
+  {
+    accessorKey: 'downvotes',
+    header: ({ column }) => (
+      <div className="flex justify-center">
+        <DataTableColumnHeader column={column} title="Downvotes" />
+      </div>
+    ),
+    cell: ({ row }) => {
+      const downvotes = row.original.downvotes
+      const roundedDownVotes = Math.ceil(downvotes)
+      return (
+        <div className="flex justify-center items-center gap-1">
+          {roundedDownVotes}
+          <ArrowBigDown className="w-4 h-4 fill-destructive text-destructive" />
+        </div>
+      )
+    },
+    size: 20,
+    sortDescFirst: true,
+  },
   {
     accessorKey: 'tvl',
     header: ({ column }) => (
@@ -247,6 +233,8 @@ export const columns: ColumnDef<TableItem>[] = [
     cell: ({ row }) => {
       const position = row.original.userPosition ?? 0
       const positionDirection = row.original.positionDirection
+      console.log('positionDirection', positionDirection)
+      console.log('position', position)
       return (
         <SignalCell
           vaultId={row.original.vaultId}

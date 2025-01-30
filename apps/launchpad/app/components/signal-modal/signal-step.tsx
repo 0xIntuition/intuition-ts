@@ -47,8 +47,9 @@ export interface SignalStepProps {
   isLoading: boolean
   setIsLoading: (isLoading: boolean) => void
   direction?: 'for' | 'against'
-  mode: 'deposit' | 'redeem'
   open: boolean
+  initialTicks?: number
+  isSimplifiedRedeem?: boolean
 }
 
 export function SignalStep({
@@ -62,13 +63,18 @@ export function SignalStep({
   isLoading,
   setIsLoading,
   direction,
-  mode,
   open,
+  initialTicks = 0,
+  isSimplifiedRedeem = false,
 }: SignalStepProps) {
-  const [ticks, setTicks] = useState(1)
+  const [ticks, setTicks] = useState(initialTicks)
+  const [currentInitialTicks, setCurrentInitialTicks] = useState(initialTicks)
+  const [hasInitialized, setHasInitialized] = useState(false)
+  const [actualValue, setActualValue] = useState<string>('0')
   const [lastTxHash, setLastTxHash] = useState<string | undefined>(undefined)
   const [validationErrors, setValidationErrors] = useState<string[]>([])
   const [showErrors, setShowErrors] = useState(false)
+
   const publicClient = usePublicClient()
   const queryClient = useQueryClient()
   const location = useLocation()
@@ -76,37 +82,71 @@ export function SignalStep({
   const contract = MULTIVAULT_CONTRACT_ADDRESS
   const userWallet = privyUser?.wallet?.address
   const walletBalance = useGetWalletBalance(userWallet as `0x${string}`)
+
+  // Determine which vault to use based on tick sign
+  const activeVaultId = ticks < 0 ? counterVaultId : vaultId
+
   const { state: txState, dispatch } = useGenericTxState<
     TransactionStateType,
     TransactionActionType
   >(transactionReducer, initialTxState)
 
   const { data: vaultDetailsData, isLoading: isLoadingVaultDetails } =
-    useGetVaultDetails(contract, vaultId, counterVaultId, {
+    useGetVaultDetails(contract, activeVaultId || '', counterVaultId, {
       queryKey: [
         'get-vault-details',
         contract,
-        vaultId,
+        activeVaultId || '',
         counterVaultId,
         direction,
       ],
-      enabled: open,
+      enabled: open && !!activeVaultId,
     })
 
-  const vaultDetails = vaultDetailsData ?? vaultDetailsProp
-
-  const { data: multiVaultConfig, isLoading: isLoadingMultiVaultConfig } =
+  const { data: multiVaultConfig, isLoading: isLoadingConfig } =
     useGetMultiVaultConfig(contract)
 
-  const min_deposit = multiVaultConfig
-    ? multiVaultConfig?.formatted_min_deposit
-    : MIN_DEPOSIT
-
-  const val = (ticks * +min_deposit).toString()
+  const vaultDetails = vaultDetailsData ?? vaultDetailsProp
+  const min_deposit = multiVaultConfig?.formatted_min_deposit ?? MIN_DEPOSIT
   const userConviction = formatUnits(
     BigInt(vaultDetails?.user_conviction ?? '0'),
     18,
   )
+  const convictionPrice = formatUnits(
+    BigInt(vaultDetails?.conviction_price ?? '0'),
+    18,
+  )
+
+  const maxTicks = hasInitialized
+    ? Math.ceil(
+        (Number(userConviction) * Number(convictionPrice)) / +MIN_DEPOSIT,
+      )
+    : initialTicks
+
+  console.log('ticks', ticks)
+  console.log('maxTicks', maxTicks)
+  // Updated tick difference calculation to handle both positive and negative ticks
+  const tickDifference = ticks >= 0 ? ticks - maxTicks : Math.abs(ticks)
+  const mode: 'deposit' | 'redeem' | undefined = isSimplifiedRedeem
+    ? 'redeem'
+    : tickDifference > 0 || ticks < 0
+      ? 'deposit'
+      : tickDifference < 0
+        ? 'redeem'
+        : undefined
+
+  const valuePerTick =
+    currentInitialTicks > 0 ? Number(userConviction) / currentInitialTicks : 0
+
+  const val = isSimplifiedRedeem
+    ? actualValue
+    : mode === 'deposit'
+      ? (Math.abs(tickDifference || ticks) * +min_deposit).toString()
+      : mode === 'redeem'
+        ? ticks === 0
+          ? actualValue
+          : ((currentInitialTicks - ticks) * valuePerTick).toString()
+        : '0'
 
   const {
     mutateAsync: stake,
@@ -115,62 +155,52 @@ export function SignalStep({
     awaitingOnChainConfirmation: stakeAwaitingOnChainConfirmation,
     isError: stakeIsError,
     reset: stakeReset,
-  } = useStakeMutation(contract, mode)
+  } = useStakeMutation(contract, mode as 'deposit' | 'redeem')
 
-  const handleAction = async () => {
-    if (!privyUser?.wallet?.address || !vaultId) {
-      return
-    }
+  // All effects
+  useEffect(() => {
+    if (userConviction && convictionPrice) {
+      const actualEthValue = (
+        Number(userConviction) * Number(convictionPrice)
+      ).toString()
+      setActualValue(actualEthValue)
+      const calculatedTicks = Math.ceil(
+        (Number(userConviction) * Number(convictionPrice)) / +MIN_DEPOSIT,
+      )
 
-    try {
-      const txHash = await stake({
-        val: mode === 'deposit' ? val : userConviction ?? '0',
-        userWallet: privyUser?.wallet?.address,
-        vaultId,
-        triple,
-        atom,
-        mode,
-        contract,
-      })
-
-      if (publicClient && txHash) {
-        dispatch({ type: 'TRANSACTION_PENDING' })
-        const receipt = await publicClient.waitForTransactionReceipt({
-          hash: txHash,
-        })
-
-        dispatch({
-          type: 'TRANSACTION_COMPLETE',
-          txHash,
-          txReceipt: receipt,
-        })
-
-        onStakingSuccess()
-        logger('invalidating queries')
-        await new Promise((resolve) => setTimeout(resolve, 3000)) // 1 second delay
-        await queryClient.invalidateQueries()
+      // Only update if the calculated value is significantly different
+      if (Math.abs(calculatedTicks - initialTicks) > 0.1) {
+        setTicks(calculatedTicks)
+        setCurrentInitialTicks(calculatedTicks)
       }
-    } catch (error) {
-      dispatch({
-        type: 'TRANSACTION_ERROR',
-        error: 'Error processing transaction',
-      })
+      setHasInitialized(true)
     }
-  }
-
-  const action = handleAction
+  }, [userConviction, convictionPrice, MIN_DEPOSIT, initialTicks])
 
   useEffect(() => {
     if (stakeIsError) {
       stakeReset()
       setIsLoading(false)
     }
-  }, [stakeIsError, stakeReset])
+  }, [stakeIsError, stakeReset, setIsLoading])
+
+  useEffect(() => {
+    dispatch({ type: 'START_TRANSACTION' })
+  }, [location, dispatch])
+
+  useEffect(() => {
+    setTxState(txState)
+  }, [setTxState, txState])
+
+  useEffect(() => {
+    setTicks(initialTicks)
+    setCurrentInitialTicks(initialTicks)
+  }, [initialTicks])
 
   useEffect(() => {
     let assets = ''
     const receipt = stakeTxReceipt
-    const action = mode === 'deposit' ? 'Deposited' : 'Redeemed'
+    const actionType = mode === 'deposit' ? 'Deposited' : 'Redeemed'
 
     type BuyArgs = {
       sender: Address
@@ -221,7 +251,7 @@ export function SignalStep({
 
           toast.custom(() => (
             <SignalToast
-              action={action}
+              action={actionType}
               assets={assets}
               txHash={stakeTxReceipt.transactionHash}
             />
@@ -232,7 +262,7 @@ export function SignalStep({
         console.error('Error decoding transaction log:', error)
       }
     }
-  }, [stakeTxReceipt, privyUser?.wallet?.address, stakeReset, lastTxHash])
+  }, [stakeTxReceipt, userWallet, mode, lastTxHash])
 
   useEffect(() => {
     if (stakeAwaitingWalletConfirmation) {
@@ -258,24 +288,114 @@ export function SignalStep({
     setIsLoading(
       !!stakeAwaitingWalletConfirmation ||
         !!stakeAwaitingOnChainConfirmation ||
-        isLoadingMultiVaultConfig ||
         txState.status === 'confirm' ||
         txState.status === 'transaction-pending' ||
         txState.status === 'transaction-confirmed' ||
         txState.status === 'approve-transaction' ||
         txState.status === 'awaiting' ||
-        isLoadingVaultDetails,
+        isLoadingVaultDetails ||
+        isLoadingConfig,
     )
   }, [
-    isLoadingVaultDetails,
-    isLoadingMultiVaultConfig,
     stakeAwaitingWalletConfirmation,
     stakeAwaitingOnChainConfirmation,
     txState.status,
+    isLoadingVaultDetails,
+    isLoadingConfig,
+    setIsLoading,
   ])
+
+  // If in simplified redeem mode, force ticks to 0 for full redeem
+  useEffect(() => {
+    if (isSimplifiedRedeem) {
+      setTicks(0)
+    }
+  }, [isSimplifiedRedeem])
+
+  // Early validation
+  if (!userWallet || (!vaultId && !counterVaultId)) {
+    return null
+  }
+
+  // Button handlers
+  const handleUpvote = () => {
+    // Only show error if trying to go positive while having negative position
+    if (currentInitialTicks < 0 && ticks === 0) {
+      setValidationErrors(['Must redeem all downvotes before upvoting'])
+      setShowErrors(true)
+      return
+    }
+    setTicks(ticks + 1)
+  }
+
+  const handleDownvote = () => {
+    // Only show error if trying to go negative while having positive position
+    if (currentInitialTicks > 0 && ticks === 0) {
+      setValidationErrors(['Must redeem all upvotes before downvoting'])
+      setShowErrors(true)
+      return
+    }
+    setTicks(ticks - 1)
+  }
+
+  console.log('activeVaultId', activeVaultId)
+  const handleAction = async () => {
+    if (!privyUser?.wallet?.address || !activeVaultId) {
+      return
+    }
+
+    try {
+      const txHash = await stake({
+        val:
+          mode === 'deposit'
+            ? val
+            : val > userConviction
+              ? userConviction
+              : val,
+        userWallet: privyUser?.wallet?.address,
+        vaultId: activeVaultId,
+        triple,
+        atom,
+        mode,
+        contract,
+      })
+
+      if (publicClient && txHash) {
+        dispatch({ type: 'TRANSACTION_PENDING' })
+        const receipt = await publicClient.waitForTransactionReceipt({
+          hash: txHash,
+        })
+
+        dispatch({
+          type: 'TRANSACTION_COMPLETE',
+          txHash,
+          txReceipt: receipt,
+        })
+
+        onStakingSuccess()
+        logger('invalidating queries')
+        await new Promise((resolve) => setTimeout(resolve, 3000))
+        await queryClient.invalidateQueries()
+      }
+    } catch (error) {
+      dispatch({
+        type: 'TRANSACTION_ERROR',
+        error: 'Error processing transaction',
+      })
+    }
+  }
 
   const handleStakeButtonClick = async () => {
     const errors = []
+
+    // Check if trying to cross zero
+    const isAttemptingToSwitchDirection =
+      (currentInitialTicks > 0 && ticks < 0) ||
+      (currentInitialTicks < 0 && ticks > 0)
+
+    if (isAttemptingToSwitchDirection && currentInitialTicks !== 0) {
+      errors.push('Must redeem all positions before switching vote direction')
+    }
 
     if (mode === 'deposit') {
       if (+val < +min_deposit) {
@@ -284,9 +404,7 @@ export function SignalStep({
       if (+val > +walletBalance) {
         errors.push(`Insufficient balance`)
       }
-    } else {
-      // Redeem mode - no validation needed since we're redeeming all shares
-      const userConviction = vaultDetails?.user_conviction ?? '0'
+    } else if (mode === 'redeem') {
       if (+userConviction <= 0) {
         errors.push('No shares to redeem')
       }
@@ -298,19 +416,7 @@ export function SignalStep({
       return
     }
 
-    action()
-  }
-
-  useEffect(() => {
-    dispatch({ type: 'START_TRANSACTION' })
-  }, [location])
-
-  useEffect(() => {
-    setTxState(txState)
-  }, [setTxState, txState])
-
-  if (!userWallet) {
-    return null
+    handleAction()
   }
 
   return (
@@ -318,23 +424,28 @@ export function SignalStep({
       <div className="flex flex-col gap-2 mb-8">
         <div className="flex flex-row items-center justify-between">
           <Text variant="headline" className="font-semibold">
-            {mode === 'deposit'
-              ? `Signal ${atom?.label ?? triple?.subject.label} as your preferred wallet`
-              : `Redeem all shares from ${atom?.label ?? triple?.subject.label}`}
+            {isSimplifiedRedeem ? (
+              <>
+                Redeem your signal for ${atom?.label ?? triple?.subject.label}
+              </>
+            ) : (
+              <>
+                Signal ${atom?.label ?? triple?.subject.label} as your preferred
+                wallet
+              </>
+            )}
           </Text>
-          {mode === 'deposit' && (
-            <Badge className="flex items-center gap-1 px-2">
-              <Icon name="wallet" className="h-4 w-4 text-secondary/50" />
-              <Text
-                variant={TextVariant.caption}
-                className="text-nowrap text-secondary/50"
-              >
-                {(+walletBalance).toFixed(2)} ETH
-              </Text>
-            </Badge>
-          )}
+          <Badge className="flex items-center gap-1 px-2">
+            <Icon name="wallet" className="h-4 w-4 text-secondary/50" />
+            <Text
+              variant={TextVariant.caption}
+              className="text-nowrap text-secondary/50"
+            >
+              {(+walletBalance).toFixed(2)} ETH
+            </Text>
+          </Badge>
         </div>
-        {mode === 'deposit' && (
+        {!isSimplifiedRedeem && (
           <Text
             variant={TextVariant.footnote}
             className="text-primary/70 flex flex-row gap-1 items-center"
@@ -352,41 +463,40 @@ export function SignalStep({
           </Text>
         )}
       </div>
-      <div
-        className={`flex w-full items-center gap-4 rounded-lg border transition-colors h-[72px] border-[#1A1A1A]`}
-      >
-        <div className="flex items-center gap-4 w-full">
-          <div className="w-14 h-14 rounded bg-[#1A1A1A] flex-shrink-0 ml-1">
-            {(atom?.image || triple?.subject.image) && (
-              <img
-                src={atom?.image ?? triple?.subject.image ?? ''}
-                alt={atom?.label ?? triple?.subject.label ?? ''}
-                className="w-full h-full object-cover rounded-lg"
-              />
-            )}
-          </div>
-          <Text variant="title">{atom?.label ?? triple?.subject.label}</Text>
-        </div>
 
-        {mode === 'deposit' && (
+      {!isSimplifiedRedeem ? (
+        <div className="flex w-full items-center gap-4 rounded-lg border transition-colors h-[72px] border-[#1A1A1A]">
+          <div className="flex items-center gap-4 w-full">
+            <div className="w-14 h-14 rounded bg-[#1A1A1A] flex-shrink-0 ml-1">
+              {(atom?.image || triple?.subject.image) && (
+                <img
+                  src={atom?.image ?? triple?.subject.image ?? ''}
+                  alt={atom?.label ?? triple?.subject.label ?? ''}
+                  className="w-full h-full object-cover rounded-lg"
+                />
+              )}
+            </div>
+            <Text variant="title">{atom?.label ?? triple?.subject.label}</Text>
+          </div>
+
           <div className="flex flex-col gap-2 w-full pr-6">
             <div className="flex items-center justify-end">
               <Text variant="title" className="w-8 text-center">
-                {ticks}
+                {hasInitialized ? ticks : initialTicks}
               </Text>
               <div className="flex flex-col">
                 <Button
                   variant="text"
-                  onClick={() => setTicks(ticks + 1)}
-                  disabled={isLoading}
-                  className="h-6 p-0"
+                  onClick={handleUpvote}
+                  disabled={isLoading || !hasInitialized}
+                  className="h-6 p-0 disabled:opacity-30"
                 >
                   <ArrowBigUp className="text-success fill-success h-5 w-5" />
                 </Button>
                 <Button
                   variant="text"
-                  onClick={() => setTicks(Math.max(1, ticks - 1))}
-                  disabled={ticks <= 1 || isLoading}
+                  onClick={handleDownvote}
+                  disabled={isLoading || !hasInitialized}
                   className="h-6 p-0 disabled:opacity-30"
                 >
                   <ArrowBigDown className="text-destructive fill-destructive h-5 w-5" />
@@ -394,8 +504,15 @@ export function SignalStep({
               </div>
             </div>
           </div>
-        )}
-      </div>
+        </div>
+      ) : (
+        <div className="flex flex-col gap-2">
+          <Text variant="body" className="text-primary/70">
+            You will receive approximately {Number(actualValue).toFixed(5)} ETH
+            for your current position.
+          </Text>
+        </div>
+      )}
 
       {showErrors && validationErrors.length > 0 && (
         <div className="flex flex-col gap-2">
@@ -413,10 +530,15 @@ export function SignalStep({
             loading={isLoading}
             onClick={handleStakeButtonClick}
             buttonText={
-              mode === 'deposit'
-                ? `Stake ${Number(val).toFixed(5)} ETH`
-                : 'Confirm Redeem'
+              isSimplifiedRedeem
+                ? `Redeem ${Number(actualValue).toFixed(5)} ETH`
+                : !mode
+                  ? 'No changes to apply'
+                  : mode === 'deposit'
+                    ? `Stake ${Number(val).toFixed(5)} ETH`
+                    : `Redeem ${Number(val).toFixed(5)} ETH`
             }
+            disabled={!mode || isLoading}
             loadingText={'Processing...'}
           />
           <Text variant="caption" className="text-end text-primary/70">
