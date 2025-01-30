@@ -4,7 +4,7 @@ import { Card, Text } from '@0xintuition/1ui'
 
 import { ErrorPage } from '@components/error-page'
 import { MinigameCardWrapper } from '@components/minigame-card-wrapper'
-import { OnboardingModal } from '@components/onboarding-modal/onboarding-modal'
+import { OnboardingModal } from '@components/survey-modal/survey-modal'
 import { mockMinigames } from '@lib/data/mock-minigames'
 import { onboardingModalAtom } from '@lib/state/store'
 import { useAtom } from 'jotai'

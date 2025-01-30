@@ -106,7 +106,6 @@ export async function getVaultDetails(
   const resp: MulticallResponse[] = await publicClient.multicall({
     contracts: coreContractConfigs,
   })
-  console.log('resp', resp)
   const totalAssets = resp[0].result[0] as bigint
   const formattedTotalAssets = formatUnits(totalAssets, 18)
   const totalConviction = resp[0].result[1] as bigint

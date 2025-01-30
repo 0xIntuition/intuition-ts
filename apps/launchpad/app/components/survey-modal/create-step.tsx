@@ -26,7 +26,7 @@ import {
 } from '@components/atom-forms/forms'
 import { SurveyDepositForm } from '@components/atom-forms/forms/survey-deposit-form'
 import { SurveyFormContainer } from '@components/atom-forms/survey-form-container'
-import { NewAtomMetadata } from '@components/onboarding-modal/types'
+import { NewAtomMetadata } from '@components/survey-modal/types'
 import { TransactionState } from '@components/transaction-state'
 import { MIN_DEPOSIT, MULTIVAULT_CONTRACT_ADDRESS } from '@consts/general'
 import { multivaultAbi } from '@lib/abis/multivault'

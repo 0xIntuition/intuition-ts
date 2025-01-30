@@ -86,8 +86,6 @@ function ShareModalContent({
     },
   )
 
-  console.log('listData', listData)
-
   return (
     <DialogContent className="bg-background backdrop-blur-sm rounded-3xl shadow-2xl border border-neutral-800 flex flex-col px-0 pb-0">
       <div className="flex flex-col gap-4">

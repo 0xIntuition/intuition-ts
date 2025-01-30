@@ -105,3 +105,19 @@ export type VaultDetailsType = {
   atom_deposit_fraction_for_triple?: string
   formatted_atom_deposit_fraction_for_triple?: string
 }
+
+export type VaultType = {
+  __typename?: 'vaults'
+  total_shares: string | number
+  current_share_price: string | number
+  min_deposit?: string | number
+  position_count?: number
+  allPositions?: {
+    aggregate?: {
+      count: number
+      sum?: {
+        shares: string | number
+      }
+    }
+  }
+}

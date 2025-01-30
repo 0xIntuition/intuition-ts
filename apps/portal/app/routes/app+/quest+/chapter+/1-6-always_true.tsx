@@ -187,6 +187,7 @@ const claimToTriple = (
   },
   vault: {
     __typename: 'vaults',
+    current_share_price: '0',
     positions_aggregate: {
       __typename: 'positions_aggregate',
       aggregate: {

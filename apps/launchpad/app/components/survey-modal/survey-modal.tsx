@@ -6,7 +6,7 @@ import {
   DialogFooter,
   StepIndicator,
 } from '@0xintuition/1ui'
-import { GetTripleQuery, useGetListDetailsQuery } from '@0xintuition/graphql'
+import { useGetListDetailsQuery } from '@0xintuition/graphql'
 
 import { CURRENT_ENV } from '@consts/general'
 import { getSpecialPredicate } from '@lib/utils/app'
@@ -14,6 +14,7 @@ import logger from '@lib/utils/logger'
 import { usePrivy } from '@privy-io/react-auth'
 import { useNavigate } from '@remix-run/react'
 import { useQueryClient } from '@tanstack/react-query'
+import { TripleType } from 'app/types'
 import { ClientOnly } from 'remix-utils/client-only'
 
 import { TransactionStateType } from '../../types/transaction'
@@ -131,7 +132,7 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
       id: triple.vault_id,
       name: triple.subject.label ?? '',
       image: triple.subject.image ?? undefined,
-      triple: triple as unknown as GetTripleQuery['triple'],
+      triple: triple as TripleType,
       selected: false,
     }))
     setTopics(newTopics)
@@ -384,8 +385,7 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
         name: metadata.name,
         image: metadata.image,
         selected: true,
-        triple: listData
-          ?.globalTriples[0] as unknown as GetTripleQuery['triple'],
+        triple: listData?.globalTriples[0] as TripleType,
       },
     }))
     updateStepStatus(STEPS.CREATE, 'completed')
