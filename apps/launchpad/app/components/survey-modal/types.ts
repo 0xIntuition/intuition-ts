@@ -1,4 +1,4 @@
-import { GetTripleQuery } from '@0xintuition/graphql'
+import { TripleType } from 'app/types'
 
 import { TransactionStateType } from '../../types/transaction'
 
@@ -22,7 +22,7 @@ export interface Topic {
   id: string
   name: string
   image?: string
-  triple?: GetTripleQuery['triple']
+  triple?: TripleType
   selected: boolean
 }
 

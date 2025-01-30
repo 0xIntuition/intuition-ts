@@ -1,11 +1,10 @@
-import { GetAtomQuery } from '@0xintuition/graphql'
-
 import { BLOCK_EXPLORER_URL, IPFS_GATEWAY_URL } from '@consts/general'
+import { AtomType } from 'app/types/atom'
 import { extractChain } from 'viem'
 import * as chains from 'viem/chains'
 
 // atom GQL helpers
-export const getAtomImage = (atom: GetAtomQuery['atom'] | null | undefined) => {
+export const getAtomImage = (atom: AtomType | null | undefined) => {
   if (!atom) {
     return ''
   }
@@ -18,7 +17,7 @@ export const getAtomImage = (atom: GetAtomQuery['atom'] | null | undefined) => {
   )
 }
 
-export const getAtomLabel = (atom: GetAtomQuery['atom'] | null | undefined) => {
+export const getAtomLabel = (atom: AtomType | null | undefined) => {
   if (!atom) {
     return '?'
   }
@@ -33,9 +32,7 @@ export const getAtomLabel = (atom: GetAtomQuery['atom'] | null | undefined) => {
   )
 }
 
-export const getAtomDescription = (
-  atom: GetAtomQuery['atom'] | null | undefined,
-) => {
+export const getAtomDescription = (atom: AtomType | null | undefined) => {
   return (
     atom?.value?.person?.description ??
     atom?.value?.thing?.description ??
@@ -44,9 +41,7 @@ export const getAtomDescription = (
   )
 }
 
-export const getAtomIpfsLink = (
-  atom: GetAtomQuery['atom'] | null | undefined,
-) => {
+export const getAtomIpfsLink = (atom: AtomType | null | undefined) => {
   if (!atom) {
     return ''
   }
@@ -73,24 +68,16 @@ export const getAtomIpfsLink = (
   return ''
 }
 
-// export const getAtomLinkGQL = (
-//   atom: GetAtomQuery['atom'] | null | undefined,
-//   readOnly: boolean = false,
-// ) => {
-//   if (!atom) {
-//     return ''
-//   }
-//   if (atom.type === ('Account' || 'Default')) {
-//     return readOnly
-//       ? `${PATHS.READONLY_PROFILE}/${atom.wallet_id}`
-//       : `${PATHS.PROFILE}/${atom.wallet_id}`
-//   }
-//   return readOnly
-//     ? `${PATHS.READONLY_IDENTITY}/${atom.vault_id}`
-//     : `${PATHS.IDENTITY}/${atom.vault_id}`
-// }
+export const getAtomLink = (atom: AtomType | null | undefined) => {
+  return (
+    atom?.value?.person?.url ??
+    atom?.value?.thing?.url ??
+    atom?.value?.organization?.url ??
+    ''
+  )
+}
 
-export const getAtomId = (atom: GetAtomQuery['atom']) => {
+export const getAtomId = (atom: AtomType) => {
   if (!atom) {
     return ''
   }

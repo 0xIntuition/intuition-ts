@@ -20,6 +20,7 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
+  Row,
   SortingState,
   useReactTable,
 } from '@tanstack/react-table'
@@ -63,10 +64,12 @@ export function DataTable<TData extends { id: string | number }, TValue>({
   const [columnResizeMode] = React.useState<ColumnResizeMode>('onChange')
   const [sorting, setSorting] = React.useState<SortingState>([
     {
-      id: 'users',
+      id: 'upvotes',
       desc: true,
     },
   ])
+  const clickLockTimeoutRef = React.useRef<NodeJS.Timeout>()
+  const isClickLockedRef = React.useRef(false)
 
   const table = useReactTable({
     data,
@@ -95,6 +98,52 @@ export function DataTable<TData extends { id: string | number }, TValue>({
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
   })
+
+  // Cleanup timeout on unmount
+  React.useEffect(() => {
+    return () => {
+      if (clickLockTimeoutRef.current) {
+        clearTimeout(clickLockTimeoutRef.current)
+      }
+    }
+  }, [])
+
+  const handleRowClick = (e: React.MouseEvent, row: Row<TData>) => {
+    // Check if the click originated from a cell that should prevent row clicks
+    const target = e.target as HTMLElement
+    const preventClick = target.closest('[data-prevent-row-click="true"]')
+    const button = target.closest('button')
+    const dialog = target.closest('[role="dialog"]')
+
+    // Don't trigger row click if:
+    // 1. Click was on a button
+    // 2. Click was in a cell that prevents clicks
+    // 3. Click was in a dialog
+    // 4. Click lock is active
+    if (preventClick || button || dialog || isClickLockedRef.current) {
+      return
+    }
+
+    onRowClick?.(Number(row.original.id))
+  }
+
+  // Expose a method to lock clicks temporarily
+  React.useEffect(() => {
+    // @ts-ignore - Add to window for other components to use
+    window.__lockTableClicks = () => {
+      // If already locked, extend the lock duration
+      if (isClickLockedRef.current) {
+        if (clickLockTimeoutRef.current) {
+          clearTimeout(clickLockTimeoutRef.current)
+        }
+      }
+
+      isClickLockedRef.current = true
+      clickLockTimeoutRef.current = setTimeout(() => {
+        isClickLockedRef.current = false
+      }, 300) // Increased to 300ms for more reliable prevention
+    }
+  }, [])
 
   return (
     <div className="space-y-4">
@@ -151,7 +200,8 @@ export function DataTable<TData extends { id: string | number }, TValue>({
                   <TableRow
                     key={row.id}
                     className="border-b border-border/10 hover:bg-[#101010] transition-colors cursor-pointer"
-                    onClick={() => onRowClick?.(Number(row.original.id))}
+                    data-state={row.getIsSelected() && 'selected'}
+                    onClick={(e) => handleRowClick(e, row)}
                   >
                     {row.getVisibleCells().map((cell) => (
                       <TableCell
@@ -161,6 +211,7 @@ export function DataTable<TData extends { id: string | number }, TValue>({
                           width: cell.column.getSize(),
                           ...getCommonPinningStyles(cell.column),
                         }}
+                        data-prevent-row-click={cell.column.id === 'signal'}
                       >
                         {flexRender(
                           cell.column.columnDef.cell,

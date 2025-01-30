@@ -1,5 +1,5 @@
 import {
-  AggregatedMetrics,
+  // AggregatedMetrics,
   PageHeader,
   Text,
   TextVariant,
@@ -10,23 +10,21 @@ import {
   GetEventsDocument,
   GetEventsQuery,
   GetEventsQueryVariables,
-  GetStatsDocument,
-  GetStatsQuery,
-  GetStatsQueryVariables,
+  // GetStatsDocument,
+  // GetStatsQuery,
+  // GetStatsQueryVariables,
   useGetEventsQuery,
-  useGetStatsQuery,
+  // useGetStatsQuery,
 } from '@0xintuition/graphql'
 
 import ActivityFeed from '@components/activity-feed'
 import { ErrorPage } from '@components/error-page'
-import KnowledgeGraph from '@components/knowledge-graph/knowledge-graph'
+// import logger from '@lib/utils/logger'
 import { LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData, useSearchParams } from '@remix-run/react'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
-import { ClientOnly } from 'remix-utils/client-only'
-import { formatUnits } from 'viem'
 
-import { mockKnowledgeGraphData } from '../../data/mock-knowledge-graph'
+// import { formatUnits } from 'viem'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url)
@@ -35,11 +33,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   const queryClient = new QueryClient()
 
-  await queryClient.prefetchQuery({
-    queryKey: ['get-stats'],
-    queryFn: () =>
-      fetcher<GetStatsQuery, GetStatsQueryVariables>(GetStatsDocument, {}),
-  })
+  // await queryClient.prefetchQuery({
+  //   queryKey: ['get-stats'],
+  //   queryFn: () =>
+  //     fetcher<GetStatsQuery, GetStatsQueryVariables>(GetStatsDocument, {}),
+  // })
 
   await queryClient.prefetchQuery({
     queryKey: ['get-events-global', { activityLimit, activityOffset }],
@@ -81,12 +79,13 @@ export default function Network() {
     searchParams.get('activityOffset') || String(initialParams.activityOffset),
   )
 
-  const { data: systemStats } = useGetStatsQuery(
-    {},
-    {
-      queryKey: ['get-stats'],
-    },
-  )
+  // const { data: systemStats } = useGetStatsQuery(
+  //   {},
+  //   {
+  //     queryKey: ['get-stats'],
+  //   },
+  // )
+  // logger('systemStats', systemStats)
 
   const { data: eventsData } = useGetEventsQuery(
     {
@@ -116,23 +115,13 @@ export default function Network() {
     },
   )
 
-  const stats = systemStats?.stats[0]
+  // const stats = systemStats?.stats[0]
 
   return (
     <>
       <PageHeader title="Network" lastUpdated={'3s'} />
       <div className="flex flex-col rounded-xl overflow-hidden">
-        <div className="relative w-full h-[400px] bg-gradient-to-b from-[#060504] to-[#101010]">
-          <ClientOnly>
-            {() => (
-              <KnowledgeGraph
-                data={mockKnowledgeGraphData}
-                className="w-full h-full"
-              />
-            )}
-          </ClientOnly>
-        </div>
-        <div className="py-4 bg-gradient-to-b from-[#060504] to-[#101010]">
+        {/* <div className="py-4 bg-gradient-to-b from-[#060504] to-[#101010]">
           <AggregatedMetrics
             metrics={[
               {
@@ -152,11 +141,11 @@ export default function Network() {
             ]}
             className="[&>div]:after:hidden sm:[&>div]:after:block"
           />
-        </div>
+        </div> */}
       </div>
       <div className="flex flex-col gap-4">
         <Text variant={TextVariant.headline} weight={TextWeight.medium}>
-          Data Stream
+          Recent Activity
         </Text>
         <ActivityFeed
           activities={{

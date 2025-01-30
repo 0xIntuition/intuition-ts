@@ -27,7 +27,7 @@ import {
   ThingForm,
 } from '@components/atom-forms/forms'
 import { StepIndicator } from '@components/atom-forms/step-indicator'
-import { NewAtomMetadata } from '@components/onboarding-modal/types'
+import { NewAtomMetadata } from '@components/survey-modal/types'
 import { TransactionState } from '@components/transaction-state'
 import { MIN_DEPOSIT, MULTIVAULT_CONTRACT_ADDRESS } from '@consts/general'
 import { multivaultAbi } from '@lib/abis/multivault'

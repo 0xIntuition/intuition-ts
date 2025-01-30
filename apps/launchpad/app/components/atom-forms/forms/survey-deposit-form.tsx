@@ -186,7 +186,6 @@ export function SurveyDepositForm({
                 loadingText="Creating..."
                 loading={isSubmitting || isLoadingConfig || isCheckingAtom}
                 onClick={() => {
-                  console.log('Submit button clicked')
                   form.handleSubmit(onSubmit)()
                 }}
               />

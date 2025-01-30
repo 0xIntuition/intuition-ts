@@ -12,8 +12,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const queryClient = new QueryClient()
   const user = await getUser(request)
 
-  console.log('user', user)
-
   try {
     // await queryClient.prefetchQuery({
     //   queryKey: ['get-protocol-stats'],
