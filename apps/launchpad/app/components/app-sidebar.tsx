@@ -76,12 +76,13 @@ export function AppSidebar({
       href: '/quests/questions',
       isAccent: location.pathname.startsWith('/quests/questions'),
     },
-    {
-      iconName: 'circle-arrow',
-      label: 'Network',
-      href: '/network',
-      isAccent: location.pathname === '/network',
-    },
+    // TODO: Add this back in once we resolve query questions
+    // {
+    //   iconName: 'circle-arrow',
+    //   label: 'Network',
+    //   href: '/network',
+    //   isAccent: location.pathname === '/network',
+    // },
   ]
 
   const footerNavItems: NavItem[] = [
