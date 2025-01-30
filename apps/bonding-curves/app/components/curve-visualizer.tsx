@@ -1073,6 +1073,8 @@ export function CurveVisualizer() {
     try {
       const rect = contentArea.getBoundingClientRect()
       const appBg = window.getComputedStyle(document.body).backgroundColor
+      const scrollTop = window.scrollY || document.documentElement.scrollTop
+      const scrollLeft = window.scrollX || document.documentElement.scrollLeft
 
       // Render at 8x scale
       const scale = 8
@@ -1083,10 +1085,10 @@ export function CurveVisualizer() {
         useCORS: true,
         allowTaint: true,
         foreignObjectRendering: true,
-        width: rect.width + scale, // scale of 1 is off by 1 px
+        width: rect.width + scale,
         height: rect.height + scale,
-        x: -rect.left,
-        y: -rect.top,
+        x: -(rect.left - scrollLeft),
+        y: -(rect.top - scrollTop),
         onclone: (clonedDoc) => {
           const clonedContent = clonedDoc.querySelector<HTMLElement>(
             '.flex.flex-col.gap-4 > .flex.flex-col.gap-4.rounded-lg.border.border-border.p-4',
