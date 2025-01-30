@@ -223,10 +223,11 @@ export const columns: ColumnDef<TableItem>[] = [
         </div>
       )
     },
-    size: 120,
+    size: 100,
   },
   {
-    id: 'signal',
+    id: 'userPosition',
+    accessorFn: (row) => row.userPosition ?? 0,
     header: ({ column }) => (
       <div className="flex justify-center items-center">
         <DataTableColumnHeader column={column} title="Signal" />
@@ -245,8 +246,7 @@ export const columns: ColumnDef<TableItem>[] = [
         />
       )
     },
-    enableSorting: false,
-    size: 120,
+    size: 100,
   },
   // {
   //   accessorKey: 'userPosition',
