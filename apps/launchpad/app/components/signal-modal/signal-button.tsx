@@ -27,7 +27,7 @@ const stakeButtonVariants = cva(
         [StakeButtonVariant.neutral]:
           'bg-primary/5 border-primary/10 hover:bg-primary/10 hover:border-primary/20 text-secondary',
         [StakeButtonVariant.claimFor]:
-          'bg-success/10 border-success/30 hover:bg-success/20 hover:border-success/50 hover:text-success text-success fill-success',
+          'bg-success/10 border-success/30 hover:bg-success/20 hover:border-success/50 hover:text-success text-success fill-success disabled:fill-transparent',
         [StakeButtonVariant.claimAgainst]:
           'bg-destructive/10 border-destructive/30 hover:bg-destructive/20 hover:border-destructive/50 hover:text-destructive text-destructive fill-destructive',
       },
