@@ -25,9 +25,9 @@ const stakeButtonVariants = cva(
     variants: {
       variant: {
         [StakeButtonVariant.neutral]:
-          'bg-primary/10 border-primary/30 hover:bg-primary/20 hover:border-primary/60 text-secondary',
+          'bg-primary/5 border-primary/10 hover:bg-primary/10 hover:border-primary/20 text-secondary',
         [StakeButtonVariant.claimFor]:
-          'bg-success/10 border-success/30 hover:bg-success/20 hover:border-success/50 hover:text-success text-success fill-success disabled:fill-transparent',
+          'bg-success/10 border-success/30 hover:bg-success/20 hover:border-success/50 hover:text-success text-success fill-success',
         [StakeButtonVariant.claimAgainst]:
           'bg-destructive/10 border-destructive/30 hover:bg-destructive/20 hover:border-destructive/50 hover:text-destructive text-destructive fill-destructive',
       },
@@ -81,7 +81,12 @@ const SignalButton = React.forwardRef<HTMLButtonElement, SignalButtonProps>(
         onClick={onClick}
         {...props}
       >
-        {direction === ClaimPosition.claimAgainst ? (
+        {direction === undefined ? (
+          <div className="relative flex flex-col items-center -my-1 gap-0.5">
+            <ArrowBigUp className="w-3 h-3 fill-success text-success" />
+            <ArrowBigDown className="w-3 h-3 fill-destructive text-destructive -mt-1" />
+          </div>
+        ) : direction === ClaimPosition.claimAgainst ? (
           <ArrowBigDown className="w-4 h-4 fill-inherit" />
         ) : (
           <ArrowBigUp className="w-4 h-4 fill-inherit" />

@@ -91,15 +91,13 @@ function SignalCell({
           numPositions={Math.abs(initialTicks)}
           direction={positionDirection}
           positionDirection={positionDirection}
-          disabled={
-            positionDirection === ClaimPosition.claimAgainst || !userWallet
-          }
+          disabled={!userWallet}
           onClick={() => handleSignal('deposit')}
         />
         <Button
           variant={ButtonVariant.ghost}
-          className="py-0.5 px-2 gap-1 h-9 w-9 rounded-xl bg-warning/10 border-warning/30 hover:bg-warning/20 hover:border-warning/50 hover:text-warning text-warning fill-warning"
-          disabled={!userPosition || userPosition === 0}
+          className="py-0.5 px-2 gap-1 h-9 w-9 rounded-xl bg-primary/5 border-primary/10 hover:bg-primary/10 hover:border-primary/20 text-secondary/70 disabled:opacity-50"
+          disabled={!userPosition || userPosition === 0 || !userWallet}
           onClick={() => handleSignal('redeem')}
         >
           <Icon name="arrow-box-left" className="w-5 h-5" />

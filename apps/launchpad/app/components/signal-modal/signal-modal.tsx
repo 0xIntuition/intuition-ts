@@ -1,5 +1,3 @@
-import { useState } from 'react'
-
 import { Dialog, DialogContent } from '@0xintuition/1ui'
 
 import { AtomType, TripleType } from 'app/types'
@@ -28,29 +26,18 @@ export function SignalModal({
   initialTicks,
   isSimplifiedRedeem,
 }: Omit<SignalModalProps, 'mode' | 'setMode'>) {
-  const [isLoading, setIsLoading] = useState(false)
-
-  const handleSuccess = () => {
-    onClose()
-  }
-
   return (
     <ClientOnly>
       {() => (
         <Dialog open={isOpen} onOpenChange={onClose}>
-          <DialogContent className="sm:max-w-[600px] p-0">
+          <DialogContent className="sm:max-w-[600px] p-0 h-[380px] flex flex-col bg-gradient-to-b from-[#060504] to-[#101010] border-none">
             <SignalStep
               vaultId={vaultId}
               counterVaultId={triple?.counter_vault_id?.toString()}
               atom={atom}
               triple={triple}
-              setTxState={() => {
-                // We don't need to track tx state in simplified mode
-              }}
-              onStakingSuccess={handleSuccess}
-              isLoading={isLoading}
-              setIsLoading={setIsLoading}
               open={isOpen}
+              onClose={onClose}
               initialTicks={initialTicks}
               isSimplifiedRedeem={isSimplifiedRedeem}
             />
