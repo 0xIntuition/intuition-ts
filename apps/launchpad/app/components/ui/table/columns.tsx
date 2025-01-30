@@ -15,6 +15,7 @@ import {
 } from '@components/signal-modal/signal-button'
 import { SignalModal } from '@components/signal-modal/signal-modal'
 import { MIN_DEPOSIT } from '@consts/general'
+import { usePrivy } from '@privy-io/react-auth'
 import { ColumnDef } from '@tanstack/react-table'
 import { AtomType, TripleType } from 'app/types'
 import { ArrowBigUp } from 'lucide-react'
@@ -55,8 +56,10 @@ function SignalCell({
   userPosition,
   positionDirection,
 }: SignalCellProps) {
+  const { user: privyUser } = usePrivy()
   const [isSignalModalOpen, setIsSignalModalOpen] = useState(false)
   const [signalMode, setSignalMode] = useState<'deposit' | 'redeem'>('deposit')
+  const userWallet = privyUser?.wallet?.address
 
   const handleSignal = (mode: 'deposit' | 'redeem') => {
     setSignalMode(mode)
@@ -87,7 +90,9 @@ function SignalCell({
           }
           direction={ClaimPosition.claimFor}
           positionDirection={positionDirection}
-          disabled={positionDirection === ClaimPosition.claimAgainst}
+          disabled={
+            positionDirection === ClaimPosition.claimAgainst || !userWallet
+          }
           onClick={() => handleSignal('deposit')}
         />
         {/* <SignalButton
@@ -104,7 +109,7 @@ function SignalCell({
         /> */}
         <Button
           variant={ButtonVariant.ghost}
-          className="py-0.5 px-2 gap-1 h-9 w-9 rounded-xl bg-destructive/10 border-destructive/30 hover:bg-destructive/20 hover:border-destructive/50 hover:text-destructive text-destructive fill-destructive"
+          className="py-0.5 px-2 gap-1 h-9 w-9 rounded-xl bg-destructive/10 border-destructive/30 hover:bg-destructive/20 hover:border-destructive/50 hover:text-destructive text-destructive fill-destructive disabled:opacity-50"
           disabled={userPosition === 0}
           onClick={() => handleSignal('redeem')}
         >
