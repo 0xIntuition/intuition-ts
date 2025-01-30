@@ -75,12 +75,20 @@ function SignalCell({
       window.__lockTableClicks?.()
     }, 0)
   }
+
+  // Calculate initial ticks based on position direction
+  const calculatedInitialTicks = Math.ceil((userPosition ?? 0) / +MIN_DEPOSIT)
+  const initialTicks =
+    positionDirection === ClaimPosition.claimAgainst
+      ? -calculatedInitialTicks
+      : calculatedInitialTicks
+
   return (
     <>
       <div className="flex items-center justify-end gap-2 pr-6">
         <SignalButton
           variant={positionDirection}
-          numPositions={Math.ceil((userPosition ?? 0) / +MIN_DEPOSIT)}
+          numPositions={Math.abs(initialTicks)}
           direction={positionDirection}
           positionDirection={positionDirection}
           disabled={
@@ -91,7 +99,7 @@ function SignalCell({
         <Button
           variant={ButtonVariant.ghost}
           className="py-0.5 px-2 gap-1 h-9 w-9 rounded-xl bg-warning/10 border-warning/30 hover:bg-warning/20 hover:border-warning/50 hover:text-warning text-warning fill-warning"
-          disabled={userPosition === 0}
+          disabled={!userPosition || userPosition === 0}
           onClick={() => handleSignal('redeem')}
         >
           <Icon name="arrow-box-left" className="w-5 h-5" />
@@ -103,11 +111,7 @@ function SignalCell({
         vaultId={vaultId}
         atom={atom}
         triple={triple}
-        initialTicks={
-          positionDirection === ClaimPosition.claimFor
-            ? Math.ceil((userPosition ?? 0) / +MIN_DEPOSIT)
-            : 0
-        }
+        initialTicks={initialTicks}
         isSimplifiedRedeem={signalMode === 'redeem'}
       />
     </>

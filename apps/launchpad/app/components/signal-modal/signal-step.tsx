@@ -83,8 +83,15 @@ export function SignalStep({
   const userWallet = privyUser?.wallet?.address
   const walletBalance = useGetWalletBalance(userWallet as `0x${string}`)
 
-  // Determine which vault to use based on tick sign
-  const activeVaultId = ticks < 0 ? counterVaultId : vaultId
+  // Determine which vault to use based on initial position or new direction
+  const activeVaultId =
+    initialTicks !== 0
+      ? initialTicks < 0
+        ? counterVaultId
+        : vaultId // Use initial position's vault
+      : ticks < 0
+        ? counterVaultId
+        : vaultId // Only switch for new positions
 
   const { state: txState, dispatch } = useGenericTxState<
     TransactionStateType,
@@ -117,36 +124,35 @@ export function SignalStep({
     18,
   )
 
-  const maxTicks = hasInitialized
-    ? Math.ceil(
-        (Number(userConviction) * Number(convictionPrice)) / +MIN_DEPOSIT,
-      )
-    : initialTicks
+  // Determine if we're moving towards or away from 0
+  const isMovingTowardsZero =
+    (initialTicks > 0 && ticks < initialTicks) ||
+    (initialTicks < 0 && ticks > initialTicks)
 
-  console.log('ticks', ticks)
-  console.log('maxTicks', maxTicks)
-  // Updated tick difference calculation to handle both positive and negative ticks
-  const tickDifference = ticks >= 0 ? ticks - maxTicks : Math.abs(ticks)
   const mode: 'deposit' | 'redeem' | undefined = isSimplifiedRedeem
     ? 'redeem'
-    : tickDifference > 0 || ticks < 0
-      ? 'deposit'
-      : tickDifference < 0
+    : ticks === initialTicks
+      ? undefined
+      : isMovingTowardsZero
         ? 'redeem'
-        : undefined
+        : 'deposit'
 
   const valuePerTick =
     currentInitialTicks > 0 ? Number(userConviction) / currentInitialTicks : 0
 
-  const val = isSimplifiedRedeem
-    ? actualValue
-    : mode === 'deposit'
-      ? (Math.abs(tickDifference || ticks) * +min_deposit).toString()
-      : mode === 'redeem'
-        ? ticks === 0
-          ? actualValue
-          : ((currentInitialTicks - ticks) * valuePerTick).toString()
-        : '0'
+  // Calculate value based on the number of ticks being changed
+  const ticksToChange = isMovingTowardsZero
+    ? Math.abs(ticks - initialTicks)
+    : Math.abs(ticks) - Math.abs(initialTicks)
+
+  const val =
+    isSimplifiedRedeem || ticks === 0
+      ? actualValue
+      : mode === 'deposit'
+        ? (ticksToChange * +min_deposit).toString()
+        : mode === 'redeem'
+          ? (ticksToChange * valuePerTick).toString()
+          : '0'
 
   const {
     mutateAsync: stake,
@@ -169,9 +175,11 @@ export function SignalStep({
       )
 
       // Only update if the calculated value is significantly different
-      if (Math.abs(calculatedTicks - initialTicks) > 0.1) {
-        setTicks(calculatedTicks)
-        setCurrentInitialTicks(calculatedTicks)
+      // For negative positions, maintain the negative sign
+      if (Math.abs(calculatedTicks - Math.abs(initialTicks)) > 0.1) {
+        const newTicks = initialTicks < 0 ? -calculatedTicks : calculatedTicks
+        setTicks(newTicks)
+        setCurrentInitialTicks(Math.abs(calculatedTicks))
       }
       setHasInitialized(true)
     }
@@ -194,7 +202,7 @@ export function SignalStep({
 
   useEffect(() => {
     setTicks(initialTicks)
-    setCurrentInitialTicks(initialTicks)
+    setCurrentInitialTicks(Math.abs(initialTicks))
   }, [initialTicks])
 
   useEffect(() => {
@@ -320,7 +328,7 @@ export function SignalStep({
   // Button handlers
   const handleUpvote = () => {
     // Only show error if trying to go positive while having negative position
-    if (currentInitialTicks < 0 && ticks === 0) {
+    if (initialTicks < 0 && ticks >= 0) {
       setValidationErrors(['Must redeem all downvotes before upvoting'])
       setShowErrors(true)
       return
@@ -330,7 +338,7 @@ export function SignalStep({
 
   const handleDownvote = () => {
     // Only show error if trying to go negative while having positive position
-    if (currentInitialTicks > 0 && ticks === 0) {
+    if (initialTicks > 0 && ticks <= 0) {
       setValidationErrors(['Must redeem all upvotes before downvoting'])
       setShowErrors(true)
       return
@@ -388,12 +396,11 @@ export function SignalStep({
   const handleStakeButtonClick = async () => {
     const errors = []
 
-    // Check if trying to cross zero
+    // Check if trying to cross zero without redeeming
     const isAttemptingToSwitchDirection =
-      (currentInitialTicks > 0 && ticks < 0) ||
-      (currentInitialTicks < 0 && ticks > 0)
+      (initialTicks > 0 && ticks <= 0) || (initialTicks < 0 && ticks >= 0)
 
-    if (isAttemptingToSwitchDirection && currentInitialTicks !== 0) {
+    if (isAttemptingToSwitchDirection && ticks !== 0) {
       errors.push('Must redeem all positions before switching vote direction')
     }
 
@@ -425,12 +432,10 @@ export function SignalStep({
         <div className="flex flex-row items-center justify-between">
           <Text variant="headline" className="font-semibold">
             {isSimplifiedRedeem ? (
-              <>
-                Redeem your signal for ${atom?.label ?? triple?.subject.label}
-              </>
+              <>Redeem your signal for {atom?.label ?? triple?.subject.label}</>
             ) : (
               <>
-                Signal ${atom?.label ?? triple?.subject.label} as your preferred
+                Signal {atom?.label ?? triple?.subject.label} as your preferred
                 wallet
               </>
             )}
@@ -445,23 +450,21 @@ export function SignalStep({
             </Text>
           </Badge>
         </div>
-        {!isSimplifiedRedeem && (
-          <Text
-            variant={TextVariant.footnote}
-            className="text-primary/70 flex flex-row gap-1 items-center"
+        <Text
+          variant={TextVariant.footnote}
+          className="text-primary/70 flex flex-row gap-1 items-center"
+        >
+          <Book className="h-4 w-4 text-primary/70" />
+          Learn how signals shape your preferences in our{' '}
+          <Link
+            to="https://tech.docs.intuition.systems/primitives-signal"
+            target="_blank"
+            rel="noreferrer"
+            className="text-primary font-semibold hover:text-accent"
           >
-            <Book className="h-4 w-4 text-primary/70" />
-            Learn how signals shape your preferences in our{' '}
-            <Link
-              to="https://tech.docs.intuition.systems/primitives-signal"
-              target="_blank"
-              rel="noreferrer"
-              className="text-primary font-semibold hover:text-accent"
-            >
-              documentation
-            </Link>
-          </Text>
-        )}
+            documentation
+          </Link>
+        </Text>
       </div>
 
       {!isSimplifiedRedeem ? (
@@ -507,10 +510,22 @@ export function SignalStep({
         </div>
       ) : (
         <div className="flex flex-col gap-2">
-          <Text variant="body" className="text-primary/70">
-            You will receive approximately {Number(actualValue).toFixed(5)} ETH
-            for your current position.
-          </Text>
+          <div className="flex w-full items-center gap-4 rounded-lg border transition-colors h-[72px] border-[#1A1A1A]">
+            <div className="flex items-center gap-4 w-full">
+              <div className="w-14 h-14 rounded bg-[#1A1A1A] flex-shrink-0 ml-1">
+                {(atom?.image || triple?.subject.image) && (
+                  <img
+                    src={atom?.image ?? triple?.subject.image ?? ''}
+                    alt={atom?.label ?? triple?.subject.label ?? ''}
+                    className="w-full h-full object-cover rounded-lg"
+                  />
+                )}
+              </div>
+              <Text variant="title">
+                {atom?.label ?? triple?.subject.label}
+              </Text>
+            </div>
+          </div>
         </div>
       )}
 
