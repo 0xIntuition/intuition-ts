@@ -69,6 +69,7 @@ export function SignalStep({
 }: SignalStepProps) {
   const [ticks, setTicks] = useState(initialTicks)
   const [currentInitialTicks, setCurrentInitialTicks] = useState(initialTicks)
+  const [initialDirection] = useState(Math.sign(initialTicks))
   const [hasInitialized, setHasInitialized] = useState(false)
   const [actualValue, setActualValue] = useState<string>('0')
   const [lastTxHash, setLastTxHash] = useState<string | undefined>(undefined)
@@ -82,6 +83,7 @@ export function SignalStep({
   const [finalMode, setFinalMode] = useState<'deposit' | 'redeem' | undefined>()
   const [finalTicks, setFinalTicks] = useState<number>(0)
 
+  const FEE_ADJUSTMENT = 0.95 // 5% fee means 95% of deposit goes to conviction
   const publicClient = usePublicClient()
   const location = useLocation()
   const { user: privyUser } = usePrivy()
@@ -113,17 +115,9 @@ export function SignalStep({
   >(transactionReducer, initialTxState)
 
   const { data: vaultDetailsData, isLoading: isLoadingVaultDetails } =
-    useGetVaultDetails(contract, activeVaultId || '', counterVaultId, {
-      queryKey: [
-        'get-vault-details',
-        contract,
-        activeVaultId || '',
-        counterVaultId,
-        ticks >= 0 ? 'for' : 'against',
-      ],
-      enabled: open && !!activeVaultId,
-      // Don't update the UI with new data while showing success
-      notifyOnChangeProps: showSuccess ? ['isLoading'] : undefined,
+    useGetVaultDetails(contract, vaultId || '', counterVaultId, {
+      queryKey: ['get-vault-details', contract, vaultId, counterVaultId],
+      enabled: open && !!vaultId,
     })
 
   const { data: multiVaultConfig, isLoading: isLoadingConfig } =
@@ -132,11 +126,19 @@ export function SignalStep({
   const vaultDetails = vaultDetailsData ?? vaultDetailsProp
   const min_deposit = multiVaultConfig?.formatted_min_deposit ?? MIN_DEPOSIT
   const userConviction = formatUnits(
-    BigInt(vaultDetails?.user_conviction ?? '0'),
+    BigInt(
+      initialTicks < 0
+        ? vaultDetails?.user_conviction_against ?? '0'
+        : vaultDetails?.user_conviction ?? '0',
+    ),
     18,
   )
   const convictionPrice = formatUnits(
-    BigInt(vaultDetails?.conviction_price ?? '0'),
+    BigInt(
+      initialTicks < 0
+        ? vaultDetails?.against_conviction_price ?? '0'
+        : vaultDetails?.conviction_price ?? '0',
+    ),
     18,
   )
 
@@ -181,25 +183,43 @@ export function SignalStep({
 
   // All effects
   useEffect(() => {
-    if (userConviction && convictionPrice) {
+    // For new positions (no conviction), initialize once we have vault details
+    if (initialTicks === 0 && vaultDetails && !hasInitialized) {
+      setHasInitialized(true)
+      return
+    }
+
+    // For existing positions, calculate ticks based on conviction
+    if (userConviction && convictionPrice && Number(userConviction) > 0) {
       const actualEthValue = (
         Number(userConviction) * Number(convictionPrice)
       ).toString()
       setActualValue(actualEthValue)
       const calculatedTicks = Math.ceil(
-        (Number(userConviction) * Number(convictionPrice)) / +MIN_DEPOSIT,
+        (Number(userConviction) * Number(convictionPrice)) /
+          (+MIN_DEPOSIT * FEE_ADJUSTMENT),
       )
 
       // Only update if the calculated value is significantly different
-      // For negative positions, maintain the negative sign
-      if (Math.abs(calculatedTicks - Math.abs(initialTicks)) > 0.1) {
-        const newTicks = initialTicks < 0 ? -calculatedTicks : calculatedTicks
+      // For negative positions, maintain the initial direction
+      if (Math.abs(calculatedTicks - Math.abs(currentInitialTicks)) > 0.1) {
+        const newTicks =
+          initialDirection < 0 ? -calculatedTicks : calculatedTicks
         setTicks(newTicks)
         setCurrentInitialTicks(Math.abs(calculatedTicks))
       }
       setHasInitialized(true)
     }
-  }, [userConviction, convictionPrice, MIN_DEPOSIT, initialTicks])
+  }, [
+    userConviction,
+    convictionPrice,
+    MIN_DEPOSIT,
+    currentInitialTicks,
+    initialDirection,
+    initialTicks,
+    vaultDetails,
+    hasInitialized,
+  ])
 
   useEffect(() => {
     if (stakeIsError) {
@@ -364,7 +384,6 @@ export function SignalStep({
     setTicks(ticks - 1)
   }
 
-  console.log('activeVaultId', activeVaultId)
   const handleAction = async () => {
     if (!privyUser?.wallet?.address || !activeVaultId) {
       return

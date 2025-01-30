@@ -28,9 +28,6 @@ export function useCreateAtomMutation(contract: string) {
       mutationFn: async (params: CreateAtomMutationParams) => {
         const { val, uri } = params
         const parsedValue = parseUnits(val === '' ? '0' : val, 18)
-        console.log('val', val)
-        console.log('parsedValue', parsedValue)
-        console.log('uri', uri)
 
         try {
           return writeContractAsync({

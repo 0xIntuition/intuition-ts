@@ -77,7 +77,9 @@ function SignalCell({
   }
 
   // Calculate initial ticks based on position direction
-  const calculatedInitialTicks = Math.ceil((userPosition ?? 0) / +MIN_DEPOSIT)
+  const calculatedInitialTicks = Math.ceil(
+    (userPosition ?? 0) / (+MIN_DEPOSIT * 0.95),
+  )
   const initialTicks =
     positionDirection === ClaimPosition.claimAgainst
       ? -calculatedInitialTicks
