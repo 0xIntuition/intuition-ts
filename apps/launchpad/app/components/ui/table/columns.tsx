@@ -233,8 +233,6 @@ export const columns: ColumnDef<TableItem>[] = [
     cell: ({ row }) => {
       const position = row.original.userPosition ?? 0
       const positionDirection = row.original.positionDirection
-      console.log('positionDirection', positionDirection)
-      console.log('position', position)
       return (
         <SignalCell
           vaultId={row.original.vaultId}
