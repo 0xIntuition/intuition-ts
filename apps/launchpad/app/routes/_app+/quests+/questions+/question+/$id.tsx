@@ -26,7 +26,7 @@ import ShareModal from '@components/share-modal'
 import { OnboardingModal } from '@components/survey-modal/survey-modal'
 import { columns } from '@components/ui/table/columns'
 import { DataTable } from '@components/ui/table/data-table'
-import { CURRENT_ENV, MIN_DEPOSIT } from '@consts/general'
+import { CURRENT_ENV, MIN_DEPOSIT, ZERO_ADDRESS } from '@consts/general'
 import { useGoBack } from '@lib/hooks/useGoBack'
 import { usePoints } from '@lib/hooks/usePoints'
 import { useQuestionData } from '@lib/hooks/useQuestionData'
@@ -57,7 +57,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const objectId =
     getSpecialPredicate(CURRENT_ENV).web3Wallet.vaultId.toString()
 
-  const userWallet = user?.wallet?.address.toLowerCase()
+  const userWallet = user?.wallet?.address?.toLowerCase()
 
   const variables: GetListDetailsWithPositionQueryVariables = {
     tagPredicateId: predicateId,
@@ -69,9 +69,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
         _eq: objectId,
       },
     },
-    ...(userWallet && {
-      address: userWallet,
-    }),
+    address: userWallet ?? ZERO_ADDRESS,
   }
 
   let listData
@@ -189,9 +187,7 @@ export default function MiniGameOne() {
         _eq: objectId,
       },
     },
-    ...(userWallet && {
-      address: userWallet,
-    }),
+    address: userWallet ?? ZERO_ADDRESS,
   }
 
   const { data: withUserData } = useGetListDetailsWithUserQuery(variables, {
