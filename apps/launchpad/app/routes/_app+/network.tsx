@@ -7,14 +7,13 @@ import {
 } from '@0xintuition/1ui'
 import {
   fetcher,
-  GetEventsDocument,
-  GetEventsQuery,
-  GetEventsQueryVariables,
+  GetSignalsDocument,
+  GetSignalsQuery,
+  GetSignalsQueryVariables,
   // GetStatsDocument,
   // GetStatsQuery,
   // GetStatsQueryVariables,
-  useGetEventsQuery,
-  // useGetStatsQuery,
+  useGetSignalsQuery,
 } from '@0xintuition/graphql'
 
 import ActivityFeed from '@components/activity-feed'
@@ -40,18 +39,13 @@ export async function loader({ request }: LoaderFunctionArgs) {
   // })
 
   await queryClient.prefetchQuery({
-    queryKey: ['get-events-global', { activityLimit, activityOffset }],
+    queryKey: ['get-signals-global', { activityLimit, activityOffset }],
     queryFn: () =>
-      fetcher<GetEventsQuery, GetEventsQueryVariables>(GetEventsDocument, {
+      fetcher<GetSignalsQuery, GetSignalsQueryVariables>(GetSignalsDocument, {
         limit: activityLimit,
         offset: activityOffset,
         addresses: [],
         orderBy: [{ block_timestamp: 'desc' }],
-        where: {
-          type: {
-            _neq: 'FeesTransfered',
-          },
-        },
       }),
   })
 
@@ -87,21 +81,16 @@ export default function Network() {
   // )
   // logger('systemStats', systemStats)
 
-  const { data: eventsData } = useGetEventsQuery(
+  const { data: signalsData } = useGetSignalsQuery(
     {
       limit: activityLimit,
       offset: activityOffset,
       addresses: [],
       orderBy: [{ block_timestamp: 'desc' }],
-      where: {
-        type: {
-          _neq: 'FeesTransfered',
-        },
-      },
     },
     {
       queryKey: [
-        'get-events-global',
+        'get-signals-global',
         {
           limit: activityLimit,
           offset: activityOffset,
@@ -149,9 +138,9 @@ export default function Network() {
         </Text>
         <ActivityFeed
           activities={{
-            events: eventsData?.events || [],
+            signals: signalsData?.signals || [],
             total: {
-              aggregate: { count: eventsData?.total.aggregate?.count || 0 },
+              aggregate: { count: signalsData?.total.aggregate?.count || 0 },
             },
           }}
         />
