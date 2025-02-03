@@ -21,6 +21,7 @@ import { QuestSetCard } from '@components/quest/quest-set-card'
 import { QuestSetProgressCard } from '@components/quest/quest-set-progress-card'
 import { ReferralCard } from '@components/referral-card/referral-card'
 import RelicPointCard from '@components/relic-point-card/relic-point-card'
+import { fetchPoints, fetchRelicPoints } from '@lib/services/points'
 import { invariant } from '@lib/utils/misc'
 import { LoaderFunctionArgs } from '@remix-run/node'
 import { Await, Link, useLoaderData } from '@remix-run/react'
@@ -42,10 +43,15 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const userWallet = await requireUserWallet(request)
   invariant(userWallet, 'Unauthorized')
 
-  const [relicCounts, protocolFees] = await Promise.all([
+  const [relicCounts, protocolFees, relicPoints, points] = await Promise.all([
     fetchRelicCounts(userWallet.toLowerCase()),
     fetchProtocolFees(userWallet.toLowerCase()),
+    fetchRelicPoints(userWallet.toLowerCase()),
+    fetchPoints(userWallet.toLowerCase()),
   ])
+
+  console.log('relicPoints', relicPoints)
+  console.log('points', points)
 
   const userProfile = await fetchWrapper(request, {
     method: UsersService.getUserByWalletPublic,
@@ -83,6 +89,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     inviteCodes: inviteCodes.invite_codes,
     relicHoldCount: relicCounts.holdCount,
     mintCount: relicCounts.mintCount,
+    relicPoints,
     protocolFees,
   }
 }
@@ -93,13 +100,10 @@ export default function Quests() {
     inviteCodes,
     mintCount,
     relicHoldCount,
+    relicPoints,
     protocolFees,
     details,
   } = useLoaderData<typeof loader>()
-
-  const nftMintPoints = mintCount * 2000000
-  const nftHoldPoints = relicHoldCount * 250000
-  const totalNftPoints = nftMintPoints + nftHoldPoints
 
   return (
     <div className="p-10 w-full max-w-7xl mx-auto flex flex-col gap-5 max-md:p-5 max-sm:p-2">
@@ -144,7 +148,7 @@ export default function Quests() {
                       totalPoints={
                         resolvedUserTotals.referral_points +
                         resolvedUserTotals.quest_points +
-                        totalNftPoints +
+                        relicPoints.totalPoints +
                         parseInt(protocolFees.totalPoints)
                       }
                       activities={[
@@ -158,7 +162,7 @@ export default function Quests() {
                         },
                         {
                           name: 'NFT',
-                          points: totalNftPoints,
+                          points: relicPoints.totalPoints,
                         },
                         {
                           name: 'Referrals',
@@ -178,7 +182,7 @@ export default function Quests() {
             <RelicPointCard
               relicsMintCount={mintCount}
               relicsHoldCount={relicHoldCount}
-              relicsPoints={totalNftPoints}
+              relicsPoints={relicPoints.totalPoints}
             />
           </div>
         </div>

@@ -41,6 +41,7 @@ import StakeModal from '@components/stake/stake-modal'
 import TagsModal from '@components/tags/tags-modal'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getIdentityOrPending } from '@lib/services/identities'
+import { fetchPoints, fetchRelicPoints } from '@lib/services/points'
 import { getTags } from '@lib/services/tags'
 import {
   editProfileModalAtom,
@@ -89,9 +90,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
   invariant(user.wallet?.address, 'User wallet not found')
   const userWallet = user.wallet?.address
 
-  const [relicCounts, protocolFees] = await Promise.all([
+  const [relicCounts, protocolFees, relicPoints, points] = await Promise.all([
     fetchRelicCounts(userWallet.toLowerCase()),
     fetchProtocolFees(userWallet.toLowerCase()),
+    fetchRelicPoints(userWallet.toLowerCase()),
+    fetchPoints(userWallet.toLowerCase()),
   ])
 
   const userObject = await fetchWrapper(request, {
@@ -197,6 +200,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
     isPending,
     relicHoldCount: relicCounts.holdCount,
     relicMintCount: relicCounts.mintCount,
+    relicPoints,
+    points,
     protocolFees,
   })
 }
@@ -213,6 +218,12 @@ export interface ProfileLoaderData {
   isPending: boolean
   relicMintCount: number
   relicHoldCount: number
+  relicPoints: {
+    totalPoints: number
+  }
+  points: {
+    totalPoints: number
+  }
   protocolFees: {
     beforeCutoffPoints: string
     afterCutoffPoints: string
@@ -230,9 +241,8 @@ export default function Profile() {
     userTotals,
     vaultDetails,
     isPending,
-    relicMintCount,
-    relicHoldCount,
     protocolFees,
+    relicPoints,
   } = useLiveLoader<ProfileLoaderData>(['attest', 'create'])
 
   const { user_assets, assets_sum } = vaultDetails ? vaultDetails : userIdentity
@@ -289,15 +299,10 @@ export default function Profile() {
     return null
   }
 
-  // TODO: Remove this relic hold/mint count and points calculation when it is stored in BE.
-  const nftMintPoints = relicMintCount * 2000000
-  const nftHoldPoints = relicHoldCount * 250000
-  const totalNftPoints = nftMintPoints + nftHoldPoints
-
   const totalPoints =
     userTotals.referral_points +
     userTotals.quest_points +
-    totalNftPoints +
+    relicPoints.totalPoints +
     parseInt(protocolFees.totalPoints)
 
   const leftPanel = (
