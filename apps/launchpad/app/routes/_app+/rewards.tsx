@@ -94,21 +94,18 @@ export default function Rewards() {
   })
 
   const feesPaidBeforeCutoff = formatUnits(
-    protocolFees?.before_cutoff?.aggregate?.sum?.amount ?? 0n,
+    protocolFees?.before_cutoff?.aggregate?.sum?.amount,
     18,
   )
   const feesPaidAfterCutoff = formatUnits(
-    protocolFees?.after_cutoff?.aggregate?.sum?.amount ?? 0n,
+    protocolFees?.after_cutoff?.aggregate?.sum?.amount,
     18,
   )
-
-  const protocolPointsBeforeCutoff =
-    Number(feesPaidBeforeCutoff || '0') * 10000000
-  const protocolPoitnsAfterCutoff = Number(feesPaidAfterCutoff || '0') * 2000000
+  const protocolPointsBeforeCutoff = Number(feesPaidBeforeCutoff) * 10000000
+  const protocolPoitnsAfterCutoff = Number(feesPaidAfterCutoff) * 2000000
   const protocolPointsTotal = Math.round(
     protocolPointsBeforeCutoff + protocolPoitnsAfterCutoff,
   )
-
   const combinedTotal =
     (relicPoints?.totalPoints ?? 0) +
     (points?.totalPoints ?? 0) +
