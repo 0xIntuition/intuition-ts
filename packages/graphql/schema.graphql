@@ -1027,7 +1027,21 @@ type atom_values {
   """
   book: books
   book_id: numeric
+  """
+  An object relationship
+  """
+  byte_object: byte_object
+  byte_object_id: numeric
+  """
+  An object relationship
+  """
+  caip10: caip10
   id: numeric!
+  """
+  An object relationship
+  """
+  json_object: json_objects
+  json_object_id: numeric
   """
   An object relationship
   """
@@ -1038,6 +1052,11 @@ type atom_values {
   """
   person: persons
   person_id: numeric
+  """
+  An object relationship
+  """
+  text_object: text_objects
+  text_object_id: numeric
   """
   An object relationship
   """
@@ -1075,9 +1094,12 @@ aggregate avg on columns
 """
 type atom_values_avg_fields {
   book_id: Float
+  byte_object_id: Float
   id: Float
+  json_object_id: Float
   organization_id: Float
   person_id: Float
+  text_object_id: Float
   thing_id: Float
 }
 
@@ -1093,11 +1115,18 @@ input atom_values_bool_exp {
   atom: atoms_bool_exp
   book: books_bool_exp
   book_id: numeric_comparison_exp
+  byte_object: byte_object_bool_exp
+  byte_object_id: numeric_comparison_exp
+  caip10: caip10_bool_exp
   id: numeric_comparison_exp
+  json_object: json_objects_bool_exp
+  json_object_id: numeric_comparison_exp
   organization: organizations_bool_exp
   organization_id: numeric_comparison_exp
   person: persons_bool_exp
   person_id: numeric_comparison_exp
+  text_object: text_objects_bool_exp
+  text_object_id: numeric_comparison_exp
   thing: things_bool_exp
   thing_id: numeric_comparison_exp
 }
@@ -1108,9 +1137,12 @@ aggregate max on columns
 type atom_values_max_fields {
   account_id: String
   book_id: numeric
+  byte_object_id: numeric
   id: numeric
+  json_object_id: numeric
   organization_id: numeric
   person_id: numeric
+  text_object_id: numeric
   thing_id: numeric
 }
 
@@ -1120,9 +1152,12 @@ aggregate min on columns
 type atom_values_min_fields {
   account_id: String
   book_id: numeric
+  byte_object_id: numeric
   id: numeric
+  json_object_id: numeric
   organization_id: numeric
   person_id: numeric
+  text_object_id: numeric
   thing_id: numeric
 }
 
@@ -1135,11 +1170,18 @@ input atom_values_order_by {
   atom: atoms_order_by
   book: books_order_by
   book_id: order_by
+  byte_object: byte_object_order_by
+  byte_object_id: order_by
+  caip10: caip10_order_by
   id: order_by
+  json_object: json_objects_order_by
+  json_object_id: order_by
   organization: organizations_order_by
   organization_id: order_by
   person: persons_order_by
   person_id: order_by
+  text_object: text_objects_order_by
+  text_object_id: order_by
   thing: things_order_by
   thing_id: order_by
 }
@@ -1159,7 +1201,15 @@ enum atom_values_select_column {
   """
   column name
   """
+  byte_object_id
+  """
+  column name
+  """
   id
+  """
+  column name
+  """
+  json_object_id
   """
   column name
   """
@@ -1171,6 +1221,10 @@ enum atom_values_select_column {
   """
   column name
   """
+  text_object_id
+  """
+  column name
+  """
   thing_id
 }
 
@@ -1179,9 +1233,12 @@ aggregate stddev on columns
 """
 type atom_values_stddev_fields {
   book_id: Float
+  byte_object_id: Float
   id: Float
+  json_object_id: Float
   organization_id: Float
   person_id: Float
+  text_object_id: Float
   thing_id: Float
 }
 
@@ -1190,9 +1247,12 @@ aggregate stddev_pop on columns
 """
 type atom_values_stddev_pop_fields {
   book_id: Float
+  byte_object_id: Float
   id: Float
+  json_object_id: Float
   organization_id: Float
   person_id: Float
+  text_object_id: Float
   thing_id: Float
 }
 
@@ -1201,9 +1261,12 @@ aggregate stddev_samp on columns
 """
 type atom_values_stddev_samp_fields {
   book_id: Float
+  byte_object_id: Float
   id: Float
+  json_object_id: Float
   organization_id: Float
   person_id: Float
+  text_object_id: Float
   thing_id: Float
 }
 
@@ -1227,9 +1290,12 @@ Initial value of the column from where the streaming should start
 input atom_values_stream_cursor_value_input {
   account_id: String
   book_id: numeric
+  byte_object_id: numeric
   id: numeric
+  json_object_id: numeric
   organization_id: numeric
   person_id: numeric
+  text_object_id: numeric
   thing_id: numeric
 }
 
@@ -1238,9 +1304,12 @@ aggregate sum on columns
 """
 type atom_values_sum_fields {
   book_id: numeric
+  byte_object_id: numeric
   id: numeric
+  json_object_id: numeric
   organization_id: numeric
   person_id: numeric
+  text_object_id: numeric
   thing_id: numeric
 }
 
@@ -1249,9 +1318,12 @@ aggregate var_pop on columns
 """
 type atom_values_var_pop_fields {
   book_id: Float
+  byte_object_id: Float
   id: Float
+  json_object_id: Float
   organization_id: Float
   person_id: Float
+  text_object_id: Float
   thing_id: Float
 }
 
@@ -1260,9 +1332,12 @@ aggregate var_samp on columns
 """
 type atom_values_var_samp_fields {
   book_id: Float
+  byte_object_id: Float
   id: Float
+  json_object_id: Float
   organization_id: Float
   person_id: Float
+  text_object_id: Float
   thing_id: Float
 }
 
@@ -1271,9 +1346,12 @@ aggregate variance on columns
 """
 type atom_values_variance_fields {
   book_id: Float
+  byte_object_id: Float
   id: Float
+  json_object_id: Float
   organization_id: Float
   person_id: Float
+  text_object_id: Float
   thing_id: Float
 }
 
@@ -2401,6 +2479,181 @@ type books_variance_fields {
 }
 
 """
+columns and relationships of "byte_object"
+"""
+type byte_object {
+  data: bytea!
+  id: numeric!
+}
+
+"""
+aggregated selection of "byte_object"
+"""
+type byte_object_aggregate {
+  aggregate: byte_object_aggregate_fields
+  nodes: [byte_object!]!
+}
+
+"""
+aggregate fields of "byte_object"
+"""
+type byte_object_aggregate_fields {
+  avg: byte_object_avg_fields
+  count(columns: [byte_object_select_column!], distinct: Boolean): Int!
+  max: byte_object_max_fields
+  min: byte_object_min_fields
+  stddev: byte_object_stddev_fields
+  stddev_pop: byte_object_stddev_pop_fields
+  stddev_samp: byte_object_stddev_samp_fields
+  sum: byte_object_sum_fields
+  var_pop: byte_object_var_pop_fields
+  var_samp: byte_object_var_samp_fields
+  variance: byte_object_variance_fields
+}
+
+"""
+aggregate avg on columns
+"""
+type byte_object_avg_fields {
+  id: Float
+}
+
+"""
+Boolean expression to filter rows from the table "byte_object". All fields are combined with a logical 'AND'.
+"""
+input byte_object_bool_exp {
+  _and: [byte_object_bool_exp!]
+  _not: byte_object_bool_exp
+  _or: [byte_object_bool_exp!]
+  data: bytea_comparison_exp
+  id: numeric_comparison_exp
+}
+
+"""
+aggregate max on columns
+"""
+type byte_object_max_fields {
+  id: numeric
+}
+
+"""
+aggregate min on columns
+"""
+type byte_object_min_fields {
+  id: numeric
+}
+
+"""
+Ordering options when selecting data from "byte_object".
+"""
+input byte_object_order_by {
+  data: order_by
+  id: order_by
+}
+
+"""
+select columns of table "byte_object"
+"""
+enum byte_object_select_column {
+  """
+  column name
+  """
+  data
+  """
+  column name
+  """
+  id
+}
+
+"""
+aggregate stddev on columns
+"""
+type byte_object_stddev_fields {
+  id: Float
+}
+
+"""
+aggregate stddev_pop on columns
+"""
+type byte_object_stddev_pop_fields {
+  id: Float
+}
+
+"""
+aggregate stddev_samp on columns
+"""
+type byte_object_stddev_samp_fields {
+  id: Float
+}
+
+"""
+Streaming cursor of the table "byte_object"
+"""
+input byte_object_stream_cursor_input {
+  """
+  Stream column input with initial value
+  """
+  initial_value: byte_object_stream_cursor_value_input!
+  """
+  cursor ordering
+  """
+  ordering: cursor_ordering
+}
+
+"""
+Initial value of the column from where the streaming should start
+"""
+input byte_object_stream_cursor_value_input {
+  data: bytea
+  id: numeric
+}
+
+"""
+aggregate sum on columns
+"""
+type byte_object_sum_fields {
+  id: numeric
+}
+
+"""
+aggregate var_pop on columns
+"""
+type byte_object_var_pop_fields {
+  id: Float
+}
+
+"""
+aggregate var_samp on columns
+"""
+type byte_object_var_samp_fields {
+  id: Float
+}
+
+"""
+aggregate variance on columns
+"""
+type byte_object_variance_fields {
+  id: Float
+}
+
+scalar bytea
+
+"""
+Boolean expression to compare columns of type "bytea". All fields are combined with logical 'AND'.
+"""
+input bytea_comparison_exp {
+  _eq: bytea
+  _gt: bytea
+  _gte: bytea
+  _in: [bytea!]
+  _is_null: Boolean
+  _lt: bytea
+  _lte: bytea
+  _neq: bytea
+  _nin: [bytea!]
+}
+
+"""
 columns and relationships of "cached_image"
 """
 type cached_images {
@@ -2498,6 +2751,194 @@ input cached_images_stream_cursor_value_input {
   safe: Boolean
   score: jsonb
   url: String
+}
+
+"""
+columns and relationships of "caip10"
+"""
+type caip10 {
+  account_address: String!
+  chain_id: Int!
+  id: numeric!
+  namespace: String!
+}
+
+"""
+aggregated selection of "caip10"
+"""
+type caip10_aggregate {
+  aggregate: caip10_aggregate_fields
+  nodes: [caip10!]!
+}
+
+"""
+aggregate fields of "caip10"
+"""
+type caip10_aggregate_fields {
+  avg: caip10_avg_fields
+  count(columns: [caip10_select_column!], distinct: Boolean): Int!
+  max: caip10_max_fields
+  min: caip10_min_fields
+  stddev: caip10_stddev_fields
+  stddev_pop: caip10_stddev_pop_fields
+  stddev_samp: caip10_stddev_samp_fields
+  sum: caip10_sum_fields
+  var_pop: caip10_var_pop_fields
+  var_samp: caip10_var_samp_fields
+  variance: caip10_variance_fields
+}
+
+"""
+aggregate avg on columns
+"""
+type caip10_avg_fields {
+  chain_id: Float
+  id: Float
+}
+
+"""
+Boolean expression to filter rows from the table "caip10". All fields are combined with a logical 'AND'.
+"""
+input caip10_bool_exp {
+  _and: [caip10_bool_exp!]
+  _not: caip10_bool_exp
+  _or: [caip10_bool_exp!]
+  account_address: String_comparison_exp
+  chain_id: Int_comparison_exp
+  id: numeric_comparison_exp
+  namespace: String_comparison_exp
+}
+
+"""
+aggregate max on columns
+"""
+type caip10_max_fields {
+  account_address: String
+  chain_id: Int
+  id: numeric
+  namespace: String
+}
+
+"""
+aggregate min on columns
+"""
+type caip10_min_fields {
+  account_address: String
+  chain_id: Int
+  id: numeric
+  namespace: String
+}
+
+"""
+Ordering options when selecting data from "caip10".
+"""
+input caip10_order_by {
+  account_address: order_by
+  chain_id: order_by
+  id: order_by
+  namespace: order_by
+}
+
+"""
+select columns of table "caip10"
+"""
+enum caip10_select_column {
+  """
+  column name
+  """
+  account_address
+  """
+  column name
+  """
+  chain_id
+  """
+  column name
+  """
+  id
+  """
+  column name
+  """
+  namespace
+}
+
+"""
+aggregate stddev on columns
+"""
+type caip10_stddev_fields {
+  chain_id: Float
+  id: Float
+}
+
+"""
+aggregate stddev_pop on columns
+"""
+type caip10_stddev_pop_fields {
+  chain_id: Float
+  id: Float
+}
+
+"""
+aggregate stddev_samp on columns
+"""
+type caip10_stddev_samp_fields {
+  chain_id: Float
+  id: Float
+}
+
+"""
+Streaming cursor of the table "caip10"
+"""
+input caip10_stream_cursor_input {
+  """
+  Stream column input with initial value
+  """
+  initial_value: caip10_stream_cursor_value_input!
+  """
+  cursor ordering
+  """
+  ordering: cursor_ordering
+}
+
+"""
+Initial value of the column from where the streaming should start
+"""
+input caip10_stream_cursor_value_input {
+  account_address: String
+  chain_id: Int
+  id: numeric
+  namespace: String
+}
+
+"""
+aggregate sum on columns
+"""
+type caip10_sum_fields {
+  chain_id: Int
+  id: numeric
+}
+
+"""
+aggregate var_pop on columns
+"""
+type caip10_var_pop_fields {
+  chain_id: Float
+  id: Float
+}
+
+"""
+aggregate var_samp on columns
+"""
+type caip10_var_samp_fields {
+  chain_id: Float
+  id: Float
+}
+
+"""
+aggregate variance on columns
+"""
+type caip10_variance_fields {
+  chain_id: Float
+  id: Float
 }
 
 """
@@ -4628,6 +5069,169 @@ input following_args {
   address: String
 }
 
+"""
+columns and relationships of "json_object"
+"""
+type json_objects {
+  data(
+    """
+    JSON select path
+    """
+    path: String
+  ): jsonb!
+  id: numeric!
+}
+
+"""
+aggregated selection of "json_object"
+"""
+type json_objects_aggregate {
+  aggregate: json_objects_aggregate_fields
+  nodes: [json_objects!]!
+}
+
+"""
+aggregate fields of "json_object"
+"""
+type json_objects_aggregate_fields {
+  avg: json_objects_avg_fields
+  count(columns: [json_objects_select_column!], distinct: Boolean): Int!
+  max: json_objects_max_fields
+  min: json_objects_min_fields
+  stddev: json_objects_stddev_fields
+  stddev_pop: json_objects_stddev_pop_fields
+  stddev_samp: json_objects_stddev_samp_fields
+  sum: json_objects_sum_fields
+  var_pop: json_objects_var_pop_fields
+  var_samp: json_objects_var_samp_fields
+  variance: json_objects_variance_fields
+}
+
+"""
+aggregate avg on columns
+"""
+type json_objects_avg_fields {
+  id: Float
+}
+
+"""
+Boolean expression to filter rows from the table "json_object". All fields are combined with a logical 'AND'.
+"""
+input json_objects_bool_exp {
+  _and: [json_objects_bool_exp!]
+  _not: json_objects_bool_exp
+  _or: [json_objects_bool_exp!]
+  data: jsonb_comparison_exp
+  id: numeric_comparison_exp
+}
+
+"""
+aggregate max on columns
+"""
+type json_objects_max_fields {
+  id: numeric
+}
+
+"""
+aggregate min on columns
+"""
+type json_objects_min_fields {
+  id: numeric
+}
+
+"""
+Ordering options when selecting data from "json_object".
+"""
+input json_objects_order_by {
+  data: order_by
+  id: order_by
+}
+
+"""
+select columns of table "json_object"
+"""
+enum json_objects_select_column {
+  """
+  column name
+  """
+  data
+  """
+  column name
+  """
+  id
+}
+
+"""
+aggregate stddev on columns
+"""
+type json_objects_stddev_fields {
+  id: Float
+}
+
+"""
+aggregate stddev_pop on columns
+"""
+type json_objects_stddev_pop_fields {
+  id: Float
+}
+
+"""
+aggregate stddev_samp on columns
+"""
+type json_objects_stddev_samp_fields {
+  id: Float
+}
+
+"""
+Streaming cursor of the table "json_objects"
+"""
+input json_objects_stream_cursor_input {
+  """
+  Stream column input with initial value
+  """
+  initial_value: json_objects_stream_cursor_value_input!
+  """
+  cursor ordering
+  """
+  ordering: cursor_ordering
+}
+
+"""
+Initial value of the column from where the streaming should start
+"""
+input json_objects_stream_cursor_value_input {
+  data: jsonb
+  id: numeric
+}
+
+"""
+aggregate sum on columns
+"""
+type json_objects_sum_fields {
+  id: numeric
+}
+
+"""
+aggregate var_pop on columns
+"""
+type json_objects_var_pop_fields {
+  id: Float
+}
+
+"""
+aggregate var_samp on columns
+"""
+type json_objects_var_samp_fields {
+  id: Float
+}
+
+"""
+aggregate variance on columns
+"""
+type json_objects_variance_fields {
+  id: Float
+}
+
 scalar jsonb
 
 input jsonb_cast_exp {
@@ -5983,6 +6587,60 @@ type query_root {
     where: books_bool_exp
   ): books_aggregate!
   """
+  fetch data from the table: "byte_object"
+  """
+  byte_object(
+    """
+    distinct select on columns
+    """
+    distinct_on: [byte_object_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [byte_object_order_by!]
+    """
+    filter the rows returned
+    """
+    where: byte_object_bool_exp
+  ): [byte_object!]!
+  """
+  fetch aggregated fields from the table: "byte_object"
+  """
+  byte_object_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [byte_object_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [byte_object_order_by!]
+    """
+    filter the rows returned
+    """
+    where: byte_object_bool_exp
+  ): byte_object_aggregate!
+  """
+  fetch data from the table: "byte_object" using primary key columns
+  """
+  byte_object_by_pk(id: numeric!): byte_object
+  """
   fetch data from the table: "cached_image" using primary key columns
   """
   cached_image(url: String!): cached_images
@@ -6011,6 +6669,60 @@ type query_root {
     """
     where: cached_images_bool_exp
   ): [cached_images!]!
+  """
+  fetch data from the table: "caip10" using primary key columns
+  """
+  caip10(id: numeric!): caip10
+  """
+  fetch aggregated fields from the table: "caip10"
+  """
+  caip10_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [caip10_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [caip10_order_by!]
+    """
+    filter the rows returned
+    """
+    where: caip10_bool_exp
+  ): caip10_aggregate!
+  """
+  fetch data from the table: "caip10"
+  """
+  caip10s(
+    """
+    distinct select on columns
+    """
+    distinct_on: [caip10_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [caip10_order_by!]
+    """
+    filter the rows returned
+    """
+    where: caip10_bool_exp
+  ): [caip10!]!
   """
   fetch data from the table: "chainlink_price" using primary key columns
   """
@@ -6372,6 +7084,60 @@ type query_root {
     """
     where: accounts_bool_exp
   ): accounts_aggregate!
+  """
+  fetch data from the table: "json_object" using primary key columns
+  """
+  json_object(id: numeric!): json_objects
+  """
+  fetch data from the table: "json_object"
+  """
+  json_objects(
+    """
+    distinct select on columns
+    """
+    distinct_on: [json_objects_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [json_objects_order_by!]
+    """
+    filter the rows returned
+    """
+    where: json_objects_bool_exp
+  ): [json_objects!]!
+  """
+  fetch aggregated fields from the table: "json_object"
+  """
+  json_objects_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [json_objects_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [json_objects_order_by!]
+    """
+    filter the rows returned
+    """
+    where: json_objects_bool_exp
+  ): json_objects_aggregate!
   """
   fetch data from the table: "organization" using primary key columns
   """
@@ -6808,6 +7574,60 @@ type query_root {
     """
     where: stats_bool_exp
   ): stats_aggregate!
+  """
+  fetch data from the table: "text_object" using primary key columns
+  """
+  text_object(id: numeric!): text_objects
+  """
+  fetch data from the table: "text_object"
+  """
+  text_objects(
+    """
+    distinct select on columns
+    """
+    distinct_on: [text_objects_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [text_objects_order_by!]
+    """
+    filter the rows returned
+    """
+    where: text_objects_bool_exp
+  ): [text_objects!]!
+  """
+  fetch aggregated fields from the table: "text_object"
+  """
+  text_objects_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [text_objects_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [text_objects_order_by!]
+    """
+    filter the rows returned
+    """
+    where: text_objects_bool_exp
+  ): text_objects_aggregate!
   """
   fetch data from the table: "thing" using primary key columns
   """
@@ -8634,6 +9454,77 @@ type subscription_root {
     where: books_bool_exp
   ): [books!]!
   """
+  fetch data from the table: "byte_object"
+  """
+  byte_object(
+    """
+    distinct select on columns
+    """
+    distinct_on: [byte_object_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [byte_object_order_by!]
+    """
+    filter the rows returned
+    """
+    where: byte_object_bool_exp
+  ): [byte_object!]!
+  """
+  fetch aggregated fields from the table: "byte_object"
+  """
+  byte_object_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [byte_object_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [byte_object_order_by!]
+    """
+    filter the rows returned
+    """
+    where: byte_object_bool_exp
+  ): byte_object_aggregate!
+  """
+  fetch data from the table: "byte_object" using primary key columns
+  """
+  byte_object_by_pk(id: numeric!): byte_object
+  """
+  fetch data from the table in a streaming manner: "byte_object"
+  """
+  byte_object_stream(
+    """
+    maximum number of rows returned in a single batch
+    """
+    batch_size: Int!
+    """
+    cursor to stream the results returned by the query
+    """
+    cursor: [byte_object_stream_cursor_input]!
+    """
+    filter the rows returned
+    """
+    where: byte_object_bool_exp
+  ): [byte_object!]!
+  """
   fetch data from the table: "cached_image" using primary key columns
   """
   cached_image(url: String!): cached_images
@@ -8679,6 +9570,77 @@ type subscription_root {
     """
     where: cached_images_bool_exp
   ): [cached_images!]!
+  """
+  fetch data from the table: "caip10" using primary key columns
+  """
+  caip10(id: numeric!): caip10
+  """
+  fetch aggregated fields from the table: "caip10"
+  """
+  caip10_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [caip10_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [caip10_order_by!]
+    """
+    filter the rows returned
+    """
+    where: caip10_bool_exp
+  ): caip10_aggregate!
+  """
+  fetch data from the table in a streaming manner: "caip10"
+  """
+  caip10_stream(
+    """
+    maximum number of rows returned in a single batch
+    """
+    batch_size: Int!
+    """
+    cursor to stream the results returned by the query
+    """
+    cursor: [caip10_stream_cursor_input]!
+    """
+    filter the rows returned
+    """
+    where: caip10_bool_exp
+  ): [caip10!]!
+  """
+  fetch data from the table: "caip10"
+  """
+  caip10s(
+    """
+    distinct select on columns
+    """
+    distinct_on: [caip10_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [caip10_order_by!]
+    """
+    filter the rows returned
+    """
+    where: caip10_bool_exp
+  ): [caip10!]!
   """
   fetch data from the table: "chainlink_price" using primary key columns
   """
@@ -9125,6 +10087,77 @@ type subscription_root {
     """
     where: accounts_bool_exp
   ): accounts_aggregate!
+  """
+  fetch data from the table: "json_object" using primary key columns
+  """
+  json_object(id: numeric!): json_objects
+  """
+  fetch data from the table: "json_object"
+  """
+  json_objects(
+    """
+    distinct select on columns
+    """
+    distinct_on: [json_objects_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [json_objects_order_by!]
+    """
+    filter the rows returned
+    """
+    where: json_objects_bool_exp
+  ): [json_objects!]!
+  """
+  fetch aggregated fields from the table: "json_object"
+  """
+  json_objects_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [json_objects_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [json_objects_order_by!]
+    """
+    filter the rows returned
+    """
+    where: json_objects_bool_exp
+  ): json_objects_aggregate!
+  """
+  fetch data from the table in a streaming manner: "json_object"
+  """
+  json_objects_stream(
+    """
+    maximum number of rows returned in a single batch
+    """
+    batch_size: Int!
+    """
+    cursor to stream the results returned by the query
+    """
+    cursor: [json_objects_stream_cursor_input]!
+    """
+    filter the rows returned
+    """
+    where: json_objects_bool_exp
+  ): [json_objects!]!
   """
   fetch data from the table: "organization" using primary key columns
   """
@@ -9681,6 +10714,77 @@ type subscription_root {
     where: stats_bool_exp
   ): [stats!]!
   """
+  fetch data from the table: "text_object" using primary key columns
+  """
+  text_object(id: numeric!): text_objects
+  """
+  fetch data from the table: "text_object"
+  """
+  text_objects(
+    """
+    distinct select on columns
+    """
+    distinct_on: [text_objects_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [text_objects_order_by!]
+    """
+    filter the rows returned
+    """
+    where: text_objects_bool_exp
+  ): [text_objects!]!
+  """
+  fetch aggregated fields from the table: "text_object"
+  """
+  text_objects_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [text_objects_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [text_objects_order_by!]
+    """
+    filter the rows returned
+    """
+    where: text_objects_bool_exp
+  ): text_objects_aggregate!
+  """
+  fetch data from the table in a streaming manner: "text_object"
+  """
+  text_objects_stream(
+    """
+    maximum number of rows returned in a single batch
+    """
+    batch_size: Int!
+    """
+    cursor to stream the results returned by the query
+    """
+    cursor: [text_objects_stream_cursor_input]!
+    """
+    filter the rows returned
+    """
+    where: text_objects_bool_exp
+  ): [text_objects!]!
+  """
   fetch data from the table: "thing" using primary key columns
   """
   thing(id: numeric!): things
@@ -9893,6 +10997,166 @@ type subscription_root {
     """
     where: vaults_bool_exp
   ): [vaults!]!
+}
+
+"""
+columns and relationships of "text_object"
+"""
+type text_objects {
+  data: String!
+  id: numeric!
+}
+
+"""
+aggregated selection of "text_object"
+"""
+type text_objects_aggregate {
+  aggregate: text_objects_aggregate_fields
+  nodes: [text_objects!]!
+}
+
+"""
+aggregate fields of "text_object"
+"""
+type text_objects_aggregate_fields {
+  avg: text_objects_avg_fields
+  count(columns: [text_objects_select_column!], distinct: Boolean): Int!
+  max: text_objects_max_fields
+  min: text_objects_min_fields
+  stddev: text_objects_stddev_fields
+  stddev_pop: text_objects_stddev_pop_fields
+  stddev_samp: text_objects_stddev_samp_fields
+  sum: text_objects_sum_fields
+  var_pop: text_objects_var_pop_fields
+  var_samp: text_objects_var_samp_fields
+  variance: text_objects_variance_fields
+}
+
+"""
+aggregate avg on columns
+"""
+type text_objects_avg_fields {
+  id: Float
+}
+
+"""
+Boolean expression to filter rows from the table "text_object". All fields are combined with a logical 'AND'.
+"""
+input text_objects_bool_exp {
+  _and: [text_objects_bool_exp!]
+  _not: text_objects_bool_exp
+  _or: [text_objects_bool_exp!]
+  data: String_comparison_exp
+  id: numeric_comparison_exp
+}
+
+"""
+aggregate max on columns
+"""
+type text_objects_max_fields {
+  data: String
+  id: numeric
+}
+
+"""
+aggregate min on columns
+"""
+type text_objects_min_fields {
+  data: String
+  id: numeric
+}
+
+"""
+Ordering options when selecting data from "text_object".
+"""
+input text_objects_order_by {
+  data: order_by
+  id: order_by
+}
+
+"""
+select columns of table "text_object"
+"""
+enum text_objects_select_column {
+  """
+  column name
+  """
+  data
+  """
+  column name
+  """
+  id
+}
+
+"""
+aggregate stddev on columns
+"""
+type text_objects_stddev_fields {
+  id: Float
+}
+
+"""
+aggregate stddev_pop on columns
+"""
+type text_objects_stddev_pop_fields {
+  id: Float
+}
+
+"""
+aggregate stddev_samp on columns
+"""
+type text_objects_stddev_samp_fields {
+  id: Float
+}
+
+"""
+Streaming cursor of the table "text_objects"
+"""
+input text_objects_stream_cursor_input {
+  """
+  Stream column input with initial value
+  """
+  initial_value: text_objects_stream_cursor_value_input!
+  """
+  cursor ordering
+  """
+  ordering: cursor_ordering
+}
+
+"""
+Initial value of the column from where the streaming should start
+"""
+input text_objects_stream_cursor_value_input {
+  data: String
+  id: numeric
+}
+
+"""
+aggregate sum on columns
+"""
+type text_objects_sum_fields {
+  id: numeric
+}
+
+"""
+aggregate var_pop on columns
+"""
+type text_objects_var_pop_fields {
+  id: Float
+}
+
+"""
+aggregate var_samp on columns
+"""
+type text_objects_var_samp_fields {
+  id: Float
+}
+
+"""
+aggregate variance on columns
+"""
+type text_objects_variance_fields {
+  id: Float
 }
 
 """

@@ -1,20 +1,75 @@
 import { Avatar, Button } from '@0xintuition/1ui'
+import { fetcher } from '@0xintuition/graphql'
 
 import { AggregateIQ } from '@components/aggregate-iq'
 import { ErrorPage } from '@components/error-page'
 import { SkillRadarChart } from '@components/skill-radar-chart'
+import { useRelicPoints } from '@lib/hooks/useRelicPoints'
+import {
+  fetchGraphQL,
+  GetRelicPointsDocument,
+  GetRelicPointsQuery,
+  GetRelicPointsQueryVariables,
+} from '@lib/services/relics'
+import { usePrivy } from '@privy-io/react-auth'
+import { json, LoaderFunctionArgs } from '@remix-run/node'
+import { getUser } from '@server/auth'
+import { QueryClient } from '@tanstack/react-query'
 import { skills } from 'app/data/mock-rewards'
 import { motion } from 'framer-motion'
 import { ChevronRight } from 'lucide-react'
+
+export async function loader({ request }: LoaderFunctionArgs) {
+  const user = await getUser(request)
+  const url = new URL(request.url)
+
+  const queryClient = new QueryClient()
+  const userAddress = user?.wallet?.address
+
+  // if (userAddress) {
+  //   await queryClient.prefetchQuery({
+  //     queryKey: ['get-relic-points', { address: userAddress }],
+  //     queryFn: () =>
+  //       fetchGraphQL<GetRelicPointsQuery, GetRelicPointsQueryVariables>(
+  //         GetRelicPointsDocument,
+  //         {
+  //           address: userAddress,
+  //         },
+  //       ),
+  //   })
+
+  //   // Get the prefetched data from the query client
+  //   const prefetchedData = (await queryClient.getQueryData([
+  //     'get-relic-points',
+  //     { address: userAddress },
+  //   ])) as GetRelicPointsQuery | undefined
+
+  //   console.log('Prefetched relic points:', prefetchedData?.relic_points)
+  // }
+
+  return json({})
+}
 
 export function ErrorBoundary() {
   return <ErrorPage routeName="rewards" />
 }
 
-const totalIQ = skills.reduce((sum, skill) => sum + skill.points, 0)
 const user = { name: 'JP', avatar: '/placeholder.svg?height=40&width=40' }
 
 export default function Rewards() {
+  const { user: privyUser } = usePrivy()
+  const userAddress = privyUser?.wallet?.address?.toLowerCase()
+
+  console.log('Component rendering with address:', userAddress)
+
+  const { data: relicPoints, isError, error } = useRelicPoints(userAddress)
+
+  console.log('Hook result:', {
+    data: relicPoints,
+    isError,
+    error,
+  })
+
   return (
     <div className="space-y-8 text-foreground p-8">
       <motion.div
@@ -49,7 +104,7 @@ export default function Rewards() {
           <Avatar className="w-24 h-24" src={user.avatar} name={user.name} />
         </motion.div>
       </motion.div>
-      <AggregateIQ totalIQ={totalIQ} />
+      <AggregateIQ totalIQ={0} />
 
       <div className="space-y-6 border-none bg-gradient-to-br from-[#060504] to-[#101010] rounded-lg p-6">
         <div className="flex justify-between items-center">
