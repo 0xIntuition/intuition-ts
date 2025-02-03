@@ -19,6 +19,7 @@ const schema = z.object({
   MULTIVAULT_ADDRESS_BASE_MAINNET: z.string(),
   ORIGIN_URL: z.string(),
   PRIVY_APP_ID: z.string(),
+  HASURA_POINTS_ENDPOINT: z.string(),
   featureFlagsSchema,
 })
 
@@ -67,6 +68,7 @@ export function getEnv() {
       process.env.MULTIVAULT_ADDRESS_BASE_MAINNET,
     ORIGIN_URL: process.env.ORIGIN_URL,
     PRIVY_APP_ID: process.env.PRIVY_APP_ID,
+    HASURA_POINTS_ENDPOINT: process.env.HASURA_POINTS_ENDPOINT,
   }
 }
 
