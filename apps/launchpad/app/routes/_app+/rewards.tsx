@@ -1,14 +1,17 @@
 import { Avatar, Button } from '@0xintuition/1ui'
-
-// Remove the fetcher import since we'll use the local one
-// import { fetcher } from '@0xintuition/graphql'
+import {
+  fetcher,
+  GetFeeTransfersDocument,
+  GetFeeTransfersQuery,
+  GetFeeTransfersQueryVariables,
+  useGetFeeTransfersQuery,
+} from '@0xintuition/graphql'
 
 import { AggregateIQ } from '@components/aggregate-iq'
 import { ErrorPage } from '@components/error-page'
 import { SkillRadarChart } from '@components/skill-radar-chart'
 import { ZERO_ADDRESS } from '@consts/general'
 import { fetchPoints, fetchRelicPoints } from '@lib/services/points'
-import logger from '@lib/utils/logger'
 import { LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 import { getUser } from '@server/auth'
@@ -16,6 +19,7 @@ import { dehydrate, QueryClient, useQuery } from '@tanstack/react-query'
 import { skills } from 'app/data/mock-rewards'
 import { motion } from 'framer-motion'
 import { ChevronRight } from 'lucide-react'
+import { formatUnits } from 'viem'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await getUser(request)
@@ -29,12 +33,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const activityOffset = parseInt(url.searchParams.get('activityOffset') || '0')
 
   const queryClient = new QueryClient()
-
-  // await queryClient.prefetchQuery({
-  //   queryKey: ['get-stats'],
-  //   queryFn: () =>
-  //     fetcher<GetStatsQuery, GetStatsQueryVariables>(GetStatsDocument, {}),
-  // })
 
   if (address) {
     await Promise.all([
@@ -51,6 +49,17 @@ export async function loader({ request }: LoaderFunctionArgs) {
           const response = await fetchPoints(address.toLowerCase())
           return response
         },
+      }),
+      await queryClient.prefetchQuery({
+        queryKey: ['get-protocol-fees', { address }],
+        queryFn: () =>
+          fetcher<GetFeeTransfersQuery, GetFeeTransfersQueryVariables>(
+            GetFeeTransfersDocument,
+            {
+              address,
+              cutoff_timestamp: 1733356800,
+            },
+          ),
       }),
     ])
   }
@@ -84,11 +93,28 @@ export default function Rewards() {
     queryFn: () => fetchPoints(address?.toLowerCase() ?? ZERO_ADDRESS),
   })
 
-  logger('Debug - Relic Points:', relicPoints)
-  logger('Debug - Points:', points)
+  const { data: protocolFees } = useGetFeeTransfersQuery({
+    address: address?.toLowerCase() ?? ZERO_ADDRESS,
+    cutoff_timestamp: 1733356800,
+  })
 
+  const feesPaidBeforeCutoff = formatUnits(
+    protocolFees?.before_cutoff?.aggregate?.sum?.amount,
+    18,
+  )
+  const feesPaidAfterCutoff = formatUnits(
+    protocolFees?.after_cutoff?.aggregate?.sum?.amount,
+    18,
+  )
+  const protocolPointsBeforeCutoff = Number(feesPaidBeforeCutoff) * 10000000
+  const protocolPoitnsAfterCutoff = Number(feesPaidAfterCutoff) * 2000000
+  const protocolPointsTotal = Math.round(
+    protocolPointsBeforeCutoff + protocolPoitnsAfterCutoff,
+  )
   const combinedTotal =
-    (relicPoints?.totalPoints ?? 0) + (points?.totalPoints ?? 0)
+    (relicPoints?.totalPoints ?? 0) +
+    (points?.totalPoints ?? 0) +
+    protocolPointsTotal
 
   return (
     <div className="space-y-8 text-foreground p-8">
