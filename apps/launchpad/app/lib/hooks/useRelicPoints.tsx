@@ -1,4 +1,4 @@
-import { fetchRelicPoints } from '@lib/services/relics'
+import { fetchRelicPoints } from '@lib/services/points'
 import { useQuery } from '@tanstack/react-query'
 
 export function useRelicPoints(address?: string) {

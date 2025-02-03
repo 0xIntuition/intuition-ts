@@ -1,53 +1,68 @@
 import { Avatar, Button } from '@0xintuition/1ui'
-import { fetcher } from '@0xintuition/graphql'
+
+// Remove the fetcher import since we'll use the local one
+// import { fetcher } from '@0xintuition/graphql'
 
 import { AggregateIQ } from '@components/aggregate-iq'
 import { ErrorPage } from '@components/error-page'
 import { SkillRadarChart } from '@components/skill-radar-chart'
-import { useRelicPoints } from '@lib/hooks/useRelicPoints'
-import {
-  fetchGraphQL,
-  GetRelicPointsDocument,
-  GetRelicPointsQuery,
-  GetRelicPointsQueryVariables,
-} from '@lib/services/relics'
-import { usePrivy } from '@privy-io/react-auth'
-import { json, LoaderFunctionArgs } from '@remix-run/node'
+import { ZERO_ADDRESS } from '@consts/general'
+import { fetchPoints, fetchRelicPoints } from '@lib/services/points'
+import logger from '@lib/utils/logger'
+import { LoaderFunctionArgs } from '@remix-run/node'
+import { useLoaderData } from '@remix-run/react'
 import { getUser } from '@server/auth'
-import { QueryClient } from '@tanstack/react-query'
+import { dehydrate, QueryClient, useQuery } from '@tanstack/react-query'
 import { skills } from 'app/data/mock-rewards'
 import { motion } from 'framer-motion'
 import { ChevronRight } from 'lucide-react'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await getUser(request)
+  const address = user?.wallet?.address
+
+  console.log('Debug - User:', user)
+  console.log('Debug - Address:', address)
+
   const url = new URL(request.url)
+  const activityLimit = parseInt(url.searchParams.get('activityLimit') || '10')
+  const activityOffset = parseInt(url.searchParams.get('activityOffset') || '0')
 
   const queryClient = new QueryClient()
-  const userAddress = user?.wallet?.address
 
-  // if (userAddress) {
-  //   await queryClient.prefetchQuery({
-  //     queryKey: ['get-relic-points', { address: userAddress }],
-  //     queryFn: () =>
-  //       fetchGraphQL<GetRelicPointsQuery, GetRelicPointsQueryVariables>(
-  //         GetRelicPointsDocument,
-  //         {
-  //           address: userAddress,
-  //         },
-  //       ),
-  //   })
+  // await queryClient.prefetchQuery({
+  //   queryKey: ['get-stats'],
+  //   queryFn: () =>
+  //     fetcher<GetStatsQuery, GetStatsQueryVariables>(GetStatsDocument, {}),
+  // })
 
-  //   // Get the prefetched data from the query client
-  //   const prefetchedData = (await queryClient.getQueryData([
-  //     'get-relic-points',
-  //     { address: userAddress },
-  //   ])) as GetRelicPointsQuery | undefined
+  if (address) {
+    await Promise.all([
+      queryClient.prefetchQuery({
+        queryKey: ['get-relic-points', { address }],
+        queryFn: async () => {
+          const response = await fetchRelicPoints(address.toLowerCase())
+          return response
+        },
+      }),
+      queryClient.prefetchQuery({
+        queryKey: ['get-points', { address }],
+        queryFn: async () => {
+          const response = await fetchPoints(address.toLowerCase())
+          return response
+        },
+      }),
+    ])
+  }
 
-  //   console.log('Prefetched relic points:', prefetchedData?.relic_points)
-  // }
-
-  return json({})
+  return {
+    address,
+    dehydratedState: dehydrate(queryClient),
+    initialParams: {
+      activityLimit,
+      activityOffset,
+    },
+  }
 }
 
 export function ErrorBoundary() {
@@ -57,18 +72,23 @@ export function ErrorBoundary() {
 const user = { name: 'JP', avatar: '/placeholder.svg?height=40&width=40' }
 
 export default function Rewards() {
-  const { user: privyUser } = usePrivy()
-  const userAddress = privyUser?.wallet?.address?.toLowerCase()
+  const { address } = useLoaderData<typeof loader>()
 
-  console.log('Component rendering with address:', userAddress)
-
-  const { data: relicPoints, isError, error } = useRelicPoints(userAddress)
-
-  console.log('Hook result:', {
-    data: relicPoints,
-    isError,
-    error,
+  const { data: relicPoints } = useQuery({
+    queryKey: ['get-relic-points', { address }],
+    queryFn: () => fetchRelicPoints(address?.toLowerCase() ?? ZERO_ADDRESS),
   })
+
+  const { data: points } = useQuery({
+    queryKey: ['get-points', { address }],
+    queryFn: () => fetchPoints(address?.toLowerCase() ?? ZERO_ADDRESS),
+  })
+
+  logger('Debug - Relic Points:', relicPoints)
+  logger('Debug - Points:', points)
+
+  const combinedTotal =
+    (relicPoints?.totalPoints ?? 0) + (points?.totalPoints ?? 0)
 
   return (
     <div className="space-y-8 text-foreground p-8">
@@ -104,7 +124,7 @@ export default function Rewards() {
           <Avatar className="w-24 h-24" src={user.avatar} name={user.name} />
         </motion.div>
       </motion.div>
-      <AggregateIQ totalIQ={0} />
+      <AggregateIQ totalIQ={combinedTotal} />
 
       <div className="space-y-6 border-none bg-gradient-to-br from-[#060504] to-[#101010] rounded-lg p-6">
         <div className="flex justify-between items-center">
