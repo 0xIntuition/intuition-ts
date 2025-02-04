@@ -36,8 +36,6 @@ export interface RelicPoints {
 }
 
 export async function fetchRelicPoints(address: string): Promise<RelicPoints> {
-  console.log('fetchRelicPoints called with address:', address)
-
   const data = await pointsClient.request<
     GetRelicPointsQuery,
     GetRelicPointsQueryVariables
@@ -102,8 +100,6 @@ export interface Points {
 }
 
 export async function fetchPoints(address: string): Promise<Points> {
-  console.log('fetchPoints called with address:', address)
-
   const data = await pointsClient.request<
     GetPointsQuery,
     GetPointsQueryVariables

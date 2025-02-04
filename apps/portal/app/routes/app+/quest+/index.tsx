@@ -21,7 +21,7 @@ import { QuestSetCard } from '@components/quest/quest-set-card'
 import { QuestSetProgressCard } from '@components/quest/quest-set-progress-card'
 import { ReferralCard } from '@components/referral-card/referral-card'
 import RelicPointCard from '@components/relic-point-card/relic-point-card'
-import { fetchPoints, fetchRelicPoints } from '@lib/services/points'
+import { fetchRelicPoints } from '@lib/services/points'
 import { invariant } from '@lib/utils/misc'
 import { LoaderFunctionArgs } from '@remix-run/node'
 import { Await, Link, useLoaderData } from '@remix-run/react'
@@ -43,15 +43,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const userWallet = await requireUserWallet(request)
   invariant(userWallet, 'Unauthorized')
 
-  const [relicCounts, protocolFees, relicPoints, points] = await Promise.all([
+  const [relicCounts, protocolFees, relicPoints] = await Promise.all([
     fetchRelicCounts(userWallet.toLowerCase()),
     fetchProtocolFees(userWallet.toLowerCase()),
     fetchRelicPoints(userWallet.toLowerCase()),
-    fetchPoints(userWallet.toLowerCase()),
   ])
-
-  console.log('relicPoints', relicPoints)
-  console.log('points', points)
 
   const userProfile = await fetchWrapper(request, {
     method: UsersService.getUserByWalletPublic,

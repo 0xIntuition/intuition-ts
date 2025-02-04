@@ -36,6 +36,7 @@ const commonGenerateOptions: Types.ConfiguredOutput = {
 const config: CodegenConfig = {
   overwrite: true,
   hooks: { afterAllFileWrite: ['prettier --write'] },
+  // Try local schema first, fall back to remote if needed
   schema: {
     [API_URL_DEV]: {
       method: 'POST',
