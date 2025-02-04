@@ -11,11 +11,13 @@ import { AggregateIQ } from '@components/aggregate-iq'
 import { ErrorPage } from '@components/error-page'
 import { SkillRadarChart } from '@components/skill-radar-chart'
 import { ZERO_ADDRESS } from '@consts/general'
+import { usePoints } from '@lib/hooks/usePoints'
+import { useRelicPoints } from '@lib/hooks/useRelicPoints'
 import { fetchPoints, fetchRelicPoints } from '@lib/services/points'
 import { LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 import { getUser } from '@server/auth'
-import { dehydrate, QueryClient, useQuery } from '@tanstack/react-query'
+import { dehydrate, QueryClient } from '@tanstack/react-query'
 import { skills } from 'app/data/mock-rewards'
 import { motion } from 'framer-motion'
 import { ChevronRight } from 'lucide-react'
@@ -23,10 +25,7 @@ import { formatUnits } from 'viem'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await getUser(request)
-  const address = user?.wallet?.address
-
-  console.log('Debug - User:', user)
-  console.log('Debug - Address:', address)
+  const address = user?.wallet?.address?.toLowerCase()
 
   const url = new URL(request.url)
   const activityLimit = parseInt(url.searchParams.get('activityLimit') || '10')
@@ -52,22 +51,24 @@ export async function loader({ request }: LoaderFunctionArgs) {
       }),
       await queryClient.prefetchQuery({
         queryKey: ['get-protocol-fees', { address }],
-        queryFn: () =>
-          fetcher<GetFeeTransfersQuery, GetFeeTransfersQueryVariables>(
-            GetFeeTransfersDocument,
-            {
-              address,
-              cutoff_timestamp: 1733356800,
-            },
-          ),
+        queryFn: async () => {
+          const response = await fetcher<
+            GetFeeTransfersQuery,
+            GetFeeTransfersQueryVariables
+          >(GetFeeTransfersDocument, {
+            address,
+            cutoff_timestamp: 1733356800,
+          })
+          return response
+        },
       }),
     ])
   }
 
   return {
-    address,
     dehydratedState: dehydrate(queryClient),
     initialParams: {
+      address,
       activityLimit,
       activityOffset,
     },
@@ -78,39 +79,36 @@ export function ErrorBoundary() {
   return <ErrorPage routeName="rewards" />
 }
 
-const user = { name: 'JP', avatar: '/placeholder.svg?height=40&width=40' }
+const user = { name: 'JP', avatar: '' }
 
 export default function Rewards() {
-  const { address } = useLoaderData<typeof loader>()
+  const { initialParams } = useLoaderData<typeof loader>()
+  const address = initialParams?.address?.toLowerCase()
 
-  const { data: relicPoints } = useQuery({
-    queryKey: ['get-relic-points', { address }],
-    queryFn: () => fetchRelicPoints(address?.toLowerCase() ?? ZERO_ADDRESS),
-  })
-
-  const { data: points } = useQuery({
-    queryKey: ['get-points', { address }],
-    queryFn: () => fetchPoints(address?.toLowerCase() ?? ZERO_ADDRESS),
-  })
+  const { data: points } = usePoints(address)
+  const { data: relicPoints } = useRelicPoints(address)
 
   const { data: protocolFees } = useGetFeeTransfersQuery({
-    address: address?.toLowerCase() ?? ZERO_ADDRESS,
+    address: address ?? ZERO_ADDRESS,
     cutoff_timestamp: 1733356800,
   })
 
   const feesPaidBeforeCutoff = formatUnits(
-    protocolFees?.before_cutoff?.aggregate?.sum?.amount,
+    protocolFees?.before_cutoff?.aggregate?.sum?.amount ?? 0n,
     18,
   )
   const feesPaidAfterCutoff = formatUnits(
-    protocolFees?.after_cutoff?.aggregate?.sum?.amount,
+    protocolFees?.after_cutoff?.aggregate?.sum?.amount ?? 0n,
     18,
   )
-  const protocolPointsBeforeCutoff = Number(feesPaidBeforeCutoff) * 10000000
-  const protocolPoitnsAfterCutoff = Number(feesPaidAfterCutoff) * 2000000
+
+  const protocolPointsBeforeCutoff =
+    Number(feesPaidBeforeCutoff || '0') * 10000000
+  const protocolPoitnsAfterCutoff = Number(feesPaidAfterCutoff || '0') * 2000000
   const protocolPointsTotal = Math.round(
     protocolPointsBeforeCutoff + protocolPoitnsAfterCutoff,
   )
+
   const combinedTotal =
     (relicPoints?.totalPoints ?? 0) +
     (points?.totalPoints ?? 0) +

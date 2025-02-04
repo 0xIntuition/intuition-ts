@@ -1,7 +1,6 @@
 import { pointsClient } from '@lib/graphql/client'
 
-export const GetRelicPointsDocument = {
-  query: `
+export const GetRelicPointsDocument = `
     query GetRelicPoints($address: String!) {
       relic_points(where: {address: {_eq: $address}}) {
         address
@@ -11,8 +10,7 @@ export const GetRelicPointsDocument = {
         total_relic_points
       }
     }
-  `,
-} as const
+  `
 
 export interface GetRelicPointsQuery {
   relic_points: Array<{
@@ -36,12 +34,10 @@ export interface RelicPoints {
 }
 
 export async function fetchRelicPoints(address: string): Promise<RelicPoints> {
-  console.log('fetchRelicPoints called with address:', address)
-
   const data = await pointsClient.request<
     GetRelicPointsQuery,
     GetRelicPointsQueryVariables
-  >(GetRelicPointsDocument.query, {
+  >(GetRelicPointsDocument, {
     address,
   })
 
@@ -62,8 +58,7 @@ export async function fetchRelicPoints(address: string): Promise<RelicPoints> {
   return result
 }
 
-export const GetPointsDocument = {
-  query: `
+export const GetPointsDocument = `
     query GetPoints($address: String!) {
       points(where: {account_id: {_eq: $address}}) {
         account_id
@@ -74,8 +69,7 @@ export const GetPointsDocument = {
         minigame1
       }
     }
-  `,
-} as const
+  `
 
 export interface GetPointsQuery {
   points: Array<{
@@ -102,12 +96,10 @@ export interface Points {
 }
 
 export async function fetchPoints(address: string): Promise<Points> {
-  console.log('fetchPoints called with address:', address)
-
   const data = await pointsClient.request<
     GetPointsQuery,
     GetPointsQueryVariables
-  >(GetPointsDocument.query, {
+  >(GetPointsDocument, {
     address,
   })
 

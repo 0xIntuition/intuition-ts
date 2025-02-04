@@ -1,14 +1,20 @@
-import { fetchRelicPoints } from '@lib/services/points'
 import { useQuery } from '@tanstack/react-query'
 
 export function useRelicPoints(address?: string) {
-  console.log('useRelicPoints hook called with address:', address)
   return useQuery({
-    queryKey: ['get-relic-points', { address }],
-    queryFn: () => {
-      console.log('Query function executing with address:', address)
-      return fetchRelicPoints(address || '')
+    queryKey: ['get-relic-points', address?.toLowerCase()],
+    queryFn: async () => {
+      if (!address) {
+        return null
+      }
+      const response = await fetch(
+        `/resources/get-relic-points?address=${address.toLowerCase()}`,
+      )
+      const data = await response.json()
+      return data.relic_points
     },
     enabled: !!address,
+    // This ensures we don't refetch on mount if we already have the data
+    staleTime: 30000, // Consider data fresh for 30 seconds
   })
 }
