@@ -169,6 +169,7 @@ const ActivityFeed = ({
   activities = { signals: [], total: { aggregate: { count: 0 } } },
   isLoading,
 }: ActivityFeedProps) => {
+  console.log(activities)
   if (isLoading) {
     return (
       <div className="space-y-4">
