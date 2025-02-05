@@ -1,8 +1,11 @@
+import { Text, TextVariant, TextWeight } from 'components/Text'
+import { Circle } from 'lucide-react'
 import { cn } from 'styles'
 import { formatNumber } from 'utils'
 
 interface Metric {
   label: string
+  icon?: React.ReactNode
   value: number | string
   hideOnMobile?: boolean
   suffix?: string
@@ -38,7 +41,7 @@ export function AggregatedMetrics({
   return (
     <div className={cn('grid gap-4 p-4', gridColsClass, className)} {...props}>
       {metrics.map(
-        ({ label, value, hideOnMobile, suffix, precision }, index) => {
+        ({ label, icon, value, hideOnMobile, suffix, precision }) => {
           const formattedValue =
             typeof value === 'string' ? Number(value) : value
           const shouldForceDecimals = formattedValue >= 1000
@@ -48,17 +51,18 @@ export function AggregatedMetrics({
             <div
               key={label}
               className={cn(
-                'relative text-center px-12',
+                'relative p-4 rounded-lg bg-white/5 backdrop-blur-md backdrop-saturate-150 border border-border/10',
                 hideOnMobile && 'hidden lg:block',
-                index !== metrics.length - 1 &&
-                  'after:absolute after:right-0 after:inset-y-0 after:w-px after:bg-border/20',
               )}
             >
-              <div className="text-sm text-foreground/70">{label}</div>
-              <div className="text-2xl font-medium text-foreground">
+              <div className="flex flex-row justify-between w-full">
+                <Text variant={TextVariant.body}>{label}</Text>
+                {icon ? icon : <Circle className="w-4 h-4" />}
+              </div>
+              <Text variant={TextVariant.headline} weight={TextWeight.medium}>
                 {formatNumber(formattedValue, effectivePrecision)}
                 {suffix ? ` ${suffix}` : ''}
-              </div>
+              </Text>
             </div>
           )
         },
