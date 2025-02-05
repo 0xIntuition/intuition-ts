@@ -73,12 +73,18 @@ export function AggregateIQ({ totalIQ }: AggregateIQProps) {
             className="relative flex flex-row gap-4 pb-6"
             animate={controls}
           >
-            <div className="p-3 rounded-xl bg-analytics-copper/10 shadow-pop-lg">
-              <BrainCircuit className="w-12 h-12 text-analytics-copper" />
-            </div>
-            <Text variant={TextVariant.heading2} weight={TextWeight.bold}>
-              {count.toLocaleString()}
-            </Text>
+            <motion.div
+              className="flex items-center gap-4"
+              whileHover={{ scale: 1.05 }}
+              transition={{ duration: 0.2 }}
+            >
+              <div className="p-3 rounded-xl bg-analytics-copper/10 shadow-pop-lg">
+                <BrainCircuit className="w-12 h-12 text-analytics-copper" />
+              </div>
+              <Text variant={TextVariant.heading2} weight={TextWeight.bold}>
+                {count.toLocaleString()}
+              </Text>
+            </motion.div>
           </motion.div>
           <div className="mt-6 grid grid-cols-3 gap-4 w-full">
             {[
