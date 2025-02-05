@@ -12,6 +12,8 @@ import {
 } from '@0xintuition/graphql'
 
 import { AggregateIQ } from '@components/aggregate-iq'
+import ChapterProgress from '@components/chapter-progress'
+import { EarnSection } from '@components/earn-section'
 import { ErrorPage } from '@components/error-page'
 import { ZERO_ADDRESS } from '@consts/general'
 import { usePoints } from '@lib/hooks/usePoints'
@@ -22,6 +24,7 @@ import { useLoaderData } from '@remix-run/react'
 import { getUser } from '@server/auth'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
 import { motion } from 'framer-motion'
+import { Code, Compass, Scroll } from 'lucide-react'
 import { formatUnits } from 'viem'
 
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -128,13 +131,41 @@ export default function Dashboard() {
     (points?.totalPoints ?? 0) +
     protocolPointsTotal
 
+  // Mock quests data - replace with actual data fetching
+  const mockQuests = [
+    {
+      id: '1',
+      earnedIQ: 500,
+      title: 'Earn IQ with Quests',
+      icon: <Scroll className="w-4 h-4" />,
+      description: 'Complete quests to obtain IQ reward points',
+      buttonText: 'View Quests',
+    },
+    {
+      id: '2',
+      earnedIQ: 750,
+      title: 'Earn IQ in the Ecosystem',
+      icon: <Compass className="w-4 h-4" />,
+      description: 'Explore and use apps from our product hub',
+      buttonText: 'Explore',
+    },
+    {
+      id: '3',
+      earnedIQ: 1250,
+      title: 'Start Building on Intuition',
+      icon: <Code className="w-4 h-4" />,
+      description: 'Build your own apps and tools on Intuition',
+      buttonText: 'Start Building',
+    },
+  ]
+
   return (
     <div className="space-y-8 text-foreground p-8">
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="flex items-center gap-4 border-none bg-gradient-to-br from-[#060504] to-[#101010] rounded-lg p-6 text-palette-neutral-900 shadow-pop-lg"
+        className="flex items-center gap-4 border-none rounded-lg p-6 text-palette-neutral-900 shadow-pop-lg"
       >
         <motion.div
           initial={{ scale: 0 }}
@@ -142,7 +173,7 @@ export default function Dashboard() {
           transition={{ type: 'spring', stiffness: 260, damping: 20 }}
         >
           <Avatar
-            className="w-24 h-24"
+            className="w-20 h-20"
             src={user?.account?.image ?? ''}
             name={user?.account?.label ?? ''}
           />
@@ -153,7 +184,7 @@ export default function Dashboard() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2, duration: 0.5 }}
-            className="text-3xl font-bold mb-2"
+            className="text-3xl font-bold text-primary"
           >
             Welcome back, {user?.account?.label}!
           </motion.h1>
@@ -161,13 +192,15 @@ export default function Dashboard() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4, duration: 0.5 }}
-            className="text-lg opacity-90"
+            className="text-primary/70"
           >
             Ready to boost your Intuition today?
           </motion.p>
         </div>
       </motion.div>
+      <ChapterProgress totalStages={5} currentStage={1} />
       <AggregateIQ totalIQ={combinedTotal} />
+      <EarnSection quests={mockQuests} />
     </div>
   )
 }

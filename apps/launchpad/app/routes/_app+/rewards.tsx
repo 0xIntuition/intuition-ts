@@ -149,7 +149,6 @@ export default function Rewards() {
         </motion.div>
       </motion.div>
       <AggregateIQ totalIQ={combinedTotal} />
-
       <div className="space-y-6 border-none bg-gradient-to-br from-[#060504] to-[#101010] rounded-lg p-6">
         <div className="flex justify-between items-center">
           <h2 className="text-3xl font-bold">Your Skills</h2>
