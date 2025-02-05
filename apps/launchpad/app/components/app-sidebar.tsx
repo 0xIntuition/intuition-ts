@@ -83,6 +83,12 @@ export function AppSidebar({
       isAccent: location.pathname.startsWith('/quests/questions'),
     },
     {
+      iconName: 'rocket',
+      label: 'Discover',
+      href: '/discover',
+      isAccent: location.pathname === '/discover',
+    },
+    {
       iconName: 'chart-bar',
       label: 'Network',
       href: '/network',
