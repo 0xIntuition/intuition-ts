@@ -41,6 +41,7 @@ export type Scalars = {
   account_type: { input: any; output: any }
   atom_type: { input: any; output: any }
   bigint: { input: any; output: any }
+  bytea: { input: any; output: any }
   event_type: { input: any; output: any }
   float8: { input: any; output: any }
   jsonb: { input: any; output: any }
@@ -5139,6 +5140,26 @@ export type Query_RootCaip10sArgs = {
   where?: InputMaybe<Caip10_Bool_Exp>
 }
 
+export type Query_RootCaip10Args = {
+  id: Scalars['numeric']['input']
+}
+
+export type Query_RootCaip10_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Caip10_Select_Column>>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  order_by?: InputMaybe<Array<Caip10_Order_By>>
+  where?: InputMaybe<Caip10_Bool_Exp>
+}
+
+export type Query_RootCaip10sArgs = {
+  distinct_on?: InputMaybe<Array<Caip10_Select_Column>>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  order_by?: InputMaybe<Array<Caip10_Order_By>>
+  where?: InputMaybe<Caip10_Bool_Exp>
+}
+
 export type Query_RootChainlink_PriceArgs = {
   id: Scalars['numeric']['input']
 }
@@ -7289,6 +7310,32 @@ export type Subscription_RootCached_Images_Cached_Image_StreamArgs = {
   batch_size: Scalars['Int']['input']
   cursor: Array<InputMaybe<Cached_Images_Cached_Image_Stream_Cursor_Input>>
   where?: InputMaybe<Cached_Images_Cached_Image_Bool_Exp>
+}
+
+export type Subscription_RootCaip10Args = {
+  id: Scalars['numeric']['input']
+}
+
+export type Subscription_RootCaip10_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Caip10_Select_Column>>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  order_by?: InputMaybe<Array<Caip10_Order_By>>
+  where?: InputMaybe<Caip10_Bool_Exp>
+}
+
+export type Subscription_RootCaip10_StreamArgs = {
+  batch_size: Scalars['Int']['input']
+  cursor: Array<InputMaybe<Caip10_Stream_Cursor_Input>>
+  where?: InputMaybe<Caip10_Bool_Exp>
+}
+
+export type Subscription_RootCaip10sArgs = {
+  distinct_on?: InputMaybe<Array<Caip10_Select_Column>>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  order_by?: InputMaybe<Array<Caip10_Order_By>>
+  where?: InputMaybe<Caip10_Bool_Exp>
 }
 
 export type Subscription_RootCaip10Args = {
