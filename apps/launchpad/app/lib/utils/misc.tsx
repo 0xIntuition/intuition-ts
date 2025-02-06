@@ -1,5 +1,3 @@
-import { formatNumber } from '@0xintuition/1ui'
-
 import { formatUnits } from 'viem'
 
 export function invariant(
@@ -35,14 +33,12 @@ export const formatBalance = (
     return '0'
   }
 
-  for (let i = 4; i <= 10; i++) {
-    const formatted = formatNumber(numBalance, i)
-    if (formatted !== '0') {
-      return formatted
-    }
-  }
+  // Count leading zeros after decimal
+  const leadingZeros =
+    numBalance < 1 ? -Math.floor(Math.log10(numBalance)) - 1 : 0
 
-  return '0'
+  // Show leading zeros + 2 significant digits
+  return numBalance.toFixed(leadingZeros + 2)
 }
 
 export const formatDisplayBalance = (

@@ -65,7 +65,9 @@ function ActivityRow({ activity }: { activity: Signals }) {
     ? new Date(parseInt(activity.block_timestamp.toString()) * 1000)
     : new Date()
 
-  const creator = activity.atom?.creator || activity.triple?.creator
+  const creator = activity.deposit
+    ? activity.deposit.sender
+    : activity.redemption?.receiver
 
   const dataType = activity.atom
     ? 'atom'

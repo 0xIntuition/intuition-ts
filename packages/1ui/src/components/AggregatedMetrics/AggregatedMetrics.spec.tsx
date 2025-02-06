@@ -20,77 +20,97 @@ describe('AggregatedMetrics', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="grid grid-cols-2 gap-4 p-4 sm:grid-cols-4 lg:grid-cols-5"
+          class="grid grid-cols-2 gap-4 sm:grid-cols-4 lg:grid-cols-5"
         >
           <div
-            class="relative text-center px-12 after:absolute after:right-0 after:inset-y-0 after:w-px after:bg-border/20"
+            class="relative p-4 rounded-lg bg-white/5 backdrop-blur-md backdrop-saturate-150 border border-border/10"
           >
             <div
-              class="text-sm text-foreground/70"
+              class="flex flex-row justify-between w-full"
             >
-              TVL
+              <div
+                class="text-primary text-base font-normal"
+              >
+                TVL
+              </div>
             </div>
-            <div
-              class="text-2xl font-medium text-foreground"
+            <h6
+              class="text-primary text-xl font-medium"
             >
               420.69 ETH
-            </div>
+            </h6>
           </div>
           <div
-            class="relative text-center px-12 after:absolute after:right-0 after:inset-y-0 after:w-px after:bg-border/20"
+            class="relative p-4 rounded-lg bg-white/5 backdrop-blur-md backdrop-saturate-150 border border-border/10"
           >
             <div
-              class="text-sm text-foreground/70"
+              class="flex flex-row justify-between w-full"
             >
-              Atoms
+              <div
+                class="text-primary text-base font-normal"
+              >
+                Atoms
+              </div>
             </div>
-            <div
-              class="text-2xl font-medium text-foreground"
+            <h6
+              class="text-primary text-xl font-medium"
             >
               4.20K
-            </div>
+            </h6>
           </div>
           <div
-            class="relative text-center px-12 after:absolute after:right-0 after:inset-y-0 after:w-px after:bg-border/20"
+            class="relative p-4 rounded-lg bg-white/5 backdrop-blur-md backdrop-saturate-150 border border-border/10"
           >
             <div
-              class="text-sm text-foreground/70"
+              class="flex flex-row justify-between w-full"
             >
-              Triples
+              <div
+                class="text-primary text-base font-normal"
+              >
+                Triples
+              </div>
             </div>
-            <div
-              class="text-2xl font-medium text-foreground"
+            <h6
+              class="text-primary text-xl font-medium"
             >
               4.20K
-            </div>
+            </h6>
           </div>
           <div
-            class="relative text-center px-12 hidden lg:block after:absolute after:right-0 after:inset-y-0 after:w-px after:bg-border/20"
+            class="relative p-4 rounded-lg bg-white/5 backdrop-blur-md backdrop-saturate-150 border border-border/10 hidden lg:block"
           >
             <div
-              class="text-sm text-foreground/70"
+              class="flex flex-row justify-between w-full"
             >
-              Signals
+              <div
+                class="text-primary text-base font-normal"
+              >
+                Signals
+              </div>
             </div>
-            <div
-              class="text-2xl font-medium text-foreground"
+            <h6
+              class="text-primary text-xl font-medium"
             >
               4.20K
-            </div>
+            </h6>
           </div>
           <div
-            class="relative text-center px-12"
+            class="relative p-4 rounded-lg bg-white/5 backdrop-blur-md backdrop-saturate-150 border border-border/10"
           >
             <div
-              class="text-sm text-foreground/70"
+              class="flex flex-row justify-between w-full"
             >
-              Users
+              <div
+                class="text-primary text-base font-normal"
+              >
+                Users
+              </div>
             </div>
-            <div
-              class="text-2xl font-medium text-foreground"
+            <h6
+              class="text-primary text-xl font-medium"
             >
               4.20K
-            </div>
+            </h6>
           </div>
         </div>
       </DocumentFragment>

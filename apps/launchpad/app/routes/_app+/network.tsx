@@ -1,6 +1,6 @@
 import {
-  // AggregatedMetrics,
-  PageHeader,
+  AggregatedMetrics,
+  Icon,
   Text,
   TextVariant,
   TextWeight,
@@ -10,18 +10,24 @@ import {
   GetSignalsDocument,
   GetSignalsQuery,
   GetSignalsQueryVariables,
+  GetStatsDocument,
+  GetStatsQuery,
+  GetStatsQueryVariables,
   // GetStatsDocument,
   // GetStatsQuery,
   // GetStatsQueryVariables,
   useGetSignalsQuery,
+  useGetStatsQuery,
 } from '@0xintuition/graphql'
 
-import ActivityFeed from '@components/activity-feed'
+import { ActivityFeedPortal } from '@components/activity-feed-portal'
 import { ErrorPage } from '@components/error-page'
 // import logger from '@lib/utils/logger'
 import { LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData, useSearchParams } from '@remix-run/react'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
+import { Radio, User } from 'lucide-react'
+import { formatUnits } from 'viem'
 
 // import { formatUnits } from 'viem'
 
@@ -32,11 +38,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   const queryClient = new QueryClient()
 
-  // await queryClient.prefetchQuery({
-  //   queryKey: ['get-stats'],
-  //   queryFn: () =>
-  //     fetcher<GetStatsQuery, GetStatsQueryVariables>(GetStatsDocument, {}),
-  // })
+  await queryClient.prefetchQuery({
+    queryKey: ['get-stats'],
+    queryFn: () =>
+      fetcher<GetStatsQuery, GetStatsQueryVariables>(GetStatsDocument, {}),
+  })
 
   await queryClient.prefetchQuery({
     queryKey: ['get-signals-global', { activityLimit, activityOffset }],
@@ -73,12 +79,12 @@ export default function Network() {
     searchParams.get('activityOffset') || String(initialParams.activityOffset),
   )
 
-  // const { data: systemStats } = useGetStatsQuery(
-  //   {},
-  //   {
-  //     queryKey: ['get-stats'],
-  //   },
-  // )
+  const { data: systemStats } = useGetStatsQuery(
+    {},
+    {
+      queryKey: ['get-stats'],
+    },
+  )
   // logger('systemStats', systemStats)
 
   const { data: signalsData } = useGetSignalsQuery(
@@ -104,39 +110,48 @@ export default function Network() {
     },
   )
 
-  // const stats = systemStats?.stats[0]
+  const stats = systemStats?.stats[0]
 
   return (
     <>
-      <PageHeader title="Network" lastUpdated={'3s'} />
-      <div className="flex flex-col rounded-xl overflow-hidden">
-        {/* <div className="py-4 bg-gradient-to-b from-[#060504] to-[#101010]">
-          <AggregatedMetrics
-            metrics={[
-              {
-                label: 'TVL',
-                value: +formatUnits(stats?.contract_balance ?? 0, 18),
-                suffix: 'ETH',
-                precision: 2,
-              },
-              { label: 'Atoms', value: stats?.total_atoms ?? 0 },
-              { label: 'Triples', value: stats?.total_triples ?? 0 },
-              {
-                label: 'Signals',
-                value: stats?.total_signals ?? 0,
-                hideOnMobile: true,
-              },
-              { label: 'Users', value: stats?.total_accounts ?? 0 },
-            ]}
-            className="[&>div]:after:hidden sm:[&>div]:after:block"
-          />
-        </div> */}
-      </div>
+      <AggregatedMetrics
+        metrics={[
+          {
+            label: 'TVL',
+            icon: <Icon name="moneybag" className="w-4 h-4" />,
+            value: +formatUnits(stats?.contract_balance ?? 0, 18),
+            suffix: 'ETH',
+            precision: 2,
+          },
+          {
+            label: 'Atoms',
+            icon: <Icon name="fingerprint" className="w-4 h-4" />,
+            value: stats?.total_atoms ?? 0,
+          },
+          {
+            label: 'Triples',
+            icon: <Icon name="claim" className="w-4 h-4" />,
+            value: stats?.total_triples ?? 0,
+          },
+          {
+            label: 'Signals',
+            icon: <Radio className="w-4 h-4" />,
+            value: stats?.total_signals ?? 0,
+            hideOnMobile: true,
+          },
+          {
+            label: 'Users',
+            icon: <User className="w-4 h-4" />,
+            value: stats?.total_accounts ?? 0,
+          },
+        ]}
+        className="[&>div]:after:hidden sm:[&>div]:after:block"
+      />
       <div className="flex flex-col gap-4">
         <Text variant={TextVariant.headline} weight={TextWeight.medium}>
-          Recent Activity
+          Network Activity
         </Text>
-        <ActivityFeed
+        <ActivityFeedPortal
           activities={{
             signals: signalsData?.signals || [],
             total: {
