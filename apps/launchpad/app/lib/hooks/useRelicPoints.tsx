@@ -1,19 +1,19 @@
 import { useQuery } from '@tanstack/react-query'
 
-export function usePoints(accountId?: string) {
+export function useRelicPoints(address?: string) {
   return useQuery({
-    queryKey: ['get-points', accountId?.toLowerCase()],
+    queryKey: ['get-relic-points', address?.toLowerCase()],
     queryFn: async () => {
-      if (!accountId) {
+      if (!address) {
         return null
       }
       const response = await fetch(
-        `/resources/get-points?accountId=${accountId.toLowerCase()}`,
+        `/resources/get-relic-points?address=${address.toLowerCase()}`,
       )
       const data = await response.json()
-      return data.points
+      return data.relic_points
     },
-    enabled: !!accountId,
+    enabled: !!address,
     // This ensures we don't refetch on mount if we already have the data
     staleTime: 30000, // Consider data fresh for 30 seconds
   })

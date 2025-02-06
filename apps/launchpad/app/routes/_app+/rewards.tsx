@@ -1,20 +1,119 @@
 import { Avatar, Button } from '@0xintuition/1ui'
+import {
+  fetcher,
+  GetFeeTransfersDocument,
+  GetFeeTransfersQuery,
+  GetFeeTransfersQueryVariables,
+  useGetFeeTransfersQuery,
+} from '@0xintuition/graphql'
 
 import { AggregateIQ } from '@components/aggregate-iq'
 import { ErrorPage } from '@components/error-page'
 import { SkillRadarChart } from '@components/skill-radar-chart'
+import { ZERO_ADDRESS } from '@consts/general'
+import { usePoints } from '@lib/hooks/usePoints'
+import { useRelicPoints } from '@lib/hooks/useRelicPoints'
+import { fetchPoints, fetchRelicPoints } from '@lib/services/points'
+import { LoaderFunctionArgs } from '@remix-run/node'
+import { useLoaderData } from '@remix-run/react'
+import { getUser } from '@server/auth'
+import { dehydrate, QueryClient } from '@tanstack/react-query'
 import { skills } from 'app/data/mock-rewards'
 import { motion } from 'framer-motion'
 import { ChevronRight } from 'lucide-react'
+import { formatUnits } from 'viem'
+
+export async function loader({ request }: LoaderFunctionArgs) {
+  const user = await getUser(request)
+  const address = user?.wallet?.address?.toLowerCase()
+
+  const url = new URL(request.url)
+  const activityLimit = parseInt(url.searchParams.get('activityLimit') || '10')
+  const activityOffset = parseInt(url.searchParams.get('activityOffset') || '0')
+
+  const queryClient = new QueryClient()
+
+  if (address) {
+    await Promise.all([
+      queryClient.prefetchQuery({
+        queryKey: ['get-relic-points', { address }],
+        queryFn: async () => {
+          const response = await fetchRelicPoints(address.toLowerCase())
+          return response
+        },
+      }),
+      queryClient.prefetchQuery({
+        queryKey: ['get-points', { address }],
+        queryFn: async () => {
+          const response = await fetchPoints(address.toLowerCase())
+          return response
+        },
+      }),
+      await queryClient.prefetchQuery({
+        queryKey: ['get-protocol-fees', { address }],
+        queryFn: async () => {
+          const response = await fetcher<
+            GetFeeTransfersQuery,
+            GetFeeTransfersQueryVariables
+          >(GetFeeTransfersDocument, {
+            address,
+            cutoff_timestamp: 1733356800,
+          })
+          return response
+        },
+      }),
+    ])
+  }
+
+  return {
+    dehydratedState: dehydrate(queryClient),
+    initialParams: {
+      address,
+      activityLimit,
+      activityOffset,
+    },
+  }
+}
 
 export function ErrorBoundary() {
   return <ErrorPage routeName="rewards" />
 }
 
-const totalIQ = skills.reduce((sum, skill) => sum + skill.points, 0)
-const user = { name: 'JP', avatar: '/placeholder.svg?height=40&width=40' }
+const user = { name: 'JP', avatar: '' }
 
 export default function Rewards() {
+  const { initialParams } = useLoaderData<typeof loader>()
+  const address = initialParams?.address?.toLowerCase()
+
+  const { data: points } = usePoints(address)
+  const { data: relicPoints } = useRelicPoints(address)
+
+  const { data: protocolFees } = useGetFeeTransfersQuery({
+    address: address ?? ZERO_ADDRESS,
+    cutoff_timestamp: 1733356800,
+  })
+
+  const feesPaidBeforeCutoff = formatUnits(
+    protocolFees?.before_cutoff?.aggregate?.sum?.amount ?? 0n,
+    18,
+  )
+  const feesPaidAfterCutoff = formatUnits(
+    protocolFees?.after_cutoff?.aggregate?.sum?.amount ?? 0n,
+    18,
+  )
+
+  const protocolPointsBeforeCutoff =
+    Number(feesPaidBeforeCutoff || '0') * 10000000
+  const protocolPoitnsAfterCutoff = Number(feesPaidAfterCutoff || '0') * 2000000
+  const protocolPointsTotal = Math.round(
+    protocolPointsBeforeCutoff + protocolPoitnsAfterCutoff,
+  )
+
+  const combinedTotal =
+    (relicPoints?.totalPoints ?? 0) +
+    (points?.totalPoints ?? 0) +
+    protocolPointsTotal
+
   return (
     <div className="space-y-8 text-foreground p-8">
       <motion.div
@@ -49,7 +148,7 @@ export default function Rewards() {
           <Avatar className="w-24 h-24" src={user.avatar} name={user.name} />
         </motion.div>
       </motion.div>
-      <AggregateIQ totalIQ={totalIQ} />
+      <AggregateIQ totalIQ={combinedTotal} />
 
       <div className="space-y-6 border-none bg-gradient-to-br from-[#060504] to-[#101010] rounded-lg p-6">
         <div className="flex justify-between items-center">
