@@ -20,7 +20,7 @@ describe('AggregatedMetrics', () => {
     expect(asFragment()).toMatchInlineSnapshot(`
       <DocumentFragment>
         <div
-          class="grid grid-cols-2 gap-4 sm:grid-cols-4 lg:grid-cols-5"
+          class="grid gap-4 grid-cols-2 sm:grid-cols-5"
         >
           <div
             class="relative p-4 rounded-lg bg-white/5 backdrop-blur-md backdrop-saturate-150 border border-border/10"
@@ -33,6 +33,24 @@ describe('AggregatedMetrics', () => {
               >
                 TVL
               </div>
+              <svg
+                class="lucide lucide-circle w-4 h-4"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <circle
+                  cx="12"
+                  cy="12"
+                  r="10"
+                />
+              </svg>
             </div>
             <h6
               class="text-primary text-xl font-medium"
@@ -51,6 +69,24 @@ describe('AggregatedMetrics', () => {
               >
                 Atoms
               </div>
+              <svg
+                class="lucide lucide-circle w-4 h-4"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <circle
+                  cx="12"
+                  cy="12"
+                  r="10"
+                />
+              </svg>
             </div>
             <h6
               class="text-primary text-xl font-medium"
@@ -69,6 +105,24 @@ describe('AggregatedMetrics', () => {
               >
                 Triples
               </div>
+              <svg
+                class="lucide lucide-circle w-4 h-4"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <circle
+                  cx="12"
+                  cy="12"
+                  r="10"
+                />
+              </svg>
             </div>
             <h6
               class="text-primary text-xl font-medium"
@@ -87,6 +141,24 @@ describe('AggregatedMetrics', () => {
               >
                 Signals
               </div>
+              <svg
+                class="lucide lucide-circle w-4 h-4"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <circle
+                  cx="12"
+                  cy="12"
+                  r="10"
+                />
+              </svg>
             </div>
             <h6
               class="text-primary text-xl font-medium"
@@ -105,6 +177,24 @@ describe('AggregatedMetrics', () => {
               >
                 Users
               </div>
+              <svg
+                class="lucide lucide-circle w-4 h-4"
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <circle
+                  cx="12"
+                  cy="12"
+                  r="10"
+                />
+              </svg>
             </div>
             <h6
               class="text-primary text-xl font-medium"
