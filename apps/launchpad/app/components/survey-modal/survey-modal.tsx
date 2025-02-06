@@ -16,6 +16,7 @@ import { useGetListDetailsQuery } from '@0xintuition/graphql'
 
 import logger from '@lib/utils/logger'
 import { usePrivy } from '@privy-io/react-auth'
+import { useLocation, useNavigate } from '@remix-run/react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { TripleType } from 'app/types'
 import { ClientOnly } from 'remix-utils/client-only'
@@ -136,6 +137,8 @@ export function OnboardingModal({
 
   const transition = useStepTransition(setState)
   const { isTransitioning, handleTransition, resetTransition } = transition
+  const navigate = useNavigate()
+  const location = useLocation()
 
   const { data: currentEpoch } = useQuery({
     queryKey: ['current-epoch'],
@@ -438,7 +441,12 @@ export function OnboardingModal({
     setSteps(STEPS_CONFIG)
     resetTransition()
     onClose()
-  }, [resetTransition, onClose])
+
+    const targetPath = `/quests/questions/question/${questionId}`
+    if (location.pathname !== targetPath) {
+      navigate(targetPath)
+    }
+  }, [resetTransition, onClose, questionId, location.pathname, navigate])
 
   const onCreationSuccess = (metadata: NewAtomMetadata) => {
     handleTransition((prev) => ({
