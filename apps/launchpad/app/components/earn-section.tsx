@@ -4,7 +4,7 @@ import { EarnCard } from './earn-card'
 
 interface Quest {
   id: string
-  earnedIQ: number
+  earnIQ: number
   title: string
   icon: React.ReactNode
   description: string
@@ -35,7 +35,7 @@ export const EarnSection = ({ quests }: EarnSectionProps) => {
               title={quest.title}
               icon={quest.icon}
               description={quest.description}
-              earnedIQ={quest.earnedIQ}
+              earnIQ={quest.earnIQ}
               buttonText={quest.buttonText}
             />
           </motion.div>

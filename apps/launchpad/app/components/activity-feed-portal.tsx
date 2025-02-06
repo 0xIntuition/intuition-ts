@@ -3,22 +3,16 @@ import {
   ButtonSize,
   ButtonVariant,
   Claim,
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
   Icon,
   IconName,
   Identity,
   IdentityTag,
-  ProfileCard,
   Text,
   Trunctacular,
 } from '@0xintuition/1ui'
 import { GetSignalsQuery, Signals } from '@0xintuition/graphql'
 
-import logger from '@lib/utils/logger'
 import { formatBalance } from '@lib/utils/misc'
-import { Link } from '@remix-run/react'
 import { BLOCK_EXPLORER_URL } from 'app/consts'
 import { formatDistance } from 'date-fns'
 
@@ -40,16 +34,15 @@ export function ActivityFeedPortal({
     AtomCreated: 'created an identity',
     TripleCreated: 'created a claim',
     depositAtom: (value: string) =>
-      `deposited ${formatBalance(BigInt(value), 18)} ETH on atom`,
+      `deposited ${formatBalance(BigInt(value), 18)} ETH on`,
     redeemAtom: (value: string) =>
-      `redeemed ${formatBalance(BigInt(value), 18)} ETH from atom`,
+      `redeemed ${formatBalance(BigInt(value), 18)} ETH from`,
     depositTriple: (value: string) =>
-      `deposited ${formatBalance(BigInt(value), 18)} ETH on triple`,
+      `deposited ${formatBalance(BigInt(value), 18)} ETH on`,
     redeemTriple: (value: string) =>
-      `redeemed ${formatBalance(BigInt(value), 18)} ETH from triple`,
+      `redeemed ${formatBalance(BigInt(value), 18)} ETH from`,
   }
 
-  logger('activities in activity list', activities)
   return (
     <div className="space-y-4 bg-white/5 backdrop-blur-md backdrop-saturate-150 border border-border/10 p-4 rounded-lg">
       {activities.signals.map((activity) => (
@@ -112,49 +105,14 @@ function ActivityItemNew({
 
   return (
     <div className="rounded-xl p-4 last:mb-0 flex flex-col w-full max-sm:p-3 border border-border/10">
-      <div className="flex flex-col justify-between min-w-full max-md:flex-col max-md:gap-3">
+      <div className="flex flex-col justify-between gap-3 min-w-full max-md:flex-col max-md:gap-3">
         <div className="flex flex-row items-center gap-2 max-md:flex-col">
-          <HoverCard openDelay={150} closeDelay={150}>
-            <HoverCardTrigger asChild>
-              <Link
-                to={`${BLOCK_EXPLORER_URL}/address/${creator}`}
-                prefetch="intent"
-              >
-                <IdentityTag variant={Identity.user} size="lg" imgSrc={''}>
-                  <Trunctacular
-                    value={
-                      creator?.label ?? creator?.id ?? creatorAddress ?? '?'
-                    }
-                    maxStringLength={32}
-                  />
-                </IdentityTag>
-              </Link>
-            </HoverCardTrigger>
-            <HoverCardContent side="right" className="w-max">
-              <div className="w-80 max-md:w-[80%]">
-                {creator ? (
-                  <ProfileCard
-                    variant={Identity.user}
-                    avatarSrc={creator.image ?? ''}
-                    name={creator.label || creator.id || ''}
-                    id={creator.id}
-                    ipfsLink={`${BLOCK_EXPLORER_URL}/address/${creator.id}`}
-                    className="w-80"
-                  />
-                ) : (
-                  <ProfileCard
-                    variant={Identity.user}
-                    avatarSrc={''}
-                    name={creatorAddress}
-                    id={creatorAddress}
-                    bio={'No user profile available'}
-                    ipfsLink={`${BLOCK_EXPLORER_URL}/address/${creatorAddress}`}
-                    className="w-80"
-                  />
-                )}
-              </div>
-            </HoverCardContent>
-          </HoverCard>
+          <IdentityTag variant={Identity.user} imgSrc={creator?.image ?? ''}>
+            <Trunctacular
+              value={creator?.label ?? creator?.id ?? creatorAddress ?? '?'}
+              maxStringLength={32}
+            />
+          </IdentityTag>
           <Text>{message}</Text>
           {activity.atom && (
             <IdentityTag
@@ -203,7 +161,7 @@ function ActivityItemNew({
             />
           )}
         </div>
-        <div className="flex gap-2 items-center justify-between">
+        <div className="flex gap-2 items-end justify-between">
           <Text className="text-secondary-foreground">
             {formatDistance(timestamp, new Date())} ago
           </Text>

@@ -39,7 +39,7 @@ export function AggregatedMetrics({
   const gridColsClass = getGridColsClass(Math.min(metrics.length, 5))
 
   return (
-    <div className={cn('grid gap-4 p-4', gridColsClass, className)} {...props}>
+    <div className={cn('grid gap-4', gridColsClass, className)} {...props}>
       {metrics.map(
         ({ label, icon, value, hideOnMobile, suffix, precision }) => {
           const formattedValue =

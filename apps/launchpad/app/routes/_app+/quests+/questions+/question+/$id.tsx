@@ -1,20 +1,26 @@
 import {
   AggregatedMetrics,
+  Avatar,
   Banner,
   Button,
   Card,
   Icon,
+  IconName,
   PageHeader,
   Text,
 } from '@0xintuition/1ui'
 import {
   fetcher,
+  GetAtomDocument,
+  GetAtomQuery,
+  GetAtomQueryVariables,
   GetListDetailsWithPositionDocument,
   GetListDetailsWithPositionQuery,
   GetListDetailsWithPositionQueryVariables,
   GetListDetailsWithUserDocument,
   GetListDetailsWithUserQuery,
   GetListDetailsWithUserQueryVariables,
+  useGetAtomQuery,
   useGetListDetailsWithPositionQuery,
   useGetListDetailsWithUserQuery,
 } from '@0xintuition/graphql'
@@ -26,17 +32,15 @@ import ShareModal from '@components/share-modal'
 import { OnboardingModal } from '@components/survey-modal/survey-modal'
 import { columns } from '@components/ui/table/columns'
 import { DataTable } from '@components/ui/table/data-table'
-import { CURRENT_ENV, MIN_DEPOSIT, ZERO_ADDRESS } from '@consts/general'
+import { MIN_DEPOSIT, ZERO_ADDRESS } from '@consts/general'
 import { useGoBack } from '@lib/hooks/useGoBack'
-import { usePoints } from '@lib/hooks/usePoints'
 import { useQuestionData } from '@lib/hooks/useQuestionData'
+import { fetchEpochQuestion } from '@lib/services/epochs'
 import {
   atomDetailsModalAtom,
   onboardingModalAtom,
   shareModalAtom,
 } from '@lib/state/store'
-import { getSpecialPredicate } from '@lib/utils/app'
-import logger from '@lib/utils/logger'
 import { usePrivy } from '@privy-io/react-auth'
 import type { LoaderFunctionArgs, MetaFunction } from '@remix-run/node'
 import { useLoaderData, useParams } from '@remix-run/react'
@@ -45,19 +49,42 @@ import { getUser } from '@server/auth'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
 import { TripleType } from 'app/types'
 import { useAtom } from 'jotai'
+import { CheckCircle, ThumbsDown, ThumbsUp } from 'lucide-react'
 import { formatUnits } from 'viem'
 
-export async function loader({ request }: LoaderFunctionArgs) {
+export async function loader({ request, params }: LoaderFunctionArgs) {
   const queryClient = new QueryClient()
 
   const user = await getUser(request)
-
-  const predicateId =
-    getSpecialPredicate(CURRENT_ENV).tagPredicate.id.toString()
-  const objectId =
-    getSpecialPredicate(CURRENT_ENV).web3Wallet.vaultId.toString()
-
   const userWallet = user?.wallet?.address?.toLowerCase()
+
+  const questionData = await fetchEpochQuestion(Number(params.id))
+  const predicateId = questionData?.predicate_id
+  const objectId = questionData?.object_id
+
+  // Get question completion if user is logged in
+  let completion = null
+  if (userWallet) {
+    const completionResponse = await fetch(
+      `${new URL(request.url).origin}/resources/get-question-completion?accountId=${userWallet}&questionId=${params.id}`,
+    )
+    const completionData = await completionResponse.json()
+    completion = completionData.completion
+  }
+
+  // If user has completed the question, prefetch their atom data
+  if (completion?.subject_id) {
+    await queryClient.prefetchQuery({
+      queryKey: ['get-atom', { id: completion.subject_id }],
+      queryFn: async () => {
+        const response = await fetcher<GetAtomQuery, GetAtomQueryVariables>(
+          GetAtomDocument,
+          { id: completion.subject_id },
+        )()
+        return response
+      },
+    })
+  }
 
   const variables: GetListDetailsWithPositionQueryVariables = {
     tagPredicateId: predicateId,
@@ -95,6 +122,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     userWallet,
     ogImageUrl,
     objectResult: listData?.globalTriples[0]?.object,
+    completion,
   }
 }
 
@@ -158,24 +186,32 @@ export function ErrorBoundary() {
 }
 
 export default function MiniGameOne() {
-  const goBack = useGoBack({ fallbackRoute: '/minigames' })
-  const { userWallet } = useLoaderData<typeof loader>()
+  const goBack = useGoBack({ fallbackRoute: '/quests/questions' })
+  const { id } = useParams()
+  const { userWallet, completion } = useLoaderData<typeof loader>()
   const [shareModalActive, setShareModalActive] = useAtom(shareModalAtom)
   const [onboardingModal, setOnboardingModal] = useAtom(onboardingModalAtom)
   const [atomDetailsModal, setAtomDetailsModal] = useAtom(atomDetailsModalAtom)
 
   const { authenticated } = usePrivy()
-  const { data: points, isLoading: isPointsLoading } = usePoints(userWallet)
+  const {
+    title,
+    description,
+    enabled,
+    pointAwardAmount,
+    isCompleted,
+    currentEpoch,
+    isLoading: isQuestionLoading,
+    predicateId,
+    objectId,
+  } = useQuestionData({
+    questionId: parseInt(id || '1', 10),
+  })
 
   const hasUserParam = location.search.includes('user=')
   const fullPath = hasUserParam
     ? `${location.pathname}${location.search}`
     : `${location.pathname}${location.search}${location.search ? '&' : '?'}`
-
-  const predicateId =
-    getSpecialPredicate(CURRENT_ENV).tagPredicate.id.toString()
-  const objectId =
-    getSpecialPredicate(CURRENT_ENV).web3Wallet.vaultId.toString()
 
   const variables = {
     tagPredicateId: predicateId,
@@ -201,17 +237,6 @@ export default function MiniGameOne() {
   )
 
   const listData = userWallet ? withUserData : withoutUserData
-
-  const { id } = useParams()
-  const {
-    title,
-    description,
-    enabled,
-    pointAwardAmount,
-    isLoading: isQuestionLoading,
-  } = useQuestionData({
-    questionId: parseInt(id || '1', 10),
-  })
 
   interface TableRowData {
     id: string
@@ -293,25 +318,40 @@ export default function MiniGameOne() {
       return tableRow
     }) || []
 
-  // Log each triple's shares for debugging
-  listData?.globalTriples?.forEach((triple, index) => {
-    logger(
-      `Triple ${index} shares:`,
-      triple.vault?.positions_aggregate?.aggregate?.sum?.shares,
-    )
-  })
+  // // Log each triple's shares for debugging
+  // listData?.globalTriples?.forEach((triple, index) => {
+  //   logger(
+  //     `Triple ${index} shares:`,
+  //     triple.vault?.positions_aggregate?.aggregate?.sum?.shares,
+  //   )
+  // })
 
   // Calculate total users and TVL
   const totalUsers = tableData.reduce((sum, item) => sum + item.users, 0)
   const forTvl = tableData.reduce((sum, item) => sum + item.forTvl, 0)
   const againstTvl = tableData.reduce((sum, item) => sum + item.againstTvl, 0)
+  const totalUpVotes = tableData.reduce((sum, item) => sum + item.upvotes, 0)
+  const totalDownVotes = tableData.reduce(
+    (sum, item) => sum + item.downvotes,
+    0,
+  )
   const totalTvl = forTvl + againstTvl
   const handleStartOnboarding = () => {
-    setOnboardingModal({ isOpen: true, gameId: 'minigame1' })
+    setOnboardingModal({
+      isOpen: true,
+      questionId: parseInt(id || '1', 10),
+      predicateId,
+      objectId,
+    })
   }
 
   const handleCloseOnboarding = () => {
-    setOnboardingModal({ isOpen: false, gameId: null })
+    setOnboardingModal({
+      isOpen: false,
+      questionId: null,
+      predicateId,
+      objectId,
+    })
   }
 
   const handleRowClick = (id: number) => {
@@ -326,8 +366,13 @@ export default function MiniGameOne() {
     }
   }
 
-  const gamePoints = points?.minigame1 || 0
-  const isLoading = isPointsLoading || !listData || isQuestionLoading
+  const isLoading = !listData || isQuestionLoading
+
+  // Get the user's selected atom if they've completed the question
+  const { data: atomData } = useGetAtomQuery(
+    { id: completion?.subject_id ?? 0 },
+    { enabled: !!completion?.subject_id },
+  )
 
   if (isLoading) {
     return (
@@ -364,7 +409,7 @@ export default function MiniGameOne() {
           <Icon name="chevron-left" className="h-4 w-4" />
         </Button>
         <div className="flex flex-1 justify-between items-center">
-          <PageHeader title={`Intuition Questions Module: Question ${id}`} />
+          <PageHeader title={`${currentEpoch?.name} | Question ${id}`} />
           <div className="flex items-center gap-2">
             <Button
               variant="secondary"
@@ -385,27 +430,80 @@ export default function MiniGameOne() {
         </div>
       </div>
 
-      <div className="py-4 bg-gradient-to-b from-[#060504] to-[#101010] rounded-xl">
+      <div className="bg-gradient-to-b from-[#060504] to-[#101010] rounded-xl">
         <div className="relative">
-          <Card className="border-none bg-gradient-to-br from-[#060504] to-[#101010] min-w-[480px] min-h-80">
+          <Card
+            className="border-none min-w-[480px] min-h-80 relative overflow-hidden"
+            style={{
+              backgroundImage: `linear-gradient(to bottom right, rgba(6, 5, 4, 0.9), rgba(16, 16, 16, 0.9)), url(${listData?.globalTriples?.[0]?.object?.image || ''})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+            }}
+          >
             <div className="absolute inset-0 flex flex-col justify-center items-center">
               <div className="space-y-2 items-center pb-8">
                 <Text variant="heading3" className="text-foreground">
                   {title}
                 </Text>
-                <Text variant="body" className="text-foreground/70">
-                  {description}
-                </Text>
+                {!isCompleted && (
+                  <Text variant="body" className="text-foreground/70">
+                    {description}
+                  </Text>
+                )}
               </div>
               <AuthCover buttonContainerClassName="h-full flex items-center justify-center w-full">
-                {gamePoints > 0 ? (
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-xl font-bold bg-gradient-to-r from-[#34C578] to-[#00FF94] bg-clip-text text-transparent">
-                      {gamePoints}
-                    </span>
-                    <span className="text-md font-semibold text-muted-foreground">
-                      IQ Earned
-                    </span>
+                {isCompleted ? (
+                  <div className="flex flex-col items-center gap-2">
+                    {atomData && (
+                      <>
+                        <Text variant="body" className="text-primary/70">
+                          You selected
+                        </Text>
+                        <button
+                          onClick={() => {
+                            const rowData = tableData.find(
+                              (row) =>
+                                row.triple.subject.vault_id ===
+                                String(atomData.atom?.vault_id),
+                            )
+
+                            if (rowData) {
+                              setAtomDetailsModal({
+                                isOpen: true,
+                                atomId: Number(rowData.id),
+                                data: rowData,
+                              })
+                            }
+                          }}
+                          className={`flex items-center gap-4 rounded-lg transition-colors w-full md:w-[280px] h-[72px] bg-background/50 backdrop-blur-md backdrop-saturate-150 border border-border/10`}
+                        >
+                          <div className="w-14 h-14 rounded bg-[#1A1A1A] flex-shrink-0 ml-1">
+                            <Avatar
+                              src={atomData?.atom?.image ?? ''}
+                              name={atomData?.atom?.label ?? ''}
+                              icon={IconName.fingerprint}
+                              className="w-full h-full object-cover rounded-lg"
+                            />
+                          </div>
+                          <div className="text-left">
+                            <div className="text-white text-base leading-5">
+                              {atomData?.atom?.label ?? ''}
+                            </div>
+                          </div>
+                          <div className="flex w-full justify-end px-6">
+                            <CheckCircle className="text-success h-6 w-6" />
+                          </div>
+                        </button>
+                      </>
+                    )}
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-xl font-bold bg-gradient-to-r from-[#34C578] to-[#00FF94] bg-clip-text text-transparent">
+                        {pointAwardAmount}
+                      </span>
+                      <span className="text-md font-semibold text-muted-foreground">
+                        IQ Earned
+                      </span>
+                    </div>
                   </div>
                 ) : (
                   authenticated && (
@@ -423,27 +521,40 @@ export default function MiniGameOne() {
             </div>
           </Card>
         </div>
-
-        <AggregatedMetrics
-          metrics={[
-            {
-              label: 'TVL',
-              value: totalTvl,
-              suffix: 'ETH',
-              precision: 2,
-            },
-            {
-              label: 'Atoms',
-              value: listData?.globalTriplesAggregate?.aggregate?.count ?? 0,
-            },
-            {
-              label: 'Users',
-              value: totalUsers,
-            },
-          ]}
-          className="[&>div]:after:hidden sm:[&>div]:after:block"
-        />
       </div>
+
+      <AggregatedMetrics
+        metrics={[
+          {
+            label: 'TVL',
+            value: totalTvl,
+            suffix: 'ETH',
+            icon: <Icon name="moneybag" className="h-4 w-4" />,
+            precision: 2,
+          },
+          {
+            label: 'Atoms',
+            value: listData?.globalTriplesAggregate?.aggregate?.count ?? 0,
+            icon: <Icon name="fingerprint" className="h-4 w-4" />,
+          },
+          {
+            label: 'Users',
+            value: totalUsers,
+            icon: <Icon name="group" className="h-4 w-4" />,
+          },
+          {
+            label: 'Upvotes',
+            value: totalUpVotes.toFixed(0),
+            icon: <ThumbsUp className="h-4 w-4" />,
+          },
+          {
+            label: 'Downvotes',
+            value: totalDownVotes.toFixed(0),
+            icon: <ThumbsDown className="h-4 w-4" />,
+          },
+        ]}
+        className="[&>div]:after:hidden sm:[&>div]:after:block"
+      />
 
       {/* Space for table */}
       <div className="mt-6">
@@ -465,6 +576,9 @@ export default function MiniGameOne() {
         tvl={shareModalActive.tvl}
       />
       <OnboardingModal
+        questionId={parseInt(id || '1', 10)}
+        predicateId={predicateId}
+        objectId={objectId}
         isOpen={onboardingModal.isOpen}
         onClose={handleCloseOnboarding}
       />

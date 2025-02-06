@@ -8,14 +8,23 @@ import {
   TextWeight,
 } from '@0xintuition/1ui'
 
+import { EpochProgress } from '@routes/resources+/get-epoch-progress'
 import { motion, useAnimation } from 'framer-motion'
-import { Award, BrainCircuit, Calendar, Sparkle } from 'lucide-react'
+import { Award, BrainCircuit, ListCheck, Sparkle } from 'lucide-react'
 
 interface AggregateIQProps {
   totalIQ: number
+  epochProgress?: EpochProgress | null
+  rank?: number
+  totalUsers?: number
 }
 
-export function AggregateIQ({ totalIQ }: AggregateIQProps) {
+export function AggregateIQ({
+  totalIQ,
+  epochProgress,
+  rank,
+  totalUsers,
+}: AggregateIQProps) {
   const [count, setCount] = useState(0)
   const controls = useAnimation()
 
@@ -89,41 +98,43 @@ export function AggregateIQ({ totalIQ }: AggregateIQProps) {
           <div className="mt-6 grid grid-cols-3 gap-4 w-full">
             {[
               {
-                label: 'Daily Gain',
+                label: 'IQ Earned on Launchpad',
                 icon: <Sparkle className="w-4 h-4" />,
-                value: '+124',
+                value: epochProgress?.total_points ?? 0,
                 subtext: '+25% in the last month',
               },
               {
-                label: 'Weekly Average',
-                icon: <Calendar className="w-4 h-4" />,
-                value: '+892',
+                label: 'Questions Completed',
+                icon: <ListCheck className="w-4 h-4" />,
+                value: epochProgress?.completed_count ?? 0,
                 subtext: '+10% in the last month',
               },
               {
-                label: 'Rank',
+                label: 'Launchpad Rank',
                 icon: <Award className="w-4 h-4" />,
-                value: '#42',
-                subtext: '+2 in the last month',
+                value: rank ?? 0,
+                subtext: totalUsers
+                  ? `Top ${Math.round(((rank ?? 0) / totalUsers) * 100)}%`
+                  : 'Not ranked',
               },
-            ].map((stat) => (
+            ].map((metric) => (
               <div
-                key={stat.label}
+                key={metric.label}
                 className="bg-analytics-white p-4 shadow-pop-lg border-t border-border/10"
               >
                 <div className="text-sm text-analytics-shadow/60 mb-1 flex items-center gap-2">
-                  {stat.icon} {stat.label}
+                  {metric.icon} {metric.label}
                 </div>
                 <div className="flex flex-row items-center gap-2">
                   <Text
                     variant={TextVariant.headline}
                     weight={TextWeight.semibold}
                   >
-                    {stat.value}
+                    {metric.value}
                   </Text>
-                  <Text variant={TextVariant.small} className="text-primary/50">
-                    {stat.subtext}
-                  </Text>
+                  {/* <Text variant={TextVariant.small} className="text-primary/50">
+                    {metric.subtext}
+                  </Text> */}
                 </div>
               </div>
             ))}

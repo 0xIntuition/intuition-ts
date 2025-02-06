@@ -1,4 +1,10 @@
-import { startTransition, useCallback, useEffect, useState } from 'react'
+import {
+  startTransition,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
 
 import {
   Dialog,
@@ -8,12 +14,9 @@ import {
 } from '@0xintuition/1ui'
 import { useGetListDetailsQuery } from '@0xintuition/graphql'
 
-import { CURRENT_ENV } from '@consts/general'
-import { getSpecialPredicate } from '@lib/utils/app'
 import logger from '@lib/utils/logger'
 import { usePrivy } from '@privy-io/react-auth'
-import { useNavigate } from '@remix-run/react'
-import { useQueryClient } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { TripleType } from 'app/types'
 import { ClientOnly } from 'remix-utils/client-only'
 
@@ -47,24 +50,104 @@ const INITIAL_STATE: OnboardingState = {
   showCreateStep: false,
 }
 
-export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
+interface StepTransition {
+  isTransitioning: boolean
+  handleTransition: (
+    updateFn: (prev: OnboardingState) => OnboardingState,
+  ) => void
+  resetTransition: () => void
+}
+
+/**
+ * Custom hook to manage step transitions with proper cleanup
+ */
+const useStepTransition = (
+  setState: React.Dispatch<React.SetStateAction<OnboardingState>>,
+): StepTransition => {
+  const [isTransitioning, setIsTransitioning] = useState(false)
+  const timeoutRef = useRef<number>()
+  const rafRef = useRef<number>()
+  const updateFnRef = useRef<
+    ((prev: OnboardingState) => OnboardingState) | null
+  >(null)
+
+  const handleTransition = useCallback(
+    (updateFn: (prev: OnboardingState) => OnboardingState) => {
+      // Store the update function for later
+      updateFnRef.current = updateFn
+      setIsTransitioning(true)
+
+      // Wait for fade out before updating state
+      rafRef.current = requestAnimationFrame(() => {
+        timeoutRef.current = window.setTimeout(() => {
+          // Update state after fade out
+          setState(updateFnRef.current!)
+          updateFnRef.current = null
+
+          // Wait a frame before starting fade in
+          rafRef.current = requestAnimationFrame(() => {
+            setIsTransitioning(false)
+          })
+        }, 150) // Match the CSS transition duration
+      })
+    },
+    [setState],
+  )
+
+  const resetTransition = useCallback(() => {
+    setIsTransitioning(false)
+    updateFnRef.current = null
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current)
+    }
+    if (rafRef.current) {
+      cancelAnimationFrame(rafRef.current)
+    }
+  }, [])
+
+  // Cleanup timeouts and animation frames
+  useEffect(() => {
+    return () => {
+      resetTransition()
+    }
+  }, [resetTransition])
+
+  return { isTransitioning, handleTransition, resetTransition }
+}
+
+export function OnboardingModal({
+  isOpen,
+  onClose,
+  questionId,
+  predicateId,
+  objectId,
+}: OnboardingModalProps) {
   const queryClient = useQueryClient()
   const { user: privyUser } = usePrivy()
   const userWallet = privyUser?.wallet?.address
-  const navigate = useNavigate()
 
   const [state, setState] = useState<OnboardingState>(INITIAL_STATE)
   const [topics, setTopics] = useState<Topic[]>([])
-  const [isTransitioning, setIsTransitioning] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const [steps, setSteps] = useState<Step[]>(STEPS_CONFIG)
   const [txState, setTxState] = useState<TransactionStateType>()
+  const [subjectId, setSubjectId] = useState<string>()
 
-  const predicateId =
-    getSpecialPredicate(CURRENT_ENV).tagPredicate.id.toString()
-  const objectId =
-    getSpecialPredicate(CURRENT_ENV).web3Wallet.vaultId.toString()
+  const transition = useStepTransition(setState)
+  const { isTransitioning, handleTransition, resetTransition } = transition
+
+  const { data: currentEpoch } = useQuery({
+    queryKey: ['current-epoch'],
+    queryFn: async () => {
+      const response = await fetch('/resources/get-current-epoch')
+      const data = await response.json()
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to fetch current epoch')
+      }
+      return data.epoch
+    },
+  })
 
   const { data: listData, isLoading: isLoadingList } = useGetListDetailsQuery(
     {
@@ -97,31 +180,36 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
 
   useEffect(() => {
     if (isOpen) {
+      setState(INITIAL_STATE)
+      setSearchTerm('')
+      resetTransition()
+
       queryClient.refetchQueries({
         queryKey: [
           'get-list-details',
           {
             predicateId,
             objectId,
-            searchTerm,
+            searchTerm: '',
           },
         ],
       })
-    }
-  }, [isOpen, queryClient, searchTerm])
 
-  const handleTransition = useCallback(
-    (updateFn: (prev: OnboardingState) => OnboardingState) => {
-      setState((prev) => {
-        setIsTransitioning(true)
-        setTimeout(() => {
-          setIsTransitioning(false)
-        }, 300)
-        return updateFn(prev)
-      })
-    },
-    [],
-  )
+      document.body.style.paddingRight = 'var(--removed-body-scroll-bar-size)'
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.paddingRight = ''
+      document.body.style.overflow = ''
+
+      const timer = setTimeout(() => {
+        setState(INITIAL_STATE)
+        setSearchTerm('')
+        resetTransition()
+      }, 300) // Animation duration
+
+      return () => clearTimeout(timer)
+    }
+  }, [isOpen, queryClient, predicateId, objectId, resetTransition])
 
   useEffect(() => {
     if (!listData?.globalTriples) {
@@ -152,46 +240,6 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify({ state, topics }))
   }, [state, topics])
-
-  useEffect(() => {
-    if (isOpen) {
-      setState(INITIAL_STATE)
-      setSearchTerm('')
-      setIsTransitioning(false)
-
-      queryClient.refetchQueries({
-        queryKey: [
-          'get-list-details',
-          {
-            predicateId,
-            objectId,
-            searchTerm: '',
-          },
-        ],
-      })
-
-      document.body.style.paddingRight = 'var(--removed-body-scroll-bar-size)'
-      document.body.style.overflow = 'hidden'
-    } else {
-      document.body.style.paddingRight = ''
-      document.body.style.overflow = ''
-
-      const MODAL_ANIMATION_DURATION = 300
-      const timer = setTimeout(() => {
-        setState(INITIAL_STATE)
-        setSearchTerm('')
-        setIsTransitioning(false)
-      }, MODAL_ANIMATION_DURATION)
-
-      return () => clearTimeout(timer)
-    }
-  }, [isOpen, queryClient, predicateId, objectId])
-
-  useEffect(() => {
-    if (txState?.status) {
-      logger('txState.status changed:', txState.status)
-    }
-  }, [txState?.status])
 
   const handleNext = useCallback(() => {
     if (state.currentStep === STEPS.TOPICS) {
@@ -317,14 +365,49 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
     [steps, state.currentStep, handleTransition],
   )
 
+  const onStakingSuccess = useCallback(
+    (subject_id: string) => {
+      startTransition(() => {
+        setSteps((prev) => {
+          const newSteps = prev.map((step) => {
+            if (step.id === STEPS.SIGNAL) {
+              return { ...step, status: 'completed' as const }
+            }
+            if (step.id === STEPS.REWARD) {
+              return { ...step, status: 'current' as const }
+            }
+            return step
+          })
+          return newSteps
+        })
+
+        handleTransition((prev) => ({
+          ...prev,
+          currentStep: STEPS.REWARD,
+        }))
+
+        setSubjectId(subject_id)
+      })
+
+      if (!userWallet) {
+        logger('Missing userWallet')
+        return
+      }
+    },
+    [handleTransition, userWallet],
+  )
+
   const awardPoints = async (accountId: string) => {
     try {
       setIsLoading(true)
       const formData = new FormData()
       formData.append('accountId', accountId)
-      formData.append('type', 'minigame1')
+      formData.append('questionId', questionId?.toString() ?? '')
+      formData.append('epochId', currentEpoch?.id?.toString() ?? '')
+      formData.append('pointAwardAmount', '200') // TODO: Get from question data
+      formData.append('subjectId', subjectId ?? '')
 
-      const response = await fetch('/actions/reward-points', {
+      const response = await fetch('/actions/reward-question-points', {
         method: 'POST',
         body: formData,
       })
@@ -333,8 +416,12 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
         throw new Error('Failed to award points')
       }
 
+      // Invalidate relevant queries
       queryClient.invalidateQueries({
-        queryKey: ['account-points', userWallet?.toLowerCase()],
+        queryKey: ['question-completion', accountId.toLowerCase(), questionId],
+      })
+      queryClient.invalidateQueries({
+        queryKey: ['epoch-progress', accountId.toLowerCase(), currentEpoch?.id],
       })
     } catch (error) {
       logger('Error awarding points:', error)
@@ -343,37 +430,15 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
     }
   }
 
-  const handleFinish = useCallback(() => {
+  const handleClose = useCallback(() => {
+    // Reset all state
+    setState(INITIAL_STATE)
+    setTopics([])
+    setSearchTerm('')
+    setSteps(STEPS_CONFIG)
+    resetTransition()
     onClose()
-    navigate('/quests/questions/question/1')
-  }, [navigate, onClose])
-
-  const onStakingSuccess = useCallback(() => {
-    startTransition(() => {
-      setSteps((prev) => {
-        const newSteps = prev.map((step) => {
-          if (step.id === STEPS.SIGNAL) {
-            return { ...step, status: 'completed' as const }
-          }
-          if (step.id === STEPS.REWARD) {
-            return { ...step, status: 'current' as const }
-          }
-          return step
-        })
-        return newSteps
-      })
-
-      handleTransition((prev) => ({
-        ...prev,
-        currentStep: STEPS.REWARD,
-      }))
-    })
-
-    if (!userWallet) {
-      logger('Missing userWallet')
-      return
-    }
-  }, [handleTransition, userWallet])
+  }, [resetTransition, onClose])
 
   const onCreationSuccess = (metadata: NewAtomMetadata) => {
     handleTransition((prev) => ({
@@ -388,6 +453,7 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
         triple: listData?.globalTriples[0] as TripleType,
       },
     }))
+    setSubjectId(metadata.vaultId)
     updateStepStatus(STEPS.CREATE, 'completed')
     updateStepStatus(STEPS.SIGNAL, 'current')
   }
@@ -419,11 +485,13 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
   return (
     <ClientOnly>
       {() => (
-        <Dialog open={isOpen} onOpenChange={onClose}>
+        <Dialog open={isOpen} onOpenChange={handleClose}>
           <DialogContent className="p-0 bg-gradient-to-br from-[#060504] to-[#101010] md:max-w-[720px] w-full border-none">
             <div
-              className={`transition-opacity duration-300 ${
-                isTransitioning ? 'opacity-0' : 'opacity-100'
+              className={`transition-all duration-150 ease-in-out ${
+                isTransitioning
+                  ? 'opacity-0 translate-y-1'
+                  : 'opacity-100 translate-y-0'
               }`}
             >
               {state.currentStep === STEPS.TOPICS && (
@@ -464,6 +532,8 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
                     txHash={txState.txHash}
                     userWallet={userWallet}
                     awardPoints={awardPoints}
+                    questionId={questionId}
+                    epochId={currentEpoch?.id}
                   />
                 )}
             </div>
@@ -477,7 +547,7 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
                     state.currentStep !== STEPS.REWARD
                       ? handleNext
                       : state.currentStep === STEPS.REWARD
-                        ? handleFinish
+                        ? handleClose
                         : undefined
                   }
                   onBack={
