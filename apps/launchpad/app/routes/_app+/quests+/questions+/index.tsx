@@ -5,7 +5,7 @@ import { Card, PageHeader, Text } from '@0xintuition/1ui'
 import { AtomDetailsModal } from '@components/atom-details-modal'
 import ChapterProgress from '@components/chapter-progress'
 import { ErrorPage } from '@components/error-page'
-import { MinigameCardWrapper } from '@components/minigame-card-wrapper'
+import { QuestionCardWrapper } from '@components/question-card-wrapper'
 import { OnboardingModal } from '@components/survey-modal/survey-modal'
 import { useEpochProgress } from '@lib/hooks/useEpochProgress'
 import { useGetQuestions } from '@lib/hooks/useGetQuestions'
@@ -232,7 +232,7 @@ export default function Questions() {
       <div className="grid gap-6 md:grid-cols-2">
         {questions?.map((question: Question) => (
           <Suspense key={question.id} fallback={<QuestionsSkeleton />}>
-            <MinigameCardWrapper
+            <QuestionCardWrapper
               question={question}
               onStart={() =>
                 handleStartOnboarding(

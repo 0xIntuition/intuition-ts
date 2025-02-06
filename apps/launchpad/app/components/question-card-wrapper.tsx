@@ -8,11 +8,10 @@ import { atomDetailsModalAtom } from '@lib/state/store'
 import { usePrivy } from '@privy-io/react-auth'
 import { useAtom } from 'jotai'
 
-import { AuthCover } from './auth-cover'
 import LoadingLogo from './loading-logo'
-import { MinigameCard } from './minigame-card'
+import { QuestionCard } from './question-card'
 
-interface MinigameCardProps {
+interface QuestionCardProps {
   onStart: () => void
   className?: string
   question: Question
@@ -29,12 +28,8 @@ function LoadingCard() {
   )
 }
 
-export function MinigameCardWrapper({
-  onStart,
-  className,
-  question,
-}: MinigameCardProps) {
-  const { ready, authenticated, user } = usePrivy()
+export function QuestionCardWrapper({ onStart, question }: QuestionCardProps) {
+  const { ready, user } = usePrivy()
   const [, setAtomDetailsModal] = useAtom(atomDetailsModalAtom)
   const { isLoading: isQuestionDataLoading, ...questionData } = useQuestionData(
     {
@@ -84,33 +79,27 @@ export function MinigameCardWrapper({
   const resultsLink = `/quests/questions/question/${question.id}`
 
   return (
-    <AuthCover
-      buttonContainerClassName="h-full flex items-center justify-center"
-      className={className}
-    >
-      <MinigameCard
-        title={questionData.title}
-        description={`${questionData.atoms.toLocaleString()} atoms • ${questionData.totalUsers.toLocaleString()} users`}
-        image={questionData.listData?.globalTriples?.[0]?.object?.image ?? ''}
-        points={completion ? questionData.pointAwardAmount : 0}
-        pointAwardAmount={questionData.pointAwardAmount}
-        onStart={onStart}
-        className="w-full"
-        hideCTA={!authenticated}
-        isLoading={isQuestionDataLoading}
-        resultsLink={resultsLink}
-        completedAtom={
-          atomData?.atom
-            ? {
-                id: atomData.atom.id,
-                label: atomData.atom.label || '',
-                image: atomData.atom.image || undefined,
-                vault_id: String(atomData.atom.vault_id),
-              }
-            : undefined
-        }
-        onCompletedAtomClick={handleAtomClick}
-      />
-    </AuthCover>
+    <QuestionCard
+      title={questionData.title}
+      description={`${questionData.atoms.toLocaleString()} atoms • ${questionData.totalUsers.toLocaleString()} users`}
+      image={questionData.listData?.globalTriples?.[0]?.object?.image ?? ''}
+      points={completion ? questionData.pointAwardAmount : 0}
+      pointAwardAmount={questionData.pointAwardAmount}
+      onStart={onStart}
+      className="w-full"
+      isLoading={isQuestionDataLoading}
+      resultsLink={resultsLink}
+      completedAtom={
+        atomData?.atom
+          ? {
+              id: atomData.atom.id,
+              label: atomData.atom.label || '',
+              image: atomData.atom.image || undefined,
+              vault_id: String(atomData.atom.vault_id),
+            }
+          : undefined
+      }
+      onCompletedAtomClick={handleAtomClick}
+    />
   )
 }
