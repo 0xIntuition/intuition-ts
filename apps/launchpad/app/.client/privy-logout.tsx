@@ -40,10 +40,6 @@ export default function PrivyLogout({ wallet }: { wallet: string }) {
             ) {
               await logout()
               disconnect()
-              submit(null, {
-                action: '/actions/logout',
-                method: 'post',
-              })
             }
           }, 1500) // 1500ms delay
         }
