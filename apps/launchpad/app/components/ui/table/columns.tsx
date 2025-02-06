@@ -1,8 +1,6 @@
 import { useState } from 'react'
 
 import {
-  Button,
-  ButtonVariant,
   ClaimPosition,
   ClaimPositionType,
   Icon,
@@ -36,6 +34,7 @@ export type TableItem = {
   currentSharePrice?: number
   atom?: AtomType
   triple?: TripleType
+  stakingDisabled?: boolean
 }
 
 interface SignalCellProps {
@@ -44,6 +43,7 @@ interface SignalCellProps {
   atom?: AtomType
   userPosition?: number
   positionDirection?: ClaimPositionType
+  stakingDisabled?: boolean
 }
 
 function SignalCell({
@@ -52,6 +52,7 @@ function SignalCell({
   triple,
   userPosition,
   positionDirection,
+  stakingDisabled,
 }: SignalCellProps) {
   const { user: privyUser } = usePrivy()
   const [isSignalModalOpen, setIsSignalModalOpen] = useState(false)
@@ -93,17 +94,9 @@ function SignalCell({
           numPositions={Math.abs(initialTicks)}
           direction={positionDirection}
           positionDirection={positionDirection}
-          disabled={!userWallet}
+          disabled={!userWallet || stakingDisabled}
           onClick={() => handleSignal('deposit')}
         />
-        <Button
-          variant={ButtonVariant.ghost}
-          className="py-0.5 px-2 gap-1 h-9 w-9 rounded-xl bg-primary/5 border-primary/10 hover:bg-primary/10 hover:border-primary/20 text-secondary/70 disabled:opacity-50"
-          disabled={!userPosition || userPosition === 0 || !userWallet}
-          onClick={() => handleSignal('redeem')}
-        >
-          <Icon name="arrow-box-left" className="w-5 h-5" />
-        </Button>
       </div>
       <SignalModal
         isOpen={isSignalModalOpen}
@@ -183,7 +176,7 @@ export const columns: ColumnDef<TableItem>[] = [
         </div>
       )
     },
-    size: 20,
+    size: 24,
     sortDescFirst: true,
   },
   {
@@ -203,7 +196,7 @@ export const columns: ColumnDef<TableItem>[] = [
         </div>
       )
     },
-    size: 20,
+    size: 24,
     sortDescFirst: true,
   },
   {
@@ -225,7 +218,7 @@ export const columns: ColumnDef<TableItem>[] = [
         </div>
       )
     },
-    size: 100,
+    size: 72,
   },
   {
     id: 'userPosition',
@@ -245,10 +238,11 @@ export const columns: ColumnDef<TableItem>[] = [
           atom={row.original.atom}
           userPosition={position as number}
           positionDirection={positionDirection}
+          stakingDisabled={row.original.stakingDisabled}
         />
       )
     },
-    size: 100,
+    size: 96,
   },
   // {
   //   accessorKey: 'userPosition',

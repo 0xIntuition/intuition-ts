@@ -255,6 +255,7 @@ export default function MiniGameOne() {
     positionDirection?: 'for' | 'against'
     userWallet?: string
     currentSharePrice?: number
+    stakingDisabled?: boolean
   }
 
   // Transform the data for the table
@@ -313,6 +314,7 @@ export default function MiniGameOne() {
             : triple.counter_vault?.positions?.[0]?.shares > 0
               ? +formatUnits(triple.counter_vault?.current_share_price, 18)
               : undefined,
+        stakingDisabled: !isCompleted,
       }
 
       return tableRow
