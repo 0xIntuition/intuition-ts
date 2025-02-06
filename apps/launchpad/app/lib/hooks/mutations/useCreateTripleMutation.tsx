@@ -29,6 +29,7 @@ export function useCreateTripleMutation(contract: string) {
     ...useMutation({
       mutationFn: async (params: CreateTripleMutationParams) => {
         const { val, subjectId, predicateId, objectId } = params
+
         const parsedValue = parseUnits(val === '' ? '0' : val, 18)
 
         try {
