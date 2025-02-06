@@ -11,11 +11,15 @@ interface ChapterStage {
 interface ChapterProgressProps {
   stages: ChapterStage[]
   currentStageIndex: number
+  title: string
+  currentChapter?: number
 }
 
 export default function ChapterProgress({
   stages,
   currentStageIndex,
+  title,
+  currentChapter,
 }: ChapterProgressProps) {
   // Calculate total progress including expired stages
   const totalProgress = Math.min(
@@ -42,13 +46,15 @@ export default function ChapterProgress({
     >
       <Card className="flex flex-row w-full gap-6 p-6 rounded-lg bg-white/5 backdrop-blur-md backdrop-saturate-150 border border-border/10">
         <motion.div
-          className="flex flex-col justify-between items-start"
+          className="flex flex-col justify-between items-start min-w-[120px]"
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.2, duration: 0.5 }}
         >
-          <div className="space-y-2">
-            <Text className="text-2xl">Chapters</Text>
+          <div className="space-y-2 w-full">
+            <Text className="text-2xl whitespace-nowrap">
+              {title} {currentChapter}
+            </Text>
           </div>
           <Text variant={TextVariant.footnote} className="text-primary/70">
             {Math.round(totalProgress)}% Complete
@@ -62,11 +68,11 @@ export default function ChapterProgress({
           transition={{ delay: 0.3, duration: 0.5 }}
         >
           {/* Stage Indicators */}
-          <div className="flex justify-between mb-6">
+          <div className="flex justify-between mb-3">
             {stages.map((stage, index) => (
               <motion.div
                 key={index}
-                className="flex flex-col items-center"
+                className="flex flex-col items-center gap-1"
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 + index * 0.1, duration: 0.3 }}
@@ -91,12 +97,14 @@ export default function ChapterProgress({
                   ) : stage.status === 'expired' ? (
                     <Clock className="w-4 h-4 text-warning" />
                   ) : (
-                    <span className="font-medium">{toRoman(index + 1)}</span>
+                    <span className="font-medium font-serif">
+                      {toRoman(index + 1)}
+                    </span>
                   )}
                 </div>
                 <Text
                   variant={TextVariant.footnote}
-                  className={cn({
+                  className={cn('text-center min-h-[1rem] text-xs', {
                     'text-success': stage.status === 'completed',
                     'text-warning': stage.status === 'expired',
                     'text-info': stage.status === 'in_progress',
@@ -106,10 +114,10 @@ export default function ChapterProgress({
                   {stage.status === 'locked'
                     ? 'Locked'
                     : stage.status === 'expired'
-                      ? `${stage.progress}% Expired`
+                      ? `${stage.progress}%`
                       : stage.status === 'completed'
                         ? 'Complete'
-                        : `${stage.progress}% Complete`}
+                        : `${stage.progress}%`}
                 </Text>
               </motion.div>
             ))}
@@ -127,27 +135,28 @@ export default function ChapterProgress({
                   animate={{
                     width: `${totalProgress}%`,
                   }}
-                  transition={{ delay: 1.4, duration: 0.8, ease: 'easeOut' }}
+                  transition={{ delay: 0.8, duration: 0.8, ease: 'easeOut' }}
                 />
               </div>
             </div>
 
             {/* Dot Markers */}
-            <div className="absolute inset-0 flex justify-between items-center px-1">
+            <div className="absolute inset-0 flex justify-between items-center px-0">
               {stages.map((stage, index) => (
-                <motion.div
-                  key={index}
-                  className={cn('w-2 h-2 rounded-full', {
-                    'bg-success': stage.status === 'completed',
-                    'bg-warning': stage.status === 'expired',
-                    'bg-primary': stage.status === 'in_progress',
-                    'bg-primary/50': stage.status === 'locked',
-                    'opacity-0': index === stages.length - 1, // Make last dot invisible
-                  })}
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  transition={{ delay: 1.2 + index * 0.1, duration: 0.2 }}
-                />
+                <div key={index} className="w-10">
+                  <motion.div
+                    className={cn('w-2 h-2 rounded-full m-auto', {
+                      'bg-success': stage.status === 'completed',
+                      'bg-warning': stage.status === 'expired',
+                      'bg-primary': stage.status === 'in_progress',
+                      'bg-primary/50': stage.status === 'locked',
+                      'opacity-0': index === stages.length - 1 || index === 0, // Make last dot invisible
+                    })}
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ delay: 0.6 + index * 0.1, duration: 0.3 }}
+                  />
+                </div>
               ))}
             </div>
           </div>

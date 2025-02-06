@@ -214,6 +214,8 @@ export default function Questions() {
       <PageHeader title="Questions" />
       <div className="mb-8">
         <ChapterProgress
+          title="Epoch"
+          currentChapter={currentEpoch?.id ?? 1}
           stages={stages}
           currentStageIndex={
             currentStageIndex === -1 ? stages.length - 1 : currentStageIndex
