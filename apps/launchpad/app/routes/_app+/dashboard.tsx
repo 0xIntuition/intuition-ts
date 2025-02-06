@@ -15,6 +15,7 @@ import { ErrorPage } from '@components/error-page'
 import { LoadingState } from '@components/loading-state'
 import { CHAPTERS } from '@consts/chapters'
 import { ZERO_ADDRESS } from '@consts/general'
+import { useEpochProgress } from '@lib/hooks/useEpochProgress'
 import { usePoints } from '@lib/hooks/usePoints'
 import { useTotalCompletedQuestions } from '@lib/hooks/useTotalCompletedQuestions'
 import { useUserRank } from '@lib/hooks/useUserRank'
@@ -22,7 +23,7 @@ import { useFeatureFlags } from '@lib/providers/feature-flags-provider'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 import { getUser } from '@server/auth'
-import { dehydrate, QueryClient } from '@tanstack/react-query'
+import { dehydrate, QueryClient, useQuery } from '@tanstack/react-query'
 import { motion } from 'framer-motion'
 import { Code, Compass, Scroll } from 'lucide-react'
 import { formatUnits } from 'viem'
@@ -129,6 +130,54 @@ export default function Dashboard() {
   const combinedTotal = (points?.total_points ?? 0) + protocolPointsTotal
 
   const stages = CHAPTERS.CHAPTERS
+
+  console.log('Current Epoch:', currentEpoch)
+  console.log('Epoch Progress:', epochProgress)
+
+  // Mock data for now - replace with real data later
+  const epochs = [
+    {
+      completion_percentage: epochProgress?.completion_percentage ?? 0,
+      completed_count: epochProgress?.completed_count ?? 0,
+      total_count: epochProgress?.total_count ?? 0,
+      total_points: epochProgress?.total_points ?? 0,
+    },
+    // Add more epochs as they become available
+  ]
+
+  // Convert epoch data into chapter stages
+  const stages = Array.from({ length: 5 }).map((_, index) => {
+    if (!currentEpoch) {
+      return {
+        status: 'locked' as const,
+        progress: 0,
+      }
+    }
+
+    if (index < (currentEpoch.id ?? 1) - 1) {
+      // Past epochs
+      const pastEpoch = epochs[index]
+      return {
+        status:
+          pastEpoch?.completion_percentage === 100 ? 'completed' : 'expired',
+        progress: pastEpoch?.completion_percentage ?? 0,
+      } as const
+    }
+
+    if (index === (currentEpoch.id ?? 1) - 1) {
+      // Current epoch
+      return {
+        status: 'in_progress' as const,
+        progress: epochProgress?.completion_percentage ?? 0,
+      }
+    }
+
+    // Future epochs
+    return {
+      status: 'locked' as const,
+      progress: 0,
+    }
+  })
 
   return (
     <div className="flex flex-col gap-4">
