@@ -270,27 +270,22 @@ export default function MiniGameOne() {
               0,
             18,
           ) * +formatUnits(triple.counter_vault?.current_share_price ?? 0, 18),
-        userPosition:
-          triple.vault?.positions?.[0]?.shares > 0
-            ? +formatUnits(triple.vault?.positions?.[0]?.shares ?? 0, 18) *
-              +formatUnits(triple.vault?.current_share_price ?? 0, 18)
-            : triple.counter_vault?.positions?.[0]?.shares > 0
-              ? +formatUnits(
-                  triple.counter_vault?.positions?.[0]?.shares ?? 0,
-                  18,
-                ) *
-                +formatUnits(triple.counter_vault?.current_share_price ?? 0, 18)
-              : 0,
-        positionDirection:
-          triple.vault?.positions?.[0]?.shares > 0
+        userPosition: triple.counter_vault?.positions?.[0]
+          ? +formatUnits(
+              triple.counter_vault?.positions?.[0]?.shares ?? 0,
+              18,
+            ) * +formatUnits(triple.counter_vault?.current_share_price ?? 0, 18)
+          : +formatUnits(triple.vault?.positions?.[0]?.shares ?? 0, 18) *
+            +formatUnits(triple.vault?.current_share_price ?? 0, 18),
+        positionDirection: triple.counter_vault?.positions?.[0]
+          ? 'against'
+          : triple.vault?.positions?.[0]
             ? 'for'
-            : triple.counter_vault_id === objectId
-              ? 'against'
-              : undefined,
+            : undefined,
         currentSharePrice:
           triple.vault?.positions?.[0]?.shares > 0
             ? +formatUnits(triple.vault?.current_share_price, 18)
-            : triple.counter_vault_id === objectId
+            : triple.counter_vault?.positions?.[0]?.shares > 0
               ? +formatUnits(triple.counter_vault?.current_share_price, 18)
               : undefined,
       }

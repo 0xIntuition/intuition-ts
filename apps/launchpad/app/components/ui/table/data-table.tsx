@@ -156,7 +156,7 @@ export function DataTable<TData extends { id: string | number }, TValue>({
       <div className="rounded-md border border-border/10 bg-[#060504] overflow-hidden">
         <div className="overflow-x-auto w-full">
           <Table className="w-full" style={{ minWidth: table.getTotalSize() }}>
-            <TableHeader className="bg-[#101010]">
+            <TableHeader className="bg-gradient-to-l from-[#060504] to-[#101010] rounded-md">
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow
                   key={headerGroup.id}
@@ -199,7 +199,7 @@ export function DataTable<TData extends { id: string | number }, TValue>({
                 table.getRowModel().rows.map((row) => (
                   <TableRow
                     key={row.id}
-                    className="border-b border-border/10 hover:bg-[#101010] transition-colors cursor-pointer"
+                    className="border-b border-border/10 hover:bg-[#101010] transition-colors cursor-pointer bg-gradient-to-r from-[#060504] to-[#101010]"
                     data-state={row.getIsSelected() && 'selected'}
                     onClick={(e) => handleRowClick(e, row)}
                   >

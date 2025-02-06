@@ -13,19 +13,30 @@ interface AggregatedMetricsProps extends React.HTMLAttributes<HTMLDivElement> {
   metrics: Metric[]
 }
 
+const getGridColsClass = (count: number) => {
+  switch (count) {
+    case 1:
+      return 'grid-cols-1 sm:grid-cols-1'
+    case 2:
+      return 'grid-cols-2 sm:grid-cols-2'
+    case 3:
+      return 'grid-cols-2 sm:grid-cols-3'
+    case 4:
+      return 'grid-cols-2 sm:grid-cols-4'
+    default:
+      return 'grid-cols-2 sm:grid-cols-5'
+  }
+}
+
 export function AggregatedMetrics({
   metrics,
   className,
   ...props
 }: AggregatedMetricsProps) {
+  const gridColsClass = getGridColsClass(Math.min(metrics.length, 5))
+
   return (
-    <div
-      className={cn(
-        'grid grid-cols-2 gap-4 p-4 sm:grid-cols-4 lg:grid-cols-5',
-        className,
-      )}
-      {...props}
-    >
+    <div className={cn('grid gap-4 p-4', gridColsClass, className)} {...props}>
       {metrics.map(
         ({ label, value, hideOnMobile, suffix, precision }, index) => {
           const formattedValue =

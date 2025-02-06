@@ -1,6 +1,14 @@
 import { useEffect, useState } from 'react'
 
-import { Badge, Button, Icon, Text, TextVariant, toast } from '@0xintuition/1ui'
+import {
+  Badge,
+  Button,
+  Icon,
+  Text,
+  TextVariant,
+  TextWeight,
+  toast,
+} from '@0xintuition/1ui'
 
 import SignalToast from '@components/survey-modal/signal-toast'
 import { MIN_DEPOSIT, MULTIVAULT_CONTRACT_ADDRESS } from '@consts/general'
@@ -324,12 +332,22 @@ export function SignalStep({
   return (
     <div className="flex flex-col gap-4 p-8">
       <div className="flex flex-col gap-2 mb-8">
-        <Text variant="headline" className="font-semibold">
-          Signal {newAtomMetadata?.name ?? selectedTopic?.triple?.subject.label}{' '}
-          as your preferred wallet
-          {/* {selectedTopic?.triple?.predicate.label}{' '}
-        {selectedTopic?.triple?.object.label} */}
-        </Text>
+        <div className="flex flex-row items-center justify-between">
+          <Text variant="headline" className="font-semibold">
+            Signal{' '}
+            {newAtomMetadata?.name ?? selectedTopic?.triple?.subject.label} as
+            your preferred wallet
+          </Text>
+          <Badge className="flex items-center gap-1 px-2">
+            <Icon name="wallet" className="h-4 w-4 text-secondary/50" />
+            <Text
+              variant={TextVariant.caption}
+              className="text-nowrap text-secondary/50"
+            >
+              {(+walletBalance).toFixed(2)} ETH
+            </Text>
+          </Badge>
+        </div>
         <Text
           variant={TextVariant.footnote}
           className="text-primary/70 flex flex-row gap-1 items-center"
@@ -346,9 +364,8 @@ export function SignalStep({
           </Link>
         </Text>
       </div>
-      <div
-        className={`flex w-full items-center gap-4 rounded-lg border transition-colors h-[72px] border-[#1A1A1A]`}
-      >
+
+      <div className="flex w-full items-center gap-4 rounded-lg border transition-colors h-[72px] border-[#1A1A1A]">
         <div className="flex items-center gap-4 w-full">
           <div className="w-14 h-14 rounded bg-[#1A1A1A] flex-shrink-0 ml-1">
             {(newAtomMetadata?.image || selectedTopic?.image) && (
@@ -364,56 +381,72 @@ export function SignalStep({
           </Text>
         </div>
 
-        <div className="flex flex-col gap-2 w-full">
-          <div className="flex items-center gap-2 justify-end">
-            <Button
-              variant="text"
-              onClick={() => setTicks(Math.max(1, ticks - 1))}
-              disabled={ticks <= 1 || isLoading}
+        <div className="flex flex-col gap-2 w-full pr-6">
+          <div className="flex items-center justify-end">
+            <Text
+              variant={TextVariant.headline}
+              weight={TextWeight.semibold}
+              className="w-8 text-center text-success"
             >
-              <ArrowBigDown className="text-destructive fill-destructive" />
-            </Button>
-            <Text variant="title" className="w-8 text-center">
               {ticks}
             </Text>
-            <Button
-              variant="text"
-              onClick={() => setTicks(ticks + 1)}
-              disabled={isLoading}
-            >
-              <ArrowBigUp className="text-success fill-success" />
-            </Button>
+            <div className="flex flex-col">
+              <Button
+                variant="text"
+                onClick={() => setTicks(ticks + 1)}
+                disabled={isLoading}
+                className="h-6 p-0 disabled:opacity-30"
+              >
+                <ArrowBigUp className="text-success fill-success h-5 w-5" />
+              </Button>
+              <Button
+                variant="text"
+                onClick={() => setTicks(Math.max(1, ticks - 1))}
+                disabled={ticks <= 1 || isLoading}
+                className="h-6 p-0 disabled:opacity-30"
+              >
+                <ArrowBigDown className="text-destructive fill-destructive h-5 w-5" />
+              </Button>
+            </div>
           </div>
         </div>
       </div>
 
-      {showErrors && validationErrors.length > 0 && (
-        <div className="flex flex-col gap-2">
-          {validationErrors.map((error, index) => (
-            <Text key={index} variant="body" className="text-destructive">
-              {error}
-            </Text>
-          ))}
-        </div>
-      )}
+      <div className="h-6">
+        {showErrors && validationErrors.length > 0 && (
+          <div className="flex flex-col gap-2">
+            {validationErrors.map((error, index) => (
+              <Text
+                key={index}
+                variant={TextVariant.footnote}
+                className="text-destructive"
+              >
+                {error}
+              </Text>
+            ))}
+          </div>
+        )}
+      </div>
 
-      <div className="flex justify-end mt-8">
-        <div className="flex flex-row gap-2">
-          <Badge className="flex items-center gap-1 px-2">
-            <Icon name="wallet" className="h-4 w-4 text-secondary/50" />
-            <Text
-              variant={TextVariant.caption}
-              className="text-nowrap text-secondary/50"
-            >
-              {(+walletBalance).toFixed(2)} ETH
-            </Text>
-          </Badge>
+      <div className="flex flex-row gap-2 justify-end mt-8">
+        <div className="flex flex-col gap-2">
           <SubmitButton
             loading={isLoading}
             onClick={handleStakeButtonClick}
             buttonText={`Stake ${Number(val).toFixed(5)} ETH`}
             loadingText={'Processing...'}
           />
+          <Text variant="caption" className="text-end text-primary/70">
+            Standard fees apply.{' '}
+            <Link
+              to="https://tech.docs.intuition.systems/fees"
+              target="_blank"
+              rel="noreferrer"
+              className="text-primary font-semibold hover:text-accent"
+            >
+              Learn more
+            </Link>
+          </Text>
         </div>
       </div>
     </div>
