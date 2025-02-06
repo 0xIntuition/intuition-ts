@@ -196,7 +196,7 @@ export default function MiniGameOne() {
   const { authenticated } = usePrivy()
   const {
     title,
-    description,
+    // description,
     enabled,
     pointAwardAmount,
     isCompleted,
@@ -445,11 +445,11 @@ export default function MiniGameOne() {
                 <Text variant="heading3" className="text-foreground">
                   {title}
                 </Text>
-                {!isCompleted && (
+                {/* {!isCompleted && (
                   <Text variant="body" className="text-foreground/70">
                     {description}
                   </Text>
-                )}
+                )} */}
               </div>
               <AuthCover buttonContainerClassName="h-full flex items-center justify-center w-full">
                 {isCompleted ? (
