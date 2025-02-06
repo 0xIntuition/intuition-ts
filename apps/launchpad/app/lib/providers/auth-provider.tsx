@@ -21,12 +21,14 @@ const AuthContext = createContext<AuthContextType | null>(null)
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const { ready: privyReady, authenticated } = usePrivy()
   const [isLoading, setIsLoading] = useState(false)
+  const revalidator = useRevalidator()
 
   const { login } = useLogin({
     onComplete: (params) => {
       logger('Login complete:', params)
       setIsLoading(false)
       toast.success('Wallet Connected')
+      revalidator.revalidate()
     },
     onError: (error: string) => {
       console.error('Login error:', error)
@@ -38,9 +40,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     onSuccess: () => {
       setIsLoading(false)
       toast.warning('Wallet Disconnected')
+      revalidator.revalidate()
     },
   })
-  const revalidator = useRevalidator()
 
   const connect = async () => {
     setIsLoading(true)
@@ -51,7 +53,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       setIsLoading(true)
       await logout()
-      revalidator.revalidate()
     } catch (error) {
       console.error('Failed to disconnect:', error)
       if (error instanceof Error) {
