@@ -65,6 +65,12 @@ export function AppSidebar({
 
   const mainNavItems: NavItem[] = [
     {
+      iconName: 'home-door',
+      label: 'Dashboard',
+      href: '/dashboard',
+      isAccent: location.pathname === '/dashboard',
+    },
+    {
       iconName: 'crystal-ball',
       label: 'Quests',
       href: '/quests/',
@@ -284,8 +290,10 @@ export function AppSidebar({
                     asChild
                     isActive={activeItem === item.label}
                     className={cn(
-                      'w-full gap-3',
-                      item.isAccent ? 'text-accent' : undefined,
+                      'w-full gap-2 py-5',
+                      item.isAccent
+                        ? 'text-primary bg-primary/10 border border-primary/10'
+                        : undefined,
                       item.label === 'Questions' ? 'pl-9' : undefined,
                     )}
                   >
@@ -303,7 +311,7 @@ export function AppSidebar({
                 <SidebarMenuItem key={item.label}>
                   <SidebarMenuButton
                     asChild
-                    className={cn('w-full gap-3 py-3')}
+                    className={cn('w-full gap-2 py-5')}
                   >
                     {renderNavLink(item)}
                   </SidebarMenuButton>
@@ -323,16 +331,13 @@ export function AppSidebar({
           <SheetTrigger asChild>
             <SidebarTrigger />
           </SheetTrigger>
-          <SheetContent
-            side="left"
-            className="w-[300px] p-0 bg-gradient-to-r from-[#060504] to-[#101010]"
-          >
+          <SheetContent side="left" className="w-[300px] p-0">
             {sidebarContent}
           </SheetContent>
         </Sheet>
       ) : (
         <Sidebar
-          className="border-r border-border/10 bg-gradient-to-r from-[#060504] to-[#101010]"
+          className="border-r border-border/10"
           collapsible="icon"
           {...props}
         >
