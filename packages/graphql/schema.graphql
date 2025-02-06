@@ -6703,6 +6703,60 @@ type query_root {
     where: caip10_bool_exp
   ): [caip10!]!
   """
+  fetch data from the table: "caip10" using primary key columns
+  """
+  caip10(id: numeric!): caip10
+  """
+  fetch aggregated fields from the table: "caip10"
+  """
+  caip10_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [caip10_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [caip10_order_by!]
+    """
+    filter the rows returned
+    """
+    where: caip10_bool_exp
+  ): caip10_aggregate!
+  """
+  fetch data from the table: "caip10"
+  """
+  caip10s(
+    """
+    distinct select on columns
+    """
+    distinct_on: [caip10_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [caip10_order_by!]
+    """
+    filter the rows returned
+    """
+    where: caip10_bool_exp
+  ): [caip10!]!
+  """
   fetch data from the table: "chainlink_price" using primary key columns
   """
   chainlink_price(id: numeric!): chainlink_prices
@@ -9935,6 +9989,77 @@ type subscription_root {
     """
     where: cached_images_cached_image_bool_exp
   ): [cached_images_cached_image!]!
+  """
+  fetch data from the table: "caip10" using primary key columns
+  """
+  caip10(id: numeric!): caip10
+  """
+  fetch aggregated fields from the table: "caip10"
+  """
+  caip10_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [caip10_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [caip10_order_by!]
+    """
+    filter the rows returned
+    """
+    where: caip10_bool_exp
+  ): caip10_aggregate!
+  """
+  fetch data from the table in a streaming manner: "caip10"
+  """
+  caip10_stream(
+    """
+    maximum number of rows returned in a single batch
+    """
+    batch_size: Int!
+    """
+    cursor to stream the results returned by the query
+    """
+    cursor: [caip10_stream_cursor_input]!
+    """
+    filter the rows returned
+    """
+    where: caip10_bool_exp
+  ): [caip10!]!
+  """
+  fetch data from the table: "caip10"
+  """
+  caip10s(
+    """
+    distinct select on columns
+    """
+    distinct_on: [caip10_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [caip10_order_by!]
+    """
+    filter the rows returned
+    """
+    where: caip10_bool_exp
+  ): [caip10!]!
   """
   fetch data from the table: "caip10" using primary key columns
   """
