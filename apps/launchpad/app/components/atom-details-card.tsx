@@ -37,7 +37,7 @@ export function AtomDetailsCard({
         {/* Header */}
         <div className="flex items-center justify-between p-4">
           <div className="flex items-center gap-3">
-            <div className="size-6 rounded flex items-center justify-center">
+            <div className="size-10 rounded flex items-center justify-center">
               {icon}
             </div>
             <div className="flex flex-col ">

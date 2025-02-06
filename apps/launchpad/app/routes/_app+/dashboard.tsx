@@ -16,13 +16,15 @@ import ChapterProgress from '@components/chapter-progress'
 import { EarnSection } from '@components/earn-section'
 import { ErrorPage } from '@components/error-page'
 import { ZERO_ADDRESS } from '@consts/general'
+import { useEpochProgress } from '@lib/hooks/useEpochProgress'
 import { usePoints } from '@lib/hooks/usePoints'
-import { useRelicPoints } from '@lib/hooks/useRelicPoints'
-import { fetchPoints, fetchRelicPoints } from '@lib/services/points'
+import { useUserRank } from '@lib/hooks/useUserRank'
+import { fetchPoints, fetchUserRank } from '@lib/services/points'
+import logger from '@lib/utils/logger'
 import { LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 import { getUser } from '@server/auth'
-import { dehydrate, QueryClient } from '@tanstack/react-query'
+import { dehydrate, QueryClient, useQuery } from '@tanstack/react-query'
 import { motion } from 'framer-motion'
 import { Code, Compass, Scroll } from 'lucide-react'
 import { formatUnits } from 'viem'
@@ -37,15 +39,14 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   const queryClient = new QueryClient()
 
+  const epochResponse = await fetch(
+    `${new URL(request.url).origin}/resources/get-current-epoch`,
+  )
+  const epochData = await epochResponse.json()
+  await queryClient.setQueryData(['current-epoch'], epochData.epoch)
+
   if (address) {
     await Promise.all([
-      queryClient.prefetchQuery({
-        queryKey: ['get-relic-points', { address }],
-        queryFn: async () => {
-          const response = await fetchRelicPoints(address.toLowerCase())
-          return response
-        },
-      }),
       queryClient.prefetchQuery({
         queryKey: ['get-points', { address }],
         queryFn: async () => {
@@ -53,7 +54,14 @@ export async function loader({ request }: LoaderFunctionArgs) {
           return response
         },
       }),
-      await queryClient.prefetchQuery({
+      queryClient.prefetchQuery({
+        queryKey: ['get-user-rank', address.toLowerCase()],
+        queryFn: async () => {
+          const response = await fetchUserRank(address.toLowerCase())
+          return response
+        },
+      }),
+      queryClient.prefetchQuery({
         queryKey: ['get-protocol-fees', { address }],
         queryFn: async () => {
           const response = fetcher<
@@ -81,6 +89,20 @@ export async function loader({ request }: LoaderFunctionArgs) {
     ])
   }
 
+  // Prefetch epoch progress if we have both wallet and epoch
+  if (address && epochData.epoch?.id) {
+    logger('Fetching epoch progress')
+    const progressResponse = await fetch(
+      `${new URL(request.url).origin}/resources/get-epoch-progress?accountId=${address}&epochId=${epochData.epoch.id}`,
+    )
+    const progressData = await progressResponse.json()
+    logger('Progress data:', progressData)
+    await queryClient.setQueryData(
+      ['epoch-progress', address.toLowerCase(), epochData.epoch.id],
+      progressData.progress,
+    )
+  }
+
   return {
     dehydratedState: dehydrate(queryClient),
     initialParams: {
@@ -102,13 +124,25 @@ export default function Dashboard() {
   const { data: user } = useGetAccountQuery({
     address: address ?? ZERO_ADDRESS,
   })
-  console.log('user', user)
+
   const { data: points } = usePoints(address)
-  const { data: relicPoints } = useRelicPoints(address)
   const { data: protocolFees } = useGetFeeTransfersQuery({
     address: address ?? ZERO_ADDRESS,
     cutoff_timestamp: 1733356800,
   })
+  const { data: currentEpoch } = useQuery({
+    queryKey: ['current-epoch'],
+    queryFn: async () => {
+      const response = await fetch('/resources/get-current-epoch')
+      const data = await response.json()
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to fetch current epoch')
+      }
+      return data.epoch
+    },
+  })
+  const { data: epochProgress } = useEpochProgress(currentEpoch?.id)
+  const { data: rankData } = useUserRank(address)
 
   const feesPaidBeforeCutoff = formatUnits(
     protocolFees?.before_cutoff?.aggregate?.sum?.amount ?? 0n,
@@ -126,16 +160,12 @@ export default function Dashboard() {
     protocolPointsBeforeCutoff + protocolPoitnsAfterCutoff,
   )
 
-  const combinedTotal =
-    (relicPoints?.totalPoints ?? 0) +
-    (points?.totalPoints ?? 0) +
-    protocolPointsTotal
+  const combinedTotal = (points?.total_points ?? 0) + protocolPointsTotal
 
-  // Mock quests data - replace with actual data fetching
-  const mockQuests = [
+  const earnCards = [
     {
       id: '1',
-      earnedIQ: 500,
+      earnIQ: 500,
       title: 'Earn IQ with Quests',
       icon: <Scroll className="w-4 h-4" />,
       description: 'Complete quests to obtain IQ reward points',
@@ -143,7 +173,7 @@ export default function Dashboard() {
     },
     {
       id: '2',
-      earnedIQ: 750,
+      earnIQ: 750,
       title: 'Earn IQ in the Ecosystem',
       icon: <Compass className="w-4 h-4" />,
       description: 'Explore and use apps from our product hub',
@@ -151,13 +181,46 @@ export default function Dashboard() {
     },
     {
       id: '3',
-      earnedIQ: 1250,
+      earnIQ: 1250,
       title: 'Start Building on Intuition',
       icon: <Code className="w-4 h-4" />,
       description: 'Build your own apps and tools on Intuition',
       buttonText: 'Start Building',
     },
   ]
+
+  // Convert epoch data into chapter stages
+  const stages = Array.from({ length: 5 }).map((_, index) => {
+    // First epoch (completed)
+    if (index === 0) {
+      return {
+        status: 'completed' as const,
+        progress: 100,
+      }
+    }
+
+    // Second epoch (expired at 75%)
+    if (index === 1) {
+      return {
+        status: 'expired' as const,
+        progress: 75,
+      }
+    }
+
+    // Third epoch (in progress at 25%)
+    if (index === 2) {
+      return {
+        status: 'in_progress' as const,
+        progress: 25,
+      }
+    }
+
+    // Future epochs (locked)
+    return {
+      status: 'locked' as const,
+      progress: 0,
+    }
+  })
 
   return (
     <div className="space-y-8 text-foreground p-8">
@@ -198,9 +261,17 @@ export default function Dashboard() {
           </motion.p>
         </div>
       </motion.div>
-      <ChapterProgress totalStages={5} currentStage={1} />
-      <AggregateIQ totalIQ={combinedTotal} />
-      <EarnSection quests={mockQuests} />
+      <ChapterProgress
+        stages={stages}
+        currentStageIndex={2} // Hardcode to show we're on epoch 3 (index 2)
+      />
+      <AggregateIQ
+        totalIQ={combinedTotal}
+        epochProgress={epochProgress}
+        rank={rankData?.rank}
+        totalUsers={rankData?.totalUsers}
+      />
+      <EarnSection quests={earnCards} />
     </div>
   )
 }

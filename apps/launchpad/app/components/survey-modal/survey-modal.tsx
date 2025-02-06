@@ -8,12 +8,9 @@ import {
 } from '@0xintuition/1ui'
 import { useGetListDetailsQuery } from '@0xintuition/graphql'
 
-import { CURRENT_ENV } from '@consts/general'
-import { getSpecialPredicate } from '@lib/utils/app'
 import logger from '@lib/utils/logger'
 import { usePrivy } from '@privy-io/react-auth'
-import { useNavigate } from '@remix-run/react'
-import { useQueryClient } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { TripleType } from 'app/types'
 import { ClientOnly } from 'remix-utils/client-only'
 
@@ -47,11 +44,16 @@ const INITIAL_STATE: OnboardingState = {
   showCreateStep: false,
 }
 
-export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
+export function OnboardingModal({
+  isOpen,
+  onClose,
+  questionId,
+  predicateId,
+  objectId,
+}: OnboardingModalProps) {
   const queryClient = useQueryClient()
   const { user: privyUser } = usePrivy()
   const userWallet = privyUser?.wallet?.address
-  const navigate = useNavigate()
 
   const [state, setState] = useState<OnboardingState>(INITIAL_STATE)
   const [topics, setTopics] = useState<Topic[]>([])
@@ -60,11 +62,19 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
   const [searchTerm, setSearchTerm] = useState('')
   const [steps, setSteps] = useState<Step[]>(STEPS_CONFIG)
   const [txState, setTxState] = useState<TransactionStateType>()
+  const [subjectId, setSubjectId] = useState<string>()
 
-  const predicateId =
-    getSpecialPredicate(CURRENT_ENV).tagPredicate.id.toString()
-  const objectId =
-    getSpecialPredicate(CURRENT_ENV).web3Wallet.vaultId.toString()
+  const { data: currentEpoch } = useQuery({
+    queryKey: ['current-epoch'],
+    queryFn: async () => {
+      const response = await fetch('/resources/get-current-epoch')
+      const data = await response.json()
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to fetch current epoch')
+      }
+      return data.epoch
+    },
+  })
 
   const { data: listData, isLoading: isLoadingList } = useGetListDetailsQuery(
     {
@@ -186,12 +196,6 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
       return () => clearTimeout(timer)
     }
   }, [isOpen, queryClient, predicateId, objectId])
-
-  useEffect(() => {
-    if (txState?.status) {
-      logger('txState.status changed:', txState.status)
-    }
-  }, [txState?.status])
 
   const handleNext = useCallback(() => {
     if (state.currentStep === STEPS.TOPICS) {
@@ -317,14 +321,49 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
     [steps, state.currentStep, handleTransition],
   )
 
+  const onStakingSuccess = useCallback(
+    (subject_id: string) => {
+      startTransition(() => {
+        setSteps((prev) => {
+          const newSteps = prev.map((step) => {
+            if (step.id === STEPS.SIGNAL) {
+              return { ...step, status: 'completed' as const }
+            }
+            if (step.id === STEPS.REWARD) {
+              return { ...step, status: 'current' as const }
+            }
+            return step
+          })
+          return newSteps
+        })
+
+        handleTransition((prev) => ({
+          ...prev,
+          currentStep: STEPS.REWARD,
+        }))
+
+        setSubjectId(subject_id)
+      })
+
+      if (!userWallet) {
+        logger('Missing userWallet')
+        return
+      }
+    },
+    [handleTransition, userWallet],
+  )
+
   const awardPoints = async (accountId: string) => {
     try {
       setIsLoading(true)
       const formData = new FormData()
       formData.append('accountId', accountId)
-      formData.append('type', 'minigame1')
+      formData.append('questionId', questionId?.toString() ?? '')
+      formData.append('epochId', currentEpoch?.id?.toString() ?? '')
+      formData.append('pointAwardAmount', '200') // TODO: Get from question data
+      formData.append('subjectId', subjectId ?? '')
 
-      const response = await fetch('/actions/reward-points', {
+      const response = await fetch('/actions/reward-question-points', {
         method: 'POST',
         body: formData,
       })
@@ -333,8 +372,12 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
         throw new Error('Failed to award points')
       }
 
+      // Invalidate relevant queries
       queryClient.invalidateQueries({
-        queryKey: ['account-points', userWallet?.toLowerCase()],
+        queryKey: ['question-completion', accountId.toLowerCase(), questionId],
+      })
+      queryClient.invalidateQueries({
+        queryKey: ['epoch-progress', accountId.toLowerCase(), currentEpoch?.id],
       })
     } catch (error) {
       logger('Error awarding points:', error)
@@ -345,35 +388,7 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
 
   const handleFinish = useCallback(() => {
     onClose()
-    navigate('/quests/questions/question/1')
-  }, [navigate, onClose])
-
-  const onStakingSuccess = useCallback(() => {
-    startTransition(() => {
-      setSteps((prev) => {
-        const newSteps = prev.map((step) => {
-          if (step.id === STEPS.SIGNAL) {
-            return { ...step, status: 'completed' as const }
-          }
-          if (step.id === STEPS.REWARD) {
-            return { ...step, status: 'current' as const }
-          }
-          return step
-        })
-        return newSteps
-      })
-
-      handleTransition((prev) => ({
-        ...prev,
-        currentStep: STEPS.REWARD,
-      }))
-    })
-
-    if (!userWallet) {
-      logger('Missing userWallet')
-      return
-    }
-  }, [handleTransition, userWallet])
+  }, [onClose])
 
   const onCreationSuccess = (metadata: NewAtomMetadata) => {
     handleTransition((prev) => ({
@@ -388,6 +403,7 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
         triple: listData?.globalTriples[0] as TripleType,
       },
     }))
+    setSubjectId(metadata.vaultId)
     updateStepStatus(STEPS.CREATE, 'completed')
     updateStepStatus(STEPS.SIGNAL, 'current')
   }
@@ -464,6 +480,8 @@ export function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
                     txHash={txState.txHash}
                     userWallet={userWallet}
                     awardPoints={awardPoints}
+                    questionId={questionId}
+                    epochId={currentEpoch?.id}
                   />
                 )}
             </div>

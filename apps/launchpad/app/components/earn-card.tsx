@@ -14,7 +14,7 @@ import { BrainCircuit } from 'lucide-react'
 interface EarnCardProps {
   title: string
   description: string
-  earnedIQ: number
+  earnIQ: number
   buttonText: string
   icon: React.ReactNode
 }
@@ -22,7 +22,7 @@ interface EarnCardProps {
 export const EarnCard = ({
   title,
   description,
-  earnedIQ,
+  earnIQ,
   buttonText,
   icon,
 }: EarnCardProps) => {
@@ -88,7 +88,7 @@ export const EarnCard = ({
           >
             <BrainCircuit className="h-5 w-5 text-primary" />
             <span className="font-medium">
-              {earnedIQ.toLocaleString()} IQ earned
+              Earn {earnIQ.toLocaleString()} IQ
             </span>
           </motion.div>
 

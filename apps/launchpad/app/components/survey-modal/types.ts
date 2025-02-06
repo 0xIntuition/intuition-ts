@@ -41,17 +41,20 @@ export interface OnboardingState {
 }
 
 export interface OnboardingModalProps {
-  isOpen?: boolean
+  isOpen: boolean
   onClose: () => void
+  questionId: number
+  predicateId: number
+  objectId: number
 }
 
 export interface SignalStepProps {
-  selectedTopic: Topic
+  selectedTopic: Topic | undefined
   newAtomMetadata?: NewAtomMetadata
-  predicateId: string
-  objectId: string
-  setTxState: (txState: TransactionStateType) => void
-  onStakingSuccess: () => void
+  predicateId: number
+  objectId: number
+  setTxState: (state: TransactionStateType) => void
+  onStakingSuccess: (subject_id: string) => void
   isLoading: boolean
-  setIsLoading: (isLoading: boolean) => void
+  setIsLoading: (loading: boolean) => void
 }

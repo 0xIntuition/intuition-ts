@@ -38,10 +38,14 @@ export const stakeModalAtom = atom<StakeModalState>({
 
 export const onboardingModalAtom = atom<{
   isOpen: boolean
-  gameId: string | null
+  questionId: number | null
+  predicateId: number | null
+  objectId: number | null
 }>({
   isOpen: false,
-  gameId: null,
+  questionId: null,
+  predicateId: null,
+  objectId: null,
 })
 
 export const shareModalAtom = atom<{

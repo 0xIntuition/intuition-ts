@@ -1,17 +1,35 @@
-import { Button, Card, Text } from '@0xintuition/1ui'
+import {
+  Avatar,
+  Button,
+  Card,
+  cn,
+  IconName,
+  Text,
+  TextVariant,
+  Trunctacular,
+} from '@0xintuition/1ui'
 
 import { useNavigate } from '@remix-run/react'
+import { CheckCircle } from 'lucide-react'
 
 interface MinigameCardProps {
   className?: string
   onStart: () => void
   title: string
   description: string
+  image: string
   points: number
   pointAwardAmount: number
   hideCTA?: boolean
   isLoading?: boolean
   resultsLink?: string
+  completedAtom?: {
+    id: number
+    label: string
+    image?: string
+    vault_id: string
+  }
+  onCompletedAtomClick?: (id: number) => void
 }
 
 export function MinigameCard({
@@ -19,17 +37,25 @@ export function MinigameCard({
   onStart,
   title,
   description,
+  image,
   points,
   pointAwardAmount,
   hideCTA = false,
   isLoading = false,
   resultsLink,
+  completedAtom,
+  onCompletedAtomClick,
 }: MinigameCardProps) {
   const navigate = useNavigate()
 
   return (
     <Card
-      className={`relative h-[400px] rounded-lg border-none bg-gradient-to-br from-[#060504] to-[#101010] min-w-[480px] ${className}`}
+      className={`relative h-[400px] rounded-lg border-none min-w-[480px] overflow-hidden ${className}`}
+      style={{
+        backgroundImage: `linear-gradient(to bottom right, rgba(6, 5, 4, 0.9), rgba(16, 16, 16, 0.9)), url(${image})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}
     >
       <div className="absolute inset-0 flex flex-col justify-between p-8">
         <div className="space-y-2">
@@ -58,7 +84,7 @@ export function MinigameCard({
               onClick={() => navigate(resultsLink || '')}
               variant="secondary"
               size="lg"
-              className="min-w-[200px] rounded-full"
+              className="min-w-[200px] rounded-full !opacity-100"
               disabled={isLoading}
             >
               See Results
@@ -66,7 +92,47 @@ export function MinigameCard({
           </div>
         )}
 
-        <div className="flex justify-end items-center">
+        <div
+          className={cn(
+            `flex items-end`,
+            completedAtom ? 'justify-between' : 'justify-end',
+          )}
+        >
+          {completedAtom && (
+            <div className="flex flex-col gap-1 items-start">
+              <Text
+                variant="body"
+                weight="medium"
+                className="text-foreground/70 ml-1"
+              >
+                You selected:
+              </Text>
+              <button
+                onClick={() => onCompletedAtomClick?.(completedAtom.id)}
+                className="flex items-center gap-4 rounded-lg transition-colors md:w-[250px] h-[52px] bg-background/50 backdrop-blur-md backdrop-saturate-150 border border-border/10"
+              >
+                <div className="w-10 h-10 rounded bg-[#1A1A1A] flex-shrink-0 ml-1">
+                  <Avatar
+                    src={completedAtom.image ?? ''}
+                    name={completedAtom.label}
+                    icon={IconName.fingerprint}
+                    className="w-full h-full object-cover rounded-lg"
+                  />
+                </div>
+                <div className="text-left w-full">
+                  <div className="text-white text-sm leading-5 w-full">
+                    <Trunctacular
+                      variant={TextVariant.body}
+                      value={completedAtom.label}
+                    />
+                  </div>
+                </div>
+                <div className="flex justify-end pr-4">
+                  <CheckCircle className="text-success h-4 w-4" />
+                </div>
+              </button>
+            </div>
+          )}
           {points > 0 ? (
             <div className="flex items-baseline gap-2">
               <span className="text-xl font-bold bg-gradient-to-r from-[#34C578] to-[#00FF94] bg-clip-text text-transparent">

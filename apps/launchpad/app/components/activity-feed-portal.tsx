@@ -16,7 +16,6 @@ import {
 } from '@0xintuition/1ui'
 import { GetSignalsQuery, Signals } from '@0xintuition/graphql'
 
-import logger from '@lib/utils/logger'
 import { formatBalance } from '@lib/utils/misc'
 import { Link } from '@remix-run/react'
 import { BLOCK_EXPLORER_URL } from 'app/consts'
@@ -49,7 +48,6 @@ export function ActivityFeedPortal({
       `redeemed ${formatBalance(BigInt(value), 18)} ETH from triple`,
   }
 
-  logger('activities in activity list', activities)
   return (
     <div className="space-y-4 bg-white/5 backdrop-blur-md backdrop-saturate-150 border border-border/10 p-4 rounded-lg">
       {activities.signals.map((activity) => (

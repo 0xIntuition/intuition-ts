@@ -11,17 +11,18 @@ interface RewardStepProps {
   newAtomMetadata?: NewAtomMetadata
   txHash?: string
   userWallet?: string
-  awardPoints?: (accountId: string, redirectUrl?: string) => void
-  redirectUrl?: string
+  questionId?: number | null
+  epochId?: number
+  awardPoints?: (accountId: string) => void
 }
 
 export function RewardStep({
   isOpen,
-  selectedTopic,
   txHash,
   userWallet,
   awardPoints,
-  redirectUrl,
+  questionId,
+  epochId,
 }: RewardStepProps) {
   const [rewardReady, setRewardReady] = useState(false)
   const [hasRewardAnimated, setHasRewardAnimated] = useState(false)
@@ -45,13 +46,18 @@ export function RewardStep({
   useEffect(() => {
     // Only run this once when the component mounts and conditions are met
     const shouldAwardPoints =
-      isOpen && !hasAwardedPoints && userWallet && awardPoints
+      isOpen &&
+      !hasAwardedPoints &&
+      userWallet &&
+      awardPoints &&
+      questionId &&
+      epochId
 
     if (shouldAwardPoints) {
       setHasAwardedPoints(true)
-      awardPoints(userWallet.toLowerCase(), redirectUrl)
+      awardPoints(userWallet.toLowerCase())
     }
-  }, [isOpen, hasAwardedPoints, userWallet, awardPoints, redirectUrl])
+  }, [isOpen, hasAwardedPoints, userWallet, awardPoints, questionId, epochId])
 
   useEffect(() => {
     if (isOpen && !hasRewardAnimated && rewardReady && !confettiTriggered) {
@@ -98,10 +104,9 @@ export function RewardStep({
         </div>
 
         <div className="text-center space-y-2">
-          <h2 className="text-2xl font-bold">Stake Successful!</h2>
+          <h2 className="text-2xl font-bold">Question Completed!</h2>
           <p className="text-gray-400">
-            You&apos;ve successfully set {selectedTopic.name} as your preferred{' '}
-            Web3 Wallet
+            You&apos;ve successfully answered the question and earned points
           </p>
         </div>
 

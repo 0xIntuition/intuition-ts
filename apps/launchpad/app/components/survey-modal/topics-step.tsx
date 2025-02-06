@@ -89,7 +89,7 @@ export function TopicsStep({
                         <Avatar
                           src={topic.image}
                           name={topic.name}
-                          icon={IconName.wallet}
+                          icon={IconName.fingerprint}
                           className="w-full h-full object-cover rounded-lg"
                         />
                       )}

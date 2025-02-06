@@ -109,8 +109,8 @@ export function SignalStep({
           val,
           userWallet: privyUser?.wallet?.address,
           subjectId: newAtomMetadata.vaultId,
-          predicateId,
-          objectId,
+          predicateId: predicateId.toString(),
+          objectId: objectId.toString(),
           contract,
         })
 
@@ -130,7 +130,7 @@ export function SignalStep({
             queryKey: ['get-triples', contract],
           })
 
-          onStakingSuccess()
+          onStakingSuccess(newAtomMetadata.vaultId.toString())
         }
       } catch (error) {
         dispatch({
@@ -174,7 +174,9 @@ export function SignalStep({
             ],
           })
 
-          onStakingSuccess()
+          onStakingSuccess(
+            selectedTopic?.triple?.subject?.vault_id?.toString() ?? '',
+          )
         }
       } catch (error) {
         dispatch({

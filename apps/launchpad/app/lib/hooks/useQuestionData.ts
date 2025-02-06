@@ -1,21 +1,78 @@
 import { useGetListDetailsQuery } from '@0xintuition/graphql'
 
-import { CURRENT_ENV } from '@consts/general'
-import { getSpecialPredicate } from '@lib/utils/app'
 import logger from '@lib/utils/logger'
+import { usePrivy } from '@privy-io/react-auth'
 import { useQuery } from '@tanstack/react-query'
 
 interface UseQuestionDataProps {
   questionId: number
 }
 
-const predicateId = getSpecialPredicate(CURRENT_ENV).tagPredicate.id.toString()
-const objectId = getSpecialPredicate(CURRENT_ENV).web3Wallet.vaultId.toString()
-
 export function useQuestionData({ questionId }: UseQuestionDataProps) {
+  const { user: privyUser } = usePrivy()
+  const userWallet = privyUser?.wallet?.address?.toLowerCase()
+
+  const { data: currentEpoch, isLoading: isLoadingEpoch } = useQuery({
+    queryKey: ['current-epoch'],
+    queryFn: async () => {
+      const response = await fetch('/resources/get-current-epoch')
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to fetch current epoch')
+      }
+
+      return data.epoch
+    },
+  })
+
+  const { data: questionData, isLoading: isLoadingQuestion } = useQuery({
+    queryKey: ['epoch-question', questionId],
+    queryFn: async () => {
+      try {
+        const response = await fetch(`/resources/get-questions/${questionId}`)
+        const data = await response.json()
+
+        if (!response.ok) {
+          logger('Error response from server:', data)
+          throw new Error(data.error || 'Failed to fetch question')
+        }
+
+        return data.question
+      } catch (error) {
+        logger('Error in useQuestionData:', error)
+        if (error instanceof Error) {
+          logger('Error details:', error.message)
+        }
+        throw error
+      }
+    },
+    enabled: !!currentEpoch,
+  })
+
+  const { data: completionData, isLoading: isLoadingCompletion } = useQuery({
+    queryKey: ['question-completion', userWallet, questionId],
+    queryFn: async () => {
+      const response = await fetch(
+        `/resources/get-question-completion?accountId=${userWallet}&questionId=${questionId}`,
+      )
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to fetch question completion')
+      }
+
+      return data.completion
+    },
+    enabled: !!userWallet && !!questionId,
+  })
+
+  const predicateId = questionData?.predicate_id
+  const objectId = questionData?.object_id
+
   const { data: listData, isLoading: isLoadingList } = useGetListDetailsQuery(
     {
-      tagPredicateId: predicateId,
+      tagPredicateId: predicateId?.toString(),
       globalWhere: {
         predicate_id: {
           _eq: predicateId,
@@ -27,18 +84,9 @@ export function useQuestionData({ questionId }: UseQuestionDataProps) {
     },
     {
       queryKey: ['get-list-details', { predicateId, objectId }],
+      enabled: !!questionData && !!predicateId && !!objectId,
     },
   )
-
-  const { data: questionData, isLoading: isLoadingQuestion } = useQuery({
-    queryKey: ['question', questionId],
-    queryFn: async () => {
-      const response = await fetch(`/resources/get-questions/${questionId}`)
-      const data = await response.json()
-      logger('Raw question response:', data)
-      return data.question
-    },
-  })
 
   const totalUsers =
     listData?.globalTriples?.reduce(
@@ -47,16 +95,23 @@ export function useQuestionData({ questionId }: UseQuestionDataProps) {
       0,
     ) ?? 0
 
-  logger('List data:', listData)
-  logger('Question data:', questionData)
-
   return {
     title: questionData?.title ?? 'Question',
     description: questionData?.description ?? '',
     enabled: questionData?.enabled ?? false,
     pointAwardAmount: questionData?.point_award_amount ?? 0,
+    isCompleted: !!completionData,
+    completedAt: completionData?.completed_at,
+    currentEpoch,
+    listData,
     atoms: listData?.globalTriplesAggregate?.aggregate?.count ?? 0,
     totalUsers,
-    isLoading: isLoadingList || isLoadingQuestion,
+    predicateId: questionData?.predicate_id,
+    objectId: questionData?.object_id,
+    isLoading:
+      isLoadingQuestion ||
+      isLoadingEpoch ||
+      isLoadingCompletion ||
+      isLoadingList,
   }
 }

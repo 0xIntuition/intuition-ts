@@ -5,25 +5,29 @@ import { gql } from 'graphql-request'
 interface PointsRecord {
   account_id: string
   community: number
-  minigame1: number
+  launchpad_quests: number
   portal_quests: number
   referral: number
   social: number
+  relic_points: number
+  total_points: number
 }
 
 interface GetAccountPointsResponse {
-  points_by_pk: PointsRecord | null
+  epoch_points_by_pk: PointsRecord[]
 }
 
 const GetAccountPointsQuery = gql`
   query GetAccountPoints($account_id: String!) {
-    points_by_pk(account_id: $account_id) {
+    epoch_points_by_pk(account_id: $account_id) {
       account_id
       community
-      minigame1
+      launchpad_quests
       portal_quests
       referral
       social
+      relic_points
+      total_points
     }
   }
 `
@@ -49,7 +53,10 @@ export async function loader({
     },
   )
 
-  return new Response(JSON.stringify({ points: data.points_by_pk }), {
-    headers: { 'Content-Type': 'application/json' },
-  })
+  return new Response(
+    JSON.stringify({ points: data.epoch_points_by_pk ?? null }),
+    {
+      headers: { 'Content-Type': 'application/json' },
+    },
+  )
 }
