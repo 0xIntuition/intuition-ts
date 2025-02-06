@@ -33,11 +33,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   const queryClient = new QueryClient()
 
-  // await queryClient.prefetchQuery({
-  //   queryKey: ['get-stats'],
-  //   queryFn: () =>
-  //     fetcher<GetStatsQuery, GetStatsQueryVariables>(GetStatsDocument, {}),
-  // })
+  await queryClient.prefetchQuery({
+    queryKey: ['get-stats'],
+    queryFn: () =>
+      fetcher<GetStatsQuery, GetStatsQueryVariables>(GetStatsDocument, {}),
+  })
 
   await queryClient.prefetchQuery({
     queryKey: ['get-signals-global', { activityLimit, activityOffset }],
