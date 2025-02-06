@@ -7,7 +7,6 @@ import { useQuestionData } from '@lib/hooks/useQuestionData'
 import { atomDetailsModalAtom } from '@lib/state/store'
 import { usePrivy } from '@privy-io/react-auth'
 import { useAtom } from 'jotai'
-import { formatUnits } from 'viem'
 
 import { AuthCover } from './auth-cover'
 import LoadingLogo from './loading-logo'
@@ -60,20 +59,6 @@ export function MinigameCardWrapper({
     )
 
     if (rowData) {
-      // Calculate TVL values
-      const forTvl =
-        +formatUnits(
-          rowData.vault?.positions_aggregate?.aggregate?.sum?.shares ?? 0n,
-          18,
-        ) * +formatUnits(rowData.vault?.current_share_price ?? 0n, 18)
-
-      const againstTvl =
-        +formatUnits(
-          rowData.counter_vault?.positions_aggregate?.aggregate?.sum?.shares ??
-            0n,
-          18,
-        ) * +formatUnits(rowData.counter_vault?.current_share_price ?? 0n, 18)
-
       setAtomDetailsModal({
         isOpen: true,
         atomId: id,
@@ -85,8 +70,8 @@ export function MinigameCardWrapper({
           users: Number(
             rowData.vault?.positions_aggregate?.aggregate?.count ?? 0,
           ),
-          forTvl,
-          againstTvl,
+          forTvl: 0,
+          againstTvl: 0,
         },
       })
     }

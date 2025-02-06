@@ -1,14 +1,6 @@
 import { useEffect, useState } from 'react'
 
-import {
-  Badge,
-  Button,
-  Icon,
-  Text,
-  TextVariant,
-  TextWeight,
-  toast,
-} from '@0xintuition/1ui'
+import { Button, Text, TextVariant, TextWeight, toast } from '@0xintuition/1ui'
 
 import SignalToast from '@components/survey-modal/signal-toast'
 import { MIN_DEPOSIT, MULTIVAULT_CONTRACT_ADDRESS } from '@consts/general'
@@ -334,22 +326,12 @@ export function SignalStep({
   return (
     <div className="flex flex-col gap-4 p-8">
       <div className="flex flex-col gap-2 mb-8">
-        <div className="flex flex-row items-center justify-between">
-          <Text variant="headline" className="font-semibold">
-            Signal{' '}
-            {newAtomMetadata?.name ?? selectedTopic?.triple?.subject.label} as
-            your preferred wallet
-          </Text>
-          <Badge className="flex items-center gap-1 px-2">
-            <Icon name="wallet" className="h-4 w-4 text-secondary/50" />
-            <Text
-              variant={TextVariant.caption}
-              className="text-nowrap text-secondary/50"
-            >
-              {(+walletBalance).toFixed(2)} ETH
-            </Text>
-          </Badge>
-        </div>
+        <Text variant="headline" className="font-semibold">
+          Signal {newAtomMetadata?.name ?? selectedTopic?.triple?.subject.label}{' '}
+          as the best {selectedTopic?.triple?.object.label}
+          {/* {selectedTopic?.triple?.predicate.label}{' '}
+        {selectedTopic?.triple?.object.label} */}
+        </Text>
         <Text
           variant={TextVariant.footnote}
           className="text-primary/70 flex flex-row gap-1 items-center"

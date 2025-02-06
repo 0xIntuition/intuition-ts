@@ -3,6 +3,7 @@ import { Suspense } from 'react'
 import { Card, PageHeader, Text } from '@0xintuition/1ui'
 
 import { AtomDetailsModal } from '@components/atom-details-modal'
+import ChapterProgress from '@components/chapter-progress'
 import { ErrorPage } from '@components/error-page'
 import { MinigameCardWrapper } from '@components/minigame-card-wrapper'
 import { OnboardingModal } from '@components/survey-modal/survey-modal'
@@ -15,6 +16,11 @@ import type { LoaderFunctionArgs, MetaFunction } from '@remix-run/node'
 import { getUser } from '@server/auth'
 import { dehydrate, QueryClient, useQuery } from '@tanstack/react-query'
 import { useAtom } from 'jotai'
+
+interface QuestionStage {
+  status: 'completed' | 'in_progress'
+  progress: number
+}
 
 export async function loader({ request }: LoaderFunctionArgs) {
   try {
@@ -164,6 +170,24 @@ export default function Questions() {
   })
   const { data: epochProgress } = useEpochProgress(currentEpoch?.id)
 
+  // Convert questions into stages
+  const stages: QuestionStage[] =
+    questions?.map((question: Question, index: number) => {
+      // Use completion count to determine if this question is completed
+      const questionsCompleted = epochProgress?.completed_count || 0
+      const isCompleted = index < questionsCompleted
+
+      return {
+        status: isCompleted ? 'completed' : 'in_progress',
+        progress: isCompleted ? 100 : 0,
+      }
+    }) || Array(4).fill({ status: 'in_progress', progress: 0 } as QuestionStage)
+
+  // Calculate current question index (first incomplete question)
+  const currentStageIndex = stages.findIndex(
+    (stage: QuestionStage) => stage.status !== 'completed',
+  )
+
   const handleStartOnboarding = (
     questionId: number,
     predicateId: number,
@@ -188,23 +212,21 @@ export default function Questions() {
   return (
     <>
       <PageHeader title="Questions" />
-      {/* Optional: Show epoch progress */}
-      {epochProgress && (
-        <div className="col-span-2 mt-4">
-          <Card className="p-4">
-            <Text variant="body" weight="medium">
-              Epoch Progress: {epochProgress.completion_percentage.toFixed(0)}%
-            </Text>
-            <Text variant="body">
-              Completed {epochProgress.completed_count} of{' '}
-              {epochProgress.total_count} questions
-            </Text>
-            <Text variant="body">
-              Total Points Earned: {epochProgress.total_points}
-            </Text>
-          </Card>
+      <div className="mb-8">
+        <ChapterProgress
+          stages={stages}
+          currentStageIndex={
+            currentStageIndex === -1 ? stages.length - 1 : currentStageIndex
+          }
+        />
+        <div className="mt-4 flex justify-between text-sm text-primary/70">
+          <span>
+            Completed {epochProgress?.completed_count || 0} of{' '}
+            {questions?.length || 4} questions
+          </span>
+          <span>Total Points: {epochProgress?.total_points || 0}</span>
         </div>
-      )}
+      </div>
       <div className="grid gap-6 md:grid-cols-2">
         {questions?.map((question: Question) => (
           <Suspense key={question.id} fallback={<QuestionsSkeleton />}>

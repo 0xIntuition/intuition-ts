@@ -189,33 +189,48 @@ export default function Dashboard() {
     },
   ]
 
+  console.log('Current Epoch:', currentEpoch)
+  console.log('Epoch Progress:', epochProgress)
+
+  // Mock data for now - replace with real data later
+  const epochs = [
+    {
+      completion_percentage: epochProgress?.completion_percentage ?? 0,
+      completed_count: epochProgress?.completed_count ?? 0,
+      total_count: epochProgress?.total_count ?? 0,
+      total_points: epochProgress?.total_points ?? 0,
+    },
+    // Add more epochs as they become available
+  ]
+
   // Convert epoch data into chapter stages
   const stages = Array.from({ length: 5 }).map((_, index) => {
-    // First epoch (completed)
-    if (index === 0) {
+    if (!currentEpoch) {
       return {
-        status: 'completed' as const,
-        progress: 100,
+        status: 'locked' as const,
+        progress: 0,
       }
     }
 
-    // Second epoch (expired at 75%)
-    if (index === 1) {
+    if (index < (currentEpoch.id ?? 1) - 1) {
+      // Past epochs
+      const pastEpoch = epochs[index]
       return {
-        status: 'expired' as const,
-        progress: 75,
-      }
+        status:
+          pastEpoch?.completion_percentage === 100 ? 'completed' : 'expired',
+        progress: pastEpoch?.completion_percentage ?? 0,
+      } as const
     }
 
-    // Third epoch (in progress at 25%)
-    if (index === 2) {
+    if (index === (currentEpoch.id ?? 1) - 1) {
+      // Current epoch
       return {
         status: 'in_progress' as const,
-        progress: 25,
+        progress: epochProgress?.completion_percentage ?? 0,
       }
     }
 
-    // Future epochs (locked)
+    // Future epochs
     return {
       status: 'locked' as const,
       progress: 0,
@@ -263,7 +278,7 @@ export default function Dashboard() {
       </motion.div>
       <ChapterProgress
         stages={stages}
-        currentStageIndex={2} // Hardcode to show we're on epoch 3 (index 2)
+        currentStageIndex={(currentEpoch?.id ?? 1) - 1}
       />
       <AggregateIQ
         totalIQ={combinedTotal}

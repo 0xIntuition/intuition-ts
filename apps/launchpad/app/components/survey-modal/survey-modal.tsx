@@ -1,4 +1,10 @@
-import { startTransition, useCallback, useEffect, useState } from 'react'
+import {
+  startTransition,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
 
 import {
   Dialog,
@@ -44,6 +50,71 @@ const INITIAL_STATE: OnboardingState = {
   showCreateStep: false,
 }
 
+interface StepTransition {
+  isTransitioning: boolean
+  handleTransition: (
+    updateFn: (prev: OnboardingState) => OnboardingState,
+  ) => void
+  resetTransition: () => void
+}
+
+/**
+ * Custom hook to manage step transitions with proper cleanup
+ */
+const useStepTransition = (
+  setState: React.Dispatch<React.SetStateAction<OnboardingState>>,
+): StepTransition => {
+  const [isTransitioning, setIsTransitioning] = useState(false)
+  const timeoutRef = useRef<number>()
+  const rafRef = useRef<number>()
+  const updateFnRef = useRef<
+    ((prev: OnboardingState) => OnboardingState) | null
+  >(null)
+
+  const handleTransition = useCallback(
+    (updateFn: (prev: OnboardingState) => OnboardingState) => {
+      // Store the update function for later
+      updateFnRef.current = updateFn
+      setIsTransitioning(true)
+
+      // Wait for fade out before updating state
+      rafRef.current = requestAnimationFrame(() => {
+        timeoutRef.current = window.setTimeout(() => {
+          // Update state after fade out
+          setState(updateFnRef.current!)
+          updateFnRef.current = null
+
+          // Wait a frame before starting fade in
+          rafRef.current = requestAnimationFrame(() => {
+            setIsTransitioning(false)
+          })
+        }, 150) // Match the CSS transition duration
+      })
+    },
+    [setState],
+  )
+
+  const resetTransition = useCallback(() => {
+    setIsTransitioning(false)
+    updateFnRef.current = null
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current)
+    }
+    if (rafRef.current) {
+      cancelAnimationFrame(rafRef.current)
+    }
+  }, [])
+
+  // Cleanup timeouts and animation frames
+  useEffect(() => {
+    return () => {
+      resetTransition()
+    }
+  }, [resetTransition])
+
+  return { isTransitioning, handleTransition, resetTransition }
+}
+
 export function OnboardingModal({
   isOpen,
   onClose,
@@ -57,12 +128,14 @@ export function OnboardingModal({
 
   const [state, setState] = useState<OnboardingState>(INITIAL_STATE)
   const [topics, setTopics] = useState<Topic[]>([])
-  const [isTransitioning, setIsTransitioning] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const [steps, setSteps] = useState<Step[]>(STEPS_CONFIG)
   const [txState, setTxState] = useState<TransactionStateType>()
   const [subjectId, setSubjectId] = useState<string>()
+
+  const transition = useStepTransition(setState)
+  const { isTransitioning, handleTransition, resetTransition } = transition
 
   const { data: currentEpoch } = useQuery({
     queryKey: ['current-epoch'],
@@ -107,31 +180,36 @@ export function OnboardingModal({
 
   useEffect(() => {
     if (isOpen) {
+      setState(INITIAL_STATE)
+      setSearchTerm('')
+      resetTransition()
+
       queryClient.refetchQueries({
         queryKey: [
           'get-list-details',
           {
             predicateId,
             objectId,
-            searchTerm,
+            searchTerm: '',
           },
         ],
       })
-    }
-  }, [isOpen, queryClient, searchTerm])
 
-  const handleTransition = useCallback(
-    (updateFn: (prev: OnboardingState) => OnboardingState) => {
-      setState((prev) => {
-        setIsTransitioning(true)
-        setTimeout(() => {
-          setIsTransitioning(false)
-        }, 300)
-        return updateFn(prev)
-      })
-    },
-    [],
-  )
+      document.body.style.paddingRight = 'var(--removed-body-scroll-bar-size)'
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.paddingRight = ''
+      document.body.style.overflow = ''
+
+      const timer = setTimeout(() => {
+        setState(INITIAL_STATE)
+        setSearchTerm('')
+        resetTransition()
+      }, 300) // Animation duration
+
+      return () => clearTimeout(timer)
+    }
+  }, [isOpen, queryClient, predicateId, objectId, resetTransition])
 
   useEffect(() => {
     if (!listData?.globalTriples) {
@@ -162,40 +240,6 @@ export function OnboardingModal({
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify({ state, topics }))
   }, [state, topics])
-
-  useEffect(() => {
-    if (isOpen) {
-      setState(INITIAL_STATE)
-      setSearchTerm('')
-      setIsTransitioning(false)
-
-      queryClient.refetchQueries({
-        queryKey: [
-          'get-list-details',
-          {
-            predicateId,
-            objectId,
-            searchTerm: '',
-          },
-        ],
-      })
-
-      document.body.style.paddingRight = 'var(--removed-body-scroll-bar-size)'
-      document.body.style.overflow = 'hidden'
-    } else {
-      document.body.style.paddingRight = ''
-      document.body.style.overflow = ''
-
-      const MODAL_ANIMATION_DURATION = 300
-      const timer = setTimeout(() => {
-        setState(INITIAL_STATE)
-        setSearchTerm('')
-        setIsTransitioning(false)
-      }, MODAL_ANIMATION_DURATION)
-
-      return () => clearTimeout(timer)
-    }
-  }, [isOpen, queryClient, predicateId, objectId])
 
   const handleNext = useCallback(() => {
     if (state.currentStep === STEPS.TOPICS) {
@@ -386,9 +430,15 @@ export function OnboardingModal({
     }
   }
 
-  const handleFinish = useCallback(() => {
+  const handleClose = useCallback(() => {
+    // Reset all state
+    setState(INITIAL_STATE)
+    setTopics([])
+    setSearchTerm('')
+    setSteps(STEPS_CONFIG)
+    resetTransition()
     onClose()
-  }, [onClose])
+  }, [resetTransition, onClose])
 
   const onCreationSuccess = (metadata: NewAtomMetadata) => {
     handleTransition((prev) => ({
@@ -435,11 +485,13 @@ export function OnboardingModal({
   return (
     <ClientOnly>
       {() => (
-        <Dialog open={isOpen} onOpenChange={onClose}>
+        <Dialog open={isOpen} onOpenChange={handleClose}>
           <DialogContent className="p-0 bg-gradient-to-br from-[#060504] to-[#101010] md:max-w-[720px] w-full border-none">
             <div
-              className={`transition-opacity duration-300 ${
-                isTransitioning ? 'opacity-0' : 'opacity-100'
+              className={`transition-all duration-150 ease-in-out ${
+                isTransitioning
+                  ? 'opacity-0 translate-y-1'
+                  : 'opacity-100 translate-y-0'
               }`}
             >
               {state.currentStep === STEPS.TOPICS && (
@@ -495,7 +547,7 @@ export function OnboardingModal({
                     state.currentStep !== STEPS.REWARD
                       ? handleNext
                       : state.currentStep === STEPS.REWARD
-                        ? handleFinish
+                        ? handleClose
                         : undefined
                   }
                   onBack={
