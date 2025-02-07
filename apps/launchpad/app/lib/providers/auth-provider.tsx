@@ -36,6 +36,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       toast.error(getPrivyErrorMessage(error))
     },
   })
+
   const { logout } = useLogout({
     onSuccess: () => {
       setIsLoading(false)
@@ -43,6 +44,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       revalidator.revalidate()
     },
   })
+
+  // Return early if Privy is not ready to prevent hooks from being called too early
+  if (!privyReady) {
+    return (
+      <AuthContext.Provider
+        value={{
+          isReady: false,
+          isAuthenticated: false,
+          isLoading: true,
+          connect: async () => {},
+          disconnect: async () => {},
+        }}
+      >
+        {children}
+      </AuthContext.Provider>
+    )
+  }
 
   const connect = async () => {
     setIsLoading(true)
@@ -79,7 +97,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 export function useAuth() {
   const context = useContext(AuthContext)
   if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider')
+    // Return a default state during hot reloads or when context is not available
+    return {
+      isReady: false,
+      isAuthenticated: false,
+      isLoading: true,
+      connect: async () => {},
+      disconnect: async () => {},
+    }
   }
   return context
 }

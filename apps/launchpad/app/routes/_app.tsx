@@ -4,6 +4,7 @@ import { Outlet, useLoaderData } from '@remix-run/react'
 import { getUser } from '@server/auth'
 import { getMultiVaultConfig } from '@server/multivault'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
+import { ClientOnly } from 'remix-utils/client-only'
 
 import PrivyLogout from '../.client/privy-logout'
 import { AppShell } from '../components/layouts/app-shell'
@@ -38,7 +39,9 @@ export default function AppLayout() {
 
   return (
     <AppShell>
-      {wallet && <PrivyLogout wallet={wallet} />}
+      <ClientOnly fallback={null}>
+        {() => (wallet ? <PrivyLogout wallet={wallet} /> : null)}
+      </ClientOnly>
       <Outlet />
     </AppShell>
   )
