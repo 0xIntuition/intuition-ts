@@ -23,6 +23,7 @@ import {
 
 import { AccountButton } from '@components/account-button'
 import LoadingButton from '@components/loading-button'
+import { useAuth } from '@lib/hooks/use-auth'
 import { usePrivy } from '@privy-io/react-auth'
 import { Link, useLocation } from '@remix-run/react'
 
@@ -61,7 +62,8 @@ export function AppSidebar({
   const isMinimal = variant === SidebarVariant.minimal
   const isMobile = useIsMobile()
   const location = useLocation()
-  const { ready, authenticated, user: privyUser } = usePrivy()
+  const { isReady, isAuthenticated } = useAuth()
+  const { user: privyUser } = usePrivy()
 
   const mainNavItems: NavItem[] = [
     {
@@ -274,9 +276,9 @@ export function AppSidebar({
             </svg>
           </SidebarMenuItem>
           <SidebarMenuItem>
-            {!ready ? (
+            {!isReady ? (
               <LoadingButton />
-            ) : authenticated && privyUser ? (
+            ) : isAuthenticated && privyUser ? (
               <AccountButton privyUser={privyUser} isMinimal={isMinimal} />
             ) : (
               <ConnectButton />

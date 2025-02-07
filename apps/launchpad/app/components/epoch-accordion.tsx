@@ -51,9 +51,6 @@ export function EpochAccordion({
     ? `epoch-${currentEpochData.epoch.id}`
     : `epoch-${epochs[0].id}`
 
-  console.log('defaultValue', defaultValue)
-  console.log('epochs', `epoch-${epochs[0].id}`)
-
   return (
     <Accordion
       type="single"

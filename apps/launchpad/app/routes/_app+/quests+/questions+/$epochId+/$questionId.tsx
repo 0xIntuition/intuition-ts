@@ -47,7 +47,7 @@ import type { LoaderFunctionArgs, MetaFunction } from '@remix-run/node'
 import { useLoaderData, useLocation, useParams } from '@remix-run/react'
 import { getUser } from '@server/auth'
 // import { requireUser } from '@server/auth'
-import { dehydrate, QueryClient } from '@tanstack/react-query'
+import { dehydrate, QueryClient, useQueryClient } from '@tanstack/react-query'
 import { TripleType } from 'app/types'
 import { useAtom } from 'jotai'
 import { CheckCircle, ThumbsDown, ThumbsUp } from 'lucide-react'
@@ -124,6 +124,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     ogImageUrl,
     objectResult: listData?.globalTriples[0]?.object,
     completion,
+    questionTitle: questionData?.title,
   }
 }
 
@@ -132,11 +133,13 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
     return []
   }
 
-  const { objectResult, ogImageUrl } = data
+  const { objectResult, ogImageUrl, questionTitle } = data
+  const title =
+    questionTitle ?? objectResult?.label ?? 'Error | Intuition Launchpad'
 
   return [
     {
-      title: objectResult ? objectResult.label : 'Error | Intuition Launchpad',
+      title: `${title} | Intuition Launchpad`,
     },
     {
       name: 'description',
@@ -144,7 +147,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
     },
     {
       property: 'og-title',
-      name: objectResult ? objectResult.label : 'Error | Intuition Launchpad',
+      name: title,
     },
     {
       property: 'og:image',
@@ -162,7 +165,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
     },
     {
       name: 'twitter:title',
-      content: `Intuition Launchpad | ${objectResult ? objectResult.label : ''}`,
+      content: `Intuition Launchpad | ${title}`,
     },
     {
       name: 'twitter:description',
@@ -203,6 +206,7 @@ export default function MiniGameOne() {
 
   const {
     title,
+    description,
     enabled,
     pointAwardAmount,
     isCompleted,
@@ -345,21 +349,57 @@ export default function MiniGameOne() {
     0,
   )
   const totalTvl = forTvl + againstTvl
+
+  const queryClient = useQueryClient()
+
   const handleStartOnboarding = () => {
+    // Ensure we have the complete question object with required fields
+    const questionObj: Question = {
+      id: parseInt(questionId || '0', 10),
+      title: title || '',
+      predicate_id: predicateId,
+      object_id: objectId,
+      point_award_amount: pointAwardAmount,
+      enabled: enabled || false,
+      epoch_id: currentEpoch?.id,
+      description: description || '', // These fields are optional in the Question type
+      link: '', // Empty string instead of null
+    }
+
     setOnboardingModal({
       isOpen: true,
-      question: questionData as unknown as Question,
+      question: questionObj,
       predicateId,
       objectId,
     })
   }
 
   const handleCloseOnboarding = () => {
+    // Only invalidate queries if we have all required values and the modal was actually open
+    if (
+      userWallet &&
+      questionId &&
+      currentEpoch?.id &&
+      onboardingModal.isOpen
+    ) {
+      // Invalidate queries first
+      queryClient.invalidateQueries({
+        queryKey: ['question-completion', userWallet.toLowerCase(), questionId],
+      })
+      queryClient.invalidateQueries({
+        queryKey: ['epoch-progress', userWallet.toLowerCase(), currentEpoch.id],
+      })
+      queryClient.invalidateQueries({
+        queryKey: ['get-questions', currentEpoch.id],
+      })
+    }
+
+    // Then close the modal
     setOnboardingModal({
       isOpen: false,
       question: null,
-      predicateId,
-      objectId,
+      predicateId: null,
+      objectId: null,
     })
   }
 
@@ -589,11 +629,13 @@ export default function MiniGameOne() {
         tvl={shareModalActive.tvl}
       />
       <OnboardingModal
-        question={questionData as unknown as Question}
-        predicateId={predicateId}
-        objectId={objectId}
         isOpen={onboardingModal.isOpen}
         onClose={handleCloseOnboarding}
+        question={
+          onboardingModal.question ?? (questionData as unknown as Question)
+        }
+        predicateId={predicateId}
+        objectId={objectId}
       />
       <AtomDetailsModal
         isOpen={atomDetailsModal.isOpen}

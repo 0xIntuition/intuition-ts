@@ -97,8 +97,6 @@ function ActivityItemNew({
     ? activity.deposit.sender
     : activity.redemption?.receiver
 
-  console.log('creator', creator)
-
   const creatorAddress = creator?.id || '0x'
 
   function formatTransactionHash(txHash: string): string {

@@ -228,8 +228,6 @@ export default function Questions() {
 
   const epochsWithQuestions = useEpochsData()
 
-  console.log('epochsWithQuestions', epochsWithQuestions)
-
   const handleStartOnboarding = (
     question: Question,
     predicateId: number,

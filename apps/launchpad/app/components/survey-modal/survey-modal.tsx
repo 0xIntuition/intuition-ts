@@ -116,8 +116,6 @@ const useStepTransition = (
   return { isTransitioning, handleTransition, resetTransition }
 }
 
-const ANIMATION_DURATION = 300 // Add this at the top with other constants
-
 export function OnboardingModal({
   isOpen,
   onClose,
@@ -180,10 +178,6 @@ export function OnboardingModal({
           searchTerm,
         },
       ],
-      staleTime: Infinity,
-      gcTime: 1000 * 60 * 5,
-      refetchOnMount: true,
-      refetchOnWindowFocus: false,
     },
   )
 
@@ -193,7 +187,7 @@ export function OnboardingModal({
       setSearchTerm('')
       resetTransition()
 
-      queryClient.invalidateQueries({
+      queryClient.refetchQueries({
         queryKey: [
           'get-list-details',
           {
@@ -212,27 +206,13 @@ export function OnboardingModal({
 
       const timer = setTimeout(() => {
         setState(INITIAL_STATE)
+        setSearchTerm('')
         resetTransition()
-      }, ANIMATION_DURATION)
+      }, 300) // Animation duration
 
       return () => clearTimeout(timer)
     }
   }, [isOpen, queryClient, predicateId, objectId, resetTransition])
-
-  useEffect(() => {
-    if (searchTerm !== undefined) {
-      queryClient.invalidateQueries({
-        queryKey: [
-          'get-list-details',
-          {
-            predicateId,
-            objectId,
-            searchTerm,
-          },
-        ],
-      })
-    }
-  }, [searchTerm, predicateId, objectId, queryClient])
 
   useEffect(() => {
     if (!listData?.globalTriples) {
@@ -246,10 +226,7 @@ export function OnboardingModal({
       triple: triple as TripleType,
       selected: false,
     }))
-
-    if (newTopics.length > 0) {
-      setTopics(newTopics)
-    }
+    setTopics(newTopics)
 
     setSteps((prev) => {
       if (newTopics.length > 0) {
@@ -258,7 +235,9 @@ export function OnboardingModal({
       return prev
     })
 
-    return undefined
+    return () => {
+      setTopics([])
+    }
   }, [listData?.globalTriples])
 
   useEffect(() => {
@@ -421,7 +400,7 @@ export function OnboardingModal({
     [handleTransition, userWallet],
   )
 
-  const awardPoints = async (accountId: string) => {
+  const awardPoints = async (accountId: string): Promise<boolean> => {
     try {
       setIsLoading(true)
       const formData = new FormData()
@@ -441,14 +420,27 @@ export function OnboardingModal({
       }
 
       // Invalidate relevant queries
-      queryClient.invalidateQueries({
-        queryKey: ['question-completion', accountId.toLowerCase(), question.id],
-      })
-      queryClient.invalidateQueries({
-        queryKey: ['epoch-progress', accountId.toLowerCase(), currentEpoch?.id],
-      })
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: [
+            'question-completion',
+            accountId.toLowerCase(),
+            question.id,
+          ],
+        }),
+        queryClient.invalidateQueries({
+          queryKey: [
+            'epoch-progress',
+            accountId.toLowerCase(),
+            currentEpoch?.id,
+          ],
+        }),
+      ])
+
+      return true
     } catch (error) {
       logger('Error awarding points:', error)
+      return false
     } finally {
       setIsLoading(false)
     }
@@ -456,25 +448,33 @@ export function OnboardingModal({
 
   const handleClose = useCallback(() => {
     const isFlowComplete =
-      state.currentStep === STEPS.REWARD && txState?.status === 'complete'
+      state.currentStep === STEPS.REWARD &&
+      txState?.status === 'complete' &&
+      !isLoading // Only consider complete if not still loading
 
-    onClose()
+    // Only close if we're not in the reward step or points have been awarded
+    if (state.currentStep !== STEPS.REWARD || (isFlowComplete && userWallet)) {
+      onClose()
 
-    setTimeout(() => {
-      setState(INITIAL_STATE)
-      setSteps(STEPS_CONFIG)
-      resetTransition()
+      // Reduced from 300ms to 150ms to match transition duration
+      setTimeout(() => {
+        setState(INITIAL_STATE)
+        setSteps(STEPS_CONFIG)
+        resetTransition()
 
-      if (isFlowComplete && question?.id && currentEpoch?.id) {
-        const targetPath = `/quests/questions/${currentEpoch.id}/${question.id}`
-        if (location.pathname !== targetPath) {
-          navigate(targetPath)
+        if (isFlowComplete && question?.id && currentEpoch?.id) {
+          const targetPath = `/quests/questions/${currentEpoch.id}/${question.id}`
+          if (location.pathname !== targetPath) {
+            navigate(targetPath)
+          }
         }
-      }
-    }, ANIMATION_DURATION)
+      }, 150)
+    }
   }, [
     state.currentStep,
     txState?.status,
+    isLoading,
+    userWallet,
     onClose,
     resetTransition,
     question?.id,
@@ -565,21 +565,18 @@ export function OnboardingModal({
                 />
               )}
 
-              {state.currentStep === STEPS.REWARD &&
-                state.selectedTopic &&
-                txState &&
-                txState.txHash && (
-                  <RewardStep
-                    isOpen={state.currentStep === STEPS.REWARD}
-                    selectedTopic={state.selectedTopic}
-                    newAtomMetadata={state.newAtomMetadata}
-                    txHash={txState.txHash}
-                    userWallet={userWallet}
-                    awardPoints={awardPoints}
-                    questionId={question.id}
-                    epochId={currentEpoch?.id}
-                  />
-                )}
+              {state.currentStep === STEPS.REWARD && state.selectedTopic && (
+                <RewardStep
+                  isOpen={state.currentStep === STEPS.REWARD}
+                  selectedTopic={state.selectedTopic}
+                  newAtomMetadata={state.newAtomMetadata}
+                  txHash={txState?.txHash}
+                  userWallet={userWallet}
+                  awardPoints={awardPoints}
+                  questionId={question?.id}
+                  epochId={currentEpoch?.id}
+                />
+              )}
             </div>
             <DialogFooter className="w-full items-center">
               <div className="flex flex-row justify-between px-5 py-5 w-full rounded-b-xl bg-[#0A0A0A]">

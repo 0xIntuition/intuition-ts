@@ -548,13 +548,13 @@ export function SignalStep({
                     />
                   )}
                 </div>
-                <div className="flex flex-col gap-0.5">
+                <div className="flex flex-col gap-0.5 w-full">
                   <Text variant={TextVariant.headline}>
                     {atom?.label ?? triple?.subject.label}
                   </Text>
                   <Text
                     variant={TextVariant.small}
-                    className="text-primary/70 flex flex-row gap-1 items-center"
+                    className="text-primary/70 flex flex-row gap-1 items-center w-full"
                   >
                     <List className="h-3 w-3 text-primary/70" /> in list{' '}
                     {triple?.object.label}
@@ -562,7 +562,7 @@ export function SignalStep({
                 </div>
               </div>
 
-              <div className="flex flex-col gap-2 w-full pr-6">
+              <div className="flex flex-col gap-2 pr-6">
                 <div className="flex items-center justify-end">
                   <Text
                     variant={TextVariant.headline}
