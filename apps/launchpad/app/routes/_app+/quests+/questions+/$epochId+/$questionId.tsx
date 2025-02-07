@@ -33,6 +33,7 @@ import { OnboardingModal } from '@components/survey-modal/survey-modal'
 import { columns } from '@components/ui/table/columns'
 import { DataTable } from '@components/ui/table/data-table'
 import { MIN_DEPOSIT, ZERO_ADDRESS } from '@consts/general'
+import { Question } from '@lib/graphql/types'
 import { useGoBack } from '@lib/hooks/useGoBack'
 import { useQuestionData } from '@lib/hooks/useQuestionData'
 import { fetchEpochQuestion } from '@lib/services/epochs'
@@ -196,6 +197,10 @@ export default function MiniGameOne() {
 
   const { authenticated } = usePrivy()
 
+  const questionData = useQuestionData({
+    questionId: parseInt(questionId || '1', 10),
+  })
+
   const {
     title,
     enabled,
@@ -205,9 +210,7 @@ export default function MiniGameOne() {
     isLoading: isQuestionLoading,
     predicateId,
     objectId,
-  } = useQuestionData({
-    questionId: parseInt(questionId || '1', 10),
-  })
+  } = questionData
 
   // Add defensive check for location
   const hasUserParam = location?.search
@@ -345,7 +348,7 @@ export default function MiniGameOne() {
   const handleStartOnboarding = () => {
     setOnboardingModal({
       isOpen: true,
-      questionId: parseInt(questionId || '1', 10),
+      question: questionData as unknown as Question,
       predicateId,
       objectId,
     })
@@ -354,7 +357,7 @@ export default function MiniGameOne() {
   const handleCloseOnboarding = () => {
     setOnboardingModal({
       isOpen: false,
-      questionId: null,
+      question: null,
       predicateId,
       objectId,
     })
@@ -586,7 +589,7 @@ export default function MiniGameOne() {
         tvl={shareModalActive.tvl}
       />
       <OnboardingModal
-        questionId={parseInt(questionId || '1', 10)}
+        question={questionData as unknown as Question}
         predicateId={predicateId}
         objectId={objectId}
         isOpen={onboardingModal.isOpen}

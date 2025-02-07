@@ -220,17 +220,17 @@ export default function EpochQuestions() {
   )
 
   const handleStartOnboarding = (
-    questionId: number,
+    question: Question,
     predicateId: number,
     objectId: number,
   ) => {
-    setOnboardingModal({ isOpen: true, questionId, predicateId, objectId })
+    setOnboardingModal({ isOpen: true, question, predicateId, objectId })
   }
 
   const handleCloseOnboarding = () => {
     setOnboardingModal({
       isOpen: false,
-      questionId: null,
+      question: null,
       predicateId: null,
       objectId: null,
     })
@@ -277,7 +277,7 @@ export default function EpochQuestions() {
               question={question}
               onStart={() =>
                 handleStartOnboarding(
-                  question.id,
+                  question,
                   question.predicate_id,
                   question.object_id,
                 )
@@ -289,7 +289,7 @@ export default function EpochQuestions() {
       <OnboardingModal
         isOpen={onboardingModal.isOpen}
         onClose={handleCloseOnboarding}
-        questionId={onboardingModal.questionId || 0}
+        question={onboardingModal.question!}
         predicateId={onboardingModal.predicateId || 0}
         objectId={onboardingModal.objectId || 0}
       />

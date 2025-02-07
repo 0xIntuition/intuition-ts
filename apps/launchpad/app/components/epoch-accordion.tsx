@@ -12,7 +12,7 @@ import { useGetCurrentEpoch } from '@lib/hooks/useGetCurrentEpoch'
 import type { Question } from '@lib/services/questions'
 import { Link } from '@remix-run/react'
 
-import { QuestionCardWrapper } from './question-card-wrapper'
+import { QuestionRowWrapper } from './question-row-wrapper'
 
 interface EpochAccordionProps {
   epochs: Array<{
@@ -26,7 +26,7 @@ interface EpochAccordionProps {
     }
   }>
   onStartQuestion: (
-    questionId: number,
+    question: Question,
     predicateId: number,
     objectId: number,
   ) => void
@@ -58,14 +58,14 @@ export function EpochAccordion({
     <Accordion
       type="single"
       collapsible
-      className="w-full space-y-4"
+      className="w-full space-y-4 rounded-lg bg-white/5 backdrop-blur-md backdrop-saturate-150 border border-border/10"
       defaultValue={defaultValue}
     >
       {epochs.map((epoch) => (
         <AccordionItem
           key={epoch.id}
           value={`epoch-${epoch.id}`}
-          className="border rounded-lg bg-background-muted px-4"
+          className="rounded-lg px-4"
         >
           <AccordionTrigger className="hover:no-underline">
             <div className="flex justify-between w-full items-center">
@@ -93,14 +93,14 @@ export function EpochAccordion({
             </div>
           </AccordionTrigger>
           <AccordionContent>
-            <div className="grid gap-6 md:grid-cols-2 py-4">
+            <div className="flex flex-col gap-4 py-4">
               {epoch.questions.map((question) => (
                 <Suspense key={question.id} fallback={<div>Loading...</div>}>
-                  <QuestionCardWrapper
+                  <QuestionRowWrapper
                     question={question}
                     onStart={() =>
                       onStartQuestion(
-                        question.id,
+                        question,
                         question.predicate_id,
                         question.object_id,
                       )

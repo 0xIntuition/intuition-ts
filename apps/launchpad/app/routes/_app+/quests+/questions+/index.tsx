@@ -231,17 +231,17 @@ export default function Questions() {
   console.log('epochsWithQuestions', epochsWithQuestions)
 
   const handleStartOnboarding = (
-    questionId: number,
+    question: Question,
     predicateId: number,
     objectId: number,
   ) => {
-    setOnboardingModal({ isOpen: true, questionId, predicateId, objectId })
+    setOnboardingModal({ isOpen: true, question, predicateId, objectId })
   }
 
   const handleCloseOnboarding = () => {
     setOnboardingModal({
       isOpen: false,
-      questionId: null,
+      question: null,
       predicateId: null,
       objectId: null,
     })
@@ -267,9 +267,9 @@ export default function Questions() {
       <OnboardingModal
         isOpen={onboardingModal.isOpen}
         onClose={handleCloseOnboarding}
-        questionId={onboardingModal.questionId || 0}
         predicateId={onboardingModal.predicateId || 0}
         objectId={onboardingModal.objectId || 0}
+        question={onboardingModal.question!}
       />
       <AtomDetailsModal
         isOpen={atomDetailsModal.isOpen}

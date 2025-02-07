@@ -11,7 +11,7 @@ export interface Question {
 }
 
 export interface GetQuestionsResponse {
-  epoch_questions: Question[]
+  questions: Question[]
 }
 
 export interface GetQuestionResponse {
@@ -26,7 +26,7 @@ export async function fetchQuestions(): Promise<Question[]> {
     throw new Error(data.error || 'Failed to fetch questions')
   }
 
-  return data.epoch_questions ?? []
+  return data.questions ?? []
 }
 
 export async function fetchQuestion(id: number): Promise<Question | null> {

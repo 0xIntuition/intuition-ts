@@ -116,12 +116,14 @@ const useStepTransition = (
   return { isTransitioning, handleTransition, resetTransition }
 }
 
+const ANIMATION_DURATION = 300 // Add this at the top with other constants
+
 export function OnboardingModal({
   isOpen,
   onClose,
-  questionId,
   predicateId,
   objectId,
+  question,
 }: OnboardingModalProps) {
   const queryClient = useQueryClient()
   const { user: privyUser } = usePrivy()
@@ -178,6 +180,10 @@ export function OnboardingModal({
           searchTerm,
         },
       ],
+      staleTime: Infinity,
+      gcTime: 1000 * 60 * 5,
+      refetchOnMount: true,
+      refetchOnWindowFocus: false,
     },
   )
 
@@ -187,7 +193,7 @@ export function OnboardingModal({
       setSearchTerm('')
       resetTransition()
 
-      queryClient.refetchQueries({
+      queryClient.invalidateQueries({
         queryKey: [
           'get-list-details',
           {
@@ -206,13 +212,27 @@ export function OnboardingModal({
 
       const timer = setTimeout(() => {
         setState(INITIAL_STATE)
-        setSearchTerm('')
         resetTransition()
-      }, 300) // Animation duration
+      }, ANIMATION_DURATION)
 
       return () => clearTimeout(timer)
     }
   }, [isOpen, queryClient, predicateId, objectId, resetTransition])
+
+  useEffect(() => {
+    if (searchTerm !== undefined) {
+      queryClient.invalidateQueries({
+        queryKey: [
+          'get-list-details',
+          {
+            predicateId,
+            objectId,
+            searchTerm,
+          },
+        ],
+      })
+    }
+  }, [searchTerm, predicateId, objectId, queryClient])
 
   useEffect(() => {
     if (!listData?.globalTriples) {
@@ -226,7 +246,10 @@ export function OnboardingModal({
       triple: triple as TripleType,
       selected: false,
     }))
-    setTopics(newTopics)
+
+    if (newTopics.length > 0) {
+      setTopics(newTopics)
+    }
 
     setSteps((prev) => {
       if (newTopics.length > 0) {
@@ -235,9 +258,7 @@ export function OnboardingModal({
       return prev
     })
 
-    return () => {
-      setTopics([])
-    }
+    return undefined
   }, [listData?.globalTriples])
 
   useEffect(() => {
@@ -405,7 +426,7 @@ export function OnboardingModal({
       setIsLoading(true)
       const formData = new FormData()
       formData.append('accountId', accountId)
-      formData.append('questionId', questionId?.toString() ?? '')
+      formData.append('questionId', question.id?.toString() ?? '')
       formData.append('epochId', currentEpoch?.id?.toString() ?? '')
       formData.append('pointAwardAmount', '200') // TODO: Get from question data
       formData.append('subjectId', subjectId ?? '')
@@ -421,7 +442,7 @@ export function OnboardingModal({
 
       // Invalidate relevant queries
       queryClient.invalidateQueries({
-        queryKey: ['question-completion', accountId.toLowerCase(), questionId],
+        queryKey: ['question-completion', accountId.toLowerCase(), question.id],
       })
       queryClient.invalidateQueries({
         queryKey: ['epoch-progress', accountId.toLowerCase(), currentEpoch?.id],
@@ -434,19 +455,33 @@ export function OnboardingModal({
   }
 
   const handleClose = useCallback(() => {
-    // Reset all state
-    setState(INITIAL_STATE)
-    setTopics([])
-    setSearchTerm('')
-    setSteps(STEPS_CONFIG)
-    resetTransition()
+    const isFlowComplete =
+      state.currentStep === STEPS.REWARD && txState?.status === 'complete'
+
     onClose()
 
-    const targetPath = `/quests/questions/question/${questionId}`
-    if (location.pathname !== targetPath) {
-      navigate(targetPath)
-    }
-  }, [resetTransition, onClose, questionId, location.pathname, navigate])
+    setTimeout(() => {
+      setState(INITIAL_STATE)
+      setSteps(STEPS_CONFIG)
+      resetTransition()
+
+      if (isFlowComplete && question?.id && currentEpoch?.id) {
+        const targetPath = `/quests/questions/${currentEpoch.id}/${question.id}`
+        if (location.pathname !== targetPath) {
+          navigate(targetPath)
+        }
+      }
+    }, ANIMATION_DURATION)
+  }, [
+    state.currentStep,
+    txState?.status,
+    onClose,
+    resetTransition,
+    question?.id,
+    currentEpoch?.id,
+    location.pathname,
+    navigate,
+  ])
 
   const onCreationSuccess = (metadata: NewAtomMetadata) => {
     handleTransition((prev) => ({
@@ -509,6 +544,7 @@ export function OnboardingModal({
                   onToggleTopic={toggleTopic}
                   onSearchChange={handleSearchChange}
                   onCreateClick={handleCreateClick}
+                  question={question}
                 />
               )}
 
@@ -540,7 +576,7 @@ export function OnboardingModal({
                     txHash={txState.txHash}
                     userWallet={userWallet}
                     awardPoints={awardPoints}
-                    questionId={questionId}
+                    questionId={question.id}
                     epochId={currentEpoch?.id}
                   />
                 )}

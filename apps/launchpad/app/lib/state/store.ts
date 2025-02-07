@@ -1,3 +1,4 @@
+import { Question } from '@lib/graphql/types'
 import { AtomType, TripleType, VaultDetailsType } from 'app/types'
 import type { WritableAtom } from 'jotai'
 import { atom, createStore } from 'jotai'
@@ -38,12 +39,12 @@ export const stakeModalAtom = atom<StakeModalState>({
 
 export const onboardingModalAtom = atom<{
   isOpen: boolean
-  questionId: number | null
+  question: Question | null
   predicateId: number | null
   objectId: number | null
 }>({
   isOpen: false,
-  questionId: null,
+  question: null,
   predicateId: null,
   objectId: null,
 })
