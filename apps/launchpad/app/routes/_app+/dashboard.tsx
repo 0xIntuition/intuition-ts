@@ -128,9 +128,6 @@ export default function Dashboard() {
 
   const stages = CHAPTERS.CHAPTERS
 
-  console.log('Current Epoch:', currentEpoch)
-  console.log('Epoch Progress:', epochProgress)
-
   // Mock data for now - replace with real data later
   const epochs = [
     {
