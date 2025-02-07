@@ -6,10 +6,10 @@ import {
   IconName,
   Text,
   TextVariant,
-  Trunctacular,
 } from '@0xintuition/1ui'
 
 import SubmitButton from '@components/submit-button'
+import { truncateString } from '@lib/utils/misc'
 import { useNavigate } from '@remix-run/react'
 import { CheckCircle } from 'lucide-react'
 
@@ -118,10 +118,9 @@ export function QuestionCard({
                 </div>
                 <div className="text-left w-full">
                   <div className="text-white text-sm leading-5 w-full">
-                    <Trunctacular
-                      variant={TextVariant.body}
-                      value={completedAtom.label}
-                    />
+                    <Text variant={TextVariant.body}>
+                      {truncateString(completedAtom.label, 20)}
+                    </Text>
                   </div>
                 </div>
                 <div className="flex justify-end pr-4">

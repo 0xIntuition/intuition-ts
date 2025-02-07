@@ -43,7 +43,7 @@ import {
 } from '@lib/state/store'
 import { usePrivy } from '@privy-io/react-auth'
 import type { LoaderFunctionArgs, MetaFunction } from '@remix-run/node'
-import { useLoaderData, useParams } from '@remix-run/react'
+import { useLoaderData, useLocation, useParams } from '@remix-run/react'
 import { getUser } from '@server/auth'
 // import { requireUser } from '@server/auth'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
@@ -58,7 +58,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const user = await getUser(request)
   const userWallet = user?.wallet?.address?.toLowerCase()
 
-  const questionData = await fetchEpochQuestion(Number(params.id))
+  const questionData = await fetchEpochQuestion(Number(params.questionId))
   const predicateId = questionData?.predicate_id
   const objectId = questionData?.object_id
 
@@ -66,7 +66,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   let completion = null
   if (userWallet) {
     const completionResponse = await fetch(
-      `${new URL(request.url).origin}/resources/get-question-completion?accountId=${userWallet}&questionId=${params.id}`,
+      `${new URL(request.url).origin}/resources/get-question-completion?accountId=${userWallet}&questionId=${params.questionId}`,
     )
     const completionData = await completionResponse.json()
     completion = completionData.completion
@@ -186,17 +186,18 @@ export function ErrorBoundary() {
 }
 
 export default function MiniGameOne() {
-  const goBack = useGoBack({ fallbackRoute: '/quests/questions' })
-  const { id } = useParams()
+  const location = useLocation()
+  const { epochId, questionId } = useParams()
+  const goBack = useGoBack({ fallbackRoute: `/quests/questions/${epochId}` })
   const { userWallet, completion } = useLoaderData<typeof loader>()
   const [shareModalActive, setShareModalActive] = useAtom(shareModalAtom)
   const [onboardingModal, setOnboardingModal] = useAtom(onboardingModalAtom)
   const [atomDetailsModal, setAtomDetailsModal] = useAtom(atomDetailsModalAtom)
 
   const { authenticated } = usePrivy()
+
   const {
     title,
-    // description,
     enabled,
     pointAwardAmount,
     isCompleted,
@@ -205,13 +206,16 @@ export default function MiniGameOne() {
     predicateId,
     objectId,
   } = useQuestionData({
-    questionId: parseInt(id || '1', 10),
+    questionId: parseInt(questionId || '1', 10),
   })
 
-  const hasUserParam = location.search.includes('user=')
+  // Add defensive check for location
+  const hasUserParam = location?.search
+    ? location.search.includes('user=')
+    : false
   const fullPath = hasUserParam
-    ? `${location.pathname}${location.search}`
-    : `${location.pathname}${location.search}${location.search ? '&' : '?'}`
+    ? `${location?.pathname}${location?.search}`
+    : `${location?.pathname}${location?.search}${location?.search ? '&' : '?'}`
 
   const variables = {
     tagPredicateId: predicateId,
@@ -341,7 +345,7 @@ export default function MiniGameOne() {
   const handleStartOnboarding = () => {
     setOnboardingModal({
       isOpen: true,
-      questionId: parseInt(id || '1', 10),
+      questionId: parseInt(questionId || '1', 10),
       predicateId,
       objectId,
     })
@@ -379,7 +383,7 @@ export default function MiniGameOne() {
   if (isLoading) {
     return (
       <>
-        <div className="flex items-center gap-4 mb-6">
+        {/* <div className="flex items-center gap-4 mb-6">
           <Button
             variant="ghost"
             size="icon"
@@ -389,9 +393,11 @@ export default function MiniGameOne() {
             <Icon name="chevron-left" className="h-4 w-4" />
           </Button>
           <div className="flex flex-1 justify-between items-center">
-            <PageHeader title={`Intuition Questions Module: Question ${id}`} />
+            <PageHeader
+              title={`Intuition Questions Module: Question ${questionId}`}
+            />
           </div>
-        </div>
+        </div> */}
         <div className="flex items-center justify-center h-[400px]">
           <LoadingLogo size={100} />
         </div>
@@ -411,7 +417,9 @@ export default function MiniGameOne() {
           <Icon name="chevron-left" className="h-4 w-4" />
         </Button>
         <div className="flex flex-1 justify-between items-center">
-          <PageHeader title={`${currentEpoch?.name} | Question ${id}`} />
+          <PageHeader
+            title={`${currentEpoch?.name} | Question ${questionId}`}
+          />
           <div className="flex items-center gap-2">
             <Button
               variant="secondary"
@@ -578,7 +586,7 @@ export default function MiniGameOne() {
         tvl={shareModalActive.tvl}
       />
       <OnboardingModal
-        questionId={parseInt(id || '1', 10)}
+        questionId={parseInt(questionId || '1', 10)}
         predicateId={predicateId}
         objectId={objectId}
         isOpen={onboardingModal.isOpen}

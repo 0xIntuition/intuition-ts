@@ -76,7 +76,7 @@ export function QuestionCardWrapper({ onStart, question }: QuestionCardProps) {
     return <LoadingCard />
   }
 
-  const resultsLink = `/quests/questions/question/${question.id}`
+  const resultsLink = `/quests/questions/${question.epoch_id}/${question.id}`
 
   return (
     <QuestionCard

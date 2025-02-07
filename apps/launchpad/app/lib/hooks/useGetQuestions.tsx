@@ -1,12 +1,16 @@
 import logger from '@lib/utils/logger'
 import { useQuery } from '@tanstack/react-query'
 
-export function useGetQuestions() {
+export function useGetQuestions(epochId?: number) {
   return useQuery({
-    queryKey: ['get-questions'],
+    queryKey: ['get-questions', epochId],
     queryFn: async () => {
       try {
-        const response = await fetch('/resources/get-questions')
+        const response = await fetch(
+          epochId
+            ? `/resources/get-questions?epochId=${epochId}`
+            : '/resources/get-questions',
+        )
         const data = await response.json()
 
         if (!response.ok) {

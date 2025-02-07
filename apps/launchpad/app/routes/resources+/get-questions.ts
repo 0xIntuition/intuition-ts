@@ -1,9 +1,11 @@
 import { pointsClient } from '@lib/graphql/client'
 import logger from '@lib/utils/logger'
+import { LoaderFunctionArgs } from '@remix-run/node'
 import { gql } from 'graphql-request'
 
 interface Question {
   id: number
+  epoch_id: number
   title: string
   description: string
   point_award_amount: number
@@ -19,10 +21,17 @@ interface GetQuestionsResponse {
   epoch_questions: Question[]
 }
 
+interface GetQuestionsVariables {
+  where?: {
+    epoch_id?: { _eq: number }
+  }
+}
+
 const GetQuestionsQuery = gql`
-  query GetQuestions {
-    epoch_questions(order_by: { order: asc }) {
+  query GetQuestions($where: epoch_questions_bool_exp) {
+    epoch_questions(where: $where, order_by: { order: asc }) {
       id
+      epoch_id
       title
       description
       point_award_amount
@@ -36,16 +45,35 @@ const GetQuestionsQuery = gql`
   }
 `
 
-export async function loader() {
+export async function loader({ request }: LoaderFunctionArgs) {
+  const url = new URL(request.url)
+  const epochId = url.searchParams.get('epochId')
+
   try {
-    logger('Fetching all questions')
-    const data =
-      await pointsClient.request<GetQuestionsResponse>(GetQuestionsQuery)
+    logger(
+      'Fetching questions',
+      epochId ? `for epoch ${epochId}` : 'for all epochs',
+    )
+
+    const variables: GetQuestionsVariables = {}
+    if (epochId) {
+      variables.where = {
+        epoch_id: { _eq: Number(epochId) },
+      }
+    }
+
+    const data = await pointsClient.request<
+      GetQuestionsResponse,
+      GetQuestionsVariables
+    >(GetQuestionsQuery, variables)
     logger('Questions response:', data)
 
-    return new Response(JSON.stringify({ questions: data.epoch_questions }), {
-      headers: { 'Content-Type': 'application/json' },
-    })
+    return new Response(
+      JSON.stringify({ epoch_questions: data.epoch_questions }),
+      {
+        headers: { 'Content-Type': 'application/json' },
+      },
+    )
   } catch (error) {
     logger('Error fetching questions:', error)
     return new Response(

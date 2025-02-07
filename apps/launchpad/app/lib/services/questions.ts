@@ -1,5 +1,6 @@
 export interface Question {
   id: number
+  epoch_id: number
   title: string
   description: string
   enabled: boolean
@@ -10,7 +11,7 @@ export interface Question {
 }
 
 export interface GetQuestionsResponse {
-  questions: Question[]
+  epoch_questions: Question[]
 }
 
 export interface GetQuestionResponse {
@@ -25,7 +26,7 @@ export async function fetchQuestions(): Promise<Question[]> {
     throw new Error(data.error || 'Failed to fetch questions')
   }
 
-  return data.questions ?? []
+  return data.epoch_questions ?? []
 }
 
 export async function fetchQuestion(id: number): Promise<Question | null> {
