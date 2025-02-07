@@ -16,17 +16,19 @@ interface AuthContextType {
   disconnect: () => Promise<void>
 }
 
-const AuthContext = createContext<AuthContextType | null>(null)
+export const AuthContext = createContext<AuthContextType | null>(null)
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const { ready: privyReady, authenticated } = usePrivy()
   const [isLoading, setIsLoading] = useState(false)
+  const revalidator = useRevalidator()
 
   const { login } = useLogin({
     onComplete: (params) => {
       logger('Login complete:', params)
       setIsLoading(false)
       toast.success('Wallet Connected')
+      revalidator.revalidate()
     },
     onError: (error: string) => {
       console.error('Login error:', error)
@@ -34,13 +36,31 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       toast.error(getPrivyErrorMessage(error))
     },
   })
+
   const { logout } = useLogout({
     onSuccess: () => {
       setIsLoading(false)
       toast.warning('Wallet Disconnected')
+      revalidator.revalidate()
     },
   })
-  const revalidator = useRevalidator()
+
+  // Return early if Privy is not ready to prevent hooks from being called too early
+  if (!privyReady) {
+    return (
+      <AuthContext.Provider
+        value={{
+          isReady: false,
+          isAuthenticated: false,
+          isLoading: true,
+          connect: async () => {},
+          disconnect: async () => {},
+        }}
+      >
+        {children}
+      </AuthContext.Provider>
+    )
+  }
 
   const connect = async () => {
     setIsLoading(true)
@@ -51,7 +71,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       setIsLoading(true)
       await logout()
-      revalidator.revalidate()
     } catch (error) {
       console.error('Failed to disconnect:', error)
       if (error instanceof Error) {
@@ -78,7 +97,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 export function useAuth() {
   const context = useContext(AuthContext)
   if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider')
+    // Return a default state during hot reloads or when context is not available
+    return {
+      isReady: false,
+      isAuthenticated: false,
+      isLoading: true,
+      connect: async () => {},
+      disconnect: async () => {},
+    }
   }
   return context
 }

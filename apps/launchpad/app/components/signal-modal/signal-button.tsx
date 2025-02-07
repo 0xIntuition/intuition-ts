@@ -87,9 +87,9 @@ const SignalButton = React.forwardRef<HTMLButtonElement, SignalButtonProps>(
             <ArrowBigDown className="w-3 h-3 fill-destructive text-destructive -mt-1" />
           </div>
         ) : direction === ClaimPosition.claimAgainst ? (
-          <ArrowBigDown className="w-4 h-4 fill-inherit" />
+          <ArrowBigDown className="w-4 h-4 fill-inherit !text-destructive" />
         ) : (
-          <ArrowBigUp className="w-4 h-4 fill-inherit" />
+          <ArrowBigUp className="w-4 h-4 fill-inherit !text-success" />
         )}
         <Text variant={TextVariant.caption} className="text-inherit">
           {numPositions}

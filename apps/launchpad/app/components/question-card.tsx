@@ -6,13 +6,14 @@ import {
   IconName,
   Text,
   TextVariant,
-  Trunctacular,
 } from '@0xintuition/1ui'
 
+import SubmitButton from '@components/submit-button'
+import { truncateString } from '@lib/utils/misc'
 import { useNavigate } from '@remix-run/react'
 import { CheckCircle } from 'lucide-react'
 
-interface MinigameCardProps {
+interface QuestionCardProps {
   className?: string
   onStart: () => void
   title: string
@@ -20,7 +21,6 @@ interface MinigameCardProps {
   image: string
   points: number
   pointAwardAmount: number
-  hideCTA?: boolean
   isLoading?: boolean
   resultsLink?: string
   completedAtom?: {
@@ -32,7 +32,7 @@ interface MinigameCardProps {
   onCompletedAtomClick?: (id: number) => void
 }
 
-export function MinigameCard({
+export function QuestionCard({
   className,
   onStart,
   title,
@@ -40,12 +40,11 @@ export function MinigameCard({
   image,
   points,
   pointAwardAmount,
-  hideCTA = false,
   isLoading = false,
   resultsLink,
   completedAtom,
   onCompletedAtomClick,
-}: MinigameCardProps) {
+}: QuestionCardProps) {
   const navigate = useNavigate()
 
   return (
@@ -67,30 +66,28 @@ export function MinigameCard({
           </Text>
         </div>
 
-        {!hideCTA && (
-          <div className="flex flex-col gap-4 items-center justify-between">
-            {points <= 0 && (
-              <Button
-                onClick={() => onStart()}
-                variant="primary"
-                size="lg"
-                className="min-w-[200px]"
-                disabled={isLoading}
-              >
-                {isLoading ? 'Loading...' : 'Answer Question'}
-              </Button>
-            )}
-            <Button
-              onClick={() => navigate(resultsLink || '')}
-              variant="secondary"
+        <div className="flex flex-col gap-4 items-center justify-between">
+          {points <= 0 && (
+            <SubmitButton
+              onClick={() => onStart()}
+              className="min-w-[200px]"
               size="lg"
-              className="min-w-[200px] rounded-full !opacity-100"
               disabled={isLoading}
-            >
-              See Results
-            </Button>
-          </div>
-        )}
+              buttonText={'Answer Question'}
+              loading={isLoading}
+              loadingText="Loading..."
+            />
+          )}
+          <Button
+            onClick={() => navigate(resultsLink || '')}
+            variant="secondary"
+            size="lg"
+            className="min-w-[200px] rounded-full !bg-background"
+            disabled={isLoading}
+          >
+            See Results
+          </Button>
+        </div>
 
         <div
           className={cn(
@@ -121,10 +118,9 @@ export function MinigameCard({
                 </div>
                 <div className="text-left w-full">
                   <div className="text-white text-sm leading-5 w-full">
-                    <Trunctacular
-                      variant={TextVariant.body}
-                      value={completedAtom.label}
-                    />
+                    <Text variant={TextVariant.body}>
+                      {truncateString(completedAtom.label, 20)}
+                    </Text>
                   </div>
                 </div>
                 <div className="flex justify-end pr-4">

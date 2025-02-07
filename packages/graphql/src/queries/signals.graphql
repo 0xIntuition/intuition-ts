@@ -107,11 +107,13 @@ query GetSignals(
       sender {
         id
         label
+        image
       }
       receiver_id
       receiver {
         id
         label
+        image
       }
       shares_for_receiver
       sender_assets_after_total_fees
@@ -134,11 +136,13 @@ query GetSignals(
       sender {
         id
         label
+        image
       }
       receiver_id
       receiver {
         id
         label
+        image
       }
       assets_for_receiver
       shares_redeemed_by_sender

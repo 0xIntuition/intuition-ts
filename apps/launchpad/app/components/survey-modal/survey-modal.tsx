@@ -16,6 +16,7 @@ import { useGetListDetailsQuery } from '@0xintuition/graphql'
 
 import logger from '@lib/utils/logger'
 import { usePrivy } from '@privy-io/react-auth'
+import { useLocation, useNavigate } from '@remix-run/react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { TripleType } from 'app/types'
 import { ClientOnly } from 'remix-utils/client-only'
@@ -118,9 +119,9 @@ const useStepTransition = (
 export function OnboardingModal({
   isOpen,
   onClose,
-  questionId,
   predicateId,
   objectId,
+  question,
 }: OnboardingModalProps) {
   const queryClient = useQueryClient()
   const { user: privyUser } = usePrivy()
@@ -136,6 +137,8 @@ export function OnboardingModal({
 
   const transition = useStepTransition(setState)
   const { isTransitioning, handleTransition, resetTransition } = transition
+  const navigate = useNavigate()
+  const location = useLocation()
 
   const { data: currentEpoch } = useQuery({
     queryKey: ['current-epoch'],
@@ -397,12 +400,12 @@ export function OnboardingModal({
     [handleTransition, userWallet],
   )
 
-  const awardPoints = async (accountId: string) => {
+  const awardPoints = async (accountId: string): Promise<boolean> => {
     try {
       setIsLoading(true)
       const formData = new FormData()
       formData.append('accountId', accountId)
-      formData.append('questionId', questionId?.toString() ?? '')
+      formData.append('questionId', question.id?.toString() ?? '')
       formData.append('epochId', currentEpoch?.id?.toString() ?? '')
       formData.append('pointAwardAmount', '200') // TODO: Get from question data
       formData.append('subjectId', subjectId ?? '')
@@ -417,28 +420,68 @@ export function OnboardingModal({
       }
 
       // Invalidate relevant queries
-      queryClient.invalidateQueries({
-        queryKey: ['question-completion', accountId.toLowerCase(), questionId],
-      })
-      queryClient.invalidateQueries({
-        queryKey: ['epoch-progress', accountId.toLowerCase(), currentEpoch?.id],
-      })
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: [
+            'question-completion',
+            accountId.toLowerCase(),
+            question.id,
+          ],
+        }),
+        queryClient.invalidateQueries({
+          queryKey: [
+            'epoch-progress',
+            accountId.toLowerCase(),
+            currentEpoch?.id,
+          ],
+        }),
+      ])
+
+      return true
     } catch (error) {
       logger('Error awarding points:', error)
+      return false
     } finally {
       setIsLoading(false)
     }
   }
 
   const handleClose = useCallback(() => {
-    // Reset all state
-    setState(INITIAL_STATE)
-    setTopics([])
-    setSearchTerm('')
-    setSteps(STEPS_CONFIG)
-    resetTransition()
-    onClose()
-  }, [resetTransition, onClose])
+    const isFlowComplete =
+      state.currentStep === STEPS.REWARD &&
+      txState?.status === 'complete' &&
+      !isLoading // Only consider complete if not still loading
+
+    // Only close if we're not in the reward step or points have been awarded
+    if (state.currentStep !== STEPS.REWARD || (isFlowComplete && userWallet)) {
+      onClose()
+
+      // Reduced from 300ms to 150ms to match transition duration
+      setTimeout(() => {
+        setState(INITIAL_STATE)
+        setSteps(STEPS_CONFIG)
+        resetTransition()
+
+        if (isFlowComplete && question?.id && currentEpoch?.id) {
+          const targetPath = `/quests/questions/${currentEpoch.id}/${question.id}`
+          if (location.pathname !== targetPath) {
+            navigate(targetPath)
+          }
+        }
+      }, 150)
+    }
+  }, [
+    state.currentStep,
+    txState?.status,
+    isLoading,
+    userWallet,
+    onClose,
+    resetTransition,
+    question?.id,
+    currentEpoch?.id,
+    location.pathname,
+    navigate,
+  ])
 
   const onCreationSuccess = (metadata: NewAtomMetadata) => {
     handleTransition((prev) => ({
@@ -501,6 +544,7 @@ export function OnboardingModal({
                   onToggleTopic={toggleTopic}
                   onSearchChange={handleSearchChange}
                   onCreateClick={handleCreateClick}
+                  question={question}
                 />
               )}
 
@@ -521,21 +565,18 @@ export function OnboardingModal({
                 />
               )}
 
-              {state.currentStep === STEPS.REWARD &&
-                state.selectedTopic &&
-                txState &&
-                txState.txHash && (
-                  <RewardStep
-                    isOpen={state.currentStep === STEPS.REWARD}
-                    selectedTopic={state.selectedTopic}
-                    newAtomMetadata={state.newAtomMetadata}
-                    txHash={txState.txHash}
-                    userWallet={userWallet}
-                    awardPoints={awardPoints}
-                    questionId={questionId}
-                    epochId={currentEpoch?.id}
-                  />
-                )}
+              {state.currentStep === STEPS.REWARD && state.selectedTopic && (
+                <RewardStep
+                  isOpen={state.currentStep === STEPS.REWARD}
+                  selectedTopic={state.selectedTopic}
+                  newAtomMetadata={state.newAtomMetadata}
+                  txHash={txState?.txHash}
+                  userWallet={userWallet}
+                  awardPoints={awardPoints}
+                  questionId={question?.id}
+                  epochId={currentEpoch?.id}
+                />
+              )}
             </div>
             <DialogFooter className="w-full items-center">
               <div className="flex flex-row justify-between px-5 py-5 w-full rounded-b-xl bg-[#0A0A0A]">

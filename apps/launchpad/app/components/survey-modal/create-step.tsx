@@ -246,23 +246,28 @@ export function CreateStep({ onCreationSuccess }: CreateStepProps) {
             event.args.creator === (wallet?.address as `0x${string}`)
           ) {
             const vaultId = event.args.vaultID.toString()
-
-            onCreationSuccess({
-              name: atomData?.name ?? '',
-              image: atomData?.image ?? '',
-              vaultId,
-            })
-
-            toast.custom(() => (
-              <CreateAtomToast
-                id={vaultId}
-                txHash={txReceipt.transactionHash}
-              />
-            ))
             setLastTxHash(txReceipt.transactionHash)
+
+            // Use setTimeout to avoid state updates during render
+            setTimeout(() => {
+              onCreationSuccess({
+                name: atomData?.name ?? '',
+                image: atomData?.image,
+                vaultId,
+              })
+
+              toast.custom(() => (
+                <CreateAtomToast
+                  id={vaultId}
+                  txHash={txReceipt.transactionHash}
+                />
+              ))
+            }, 0)
+
+            return TransactionStatus.complete
           }
         }
-        return TransactionStatus.complete
+        return TransactionStatus.inProgress
       }
       if (isError) {
         reset()

@@ -107,7 +107,10 @@ function ActivityItemNew({
     <div className="rounded-xl p-4 last:mb-0 flex flex-col w-full max-sm:p-3 border border-border/10">
       <div className="flex flex-col justify-between gap-3 min-w-full max-md:flex-col max-md:gap-3">
         <div className="flex flex-row items-center gap-2 max-md:flex-col">
-          <IdentityTag variant={Identity.user} imgSrc={creator?.image ?? ''}>
+          <IdentityTag
+            variant={Identity.user}
+            imgSrc={creator?.image ?? creator?.atom?.image ?? ''}
+          >
             <Trunctacular
               value={creator?.label ?? creator?.id ?? creatorAddress ?? '?'}
               maxStringLength={32}

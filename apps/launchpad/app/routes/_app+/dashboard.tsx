@@ -12,6 +12,7 @@ import {
 } from '@0xintuition/graphql'
 
 import { AggregateIQ } from '@components/aggregate-iq'
+import { AuthCover } from '@components/auth-cover'
 import ChapterProgress from '@components/chapter-progress'
 import { EarnSection } from '@components/earn-section'
 import { ErrorPage } from '@components/error-page'
@@ -189,9 +190,6 @@ export default function Dashboard() {
     },
   ]
 
-  console.log('Current Epoch:', currentEpoch)
-  console.log('Epoch Progress:', epochProgress)
-
   // Mock data for now - replace with real data later
   const epochs = [
     {
@@ -264,7 +262,9 @@ export default function Dashboard() {
             transition={{ delay: 0.2, duration: 0.5 }}
             className="text-3xl font-bold text-primary"
           >
-            Welcome back, {user?.account?.label}!
+            {user?.account?.label
+              ? `Welcome back, ${user.account.label}!`
+              : `Welcome Intuit!`}
           </motion.h1>
           <motion.p
             initial={{ opacity: 0 }}
@@ -272,20 +272,23 @@ export default function Dashboard() {
             transition={{ delay: 0.4, duration: 0.5 }}
             className="text-primary/70"
           >
-            Ready to boost your Intuition today?
+            Are you ready to boost your Intuition?
           </motion.p>
         </div>
       </motion.div>
       <ChapterProgress
+        title="Chapters"
         stages={stages}
         currentStageIndex={(currentEpoch?.id ?? 1) - 1}
       />
-      <AggregateIQ
-        totalIQ={combinedTotal}
-        epochProgress={epochProgress}
-        rank={rankData?.rank}
-        totalUsers={rankData?.totalUsers}
-      />
+      <AuthCover buttonContainerClassName="h-full flex items-center justify-center">
+        <AggregateIQ
+          totalIQ={combinedTotal}
+          epochProgress={epochProgress}
+          rank={rankData?.rank}
+          totalUsers={rankData?.totalUsers}
+        />
+      </AuthCover>
       <EarnSection quests={earnCards} />
     </div>
   )

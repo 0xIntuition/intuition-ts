@@ -1,3 +1,4 @@
+import { Question } from '@lib/graphql/types'
 import { TripleType } from 'app/types'
 
 import { TransactionStateType } from '../../types/transaction'
@@ -43,9 +44,9 @@ export interface OnboardingState {
 export interface OnboardingModalProps {
   isOpen: boolean
   onClose: () => void
-  questionId: number
   predicateId: number
   objectId: number
+  question: Question
 }
 
 export interface SignalStepProps {

@@ -1,3 +1,4 @@
+import logger from '@lib/utils/logger'
 import { useQuery } from '@tanstack/react-query'
 
 export function useRelicPoints(address?: string) {
@@ -7,14 +8,23 @@ export function useRelicPoints(address?: string) {
       if (!address) {
         return null
       }
-      const response = await fetch(
-        `/resources/get-relic-points?address=${address.toLowerCase()}`,
-      )
-      const data = await response.json()
-      return data.relic_points
+
+      try {
+        const response = await fetch(
+          `/resources/get-relic-points?address=${address.toLowerCase()}`,
+        )
+        const data = await response.json()
+
+        if (!response.ok) {
+          throw new Error(data.error || 'Failed to fetch relic points')
+        }
+
+        return data.points
+      } catch (error) {
+        logger('Error fetching relic points:', error)
+        return null
+      }
     },
     enabled: !!address,
-    // This ensures we don't refetch on mount if we already have the data
-    staleTime: 30000, // Consider data fresh for 30 seconds
   })
 }

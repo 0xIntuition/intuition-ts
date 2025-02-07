@@ -33,6 +33,7 @@ import { OnboardingModal } from '@components/survey-modal/survey-modal'
 import { columns } from '@components/ui/table/columns'
 import { DataTable } from '@components/ui/table/data-table'
 import { MIN_DEPOSIT, ZERO_ADDRESS } from '@consts/general'
+import { Question } from '@lib/graphql/types'
 import { useGoBack } from '@lib/hooks/useGoBack'
 import { useQuestionData } from '@lib/hooks/useQuestionData'
 import { fetchEpochQuestion } from '@lib/services/epochs'
@@ -43,10 +44,10 @@ import {
 } from '@lib/state/store'
 import { usePrivy } from '@privy-io/react-auth'
 import type { LoaderFunctionArgs, MetaFunction } from '@remix-run/node'
-import { useLoaderData, useParams } from '@remix-run/react'
+import { useLoaderData, useLocation, useParams } from '@remix-run/react'
 import { getUser } from '@server/auth'
 // import { requireUser } from '@server/auth'
-import { dehydrate, QueryClient } from '@tanstack/react-query'
+import { dehydrate, QueryClient, useQueryClient } from '@tanstack/react-query'
 import { TripleType } from 'app/types'
 import { useAtom } from 'jotai'
 import { CheckCircle, ThumbsDown, ThumbsUp } from 'lucide-react'
@@ -58,7 +59,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const user = await getUser(request)
   const userWallet = user?.wallet?.address?.toLowerCase()
 
-  const questionData = await fetchEpochQuestion(Number(params.id))
+  const questionData = await fetchEpochQuestion(Number(params.questionId))
   const predicateId = questionData?.predicate_id
   const objectId = questionData?.object_id
 
@@ -66,7 +67,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   let completion = null
   if (userWallet) {
     const completionResponse = await fetch(
-      `${new URL(request.url).origin}/resources/get-question-completion?accountId=${userWallet}&questionId=${params.id}`,
+      `${new URL(request.url).origin}/resources/get-question-completion?accountId=${userWallet}&questionId=${params.questionId}`,
     )
     const completionData = await completionResponse.json()
     completion = completionData.completion
@@ -123,6 +124,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     ogImageUrl,
     objectResult: listData?.globalTriples[0]?.object,
     completion,
+    questionTitle: questionData?.title,
   }
 }
 
@@ -131,11 +133,13 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
     return []
   }
 
-  const { objectResult, ogImageUrl } = data
+  const { objectResult, ogImageUrl, questionTitle } = data
+  const title =
+    questionTitle ?? objectResult?.label ?? 'Error | Intuition Launchpad'
 
   return [
     {
-      title: objectResult ? objectResult.label : 'Error | Intuition Launchpad',
+      title: `${title} | Intuition Launchpad`,
     },
     {
       name: 'description',
@@ -143,7 +147,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
     },
     {
       property: 'og-title',
-      name: objectResult ? objectResult.label : 'Error | Intuition Launchpad',
+      name: title,
     },
     {
       property: 'og:image',
@@ -161,7 +165,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
     },
     {
       name: 'twitter:title',
-      content: `Intuition Launchpad | ${objectResult ? objectResult.label : ''}`,
+      content: `Intuition Launchpad | ${title}`,
     },
     {
       name: 'twitter:description',
@@ -186,14 +190,20 @@ export function ErrorBoundary() {
 }
 
 export default function MiniGameOne() {
-  const goBack = useGoBack({ fallbackRoute: '/quests/questions' })
-  const { id } = useParams()
+  const location = useLocation()
+  const { epochId, questionId } = useParams()
+  const goBack = useGoBack({ fallbackRoute: `/quests/questions/${epochId}` })
   const { userWallet, completion } = useLoaderData<typeof loader>()
   const [shareModalActive, setShareModalActive] = useAtom(shareModalAtom)
   const [onboardingModal, setOnboardingModal] = useAtom(onboardingModalAtom)
   const [atomDetailsModal, setAtomDetailsModal] = useAtom(atomDetailsModalAtom)
 
   const { authenticated } = usePrivy()
+
+  const questionData = useQuestionData({
+    questionId: parseInt(questionId || '1', 10),
+  })
+
   const {
     title,
     description,
@@ -204,14 +214,15 @@ export default function MiniGameOne() {
     isLoading: isQuestionLoading,
     predicateId,
     objectId,
-  } = useQuestionData({
-    questionId: parseInt(id || '1', 10),
-  })
+  } = questionData
 
-  const hasUserParam = location.search.includes('user=')
+  // Add defensive check for location
+  const hasUserParam = location?.search
+    ? location.search.includes('user=')
+    : false
   const fullPath = hasUserParam
-    ? `${location.pathname}${location.search}`
-    : `${location.pathname}${location.search}${location.search ? '&' : '?'}`
+    ? `${location?.pathname}${location?.search}`
+    : `${location?.pathname}${location?.search}${location?.search ? '&' : '?'}`
 
   const variables = {
     tagPredicateId: predicateId,
@@ -255,6 +266,7 @@ export default function MiniGameOne() {
     positionDirection?: 'for' | 'against'
     userWallet?: string
     currentSharePrice?: number
+    stakingDisabled?: boolean
   }
 
   // Transform the data for the table
@@ -313,6 +325,7 @@ export default function MiniGameOne() {
             : triple.counter_vault?.positions?.[0]?.shares > 0
               ? +formatUnits(triple.counter_vault?.current_share_price, 18)
               : undefined,
+        stakingDisabled: !isCompleted,
       }
 
       return tableRow
@@ -336,21 +349,57 @@ export default function MiniGameOne() {
     0,
   )
   const totalTvl = forTvl + againstTvl
+
+  const queryClient = useQueryClient()
+
   const handleStartOnboarding = () => {
+    // Ensure we have the complete question object with required fields
+    const questionObj: Question = {
+      id: parseInt(questionId || '0', 10),
+      title: title || '',
+      predicate_id: predicateId,
+      object_id: objectId,
+      point_award_amount: pointAwardAmount,
+      enabled: enabled || false,
+      epoch_id: currentEpoch?.id,
+      description: description || '', // These fields are optional in the Question type
+      link: '', // Empty string instead of null
+    }
+
     setOnboardingModal({
       isOpen: true,
-      questionId: parseInt(id || '1', 10),
+      question: questionObj,
       predicateId,
       objectId,
     })
   }
 
   const handleCloseOnboarding = () => {
+    // Only invalidate queries if we have all required values and the modal was actually open
+    if (
+      userWallet &&
+      questionId &&
+      currentEpoch?.id &&
+      onboardingModal.isOpen
+    ) {
+      // Invalidate queries first
+      queryClient.invalidateQueries({
+        queryKey: ['question-completion', userWallet.toLowerCase(), questionId],
+      })
+      queryClient.invalidateQueries({
+        queryKey: ['epoch-progress', userWallet.toLowerCase(), currentEpoch.id],
+      })
+      queryClient.invalidateQueries({
+        queryKey: ['get-questions', currentEpoch.id],
+      })
+    }
+
+    // Then close the modal
     setOnboardingModal({
       isOpen: false,
-      questionId: null,
-      predicateId,
-      objectId,
+      question: null,
+      predicateId: null,
+      objectId: null,
     })
   }
 
@@ -377,7 +426,7 @@ export default function MiniGameOne() {
   if (isLoading) {
     return (
       <>
-        <div className="flex items-center gap-4 mb-6">
+        {/* <div className="flex items-center gap-4 mb-6">
           <Button
             variant="ghost"
             size="icon"
@@ -387,9 +436,11 @@ export default function MiniGameOne() {
             <Icon name="chevron-left" className="h-4 w-4" />
           </Button>
           <div className="flex flex-1 justify-between items-center">
-            <PageHeader title={`Intuition Questions Module: Question ${id}`} />
+            <PageHeader
+              title={`Intuition Questions Module: Question ${questionId}`}
+            />
           </div>
-        </div>
+        </div> */}
         <div className="flex items-center justify-center h-[400px]">
           <LoadingLogo size={100} />
         </div>
@@ -409,7 +460,9 @@ export default function MiniGameOne() {
           <Icon name="chevron-left" className="h-4 w-4" />
         </Button>
         <div className="flex flex-1 justify-between items-center">
-          <PageHeader title={`${currentEpoch?.name} | Question ${id}`} />
+          <PageHeader
+            title={`${currentEpoch?.name} | Question ${questionId}`}
+          />
           <div className="flex items-center gap-2">
             <Button
               variant="secondary"
@@ -445,11 +498,11 @@ export default function MiniGameOne() {
                 <Text variant="heading3" className="text-foreground">
                   {title}
                 </Text>
-                {!isCompleted && (
+                {/* {!isCompleted && (
                   <Text variant="body" className="text-foreground/70">
                     {description}
                   </Text>
-                )}
+                )} */}
               </div>
               <AuthCover buttonContainerClassName="h-full flex items-center justify-center w-full">
                 {isCompleted ? (
@@ -576,11 +629,13 @@ export default function MiniGameOne() {
         tvl={shareModalActive.tvl}
       />
       <OnboardingModal
-        questionId={parseInt(id || '1', 10)}
-        predicateId={predicateId}
-        objectId={objectId}
         isOpen={onboardingModal.isOpen}
         onClose={handleCloseOnboarding}
+        question={
+          onboardingModal.question ?? (questionData as unknown as Question)
+        }
+        predicateId={predicateId}
+        objectId={objectId}
       />
       <AtomDetailsModal
         isOpen={atomDetailsModal.isOpen}

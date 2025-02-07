@@ -2,6 +2,7 @@ import { gql } from 'graphql-request'
 
 export interface Question {
   id: number
+  epoch_id: number
   title: string
   description: string
   enabled: boolean
@@ -22,6 +23,7 @@ export interface GetQuestionResponse {
 const QuestionFields = gql`
   fragment QuestionFields on questions {
     id
+    epoch_id
     title
     description
     link

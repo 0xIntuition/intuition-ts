@@ -1,5 +1,6 @@
 export interface Question {
   id: number
+  epoch_id: number
   title: string
   description: string
   enabled: boolean
