@@ -104,6 +104,12 @@ export function AppSidebar({
       href: '/lore',
       isAccent: location.pathname.startsWith('/lore'),
     },
+    {
+      iconName: 'lightning-bolt',
+      label: 'Rewards',
+      href: '/rewards',
+      isAccent: location.pathname === '/rewards',
+    },
   ]
 
   const footerNavItems: NavItem[] = [
