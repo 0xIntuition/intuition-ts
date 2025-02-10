@@ -276,11 +276,6 @@ export default function Dashboard() {
           </motion.p>
         </div>
       </motion.div>
-      <ChapterProgress
-        title="Chapters"
-        stages={stages}
-        currentStageIndex={(currentEpoch?.id ?? 1) - 1}
-      />
       <AuthCover buttonContainerClassName="h-full flex items-center justify-center">
         <AggregateIQ
           totalIQ={combinedTotal}
@@ -289,6 +284,11 @@ export default function Dashboard() {
           totalUsers={rankData?.totalUsers}
         />
       </AuthCover>
+      <ChapterProgress
+        title="Chapters"
+        stages={stages}
+        currentStageIndex={(currentEpoch?.id ?? 1) - 1}
+      />
       <EarnSection quests={earnCards} />
     </div>
   )
