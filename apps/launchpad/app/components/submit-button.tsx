@@ -15,6 +15,7 @@ interface SubmitButtonProps {
   onClick: () => void
   buttonText: string
   loadingText: string
+  actionText?: string
   className?: string
   disabled?: boolean
   size?: 'lg' | 'md' | 'sm'
@@ -25,6 +26,7 @@ const SubmitButton: React.FC<SubmitButtonProps> = ({
   onClick,
   buttonText,
   loadingText,
+  actionText,
   className,
   disabled = false,
   size,
@@ -70,12 +72,12 @@ const SubmitButton: React.FC<SubmitButtonProps> = ({
       ) : !isAuthenticated ? (
         <>
           <Wallet className="h-4 w-4" />
-          Connect Wallet
+          Connect Wallet {actionText && `to ${actionText}`}
         </>
       ) : !correctChain ? (
         <>
           <Network className="h-4 w-4" />
-          Switch Network
+          Switch Network {actionText && `to ${actionText}`}
         </>
       ) : (
         buttonText

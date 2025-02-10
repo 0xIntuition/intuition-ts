@@ -9,6 +9,7 @@ interface AuthCoverProps {
   blurAmount?: string
   // Optional custom styles for the button container
   buttonContainerClassName?: string
+  actionText?: string
 }
 
 export function AuthCover({
@@ -16,6 +17,7 @@ export function AuthCover({
   className,
   blurAmount = 'blur-sm',
   buttonContainerClassName,
+  actionText,
 }: AuthCoverProps) {
   const { login, ready, authenticated } = usePrivy()
 
@@ -43,9 +45,9 @@ export function AuthCover({
             variant="primary"
             size="lg"
             onClick={login}
-            className="pointer-events-auto shadow-2xl min-w-[200px]"
+            className="pointer-events-auto shadow-2xl min-w-[220px]"
           >
-            Connect Wallet
+            Connect Wallet {actionText && `to ${actionText}`}
           </Button>
         </div>
       </div>

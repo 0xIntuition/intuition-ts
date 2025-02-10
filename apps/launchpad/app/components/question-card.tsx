@@ -76,6 +76,7 @@ export function QuestionCard({
               buttonText={'Answer Question'}
               loading={isLoading}
               loadingText="Loading..."
+              actionText="Answer"
             />
           )}
           <Button
