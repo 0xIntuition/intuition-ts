@@ -276,7 +276,10 @@ export default function Dashboard() {
           </motion.p>
         </div>
       </motion.div>
-      <AuthCover buttonContainerClassName="h-full flex items-center justify-center">
+      <AuthCover
+        buttonContainerClassName="h-full flex items-center justify-center"
+        blurAmount="blur-none"
+      >
         <AggregateIQ
           totalIQ={combinedTotal}
           epochProgress={epochProgress}
