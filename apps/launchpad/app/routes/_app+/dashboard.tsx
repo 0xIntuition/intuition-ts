@@ -264,7 +264,7 @@ export default function Dashboard() {
           >
             {user?.account?.label
               ? `Welcome back, ${user.account.label}!`
-              : `Welcome Intuit!`}
+              : `Welcome!`}
           </motion.h1>
           <motion.p
             initial={{ opacity: 0 }}
