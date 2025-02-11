@@ -615,7 +615,10 @@ export function OnboardingModal({
                 )}
 
                 {state.currentStep === STEPS.CREATE && (
-                  <CreateStep onCreationSuccess={onCreationSuccess} />
+                  <CreateStep
+                    onCreationSuccess={onCreationSuccess}
+                    initialName={searchTerm}
+                  />
                 )}
 
                 {state.currentStep === STEPS.SIGNAL && state.selectedTopic && (
