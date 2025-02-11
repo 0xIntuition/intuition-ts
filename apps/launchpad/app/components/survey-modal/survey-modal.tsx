@@ -74,19 +74,45 @@ const useStepTransition = (
 
   const handleTransition = useCallback(
     (updateFn: (prev: OnboardingState) => OnboardingState) => {
+      logger('Starting transition with update function')
+
       // Store the update function for later
       updateFnRef.current = updateFn
       setIsTransitioning(true)
 
       // Wait for fade out before updating state
       rafRef.current = requestAnimationFrame(() => {
+        logger('RAF callback triggered')
         timeoutRef.current = window.setTimeout(() => {
-          // Update state after fade out
-          setState(updateFnRef.current!)
+          logger('Timeout callback triggered')
+          if (!updateFnRef.current) {
+            logger('Error: Update function is null during transition')
+            setIsTransitioning(false)
+            return
+          }
+
+          try {
+            // Update state after fade out
+            setState((prevState) => {
+              if (!prevState) {
+                logger('Error: Previous state is null during transition')
+                return INITIAL_STATE
+              }
+              const newState = updateFnRef.current!(prevState)
+              logger('State updated:', { prevState, newState })
+              return newState
+            })
+          } catch (error) {
+            logger('Error during state update:', error)
+            setIsTransitioning(false)
+            return
+          }
+
           updateFnRef.current = null
 
           // Wait a frame before starting fade in
           rafRef.current = requestAnimationFrame(() => {
+            logger('Final RAF callback triggered')
             setIsTransitioning(false)
           })
         }, 150) // Match the CSS transition duration
@@ -96,6 +122,7 @@ const useStepTransition = (
   )
 
   const resetTransition = useCallback(() => {
+    logger('Resetting transition')
     setIsTransitioning(false)
     updateFnRef.current = null
     if (timeoutRef.current) {
@@ -109,6 +136,7 @@ const useStepTransition = (
   // Cleanup timeouts and animation frames
   useEffect(() => {
     return () => {
+      logger('Cleaning up transition effects')
       resetTransition()
     }
   }, [resetTransition])
@@ -484,18 +512,32 @@ export function OnboardingModal({
   ])
 
   const onCreationSuccess = (metadata: NewAtomMetadata) => {
-    handleTransition((prev) => ({
-      ...prev,
-      currentStep: STEPS.SIGNAL,
-      newAtomMetadata: metadata,
-      selectedTopic: {
-        id: metadata.vaultId,
-        name: metadata.name,
-        image: metadata.image,
-        selected: true,
-        triple: listData?.globalTriples[0] as TripleType,
-      },
-    }))
+    logger('Creation success called with metadata:', metadata)
+
+    // Ensure we have valid state before transition
+    if (!state) {
+      logger('Error: State is null in onCreationSuccess')
+      return
+    }
+
+    handleTransition((prev) => {
+      logger('Transitioning from state:', prev)
+      const newState = {
+        ...prev,
+        currentStep: STEPS.SIGNAL,
+        newAtomMetadata: metadata,
+        selectedTopic: {
+          id: metadata.vaultId,
+          name: metadata.name,
+          image: metadata.image,
+          selected: true,
+          triple: listData?.globalTriples[0] as TripleType,
+        },
+      }
+      logger('New state after transition:', newState)
+      return newState
+    })
+
     setSubjectId(metadata.vaultId)
     updateStepStatus(STEPS.CREATE, 'completed')
     updateStepStatus(STEPS.SIGNAL, 'current')
@@ -525,99 +567,125 @@ export function OnboardingModal({
     updateStepStatus(STEPS.CREATE, 'current')
   }, [handleTransition])
 
+  // Add error boundary logging
+  useEffect(() => {
+    if (!state) {
+      logger('Error: State is null after initialization')
+    }
+  }, [state])
+
+  // Track transitions
+  useEffect(() => {
+    logger('Transition state changed:', { isTransitioning })
+  }, [isTransitioning])
+
+  // Track step changes
+  useEffect(() => {
+    logger('Steps changed:', steps)
+  }, [steps])
+
   return (
     <ClientOnly>
-      {() => (
-        <Dialog open={isOpen} onOpenChange={handleClose}>
-          <DialogContent className="p-0 bg-gradient-to-br from-[#060504] to-[#101010] md:max-w-[720px] w-full border-none">
-            <div
-              className={`transition-all duration-150 ease-in-out ${
-                isTransitioning
-                  ? 'opacity-0 translate-y-1'
-                  : 'opacity-100 translate-y-0'
-              }`}
-            >
-              {state.currentStep === STEPS.TOPICS && (
-                <TopicsStep
-                  topics={topics}
-                  isLoadingList={isLoadingList}
-                  onToggleTopic={toggleTopic}
-                  onSearchChange={handleSearchChange}
-                  onCreateClick={handleCreateClick}
-                  question={question}
-                />
-              )}
+      {() => {
+        // Safeguard against null state
+        if (!state) {
+          logger('Error: Attempting to render with null state')
+          return null
+        }
 
-              {state.currentStep === STEPS.CREATE && (
-                <CreateStep onCreationSuccess={onCreationSuccess} />
-              )}
+        return (
+          <Dialog open={isOpen} onOpenChange={handleClose}>
+            <DialogContent className="p-0 bg-gradient-to-br from-[#060504] to-[#101010] md:max-w-[720px] w-full border-none">
+              <div
+                className={`transition-all duration-150 ease-in-out ${
+                  isTransitioning
+                    ? 'opacity-0 translate-y-1'
+                    : 'opacity-100 translate-y-0'
+                }`}
+              >
+                {state.currentStep === STEPS.TOPICS && (
+                  <TopicsStep
+                    topics={topics}
+                    isLoadingList={isLoadingList}
+                    onToggleTopic={toggleTopic}
+                    onSearchChange={handleSearchChange}
+                    onCreateClick={handleCreateClick}
+                    question={question}
+                  />
+                )}
 
-              {state.currentStep === STEPS.SIGNAL && state.selectedTopic && (
-                <SignalStep
-                  selectedTopic={state.selectedTopic}
-                  newAtomMetadata={state.newAtomMetadata}
-                  predicateId={predicateId}
-                  objectId={objectId}
-                  setTxState={setTxState}
-                  onStakingSuccess={onStakingSuccess}
-                  isLoading={isLoading}
-                  setIsLoading={setIsLoading}
-                />
-              )}
+                {state.currentStep === STEPS.CREATE && (
+                  <CreateStep onCreationSuccess={onCreationSuccess} />
+                )}
 
-              {state.currentStep === STEPS.REWARD && state.selectedTopic && (
-                <RewardStep
-                  isOpen={state.currentStep === STEPS.REWARD}
-                  selectedTopic={state.selectedTopic}
-                  newAtomMetadata={state.newAtomMetadata}
-                  txHash={txState?.txHash}
-                  userWallet={userWallet}
-                  awardPoints={awardPoints}
-                  questionId={question?.id}
-                  epochId={currentEpoch?.id}
-                />
-              )}
-            </div>
-            <DialogFooter className="w-full items-center">
-              <div className="flex flex-row justify-between px-5 py-5 w-full rounded-b-xl bg-[#0A0A0A]">
-                <StepIndicator<StepId>
-                  steps={steps}
-                  onStepClick={handleStepClick}
-                  showNavigation
-                  onNext={
-                    state.currentStep !== STEPS.REWARD
-                      ? handleNext
-                      : state.currentStep === STEPS.REWARD
-                        ? handleClose
-                        : undefined
-                  }
-                  onBack={
-                    state.currentStep === STEPS.SIGNAL ||
-                    state.currentStep === STEPS.CREATE
-                      ? handleBack
-                      : undefined
-                  }
-                  disableNext={
-                    state.currentStep === STEPS.TOPICS
-                      ? !topics.some((t) => t.selected)
-                      : state.currentStep === STEPS.SIGNAL
-                        ? txState?.status !== 'complete'
-                        : state.currentStep === STEPS.CREATE
-                  }
-                  disableBack={
-                    isLoading || (txState?.status && txState?.status !== 'idle')
-                  }
-                  customNextButton={
-                    state.currentStep === STEPS.REWARD
-                      ? { content: 'Finish' }
-                      : undefined
-                  }
-                />
+                {state.currentStep === STEPS.SIGNAL && state.selectedTopic && (
+                  <SignalStep
+                    selectedTopic={state.selectedTopic}
+                    newAtomMetadata={state.newAtomMetadata}
+                    predicateId={predicateId}
+                    objectId={objectId}
+                    setTxState={setTxState}
+                    onStakingSuccess={onStakingSuccess}
+                    isLoading={isLoading}
+                    setIsLoading={setIsLoading}
+                  />
+                )}
+
+                {state.currentStep === STEPS.REWARD && state.selectedTopic && (
+                  <RewardStep
+                    isOpen={state.currentStep === STEPS.REWARD}
+                    selectedTopic={state.selectedTopic}
+                    newAtomMetadata={state.newAtomMetadata}
+                    txHash={txState?.txHash}
+                    userWallet={userWallet}
+                    awardPoints={awardPoints}
+                    questionId={question?.id}
+                    epochId={currentEpoch?.id}
+                  />
+                )}
               </div>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-      )}
+              <DialogFooter className="w-full items-center">
+                <div className="flex flex-row justify-between px-5 py-5 w-full rounded-b-xl bg-[#0A0A0A]">
+                  <StepIndicator<StepId>
+                    steps={steps}
+                    onStepClick={handleStepClick}
+                    showNavigation
+                    onNext={
+                      state.currentStep !== STEPS.REWARD
+                        ? handleNext
+                        : state.currentStep === STEPS.REWARD
+                          ? handleClose
+                          : undefined
+                    }
+                    onBack={
+                      state.currentStep === STEPS.SIGNAL ||
+                      state.currentStep === STEPS.CREATE
+                        ? handleBack
+                        : undefined
+                    }
+                    disableNext={
+                      state.currentStep === STEPS.TOPICS
+                        ? !topics.some((t) => t.selected)
+                        : state.currentStep === STEPS.SIGNAL
+                          ? txState?.status !== 'complete'
+                          : state.currentStep === STEPS.CREATE
+                    }
+                    disableBack={
+                      isLoading ||
+                      (txState?.status && txState?.status !== 'idle')
+                    }
+                    customNextButton={
+                      state.currentStep === STEPS.REWARD
+                        ? { content: 'Finish' }
+                        : undefined
+                    }
+                  />
+                </div>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        )
+      }}
     </ClientOnly>
   )
 }
