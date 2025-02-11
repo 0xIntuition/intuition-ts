@@ -161,6 +161,7 @@ function ActivityItemNew({
                 imgSrc: activity.triple.object?.image ?? '',
                 id: activity.triple.object?.id,
               }}
+              shouldHover={false}
             />
           )}
         </div>
