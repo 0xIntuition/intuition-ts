@@ -70,14 +70,6 @@ export const PointsEarnedCard: React.FC<PointsEarnedCardProps> = ({
 }) => {
   return (
     <div className="flex flex-col theme-border rounded-lg p-6 gap-4 bg-black">
-      {/* <div className="flex flex-col gap-1">
-        <Text variant={TextVariant.body} className="text-muted-foreground">
-          IQ Points Earned
-        </Text>
-        <Text variant={TextVariant.heading5} className="text-white">
-          {truncateNumber(totalPoints)}
-        </Text>
-      </div> */}
       <div className="flex flex-col gap-4">
         {activities.map((activity) => (
           <PointsRow
