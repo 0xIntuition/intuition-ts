@@ -1,5 +1,6 @@
 import { Card, cn, Text, TextVariant } from '@0xintuition/1ui'
 
+import { toRoman } from '@lib/utils/misc'
 import { motion } from 'framer-motion'
 import { Clock, Lock } from 'lucide-react'
 
@@ -164,10 +165,4 @@ export default function ChapterProgress({
       </Card>
     </motion.div>
   )
-}
-
-// Helper function to convert numbers to Roman numerals
-function toRoman(num: number): string {
-  const roman = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X']
-  return roman[num - 1] || num.toString()
 }

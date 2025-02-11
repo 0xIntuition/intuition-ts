@@ -26,6 +26,7 @@ import LoadingButton from '@components/loading-button'
 import { useAuth } from '@lib/hooks/use-auth'
 import { usePrivy } from '@privy-io/react-auth'
 import { Link, useLocation } from '@remix-run/react'
+import { BookOpenText } from 'lucide-react'
 
 import { ConnectButton } from './connect-button'
 
@@ -42,7 +43,8 @@ export interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 export interface NavItem {
-  iconName: IconNameType
+  iconName?: IconNameType
+  icon?: React.ReactNode
   label: string
   href: string
   isActive?: boolean
@@ -96,6 +98,12 @@ export function AppSidebar({
       href: '/network',
       isAccent: location.pathname === '/network',
     },
+    {
+      icon: <BookOpenText className="w-5 h-5" />,
+      label: 'Lore',
+      href: '/lore',
+      isAccent: location.pathname.startsWith('/lore'),
+    },
   ]
 
   const footerNavItems: NavItem[] = [
@@ -122,7 +130,11 @@ export function AppSidebar({
   const renderNavLink = (item: NavItem) => {
     const content = (
       <>
-        <Icon name={item.iconName} className="!h-5 !w-5" />
+        {item.iconName ? (
+          <Icon name={item.iconName} className="!h-5 !w-5" />
+        ) : (
+          item.icon
+        )}
         {!isMinimal && (
           <Text variant={TextVariant.body} className="text-inherit">
             {item.label}
