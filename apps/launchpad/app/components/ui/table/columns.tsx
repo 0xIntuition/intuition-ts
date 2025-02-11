@@ -225,7 +225,7 @@ export const columns: ColumnDef<TableItem>[] = [
     accessorFn: (row) => row.userPosition ?? 0,
     header: ({ column }) => (
       <div className="flex justify-center items-center">
-        <DataTableColumnHeader column={column} title="Signal" />
+        <DataTableColumnHeader column={column} title="My Vote" />
       </div>
     ),
     cell: ({ row }) => {

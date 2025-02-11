@@ -504,7 +504,10 @@ export default function MiniGameOne() {
                   </Text>
                 )} */}
               </div>
-              <AuthCover buttonContainerClassName="h-full flex items-center justify-center w-full">
+              <AuthCover
+                buttonContainerClassName="h-full flex items-center justify-center w-full"
+                actionText="Answer"
+              >
                 {isCompleted ? (
                   <div className="flex flex-col items-center gap-2">
                     {atomData && (

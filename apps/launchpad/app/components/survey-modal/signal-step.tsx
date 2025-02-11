@@ -419,6 +419,7 @@ export function SignalStep({
             onClick={handleStakeButtonClick}
             buttonText={`Stake ${Number(val).toFixed(5)} ETH`}
             loadingText={'Processing...'}
+            actionText="Stake"
           />
           <Text variant="caption" className="text-end text-primary/70">
             Standard fees apply.{' '}

@@ -3,10 +3,12 @@ import { useEffect, useState } from 'react'
 import {
   Card,
   CardContent,
+  cn,
   Text,
   TextVariant,
   TextWeight,
 } from '@0xintuition/1ui'
+import { GetAccountQuery } from '@0xintuition/graphql'
 
 import { EpochProgress } from '@routes/resources+/get-epoch-progress'
 import { motion, useAnimation } from 'framer-motion'
@@ -14,6 +16,7 @@ import { Award, BrainCircuit, ListCheck, Sparkle } from 'lucide-react'
 
 interface AggregateIQProps {
   totalIQ: number
+  user?: GetAccountQuery
   epochProgress?: EpochProgress | null
   rank?: number
   totalUsers?: number
@@ -21,6 +24,7 @@ interface AggregateIQProps {
 
 export function AggregateIQ({
   totalIQ,
+  user,
   epochProgress,
   rank,
   totalUsers,
@@ -83,7 +87,7 @@ export function AggregateIQ({
             animate={controls}
           >
             <motion.div
-              className="flex items-center gap-4"
+              className={cn('flex items-center gap-4', !user && 'blur-sm')}
               whileHover={{ scale: 1.05 }}
               transition={{ duration: 0.2 }}
             >
@@ -125,7 +129,12 @@ export function AggregateIQ({
                 <div className="text-sm text-analytics-shadow/60 mb-1 flex items-center gap-2">
                   {metric.icon} {metric.label}
                 </div>
-                <div className="flex flex-row items-center gap-2">
+                <div
+                  className={cn(
+                    'flex flex-row items-center gap-2',
+                    !user && 'blur-sm',
+                  )}
+                >
                   <Text
                     variant={TextVariant.headline}
                     weight={TextWeight.semibold}

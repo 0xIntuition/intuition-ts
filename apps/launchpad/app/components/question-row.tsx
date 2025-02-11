@@ -130,6 +130,7 @@ export function QuestionRow({
                 buttonText="Answer"
                 loading={isLoading}
                 loadingText="Loading..."
+                actionText="Answer"
               />
             )}
             {resultsLink && (

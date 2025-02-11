@@ -264,7 +264,7 @@ export default function Dashboard() {
           >
             {user?.account?.label
               ? `Welcome back, ${user.account.label}!`
-              : `Welcome Intuit!`}
+              : `Welcome!`}
           </motion.h1>
           <motion.p
             initial={{ opacity: 0 }}
@@ -276,12 +276,10 @@ export default function Dashboard() {
           </motion.p>
         </div>
       </motion.div>
-      <ChapterProgress
-        title="Chapters"
-        stages={stages}
-        currentStageIndex={(currentEpoch?.id ?? 1) - 1}
-      />
-      <AuthCover buttonContainerClassName="h-full flex items-center justify-center">
+      <AuthCover
+        buttonContainerClassName="h-full flex items-center justify-center"
+        blurAmount="blur-none"
+      >
         <AggregateIQ
           totalIQ={combinedTotal}
           epochProgress={epochProgress}
@@ -289,6 +287,11 @@ export default function Dashboard() {
           totalUsers={rankData?.totalUsers}
         />
       </AuthCover>
+      <ChapterProgress
+        title="Chapters"
+        stages={stages}
+        currentStageIndex={(currentEpoch?.id ?? 1) - 1}
+      />
       <EarnSection quests={earnCards} />
     </div>
   )
