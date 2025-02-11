@@ -68,9 +68,13 @@ const INITIAL_STEPS: Step[] = [
 
 export interface CreateStepProps {
   onCreationSuccess: (metadata: NewAtomMetadata) => void
+  initialName?: string
 }
 
-export function CreateStep({ onCreationSuccess }: CreateStepProps) {
+export function CreateStep({
+  onCreationSuccess,
+  initialName,
+}: CreateStepProps) {
   const [currentStep, setCurrentStep] = useState('metadata')
   const [steps, setSteps] = useState<Step[]>(INITIAL_STEPS)
   const [ipfsUri, setIpfsUri] = useState<string | null>(null)
@@ -295,7 +299,9 @@ export function CreateStep({ onCreationSuccess }: CreateStepProps) {
           <SurveyFormContainer
             onSubmit={handleMetadataSubmit}
             isLoading={isPending}
-            defaultValues={atomData || undefined}
+            defaultValues={
+              atomData || (initialName ? { name: initialName } : undefined)
+            }
           />
         )
       case 'review':

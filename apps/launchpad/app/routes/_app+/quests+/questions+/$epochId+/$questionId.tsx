@@ -541,12 +541,12 @@ export default function MiniGameOne() {
                               className="w-full h-full object-cover rounded-lg"
                             />
                           </div>
-                          <div className="text-left">
+                          <div className="text-left w-full">
                             <div className="text-white text-base leading-5">
                               {atomData?.atom?.label ?? ''}
                             </div>
                           </div>
-                          <div className="flex w-full justify-end px-6">
+                          <div className="flex justify-end px-6">
                             <CheckCircle className="text-success h-6 w-6" />
                           </div>
                         </button>
