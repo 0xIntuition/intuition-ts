@@ -285,6 +285,7 @@ export default function Dashboard() {
           epochProgress={epochProgress}
           rank={rankData?.rank}
           totalUsers={rankData?.totalUsers}
+          user={user}
         />
       </AuthCover>
       <ChapterProgress

@@ -103,6 +103,17 @@ export function TopicsStep({
                 ))}
               </div>
             </div>
+            <div className="flex flex-col gap-2 items-center justify-center mt-10">
+              <Text
+                variant={TextVariant.body}
+                className="italic text-primary/70"
+              >
+                Don&apos;t see the atom you&apos;re looking for?
+              </Text>
+              <Button variant="secondary" onClick={onCreateClick}>
+                Create Atom
+              </Button>
+            </div>
           </ScrollArea>
         ) : (
           <div className="flex flex-col gap-2 justify-center items-center h-[350px] w-full">
@@ -115,7 +126,7 @@ export function TopicsStep({
                 Would you like to create one?
               </Text>
               <Button variant="secondary" onClick={onCreateClick}>
-                Create
+                Create Atom
               </Button>
             </div>
           </div>

@@ -1,7 +1,7 @@
 import * as React from 'react'
 
 import { cn } from '../../styles'
-import { Button, ButtonProps, ButtonVariant } from '../Button'
+import { Button, ButtonProps, ButtonSize, ButtonVariant } from '../Button'
 import { Icon, IconName } from '../Icon'
 import { Step, StepStatus } from './Step'
 
@@ -83,6 +83,7 @@ export function StepIndicator<T = string>({
         {customBackButton ? (
           <Button
             variant={ButtonVariant.secondary}
+            size={ButtonSize.md}
             {...customBackButton.props}
             onClick={onBack}
             disabled={disableBack}
@@ -95,6 +96,7 @@ export function StepIndicator<T = string>({
             onClick={onBack}
             disabled={disableBack}
             variant={ButtonVariant.secondary}
+            size={ButtonSize.md}
           >
             Back
           </Button>
@@ -108,6 +110,7 @@ export function StepIndicator<T = string>({
           (customNextButton ? (
             <Button
               variant={ButtonVariant.secondary}
+              size={ButtonSize.md}
               {...customNextButton.props}
               onClick={onNext}
               disabled={disableNext}
@@ -120,6 +123,7 @@ export function StepIndicator<T = string>({
               onClick={onNext}
               disabled={disableNext}
               variant={ButtonVariant.secondary}
+              size={ButtonSize.md}
             >
               Next
             </Button>

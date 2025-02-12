@@ -39,11 +39,13 @@ export interface ClaimProps {
   orientation?: 'horizontal' | 'vertical'
   isClickable?: boolean
   maxIdentityLength?: number
+  shouldHover?: boolean
   linkComponent?: React.ComponentType<{
     href: string
     onClick: (e: React.MouseEvent) => void
     children: React.ReactNode
   }>
+  className?: string
 }
 
 export const Claim = ({
@@ -55,6 +57,8 @@ export const Claim = ({
   size,
   isClickable,
   maxIdentityLength,
+  shouldHover = true,
+  className,
 }: ClaimProps) => {
   const separatorWidth = size !== IdentityTagSize.default ? 'w-4' : 'w-2'
   const items = [subject, predicate, object]
@@ -86,7 +90,7 @@ export const Claim = ({
               item={item}
               size={size}
               disabled={disabled}
-              shouldHover={true}
+              shouldHover={shouldHover}
               maxIdentityLength={maxIdentityLength}
               isHovered={isFullClaimHovered || hoveredIndex === index}
               onMouseEnter={() => {
@@ -99,6 +103,7 @@ export const Claim = ({
                   setHoveredIndex(null)
                 }
               }}
+              className={className}
             />
           </div>
         </Fragment>
@@ -141,6 +146,7 @@ const ClaimItem = ({
   onMouseEnter,
   onMouseLeave,
   linkComponent: LinkComponent,
+  className,
 }: {
   item: ClaimItemProps
   link?: string
@@ -156,6 +162,7 @@ const ClaimItem = ({
     onClick: (e: React.MouseEvent) => void
     children: React.ReactNode
   }>
+  className?: string
 }) => {
   const effectiveMaxLength = maxIdentityLength ?? 24
 
@@ -173,6 +180,7 @@ const ClaimItem = ({
           'border-primary bg-primary/10': isHovered,
           'border-theme': !isHovered,
         },
+        className,
       )}
       shouldHover={shouldHover}
     >

@@ -110,6 +110,8 @@ function ActivityItemNew({
           <IdentityTag
             variant={Identity.user}
             imgSrc={creator?.image ?? creator?.atom?.image ?? ''}
+            disabled={true}
+            className="!opacity-100"
           >
             <Trunctacular
               value={creator?.label ?? creator?.id ?? creatorAddress ?? '?'}
@@ -127,13 +129,14 @@ function ActivityItemNew({
               }
               imgSrc={activity.atom.image ?? ''}
               id={activity.atom.id}
+              disabled={true}
+              className="!opacity-100"
             >
               {activity.atom.label ?? activity.atom.id}
             </IdentityTag>
           )}
           {activity.triple && (
             <Claim
-              size="md"
               subject={{
                 variant:
                   activity.triple.subject?.type === 'user'
@@ -161,6 +164,9 @@ function ActivityItemNew({
                 imgSrc: activity.triple.object?.image ?? '',
                 id: activity.triple.object?.id,
               }}
+              shouldHover={false}
+              disabled={true}
+              className="!opacity-100"
             />
           )}
         </div>
