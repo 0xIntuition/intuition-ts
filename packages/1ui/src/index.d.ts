@@ -1,3 +1,5 @@
+/// <reference types="react" />
+
 import './styles/globals.css'
 
 export * from './styles'

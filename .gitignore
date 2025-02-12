@@ -20,4 +20,4 @@ act.sh
 # Build outputs
 /dist/
 **/dist/
-packages/*/dist/
+packages/*/dist/.DS_Store

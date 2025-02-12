@@ -1,14 +1,6 @@
 import React from 'react'
 
-import { Button, ButtonSize, ButtonVariant } from 'components/Button'
-import {
-  ContextMenu,
-  ContextMenuContent,
-  ContextMenuItem,
-  ContextMenuTrigger,
-} from 'components/ContextMenu'
 import { Icon, IconName } from 'components/Icon'
-import { Separator } from 'components/Separator'
 import { StakeButton, StakeButtonVariant } from 'components/StakeButton'
 import { StakeTVL } from 'components/StakeTVL'
 import { Text, TextVariant } from 'components/Text'
@@ -49,46 +41,25 @@ const ClaimRow = ({
   return (
     <div
       className={cn(
-        `w-full flex flex-col items-center border border-border/10 overflow-hidden`,
+        `w-full flex flex-col items-center bg-primary/5 border border-border/10`,
         isFirst && 'rounded-t-xl',
         isLast && 'rounded-b-xl',
         className,
       )}
     >
       <div
-        style={{
-          backgroundImage:
-            userPosition && userPosition !== '0'
-              ? positionDirection === ClaimPosition.claimFor
-                ? 'linear-gradient(to right, transparent, rgba(0, 111, 232, 0.3))'
-                : 'linear-gradient(to right, transparent, rgba(255, 149, 0, 0.3))'
-              : 'none',
-        }}
         className={cn(
-          `w-full flex flex-col md:flex-row justify-between items-center p-4 max-sm:gap-6`,
+          `w-full flex justify-between items-center p-4`,
           isFirst && 'rounded-t-xl',
+          userPosition &&
+            userPosition !== '0' &&
+            (positionDirection === ClaimPosition.claimFor
+              ? 'bg-gradient-to-r from-transparent to-for'
+              : 'bg-gradient-to-r from-transparent to-against'),
         )}
       >
-        <div className="flex w-full items-start md:items-center gap-1">
-          {children}
-          <ContextMenu>
-            <ContextMenuTrigger className="sm:hidden ml-auto">
-              <Button variant={ButtonVariant.text} size={ButtonSize.icon}>
-                <Icon
-                  name={IconName.context}
-                  className="text-secondary/70 h-4 w-4"
-                />
-              </Button>
-            </ContextMenuTrigger>
-            <ContextMenuContent>
-              <ContextMenuItem>Profile</ContextMenuItem>
-              <ContextMenuItem>Settings</ContextMenuItem>
-              <ContextMenuItem>Logout</ContextMenuItem>
-            </ContextMenuContent>
-          </ContextMenu>
-        </div>
-        <Separator className="md:hidden" />
-        <div className="flex items-center gap-3 max-sm:w-full">
+        <div className="flex items-center gap-1">{children}</div>
+        <div className="flex items-center gap-3">
           <StakeTVL
             totalTVL={+totalTVL}
             tvlFor={+tvlFor}
@@ -98,30 +69,28 @@ const ClaimRow = ({
             numPositionsFor={numPositionsFor}
             numPositionsAgainst={numPositionsAgainst}
           />
-          {!!onStakeForClick && !!onStakeAgainstClick && (
-            <>
-              <StakeButton
-                variant={StakeButtonVariant.claimFor}
-                numPositions={numPositionsFor}
-                direction={ClaimPosition.claimFor}
-                positionDirection={positionDirection}
-                disabled={positionDirection === ClaimPosition.claimAgainst}
-                onClick={onStakeForClick}
-                className="max-sm:w-full"
-              />
-              <StakeButton
-                variant={StakeButtonVariant.claimAgainst}
-                numPositions={numPositionsAgainst}
-                direction={ClaimPosition.claimAgainst}
-                positionDirection={positionDirection}
-                disabled={positionDirection === ClaimPosition.claimFor}
-                onClick={onStakeAgainstClick}
-                className="max-sm:w-full"
-              />
-            </>
+          {onStakeForClick && (
+            <StakeButton
+              variant={StakeButtonVariant.claimFor}
+              numPositions={numPositionsFor}
+              direction={ClaimPosition.claimFor}
+              positionDirection={positionDirection}
+              disabled={positionDirection === ClaimPosition.claimAgainst}
+              onClick={onStakeForClick}
+            />
           )}
-          <ContextMenu>
-            <ContextMenuTrigger disabled className="max-sm:hidden">
+          {onStakeAgainstClick && (
+            <StakeButton
+              variant={StakeButtonVariant.claimAgainst}
+              numPositions={numPositionsAgainst}
+              direction={ClaimPosition.claimAgainst}
+              positionDirection={positionDirection}
+              disabled={positionDirection === ClaimPosition.claimFor}
+              onClick={onStakeAgainstClick}
+            />
+          )}
+          {/* <ContextMenu>
+            <ContextMenuTrigger disabled>
               <Button
                 variant={ButtonVariant.text}
                 size={ButtonSize.icon}
@@ -138,27 +107,20 @@ const ClaimRow = ({
               <ContextMenuItem>Settings</ContextMenuItem>
               <ContextMenuItem>Logout</ContextMenuItem>
             </ContextMenuContent>
-          </ContextMenu>
+          </ContextMenu> */}
         </div>
       </div>
       {userPosition && userPosition !== '0' && (
         <div
-          style={{
-            backgroundImage:
-              positionDirection === ClaimPosition.claimFor
-                ? 'linear-gradient(to right, transparent, rgba(0, 111, 232, 0.3))'
-                : 'linear-gradient(to right, transparent, rgba(255, 149, 0, 0.3))',
-          }}
           className={cn(
-            `flex flex-row justify-center md:justify-end px-4 py-0.5 w-full items-center gap-1.5 h-14 md:h-9`,
-            isLast && 'rounded-b-xl',
+            `flex flex-row justify-end px-4 py-0.5 w-full items-center gap-1.5 h-9`,
             positionDirection === ClaimPosition.claimFor
-              ? 'text-for'
-              : 'text-against',
+              ? 'bg-for/10 text-for'
+              : 'bg-against/10 text-against',
           )}
         >
           <Icon name={IconName.arrowUp} className="h-4 w-4" />
-          <Text variant={TextVariant.caption} className={cn('text-inherit')}>
+          <Text variant={TextVariant.caption} className="text-inherit">
             You have staked {userPosition} {currency} {positionDirection} this
             claim
           </Text>

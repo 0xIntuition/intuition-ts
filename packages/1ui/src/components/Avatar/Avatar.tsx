@@ -4,7 +4,7 @@ import * as AvatarPrimitive from '@radix-ui/react-avatar'
 import { cva, type VariantProps } from 'class-variance-authority'
 import { Identity } from 'types'
 
-import { Icon, IconName } from '..'
+import { Icon, IconName, IconNameType } from '..'
 import { cn } from '../../styles'
 
 const AvatarContainer = React.forwardRef<
@@ -49,7 +49,7 @@ const AvatarFallback = React.forwardRef<
 ))
 AvatarFallback.displayName = AvatarPrimitive.Fallback.displayName
 
-const avatarVariants = cva('aspect-square bg-background border-border/10', {
+const avatarVariants = cva('aspect-square bg-background theme-border', {
   variants: {
     variant: {
       [Identity.user]: 'rounded-full',
@@ -65,10 +65,18 @@ export interface AvatarProps
   extends React.HTMLAttributes<HTMLDivElement>,
     VariantProps<typeof avatarVariants> {
   src?: string
+  icon?: string
   name: string
 }
 
-const Avatar = ({ className, variant, src, name, onClick }: AvatarProps) => {
+const Avatar = ({
+  className,
+  variant,
+  src,
+  name,
+  icon,
+  onClick,
+}: AvatarProps) => {
   return (
     <AvatarContainer
       className={cn(avatarVariants({ variant }), className)}
@@ -78,11 +86,13 @@ const Avatar = ({ className, variant, src, name, onClick }: AvatarProps) => {
       <AvatarFallback className="bg-inherit">
         <Icon
           name={
-            variant === Identity.nonUser
-              ? IconName.fingerprint
-              : IconName.cryptoPunk
+            icon
+              ? (icon as IconNameType)
+              : variant === Identity.nonUser
+                ? IconName.fingerprint
+                : IconName.cryptoPunk
           }
-          className="text-primary/30 w-1/2 h-1/2 max-h-10 max-w-10"
+          className="text-primary/30 w-[80%] h-[80%]"
         />
       </AvatarFallback>
     </AvatarContainer>
