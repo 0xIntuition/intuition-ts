@@ -1,0 +1,52 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "target": "es5",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@0xintuition/1ui": ["../../packages/1ui/src"],
+      "@0xintuition/1ui/*": ["../../packages/1ui/src/*"],
+      "@0xintuition/1ui/src/components/*": [
+        "../../packages/1ui/src/components/*"
+      ],
+      "@0xintuition/1ui/src/styles/*": ["../../packages/1ui/src/styles/*"],
+      "@0xintuition/1ui/src/types/*": ["../../packages/1ui/src/types/*"],
+      "@0xintuition/1ui/src/utils/*": ["../../packages/1ui/src/utils/*"],
+      "types/*": ["../../packages/1ui/src/types/*"],
+      "types": ["../../packages/1ui/src/types"],
+      "components/*": ["../../packages/1ui/src/components/*"],
+      "components": ["../../packages/1ui/src/components"],
+      "styles/*": ["../../packages/1ui/src/styles/*"],
+      "styles": ["../../packages/1ui/src/styles"],
+      "utils/*": ["../../packages/1ui/src/utils/*"],
+      "utils": ["../../packages/1ui/src/utils"]
+    },
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "../../packages/1ui/src/**/*.ts",
+    "../../packages/1ui/src/**/*.tsx"
+  ],
+  "exclude": ["node_modules"]
+}
