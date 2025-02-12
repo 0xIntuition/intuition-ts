@@ -1,0 +1,64 @@
+import { Canvas, Controls, Meta, Title } from '@storybook/blocks'
+
+import * as CardStories from './Card.stories'
+
+<Meta of={CardStories} />
+
+<Title />
+
+A versatile card component for grouping related content with optional header, footer, and content sections.
+
+## Usage
+
+<Canvas of={CardStories.Default} />
+
+```tsx
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@0xintuition/1ui'
+
+;<Card>
+  <CardHeader>
+    <CardTitle>Card Title</CardTitle>
+    <CardDescription>Card Description</CardDescription>
+  </CardHeader>
+  <CardContent>
+    <p>Card Content</p>
+  </CardContent>
+</Card>
+```
+
+## Examples
+
+### With Footer Actions
+
+<Canvas of={CardStories.WithFooter} />
+
+### Simple Content Only
+
+<Canvas of={CardStories.Simple} />
+
+### Custom Styled Card
+
+<Canvas of={CardStories.CustomStyles} />
+
+## Anatomy
+
+The Card component is composed of several sub-components:
+
+- `Card` - The root container
+- `CardHeader` - Container for title and description
+- `CardTitle` - The card's title
+- `CardDescription` - Optional description text
+- `CardContent` - The main content area
+- `CardFooter` - Optional footer for actions
+
+Each component can be styled independently using className prop.
+
+## API Reference
+
+<Controls />
