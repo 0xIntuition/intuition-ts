@@ -355,16 +355,24 @@ export function AppSidebar({
     <>
       {isMobile ? (
         <Sheet>
-          <SheetTrigger asChild>
-            <SidebarTrigger />
-          </SheetTrigger>
-          <SheetContent side="left" className="w-[300px] p-0">
+          <div className="fixed top-4 left-4 z-50">
+            <SheetTrigger asChild>
+              <SidebarTrigger className="bg-background/80 backdrop-blur-sm border border-border/10 shadow-sm" />
+            </SheetTrigger>
+          </div>
+          <SheetContent
+            side="left"
+            className="w-[300px] p-0 block md:hidden border-border/20"
+          >
             {sidebarContent}
           </SheetContent>
         </Sheet>
       ) : (
         <Sidebar
-          className="border-r border-border/10"
+          className={cn(
+            'border-r border-border/10',
+            isMobile && 'hidden md:flex',
+          )}
           collapsible="icon"
           {...props}
         >

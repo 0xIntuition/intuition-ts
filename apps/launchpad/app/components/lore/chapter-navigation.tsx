@@ -13,18 +13,19 @@ export function ChapterNavigation({
   nextChapter,
 }: ChapterNavigationProps) {
   return (
-    <div className="fixed bottom-0 left-[256px] right-0 z-20">
-      <div className="w-full h-24 bg-background/80 backdrop-blur-md border-t border-border/5">
+    <div className="fixed bottom-0 left-0 md:left-[256px] right-0 z-20">
+      <div className="w-full h-16 sm:h-24 bg-background/80 backdrop-blur-md border-t border-border/5">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.8, duration: 0.5 }}
-          className="max-w-4xl mx-auto h-full px-8 grid grid-cols-3 items-center"
+          className="max-w-[95vw] md:max-w-4xl mx-auto h-full px-4 sm:px-8 grid grid-cols-3 items-center"
         >
           {prevChapter ? (
             <Link
               to={`/lore/${prevChapter.id}`}
               className="group flex items-center gap-2 text-foreground/60 hover:text-foreground transition-colors"
+              aria-label={`Previous Chapter: ${prevChapter.title}`}
             >
               <motion.div
                 whileHover={{ x: -4 }}
@@ -33,8 +34,12 @@ export function ChapterNavigation({
                 <ArrowLeft className="w-5 h-5" />
               </motion.div>
               <div className="text-right">
-                <div className="text-sm opacity-60">Previous Chapter</div>
-                <div className="font-medium">{prevChapter.title}</div>
+                <div className="hidden sm:block text-sm opacity-60">
+                  Previous Chapter
+                </div>
+                <div className="hidden sm:block font-medium">
+                  {prevChapter.title}
+                </div>
               </div>
             </Link>
           ) : (
@@ -52,10 +57,15 @@ export function ChapterNavigation({
             <Link
               to={`/lore/${nextChapter.id}`}
               className="group flex items-center gap-2 text-foreground/60 hover:text-foreground transition-colors justify-self-end"
+              aria-label={`Next Chapter: ${nextChapter.title}`}
             >
               <div className="text-left">
-                <div className="text-sm opacity-60">Next Chapter</div>
-                <div className="font-medium">{nextChapter.title}</div>
+                <div className="hidden sm:block text-sm opacity-60">
+                  Next Chapter
+                </div>
+                <div className="hidden sm:block font-medium">
+                  {nextChapter.title}
+                </div>
               </div>
               <motion.div
                 whileHover={{ x: 4 }}
