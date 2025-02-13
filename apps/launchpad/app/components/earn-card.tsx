@@ -33,7 +33,7 @@ export const EarnCard = ({
       transition={{ duration: 0.5 }}
       whileHover={{ y: -5 }}
     >
-      <Card className="relative flex flex-col justify-between bg-black/5 backdrop-blur-md backdrop-saturate-150 p-6 border border-border/10 h-64">
+      <Card className="relative flex flex-col rounded-lg justify-between bg-black/5 before:absolute before:inset-0 before:bg-gradient-to-t before:from-black/5 before:via-for/10 before:to-black/5 before:-z-10 backdrop-blur-sm backdrop-saturate-150 p-6 border border-border/10 h-64">
         <div className="flex flex-col">
           <motion.div
             className="absolute left-6 top-6 border border-border/10 rounded-lg p-2.5 bg-primary/10"
@@ -74,9 +74,8 @@ export const EarnCard = ({
             </div>
           </motion.div>
         </div>
-
         <motion.div
-          className="flex items-center justify-between"
+          className="flex items-center justify-between border-t border-border/10 pt-6"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5, duration: 0.5 }}
