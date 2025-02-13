@@ -23,12 +23,17 @@ export function DiscoverSection({ products }: DiscoverSectionProps) {
       <div className="flex flex-col">
         <Text
           variant={TextVariant.heading3}
-          weight={TextWeight.semibold}
+          weight={TextWeight.bold}
           className="leading-tight"
         >
           Discover our products
         </Text>
-        <Text variant={TextVariant.body} className="text-primary/50">
+        <Text
+          variant={TextVariant.body}
+          weight={TextWeight.medium}
+          className="text-primary/70
+        "
+        >
           Find out the best products for your work, life, and more.
         </Text>
       </div>
