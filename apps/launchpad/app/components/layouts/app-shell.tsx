@@ -12,7 +12,7 @@ function AppShellContent({ children }: AppShellContentProps) {
   const { layoutVariant, paddingVariant } = useAppShell()
 
   return (
-    <div className="flex justify-center w-full max-w-screen-xl mx-auto">
+    <div className="flex justify-center w-full max-w-screen-xl mx-auto mt-6">
       <div
         className={cn(
           'flex flex-col w-full space-y-6',
