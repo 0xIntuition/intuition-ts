@@ -11,7 +11,12 @@
       "import": "./dist/index.mjs",
       "require": "./dist/index.js"
     },
-    "./styles.css": "./dist/index.css"
+    "./styles.css": "./dist/index.css",
+    "./src/styles/theme-preset": {
+      "types": "./dist/styles/theme-preset.d.ts",
+      "import": "./dist/styles/theme-preset.mjs",
+      "require": "./dist/styles/theme-preset.js"
+    }
   },
   "files": [
     "dist"
@@ -123,7 +128,7 @@
     ],
     "versioning": {
       "patch": "Bug fixes (0.0.X)",
-      "minor": "New features (0.X.0)",
+      "minor": "New features ciy(0.X.0)",
       "major": "Breaking changes (X.0.0)",
       "beta": "Pre-release versions (X.X.X-beta.0)"
     },
