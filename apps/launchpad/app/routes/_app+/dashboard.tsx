@@ -236,12 +236,12 @@ export default function Dashboard() {
   })
 
   return (
-    <div className="space-y-8 text-foreground p-8">
+    <>
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="flex items-center gap-4 border-none rounded-lg p-6 text-palette-neutral-900 shadow-pop-lg"
+        className="flex items-center gap-4 border-none rounded-lg px-6 pb-6 text-palette-neutral-900 shadow-pop-lg"
       >
         <motion.div
           initial={{ scale: 0 }}
@@ -294,6 +294,6 @@ export default function Dashboard() {
         currentStageIndex={(currentEpoch?.id ?? 1) - 1}
       />
       <EarnSection quests={earnCards} />
-    </div>
+    </>
   )
 }
