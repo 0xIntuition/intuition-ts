@@ -1,7 +1,7 @@
 import { PageHeader } from '@0xintuition/1ui'
 
 import { ErrorPage } from '@components/error-page'
-import { QuestCard } from '@components/quest-card'
+import { QuestRow } from '@components/quest-row'
 import { QUESTS } from '@lib/utils/constants'
 
 export function ErrorBoundary() {
@@ -15,7 +15,7 @@ export default function Quests() {
 
       <div className="flex flex-col gap-6">
         {QUESTS.map((quest) => (
-          <QuestCard
+          <QuestRow
             key={quest.link}
             title={quest.title}
             description={quest.description}
