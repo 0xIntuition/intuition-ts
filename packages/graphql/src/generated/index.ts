@@ -12267,6 +12267,9 @@ export type GetListItemsQuery = {
 export type GetListDetailsQueryVariables = Exact<{
   globalWhere?: InputMaybe<Triples_Bool_Exp>
   tagPredicateId?: InputMaybe<Scalars['numeric']['input']>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  orderBy?: InputMaybe<Array<Triples_Order_By> | Triples_Order_By>
 }>
 
 export type GetListDetailsQuery = {
@@ -12378,6 +12381,9 @@ export type GetListDetailsWithPositionQueryVariables = Exact<{
   globalWhere?: InputMaybe<Triples_Bool_Exp>
   tagPredicateId?: InputMaybe<Scalars['numeric']['input']>
   address?: InputMaybe<Scalars['String']['input']>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  orderBy?: InputMaybe<Array<Triples_Order_By> | Triples_Order_By>
 }>
 
 export type GetListDetailsWithPositionQuery = {
@@ -12510,6 +12516,9 @@ export type GetListDetailsWithUserQueryVariables = Exact<{
   userWhere?: InputMaybe<Triples_Bool_Exp>
   tagPredicateId?: InputMaybe<Scalars['numeric']['input']>
   address?: InputMaybe<Scalars['String']['input']>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  orderBy?: InputMaybe<Array<Triples_Order_By> | Triples_Order_By>
 }>
 
 export type GetListDetailsWithUserQuery = {
@@ -19653,13 +19662,18 @@ useGetListItemsQuery.fetcher = (
   )
 
 export const GetListDetailsDocument = `
-    query GetListDetails($globalWhere: triples_bool_exp, $tagPredicateId: numeric) {
+    query GetListDetails($globalWhere: triples_bool_exp, $tagPredicateId: numeric, $limit: Int, $offset: Int, $orderBy: [triples_order_by!]) {
   globalTriplesAggregate: triples_aggregate(where: $globalWhere) {
     aggregate {
       count
     }
   }
-  globalTriples: triples(where: $globalWhere) {
+  globalTriples: triples(
+    where: $globalWhere
+    limit: $limit
+    offset: $offset
+    order_by: $orderBy
+  ) {
     id
     vault_id
     counter_vault_id
@@ -19821,13 +19835,18 @@ useGetListDetailsQuery.fetcher = (
   )
 
 export const GetListDetailsWithPositionDocument = `
-    query GetListDetailsWithPosition($globalWhere: triples_bool_exp, $tagPredicateId: numeric, $address: String) {
+    query GetListDetailsWithPosition($globalWhere: triples_bool_exp, $tagPredicateId: numeric, $address: String, $limit: Int, $offset: Int, $orderBy: [triples_order_by!]) {
   globalTriplesAggregate: triples_aggregate(where: $globalWhere) {
     aggregate {
       count
     }
   }
-  globalTriples: triples(where: $globalWhere) {
+  globalTriples: triples(
+    where: $globalWhere
+    limit: $limit
+    offset: $offset
+    order_by: $orderBy
+  ) {
     id
     vault_id
     counter_vault_id
@@ -20015,13 +20034,18 @@ useGetListDetailsWithPositionQuery.fetcher = (
   >(GetListDetailsWithPositionDocument, variables, options)
 
 export const GetListDetailsWithUserDocument = `
-    query GetListDetailsWithUser($globalWhere: triples_bool_exp, $userWhere: triples_bool_exp, $tagPredicateId: numeric, $address: String) {
+    query GetListDetailsWithUser($globalWhere: triples_bool_exp, $userWhere: triples_bool_exp, $tagPredicateId: numeric, $address: String, $limit: Int, $offset: Int, $orderBy: [triples_order_by!]) {
   globalTriplesAggregate: triples_aggregate(where: $globalWhere) {
     aggregate {
       count
     }
   }
-  globalTriples: triples(where: $globalWhere) {
+  globalTriples: triples(
+    where: $globalWhere
+    limit: $limit
+    offset: $offset
+    order_by: $orderBy
+  ) {
     id
     vault_id
     counter_vault_id
@@ -38965,6 +38989,39 @@ export const GetListDetails = {
           },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'numeric' } },
         },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'limit' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'offset' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'orderBy' },
+          },
+          type: {
+            kind: 'ListType',
+            type: {
+              kind: 'NonNullType',
+              type: {
+                kind: 'NamedType',
+                name: { kind: 'Name', value: 'triples_order_by' },
+              },
+            },
+          },
+        },
       ],
       selectionSet: {
         kind: 'SelectionSet',
@@ -39010,6 +39067,30 @@ export const GetListDetails = {
                 value: {
                   kind: 'Variable',
                   name: { kind: 'Name', value: 'globalWhere' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'limit' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'offset' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'offset' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'order_by' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'orderBy' },
                 },
               },
             ],
@@ -39400,6 +39481,39 @@ export const GetListDetailsWithPosition = {
           },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
         },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'limit' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'offset' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'orderBy' },
+          },
+          type: {
+            kind: 'ListType',
+            type: {
+              kind: 'NonNullType',
+              type: {
+                kind: 'NamedType',
+                name: { kind: 'Name', value: 'triples_order_by' },
+              },
+            },
+          },
+        },
       ],
       selectionSet: {
         kind: 'SelectionSet',
@@ -39445,6 +39559,30 @@ export const GetListDetailsWithPosition = {
                 value: {
                   kind: 'Variable',
                   name: { kind: 'Name', value: 'globalWhere' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'limit' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'offset' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'offset' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'order_by' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'orderBy' },
                 },
               },
             ],
@@ -39976,6 +40114,39 @@ export const GetListDetailsWithUser = {
           },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
         },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'limit' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'offset' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'orderBy' },
+          },
+          type: {
+            kind: 'ListType',
+            type: {
+              kind: 'NonNullType',
+              type: {
+                kind: 'NamedType',
+                name: { kind: 'Name', value: 'triples_order_by' },
+              },
+            },
+          },
+        },
       ],
       selectionSet: {
         kind: 'SelectionSet',
@@ -40021,6 +40192,30 @@ export const GetListDetailsWithUser = {
                 value: {
                   kind: 'Variable',
                   name: { kind: 'Name', value: 'globalWhere' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'limit' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'offset' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'offset' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'order_by' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'orderBy' },
                 },
               },
             ],

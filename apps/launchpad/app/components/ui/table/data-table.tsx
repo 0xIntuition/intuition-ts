@@ -9,10 +9,16 @@ import {
   TableRow,
 } from '@0xintuition/1ui'
 
-import {
+import type {
+  Cell,
   Column,
   ColumnDef,
   ColumnResizeMode,
+  HeaderGroup,
+  Row,
+  SortingState,
+} from '@tanstack/react-table'
+import {
   flexRender,
   getCoreRowModel,
   getFacetedRowModel,
@@ -20,8 +26,6 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
-  Row,
-  SortingState,
   useReactTable,
 } from '@tanstack/react-table'
 
@@ -31,6 +35,8 @@ interface DataTableProps<TData extends { id: string | number }, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
   onRowClick?: (id: number) => void
+  table?: ReturnType<typeof useReactTable<TData>>
+  onPaginationChange?: (pageIndex: number, pageSize: number) => void
 }
 
 const getCommonPinningStyles = <T,>(
@@ -60,6 +66,8 @@ export function DataTable<TData extends { id: string | number }, TValue>({
   columns,
   data,
   onRowClick,
+  table: externalTable,
+  onPaginationChange,
 }: DataTableProps<TData, TValue>) {
   const [columnResizeMode] = React.useState<ColumnResizeMode>('onChange')
   const [sorting, setSorting] = React.useState<SortingState>([
@@ -71,7 +79,7 @@ export function DataTable<TData extends { id: string | number }, TValue>({
   const clickLockTimeoutRef = React.useRef<NodeJS.Timeout>()
   const isClickLockedRef = React.useRef(false)
 
-  const table = useReactTable({
+  const internalTable = useReactTable({
     data,
     columns,
     columnResizeMode,
@@ -98,6 +106,8 @@ export function DataTable<TData extends { id: string | number }, TValue>({
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
   })
+
+  const table = externalTable ?? internalTable
 
   // Cleanup timeout on unmount
   React.useEffect(() => {
@@ -157,53 +167,55 @@ export function DataTable<TData extends { id: string | number }, TValue>({
         <div className="overflow-x-auto w-full">
           <Table className="w-full" style={{ minWidth: table.getTotalSize() }}>
             <TableHeader className="bg-gradient-to-l from-[#060504] to-[#101010] rounded-md">
-              {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow
-                  key={headerGroup.id}
-                  className="border-b border-border/10"
-                >
-                  {headerGroup.headers.map((header) => (
-                    <TableHead
-                      key={header.id}
-                      colSpan={header.colSpan}
-                      className="text-sm font-medium text-muted-foreground h-12"
-                      style={{
-                        width: header.getSize(),
-                        ...getCommonPinningStyles(header.column),
-                      }}
-                    >
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                          )}
-                      {header.column.getCanResize() && (
-                        <div
-                          role="presentation"
-                          aria-hidden="true"
-                          onMouseDown={header.getResizeHandler()}
-                          onTouchStart={header.getResizeHandler()}
-                          className={`resizer ${
-                            header.column.getIsResizing() ? 'isResizing' : ''
-                          }`}
-                        />
-                      )}
-                    </TableHead>
-                  ))}
-                </TableRow>
-              ))}
+              {table
+                .getHeaderGroups()
+                .map((headerGroup: HeaderGroup<TData>) => (
+                  <TableRow
+                    key={headerGroup.id}
+                    className="border-b border-border/10"
+                  >
+                    {headerGroup.headers.map((header) => (
+                      <TableHead
+                        key={header.id}
+                        colSpan={header.colSpan}
+                        className="text-sm font-medium text-muted-foreground h-12"
+                        style={{
+                          width: header.getSize(),
+                          ...getCommonPinningStyles(header.column),
+                        }}
+                      >
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                              header.column.columnDef.header,
+                              header.getContext(),
+                            )}
+                        {header.column.getCanResize() && (
+                          <div
+                            role="presentation"
+                            aria-hidden="true"
+                            onMouseDown={header.getResizeHandler()}
+                            onTouchStart={header.getResizeHandler()}
+                            className={`resizer ${
+                              header.column.getIsResizing() ? 'isResizing' : ''
+                            }`}
+                          />
+                        )}
+                      </TableHead>
+                    ))}
+                  </TableRow>
+                ))}
             </TableHeader>
             <TableBody>
               {table.getRowModel().rows?.length ? (
-                table.getRowModel().rows.map((row) => (
+                table.getRowModel().rows.map((row: Row<TData>) => (
                   <TableRow
                     key={row.id}
                     className="border-b border-border/10 hover:bg-[#101010] transition-colors cursor-pointer bg-gradient-to-r from-[#060504] to-[#101010]"
                     data-state={row.getIsSelected() && 'selected'}
                     onClick={(e) => handleRowClick(e, row)}
                   >
-                    {row.getVisibleCells().map((cell) => (
+                    {row.getVisibleCells().map((cell: Cell<TData, unknown>) => (
                       <TableCell
                         key={cell.id}
                         className="h-[72px] text-sm"
@@ -235,7 +247,10 @@ export function DataTable<TData extends { id: string | number }, TValue>({
           </Table>
         </div>
       </div>
-      <DataTablePagination table={table} />
+      <DataTablePagination
+        table={table}
+        onPaginationChange={onPaginationChange}
+      />
     </div>
   )
 }
