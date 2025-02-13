@@ -33,7 +33,7 @@ export const EarnCard = ({
       transition={{ duration: 0.5 }}
       whileHover={{ y: -5 }}
     >
-      <Card className="relative flex flex-col justify-between bg-white/5 backdrop-blur-md backdrop-saturate-150 p-6 border border-border/10 h-64">
+      <Card className="relative flex flex-col justify-between bg-black/5 backdrop-blur-md backdrop-saturate-150 p-6 border border-border/10 h-64">
         <div className="flex flex-col">
           <motion.div
             className="absolute left-6 top-6 border border-border/10 rounded-lg p-2.5 bg-primary/10"
