@@ -369,10 +369,7 @@ export function AppSidebar({
         </Sheet>
       ) : (
         <Sidebar
-          className={cn(
-            'border-r border-border/10',
-            isMobile && 'hidden md:flex',
-          )}
+          className="border-r border-border/10 bg-background/60"
           collapsible="icon"
           {...props}
         >

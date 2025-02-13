@@ -19,6 +19,7 @@ import {
   configureClient,
 } from '@0xintuition/graphql'
 
+import { VideoBackground } from '@components/video-background'
 import { CURRENT_ENV } from '@consts/general'
 import { json } from '@remix-run/node'
 import { setupAPI } from '@server/auth'
@@ -114,7 +115,8 @@ export default function App() {
 
 export function AppLayout() {
   return (
-    <main className="relative flex min-h-screen w-full flex-col justify-between antialiased">
+    <main className="relative flex min-h-screen w-full flex-col justify-between antialiased !bg-transparent">
+      <VideoBackground />
       <Outlet />
     </main>
   )

@@ -37,7 +37,7 @@ function AppShellInner({ children }: BaseLayoutProps) {
         }
       >
         <AppSidebar />
-        <SidebarInset className="">
+        <SidebarInset>
           <AppShellContent>{children}</AppShellContent>
         </SidebarInset>
       </SidebarProvider>
