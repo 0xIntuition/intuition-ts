@@ -28,7 +28,7 @@ export function MasteryCard({
   return (
     <button
       className={cn(
-        'relative w-full overflow-hidden rounded-lg transition-all duration-200 border border-border/20',
+        'relative w-full overflow-hidden rounded-lg transition-all duration-200',
         'h-[120px] bg-background/80 backdrop-blur-sm group',
         isLocked && 'opacity-50 cursor-not-allowed',
         !isLocked && 'cursor-pointer',
