@@ -147,7 +147,7 @@ export default function RewardsRoute() {
     },
     {
       name: 'Portal',
-      image: '/images/lore/2-3.png',
+      image: '/images/lore/2-3.webp',
       totalPoints: points?.portal_quests ?? 0,
       levels: CATEGORY_MAX_POINTS.PORTAL.map((maxPoints, index) => {
         const categoryPoints = points?.portal_quests ?? 0
@@ -197,7 +197,7 @@ export default function RewardsRoute() {
     },
     {
       name: 'Community',
-      image: '/images/lore/7-1.png',
+      image: '/images/lore/7-1.webp',
       totalPoints: points?.community ?? 0,
       levels: CATEGORY_MAX_POINTS.COMMUNITY.map((maxPoints, index) => {
         const categoryPoints = points?.community ?? 0
@@ -214,7 +214,7 @@ export default function RewardsRoute() {
     },
     {
       name: 'Social',
-      image: '/images/lore/6-1.png',
+      image: '/images/lore/6-1.webp',
       totalPoints: 0,
       levels: CATEGORY_MAX_POINTS.SOCIAL.map((maxPoints) => ({
         points: maxPoints,

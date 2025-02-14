@@ -11,7 +11,7 @@ export function DecisionSection({ className }: ChapterSectionProps) {
     <section className={cn('max-w-[70ch] mx-auto', className)}>
       <SectionHeader
         title="The Decision"
-        image="/images/lore/1-2-the-decision.png"
+        image="/images/lore/1-2-the-decision.webp"
       />
 
       <div className="mx-auto space-y-6 py-6">

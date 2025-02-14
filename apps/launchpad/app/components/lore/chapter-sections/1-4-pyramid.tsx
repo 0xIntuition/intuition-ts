@@ -11,7 +11,7 @@ export function PyramidSection({ className }: ChapterSectionProps) {
     <section className={cn('max-w-[70ch] mx-auto', className)}>
       <SectionHeader
         title="The Pyramid"
-        image="/images/lore/1-4-the-pyramid.png"
+        image="/images/lore/1-4-the-pyramid.webp"
       />
 
       <div className="mx-auto space-y-6 py-6">

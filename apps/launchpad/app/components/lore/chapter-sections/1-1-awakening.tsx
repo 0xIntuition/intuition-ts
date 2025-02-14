@@ -11,7 +11,7 @@ export function AwakeningSection({ className }: ChapterSectionProps) {
     <section className={cn('max-w-[70ch] mx-auto', className)}>
       <SectionHeader
         title="The Awakening"
-        image="/images/lore/1-1-the-awakening.png"
+        image="/images/lore/1-1-the-awakening.webp"
       />
 
       <div className="mx-auto space-y-6 py-6">
