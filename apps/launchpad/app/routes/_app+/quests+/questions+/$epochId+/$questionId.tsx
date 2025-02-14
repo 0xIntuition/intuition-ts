@@ -66,6 +66,7 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 import { TripleType } from 'app/types'
+import { ListDetailsType } from 'app/types/list-details'
 import { useAtom } from 'jotai'
 import { CheckCircle } from 'lucide-react'
 import { formatUnits } from 'viem'
@@ -713,7 +714,7 @@ export default function MiniGameOne() {
           })
         }
         title={shareModalActive.title}
-        listData={listData}
+        listData={listData as unknown as ListDetailsType}
       />
       <OnboardingModal
         isOpen={onboardingModal.isOpen}

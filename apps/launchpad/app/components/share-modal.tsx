@@ -13,15 +13,15 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@0xintuition/1ui'
-import { GetListDetailsQuery } from '@0xintuition/graphql'
 
 import { useCopy } from '@lib/hooks/useCopy'
+import { ListDetailsType } from 'app/types/list-details'
 
 export interface ShareModalProps {
   open?: boolean
   onClose: () => void
   title: string
-  listData: GetListDetailsQuery
+  listData: ListDetailsType
   tvl?: number
   percentageChange?: number
   valueChange?: number
