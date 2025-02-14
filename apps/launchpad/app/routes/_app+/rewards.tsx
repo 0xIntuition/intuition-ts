@@ -312,7 +312,7 @@ export default function RewardsRoute() {
         </Text>
         <EarnSection quests={earnCards} />
       </div>
-    </div>
+    </>
   )
 }
 

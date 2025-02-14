@@ -239,6 +239,6 @@ export default function Dashboard() {
         currentStageIndex={CHAPTERS.CURRENT_CHAPTER - 1}
       />
       <EarnSection quests={earnCards} />
-    </div>
+    </>
   )
 }
