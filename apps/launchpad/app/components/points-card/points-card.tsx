@@ -1,23 +1,20 @@
 import React from 'react'
 
-import {
-  Text,
-  TextVariant,
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@0xintuition/1ui'
+import { Text, TextVariant } from '@0xintuition/1ui'
 
-import { truncateNumber } from '@lib/utils/misc'
+import { motion } from 'framer-motion'
+
+import { LevelProgress } from './level-progress'
+
+interface Activity {
+  name: string
+  points: number
+  disabled?: boolean
+}
 
 interface PointsEarnedCardProps {
   totalPoints: number
-  activities: Array<{
-    name: string
-    points: number
-    disabled?: boolean
-  }>
+  activities: Activity[]
 }
 
 const PointsRow: React.FC<{
@@ -25,42 +22,30 @@ const PointsRow: React.FC<{
   points: number
   totalPoints: number
   disabled?: boolean
-}> = ({ name, points, totalPoints, disabled = false }) => {
+}> = ({ name, points, disabled }) => {
   return (
-    <TooltipProvider>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <div className="grid grid-cols-7 items-center gap-2">
-            <Text
-              variant={TextVariant.body}
-              className={`col-span-1 ${disabled ? 'text-primary/40' : ''}`}
-            >
-              {name}
-            </Text>
-            <div className="col-span-5 h-1.5 w-full bg-muted rounded-sm mx-auto">
-              <div
-                className="h-full bg-primary rounded-sm"
-                style={{
-                  width: `${totalPoints === 0 ? 0 : (points / totalPoints) * 100}%`,
-                }}
-              />
-            </div>
-
-            <Text
-              variant={TextVariant.body}
-              className={`col-span-1 text-right ${disabled ? 'text-primary/40' : ''}`}
-            >
-              {truncateNumber(points)}
-            </Text>
-          </div>
-        </TooltipTrigger>
-        <TooltipContent>
-          {disabled
-            ? 'Coming Soon'
-            : `${(totalPoints === 0 ? 0 : (points / totalPoints) * 100).toFixed(1)}%`}
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
+    <motion.div
+      className="flex flex-col gap-2"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+    >
+      <div className="flex justify-between items-center">
+        <Text
+          variant={TextVariant.body}
+          className={disabled ? 'text-muted-foreground' : ''}
+        >
+          {name}
+        </Text>
+        <Text
+          variant={TextVariant.body}
+          className={disabled ? 'text-muted-foreground' : ''}
+        >
+          {points.toLocaleString()} IQ
+        </Text>
+      </div>
+      {!disabled && <LevelProgress points={points} category={name} />}
+    </motion.div>
   )
 }
 
@@ -69,8 +54,8 @@ export const PointsEarnedCard: React.FC<PointsEarnedCardProps> = ({
   activities,
 }) => {
   return (
-    <div className="flex flex-col theme-border rounded-lg p-6 gap-4 bg-black">
-      <div className="flex flex-col gap-4">
+    <div className="flex flex-col theme-border rounded-lg p-6 gap-6 bg-black">
+      <div className="flex flex-col gap-6">
         {activities.map((activity) => (
           <PointsRow
             key={activity.name}

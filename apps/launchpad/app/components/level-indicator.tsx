@@ -1,29 +1,46 @@
-import * as React from 'react'
+import { Text, TextVariant, TextWeight } from '@0xintuition/1ui'
 
-import { Text, TextVariant } from '@0xintuition/1ui'
+import { toRomanNumeral } from '@lib/utils/misc'
+
+import { LevelIndicatorGraphic } from './svg/level-indicator-graphic'
 
 interface LevelIndicatorProps {
   level: number
-  progress?: number // 0-100
+  progress: number // 0-100
 }
 
-export function LevelIndicator({ level, progress = 75 }: LevelIndicatorProps) {
-  const circleSize = 192 // Size of the circle in pixels
-  const strokeWidth = 8
+export function LevelIndicator({ level, progress }: LevelIndicatorProps) {
+  const circleSize = 300 // Size of the circle in pixels
+  const strokeWidth = 12
   const radius = (circleSize - strokeWidth) / 2
   const circumference = 2 * Math.PI * radius
 
   return (
     <div className="relative" style={{ width: circleSize, height: circleSize }}>
-      {/* Level Display */}
+      {/* Level Display and Graphic */}
       <div className="absolute inset-0 flex items-center justify-center">
-        <div className="text-center">
-          <Text variant={TextVariant.heading2} className="text-4xl font-bold">
-            {level}
-          </Text>
-          <Text variant={TextVariant.small} className="text-muted-foreground">
-            LVL
-          </Text>
+        <div className="relative scale-[1.5]">
+          <LevelIndicatorGraphic level={level} className="text-success/20" />
+          <div
+            className="absolute inset-0 flex items-center justify-center"
+            style={{ marginTop: '-40px' }}
+          >
+            <div className="text-center gap-0 flex flex-col items-center justify-center">
+              <Text
+                variant={TextVariant.heading3}
+                weight={TextWeight.medium}
+                className="font-serif"
+              >
+                {toRomanNumeral(level)}
+              </Text>
+              <Text
+                variant={TextVariant.footnote}
+                className="text-primary/50 -mt-3"
+              >
+                LVL
+              </Text>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -47,7 +64,7 @@ export function LevelIndicator({ level, progress = 75 }: LevelIndicatorProps) {
           cx={circleSize / 2}
           cy={circleSize / 2}
           r={radius}
-          className="fill-none stroke-primary"
+          className="fill-none stroke-success"
           strokeWidth={strokeWidth}
           strokeLinecap="round"
           strokeDasharray={circumference}
