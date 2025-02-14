@@ -1,7 +1,6 @@
 import React from 'react'
 
 import {
-  AggregatedMetrics,
   Avatar,
   Banner,
   Button,
@@ -68,7 +67,7 @@ import {
 } from '@tanstack/react-table'
 import { TripleType } from 'app/types'
 import { useAtom } from 'jotai'
-import { CheckCircle, ThumbsDown, ThumbsUp } from 'lucide-react'
+import { CheckCircle } from 'lucide-react'
 import { formatUnits } from 'viem'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -445,20 +444,15 @@ export default function MiniGameOne() {
   })
 
   // Calculate total users and TVL
-  const totals = React.useMemo(() => {
-    console.time('totals calculation')
-    const result = {
-      users: tableData.reduce((sum, item) => sum + item.users, 0),
-      forTvl: tableData.reduce((sum, item) => sum + item.forTvl, 0),
-      againstTvl: tableData.reduce((sum, item) => sum + item.againstTvl, 0),
-      upVotes: tableData.reduce((sum, item) => sum + item.upvotes, 0),
-      downVotes: tableData.reduce((sum, item) => sum + item.downvotes, 0),
-    }
-    console.timeEnd('totals calculation')
-    return result
-  }, [tableData])
-
-  const totalTvl = totals.forTvl + totals.againstTvl
+  // const totalUsers = tableData.reduce((sum, item) => sum + item.users, 0)
+  // const forTvl = tableData.reduce((sum, item) => sum + item.forTvl, 0)
+  // const againstTvl = tableData.reduce((sum, item) => sum + item.againstTvl, 0)
+  // const totalUpVotes = tableData.reduce((sum, item) => sum + item.upvotes, 0)
+  // const totalDownVotes = tableData.reduce(
+  //   (sum, item) => sum + item.downvotes,
+  //   0,
+  // )
+  // const totalTvl = forTvl + againstTvl
 
   const queryClient = useQueryClient()
 
@@ -534,21 +528,6 @@ export default function MiniGameOne() {
   if (isLoading) {
     return (
       <>
-        {/* <div className="flex items-center gap-4 mb-6">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="border-none bg-background-muted"
-            onClick={goBack}
-          >
-            <Icon name="chevron-left" className="h-4 w-4" />
-          </Button>
-          <div className="flex flex-1 justify-between items-center">
-            <PageHeader
-              title={`Intuition Questions Module: Question ${questionId}`}
-            />
-          </div>
-        </div> */}
         <div className="flex items-center justify-center h-[400px]">
           <LoadingLogo size={100} />
         </div>
@@ -579,8 +558,7 @@ export default function MiniGameOne() {
                 setShareModalActive({
                   isOpen: true,
                   currentPath: fullPath,
-                  title: listData?.globalTriples[0].object.label ?? '', // TODO: Change this to use the quest name from the metadata once it's added to the points API
-                  tvl: totalTvl,
+                  title,
                 })
               }
             >
@@ -606,11 +584,6 @@ export default function MiniGameOne() {
                 <Text variant="heading3" className="text-foreground">
                   {title}
                 </Text>
-                {/* {!isCompleted && (
-                  <Text variant="body" className="text-foreground/70">
-                    {description}
-                  </Text>
-                )} */}
               </div>
               <AuthCover
                 buttonContainerClassName="h-full flex items-center justify-center w-full"
@@ -687,7 +660,8 @@ export default function MiniGameOne() {
         </div>
       </div>
 
-      <AggregatedMetrics
+      {/* TODO: Add back in once we have the metrics */}
+      {/* <AggregatedMetrics
         metrics={[
           {
             label: 'TVL',
@@ -718,7 +692,7 @@ export default function MiniGameOne() {
           },
         ]}
         className="[&>div]:after:hidden sm:[&>div]:after:block"
-      />
+      /> */}
 
       {/* Space for table */}
       <div className="mt-6">
@@ -739,7 +713,7 @@ export default function MiniGameOne() {
           })
         }
         title={shareModalActive.title}
-        tvl={shareModalActive.tvl}
+        listData={listData}
       />
       <OnboardingModal
         isOpen={onboardingModal.isOpen}
