@@ -1,5 +1,4 @@
-import { PageHeader } from '@0xintuition/1ui'
-
+import { PageHeader } from '@components/page-header'
 import { motion } from 'framer-motion'
 
 import { DiscoverCard, DiscoverCardProps } from './discover-card'

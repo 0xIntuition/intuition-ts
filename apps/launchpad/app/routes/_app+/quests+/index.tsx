@@ -1,6 +1,5 @@
-import { PageHeader } from '@0xintuition/1ui'
-
 import { ErrorPage } from '@components/error-page'
+import { PageHeader } from '@components/page-header'
 import { QuestRow } from '@components/quest-row'
 import { QUESTS } from '@lib/utils/constants'
 

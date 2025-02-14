@@ -1,4 +1,4 @@
-import { Button, PageHeader, Text, TextVariant } from '@0xintuition/1ui'
+import { Button, Text, TextVariant } from '@0xintuition/1ui'
 import {
   fetcher,
   GetFeeTransfersDocument,
@@ -8,6 +8,7 @@ import {
 } from '@0xintuition/graphql'
 
 import { LevelIndicator } from '@components/level-indicator'
+import { PageHeader } from '@components/page-header'
 import { PointsEarnedCard } from '@components/points-card/points-card'
 import { ZERO_ADDRESS } from '@consts/general'
 import { usePoints } from '@lib/hooks/usePoints'

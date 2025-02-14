@@ -8,7 +8,6 @@ import {
   Card,
   Icon,
   IconName,
-  PageHeader,
   Text,
 } from '@0xintuition/1ui'
 import {
@@ -30,6 +29,7 @@ import {
 import { AtomDetailsModal } from '@components/atom-details-modal'
 import { AuthCover } from '@components/auth-cover'
 import LoadingLogo from '@components/loading-logo'
+import { PageHeader } from '@components/page-header'
 import ShareModal from '@components/share-modal'
 import { OnboardingModal } from '@components/survey-modal/survey-modal'
 import { columns } from '@components/ui/table/columns'

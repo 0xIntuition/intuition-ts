@@ -1,7 +1,6 @@
 import {
   AggregatedMetrics,
   Icon,
-  PageHeader,
   Text,
   TextVariant,
   TextWeight,
@@ -20,6 +19,7 @@ import {
 
 import { ActivityFeedPortal } from '@components/activity-feed-portal'
 import { ErrorPage } from '@components/error-page'
+import { PageHeader } from '@components/page-header'
 import { LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData, useSearchParams } from '@remix-run/react'
 import { dehydrate, QueryClient } from '@tanstack/react-query'

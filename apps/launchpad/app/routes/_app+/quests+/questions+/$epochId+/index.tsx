@@ -5,11 +5,12 @@
 
 import { Suspense } from 'react'
 
-import { Button, Card, Icon, PageHeader, Text } from '@0xintuition/1ui'
+import { Button, Card, Icon, Text } from '@0xintuition/1ui'
 
 import { AtomDetailsModal } from '@components/atom-details-modal'
 import ChapterProgress from '@components/chapter-progress'
 import { ErrorPage } from '@components/error-page'
+import { PageHeader } from '@components/page-header'
 import { QuestionCardWrapper } from '@components/question-card-wrapper'
 import { OnboardingModal } from '@components/survey-modal/survey-modal'
 import { useGoBack } from '@lib/hooks/useGoBack'
