@@ -1,4 +1,6 @@
-import { Button, Text, TextVariant, TextWeight } from '@0xintuition/1ui'
+import { useState } from 'react'
+
+import { Text, TextVariant, TextWeight } from '@0xintuition/1ui'
 import {
   fetcher,
   GetFeeTransfersDocument,
@@ -9,8 +11,8 @@ import {
 
 import { EarnSection } from '@components/earn-section'
 import { LevelIndicator } from '@components/level-indicator'
-import { PageHeader } from '@components/page-header'
-import { ActsProgress } from '@components/points-card/acts-progress'
+import { MasteryCard } from '@components/mastery-card'
+import { MasteryPreview } from '@components/mastery-preview'
 import { ZERO_ADDRESS } from '@consts/general'
 import { calculateLevelAndProgress } from '@consts/levels'
 import {
@@ -20,7 +22,7 @@ import {
 import { usePoints } from '@lib/hooks/usePoints'
 import { fetchPoints } from '@lib/services/points'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
-import { Link, useLoaderData } from '@remix-run/react'
+import { useLoaderData } from '@remix-run/react'
 import { getUser } from '@server/auth'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
 import { Code, Compass, Scroll } from 'lucide-react'
@@ -127,6 +129,8 @@ export default function RewardsRoute() {
   const actCategories = [
     {
       name: 'Launchpad',
+      image: '/images/lore/6-choosing-your-path.webp',
+      align: 'bottom',
       totalPoints: points?.launchpad_quests ?? 0,
       levels: CATEGORY_MAX_POINTS.LAUNCHPAD.map((maxPoints, index) => {
         const categoryPoints = points?.launchpad_quests ?? 0
@@ -143,6 +147,7 @@ export default function RewardsRoute() {
     },
     {
       name: 'Portal',
+      image: '/images/lore/2-3.png',
       totalPoints: points?.portal_quests ?? 0,
       levels: CATEGORY_MAX_POINTS.PORTAL.map((maxPoints, index) => {
         const categoryPoints = points?.portal_quests ?? 0
@@ -159,6 +164,7 @@ export default function RewardsRoute() {
     },
     {
       name: 'Protocol',
+      image: '/images/lore/3-transcendence.webp',
       totalPoints: protocolPointsTotal,
       levels: CATEGORY_MAX_POINTS.PROTOCOL.map((maxPoints, index) => {
         return {
@@ -174,6 +180,7 @@ export default function RewardsRoute() {
     },
     {
       name: 'Relic',
+      image: '/images/lore/2-lost-origins.webp',
       totalPoints: points?.relic_points ?? 0,
       levels: CATEGORY_MAX_POINTS.RELIC.map((maxPoints, index) => {
         const categoryPoints = points?.relic_points ?? 0
@@ -190,6 +197,7 @@ export default function RewardsRoute() {
     },
     {
       name: 'Community',
+      image: '/images/lore/7-1.png',
       totalPoints: points?.community ?? 0,
       levels: CATEGORY_MAX_POINTS.COMMUNITY.map((maxPoints, index) => {
         const categoryPoints = points?.community ?? 0
@@ -206,6 +214,7 @@ export default function RewardsRoute() {
     },
     {
       name: 'Social',
+      image: '/images/lore/6-1.png',
       totalPoints: 0,
       levels: CATEGORY_MAX_POINTS.SOCIAL.map((maxPoints) => ({
         points: maxPoints,
@@ -215,10 +224,13 @@ export default function RewardsRoute() {
     },
   ]
 
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(
+    'Launchpad',
+  )
+
   return (
-    <>
-      <PageHeader title="Rewards" />
-      <div className="flex flex-col items-center text-center space-y-4">
+    <div className="relative z-10">
+      <div className="flex flex-col items-center text-center space-y-4 mb-12">
         <LevelIndicator level={level} progress={progress} />
 
         <div>
@@ -229,18 +241,82 @@ export default function RewardsRoute() {
             IQ Points Earned
           </Text>
         </div>
-
-        <Link to="/quests" prefetch="intent">
-          <Button variant="secondary" className="mt-4 px-6">
-            Earn with Quests
-          </Button>
-        </Link>
       </div>
 
-      <div className="flex-shrink-0 w-full space-y-8">
-        <ActsProgress categories={actCategories} />
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+        {actCategories.map((category) => {
+          return (
+            <MasteryCard
+              key={category.name}
+              title={category.name}
+              progress={
+                category.levels.filter((l) => l.percentage === 100).length
+              }
+              maxProgress={category.levels.length}
+              isLocked={category.name === 'Social'}
+              isSelected={selectedCategory === category.name}
+              onClick={() => setSelectedCategory(category.name)}
+              backgroundPattern={category.image}
+              align={category.align}
+            />
+          )
+        })}
+      </div>
+
+      {selectedCategory && (
+        <MasteryPreview
+          title={
+            actCategories.find((c) => c.name === selectedCategory)?.name ?? ''
+          }
+          background={
+            actCategories.find((c) => c.name === selectedCategory)?.image
+          }
+          description={getCategoryDescription(selectedCategory)}
+          progress={
+            actCategories
+              .find((c) => c.name === selectedCategory)
+              ?.levels.filter((l) => l.percentage === 100).length ?? 0
+          }
+          maxProgress={
+            actCategories.find((c) => c.name === selectedCategory)?.levels
+              .length ?? 0
+          }
+          levels={
+            actCategories.find((c) => c.name === selectedCategory)?.levels ?? []
+          }
+          className="mb-8"
+        />
+      )}
+
+      <div className="space-y-8">
+        <Text
+          variant={TextVariant.heading2}
+          weight={TextWeight.semibold}
+          className="mb-4"
+        >
+          Ways to Earn
+        </Text>
         <EarnSection quests={earnCards} />
       </div>
-    </>
+    </div>
   )
+}
+
+function getCategoryDescription(category: string): string {
+  switch (category) {
+    case 'Launchpad':
+      return 'Complete quests and challenges in the Launchpad to earn mastery points.'
+    case 'Portal':
+      return 'Explore and interact with the Portal to unlock achievements.'
+    case 'Protocol':
+      return 'Engage with the protocol and earn points through network participation.'
+    case 'Relic':
+      return 'Discover and collect relics to increase your mastery level.'
+    case 'Community':
+      return 'Participate in community events and discussions.'
+    case 'Social':
+      return 'Connect and share with other members of the community.'
+    default:
+      return ''
+  }
 }

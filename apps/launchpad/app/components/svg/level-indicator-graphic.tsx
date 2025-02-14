@@ -7,9 +7,8 @@ interface LevelIndicatorGraphicProps {
 
 export function LevelIndicatorGraphic({
   className,
-  level = 0,
 }: LevelIndicatorGraphicProps) {
-  const fillPercentage = Math.min((level / 20) * 100, 100)
+  // const fillPercentage = Math.min((level / 20) * 100, 100)
 
   return (
     <svg
@@ -334,7 +333,7 @@ export function LevelIndicatorGraphic({
           />
         </filter>
       </defs>
-      <defs>
+      {/* <defs>
         <clipPath id="graphicShape">
           <path d="M55 138.25L95 175.75L65 132.25L34.5 109.75L55 138.25Z" />
           <path d="M139.5 138.25L99.5 175.75L129.5 132.25L160 109.75L139.5 138.25Z" />
@@ -350,7 +349,7 @@ export function LevelIndicatorGraphic({
         <filter id="levelBlur">
           <feGaussianBlur stdDeviation="5" />
         </filter>
-      </defs>
+      </defs> */}
 
       {/* Background gradient rectangle */}
       <rect
