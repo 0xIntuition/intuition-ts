@@ -80,6 +80,14 @@ import { formatUnits } from 'viem'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const queryClient = new QueryClient()
+  const url = new URL(request.url)
+
+  // Get pagination params from URL with defaults
+  const pageSize = parseInt(url.searchParams.get('limit') ?? '20', 10)
+  const pageIndex = Math.max(
+    0,
+    parseInt(url.searchParams.get('page') ?? '1', 10) - 1,
+  )
 
   // Start parallel fetches for independent data
   const [user, questionData, allQuestions, epoch] = await Promise.all([
@@ -190,6 +198,7 @@ export function ErrorBoundary() {
 type Triple = GetListDetailsSimplifiedQuery['globalTriples'][0]
 
 export default function MiniGameOne() {
+  console.time('MiniGameOne render')
   const location = useLocation()
   const { epochId, questionId } = useParams()
   const goBack = useGoBack({ fallbackRoute: `/quests/questions/${epochId}` })
