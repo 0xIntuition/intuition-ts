@@ -1,4 +1,4 @@
-import { Avatar } from '@0xintuition/1ui'
+import { Avatar, Text, TextVariant, TextWeight } from '@0xintuition/1ui'
 import {
   fetcher,
   GetAccountDocument,
@@ -256,24 +256,30 @@ export default function Dashboard() {
         </motion.div>
 
         <div>
-          <motion.h1
+          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2, duration: 0.5 }}
-            className="text-3xl font-bold text-primary"
           >
-            {user?.account?.label
-              ? `Welcome back, ${user.account.label}!`
-              : `Welcome!`}
-          </motion.h1>
-          <motion.p
+            <Text variant={TextVariant.heading3} weight={TextWeight.semibold}>
+              {user?.account?.label
+                ? `Welcome back, ${user.account.label}!`
+                : `Welcome!`}
+            </Text>
+          </motion.div>
+          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4, duration: 0.5 }}
-            className="text-primary/70"
           >
-            Are you ready to boost your Intuition?
-          </motion.p>
+            <Text
+              variant={TextVariant.body}
+              weight={TextWeight.medium}
+              className="text-primary/70"
+            >
+              Are you ready to boost your Intuition?
+            </Text>
+          </motion.div>
         </div>
       </motion.div>
       <AuthCover

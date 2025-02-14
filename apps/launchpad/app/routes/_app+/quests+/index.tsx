@@ -11,8 +11,7 @@ export function ErrorBoundary() {
 export default function Quests() {
   return (
     <>
-      <PageHeader title="Quests" />
-
+      <PageHeader title="Quests" subtitle="Complete quests to earn IQ" />
       <div className="flex flex-col gap-6">
         {QUESTS.map((quest) => (
           <QuestRow

@@ -1,6 +1,7 @@
 import {
   AggregatedMetrics,
   Icon,
+  PageHeader,
   Text,
   TextVariant,
   TextWeight,
@@ -106,6 +107,7 @@ export default function Network() {
 
   return (
     <>
+      <PageHeader title="Network" />
       <AggregatedMetrics
         metrics={[
           {
@@ -134,7 +136,7 @@ export default function Network() {
       />
       <div className="flex flex-col gap-4">
         <Text variant={TextVariant.headline} weight={TextWeight.medium}>
-          Network Activity
+          Activity Feed
         </Text>
         <ActivityFeedPortal
           activities={{

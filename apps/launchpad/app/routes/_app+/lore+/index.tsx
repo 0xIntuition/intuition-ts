@@ -97,14 +97,13 @@ export default function LoreIndex() {
   return (
     <div>
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-        <div className="max-w-4xl mx-auto text-center px-8 mb-8">
+        <div className="max-w-4xl mx-auto text-center px-6 pb-6">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="text-3xl font-bold text-white"
           >
-            <Text variant={TextVariant.heading4} weight={TextWeight.bold}>
+            <Text variant={TextVariant.heading3} weight={TextWeight.semibold}>
               The Intuition Story
             </Text>
           </motion.div>
@@ -113,7 +112,7 @@ export default function LoreIndex() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
           >
-            <Text variant={TextVariant.body} className="text-primary/50">
+            <Text variant={TextVariant.body} className="text-primary/70">
               Where it all begins
             </Text>
           </motion.div>

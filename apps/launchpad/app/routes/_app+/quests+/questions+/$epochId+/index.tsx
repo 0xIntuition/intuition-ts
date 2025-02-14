@@ -251,7 +251,10 @@ export default function EpochQuestions() {
         >
           <Icon name="chevron-left" className="h-4 w-4" />
         </Button>
-        <PageHeader title={`Epoch ${epochId} Questions`} />
+        <PageHeader
+          title={`Epoch ${epochId} Questions`}
+          subtitle="Answer questions to earn IQ"
+        />
       </div>
       <div className="mb-8">
         <ChapterProgress

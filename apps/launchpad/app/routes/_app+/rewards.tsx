@@ -1,6 +1,4 @@
-import * as React from 'react'
-
-import { Button, Text, TextVariant } from '@0xintuition/1ui'
+import { Button, PageHeader, Text, TextVariant } from '@0xintuition/1ui'
 import {
   fetcher,
   GetFeeTransfersDocument,
@@ -88,8 +86,8 @@ export default function RewardsRoute() {
   const combinedTotal = (points?.total_points ?? 0) + protocolPointsTotal
 
   return (
-    <div className="container mx-auto p-6 space-y-8">
-      {/* Level and Points Display */}
+    <>
+      <PageHeader title="Rewards" />
       <div className="flex flex-col items-center text-center space-y-4">
         <LevelIndicator level={12} />
 
@@ -148,6 +146,6 @@ export default function RewardsRoute() {
           ]}
         />
       </div>
-    </div>
+    </>
   )
 }

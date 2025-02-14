@@ -256,7 +256,7 @@ export default function Questions() {
         >
           <Icon name="chevron-left" className="h-4 w-4" />
         </Button>
-        <PageHeader title="Questions" />
+        <PageHeader title="Questions" subtitle="Answer questions to earn IQ" />
       </div>
       <EpochAccordion
         epochs={epochsWithQuestions}
