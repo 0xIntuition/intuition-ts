@@ -8,7 +8,6 @@ import {
   TextVariant,
   TextWeight,
 } from '@0xintuition/1ui'
-import { GetAccountQuery } from '@0xintuition/graphql'
 
 import { EpochProgress } from '@routes/resources+/get-epoch-progress'
 import { motion, useAnimation } from 'framer-motion'
