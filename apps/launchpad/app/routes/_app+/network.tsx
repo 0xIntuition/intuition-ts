@@ -13,23 +13,17 @@ import {
   GetStatsDocument,
   GetStatsQuery,
   GetStatsQueryVariables,
-  // GetStatsDocument,
-  // GetStatsQuery,
-  // GetStatsQueryVariables,
   useGetSignalsQuery,
   useGetStatsQuery,
 } from '@0xintuition/graphql'
 
 import { ActivityFeedPortal } from '@components/activity-feed-portal'
 import { ErrorPage } from '@components/error-page'
-// import logger from '@lib/utils/logger'
+import { PageHeader } from '@components/page-header'
 import { LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData, useSearchParams } from '@remix-run/react'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
 import { Radio, User } from 'lucide-react'
-import { formatUnits } from 'viem'
-
-// import { formatUnits } from 'viem'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url)
@@ -85,7 +79,6 @@ export default function Network() {
       queryKey: ['get-stats'],
     },
   )
-  // logger('systemStats', systemStats)
 
   const { data: signalsData } = useGetSignalsQuery(
     {
@@ -114,15 +107,9 @@ export default function Network() {
 
   return (
     <>
+      <PageHeader title="Network" />
       <AggregatedMetrics
         metrics={[
-          {
-            label: 'TVL',
-            icon: <Icon name="moneybag" className="w-4 h-4" />,
-            value: +formatUnits(stats?.contract_balance ?? 0, 18),
-            suffix: 'ETH',
-            precision: 2,
-          },
           {
             label: 'Atoms',
             icon: <Icon name="fingerprint" className="w-4 h-4" />,
@@ -149,7 +136,7 @@ export default function Network() {
       />
       <div className="flex flex-col gap-4">
         <Text variant={TextVariant.headline} weight={TextWeight.medium}>
-          Network Activity
+          Activity Feed
         </Text>
         <ActivityFeedPortal
           activities={{

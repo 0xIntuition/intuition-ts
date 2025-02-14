@@ -1,4 +1,4 @@
-import { Avatar } from '@0xintuition/1ui'
+import { Avatar, Text, TextVariant, TextWeight } from '@0xintuition/1ui'
 import {
   fetcher,
   GetAccountDocument,
@@ -236,12 +236,12 @@ export default function Dashboard() {
   })
 
   return (
-    <div className="space-y-8 text-foreground p-8">
+    <>
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="flex items-center gap-4 border-none rounded-lg p-6 text-palette-neutral-900 shadow-pop-lg"
+        className="flex items-center gap-4 border-none rounded-lg px-6 pb-6 text-palette-neutral-900 shadow-pop-lg"
       >
         <motion.div
           initial={{ scale: 0 }}
@@ -256,24 +256,30 @@ export default function Dashboard() {
         </motion.div>
 
         <div>
-          <motion.h1
+          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2, duration: 0.5 }}
-            className="text-3xl font-bold text-primary"
           >
-            {user?.account?.label
-              ? `Welcome back, ${user.account.label}!`
-              : `Welcome!`}
-          </motion.h1>
-          <motion.p
+            <Text variant={TextVariant.heading3} weight={TextWeight.semibold}>
+              {user?.account?.label
+                ? `Welcome back, ${user.account.label}!`
+                : `Welcome!`}
+            </Text>
+          </motion.div>
+          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4, duration: 0.5 }}
-            className="text-primary/70"
           >
-            Are you ready to boost your Intuition?
-          </motion.p>
+            <Text
+              variant={TextVariant.body}
+              weight={TextWeight.medium}
+              className="text-primary/70"
+            >
+              Are you ready to boost your Intuition?
+            </Text>
+          </motion.div>
         </div>
       </motion.div>
       <AuthCover
@@ -285,7 +291,7 @@ export default function Dashboard() {
           epochProgress={epochProgress}
           rank={rankData?.rank}
           totalUsers={rankData?.totalUsers}
-          user={user}
+          address={address}
         />
       </AuthCover>
       <ChapterProgress
@@ -294,6 +300,6 @@ export default function Dashboard() {
         currentStageIndex={(currentEpoch?.id ?? 1) - 1}
       />
       <EarnSection quests={earnCards} />
-    </div>
+    </>
   )
 }

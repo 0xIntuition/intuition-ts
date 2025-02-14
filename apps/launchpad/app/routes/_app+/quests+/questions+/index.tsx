@@ -1,8 +1,9 @@
-import { Button, Icon, PageHeader } from '@0xintuition/1ui'
+import { Button, Icon } from '@0xintuition/1ui'
 
 import { AtomDetailsModal } from '@components/atom-details-modal'
 import { EpochAccordion } from '@components/epoch-accordion'
 import { ErrorPage } from '@components/error-page'
+import { PageHeader } from '@components/page-header'
 import { OnboardingModal } from '@components/survey-modal/survey-modal'
 import { useGoBack } from '@lib/hooks/useGoBack'
 import type { Question } from '@lib/services/questions'
@@ -256,7 +257,7 @@ export default function Questions() {
         >
           <Icon name="chevron-left" className="h-4 w-4" />
         </Button>
-        <PageHeader title="Questions" />
+        <PageHeader title="Questions" subtitle="Answer questions to earn IQ" />
       </div>
       <EpochAccordion
         epochs={epochsWithQuestions}

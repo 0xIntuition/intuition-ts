@@ -45,7 +45,7 @@ export default function ChapterProgress({
       transition={{ duration: 0.5 }}
       whileHover={{ y: -5 }}
     >
-      <Card className="flex flex-row w-full gap-6 p-6 rounded-lg bg-white/5 backdrop-blur-md backdrop-saturate-150 border border-border/10">
+      <Card className="flex flex-row w-full gap-6 p-6 rounded-lg bg-black/5 backdrop-blur-md backdrop-saturate-150 border border-border/10">
         <motion.div
           className="flex flex-col justify-between items-start min-w-[120px]"
           initial={{ opacity: 0, x: -20 }}

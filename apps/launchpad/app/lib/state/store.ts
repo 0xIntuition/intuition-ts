@@ -53,14 +53,13 @@ export const shareModalAtom = atom<{
   isOpen: boolean
   currentPath: string | null
   title: string
-  tvl: number
+  tvl?: number
   percentageChange?: number
   valueChange?: number
 }>({
   isOpen: false,
   currentPath: null,
   title: '',
-  tvl: 0,
 })
 
 export const atomDetailsModalAtom = atom<{

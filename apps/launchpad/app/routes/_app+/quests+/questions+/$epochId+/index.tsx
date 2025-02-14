@@ -5,11 +5,12 @@
 
 import { Suspense } from 'react'
 
-import { Button, Card, Icon, PageHeader, Text } from '@0xintuition/1ui'
+import { Button, Card, Icon, Text } from '@0xintuition/1ui'
 
 import { AtomDetailsModal } from '@components/atom-details-modal'
 import ChapterProgress from '@components/chapter-progress'
 import { ErrorPage } from '@components/error-page'
+import { PageHeader } from '@components/page-header'
 import { QuestionCardWrapper } from '@components/question-card-wrapper'
 import { OnboardingModal } from '@components/survey-modal/survey-modal'
 import { useGoBack } from '@lib/hooks/useGoBack'
@@ -251,7 +252,10 @@ export default function EpochQuestions() {
         >
           <Icon name="chevron-left" className="h-4 w-4" />
         </Button>
-        <PageHeader title={`Epoch ${epochId} Questions`} />
+        <PageHeader
+          title={`Epoch ${epochId} Questions`}
+          subtitle="Answer questions to earn IQ"
+        />
       </div>
       <div className="mb-8">
         <ChapterProgress

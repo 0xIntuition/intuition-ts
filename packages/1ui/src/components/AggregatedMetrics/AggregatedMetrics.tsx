@@ -51,7 +51,7 @@ export function AggregatedMetrics({
             <div
               key={label}
               className={cn(
-                'relative p-4 rounded-lg bg-white/5 backdrop-blur-md backdrop-saturate-150 border border-border/10',
+                'relative p-4 rounded-lg bg-black/5 backdrop-blur-md backdrop-saturate-150 border border-border/10',
                 hideOnMobile && 'hidden lg:block',
               )}
             >
