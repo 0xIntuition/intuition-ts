@@ -160,7 +160,7 @@ export default function ChapterRoute() {
   }
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-background text-foreground px-4 md:px-0">
       <ChapterHeader
         title={chapter.title}
         subtitle={chapter.subtitle}
@@ -168,7 +168,7 @@ export default function ChapterRoute() {
       />
 
       <motion.div
-        className="space-y-6"
+        className="space-y-6 mb-24 max-w-[95vw] md:max-w-4xl mx-auto"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}

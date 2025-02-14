@@ -1,3 +1,5 @@
+import React from 'react'
+
 import {
   AggregatedMetrics,
   Avatar,
@@ -44,10 +46,26 @@ import {
 } from '@lib/state/store'
 import { usePrivy } from '@privy-io/react-auth'
 import type { LoaderFunctionArgs, MetaFunction } from '@remix-run/node'
-import { useLoaderData, useLocation, useParams } from '@remix-run/react'
+import {
+  useLoaderData,
+  useLocation,
+  useParams,
+  useSearchParams,
+} from '@remix-run/react'
 import { getUser } from '@server/auth'
 // import { requireUser } from '@server/auth'
 import { dehydrate, QueryClient, useQueryClient } from '@tanstack/react-query'
+import {
+  ColumnDef,
+  getCoreRowModel,
+  getFacetedRowModel,
+  getFacetedUniqueValues,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  SortingState,
+  useReactTable,
+} from '@tanstack/react-table'
 import { TripleType } from 'app/types'
 import { useAtom } from 'jotai'
 import { CheckCircle, ThumbsDown, ThumbsUp } from 'lucide-react'
@@ -55,6 +73,14 @@ import { formatUnits } from 'viem'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const queryClient = new QueryClient()
+  const url = new URL(request.url)
+
+  // Get pagination params from URL with defaults
+  const pageSize = parseInt(url.searchParams.get('limit') ?? '20', 10)
+  const pageIndex = Math.max(
+    0,
+    parseInt(url.searchParams.get('page') ?? '1', 10) - 1,
+  )
 
   const user = await getUser(request)
   const userWallet = user?.wallet?.address?.toLowerCase()
@@ -98,6 +124,8 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
       },
     },
     address: userWallet ?? ZERO_ADDRESS,
+    limit: pageSize,
+    offset: pageIndex * pageSize,
   }
 
   let listData
@@ -190,6 +218,7 @@ export function ErrorBoundary() {
 }
 
 export default function MiniGameOne() {
+  console.time('MiniGameOne render')
   const location = useLocation()
   const { epochId, questionId } = useParams()
   const goBack = useGoBack({ fallbackRoute: `/quests/questions/${epochId}` })
@@ -211,7 +240,6 @@ export default function MiniGameOne() {
     pointAwardAmount,
     isCompleted,
     currentEpoch,
-    isLoading: isQuestionLoading,
     predicateId,
     objectId,
   } = questionData
@@ -224,32 +252,76 @@ export default function MiniGameOne() {
     ? `${location?.pathname}${location?.search}`
     : `${location?.pathname}${location?.search}${location?.search ? '&' : '?'}`
 
-  const variables = {
-    tagPredicateId: predicateId,
-    globalWhere: {
-      predicate_id: {
-        _eq: predicateId,
-      },
-      object_id: {
-        _eq: objectId,
-      },
-    },
-    address: userWallet ?? ZERO_ADDRESS,
-  }
-
-  const { data: withUserData } = useGetListDetailsWithUserQuery(variables, {
-    enabled: !!userWallet,
-  })
-  const { data: withoutUserData } = useGetListDetailsWithPositionQuery(
-    variables,
+  const [sorting, setSorting] = React.useState<SortingState>([
     {
-      enabled: !userWallet,
+      id: 'upvotes',
+      desc: true,
     },
+  ])
+
+  const [searchParams, setSearchParams] = useSearchParams()
+
+  // Get pagination values from URL or use defaults
+  const [pageSize, setPageSize] = React.useState(() => {
+    const limit = searchParams.get('limit')
+    return limit ? parseInt(limit, 10) : 20
+  })
+
+  const [pageIndex, setPageIndex] = React.useState(() => {
+    const page = searchParams.get('page')
+    // Convert 1-based page number from URL to 0-based index
+    return page ? Math.max(0, parseInt(page, 10) - 1) : 0
+  })
+
+  // Update URL when pagination changes
+  const updatePaginationParams = React.useCallback(
+    (newPage: number, newSize: number) => {
+      // Update URL params immediately
+      const newParams = new URLSearchParams(searchParams)
+      newParams.set('page', (newPage + 1).toString())
+      newParams.set('limit', newSize.toString())
+      setSearchParams(newParams, { replace: true }) // Use replace to avoid adding to history
+
+      // Update local state
+      setPageIndex(newPage)
+      setPageSize(newSize)
+    },
+    [searchParams, setSearchParams],
   )
 
-  const listData = userWallet ? withUserData : withoutUserData
+  const queryVariables = React.useMemo(
+    () =>
+      ({
+        tagPredicateId: predicateId,
+        globalWhere: {
+          predicate_id: {
+            _eq: predicateId,
+          },
+          object_id: {
+            _eq: objectId,
+          },
+        },
+        address: userWallet ?? ZERO_ADDRESS,
+        limit: pageSize,
+        offset: pageIndex * pageSize,
+      }) as const,
+    [predicateId, objectId, userWallet, pageSize, pageIndex],
+  )
 
-  interface TableRowData {
+  const { data: withUserData, isLoading: isLoadingUserData } =
+    useGetListDetailsWithUserQuery(queryVariables, {
+      enabled: !!userWallet,
+    })
+  const { data: withoutUserData, isLoading: isLoadingPositionData } =
+    useGetListDetailsWithPositionQuery(queryVariables, {
+      enabled: !userWallet,
+    })
+
+  const listData = userWallet ? withUserData : withoutUserData
+  const isLoading = userWallet ? isLoadingUserData : isLoadingPositionData
+  const totalCount = listData?.globalTriplesAggregate?.aggregate?.count ?? 0
+
+  type TableRowData = {
     id: string
     triple: TripleType
     image: string
@@ -264,16 +336,14 @@ export default function MiniGameOne() {
     againstTvl: number
     userPosition?: number
     positionDirection?: 'for' | 'against'
-    userWallet?: string
     currentSharePrice?: number
     stakingDisabled?: boolean
   }
 
-  // Transform the data for the table
-  const tableData: TableRowData[] =
-    listData?.globalTriples?.map((triple) => {
-      const tableRow: TableRowData = {
-        id: String(triple.id),
+  const tableData = React.useMemo(() => {
+    const data =
+      (listData?.globalTriples?.map((triple) => ({
+        id: String(pageIndex * pageSize + triple.id),
         triple: triple as TripleType,
         image: triple.subject.image || '',
         name: triple.subject.label || 'Untitled Entry',
@@ -326,29 +396,69 @@ export default function MiniGameOne() {
               ? +formatUnits(triple.counter_vault?.current_share_price, 18)
               : undefined,
         stakingDisabled: !isCompleted,
+      })) as TableRowData[]) ?? []
+    console.timeEnd('tableData transform')
+    return data
+  }, [listData, isCompleted])
+
+  const table = useReactTable<TableRowData>({
+    data: tableData,
+    columns: columns as ColumnDef<TableRowData>[],
+    columnResizeMode: 'onChange',
+    enableColumnPinning: true,
+    enableColumnResizing: true,
+    onSortingChange: setSorting,
+    state: {
+      sorting,
+      pagination: {
+        pageIndex,
+        pageSize,
+      },
+    },
+    onPaginationChange: (updater) => {
+      console.time('pagination change')
+      if (typeof updater === 'function') {
+        const newState = updater({
+          pageIndex,
+          pageSize,
+        })
+        setPageIndex(newState.pageIndex)
+        setPageSize(newState.pageSize)
+        updatePaginationParams(newState.pageIndex, newState.pageSize)
       }
-
-      return tableRow
-    }) || []
-
-  // // Log each triple's shares for debugging
-  // listData?.globalTriples?.forEach((triple, index) => {
-  //   logger(
-  //     `Triple ${index} shares:`,
-  //     triple.vault?.positions_aggregate?.aggregate?.sum?.shares,
-  //   )
-  // })
+      console.timeEnd('pagination change')
+    },
+    pageCount: Math.ceil(totalCount / pageSize),
+    manualPagination: true,
+    getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFacetedRowModel: getFacetedRowModel(),
+    getFacetedUniqueValues: getFacetedUniqueValues(),
+    initialState: {
+      columnPinning: {
+        left: ['index'],
+        right: ['actions'],
+      },
+    },
+  })
 
   // Calculate total users and TVL
-  const totalUsers = tableData.reduce((sum, item) => sum + item.users, 0)
-  const forTvl = tableData.reduce((sum, item) => sum + item.forTvl, 0)
-  const againstTvl = tableData.reduce((sum, item) => sum + item.againstTvl, 0)
-  const totalUpVotes = tableData.reduce((sum, item) => sum + item.upvotes, 0)
-  const totalDownVotes = tableData.reduce(
-    (sum, item) => sum + item.downvotes,
-    0,
-  )
-  const totalTvl = forTvl + againstTvl
+  const totals = React.useMemo(() => {
+    console.time('totals calculation')
+    const result = {
+      users: tableData.reduce((sum, item) => sum + item.users, 0),
+      forTvl: tableData.reduce((sum, item) => sum + item.forTvl, 0),
+      againstTvl: tableData.reduce((sum, item) => sum + item.againstTvl, 0),
+      upVotes: tableData.reduce((sum, item) => sum + item.upvotes, 0),
+      downVotes: tableData.reduce((sum, item) => sum + item.downvotes, 0),
+    }
+    console.timeEnd('totals calculation')
+    return result
+  }, [tableData])
+
+  const totalTvl = totals.forTvl + totals.againstTvl
 
   const queryClient = useQueryClient()
 
@@ -414,8 +524,6 @@ export default function MiniGameOne() {
       })
     }
   }
-
-  const isLoading = !listData || isQuestionLoading
 
   // Get the user's selected atom if they've completed the question
   const { data: atomData } = useGetAtomQuery(
@@ -595,17 +703,17 @@ export default function MiniGameOne() {
           },
           {
             label: 'Users',
-            value: totalUsers,
+            value: totals.users,
             icon: <Icon name="group" className="h-4 w-4" />,
           },
           {
             label: 'Upvotes',
-            value: totalUpVotes.toFixed(0),
+            value: totals.upVotes.toFixed(0),
             icon: <ThumbsUp className="h-4 w-4" />,
           },
           {
             label: 'Downvotes',
-            value: totalDownVotes.toFixed(0),
+            value: totals.downVotes.toFixed(0),
             icon: <ThumbsDown className="h-4 w-4" />,
           },
         ]}
@@ -615,9 +723,11 @@ export default function MiniGameOne() {
       {/* Space for table */}
       <div className="mt-6">
         <DataTable
-          columns={columns}
+          columns={columns as ColumnDef<TableRowData>[]}
           data={tableData}
           onRowClick={handleRowClick}
+          table={table}
+          onPaginationChange={updatePaginationParams}
         />
       </div>
       <ShareModal
