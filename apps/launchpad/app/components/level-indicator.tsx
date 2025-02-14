@@ -1,7 +1,5 @@
 import { Text, TextVariant, TextWeight } from '@0xintuition/1ui'
 
-import { toRomanNumeral } from '@lib/utils/misc'
-
 import { LevelIndicatorGraphic } from './svg/level-indicator-graphic'
 
 interface LevelIndicatorProps {
@@ -26,12 +24,8 @@ export function LevelIndicator({ level, progress }: LevelIndicatorProps) {
             style={{ marginTop: '-40px' }}
           >
             <div className="text-center gap-0 flex flex-col items-center justify-center">
-              <Text
-                variant={TextVariant.heading3}
-                weight={TextWeight.medium}
-                className="font-serif"
-              >
-                {toRomanNumeral(level)}
+              <Text variant={TextVariant.heading2} weight={TextWeight.bold}>
+                {level}
               </Text>
               <Text
                 variant={TextVariant.footnote}
