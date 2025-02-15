@@ -1,4 +1,4 @@
-export function HeaderLogo() {
+export function PointsGraphic() {
   return (
     <svg
       width="421"

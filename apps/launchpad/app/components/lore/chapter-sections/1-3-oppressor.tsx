@@ -11,7 +11,7 @@ export function OppressorSection({ className }: ChapterSectionProps) {
     <section className={cn('max-w-[70ch] mx-auto', className)}>
       <SectionHeader
         title="A Subtle Oppressor"
-        image="/images/lore/1-3-the-oppressor.png"
+        image="/images/lore/1-3-the-oppressor.webp"
       />
 
       <div className="mx-auto space-y-6 py-6">
