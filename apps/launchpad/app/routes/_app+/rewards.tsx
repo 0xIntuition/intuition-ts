@@ -70,27 +70,28 @@ export async function loader({ request }: LoaderFunctionArgs) {
 const earnCards = [
   {
     id: '1',
-    earnIQ: 500,
+    earnIQ: 100000,
     title: 'Earn IQ with Quests',
     icon: <Scroll className="w-4 h-4" />,
     description: 'Complete quests to obtain IQ reward points',
     buttonText: 'View Quests',
+    link: '/quests',
   },
   {
     id: '2',
-    earnIQ: 750,
     title: 'Earn IQ in the Ecosystem',
     icon: <Compass className="w-4 h-4" />,
     description: 'Explore and use apps from our product hub',
     buttonText: 'Explore',
+    link: '/discover',
   },
   {
     id: '3',
-    earnIQ: 1250,
     title: 'Start Building on Intuition',
     icon: <Code className="w-4 h-4" />,
     description: 'Build your own apps and tools on Intuition',
     buttonText: 'Start Building',
+    link: 'https://tech.docs.intuition.systems/',
   },
 ]
 

@@ -4,11 +4,12 @@ import { EarnCard } from './earn-card'
 
 interface Quest {
   id: string
-  earnIQ: number
+  earnIQ?: number
   title: string
   icon: React.ReactNode
   description: string
   buttonText: string
+  link: string
 }
 
 interface EarnSectionProps {
@@ -37,6 +38,7 @@ export const EarnSection = ({ quests }: EarnSectionProps) => {
               description={quest.description}
               earnIQ={quest.earnIQ}
               buttonText={quest.buttonText}
+              link={quest.link}
             />
           </motion.div>
         ))}
