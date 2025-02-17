@@ -1,21 +1,18 @@
-# Main pagination query
-query GetEvents(
+query GetSignals(
   $limit: Int
   $offset: Int
-  $orderBy: [events_order_by!]
-  $where: events_bool_exp
+  $orderBy: [signals_order_by!]
   $addresses: [String!]
 ) {
-  total: events_aggregate(where: $where) {
+  total: events_aggregate {
     aggregate {
       count
     }
   }
-  events(limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
+  signals(limit: $limit, offset: $offset, order_by: $orderBy) {
     id
     block_number
     block_timestamp
-    type
     transaction_hash
     atom_id
     triple_id
@@ -109,6 +106,14 @@ query GetEvents(
       sender_id
       sender {
         id
+        label
+        image
+      }
+      receiver_id
+      receiver {
+        id
+        label
+        image
       }
       shares_for_receiver
       sender_assets_after_total_fees
@@ -130,80 +135,64 @@ query GetEvents(
       sender_id
       sender {
         id
+        label
+        image
       }
+      receiver_id
+      receiver {
+        id
+        label
+        image
+      }
+      assets_for_receiver
+      shares_redeemed_by_sender
     }
   }
 }
 
-# Combined query with aggregates and nodes
-query GetEventsWithAggregates(
-  $limit: Int
-  $offset: Int
-  $orderBy: [events_order_by!]
-  $where: events_bool_exp
-  $addresses: [String!]
-) {
-  events_aggregate(
-    where: $where
-    limit: $limit
-    offset: $offset
-    order_by: $orderBy
-  ) {
-    aggregate {
-      count
-      max {
-        block_timestamp
-        block_number
-      }
-      min {
-        block_timestamp
-        block_number
-      }
+fragment AtomValue on atoms {
+  value {
+    person {
+      name
+      image
+      description
+      url
     }
-    nodes {
-      ...EventDetails
+    thing {
+      name
+      image
+      description
+      url
+    }
+    organization {
+      name
+      image
+      description
+      url
     }
   }
 }
 
-query GetEventsCount($where: events_bool_exp) {
-  events_aggregate(where: $where) {
-    aggregate {
-      count
-    }
-  }
-}
-
-query GetEventsData($where: events_bool_exp) {
-  events_aggregate(where: $where) {
-    aggregate {
-      count
-      max {
-        block_timestamp
-        block_number
-      }
-      min {
-        block_timestamp
-        block_number
-      }
-      avg {
-        block_number
-      }
-    }
-  }
-}
-
-# Debug query with explicit address and position filtering
-query GetDebugEvents($addresses: [String!]) {
-  debug_events: events {
+fragment AtomMetadata on atoms {
+  id
+  data
+  image
+  label
+  emoji
+  type
+  wallet_id
+  creator {
     id
-    atom {
-      vault {
-        positions(where: { account_id: { _in: $addresses } }) {
-          account_id
-          shares
-        }
-      }
-    }
+    label
+    image
   }
+  ...AtomValue
+}
+
+fragment AccountMetadata on accounts {
+  label
+  image
+  id
+  atom_id
+  type
 }

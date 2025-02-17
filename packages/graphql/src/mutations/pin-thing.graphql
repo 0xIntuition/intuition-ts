@@ -1,0 +1,12 @@
+mutation pinThing(
+  $name: String!
+  $description: String
+  $image: String
+  $url: String
+) {
+  pinThing(
+    thing: { description: $description, image: $image, name: $name, url: $url }
+  ) {
+    uri
+  }
+}
