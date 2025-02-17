@@ -305,17 +305,17 @@ export default function RewardsRoute() {
 function getCategoryDescription(category: string): string {
   switch (category) {
     case 'Launchpad':
-      return 'Complete quests and challenges in the Launchpad to earn mastery points.'
+      return 'Complete quests and challenges in the Launchpad to earn IQ.'
     case 'Portal':
-      return 'Explore and interact with the Portal to unlock achievements.'
+      return 'Explore and interact with the Portal to earn IQ.'
     case 'Protocol':
-      return 'Engage with the protocol and earn points through network participation.'
+      return 'Engage with the protocol and earn IQ through network participation.'
     case 'Relic':
-      return 'Discover and collect relics to increase your mastery level.'
+      return 'Discover and collect relics to earn IQ.'
     case 'Community':
-      return 'Participate in community events and discussions.'
+      return 'Participate in community events and discussions to earn IQ.'
     case 'Social':
-      return 'Connect and share with other members of the community.'
+      return 'Connect and share with other members of the community to earn IQ.'
     default:
       return ''
   }
