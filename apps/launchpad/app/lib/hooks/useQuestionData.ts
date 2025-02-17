@@ -108,6 +108,7 @@ export function useQuestionData({ questionId }: UseQuestionDataProps) {
     totalUsers,
     predicateId: questionData?.predicate_id,
     objectId: questionData?.object_id,
+    order: questionData?.order,
     isLoading:
       isLoadingQuestion ||
       isLoadingEpoch ||

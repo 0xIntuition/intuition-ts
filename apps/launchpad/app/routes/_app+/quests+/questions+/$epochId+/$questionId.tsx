@@ -244,6 +244,8 @@ export default function MiniGameOne() {
     objectId,
   } = questionData
 
+  console.log('questionData', questionData)
+
   // Add defensive check for location
   const hasUserParam = location?.search
     ? location.search.includes('user=')
@@ -549,7 +551,7 @@ export default function MiniGameOne() {
         </Button>
         <div className="flex flex-1 justify-between items-center">
           <PageHeader
-            title={`${currentEpoch?.name} | Question ${questionId}`}
+            title={`${currentEpoch?.name} | Question ${questionData?.order}`}
           />
           <div className="flex items-center gap-2">
             <Button
