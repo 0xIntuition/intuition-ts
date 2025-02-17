@@ -409,6 +409,7 @@ export default function MiniGameOne() {
     columnResizeMode: 'onChange',
     enableColumnPinning: true,
     enableColumnResizing: true,
+    enableHiding: false,
     onSortingChange: setSorting,
     state: {
       sorting,
