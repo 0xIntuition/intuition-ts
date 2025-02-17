@@ -28,7 +28,7 @@ export function DiscoverCard({
   return (
     <Card
       className={cn(
-        'rounded-lg shadow-sm overflow-hidden h-80 bg-black/5 backdrop-blur-md backdrop-saturate-150 border border-border/10 p-0',
+        'rounded-lg shadow-sm overflow-hidden h-80 bg-white/5 backdrop-blur-md backdrop-saturate-150 border border-border/10 p-0',
         className,
       )}
     >

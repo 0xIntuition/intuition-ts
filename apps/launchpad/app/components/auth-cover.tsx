@@ -32,7 +32,7 @@ export function AuthCover({
   return (
     <div className={`relative ${className}`}>
       <div
-        className={`${blurAmount} select-none rounded-lg bg-black/5 backdrop-blur-md backdrop-saturate-150`}
+        className={`${blurAmount} select-none rounded-lg bg-white/5 backdrop-blur-md backdrop-saturate-150`}
       >
         {children}
       </div>

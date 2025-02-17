@@ -369,7 +369,7 @@ export function AppSidebar({
         </Sheet>
       ) : (
         <Sidebar
-          className="border-r border-border/10 bg-background/60"
+          className="border-r border-border/10 bg-white/5 backdrop-blur-md backdrop-saturate-150"
           collapsible="icon"
           {...props}
         >

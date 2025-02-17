@@ -55,7 +55,7 @@ export function EpochAccordion({
     <Accordion
       type="single"
       collapsible
-      className="w-full space-y-4 rounded-lg bg-black/5 backdrop-blur-md backdrop-saturate-150 border border-border/10"
+      className="w-full space-y-4 rounded-lg bg-white/5 backdrop-blur-md backdrop-saturate-150 border border-border/10"
       defaultValue={defaultValue}
     >
       {epochs.map((epoch) => (

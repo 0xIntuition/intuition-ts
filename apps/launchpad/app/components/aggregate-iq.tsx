@@ -58,7 +58,7 @@ export function AggregateIQ({
       transition={{ duration: 0.5 }}
       whileHover={{ y: -5 }}
     >
-      <Card className="flex flex-row w-full gap-6 rounded-lg bg-black/5 backdrop-blur-md backdrop-saturate-150 p-6 border border-border/10">
+      <Card className="flex flex-row w-full gap-6 rounded-lg bg-white/5 backdrop-blur-md backdrop-saturate-150 p-6 border border-border/10">
         <div className="absolute inset-0 shadow-inner-pop" />
         <CardContent className="relative p-0 w-full">
           <motion.div
