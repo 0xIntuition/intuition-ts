@@ -72,7 +72,7 @@ export function MasteryCard({
         <div className="mt-auto">
           <div className="flex justify-between text-sm mb-1">
             <span>
-              {progress}/{maxProgress}
+              Level {progress}/{maxProgress}
             </span>
             <span className="text-primary">
               {Math.round((progress / maxProgress) * 100)}%
