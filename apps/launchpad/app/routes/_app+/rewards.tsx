@@ -104,8 +104,6 @@ export default function RewardsRoute() {
     cutoff_timestamp: 1733356800,
   })
 
-  console.log('points', points)
-
   const feesPaidBeforeCutoff = formatUnits(
     protocolFees?.before_cutoff?.aggregate?.sum?.amount ?? 0n,
     18,
