@@ -527,7 +527,7 @@ export default function MiniGameOne() {
     if (rowData) {
       setAtomDetailsModal({
         isOpen: true,
-        atomId: id,
+        atomId: Number(rowData.triple.vault_id),
         data: rowData,
       })
     }
@@ -621,7 +621,7 @@ export default function MiniGameOne() {
                             if (rowData) {
                               setAtomDetailsModal({
                                 isOpen: true,
-                                atomId: Number(rowData.id),
+                                atomId: Number(rowData.triple.vault_id),
                                 data: rowData,
                               })
                             }
