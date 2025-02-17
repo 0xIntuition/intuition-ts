@@ -353,21 +353,30 @@ export default function MiniGameOne() {
         vaultId: triple.vault_id,
         counterVaultId: triple.counter_vault_id,
         users: Number(triple.vault?.positions_aggregate?.aggregate?.count ?? 0),
-        upvotes:
-          (+formatUnits(
-            triple.vault?.positions_aggregate?.aggregate?.sum?.shares ?? 0,
-            18,
-          ) *
-            +formatUnits(triple.vault?.current_share_price ?? 0, 18)) /
-          +MIN_DEPOSIT,
-        downvotes:
-          (+formatUnits(
-            triple.counter_vault?.positions_aggregate?.aggregate?.sum?.shares ??
-              0,
-            18,
-          ) *
-            +formatUnits(triple.counter_vault?.current_share_price ?? 0, 18)) /
-          +MIN_DEPOSIT,
+        upvotes: (() => {
+          const amount =
+            (+formatUnits(
+              triple.vault?.positions_aggregate?.aggregate?.sum?.shares ?? 0,
+              18,
+            ) *
+              +formatUnits(triple.vault?.current_share_price ?? 0, 18)) /
+            +MIN_DEPOSIT
+          return amount < 0.1 ? 0 : amount
+        })(),
+        downvotes: (() => {
+          const amount =
+            (+formatUnits(
+              triple.counter_vault?.positions_aggregate?.aggregate?.sum
+                ?.shares ?? 0,
+              18,
+            ) *
+              +formatUnits(
+                triple.counter_vault?.current_share_price ?? 0,
+                18,
+              )) /
+            +MIN_DEPOSIT
+          return amount < 0.1 ? 0 : amount
+        })(),
         forTvl:
           +formatUnits(
             triple.vault?.positions_aggregate?.aggregate?.sum?.shares ?? 0,
@@ -400,6 +409,7 @@ export default function MiniGameOne() {
         stakingDisabled: !isCompleted,
       })) as TableRowData[]) ?? []
     console.timeEnd('tableData transform')
+    console.log('tableData', data)
     return data
   }, [listData, isCompleted])
 
