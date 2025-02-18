@@ -11,10 +11,12 @@ import {
   TextWeight,
 } from '@0xintuition/1ui'
 
+import { EpochStatus } from '@components/epoch-status'
 import LoadingLogo from '@components/loading-logo'
 import { useGetCurrentEpoch } from '@lib/hooks/useGetCurrentEpoch'
 import type { Question } from '@lib/services/questions'
 import { Link } from '@remix-run/react'
+import { MessageCircleQuestion } from 'lucide-react'
 
 import { QuestionRowWrapper } from './question-row-wrapper'
 
@@ -24,6 +26,9 @@ interface EpochAccordionProps {
     name: string
     questions: Question[]
     total_points_available: number
+    start_date: string
+    end_date: string
+    is_active: boolean
     progress?: {
       completed_count: number
       total_points: number
@@ -59,62 +64,88 @@ export function EpochAccordion({
     <Accordion
       type="single"
       collapsible
-      className="w-full space-y-4 rounded-lg bg-white/5 backdrop-blur-md backdrop-saturate-150 border border-border/10"
+      className="w-full space-y-4"
       defaultValue={defaultValue}
     >
       {epochs.map((epoch) => (
         <AccordionItem
           key={epoch.id}
           value={`epoch-${epoch.id}`}
-          className="rounded-lg px-4 first:rounded-b-none last:rounded-b-lg"
+          className={cn(
+            'relative overflow-hidden rounded-lg transition-all duration-200',
+            'bg-white/5 backdrop-blur-md backdrop-saturate-150 group border border-border/10',
+            !epoch.is_active && 'opacity-90',
+          )}
         >
-          <AccordionTrigger className="hover:no-underline">
-            <div className="flex justify-between w-full items-center">
-              <div className="flex items-center gap-4">
-                <span className="text-lg font-semibold">{epoch.name}</span>
-                <Link
-                  to={`/quests/questions/${epoch.id}`}
-                  className="text-sm text-primary/70 hover:text-primary"
-                >
-                  View All
-                </Link>
-              </div>
-              {epoch.progress && (
-                <div className="flex items-center gap-4">
-                  <div className="relative h-2 w-32">
-                    <div className="absolute inset-0 bg-gradient-to-b from-[#000000] to-[#FFFFFF]/10 rounded-full overflow-hidden p-[1px]">
-                      <div className="bg-[#191919] rounded-full h-full w-full overflow-hidden p-[1px]">
-                        <div
-                          className="h-full bg-gradient-to-r from-success to-success/70 rounded-full transition-all duration-300"
-                          style={{
-                            width: `${(epoch.progress.completed_count / epoch.questions.length) * 100}%`,
-                          }}
-                        />
-                      </div>
-                    </div>
-                  </div>
+          <AccordionTrigger className="hover:no-underline w-full px-6 py-4">
+            <div className="flex flex-col w-full gap-4">
+              {/* Header Section */}
+              <div className="flex justify-between items-start w-full">
+                <div className="flex items-center gap-3">
                   <Text
-                    variant={TextVariant.footnote}
+                    variant={TextVariant.heading4}
                     weight={TextWeight.semibold}
-                    className="flex flex-row items-center gap-1 text-primary/70"
+                    className="text-left"
                   >
-                    <Text
-                      variant={TextVariant.bodyLarge}
-                      weight={TextWeight.semibold}
-                      className={cn(
-                        epoch.progress.total_points !== 0 && 'text-success',
-                      )}
-                    >
-                      {epoch.progress.total_points}
-                    </Text>{' '}
-                    of {epoch.total_points_available} IQ Earned
+                    {epoch.name}
                   </Text>
+                  <Link
+                    to={`/quests/questions/${epoch.id}`}
+                    className="text-sm text-primary/70 hover:text-primary"
+                  >
+                    View All
+                  </Link>
+                </div>
+                <EpochStatus
+                  startDate={epoch.start_date}
+                  endDate={epoch.end_date}
+                  isActive={epoch.is_active}
+                />
+              </div>
+
+              {/* Progress Section */}
+              {epoch.progress && (
+                <div className="w-full">
+                  <div className="flex justify-between text-sm mb-2">
+                    <Text
+                      variant={TextVariant.footnote}
+                      weight={TextWeight.medium}
+                      className="flex items-center gap-2 text-primary/70"
+                    >
+                      <MessageCircleQuestion className="w-4 h-4" />
+                      {epoch.progress.completed_count} of{' '}
+                      {epoch.questions.length} Questions Completed
+                    </Text>
+                    <Text
+                      variant={TextVariant.footnote}
+                      weight={TextWeight.medium}
+                      className="text-primary/70 flex flex-row gap-1 items-center"
+                    >
+                      <Text
+                        variant={TextVariant.body}
+                        weight={TextWeight.semibold}
+                        className="text-success"
+                      >
+                        {epoch.progress.total_points}
+                      </Text>{' '}
+                      / {epoch.total_points_available} IQ Earned
+                    </Text>
+                  </div>
+                  <div className="h-1 bg-background rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-success transition-all duration-300"
+                      style={{
+                        width: `${(epoch.progress.completed_count / epoch.questions.length) * 100}%`,
+                      }}
+                    />
+                  </div>
                 </div>
               )}
             </div>
           </AccordionTrigger>
+
           <AccordionContent>
-            <div className="flex flex-col gap-4 py-4">
+            <div className="flex flex-col gap-4 px-6 py-4">
               {epoch.questions.map((question) => (
                 <Suspense key={question.id} fallback={<div>Loading...</div>}>
                   <QuestionRowWrapper
