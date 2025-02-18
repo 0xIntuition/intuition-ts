@@ -87,6 +87,7 @@ export function QuestionCardWrapper({ onStart, question }: QuestionCardProps) {
       pointAwardAmount={questionData.pointAwardAmount}
       onStart={onStart}
       className="w-full"
+      isActive={questionData.enabled}
       isLoading={isQuestionDataLoading}
       resultsLink={resultsLink}
       completedAtom={
