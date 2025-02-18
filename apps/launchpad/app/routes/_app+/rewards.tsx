@@ -242,7 +242,7 @@ export default function RewardsRoute() {
         <LevelIndicator level={level} progress={progress} />
 
         <div>
-          <Text variant={TextVariant.heading1} weight={TextWeight.semibold}>
+          <Text variant={TextVariant.heading2} weight={TextWeight.semibold}>
             {combinedTotal.toLocaleString()}
           </Text>
           <Text variant={TextVariant.body} className="text-primary/70">

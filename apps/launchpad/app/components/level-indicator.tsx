@@ -8,8 +8,8 @@ interface LevelIndicatorProps {
 }
 
 export function LevelIndicator({ level, progress }: LevelIndicatorProps) {
-  const circleSize = 300 // Size of the circle in pixels
-  const strokeWidth = 12
+  const circleSize = 200 // Size of the circle in pixels
+  const strokeWidth = 8
   const radius = (circleSize - strokeWidth) / 2
   const circumference = 2 * Math.PI * radius
 
@@ -17,7 +17,7 @@ export function LevelIndicator({ level, progress }: LevelIndicatorProps) {
     <div className="relative" style={{ width: circleSize, height: circleSize }}>
       {/* Level Display and Graphic */}
       <div className="absolute inset-0 flex items-center justify-center">
-        <div className="relative scale-[1.5]">
+        <div className="relative">
           <LevelIndicatorGraphic level={level} className="text-success/20" />
           <div
             className="absolute inset-0 flex items-center justify-center"
