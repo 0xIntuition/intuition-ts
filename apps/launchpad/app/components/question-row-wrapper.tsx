@@ -85,6 +85,7 @@ export function QuestionRowWrapper({ onStart, question }: QuestionRowProps) {
       image={questionData.listData?.globalTriples?.[0]?.object?.image ?? ''}
       points={completion ? questionData.pointAwardAmount : 0}
       pointAwardAmount={questionData.pointAwardAmount}
+      isActive={questionData.enabled}
       onStart={onStart}
       className="w-full"
       isLoading={isQuestionDataLoading}

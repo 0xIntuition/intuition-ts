@@ -22,6 +22,7 @@ interface QuestionRowProps {
   image: string
   points: number
   pointAwardAmount: number
+  isActive: boolean
   isLoading?: boolean
   resultsLink?: string
   completedAtom?: {
@@ -41,6 +42,7 @@ export function QuestionRow({
   image,
   points,
   pointAwardAmount,
+  isActive,
   isLoading = false,
   resultsLink,
   completedAtom,
@@ -123,7 +125,7 @@ export function QuestionRow({
           </div>
 
           <div className="flex gap-2">
-            {points <= 0 && (
+            {points <= 0 && isActive && (
               <SubmitButton
                 onClick={() => onStart()}
                 disabled={isLoading}

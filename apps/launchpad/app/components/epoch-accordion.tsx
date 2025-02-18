@@ -5,6 +5,10 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
+  cn,
+  Text,
+  TextVariant,
+  TextWeight,
 } from '@0xintuition/1ui'
 
 import LoadingLogo from '@components/loading-logo'
@@ -62,7 +66,7 @@ export function EpochAccordion({
         <AccordionItem
           key={epoch.id}
           value={`epoch-${epoch.id}`}
-          className="rounded-lg px-4"
+          className="rounded-lg px-4 first:rounded-b-none last:rounded-b-lg"
         >
           <AccordionTrigger className="hover:no-underline">
             <div className="flex justify-between w-full items-center">
@@ -76,15 +80,35 @@ export function EpochAccordion({
                 </Link>
               </div>
               {epoch.progress && (
-                <div className="flex gap-4 text-sm text-primary/70">
-                  <span>
-                    {epoch.progress.completed_count} / {epoch.questions.length}{' '}
-                    Completed
-                  </span>
-                  <span>
-                    {epoch.progress.total_points} /{' '}
-                    {epoch.total_points_available} IQ Earned
-                  </span>
+                <div className="flex items-center gap-4">
+                  <div className="relative h-2 w-32">
+                    <div className="absolute inset-0 bg-gradient-to-b from-[#000000] to-[#FFFFFF]/10 rounded-full overflow-hidden p-[1px]">
+                      <div className="bg-[#191919] rounded-full h-full w-full overflow-hidden p-[1px]">
+                        <div
+                          className="h-full bg-gradient-to-r from-success to-success/70 rounded-full transition-all duration-300"
+                          style={{
+                            width: `${(epoch.progress.completed_count / epoch.questions.length) * 100}%`,
+                          }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <Text
+                    variant={TextVariant.footnote}
+                    weight={TextWeight.semibold}
+                    className="flex flex-row items-center gap-1 text-primary/70"
+                  >
+                    <Text
+                      variant={TextVariant.bodyLarge}
+                      weight={TextWeight.semibold}
+                      className={cn(
+                        epoch.progress.total_points !== 0 && 'text-success',
+                      )}
+                    >
+                      {epoch.progress.total_points}
+                    </Text>{' '}
+                    of {epoch.total_points_available} IQ Earned
+                  </Text>
                 </div>
               )}
             </div>
