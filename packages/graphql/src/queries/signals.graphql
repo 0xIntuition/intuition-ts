@@ -1,0 +1,198 @@
+query GetSignals(
+  $limit: Int
+  $offset: Int
+  $orderBy: [signals_order_by!]
+  $addresses: [String!]
+) {
+  total: events_aggregate {
+    aggregate {
+      count
+    }
+  }
+  signals(limit: $limit, offset: $offset, order_by: $orderBy) {
+    id
+    block_number
+    block_timestamp
+    transaction_hash
+    atom_id
+    triple_id
+    deposit_id
+    redemption_id
+    atom {
+      ...AtomMetadata
+      vault {
+        total_shares
+        position_count
+        positions(where: { account: { id: { _in: $addresses } } }) {
+          account_id
+          shares
+          account {
+            id
+            label
+            image
+          }
+        }
+      }
+    }
+    triple {
+      id
+      creator {
+        ...AccountMetadata
+      }
+      subject {
+        data
+        id
+        image
+        label
+        emoji
+        type
+        ...AtomValue
+        creator {
+          ...AccountMetadata
+        }
+      }
+      predicate {
+        data
+        id
+        image
+        label
+        emoji
+        type
+        ...AtomValue
+        creator {
+          ...AccountMetadata
+        }
+      }
+      object {
+        data
+        id
+        image
+        label
+        emoji
+        type
+        ...AtomValue
+        creator {
+          ...AccountMetadata
+        }
+      }
+      vault {
+        total_shares
+        position_count
+        positions(where: { account: { id: { _in: $addresses } } }) {
+          account_id
+          shares
+          account {
+            id
+            label
+            image
+          }
+        }
+      }
+      counter_vault {
+        total_shares
+        position_count
+        positions(where: { account: { id: { _in: $addresses } } }) {
+          account_id
+          shares
+          account {
+            id
+            label
+            image
+          }
+        }
+      }
+    }
+    deposit {
+      sender_id
+      sender {
+        id
+        label
+        image
+      }
+      receiver_id
+      receiver {
+        id
+        label
+        image
+      }
+      shares_for_receiver
+      sender_assets_after_total_fees
+      vault {
+        total_shares
+        position_count
+        positions(where: { account: { id: { _in: $addresses } } }) {
+          account_id
+          shares
+          account {
+            id
+            label
+            image
+          }
+        }
+      }
+    }
+    redemption {
+      sender_id
+      sender {
+        id
+        label
+        image
+      }
+      receiver_id
+      receiver {
+        id
+        label
+        image
+      }
+      assets_for_receiver
+      shares_redeemed_by_sender
+    }
+  }
+}
+
+fragment AtomValue on atoms {
+  value {
+    person {
+      name
+      image
+      description
+      url
+    }
+    thing {
+      name
+      image
+      description
+      url
+    }
+    organization {
+      name
+      image
+      description
+      url
+    }
+  }
+}
+
+fragment AtomMetadata on atoms {
+  id
+  data
+  image
+  label
+  emoji
+  type
+  wallet_id
+  creator {
+    id
+    label
+    image
+  }
+  ...AtomValue
+}
+
+fragment AccountMetadata on accounts {
+  label
+  image
+  id
+  atom_id
+  type
+}

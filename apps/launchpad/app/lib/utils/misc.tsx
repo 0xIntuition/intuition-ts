@@ -1,5 +1,3 @@
-import { formatNumber } from '@0xintuition/1ui'
-
 import { formatUnits } from 'viem'
 
 export function invariant(
@@ -35,14 +33,12 @@ export const formatBalance = (
     return '0'
   }
 
-  for (let i = 4; i <= 10; i++) {
-    const formatted = formatNumber(numBalance, i)
-    if (formatted !== '0') {
-      return formatted
-    }
-  }
+  // Count leading zeros after decimal
+  const leadingZeros =
+    numBalance < 1 ? -Math.floor(Math.log10(numBalance)) - 1 : 0
 
-  return '0'
+  // Show leading zeros + 2 significant digits
+  return numBalance.toFixed(leadingZeros + 2)
 }
 
 export const formatDisplayBalance = (
@@ -89,4 +85,69 @@ export function combineHeaders(
     }
   }
   return combined
+}
+
+export function truncateString(str: string, maxLength: number): string {
+  if (str.length <= maxLength) {
+    return str
+  }
+  return `${str.slice(0, maxLength)}...`
+}
+
+export function toRoman(num: number): string {
+  const roman = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X']
+  return roman[num - 1] || num.toString()
+}
+
+export const truncateNumber = (balance: string | number): string => {
+  const n = Number(
+    typeof balance === 'string' ? balance.replace(/,/g, '') : balance,
+  )
+  if (isNaN(n)) {
+    console.error('Invalid number input:', balance)
+    return 'Invalid number'
+  }
+  const format = (num: number, divisor: number, suffix: string) =>
+    `${(num / divisor).toFixed(2).replace(/\.?0+$/, '')}${suffix}`
+
+  if (n >= 1000000000) {
+    return format(n, 1000000000, 'B')
+  }
+  if (n >= 1000000) {
+    return format(n, 1000000, 'M')
+  }
+  if (n >= 1000) {
+    return format(n, 1000, 'K')
+  }
+  return n.toFixed(2).replace(/\.?0+$/, '')
+}
+
+export function toRomanNumeral(num: number): string {
+  const romanNumerals = [
+    { value: 1000, numeral: 'M' },
+    { value: 900, numeral: 'CM' },
+    { value: 500, numeral: 'D' },
+    { value: 400, numeral: 'CD' },
+    { value: 100, numeral: 'C' },
+    { value: 90, numeral: 'XC' },
+    { value: 50, numeral: 'L' },
+    { value: 40, numeral: 'XL' },
+    { value: 10, numeral: 'X' },
+    { value: 9, numeral: 'IX' },
+    { value: 5, numeral: 'V' },
+    { value: 4, numeral: 'IV' },
+    { value: 1, numeral: 'I' },
+  ]
+
+  let result = ''
+  let remaining = num
+
+  for (const { value, numeral } of romanNumerals) {
+    while (remaining >= value) {
+      result += numeral
+      remaining -= value
+    }
+  }
+
+  return result
 }

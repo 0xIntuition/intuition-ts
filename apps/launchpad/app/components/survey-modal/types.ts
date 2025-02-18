@@ -1,3 +1,4 @@
+import { Question } from '@lib/graphql/types'
 import { TripleType } from 'app/types'
 
 import { TransactionStateType } from '../../types/transaction'
@@ -41,17 +42,20 @@ export interface OnboardingState {
 }
 
 export interface OnboardingModalProps {
-  isOpen?: boolean
+  isOpen: boolean
   onClose: () => void
+  predicateId: number
+  objectId: number
+  question: Question
 }
 
 export interface SignalStepProps {
-  selectedTopic: Topic
+  selectedTopic: Topic | undefined
   newAtomMetadata?: NewAtomMetadata
-  predicateId: string
-  objectId: string
-  setTxState: (txState: TransactionStateType) => void
-  onStakingSuccess: () => void
+  predicateId: number
+  objectId: number
+  setTxState: (state: TransactionStateType) => void
+  onStakingSuccess: (subject_id: string) => void
   isLoading: boolean
-  setIsLoading: (isLoading: boolean) => void
+  setIsLoading: (loading: boolean) => void
 }

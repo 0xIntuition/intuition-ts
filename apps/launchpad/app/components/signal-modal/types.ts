@@ -16,15 +16,16 @@ export type Step = {
 
 export interface SignalModalState {
   currentStep: StepId
-  ticks: number
   showCreateStep?: boolean
 }
 
 export interface SignalModalProps {
-  isOpen?: boolean
-  onClose: (e?: React.MouseEvent) => void
-  vaultId: string
-  mode: 'deposit' | 'redeem'
+  isOpen: boolean
+  onClose: () => void
   atom?: AtomType
   triple?: TripleType
+  vaultId: string
+  mode: 'deposit' | 'redeem'
+  setMode: (mode: 'deposit' | 'redeem') => void
+  initialTicks?: number
 }

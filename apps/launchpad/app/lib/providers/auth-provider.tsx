@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from 'react'
+import { createContext, useContext, useEffect, useState } from 'react'
 
 import { toast } from '@0xintuition/1ui'
 
@@ -16,17 +16,34 @@ interface AuthContextType {
   disconnect: () => Promise<void>
 }
 
-const AuthContext = createContext<AuthContextType | null>(null)
+const defaultAuthContext: AuthContextType = {
+  isReady: false,
+  isAuthenticated: false,
+  isLoading: false,
+  connect: async () => {},
+  disconnect: async () => {},
+}
+
+export const AuthContext = createContext<AuthContextType>(defaultAuthContext)
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const { ready: privyReady, authenticated } = usePrivy()
   const [isLoading, setIsLoading] = useState(false)
+  const [isInitializing, setIsInitializing] = useState(true)
+  const revalidator = useRevalidator()
+
+  useEffect(() => {
+    if (privyReady) {
+      setIsInitializing(false)
+    }
+  }, [privyReady])
 
   const { login } = useLogin({
     onComplete: (params) => {
       logger('Login complete:', params)
       setIsLoading(false)
       toast.success('Wallet Connected')
+      revalidator.revalidate()
     },
     onError: (error: string) => {
       console.error('Login error:', error)
@@ -34,13 +51,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       toast.error(getPrivyErrorMessage(error))
     },
   })
+
   const { logout } = useLogout({
     onSuccess: () => {
       setIsLoading(false)
       toast.warning('Wallet Disconnected')
+      revalidator.revalidate()
     },
   })
-  const revalidator = useRevalidator()
 
   const connect = async () => {
     setIsLoading(true)
@@ -51,7 +69,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       setIsLoading(true)
       await logout()
-      revalidator.revalidate()
     } catch (error) {
       console.error('Failed to disconnect:', error)
       if (error instanceof Error) {
@@ -67,7 +84,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const value: AuthContextType = {
     isReady: privyReady,
     isAuthenticated: authenticated,
-    isLoading,
+    isLoading: isLoading || isInitializing,
     connect,
     disconnect,
   }
@@ -76,9 +93,5 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 }
 
 export function useAuth() {
-  const context = useContext(AuthContext)
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider')
-  }
-  return context
+  return useContext(AuthContext)
 }

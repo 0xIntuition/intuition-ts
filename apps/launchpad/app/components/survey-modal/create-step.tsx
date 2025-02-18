@@ -68,9 +68,13 @@ const INITIAL_STEPS: Step[] = [
 
 export interface CreateStepProps {
   onCreationSuccess: (metadata: NewAtomMetadata) => void
+  initialName?: string
 }
 
-export function CreateStep({ onCreationSuccess }: CreateStepProps) {
+export function CreateStep({
+  onCreationSuccess,
+  initialName,
+}: CreateStepProps) {
   const [currentStep, setCurrentStep] = useState('metadata')
   const [steps, setSteps] = useState<Step[]>(INITIAL_STEPS)
   const [ipfsUri, setIpfsUri] = useState<string | null>(null)
@@ -246,23 +250,28 @@ export function CreateStep({ onCreationSuccess }: CreateStepProps) {
             event.args.creator === (wallet?.address as `0x${string}`)
           ) {
             const vaultId = event.args.vaultID.toString()
-
-            onCreationSuccess({
-              name: atomData?.name ?? '',
-              image: atomData?.image ?? '',
-              vaultId,
-            })
-
-            toast.custom(() => (
-              <CreateAtomToast
-                id={vaultId}
-                txHash={txReceipt.transactionHash}
-              />
-            ))
             setLastTxHash(txReceipt.transactionHash)
+
+            // Use setTimeout to avoid state updates during render
+            setTimeout(() => {
+              onCreationSuccess({
+                name: atomData?.name ?? '',
+                image: atomData?.image,
+                vaultId,
+              })
+
+              toast.custom(() => (
+                <CreateAtomToast
+                  id={vaultId}
+                  txHash={txReceipt.transactionHash}
+                />
+              ))
+            }, 0)
+
+            return TransactionStatus.complete
           }
         }
-        return TransactionStatus.complete
+        return TransactionStatus.inProgress
       }
       if (isError) {
         reset()
@@ -290,7 +299,9 @@ export function CreateStep({ onCreationSuccess }: CreateStepProps) {
           <SurveyFormContainer
             onSubmit={handleMetadataSubmit}
             isLoading={isPending}
-            defaultValues={atomData || undefined}
+            defaultValues={
+              atomData || (initialName ? { name: initialName } : undefined)
+            }
           />
         )
       case 'review':

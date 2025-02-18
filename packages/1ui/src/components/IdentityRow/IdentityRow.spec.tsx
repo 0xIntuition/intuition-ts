@@ -98,23 +98,6 @@ describe('IdentityRow', () => {
                   69
                 </div>
               </button>
-              <span
-                data-disabled=""
-                data-state="closed"
-              >
-                <button
-                  class="flex justify-center items-center gap-2 text-sm font-medium border disabled:text-muted-foreground aria-disabled:text-muted-foreground aria-disabled:pointer-events-none bg-transparent text-primary/70 border-transparent hover:text-primary disabled:border-transparent aria-disabled:border-transparent disabled:bg-transparent aria-disabled:bg-transparent shadow-none p-1"
-                  disabled=""
-                >
-                  <svg
-                    class="text-secondary/70 h-4 w-4"
-                  >
-                    <use
-                      href="/src/components/Icon/Icon.sprites.svg#context"
-                    />
-                  </svg>
-                </button>
-              </span>
             </div>
           </div>
         </div>
@@ -217,23 +200,6 @@ describe('IdentityRow', () => {
                   69
                 </div>
               </button>
-              <span
-                data-disabled=""
-                data-state="closed"
-              >
-                <button
-                  class="flex justify-center items-center gap-2 text-sm font-medium border disabled:text-muted-foreground aria-disabled:text-muted-foreground aria-disabled:pointer-events-none bg-transparent text-primary/70 border-transparent hover:text-primary disabled:border-transparent aria-disabled:border-transparent disabled:bg-transparent aria-disabled:bg-transparent shadow-none p-1"
-                  disabled=""
-                >
-                  <svg
-                    class="text-secondary/70 h-4 w-4"
-                  >
-                    <use
-                      href="/src/components/Icon/Icon.sprites.svg#context"
-                    />
-                  </svg>
-                </button>
-              </span>
             </div>
           </div>
           <div

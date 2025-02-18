@@ -4,6 +4,10 @@ import { base, baseSepolia } from 'viem/chains'
 // export const CURRENT_ENV =
 //   typeof window !== 'undefined' ? window.ENV.DEPLOY_ENV : process.env.DEPLOY_ENV
 
+export const API_URL_DEV =
+  'https://prod.base-sepolia.intuition-api.com/v1/graphql'
+export const API_URL_PROD = 'https://prod.base.intuition-api.com/v1/graphql'
+
 export const CURRENT_ENV: ChainEnv =
   (import.meta.env.VITE_DEPLOY_ENV as ChainEnv) || 'development'
 

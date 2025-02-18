@@ -38,7 +38,7 @@ export function AppShellProvider({ children }: { children: ReactNode }) {
     if (isMobile) {
       setIsSidebarOpen(false)
       setLayoutVariant('narrow')
-      setPaddingVariant('default')
+      setPaddingVariant('narrow')
     } else {
       setIsSidebarOpen(true)
       setLayoutVariant('default')

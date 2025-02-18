@@ -20,37 +20,60 @@ interface TestFormValues {
   test: string
 }
 
-describe('Form', () => {
-  const TestForm = () => {
-    const form = useForm<TestFormValues>({
-      defaultValues: {
-        test: '',
-      },
-    })
+const TestForm = () => {
+  const form = useForm<TestFormValues>({
+    defaultValues: {
+      test: '',
+    },
+    mode: 'all',
+  })
 
-    return (
-      <Form {...form}>
-        <form>
-          <FormField
-            control={form.control}
-            name="test"
-            rules={{ required: 'Field is required' }}
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Test Field</FormLabel>
-                <FormControl>
-                  <input {...field} />
-                </FormControl>
-                <FormDescription>Test description</FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </form>
-      </Form>
-    )
+  const onSubmit = (data: TestFormValues) => {
+    console.log(data)
   }
 
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)}>
+        <FormField
+          control={form.control}
+          name="test"
+          rules={{ required: 'Field is required' }}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Test Field</FormLabel>
+              <FormControl>
+                <input {...field} />
+              </FormControl>
+              <FormDescription>Test description</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <button type="submit">Submit</button>
+      </form>
+    </Form>
+  )
+}
+
+const TestFormWithCustomClasses = () => {
+  const form = useForm()
+
+  return (
+    <Form {...form}>
+      <FormItem className="item-class">
+        <FormLabel className="label-class">Label</FormLabel>
+        <FormControl className="control-class">
+          <input />
+        </FormControl>
+        <FormDescription className="desc-class">Description</FormDescription>
+        <FormMessage className="message-class">Error message</FormMessage>
+      </FormItem>
+    </Form>
+  )
+}
+
+describe('Form', () => {
   it('renders all form components correctly', () => {
     render(<TestForm />)
 
@@ -60,18 +83,7 @@ describe('Form', () => {
   })
 
   it('applies custom className to form components', () => {
-    const { container } = render(
-      <Form {...useForm()}>
-        <FormItem className="item-class">
-          <FormLabel className="label-class">Label</FormLabel>
-          <FormControl className="control-class">
-            <input />
-          </FormControl>
-          <FormDescription className="desc-class">Description</FormDescription>
-          <FormMessage className="message-class">Error message</FormMessage>
-        </FormItem>
-      </Form>,
-    )
+    const { container } = render(<TestFormWithCustomClasses />)
 
     expect(container.querySelector('.item-class')).toBeInTheDocument()
     expect(container.querySelector('.label-class')).toBeInTheDocument()
@@ -85,8 +97,12 @@ describe('Form', () => {
     render(<TestForm />)
 
     const input = screen.getByRole('textbox')
+    const submitButton = screen.getByRole('button', { name: /submit/i })
+
+    // Type and clear to trigger validation
     await user.type(input, 'test')
     await user.clear(input)
+    await user.click(submitButton)
 
     expect(await screen.findByText('Field is required')).toBeInTheDocument()
   })

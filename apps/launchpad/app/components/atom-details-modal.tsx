@@ -29,9 +29,13 @@ export function AtomDetailsModal({
     list: data?.list ?? 'Intuition',
     description: 'A detailed description of this atom will be added soon.',
     icon: data?.image ? (
-      <img src={data.image} alt={data.name} className="h-6 w-6 rounded-full" />
+      <img
+        src={data.image}
+        alt={data.name}
+        className="h-10 w-10 rounded-full"
+      />
     ) : (
-      <Icon name="circles-three" className="h-6 w-6" />
+      <Icon name="fingerprint" className="h-10 w-10" />
     ),
     atomId,
     listClaim: true, // TODO: Add handling for regular atoms (not in a list)

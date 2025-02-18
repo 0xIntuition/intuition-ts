@@ -16,6 +16,7 @@ export const IconName = {
   bubbleAnnotation: 'bubble-annotation',
   calendar: 'calendar',
   chainLink: 'chain-link',
+  chartBar: 'chart-bar',
   checkmark: 'checkmark',
   chevronDoubleLeft: 'chevron-double-left',
   chevronDoubleRight: 'chevron-double-right',

@@ -8,13 +8,6 @@ import {
   Text,
   TextVariant,
 } from 'components'
-import { Button, ButtonSize, ButtonVariant } from 'components/Button'
-import {
-  ContextMenu,
-  ContextMenuContent,
-  ContextMenuItem,
-  ContextMenuTrigger,
-} from 'components/ContextMenu'
 import { Icon, IconName } from 'components/Icon'
 import { IdentityTag, IdentityTagSize } from 'components/IdentityTag'
 import { StakeButton } from 'components/StakeButton'
@@ -37,7 +30,7 @@ export interface IdentityRowProps extends React.HTMLAttributes<HTMLDivElement> {
   numPositions: number
   tags?: TagWithValueProps[]
   userPosition?: string
-  onStakeClick: () => void
+  onStakeClick?: () => void
   isFirst?: boolean
   isLast?: boolean
   readOnly?: boolean
@@ -113,10 +106,10 @@ const IdentityRow = ({
 
         <div className="flex items-center gap-3">
           <StakeTVL totalTVL={+totalTVL} currency={currency} />
-          {!readOnly && (
+          {!readOnly && onStakeClick && (
             <StakeButton numPositions={numPositions} onClick={onStakeClick} />
           )}
-          <ContextMenu>
+          {/* <ContextMenu>
             <ContextMenuTrigger disabled>
               <Button
                 variant={ButtonVariant.text}
@@ -134,7 +127,7 @@ const IdentityRow = ({
               <ContextMenuItem>Settings</ContextMenuItem>
               <ContextMenuItem>Logout</ContextMenuItem>
             </ContextMenuContent>
-          </ContextMenu>
+          </ContextMenu> */}
         </div>
       </div>
       {userPosition && userPosition !== '0' && (

@@ -1,186 +1,120 @@
-import { startTransition, useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
-import {
-  Button,
-  Dialog,
-  DialogContent,
-  Icon,
-  Text,
-  TextVariant,
-  TextWeight,
-} from '@0xintuition/1ui'
+import { Dialog, DialogContent } from '@0xintuition/1ui'
 
-import { BLOCK_EXPLORER_URL } from '@consts/general'
-import logger from '@lib/utils/logger'
-import { usePrivy } from '@privy-io/react-auth'
-import { Link } from '@remix-run/react'
+import { AtomType, TripleType } from 'app/types'
 import { ClientOnly } from 'remix-utils/client-only'
 
-import { TransactionStateType } from '../../types/transaction'
 import { SignalStep } from './signal-step'
-import { SignalModalProps, SignalModalState, STEPS } from './types'
 
-const INITIAL_STATE: SignalModalState = {
-  currentStep: STEPS.SIGNAL,
-  ticks: 1,
+interface StepTransition {
+  isTransitioning: boolean
+  handleTransition: () => void
+  resetTransition: () => void
 }
 
-interface FinishedStepProps {
-  txHash?: string
-  onClose: (e?: React.MouseEvent) => void
+/**
+ * Custom hook to manage transitions with proper cleanup
+ */
+const useTransition = (): StepTransition => {
+  const [isTransitioning, setIsTransitioning] = useState(false)
+  const timeoutRef = useRef<number>()
+  const rafRef = useRef<number>()
+
+  const handleTransition = useCallback(() => {
+    setIsTransitioning(true)
+
+    // Wait for fade out before updating state
+    rafRef.current = requestAnimationFrame(() => {
+      timeoutRef.current = window.setTimeout(() => {
+        // Wait a frame before starting fade in
+        rafRef.current = requestAnimationFrame(() => {
+          setIsTransitioning(false)
+        })
+      }, 150) // Match the CSS transition duration
+    })
+  }, [])
+
+  const resetTransition = useCallback(() => {
+    setIsTransitioning(false)
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current)
+    }
+    if (rafRef.current) {
+      cancelAnimationFrame(rafRef.current)
+    }
+  }, [])
+
+  // Cleanup timeouts and animation frames
+  useEffect(() => {
+    return () => {
+      resetTransition()
+    }
+  }, [resetTransition])
+
+  return { isTransitioning, handleTransition, resetTransition }
 }
 
-function FinishedStep({ txHash, onClose }: FinishedStepProps) {
-  const handleClose = (e: React.MouseEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
-    onClose(e)
-  }
-
-  return (
-    <div className="w-full h-full flex flex-col items-center justify-center p-6 gap-4">
-      <div className="flex flex-col items-center gap-2">
-        <div className="w-12 h-12 rounded-full bg-green-500/10 flex items-center justify-center">
-          <Icon name="circle-check-filled" className="w-6 h-6 text-green-500" />
-        </div>
-        <Text variant={TextVariant.headline} weight={TextWeight.semibold}>
-          Signal Complete!
-        </Text>
-        <Text variant={TextVariant.footnote} className="text-foreground/70">
-          Your transaction has been successfully processed.
-        </Text>
-      </div>
-      {txHash && (
-        <Link
-          to={`${BLOCK_EXPLORER_URL}/tx/${txHash}`}
-          target="_blank"
-          className="flex flex-row items-center gap-1 text-blue-500 transition-colors duration-300 hover:text-blue-400"
-        >
-          <Text variant={TextVariant.body} className="text-inherit">
-            View Transaction on Basescan
-          </Text>
-          <Icon name="square-arrow-top-right" className="h-3 w-3" />
-        </Link>
-      )}
-      <Button onClick={handleClose}>Close</Button>
-    </div>
-  )
+export interface SignalModalProps {
+  isOpen: boolean
+  onClose: () => void
+  vaultId: string
+  atom?: AtomType
+  triple?: TripleType
+  mode: 'deposit' | 'redeem'
+  setMode: (mode: 'deposit' | 'redeem') => void
+  initialTicks?: number
+  isSimplifiedRedeem?: boolean
 }
 
 export function SignalModal({
   isOpen,
   onClose,
+  vaultId,
   atom,
   triple,
-  vaultId,
-  mode,
-}: SignalModalProps) {
-  const { user: privyUser } = usePrivy()
-  const userWallet = privyUser?.wallet?.address
-
-  const [state, setState] = useState<SignalModalState>(INITIAL_STATE)
-  const [isLoading, setIsLoading] = useState(false)
-  const [txState, setTxState] = useState<TransactionStateType>()
-  const [txHash, setTxHash] = useState<string>()
-
-  const handleTransition = useCallback(
-    (updateFn: (prev: SignalModalState) => SignalModalState) => {
-      setState((prev) => {
-        return updateFn(prev)
-      })
-    },
-    [],
-  )
+  initialTicks,
+  isSimplifiedRedeem,
+}: Omit<SignalModalProps, 'mode' | 'setMode'>) {
+  const transition = useTransition()
+  const { isTransitioning, handleTransition, resetTransition } = transition
 
   useEffect(() => {
     if (isOpen) {
-      setState(INITIAL_STATE)
-      document.body.style.paddingRight = 'var(--removed-body-scroll-bar-size)'
-      document.body.style.overflow = 'hidden'
-    } else {
-      document.body.style.paddingRight = ''
-      document.body.style.overflow = ''
-
-      const MODAL_ANIMATION_DURATION = 300
-      const timer = setTimeout(() => {
-        setState(INITIAL_STATE)
-      }, MODAL_ANIMATION_DURATION)
-
-      return () => clearTimeout(timer)
+      resetTransition()
     }
-  }, [isOpen])
+  }, [isOpen, resetTransition])
 
-  useEffect(() => {
-    if (txState?.status) {
-      logger('txState.status changed:', txState.status)
-      if (txState.status === 'complete') {
-        handleTransition((prev) => ({
-          ...prev,
-          currentStep: STEPS.FINISHED,
-        }))
-      }
-    }
-  }, [txState?.status])
-
-  const onStakingSuccess = useCallback(() => {
-    startTransition(() => {
-      handleTransition((prev) => ({
-        ...prev,
-        currentStep: STEPS.FINISHED,
-      }))
-    })
-
-    if (!userWallet) {
-      logger('Missing userWallet')
-      return
-    }
-  }, [handleTransition, userWallet])
-
-  useEffect(() => {
-    if (txState?.txHash) {
-      setTxHash(txState.txHash)
-    }
-  }, [txState?.txHash])
-
-  const renderCurrentStep = () => {
-    switch (state.currentStep) {
-      case STEPS.SIGNAL:
-        return (
-          <SignalStep
-            vaultId={vaultId}
-            mode={mode}
-            atom={atom}
-            triple={triple}
-            open={true}
-            setTxState={setTxState}
-            onStakingSuccess={onStakingSuccess}
-            isLoading={isLoading}
-            setIsLoading={setIsLoading}
-          />
-        )
-      case STEPS.FINISHED:
-        return <FinishedStep txHash={txHash} onClose={onClose} />
-      default:
-        return null
-    }
-  }
+  const handleClose = useCallback(() => {
+    handleTransition()
+    setTimeout(() => {
+      onClose()
+    }, 150)
+  }, [handleTransition, onClose])
 
   return (
     <ClientOnly>
       {() => (
-        <Dialog
-          open={isOpen}
-          onOpenChange={(open) => {
-            if (!open) {
-              // Lock clicks when the Dialog starts to close
-              // @ts-ignore - Added by DataTable
-              window.__lockTableClicks?.()
-              onClose()
-            }
-          }}
-        >
-          <DialogContent className="p-0 bg-gradient-to-br from-[#060504] to-[#101010] md:max-w-[720px] w-full border-none">
-            {renderCurrentStep()}
+        <Dialog open={isOpen} onOpenChange={handleClose}>
+          <DialogContent className="sm:max-w-[600px] p-0 h-[380px] flex flex-col bg-gradient-to-b from-[#060504] to-[#101010] border-none">
+            <div
+              className={`transition-all duration-150 ease-in-out ${
+                isTransitioning
+                  ? 'opacity-0 translate-y-1'
+                  : 'opacity-100 translate-y-0'
+              }`}
+            >
+              <SignalStep
+                vaultId={vaultId}
+                counterVaultId={triple?.counter_vault_id?.toString()}
+                atom={atom}
+                triple={triple}
+                open={isOpen}
+                onClose={handleClose}
+                initialTicks={initialTicks}
+                isSimplifiedRedeem={isSimplifiedRedeem}
+              />
+            </div>
           </DialogContent>
         </Dialog>
       )}

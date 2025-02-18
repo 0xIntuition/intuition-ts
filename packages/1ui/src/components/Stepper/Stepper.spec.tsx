@@ -1,6 +1,7 @@
 import React from 'react'
 
 import { fireEvent, render } from '@testing-library/react'
+import { vi } from 'vitest'
 
 import { Stepper } from './Stepper'
 
@@ -36,7 +37,7 @@ describe('Stepper', () => {
   })
 
   it('calls onNext when next button is clicked', () => {
-    const onNext = jest.fn()
+    const onNext = vi.fn()
     const { getByText } = render(
       <Stepper steps={mockSteps} currentStep={1} onNext={onNext} />,
     )
@@ -46,7 +47,7 @@ describe('Stepper', () => {
   })
 
   it('calls onBack when back button is clicked', () => {
-    const onBack = jest.fn()
+    const onBack = vi.fn()
     const { getByText } = render(
       <Stepper steps={mockSteps} currentStep={2} onBack={onBack} />,
     )

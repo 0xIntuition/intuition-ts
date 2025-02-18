@@ -2,6 +2,8 @@ import * as React from 'react'
 
 import { cn, SidebarInset, SidebarProvider } from '@0xintuition/1ui'
 
+import { ClientOnly } from 'remix-utils/client-only'
+
 import { AppSidebar } from '../app-sidebar'
 import { AppShellProvider, useAppShell } from './app-shell-context'
 import { BaseLayoutProps, layoutConfig } from './types'
@@ -12,7 +14,7 @@ function AppShellContent({ children }: AppShellContentProps) {
   const { layoutVariant, paddingVariant } = useAppShell()
 
   return (
-    <div className="flex justify-center w-full max-w-screen-xl mx-auto">
+    <div className="flex justify-center w-full max-w-screen-xl mx-auto mt-6">
       <div
         className={cn(
           'flex flex-col w-full space-y-6',
@@ -36,8 +38,8 @@ function AppShellInner({ children }: BaseLayoutProps) {
           } as React.CSSProperties
         }
       >
-        <AppSidebar />
-        <SidebarInset className="bg-[#131313]">
+        <ClientOnly>{() => <AppSidebar />}</ClientOnly>
+        <SidebarInset>
           <AppShellContent>{children}</AppShellContent>
         </SidebarInset>
       </SidebarProvider>

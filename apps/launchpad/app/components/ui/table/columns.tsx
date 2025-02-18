@@ -1,24 +1,21 @@
 import { useState } from 'react'
 
 import {
-  Button,
-  ButtonVariant,
   ClaimPosition,
   ClaimPositionType,
   Icon,
   IconName,
 } from '@0xintuition/1ui'
 
-import {
-  SignalButton,
-  StakeButtonVariant,
-} from '@components/signal-modal/signal-button'
+import { SignalButton } from '@components/signal-modal/signal-button'
 import { SignalModal } from '@components/signal-modal/signal-modal'
 import { MIN_DEPOSIT } from '@consts/general'
 import { usePrivy } from '@privy-io/react-auth'
+import { useRevalidator } from '@remix-run/react'
+import { useQueryClient } from '@tanstack/react-query'
 import { ColumnDef } from '@tanstack/react-table'
 import { AtomType, TripleType } from 'app/types'
-import { ArrowBigUp } from 'lucide-react'
+import { ArrowBigDown, ArrowBigUp } from 'lucide-react'
 
 import { DataTableColumnHeader } from './data-table-column-header'
 
@@ -39,6 +36,7 @@ export type TableItem = {
   currentSharePrice?: number
   atom?: AtomType
   triple?: TripleType
+  stakingDisabled?: boolean
 }
 
 interface SignalCellProps {
@@ -47,6 +45,7 @@ interface SignalCellProps {
   atom?: AtomType
   userPosition?: number
   positionDirection?: ClaimPositionType
+  stakingDisabled?: boolean
 }
 
 function SignalCell({
@@ -55,16 +54,19 @@ function SignalCell({
   triple,
   userPosition,
   positionDirection,
+  stakingDisabled,
 }: SignalCellProps) {
   const { user: privyUser } = usePrivy()
   const [isSignalModalOpen, setIsSignalModalOpen] = useState(false)
   const [signalMode, setSignalMode] = useState<'deposit' | 'redeem'>('deposit')
   const userWallet = privyUser?.wallet?.address
-
+  const queryClient = useQueryClient()
   const handleSignal = (mode: 'deposit' | 'redeem') => {
     setSignalMode(mode)
     setIsSignalModalOpen(true)
   }
+
+  const revalidator = useRevalidator()
 
   const handleClose = () => {
     // Lock table clicks and close modal
@@ -77,44 +79,30 @@ function SignalCell({
       // @ts-ignore - Added by DataTable
       window.__lockTableClicks?.()
     }, 0)
+    queryClient.invalidateQueries()
+    revalidator.revalidate()
   }
+
+  // Calculate initial ticks based on position direction
+  const calculatedInitialTicks = Math.ceil(
+    (userPosition ?? 0) / (+MIN_DEPOSIT * 0.95),
+  )
+  const initialTicks =
+    positionDirection === ClaimPosition.claimAgainst
+      ? -calculatedInitialTicks
+      : calculatedInitialTicks
+
   return (
     <>
       <div className="flex items-center justify-end gap-2 pr-6">
         <SignalButton
-          variant={StakeButtonVariant.claimFor}
-          numPositions={
-            positionDirection === ClaimPosition.claimFor
-              ? Math.ceil((userPosition ?? 0) / +MIN_DEPOSIT)
-              : 0
-          }
-          direction={ClaimPosition.claimFor}
+          variant={positionDirection}
+          numPositions={Math.abs(initialTicks)}
+          direction={positionDirection}
           positionDirection={positionDirection}
-          disabled={
-            positionDirection === ClaimPosition.claimAgainst || !userWallet
-          }
+          disabled={!userWallet || stakingDisabled}
           onClick={() => handleSignal('deposit')}
         />
-        {/* <SignalButton
-          variant={StakeButtonVariant.claimAgainst}
-          numPositions={
-            positionDirection === ClaimPosition.claimAgainst
-              ? Number(((userPosition ?? 0) / +MIN_DEPOSIT).toFixed(0))
-              : 0
-          }
-          direction={ClaimPosition.claimAgainst}
-          positionDirection={positionDirection}
-          disabled={positionDirection === ClaimPosition.claimFor}
-          onClick={() => handleSignal('redeem')}
-        /> */}
-        <Button
-          variant={ButtonVariant.ghost}
-          className="py-0.5 px-2 gap-1 h-9 w-9 rounded-xl bg-destructive/10 border-destructive/30 hover:bg-destructive/20 hover:border-destructive/50 hover:text-destructive text-destructive fill-destructive disabled:opacity-50"
-          disabled={userPosition === 0}
-          onClick={() => handleSignal('redeem')}
-        >
-          <Icon name="arrow-box-left" className="w-5 h-5" />
-        </Button>
       </div>
       <SignalModal
         isOpen={isSignalModalOpen}
@@ -122,7 +110,8 @@ function SignalCell({
         vaultId={vaultId}
         atom={atom}
         triple={triple}
-        mode={signalMode}
+        initialTicks={initialTicks}
+        isSimplifiedRedeem={signalMode === 'redeem'}
       />
     </>
   )
@@ -193,29 +182,29 @@ export const columns: ColumnDef<TableItem>[] = [
         </div>
       )
     },
-    size: 20,
+    size: 24,
     sortDescFirst: true,
   },
-  // {
-  //   accessorKey: 'downvotes',
-  //   header: ({ column }) => (
-  //     <div className="flex justify-center">
-  //       <DataTableColumnHeader column={column} title="Downvotes" />
-  //     </div>
-  //   ),
-  //   cell: ({ row }) => {
-  //     const downvotes = row.original.downvotes
-  //     const roundedDownVotes = Math.ceil(downvotes)
-  //     return (
-  //       <div className="flex justify-center items-center gap-1">
-  //         {roundedDownVotes}
-  //         <ArrowBigDown className="w-4 h-4 fill-destructive text-destructive" />
-  //       </div>
-  //     )
-  //   },
-  //   size: 20,
-  //   sortDescFirst: true,
-  // },
+  {
+    accessorKey: 'downvotes',
+    header: ({ column }) => (
+      <div className="flex justify-center">
+        <DataTableColumnHeader column={column} title="Downvotes" />
+      </div>
+    ),
+    cell: ({ row }) => {
+      const downvotes = row.original.downvotes
+      const roundedDownVotes = Math.ceil(downvotes)
+      return (
+        <div className="flex justify-center items-center gap-1">
+          {roundedDownVotes}
+          <ArrowBigDown className="w-4 h-4 fill-destructive text-destructive" />
+        </div>
+      )
+    },
+    size: 24,
+    sortDescFirst: true,
+  },
   {
     accessorKey: 'tvl',
     header: ({ column }) => (
@@ -235,13 +224,14 @@ export const columns: ColumnDef<TableItem>[] = [
         </div>
       )
     },
-    size: 120,
+    size: 72,
   },
   {
-    id: 'signal',
+    id: 'userPosition',
+    accessorFn: (row) => row.userPosition ?? 0,
     header: ({ column }) => (
       <div className="flex justify-center items-center">
-        <DataTableColumnHeader column={column} title="Signal" />
+        <DataTableColumnHeader column={column} title="My Vote" />
       </div>
     ),
     cell: ({ row }) => {
@@ -254,11 +244,11 @@ export const columns: ColumnDef<TableItem>[] = [
           atom={row.original.atom}
           userPosition={position as number}
           positionDirection={positionDirection}
+          stakingDisabled={row.original.stakingDisabled}
         />
       )
     },
-    enableSorting: false,
-    size: 120,
+    size: 96,
   },
   // {
   //   accessorKey: 'userPosition',

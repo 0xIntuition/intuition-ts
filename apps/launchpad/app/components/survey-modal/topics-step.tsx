@@ -9,7 +9,7 @@ import {
 
 import LoadingLogo from '@components/loading-logo'
 import { Search } from '@components/search'
-import { useQuestionData } from '@lib/hooks/useQuestionData'
+import { Question } from '@lib/graphql/types'
 import { Book } from 'lucide-react'
 
 import { Topic } from './types'
@@ -20,6 +20,7 @@ interface TopicsStepProps {
   onToggleTopic: (id: string) => void
   onSearchChange: (event: React.ChangeEvent<HTMLInputElement>) => void
   onCreateClick: () => void
+  question: Question
 }
 
 export function TopicsStep({
@@ -28,14 +29,13 @@ export function TopicsStep({
   onToggleTopic,
   onSearchChange,
   onCreateClick,
+  question,
 }: TopicsStepProps) {
-  const {
-    title,
-    description,
-    isLoading: isQuestionLoading,
-  } = useQuestionData({
-    questionId: 1,
-  })
+  if (!question) {
+    return null
+  }
+
+  const { title, description } = question
 
   return (
     <div className="p-8">
@@ -43,14 +43,14 @@ export function TopicsStep({
         <div className="flex items-start justify-between gap-4 pb-5">
           <div className="space-y-1">
             <Text variant="headline" className="font-semibold">
-              {isQuestionLoading ? 'Loading...' : title}
+              {title}
             </Text>
             <Text
               variant={TextVariant.footnote}
               className="text-primary/70 flex flex-row gap-1 items-center"
             >
               <Book className="h-4 w-4 text-primary/70" />
-              {isQuestionLoading ? 'Loading...' : description}
+              {description}
             </Text>
           </div>
         </div>
@@ -89,7 +89,7 @@ export function TopicsStep({
                         <Avatar
                           src={topic.image}
                           name={topic.name}
-                          icon={IconName.wallet}
+                          icon={IconName.fingerprint}
                           className="w-full h-full object-cover rounded-lg"
                         />
                       )}
@@ -103,6 +103,17 @@ export function TopicsStep({
                 ))}
               </div>
             </div>
+            <div className="flex flex-col gap-2 items-center justify-center mt-10">
+              <Text
+                variant={TextVariant.body}
+                className="italic text-primary/70"
+              >
+                Don&apos;t see the atom you&apos;re looking for?
+              </Text>
+              <Button variant="secondary" onClick={onCreateClick}>
+                Create Atom
+              </Button>
+            </div>
           </ScrollArea>
         ) : (
           <div className="flex flex-col gap-2 justify-center items-center h-[350px] w-full">
@@ -115,7 +126,7 @@ export function TopicsStep({
                 Would you like to create one?
               </Text>
               <Button variant="secondary" onClick={onCreateClick}>
-                Create
+                Create Atom
               </Button>
             </div>
           </div>

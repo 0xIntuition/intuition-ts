@@ -12,7 +12,7 @@ import { useGetAccountQuery } from '@0xintuition/graphql'
 
 import { useAuth } from '@lib/providers/auth-provider'
 import { User } from '@privy-io/react-auth'
-import { MoreVertical } from 'lucide-react'
+import { Loader2, MoreVertical } from 'lucide-react'
 
 export function AccountButton({
   privyUser,
@@ -21,7 +21,7 @@ export function AccountButton({
   privyUser: User
   isMinimal: boolean
 }) {
-  const { isReady, isAuthenticated, disconnect } = useAuth()
+  const { isReady, isAuthenticated, isLoading, disconnect } = useAuth()
   const walletAddress = privyUser.wallet?.address ?? ''
 
   const { data: accountResult } = useGetAccountQuery(
@@ -37,15 +37,27 @@ export function AccountButton({
     ? `${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}`
     : ''
 
-  return isReady && isAuthenticated && privyUser.wallet ? (
+  // Show loading state
+  if (isLoading) {
+    return (
+      <SidebarMenuButton className="w-full gap-2 py-5 border border-primary/10">
+        <Loader2 className="h-5 w-5 animate-spin" />
+        {!isMinimal && <Text variant={TextVariant.body}>Loading...</Text>}
+      </SidebarMenuButton>
+    )
+  }
+
+  // Only show the dropdown when ready and authenticated
+  if (!isReady || !isAuthenticated || !privyUser.wallet) {
+    return null
+  }
+
+  return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <SidebarMenuButton
-          size="lg"
-          className="w-full gap-3 theme-border bg-[#131313]"
-        >
+        <SidebarMenuButton className="w-full gap-2 py-5 border border-primary/10">
           <Avatar
-            className="h-7 w-7 border border-border/10"
+            className="h-5 w-5 border border-primary/10"
             name={walletAddress}
             src={avatarImage}
           />
@@ -54,17 +66,17 @@ export function AccountButton({
               <Text variant={TextVariant.body}>
                 {accountResult?.account?.label || displayAddress}
               </Text>
-              <MoreVertical className="h-6 w-6 text-secondary/60" />
+              <MoreVertical className="h-5 w-5 text-primary/50" />
             </div>
           )}
         </SidebarMenuButton>
       </DropdownMenuTrigger>
       <DropdownMenuContent
         align="start"
-        className="w-[--radix-dropdown-menu-trigger-width] bg-[#131313]"
+        className="w-[--radix-dropdown-menu-trigger-width]"
       >
         <DropdownMenuItem onClick={disconnect}>Disconnect</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  ) : null
+  )
 }

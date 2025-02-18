@@ -41,6 +41,7 @@ export type Scalars = {
   account_type: { input: any; output: any }
   atom_type: { input: any; output: any }
   bigint: { input: any; output: any }
+  bytea: { input: any; output: any }
   event_type: { input: any; output: any }
   float8: { input: any; output: any }
   jsonb: { input: any; output: any }
@@ -159,8 +160,7 @@ export type Accounts = {
   atoms: Array<Atoms>
   /** An aggregate relationship */
   atoms_aggregate: Atoms_Aggregate
-  /** An object relationship */
-  cached_image?: Maybe<Cached_Images>
+  cached_image?: Maybe<Cached_Images_Cached_Image>
   /** An array relationship */
   claims: Array<Claims>
   /** An aggregate relationship */
@@ -458,7 +458,6 @@ export type Accounts_Bool_Exp = {
   atom_id?: InputMaybe<Numeric_Comparison_Exp>
   atoms?: InputMaybe<Atoms_Bool_Exp>
   atoms_aggregate?: InputMaybe<Atoms_Aggregate_Bool_Exp>
-  cached_image?: InputMaybe<Cached_Images_Bool_Exp>
   claims?: InputMaybe<Claims_Bool_Exp>
   claims_aggregate?: InputMaybe<Claims_Aggregate_Bool_Exp>
   deposits_received?: InputMaybe<Deposits_Bool_Exp>
@@ -526,7 +525,6 @@ export type Accounts_Order_By = {
   atom?: InputMaybe<Atoms_Order_By>
   atom_id?: InputMaybe<Order_By>
   atoms_aggregate?: InputMaybe<Atoms_Aggregate_Order_By>
-  cached_image?: InputMaybe<Cached_Images_Order_By>
   claims_aggregate?: InputMaybe<Claims_Aggregate_Order_By>
   deposits_received_aggregate?: InputMaybe<Deposits_Aggregate_Order_By>
   deposits_sent_aggregate?: InputMaybe<Deposits_Aggregate_Order_By>
@@ -679,13 +677,24 @@ export type Atom_Values = {
   /** An object relationship */
   book?: Maybe<Books>
   book_id?: Maybe<Scalars['numeric']['output']>
+  /** An object relationship */
+  byte_object?: Maybe<Byte_Object>
+  byte_object_id?: Maybe<Scalars['numeric']['output']>
+  /** An object relationship */
+  caip10?: Maybe<Caip10>
   id: Scalars['numeric']['output']
+  /** An object relationship */
+  json_object?: Maybe<Json_Objects>
+  json_object_id?: Maybe<Scalars['numeric']['output']>
   /** An object relationship */
   organization?: Maybe<Organizations>
   organization_id?: Maybe<Scalars['numeric']['output']>
   /** An object relationship */
   person?: Maybe<Persons>
   person_id?: Maybe<Scalars['numeric']['output']>
+  /** An object relationship */
+  text_object?: Maybe<Text_Objects>
+  text_object_id?: Maybe<Scalars['numeric']['output']>
   /** An object relationship */
   thing?: Maybe<Things>
   thing_id?: Maybe<Scalars['numeric']['output']>
@@ -724,9 +733,12 @@ export type Atom_Values_Aggregate_FieldsCountArgs = {
 export type Atom_Values_Avg_Fields = {
   __typename?: 'atom_values_avg_fields'
   book_id?: Maybe<Scalars['Float']['output']>
+  byte_object_id?: Maybe<Scalars['Float']['output']>
   id?: Maybe<Scalars['Float']['output']>
+  json_object_id?: Maybe<Scalars['Float']['output']>
   organization_id?: Maybe<Scalars['Float']['output']>
   person_id?: Maybe<Scalars['Float']['output']>
+  text_object_id?: Maybe<Scalars['Float']['output']>
   thing_id?: Maybe<Scalars['Float']['output']>
 }
 
@@ -740,11 +752,18 @@ export type Atom_Values_Bool_Exp = {
   atom?: InputMaybe<Atoms_Bool_Exp>
   book?: InputMaybe<Books_Bool_Exp>
   book_id?: InputMaybe<Numeric_Comparison_Exp>
+  byte_object?: InputMaybe<Byte_Object_Bool_Exp>
+  byte_object_id?: InputMaybe<Numeric_Comparison_Exp>
+  caip10?: InputMaybe<Caip10_Bool_Exp>
   id?: InputMaybe<Numeric_Comparison_Exp>
+  json_object?: InputMaybe<Json_Objects_Bool_Exp>
+  json_object_id?: InputMaybe<Numeric_Comparison_Exp>
   organization?: InputMaybe<Organizations_Bool_Exp>
   organization_id?: InputMaybe<Numeric_Comparison_Exp>
   person?: InputMaybe<Persons_Bool_Exp>
   person_id?: InputMaybe<Numeric_Comparison_Exp>
+  text_object?: InputMaybe<Text_Objects_Bool_Exp>
+  text_object_id?: InputMaybe<Numeric_Comparison_Exp>
   thing?: InputMaybe<Things_Bool_Exp>
   thing_id?: InputMaybe<Numeric_Comparison_Exp>
 }
@@ -754,9 +773,12 @@ export type Atom_Values_Max_Fields = {
   __typename?: 'atom_values_max_fields'
   account_id?: Maybe<Scalars['String']['output']>
   book_id?: Maybe<Scalars['numeric']['output']>
+  byte_object_id?: Maybe<Scalars['numeric']['output']>
   id?: Maybe<Scalars['numeric']['output']>
+  json_object_id?: Maybe<Scalars['numeric']['output']>
   organization_id?: Maybe<Scalars['numeric']['output']>
   person_id?: Maybe<Scalars['numeric']['output']>
+  text_object_id?: Maybe<Scalars['numeric']['output']>
   thing_id?: Maybe<Scalars['numeric']['output']>
 }
 
@@ -765,9 +787,12 @@ export type Atom_Values_Min_Fields = {
   __typename?: 'atom_values_min_fields'
   account_id?: Maybe<Scalars['String']['output']>
   book_id?: Maybe<Scalars['numeric']['output']>
+  byte_object_id?: Maybe<Scalars['numeric']['output']>
   id?: Maybe<Scalars['numeric']['output']>
+  json_object_id?: Maybe<Scalars['numeric']['output']>
   organization_id?: Maybe<Scalars['numeric']['output']>
   person_id?: Maybe<Scalars['numeric']['output']>
+  text_object_id?: Maybe<Scalars['numeric']['output']>
   thing_id?: Maybe<Scalars['numeric']['output']>
 }
 
@@ -778,11 +803,18 @@ export type Atom_Values_Order_By = {
   atom?: InputMaybe<Atoms_Order_By>
   book?: InputMaybe<Books_Order_By>
   book_id?: InputMaybe<Order_By>
+  byte_object?: InputMaybe<Byte_Object_Order_By>
+  byte_object_id?: InputMaybe<Order_By>
+  caip10?: InputMaybe<Caip10_Order_By>
   id?: InputMaybe<Order_By>
+  json_object?: InputMaybe<Json_Objects_Order_By>
+  json_object_id?: InputMaybe<Order_By>
   organization?: InputMaybe<Organizations_Order_By>
   organization_id?: InputMaybe<Order_By>
   person?: InputMaybe<Persons_Order_By>
   person_id?: InputMaybe<Order_By>
+  text_object?: InputMaybe<Text_Objects_Order_By>
+  text_object_id?: InputMaybe<Order_By>
   thing?: InputMaybe<Things_Order_By>
   thing_id?: InputMaybe<Order_By>
 }
@@ -794,11 +826,17 @@ export type Atom_Values_Select_Column =
   /** column name */
   | 'book_id'
   /** column name */
+  | 'byte_object_id'
+  /** column name */
   | 'id'
+  /** column name */
+  | 'json_object_id'
   /** column name */
   | 'organization_id'
   /** column name */
   | 'person_id'
+  /** column name */
+  | 'text_object_id'
   /** column name */
   | 'thing_id'
 
@@ -806,9 +844,12 @@ export type Atom_Values_Select_Column =
 export type Atom_Values_Stddev_Fields = {
   __typename?: 'atom_values_stddev_fields'
   book_id?: Maybe<Scalars['Float']['output']>
+  byte_object_id?: Maybe<Scalars['Float']['output']>
   id?: Maybe<Scalars['Float']['output']>
+  json_object_id?: Maybe<Scalars['Float']['output']>
   organization_id?: Maybe<Scalars['Float']['output']>
   person_id?: Maybe<Scalars['Float']['output']>
+  text_object_id?: Maybe<Scalars['Float']['output']>
   thing_id?: Maybe<Scalars['Float']['output']>
 }
 
@@ -816,9 +857,12 @@ export type Atom_Values_Stddev_Fields = {
 export type Atom_Values_Stddev_Pop_Fields = {
   __typename?: 'atom_values_stddev_pop_fields'
   book_id?: Maybe<Scalars['Float']['output']>
+  byte_object_id?: Maybe<Scalars['Float']['output']>
   id?: Maybe<Scalars['Float']['output']>
+  json_object_id?: Maybe<Scalars['Float']['output']>
   organization_id?: Maybe<Scalars['Float']['output']>
   person_id?: Maybe<Scalars['Float']['output']>
+  text_object_id?: Maybe<Scalars['Float']['output']>
   thing_id?: Maybe<Scalars['Float']['output']>
 }
 
@@ -826,9 +870,12 @@ export type Atom_Values_Stddev_Pop_Fields = {
 export type Atom_Values_Stddev_Samp_Fields = {
   __typename?: 'atom_values_stddev_samp_fields'
   book_id?: Maybe<Scalars['Float']['output']>
+  byte_object_id?: Maybe<Scalars['Float']['output']>
   id?: Maybe<Scalars['Float']['output']>
+  json_object_id?: Maybe<Scalars['Float']['output']>
   organization_id?: Maybe<Scalars['Float']['output']>
   person_id?: Maybe<Scalars['Float']['output']>
+  text_object_id?: Maybe<Scalars['Float']['output']>
   thing_id?: Maybe<Scalars['Float']['output']>
 }
 
@@ -844,9 +891,12 @@ export type Atom_Values_Stream_Cursor_Input = {
 export type Atom_Values_Stream_Cursor_Value_Input = {
   account_id?: InputMaybe<Scalars['String']['input']>
   book_id?: InputMaybe<Scalars['numeric']['input']>
+  byte_object_id?: InputMaybe<Scalars['numeric']['input']>
   id?: InputMaybe<Scalars['numeric']['input']>
+  json_object_id?: InputMaybe<Scalars['numeric']['input']>
   organization_id?: InputMaybe<Scalars['numeric']['input']>
   person_id?: InputMaybe<Scalars['numeric']['input']>
+  text_object_id?: InputMaybe<Scalars['numeric']['input']>
   thing_id?: InputMaybe<Scalars['numeric']['input']>
 }
 
@@ -854,9 +904,12 @@ export type Atom_Values_Stream_Cursor_Value_Input = {
 export type Atom_Values_Sum_Fields = {
   __typename?: 'atom_values_sum_fields'
   book_id?: Maybe<Scalars['numeric']['output']>
+  byte_object_id?: Maybe<Scalars['numeric']['output']>
   id?: Maybe<Scalars['numeric']['output']>
+  json_object_id?: Maybe<Scalars['numeric']['output']>
   organization_id?: Maybe<Scalars['numeric']['output']>
   person_id?: Maybe<Scalars['numeric']['output']>
+  text_object_id?: Maybe<Scalars['numeric']['output']>
   thing_id?: Maybe<Scalars['numeric']['output']>
 }
 
@@ -864,9 +917,12 @@ export type Atom_Values_Sum_Fields = {
 export type Atom_Values_Var_Pop_Fields = {
   __typename?: 'atom_values_var_pop_fields'
   book_id?: Maybe<Scalars['Float']['output']>
+  byte_object_id?: Maybe<Scalars['Float']['output']>
   id?: Maybe<Scalars['Float']['output']>
+  json_object_id?: Maybe<Scalars['Float']['output']>
   organization_id?: Maybe<Scalars['Float']['output']>
   person_id?: Maybe<Scalars['Float']['output']>
+  text_object_id?: Maybe<Scalars['Float']['output']>
   thing_id?: Maybe<Scalars['Float']['output']>
 }
 
@@ -874,9 +930,12 @@ export type Atom_Values_Var_Pop_Fields = {
 export type Atom_Values_Var_Samp_Fields = {
   __typename?: 'atom_values_var_samp_fields'
   book_id?: Maybe<Scalars['Float']['output']>
+  byte_object_id?: Maybe<Scalars['Float']['output']>
   id?: Maybe<Scalars['Float']['output']>
+  json_object_id?: Maybe<Scalars['Float']['output']>
   organization_id?: Maybe<Scalars['Float']['output']>
   person_id?: Maybe<Scalars['Float']['output']>
+  text_object_id?: Maybe<Scalars['Float']['output']>
   thing_id?: Maybe<Scalars['Float']['output']>
 }
 
@@ -884,9 +943,12 @@ export type Atom_Values_Var_Samp_Fields = {
 export type Atom_Values_Variance_Fields = {
   __typename?: 'atom_values_variance_fields'
   book_id?: Maybe<Scalars['Float']['output']>
+  byte_object_id?: Maybe<Scalars['Float']['output']>
   id?: Maybe<Scalars['Float']['output']>
+  json_object_id?: Maybe<Scalars['Float']['output']>
   organization_id?: Maybe<Scalars['Float']['output']>
   person_id?: Maybe<Scalars['Float']['output']>
+  text_object_id?: Maybe<Scalars['Float']['output']>
   thing_id?: Maybe<Scalars['Float']['output']>
 }
 
@@ -923,8 +985,7 @@ export type Atoms = {
   as_subject_triples_aggregate: Triples_Aggregate
   block_number: Scalars['numeric']['output']
   block_timestamp: Scalars['bigint']['output']
-  /** An object relationship */
-  cached_image?: Maybe<Cached_Images>
+  cached_image?: Maybe<Cached_Images_Cached_Image>
   /** An object relationship */
   controler?: Maybe<Accounts>
   /** An object relationship */
@@ -1189,7 +1250,6 @@ export type Atoms_Bool_Exp = {
   as_subject_triples_aggregate?: InputMaybe<Triples_Aggregate_Bool_Exp>
   block_number?: InputMaybe<Numeric_Comparison_Exp>
   block_timestamp?: InputMaybe<Bigint_Comparison_Exp>
-  cached_image?: InputMaybe<Cached_Images_Bool_Exp>
   controler?: InputMaybe<Accounts_Bool_Exp>
   creator?: InputMaybe<Accounts_Bool_Exp>
   creator_id?: InputMaybe<String_Comparison_Exp>
@@ -1290,7 +1350,6 @@ export type Atoms_Order_By = {
   as_subject_triples_aggregate?: InputMaybe<Triples_Aggregate_Order_By>
   block_number?: InputMaybe<Order_By>
   block_timestamp?: InputMaybe<Order_By>
-  cached_image?: InputMaybe<Cached_Images_Order_By>
   controler?: InputMaybe<Accounts_Order_By>
   creator?: InputMaybe<Accounts_Order_By>
   creator_id?: InputMaybe<Order_By>
@@ -1671,9 +1730,154 @@ export type Books_Variance_Fields = {
   id?: Maybe<Scalars['Float']['output']>
 }
 
-/** columns and relationships of "cached_image" */
-export type Cached_Images = {
-  __typename?: 'cached_images'
+/** columns and relationships of "byte_object" */
+export type Byte_Object = {
+  __typename?: 'byte_object'
+  data: Scalars['bytea']['output']
+  id: Scalars['numeric']['output']
+}
+
+/** aggregated selection of "byte_object" */
+export type Byte_Object_Aggregate = {
+  __typename?: 'byte_object_aggregate'
+  aggregate?: Maybe<Byte_Object_Aggregate_Fields>
+  nodes: Array<Byte_Object>
+}
+
+/** aggregate fields of "byte_object" */
+export type Byte_Object_Aggregate_Fields = {
+  __typename?: 'byte_object_aggregate_fields'
+  avg?: Maybe<Byte_Object_Avg_Fields>
+  count: Scalars['Int']['output']
+  max?: Maybe<Byte_Object_Max_Fields>
+  min?: Maybe<Byte_Object_Min_Fields>
+  stddev?: Maybe<Byte_Object_Stddev_Fields>
+  stddev_pop?: Maybe<Byte_Object_Stddev_Pop_Fields>
+  stddev_samp?: Maybe<Byte_Object_Stddev_Samp_Fields>
+  sum?: Maybe<Byte_Object_Sum_Fields>
+  var_pop?: Maybe<Byte_Object_Var_Pop_Fields>
+  var_samp?: Maybe<Byte_Object_Var_Samp_Fields>
+  variance?: Maybe<Byte_Object_Variance_Fields>
+}
+
+/** aggregate fields of "byte_object" */
+export type Byte_Object_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Byte_Object_Select_Column>>
+  distinct?: InputMaybe<Scalars['Boolean']['input']>
+}
+
+/** aggregate avg on columns */
+export type Byte_Object_Avg_Fields = {
+  __typename?: 'byte_object_avg_fields'
+  id?: Maybe<Scalars['Float']['output']>
+}
+
+/** Boolean expression to filter rows from the table "byte_object". All fields are combined with a logical 'AND'. */
+export type Byte_Object_Bool_Exp = {
+  _and?: InputMaybe<Array<Byte_Object_Bool_Exp>>
+  _not?: InputMaybe<Byte_Object_Bool_Exp>
+  _or?: InputMaybe<Array<Byte_Object_Bool_Exp>>
+  data?: InputMaybe<Bytea_Comparison_Exp>
+  id?: InputMaybe<Numeric_Comparison_Exp>
+}
+
+/** aggregate max on columns */
+export type Byte_Object_Max_Fields = {
+  __typename?: 'byte_object_max_fields'
+  id?: Maybe<Scalars['numeric']['output']>
+}
+
+/** aggregate min on columns */
+export type Byte_Object_Min_Fields = {
+  __typename?: 'byte_object_min_fields'
+  id?: Maybe<Scalars['numeric']['output']>
+}
+
+/** Ordering options when selecting data from "byte_object". */
+export type Byte_Object_Order_By = {
+  data?: InputMaybe<Order_By>
+  id?: InputMaybe<Order_By>
+}
+
+/** select columns of table "byte_object" */
+export type Byte_Object_Select_Column =
+  /** column name */
+  | 'data'
+  /** column name */
+  | 'id'
+
+/** aggregate stddev on columns */
+export type Byte_Object_Stddev_Fields = {
+  __typename?: 'byte_object_stddev_fields'
+  id?: Maybe<Scalars['Float']['output']>
+}
+
+/** aggregate stddev_pop on columns */
+export type Byte_Object_Stddev_Pop_Fields = {
+  __typename?: 'byte_object_stddev_pop_fields'
+  id?: Maybe<Scalars['Float']['output']>
+}
+
+/** aggregate stddev_samp on columns */
+export type Byte_Object_Stddev_Samp_Fields = {
+  __typename?: 'byte_object_stddev_samp_fields'
+  id?: Maybe<Scalars['Float']['output']>
+}
+
+/** Streaming cursor of the table "byte_object" */
+export type Byte_Object_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Byte_Object_Stream_Cursor_Value_Input
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>
+}
+
+/** Initial value of the column from where the streaming should start */
+export type Byte_Object_Stream_Cursor_Value_Input = {
+  data?: InputMaybe<Scalars['bytea']['input']>
+  id?: InputMaybe<Scalars['numeric']['input']>
+}
+
+/** aggregate sum on columns */
+export type Byte_Object_Sum_Fields = {
+  __typename?: 'byte_object_sum_fields'
+  id?: Maybe<Scalars['numeric']['output']>
+}
+
+/** aggregate var_pop on columns */
+export type Byte_Object_Var_Pop_Fields = {
+  __typename?: 'byte_object_var_pop_fields'
+  id?: Maybe<Scalars['Float']['output']>
+}
+
+/** aggregate var_samp on columns */
+export type Byte_Object_Var_Samp_Fields = {
+  __typename?: 'byte_object_var_samp_fields'
+  id?: Maybe<Scalars['Float']['output']>
+}
+
+/** aggregate variance on columns */
+export type Byte_Object_Variance_Fields = {
+  __typename?: 'byte_object_variance_fields'
+  id?: Maybe<Scalars['Float']['output']>
+}
+
+/** Boolean expression to compare columns of type "bytea". All fields are combined with logical 'AND'. */
+export type Bytea_Comparison_Exp = {
+  _eq?: InputMaybe<Scalars['bytea']['input']>
+  _gt?: InputMaybe<Scalars['bytea']['input']>
+  _gte?: InputMaybe<Scalars['bytea']['input']>
+  _in?: InputMaybe<Array<Scalars['bytea']['input']>>
+  _is_null?: InputMaybe<Scalars['Boolean']['input']>
+  _lt?: InputMaybe<Scalars['bytea']['input']>
+  _lte?: InputMaybe<Scalars['bytea']['input']>
+  _neq?: InputMaybe<Scalars['bytea']['input']>
+  _nin?: InputMaybe<Array<Scalars['bytea']['input']>>
+}
+
+/** columns and relationships of "cached_images.cached_image" */
+export type Cached_Images_Cached_Image = {
+  __typename?: 'cached_images_cached_image'
   created_at: Scalars['timestamptz']['output']
   model?: Maybe<Scalars['String']['output']>
   original_url: Scalars['String']['output']
@@ -1682,16 +1886,16 @@ export type Cached_Images = {
   url: Scalars['String']['output']
 }
 
-/** columns and relationships of "cached_image" */
-export type Cached_ImagesScoreArgs = {
+/** columns and relationships of "cached_images.cached_image" */
+export type Cached_Images_Cached_ImageScoreArgs = {
   path?: InputMaybe<Scalars['String']['input']>
 }
 
-/** Boolean expression to filter rows from the table "cached_image". All fields are combined with a logical 'AND'. */
-export type Cached_Images_Bool_Exp = {
-  _and?: InputMaybe<Array<Cached_Images_Bool_Exp>>
-  _not?: InputMaybe<Cached_Images_Bool_Exp>
-  _or?: InputMaybe<Array<Cached_Images_Bool_Exp>>
+/** Boolean expression to filter rows from the table "cached_images.cached_image". All fields are combined with a logical 'AND'. */
+export type Cached_Images_Cached_Image_Bool_Exp = {
+  _and?: InputMaybe<Array<Cached_Images_Cached_Image_Bool_Exp>>
+  _not?: InputMaybe<Cached_Images_Cached_Image_Bool_Exp>
+  _or?: InputMaybe<Array<Cached_Images_Cached_Image_Bool_Exp>>
   created_at?: InputMaybe<Timestamptz_Comparison_Exp>
   model?: InputMaybe<String_Comparison_Exp>
   original_url?: InputMaybe<String_Comparison_Exp>
@@ -1700,8 +1904,8 @@ export type Cached_Images_Bool_Exp = {
   url?: InputMaybe<String_Comparison_Exp>
 }
 
-/** Ordering options when selecting data from "cached_image". */
-export type Cached_Images_Order_By = {
+/** Ordering options when selecting data from "cached_images.cached_image". */
+export type Cached_Images_Cached_Image_Order_By = {
   created_at?: InputMaybe<Order_By>
   model?: InputMaybe<Order_By>
   original_url?: InputMaybe<Order_By>
@@ -1710,8 +1914,8 @@ export type Cached_Images_Order_By = {
   url?: InputMaybe<Order_By>
 }
 
-/** select columns of table "cached_image" */
-export type Cached_Images_Select_Column =
+/** select columns of table "cached_images.cached_image" */
+export type Cached_Images_Cached_Image_Select_Column =
   /** column name */
   | 'created_at'
   /** column name */
@@ -1725,22 +1929,180 @@ export type Cached_Images_Select_Column =
   /** column name */
   | 'url'
 
-/** Streaming cursor of the table "cached_images" */
-export type Cached_Images_Stream_Cursor_Input = {
+/** Streaming cursor of the table "cached_images_cached_image" */
+export type Cached_Images_Cached_Image_Stream_Cursor_Input = {
   /** Stream column input with initial value */
-  initial_value: Cached_Images_Stream_Cursor_Value_Input
+  initial_value: Cached_Images_Cached_Image_Stream_Cursor_Value_Input
   /** cursor ordering */
   ordering?: InputMaybe<Cursor_Ordering>
 }
 
 /** Initial value of the column from where the streaming should start */
-export type Cached_Images_Stream_Cursor_Value_Input = {
+export type Cached_Images_Cached_Image_Stream_Cursor_Value_Input = {
   created_at?: InputMaybe<Scalars['timestamptz']['input']>
   model?: InputMaybe<Scalars['String']['input']>
   original_url?: InputMaybe<Scalars['String']['input']>
   safe?: InputMaybe<Scalars['Boolean']['input']>
   score?: InputMaybe<Scalars['jsonb']['input']>
   url?: InputMaybe<Scalars['String']['input']>
+}
+
+/** columns and relationships of "caip10" */
+export type Caip10 = {
+  __typename?: 'caip10'
+  account_address: Scalars['String']['output']
+  chain_id: Scalars['Int']['output']
+  id: Scalars['numeric']['output']
+  namespace: Scalars['String']['output']
+}
+
+/** aggregated selection of "caip10" */
+export type Caip10_Aggregate = {
+  __typename?: 'caip10_aggregate'
+  aggregate?: Maybe<Caip10_Aggregate_Fields>
+  nodes: Array<Caip10>
+}
+
+/** aggregate fields of "caip10" */
+export type Caip10_Aggregate_Fields = {
+  __typename?: 'caip10_aggregate_fields'
+  avg?: Maybe<Caip10_Avg_Fields>
+  count: Scalars['Int']['output']
+  max?: Maybe<Caip10_Max_Fields>
+  min?: Maybe<Caip10_Min_Fields>
+  stddev?: Maybe<Caip10_Stddev_Fields>
+  stddev_pop?: Maybe<Caip10_Stddev_Pop_Fields>
+  stddev_samp?: Maybe<Caip10_Stddev_Samp_Fields>
+  sum?: Maybe<Caip10_Sum_Fields>
+  var_pop?: Maybe<Caip10_Var_Pop_Fields>
+  var_samp?: Maybe<Caip10_Var_Samp_Fields>
+  variance?: Maybe<Caip10_Variance_Fields>
+}
+
+/** aggregate fields of "caip10" */
+export type Caip10_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Caip10_Select_Column>>
+  distinct?: InputMaybe<Scalars['Boolean']['input']>
+}
+
+/** aggregate avg on columns */
+export type Caip10_Avg_Fields = {
+  __typename?: 'caip10_avg_fields'
+  chain_id?: Maybe<Scalars['Float']['output']>
+  id?: Maybe<Scalars['Float']['output']>
+}
+
+/** Boolean expression to filter rows from the table "caip10". All fields are combined with a logical 'AND'. */
+export type Caip10_Bool_Exp = {
+  _and?: InputMaybe<Array<Caip10_Bool_Exp>>
+  _not?: InputMaybe<Caip10_Bool_Exp>
+  _or?: InputMaybe<Array<Caip10_Bool_Exp>>
+  account_address?: InputMaybe<String_Comparison_Exp>
+  chain_id?: InputMaybe<Int_Comparison_Exp>
+  id?: InputMaybe<Numeric_Comparison_Exp>
+  namespace?: InputMaybe<String_Comparison_Exp>
+}
+
+/** aggregate max on columns */
+export type Caip10_Max_Fields = {
+  __typename?: 'caip10_max_fields'
+  account_address?: Maybe<Scalars['String']['output']>
+  chain_id?: Maybe<Scalars['Int']['output']>
+  id?: Maybe<Scalars['numeric']['output']>
+  namespace?: Maybe<Scalars['String']['output']>
+}
+
+/** aggregate min on columns */
+export type Caip10_Min_Fields = {
+  __typename?: 'caip10_min_fields'
+  account_address?: Maybe<Scalars['String']['output']>
+  chain_id?: Maybe<Scalars['Int']['output']>
+  id?: Maybe<Scalars['numeric']['output']>
+  namespace?: Maybe<Scalars['String']['output']>
+}
+
+/** Ordering options when selecting data from "caip10". */
+export type Caip10_Order_By = {
+  account_address?: InputMaybe<Order_By>
+  chain_id?: InputMaybe<Order_By>
+  id?: InputMaybe<Order_By>
+  namespace?: InputMaybe<Order_By>
+}
+
+/** select columns of table "caip10" */
+export type Caip10_Select_Column =
+  /** column name */
+  | 'account_address'
+  /** column name */
+  | 'chain_id'
+  /** column name */
+  | 'id'
+  /** column name */
+  | 'namespace'
+
+/** aggregate stddev on columns */
+export type Caip10_Stddev_Fields = {
+  __typename?: 'caip10_stddev_fields'
+  chain_id?: Maybe<Scalars['Float']['output']>
+  id?: Maybe<Scalars['Float']['output']>
+}
+
+/** aggregate stddev_pop on columns */
+export type Caip10_Stddev_Pop_Fields = {
+  __typename?: 'caip10_stddev_pop_fields'
+  chain_id?: Maybe<Scalars['Float']['output']>
+  id?: Maybe<Scalars['Float']['output']>
+}
+
+/** aggregate stddev_samp on columns */
+export type Caip10_Stddev_Samp_Fields = {
+  __typename?: 'caip10_stddev_samp_fields'
+  chain_id?: Maybe<Scalars['Float']['output']>
+  id?: Maybe<Scalars['Float']['output']>
+}
+
+/** Streaming cursor of the table "caip10" */
+export type Caip10_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Caip10_Stream_Cursor_Value_Input
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>
+}
+
+/** Initial value of the column from where the streaming should start */
+export type Caip10_Stream_Cursor_Value_Input = {
+  account_address?: InputMaybe<Scalars['String']['input']>
+  chain_id?: InputMaybe<Scalars['Int']['input']>
+  id?: InputMaybe<Scalars['numeric']['input']>
+  namespace?: InputMaybe<Scalars['String']['input']>
+}
+
+/** aggregate sum on columns */
+export type Caip10_Sum_Fields = {
+  __typename?: 'caip10_sum_fields'
+  chain_id?: Maybe<Scalars['Int']['output']>
+  id?: Maybe<Scalars['numeric']['output']>
+}
+
+/** aggregate var_pop on columns */
+export type Caip10_Var_Pop_Fields = {
+  __typename?: 'caip10_var_pop_fields'
+  chain_id?: Maybe<Scalars['Float']['output']>
+  id?: Maybe<Scalars['Float']['output']>
+}
+
+/** aggregate var_samp on columns */
+export type Caip10_Var_Samp_Fields = {
+  __typename?: 'caip10_var_samp_fields'
+  chain_id?: Maybe<Scalars['Float']['output']>
+  id?: Maybe<Scalars['Float']['output']>
+}
+
+/** aggregate variance on columns */
+export type Caip10_Variance_Fields = {
+  __typename?: 'caip10_variance_fields'
+  chain_id?: Maybe<Scalars['Float']['output']>
+  id?: Maybe<Scalars['Float']['output']>
 }
 
 /** columns and relationships of "chainlink_price" */
@@ -3448,6 +3810,143 @@ export type Following_Args = {
   address?: InputMaybe<Scalars['String']['input']>
 }
 
+/** columns and relationships of "json_object" */
+export type Json_Objects = {
+  __typename?: 'json_objects'
+  data: Scalars['jsonb']['output']
+  id: Scalars['numeric']['output']
+}
+
+/** columns and relationships of "json_object" */
+export type Json_ObjectsDataArgs = {
+  path?: InputMaybe<Scalars['String']['input']>
+}
+
+/** aggregated selection of "json_object" */
+export type Json_Objects_Aggregate = {
+  __typename?: 'json_objects_aggregate'
+  aggregate?: Maybe<Json_Objects_Aggregate_Fields>
+  nodes: Array<Json_Objects>
+}
+
+/** aggregate fields of "json_object" */
+export type Json_Objects_Aggregate_Fields = {
+  __typename?: 'json_objects_aggregate_fields'
+  avg?: Maybe<Json_Objects_Avg_Fields>
+  count: Scalars['Int']['output']
+  max?: Maybe<Json_Objects_Max_Fields>
+  min?: Maybe<Json_Objects_Min_Fields>
+  stddev?: Maybe<Json_Objects_Stddev_Fields>
+  stddev_pop?: Maybe<Json_Objects_Stddev_Pop_Fields>
+  stddev_samp?: Maybe<Json_Objects_Stddev_Samp_Fields>
+  sum?: Maybe<Json_Objects_Sum_Fields>
+  var_pop?: Maybe<Json_Objects_Var_Pop_Fields>
+  var_samp?: Maybe<Json_Objects_Var_Samp_Fields>
+  variance?: Maybe<Json_Objects_Variance_Fields>
+}
+
+/** aggregate fields of "json_object" */
+export type Json_Objects_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Json_Objects_Select_Column>>
+  distinct?: InputMaybe<Scalars['Boolean']['input']>
+}
+
+/** aggregate avg on columns */
+export type Json_Objects_Avg_Fields = {
+  __typename?: 'json_objects_avg_fields'
+  id?: Maybe<Scalars['Float']['output']>
+}
+
+/** Boolean expression to filter rows from the table "json_object". All fields are combined with a logical 'AND'. */
+export type Json_Objects_Bool_Exp = {
+  _and?: InputMaybe<Array<Json_Objects_Bool_Exp>>
+  _not?: InputMaybe<Json_Objects_Bool_Exp>
+  _or?: InputMaybe<Array<Json_Objects_Bool_Exp>>
+  data?: InputMaybe<Jsonb_Comparison_Exp>
+  id?: InputMaybe<Numeric_Comparison_Exp>
+}
+
+/** aggregate max on columns */
+export type Json_Objects_Max_Fields = {
+  __typename?: 'json_objects_max_fields'
+  id?: Maybe<Scalars['numeric']['output']>
+}
+
+/** aggregate min on columns */
+export type Json_Objects_Min_Fields = {
+  __typename?: 'json_objects_min_fields'
+  id?: Maybe<Scalars['numeric']['output']>
+}
+
+/** Ordering options when selecting data from "json_object". */
+export type Json_Objects_Order_By = {
+  data?: InputMaybe<Order_By>
+  id?: InputMaybe<Order_By>
+}
+
+/** select columns of table "json_object" */
+export type Json_Objects_Select_Column =
+  /** column name */
+  | 'data'
+  /** column name */
+  | 'id'
+
+/** aggregate stddev on columns */
+export type Json_Objects_Stddev_Fields = {
+  __typename?: 'json_objects_stddev_fields'
+  id?: Maybe<Scalars['Float']['output']>
+}
+
+/** aggregate stddev_pop on columns */
+export type Json_Objects_Stddev_Pop_Fields = {
+  __typename?: 'json_objects_stddev_pop_fields'
+  id?: Maybe<Scalars['Float']['output']>
+}
+
+/** aggregate stddev_samp on columns */
+export type Json_Objects_Stddev_Samp_Fields = {
+  __typename?: 'json_objects_stddev_samp_fields'
+  id?: Maybe<Scalars['Float']['output']>
+}
+
+/** Streaming cursor of the table "json_objects" */
+export type Json_Objects_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Json_Objects_Stream_Cursor_Value_Input
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>
+}
+
+/** Initial value of the column from where the streaming should start */
+export type Json_Objects_Stream_Cursor_Value_Input = {
+  data?: InputMaybe<Scalars['jsonb']['input']>
+  id?: InputMaybe<Scalars['numeric']['input']>
+}
+
+/** aggregate sum on columns */
+export type Json_Objects_Sum_Fields = {
+  __typename?: 'json_objects_sum_fields'
+  id?: Maybe<Scalars['numeric']['output']>
+}
+
+/** aggregate var_pop on columns */
+export type Json_Objects_Var_Pop_Fields = {
+  __typename?: 'json_objects_var_pop_fields'
+  id?: Maybe<Scalars['Float']['output']>
+}
+
+/** aggregate var_samp on columns */
+export type Json_Objects_Var_Samp_Fields = {
+  __typename?: 'json_objects_var_samp_fields'
+  id?: Maybe<Scalars['Float']['output']>
+}
+
+/** aggregate variance on columns */
+export type Json_Objects_Variance_Fields = {
+  __typename?: 'json_objects_variance_fields'
+  id?: Maybe<Scalars['Float']['output']>
+}
+
 export type Jsonb_Cast_Exp = {
   String?: InputMaybe<String_Comparison_Exp>
 }
@@ -3535,8 +4034,6 @@ export type Organizations = {
   __typename?: 'organizations'
   /** An object relationship */
   atom?: Maybe<Atoms>
-  /** An object relationship */
-  cached_image?: Maybe<Cached_Images>
   description?: Maybe<Scalars['String']['output']>
   email?: Maybe<Scalars['String']['output']>
   id: Scalars['numeric']['output']
@@ -3586,7 +4083,6 @@ export type Organizations_Bool_Exp = {
   _not?: InputMaybe<Organizations_Bool_Exp>
   _or?: InputMaybe<Array<Organizations_Bool_Exp>>
   atom?: InputMaybe<Atoms_Bool_Exp>
-  cached_image?: InputMaybe<Cached_Images_Bool_Exp>
   description?: InputMaybe<String_Comparison_Exp>
   email?: InputMaybe<String_Comparison_Exp>
   id?: InputMaybe<Numeric_Comparison_Exp>
@@ -3620,7 +4116,6 @@ export type Organizations_Min_Fields = {
 /** Ordering options when selecting data from "organization". */
 export type Organizations_Order_By = {
   atom?: InputMaybe<Atoms_Order_By>
-  cached_image?: InputMaybe<Cached_Images_Order_By>
   description?: InputMaybe<Order_By>
   email?: InputMaybe<Order_By>
   id?: InputMaybe<Order_By>
@@ -3709,8 +4204,7 @@ export type Persons = {
   __typename?: 'persons'
   /** An object relationship */
   atom?: Maybe<Atoms>
-  /** An object relationship */
-  cached_image?: Maybe<Cached_Images>
+  cached_image?: Maybe<Cached_Images_Cached_Image>
   description?: Maybe<Scalars['String']['output']>
   email?: Maybe<Scalars['String']['output']>
   id: Scalars['numeric']['output']
@@ -3761,7 +4255,6 @@ export type Persons_Bool_Exp = {
   _not?: InputMaybe<Persons_Bool_Exp>
   _or?: InputMaybe<Array<Persons_Bool_Exp>>
   atom?: InputMaybe<Atoms_Bool_Exp>
-  cached_image?: InputMaybe<Cached_Images_Bool_Exp>
   description?: InputMaybe<String_Comparison_Exp>
   email?: InputMaybe<String_Comparison_Exp>
   id?: InputMaybe<Numeric_Comparison_Exp>
@@ -3798,7 +4291,6 @@ export type Persons_Min_Fields = {
 /** Ordering options when selecting data from "person". */
 export type Persons_Order_By = {
   atom?: InputMaybe<Atoms_Order_By>
-  cached_image?: InputMaybe<Cached_Images_Order_By>
   description?: InputMaybe<Order_By>
   email?: InputMaybe<Order_By>
   id?: InputMaybe<Order_By>
@@ -4362,10 +4854,22 @@ export type Query_Root = {
   books: Array<Books>
   /** fetch aggregated fields from the table: "book" */
   books_aggregate: Books_Aggregate
-  /** fetch data from the table: "cached_image" using primary key columns */
-  cached_image?: Maybe<Cached_Images>
-  /** fetch data from the table: "cached_image" */
-  cached_images: Array<Cached_Images>
+  /** fetch data from the table: "byte_object" */
+  byte_object: Array<Byte_Object>
+  /** fetch aggregated fields from the table: "byte_object" */
+  byte_object_aggregate: Byte_Object_Aggregate
+  /** fetch data from the table: "byte_object" using primary key columns */
+  byte_object_by_pk?: Maybe<Byte_Object>
+  /** fetch data from the table: "cached_images.cached_image" */
+  cached_images_cached_image: Array<Cached_Images_Cached_Image>
+  /** fetch data from the table: "cached_images.cached_image" using primary key columns */
+  cached_images_cached_image_by_pk?: Maybe<Cached_Images_Cached_Image>
+  /** fetch data from the table: "caip10" using primary key columns */
+  caip10?: Maybe<Caip10>
+  /** fetch aggregated fields from the table: "caip10" */
+  caip10_aggregate: Caip10_Aggregate
+  /** fetch data from the table: "caip10" */
+  caip10s: Array<Caip10>
   /** fetch data from the table: "chainlink_price" using primary key columns */
   chainlink_price?: Maybe<Chainlink_Prices>
   /** fetch data from the table: "chainlink_price" */
@@ -4402,6 +4906,12 @@ export type Query_Root = {
   following: Array<Accounts>
   /** execute function "following" and query aggregates on result of table type "account" */
   following_aggregate: Accounts_Aggregate
+  /** fetch data from the table: "json_object" using primary key columns */
+  json_object?: Maybe<Json_Objects>
+  /** fetch data from the table: "json_object" */
+  json_objects: Array<Json_Objects>
+  /** fetch aggregated fields from the table: "json_object" */
+  json_objects_aggregate: Json_Objects_Aggregate
   /** fetch data from the table: "organization" using primary key columns */
   organization?: Maybe<Organizations>
   /** fetch data from the table: "organization" */
@@ -4444,10 +4954,22 @@ export type Query_Root = {
   signals_from_following_aggregate: Signals_Aggregate
   /** fetch data from the table: "stats" using primary key columns */
   stat?: Maybe<Stats>
+  /** fetch data from the table: "stats_hour" using primary key columns */
+  stat_hour?: Maybe<Stat_Hours>
+  /** fetch data from the table: "stats_hour" */
+  stat_hours: Array<Stat_Hours>
+  /** fetch aggregated fields from the table: "stats_hour" */
+  stat_hours_aggregate: Stat_Hours_Aggregate
   /** fetch data from the table: "stats" */
   stats: Array<Stats>
   /** fetch aggregated fields from the table: "stats" */
   stats_aggregate: Stats_Aggregate
+  /** fetch data from the table: "text_object" using primary key columns */
+  text_object?: Maybe<Text_Objects>
+  /** fetch data from the table: "text_object" */
+  text_objects: Array<Text_Objects>
+  /** fetch aggregated fields from the table: "text_object" */
+  text_objects_aggregate: Text_Objects_Aggregate
   /** fetch data from the table: "thing" using primary key columns */
   thing?: Maybe<Things>
   /** fetch data from the table: "thing" */
@@ -4566,16 +5088,56 @@ export type Query_RootBooks_AggregateArgs = {
   where?: InputMaybe<Books_Bool_Exp>
 }
 
-export type Query_RootCached_ImageArgs = {
+export type Query_RootByte_ObjectArgs = {
+  distinct_on?: InputMaybe<Array<Byte_Object_Select_Column>>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  order_by?: InputMaybe<Array<Byte_Object_Order_By>>
+  where?: InputMaybe<Byte_Object_Bool_Exp>
+}
+
+export type Query_RootByte_Object_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Byte_Object_Select_Column>>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  order_by?: InputMaybe<Array<Byte_Object_Order_By>>
+  where?: InputMaybe<Byte_Object_Bool_Exp>
+}
+
+export type Query_RootByte_Object_By_PkArgs = {
+  id: Scalars['numeric']['input']
+}
+
+export type Query_RootCached_Images_Cached_ImageArgs = {
+  distinct_on?: InputMaybe<Array<Cached_Images_Cached_Image_Select_Column>>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  order_by?: InputMaybe<Array<Cached_Images_Cached_Image_Order_By>>
+  where?: InputMaybe<Cached_Images_Cached_Image_Bool_Exp>
+}
+
+export type Query_RootCached_Images_Cached_Image_By_PkArgs = {
   url: Scalars['String']['input']
 }
 
-export type Query_RootCached_ImagesArgs = {
-  distinct_on?: InputMaybe<Array<Cached_Images_Select_Column>>
+export type Query_RootCaip10Args = {
+  id: Scalars['numeric']['input']
+}
+
+export type Query_RootCaip10_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Caip10_Select_Column>>
   limit?: InputMaybe<Scalars['Int']['input']>
   offset?: InputMaybe<Scalars['Int']['input']>
-  order_by?: InputMaybe<Array<Cached_Images_Order_By>>
-  where?: InputMaybe<Cached_Images_Bool_Exp>
+  order_by?: InputMaybe<Array<Caip10_Order_By>>
+  where?: InputMaybe<Caip10_Bool_Exp>
+}
+
+export type Query_RootCaip10sArgs = {
+  distinct_on?: InputMaybe<Array<Caip10_Select_Column>>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  order_by?: InputMaybe<Array<Caip10_Order_By>>
+  where?: InputMaybe<Caip10_Bool_Exp>
 }
 
 export type Query_RootChainlink_PriceArgs = {
@@ -4704,6 +5266,26 @@ export type Query_RootFollowing_AggregateArgs = {
   offset?: InputMaybe<Scalars['Int']['input']>
   order_by?: InputMaybe<Array<Accounts_Order_By>>
   where?: InputMaybe<Accounts_Bool_Exp>
+}
+
+export type Query_RootJson_ObjectArgs = {
+  id: Scalars['numeric']['input']
+}
+
+export type Query_RootJson_ObjectsArgs = {
+  distinct_on?: InputMaybe<Array<Json_Objects_Select_Column>>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  order_by?: InputMaybe<Array<Json_Objects_Order_By>>
+  where?: InputMaybe<Json_Objects_Bool_Exp>
+}
+
+export type Query_RootJson_Objects_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Json_Objects_Select_Column>>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  order_by?: InputMaybe<Array<Json_Objects_Order_By>>
+  where?: InputMaybe<Json_Objects_Bool_Exp>
 }
 
 export type Query_RootOrganizationArgs = {
@@ -4848,6 +5430,26 @@ export type Query_RootStatArgs = {
   id: Scalars['Int']['input']
 }
 
+export type Query_RootStat_HourArgs = {
+  id: Scalars['Int']['input']
+}
+
+export type Query_RootStat_HoursArgs = {
+  distinct_on?: InputMaybe<Array<Stat_Hours_Select_Column>>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  order_by?: InputMaybe<Array<Stat_Hours_Order_By>>
+  where?: InputMaybe<Stat_Hours_Bool_Exp>
+}
+
+export type Query_RootStat_Hours_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Stat_Hours_Select_Column>>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  order_by?: InputMaybe<Array<Stat_Hours_Order_By>>
+  where?: InputMaybe<Stat_Hours_Bool_Exp>
+}
+
 export type Query_RootStatsArgs = {
   distinct_on?: InputMaybe<Array<Stats_Select_Column>>
   limit?: InputMaybe<Scalars['Int']['input']>
@@ -4862,6 +5464,26 @@ export type Query_RootStats_AggregateArgs = {
   offset?: InputMaybe<Scalars['Int']['input']>
   order_by?: InputMaybe<Array<Stats_Order_By>>
   where?: InputMaybe<Stats_Bool_Exp>
+}
+
+export type Query_RootText_ObjectArgs = {
+  id: Scalars['numeric']['input']
+}
+
+export type Query_RootText_ObjectsArgs = {
+  distinct_on?: InputMaybe<Array<Text_Objects_Select_Column>>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  order_by?: InputMaybe<Array<Text_Objects_Order_By>>
+  where?: InputMaybe<Text_Objects_Bool_Exp>
+}
+
+export type Query_RootText_Objects_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Text_Objects_Select_Column>>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  order_by?: InputMaybe<Array<Text_Objects_Order_By>>
+  where?: InputMaybe<Text_Objects_Bool_Exp>
 }
 
 export type Query_RootThingArgs = {
@@ -5764,11 +6386,260 @@ export type Signals_Variance_Order_By = {
   triple_id?: InputMaybe<Order_By>
 }
 
+/** columns and relationships of "stats_hour" */
+export type Stat_Hours = {
+  __typename?: 'stat_hours'
+  contract_balance?: Maybe<Scalars['numeric']['output']>
+  created_at: Scalars['timestamptz']['output']
+  id: Scalars['Int']['output']
+  total_accounts?: Maybe<Scalars['Int']['output']>
+  total_atoms?: Maybe<Scalars['Int']['output']>
+  total_fees?: Maybe<Scalars['numeric']['output']>
+  total_positions?: Maybe<Scalars['Int']['output']>
+  total_signals?: Maybe<Scalars['Int']['output']>
+  total_triples?: Maybe<Scalars['Int']['output']>
+}
+
+/** aggregated selection of "stats_hour" */
+export type Stat_Hours_Aggregate = {
+  __typename?: 'stat_hours_aggregate'
+  aggregate?: Maybe<Stat_Hours_Aggregate_Fields>
+  nodes: Array<Stat_Hours>
+}
+
+/** aggregate fields of "stats_hour" */
+export type Stat_Hours_Aggregate_Fields = {
+  __typename?: 'stat_hours_aggregate_fields'
+  avg?: Maybe<Stat_Hours_Avg_Fields>
+  count: Scalars['Int']['output']
+  max?: Maybe<Stat_Hours_Max_Fields>
+  min?: Maybe<Stat_Hours_Min_Fields>
+  stddev?: Maybe<Stat_Hours_Stddev_Fields>
+  stddev_pop?: Maybe<Stat_Hours_Stddev_Pop_Fields>
+  stddev_samp?: Maybe<Stat_Hours_Stddev_Samp_Fields>
+  sum?: Maybe<Stat_Hours_Sum_Fields>
+  var_pop?: Maybe<Stat_Hours_Var_Pop_Fields>
+  var_samp?: Maybe<Stat_Hours_Var_Samp_Fields>
+  variance?: Maybe<Stat_Hours_Variance_Fields>
+}
+
+/** aggregate fields of "stats_hour" */
+export type Stat_Hours_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Stat_Hours_Select_Column>>
+  distinct?: InputMaybe<Scalars['Boolean']['input']>
+}
+
+/** aggregate avg on columns */
+export type Stat_Hours_Avg_Fields = {
+  __typename?: 'stat_hours_avg_fields'
+  contract_balance?: Maybe<Scalars['Float']['output']>
+  id?: Maybe<Scalars['Float']['output']>
+  total_accounts?: Maybe<Scalars['Float']['output']>
+  total_atoms?: Maybe<Scalars['Float']['output']>
+  total_fees?: Maybe<Scalars['Float']['output']>
+  total_positions?: Maybe<Scalars['Float']['output']>
+  total_signals?: Maybe<Scalars['Float']['output']>
+  total_triples?: Maybe<Scalars['Float']['output']>
+}
+
+/** Boolean expression to filter rows from the table "stats_hour". All fields are combined with a logical 'AND'. */
+export type Stat_Hours_Bool_Exp = {
+  _and?: InputMaybe<Array<Stat_Hours_Bool_Exp>>
+  _not?: InputMaybe<Stat_Hours_Bool_Exp>
+  _or?: InputMaybe<Array<Stat_Hours_Bool_Exp>>
+  contract_balance?: InputMaybe<Numeric_Comparison_Exp>
+  created_at?: InputMaybe<Timestamptz_Comparison_Exp>
+  id?: InputMaybe<Int_Comparison_Exp>
+  total_accounts?: InputMaybe<Int_Comparison_Exp>
+  total_atoms?: InputMaybe<Int_Comparison_Exp>
+  total_fees?: InputMaybe<Numeric_Comparison_Exp>
+  total_positions?: InputMaybe<Int_Comparison_Exp>
+  total_signals?: InputMaybe<Int_Comparison_Exp>
+  total_triples?: InputMaybe<Int_Comparison_Exp>
+}
+
+/** aggregate max on columns */
+export type Stat_Hours_Max_Fields = {
+  __typename?: 'stat_hours_max_fields'
+  contract_balance?: Maybe<Scalars['numeric']['output']>
+  created_at?: Maybe<Scalars['timestamptz']['output']>
+  id?: Maybe<Scalars['Int']['output']>
+  total_accounts?: Maybe<Scalars['Int']['output']>
+  total_atoms?: Maybe<Scalars['Int']['output']>
+  total_fees?: Maybe<Scalars['numeric']['output']>
+  total_positions?: Maybe<Scalars['Int']['output']>
+  total_signals?: Maybe<Scalars['Int']['output']>
+  total_triples?: Maybe<Scalars['Int']['output']>
+}
+
+/** aggregate min on columns */
+export type Stat_Hours_Min_Fields = {
+  __typename?: 'stat_hours_min_fields'
+  contract_balance?: Maybe<Scalars['numeric']['output']>
+  created_at?: Maybe<Scalars['timestamptz']['output']>
+  id?: Maybe<Scalars['Int']['output']>
+  total_accounts?: Maybe<Scalars['Int']['output']>
+  total_atoms?: Maybe<Scalars['Int']['output']>
+  total_fees?: Maybe<Scalars['numeric']['output']>
+  total_positions?: Maybe<Scalars['Int']['output']>
+  total_signals?: Maybe<Scalars['Int']['output']>
+  total_triples?: Maybe<Scalars['Int']['output']>
+}
+
+/** Ordering options when selecting data from "stats_hour". */
+export type Stat_Hours_Order_By = {
+  contract_balance?: InputMaybe<Order_By>
+  created_at?: InputMaybe<Order_By>
+  id?: InputMaybe<Order_By>
+  total_accounts?: InputMaybe<Order_By>
+  total_atoms?: InputMaybe<Order_By>
+  total_fees?: InputMaybe<Order_By>
+  total_positions?: InputMaybe<Order_By>
+  total_signals?: InputMaybe<Order_By>
+  total_triples?: InputMaybe<Order_By>
+}
+
+/** select columns of table "stats_hour" */
+export type Stat_Hours_Select_Column =
+  /** column name */
+  | 'contract_balance'
+  /** column name */
+  | 'created_at'
+  /** column name */
+  | 'id'
+  /** column name */
+  | 'total_accounts'
+  /** column name */
+  | 'total_atoms'
+  /** column name */
+  | 'total_fees'
+  /** column name */
+  | 'total_positions'
+  /** column name */
+  | 'total_signals'
+  /** column name */
+  | 'total_triples'
+
+/** aggregate stddev on columns */
+export type Stat_Hours_Stddev_Fields = {
+  __typename?: 'stat_hours_stddev_fields'
+  contract_balance?: Maybe<Scalars['Float']['output']>
+  id?: Maybe<Scalars['Float']['output']>
+  total_accounts?: Maybe<Scalars['Float']['output']>
+  total_atoms?: Maybe<Scalars['Float']['output']>
+  total_fees?: Maybe<Scalars['Float']['output']>
+  total_positions?: Maybe<Scalars['Float']['output']>
+  total_signals?: Maybe<Scalars['Float']['output']>
+  total_triples?: Maybe<Scalars['Float']['output']>
+}
+
+/** aggregate stddev_pop on columns */
+export type Stat_Hours_Stddev_Pop_Fields = {
+  __typename?: 'stat_hours_stddev_pop_fields'
+  contract_balance?: Maybe<Scalars['Float']['output']>
+  id?: Maybe<Scalars['Float']['output']>
+  total_accounts?: Maybe<Scalars['Float']['output']>
+  total_atoms?: Maybe<Scalars['Float']['output']>
+  total_fees?: Maybe<Scalars['Float']['output']>
+  total_positions?: Maybe<Scalars['Float']['output']>
+  total_signals?: Maybe<Scalars['Float']['output']>
+  total_triples?: Maybe<Scalars['Float']['output']>
+}
+
+/** aggregate stddev_samp on columns */
+export type Stat_Hours_Stddev_Samp_Fields = {
+  __typename?: 'stat_hours_stddev_samp_fields'
+  contract_balance?: Maybe<Scalars['Float']['output']>
+  id?: Maybe<Scalars['Float']['output']>
+  total_accounts?: Maybe<Scalars['Float']['output']>
+  total_atoms?: Maybe<Scalars['Float']['output']>
+  total_fees?: Maybe<Scalars['Float']['output']>
+  total_positions?: Maybe<Scalars['Float']['output']>
+  total_signals?: Maybe<Scalars['Float']['output']>
+  total_triples?: Maybe<Scalars['Float']['output']>
+}
+
+/** Streaming cursor of the table "stat_hours" */
+export type Stat_Hours_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Stat_Hours_Stream_Cursor_Value_Input
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>
+}
+
+/** Initial value of the column from where the streaming should start */
+export type Stat_Hours_Stream_Cursor_Value_Input = {
+  contract_balance?: InputMaybe<Scalars['numeric']['input']>
+  created_at?: InputMaybe<Scalars['timestamptz']['input']>
+  id?: InputMaybe<Scalars['Int']['input']>
+  total_accounts?: InputMaybe<Scalars['Int']['input']>
+  total_atoms?: InputMaybe<Scalars['Int']['input']>
+  total_fees?: InputMaybe<Scalars['numeric']['input']>
+  total_positions?: InputMaybe<Scalars['Int']['input']>
+  total_signals?: InputMaybe<Scalars['Int']['input']>
+  total_triples?: InputMaybe<Scalars['Int']['input']>
+}
+
+/** aggregate sum on columns */
+export type Stat_Hours_Sum_Fields = {
+  __typename?: 'stat_hours_sum_fields'
+  contract_balance?: Maybe<Scalars['numeric']['output']>
+  id?: Maybe<Scalars['Int']['output']>
+  total_accounts?: Maybe<Scalars['Int']['output']>
+  total_atoms?: Maybe<Scalars['Int']['output']>
+  total_fees?: Maybe<Scalars['numeric']['output']>
+  total_positions?: Maybe<Scalars['Int']['output']>
+  total_signals?: Maybe<Scalars['Int']['output']>
+  total_triples?: Maybe<Scalars['Int']['output']>
+}
+
+/** aggregate var_pop on columns */
+export type Stat_Hours_Var_Pop_Fields = {
+  __typename?: 'stat_hours_var_pop_fields'
+  contract_balance?: Maybe<Scalars['Float']['output']>
+  id?: Maybe<Scalars['Float']['output']>
+  total_accounts?: Maybe<Scalars['Float']['output']>
+  total_atoms?: Maybe<Scalars['Float']['output']>
+  total_fees?: Maybe<Scalars['Float']['output']>
+  total_positions?: Maybe<Scalars['Float']['output']>
+  total_signals?: Maybe<Scalars['Float']['output']>
+  total_triples?: Maybe<Scalars['Float']['output']>
+}
+
+/** aggregate var_samp on columns */
+export type Stat_Hours_Var_Samp_Fields = {
+  __typename?: 'stat_hours_var_samp_fields'
+  contract_balance?: Maybe<Scalars['Float']['output']>
+  id?: Maybe<Scalars['Float']['output']>
+  total_accounts?: Maybe<Scalars['Float']['output']>
+  total_atoms?: Maybe<Scalars['Float']['output']>
+  total_fees?: Maybe<Scalars['Float']['output']>
+  total_positions?: Maybe<Scalars['Float']['output']>
+  total_signals?: Maybe<Scalars['Float']['output']>
+  total_triples?: Maybe<Scalars['Float']['output']>
+}
+
+/** aggregate variance on columns */
+export type Stat_Hours_Variance_Fields = {
+  __typename?: 'stat_hours_variance_fields'
+  contract_balance?: Maybe<Scalars['Float']['output']>
+  id?: Maybe<Scalars['Float']['output']>
+  total_accounts?: Maybe<Scalars['Float']['output']>
+  total_atoms?: Maybe<Scalars['Float']['output']>
+  total_fees?: Maybe<Scalars['Float']['output']>
+  total_positions?: Maybe<Scalars['Float']['output']>
+  total_signals?: Maybe<Scalars['Float']['output']>
+  total_triples?: Maybe<Scalars['Float']['output']>
+}
+
 /** columns and relationships of "stats" */
 export type Stats = {
   __typename?: 'stats'
   contract_balance?: Maybe<Scalars['numeric']['output']>
   id: Scalars['Int']['output']
+  last_processed_block_number?: Maybe<Scalars['numeric']['output']>
+  last_processed_block_timestamp?: Maybe<Scalars['bigint']['output']>
+  last_updated: Scalars['timestamptz']['output']
   total_accounts?: Maybe<Scalars['Int']['output']>
   total_atoms?: Maybe<Scalars['Int']['output']>
   total_fees?: Maybe<Scalars['numeric']['output']>
@@ -5811,6 +6682,8 @@ export type Stats_Avg_Fields = {
   __typename?: 'stats_avg_fields'
   contract_balance?: Maybe<Scalars['Float']['output']>
   id?: Maybe<Scalars['Float']['output']>
+  last_processed_block_number?: Maybe<Scalars['Float']['output']>
+  last_processed_block_timestamp?: Maybe<Scalars['Float']['output']>
   total_accounts?: Maybe<Scalars['Float']['output']>
   total_atoms?: Maybe<Scalars['Float']['output']>
   total_fees?: Maybe<Scalars['Float']['output']>
@@ -5826,6 +6699,9 @@ export type Stats_Bool_Exp = {
   _or?: InputMaybe<Array<Stats_Bool_Exp>>
   contract_balance?: InputMaybe<Numeric_Comparison_Exp>
   id?: InputMaybe<Int_Comparison_Exp>
+  last_processed_block_number?: InputMaybe<Numeric_Comparison_Exp>
+  last_processed_block_timestamp?: InputMaybe<Bigint_Comparison_Exp>
+  last_updated?: InputMaybe<Timestamptz_Comparison_Exp>
   total_accounts?: InputMaybe<Int_Comparison_Exp>
   total_atoms?: InputMaybe<Int_Comparison_Exp>
   total_fees?: InputMaybe<Numeric_Comparison_Exp>
@@ -5839,6 +6715,9 @@ export type Stats_Max_Fields = {
   __typename?: 'stats_max_fields'
   contract_balance?: Maybe<Scalars['numeric']['output']>
   id?: Maybe<Scalars['Int']['output']>
+  last_processed_block_number?: Maybe<Scalars['numeric']['output']>
+  last_processed_block_timestamp?: Maybe<Scalars['bigint']['output']>
+  last_updated?: Maybe<Scalars['timestamptz']['output']>
   total_accounts?: Maybe<Scalars['Int']['output']>
   total_atoms?: Maybe<Scalars['Int']['output']>
   total_fees?: Maybe<Scalars['numeric']['output']>
@@ -5852,6 +6731,9 @@ export type Stats_Min_Fields = {
   __typename?: 'stats_min_fields'
   contract_balance?: Maybe<Scalars['numeric']['output']>
   id?: Maybe<Scalars['Int']['output']>
+  last_processed_block_number?: Maybe<Scalars['numeric']['output']>
+  last_processed_block_timestamp?: Maybe<Scalars['bigint']['output']>
+  last_updated?: Maybe<Scalars['timestamptz']['output']>
   total_accounts?: Maybe<Scalars['Int']['output']>
   total_atoms?: Maybe<Scalars['Int']['output']>
   total_fees?: Maybe<Scalars['numeric']['output']>
@@ -5864,6 +6746,9 @@ export type Stats_Min_Fields = {
 export type Stats_Order_By = {
   contract_balance?: InputMaybe<Order_By>
   id?: InputMaybe<Order_By>
+  last_processed_block_number?: InputMaybe<Order_By>
+  last_processed_block_timestamp?: InputMaybe<Order_By>
+  last_updated?: InputMaybe<Order_By>
   total_accounts?: InputMaybe<Order_By>
   total_atoms?: InputMaybe<Order_By>
   total_fees?: InputMaybe<Order_By>
@@ -5878,6 +6763,12 @@ export type Stats_Select_Column =
   | 'contract_balance'
   /** column name */
   | 'id'
+  /** column name */
+  | 'last_processed_block_number'
+  /** column name */
+  | 'last_processed_block_timestamp'
+  /** column name */
+  | 'last_updated'
   /** column name */
   | 'total_accounts'
   /** column name */
@@ -5896,6 +6787,8 @@ export type Stats_Stddev_Fields = {
   __typename?: 'stats_stddev_fields'
   contract_balance?: Maybe<Scalars['Float']['output']>
   id?: Maybe<Scalars['Float']['output']>
+  last_processed_block_number?: Maybe<Scalars['Float']['output']>
+  last_processed_block_timestamp?: Maybe<Scalars['Float']['output']>
   total_accounts?: Maybe<Scalars['Float']['output']>
   total_atoms?: Maybe<Scalars['Float']['output']>
   total_fees?: Maybe<Scalars['Float']['output']>
@@ -5909,6 +6802,8 @@ export type Stats_Stddev_Pop_Fields = {
   __typename?: 'stats_stddev_pop_fields'
   contract_balance?: Maybe<Scalars['Float']['output']>
   id?: Maybe<Scalars['Float']['output']>
+  last_processed_block_number?: Maybe<Scalars['Float']['output']>
+  last_processed_block_timestamp?: Maybe<Scalars['Float']['output']>
   total_accounts?: Maybe<Scalars['Float']['output']>
   total_atoms?: Maybe<Scalars['Float']['output']>
   total_fees?: Maybe<Scalars['Float']['output']>
@@ -5922,6 +6817,8 @@ export type Stats_Stddev_Samp_Fields = {
   __typename?: 'stats_stddev_samp_fields'
   contract_balance?: Maybe<Scalars['Float']['output']>
   id?: Maybe<Scalars['Float']['output']>
+  last_processed_block_number?: Maybe<Scalars['Float']['output']>
+  last_processed_block_timestamp?: Maybe<Scalars['Float']['output']>
   total_accounts?: Maybe<Scalars['Float']['output']>
   total_atoms?: Maybe<Scalars['Float']['output']>
   total_fees?: Maybe<Scalars['Float']['output']>
@@ -5942,6 +6839,9 @@ export type Stats_Stream_Cursor_Input = {
 export type Stats_Stream_Cursor_Value_Input = {
   contract_balance?: InputMaybe<Scalars['numeric']['input']>
   id?: InputMaybe<Scalars['Int']['input']>
+  last_processed_block_number?: InputMaybe<Scalars['numeric']['input']>
+  last_processed_block_timestamp?: InputMaybe<Scalars['bigint']['input']>
+  last_updated?: InputMaybe<Scalars['timestamptz']['input']>
   total_accounts?: InputMaybe<Scalars['Int']['input']>
   total_atoms?: InputMaybe<Scalars['Int']['input']>
   total_fees?: InputMaybe<Scalars['numeric']['input']>
@@ -5955,6 +6855,8 @@ export type Stats_Sum_Fields = {
   __typename?: 'stats_sum_fields'
   contract_balance?: Maybe<Scalars['numeric']['output']>
   id?: Maybe<Scalars['Int']['output']>
+  last_processed_block_number?: Maybe<Scalars['numeric']['output']>
+  last_processed_block_timestamp?: Maybe<Scalars['bigint']['output']>
   total_accounts?: Maybe<Scalars['Int']['output']>
   total_atoms?: Maybe<Scalars['Int']['output']>
   total_fees?: Maybe<Scalars['numeric']['output']>
@@ -5968,6 +6870,8 @@ export type Stats_Var_Pop_Fields = {
   __typename?: 'stats_var_pop_fields'
   contract_balance?: Maybe<Scalars['Float']['output']>
   id?: Maybe<Scalars['Float']['output']>
+  last_processed_block_number?: Maybe<Scalars['Float']['output']>
+  last_processed_block_timestamp?: Maybe<Scalars['Float']['output']>
   total_accounts?: Maybe<Scalars['Float']['output']>
   total_atoms?: Maybe<Scalars['Float']['output']>
   total_fees?: Maybe<Scalars['Float']['output']>
@@ -5981,6 +6885,8 @@ export type Stats_Var_Samp_Fields = {
   __typename?: 'stats_var_samp_fields'
   contract_balance?: Maybe<Scalars['Float']['output']>
   id?: Maybe<Scalars['Float']['output']>
+  last_processed_block_number?: Maybe<Scalars['Float']['output']>
+  last_processed_block_timestamp?: Maybe<Scalars['Float']['output']>
   total_accounts?: Maybe<Scalars['Float']['output']>
   total_atoms?: Maybe<Scalars['Float']['output']>
   total_fees?: Maybe<Scalars['Float']['output']>
@@ -5994,6 +6900,8 @@ export type Stats_Variance_Fields = {
   __typename?: 'stats_variance_fields'
   contract_balance?: Maybe<Scalars['Float']['output']>
   id?: Maybe<Scalars['Float']['output']>
+  last_processed_block_number?: Maybe<Scalars['Float']['output']>
+  last_processed_block_timestamp?: Maybe<Scalars['Float']['output']>
   total_accounts?: Maybe<Scalars['Float']['output']>
   total_atoms?: Maybe<Scalars['Float']['output']>
   total_fees?: Maybe<Scalars['Float']['output']>
@@ -6040,12 +6948,28 @@ export type Subscription_Root = {
   books_aggregate: Books_Aggregate
   /** fetch data from the table in a streaming manner: "book" */
   books_stream: Array<Books>
-  /** fetch data from the table: "cached_image" using primary key columns */
-  cached_image?: Maybe<Cached_Images>
-  /** fetch data from the table: "cached_image" */
-  cached_images: Array<Cached_Images>
-  /** fetch data from the table in a streaming manner: "cached_image" */
-  cached_images_stream: Array<Cached_Images>
+  /** fetch data from the table: "byte_object" */
+  byte_object: Array<Byte_Object>
+  /** fetch aggregated fields from the table: "byte_object" */
+  byte_object_aggregate: Byte_Object_Aggregate
+  /** fetch data from the table: "byte_object" using primary key columns */
+  byte_object_by_pk?: Maybe<Byte_Object>
+  /** fetch data from the table in a streaming manner: "byte_object" */
+  byte_object_stream: Array<Byte_Object>
+  /** fetch data from the table: "cached_images.cached_image" */
+  cached_images_cached_image: Array<Cached_Images_Cached_Image>
+  /** fetch data from the table: "cached_images.cached_image" using primary key columns */
+  cached_images_cached_image_by_pk?: Maybe<Cached_Images_Cached_Image>
+  /** fetch data from the table in a streaming manner: "cached_images.cached_image" */
+  cached_images_cached_image_stream: Array<Cached_Images_Cached_Image>
+  /** fetch data from the table: "caip10" using primary key columns */
+  caip10?: Maybe<Caip10>
+  /** fetch aggregated fields from the table: "caip10" */
+  caip10_aggregate: Caip10_Aggregate
+  /** fetch data from the table in a streaming manner: "caip10" */
+  caip10_stream: Array<Caip10>
+  /** fetch data from the table: "caip10" */
+  caip10s: Array<Caip10>
   /** fetch data from the table: "chainlink_price" using primary key columns */
   chainlink_price?: Maybe<Chainlink_Prices>
   /** fetch data from the table: "chainlink_price" */
@@ -6092,6 +7016,14 @@ export type Subscription_Root = {
   following: Array<Accounts>
   /** execute function "following" and query aggregates on result of table type "account" */
   following_aggregate: Accounts_Aggregate
+  /** fetch data from the table: "json_object" using primary key columns */
+  json_object?: Maybe<Json_Objects>
+  /** fetch data from the table: "json_object" */
+  json_objects: Array<Json_Objects>
+  /** fetch aggregated fields from the table: "json_object" */
+  json_objects_aggregate: Json_Objects_Aggregate
+  /** fetch data from the table in a streaming manner: "json_object" */
+  json_objects_stream: Array<Json_Objects>
   /** fetch data from the table: "organization" using primary key columns */
   organization?: Maybe<Organizations>
   /** fetch data from the table: "organization" */
@@ -6146,12 +7078,28 @@ export type Subscription_Root = {
   signals_stream: Array<Signals>
   /** fetch data from the table: "stats" using primary key columns */
   stat?: Maybe<Stats>
+  /** fetch data from the table: "stats_hour" using primary key columns */
+  stat_hour?: Maybe<Stat_Hours>
+  /** fetch data from the table: "stats_hour" */
+  stat_hours: Array<Stat_Hours>
+  /** fetch aggregated fields from the table: "stats_hour" */
+  stat_hours_aggregate: Stat_Hours_Aggregate
+  /** fetch data from the table in a streaming manner: "stats_hour" */
+  stat_hours_stream: Array<Stat_Hours>
   /** fetch data from the table: "stats" */
   stats: Array<Stats>
   /** fetch aggregated fields from the table: "stats" */
   stats_aggregate: Stats_Aggregate
   /** fetch data from the table in a streaming manner: "stats" */
   stats_stream: Array<Stats>
+  /** fetch data from the table: "text_object" using primary key columns */
+  text_object?: Maybe<Text_Objects>
+  /** fetch data from the table: "text_object" */
+  text_objects: Array<Text_Objects>
+  /** fetch aggregated fields from the table: "text_object" */
+  text_objects_aggregate: Text_Objects_Aggregate
+  /** fetch data from the table in a streaming manner: "text_object" */
+  text_objects_stream: Array<Text_Objects>
   /** fetch data from the table: "thing" using primary key columns */
   thing?: Maybe<Things>
   /** fetch data from the table: "thing" */
@@ -6300,22 +7248,74 @@ export type Subscription_RootBooks_StreamArgs = {
   where?: InputMaybe<Books_Bool_Exp>
 }
 
-export type Subscription_RootCached_ImageArgs = {
+export type Subscription_RootByte_ObjectArgs = {
+  distinct_on?: InputMaybe<Array<Byte_Object_Select_Column>>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  order_by?: InputMaybe<Array<Byte_Object_Order_By>>
+  where?: InputMaybe<Byte_Object_Bool_Exp>
+}
+
+export type Subscription_RootByte_Object_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Byte_Object_Select_Column>>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  order_by?: InputMaybe<Array<Byte_Object_Order_By>>
+  where?: InputMaybe<Byte_Object_Bool_Exp>
+}
+
+export type Subscription_RootByte_Object_By_PkArgs = {
+  id: Scalars['numeric']['input']
+}
+
+export type Subscription_RootByte_Object_StreamArgs = {
+  batch_size: Scalars['Int']['input']
+  cursor: Array<InputMaybe<Byte_Object_Stream_Cursor_Input>>
+  where?: InputMaybe<Byte_Object_Bool_Exp>
+}
+
+export type Subscription_RootCached_Images_Cached_ImageArgs = {
+  distinct_on?: InputMaybe<Array<Cached_Images_Cached_Image_Select_Column>>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  order_by?: InputMaybe<Array<Cached_Images_Cached_Image_Order_By>>
+  where?: InputMaybe<Cached_Images_Cached_Image_Bool_Exp>
+}
+
+export type Subscription_RootCached_Images_Cached_Image_By_PkArgs = {
   url: Scalars['String']['input']
 }
 
-export type Subscription_RootCached_ImagesArgs = {
-  distinct_on?: InputMaybe<Array<Cached_Images_Select_Column>>
-  limit?: InputMaybe<Scalars['Int']['input']>
-  offset?: InputMaybe<Scalars['Int']['input']>
-  order_by?: InputMaybe<Array<Cached_Images_Order_By>>
-  where?: InputMaybe<Cached_Images_Bool_Exp>
+export type Subscription_RootCached_Images_Cached_Image_StreamArgs = {
+  batch_size: Scalars['Int']['input']
+  cursor: Array<InputMaybe<Cached_Images_Cached_Image_Stream_Cursor_Input>>
+  where?: InputMaybe<Cached_Images_Cached_Image_Bool_Exp>
 }
 
-export type Subscription_RootCached_Images_StreamArgs = {
+export type Subscription_RootCaip10Args = {
+  id: Scalars['numeric']['input']
+}
+
+export type Subscription_RootCaip10_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Caip10_Select_Column>>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  order_by?: InputMaybe<Array<Caip10_Order_By>>
+  where?: InputMaybe<Caip10_Bool_Exp>
+}
+
+export type Subscription_RootCaip10_StreamArgs = {
   batch_size: Scalars['Int']['input']
-  cursor: Array<InputMaybe<Cached_Images_Stream_Cursor_Input>>
-  where?: InputMaybe<Cached_Images_Bool_Exp>
+  cursor: Array<InputMaybe<Caip10_Stream_Cursor_Input>>
+  where?: InputMaybe<Caip10_Bool_Exp>
+}
+
+export type Subscription_RootCaip10sArgs = {
+  distinct_on?: InputMaybe<Array<Caip10_Select_Column>>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  order_by?: InputMaybe<Array<Caip10_Order_By>>
+  where?: InputMaybe<Caip10_Bool_Exp>
 }
 
 export type Subscription_RootChainlink_PriceArgs = {
@@ -6474,6 +7474,32 @@ export type Subscription_RootFollowing_AggregateArgs = {
   offset?: InputMaybe<Scalars['Int']['input']>
   order_by?: InputMaybe<Array<Accounts_Order_By>>
   where?: InputMaybe<Accounts_Bool_Exp>
+}
+
+export type Subscription_RootJson_ObjectArgs = {
+  id: Scalars['numeric']['input']
+}
+
+export type Subscription_RootJson_ObjectsArgs = {
+  distinct_on?: InputMaybe<Array<Json_Objects_Select_Column>>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  order_by?: InputMaybe<Array<Json_Objects_Order_By>>
+  where?: InputMaybe<Json_Objects_Bool_Exp>
+}
+
+export type Subscription_RootJson_Objects_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Json_Objects_Select_Column>>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  order_by?: InputMaybe<Array<Json_Objects_Order_By>>
+  where?: InputMaybe<Json_Objects_Bool_Exp>
+}
+
+export type Subscription_RootJson_Objects_StreamArgs = {
+  batch_size: Scalars['Int']['input']
+  cursor: Array<InputMaybe<Json_Objects_Stream_Cursor_Input>>
+  where?: InputMaybe<Json_Objects_Bool_Exp>
 }
 
 export type Subscription_RootOrganizationArgs = {
@@ -6654,6 +7680,32 @@ export type Subscription_RootStatArgs = {
   id: Scalars['Int']['input']
 }
 
+export type Subscription_RootStat_HourArgs = {
+  id: Scalars['Int']['input']
+}
+
+export type Subscription_RootStat_HoursArgs = {
+  distinct_on?: InputMaybe<Array<Stat_Hours_Select_Column>>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  order_by?: InputMaybe<Array<Stat_Hours_Order_By>>
+  where?: InputMaybe<Stat_Hours_Bool_Exp>
+}
+
+export type Subscription_RootStat_Hours_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Stat_Hours_Select_Column>>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  order_by?: InputMaybe<Array<Stat_Hours_Order_By>>
+  where?: InputMaybe<Stat_Hours_Bool_Exp>
+}
+
+export type Subscription_RootStat_Hours_StreamArgs = {
+  batch_size: Scalars['Int']['input']
+  cursor: Array<InputMaybe<Stat_Hours_Stream_Cursor_Input>>
+  where?: InputMaybe<Stat_Hours_Bool_Exp>
+}
+
 export type Subscription_RootStatsArgs = {
   distinct_on?: InputMaybe<Array<Stats_Select_Column>>
   limit?: InputMaybe<Scalars['Int']['input']>
@@ -6674,6 +7726,32 @@ export type Subscription_RootStats_StreamArgs = {
   batch_size: Scalars['Int']['input']
   cursor: Array<InputMaybe<Stats_Stream_Cursor_Input>>
   where?: InputMaybe<Stats_Bool_Exp>
+}
+
+export type Subscription_RootText_ObjectArgs = {
+  id: Scalars['numeric']['input']
+}
+
+export type Subscription_RootText_ObjectsArgs = {
+  distinct_on?: InputMaybe<Array<Text_Objects_Select_Column>>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  order_by?: InputMaybe<Array<Text_Objects_Order_By>>
+  where?: InputMaybe<Text_Objects_Bool_Exp>
+}
+
+export type Subscription_RootText_Objects_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Text_Objects_Select_Column>>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  order_by?: InputMaybe<Array<Text_Objects_Order_By>>
+  where?: InputMaybe<Text_Objects_Bool_Exp>
+}
+
+export type Subscription_RootText_Objects_StreamArgs = {
+  batch_size: Scalars['Int']['input']
+  cursor: Array<InputMaybe<Text_Objects_Stream_Cursor_Input>>
+  where?: InputMaybe<Text_Objects_Bool_Exp>
 }
 
 export type Subscription_RootThingArgs = {
@@ -6754,13 +7832,146 @@ export type Subscription_RootVaults_StreamArgs = {
   where?: InputMaybe<Vaults_Bool_Exp>
 }
 
+/** columns and relationships of "text_object" */
+export type Text_Objects = {
+  __typename?: 'text_objects'
+  data: Scalars['String']['output']
+  id: Scalars['numeric']['output']
+}
+
+/** aggregated selection of "text_object" */
+export type Text_Objects_Aggregate = {
+  __typename?: 'text_objects_aggregate'
+  aggregate?: Maybe<Text_Objects_Aggregate_Fields>
+  nodes: Array<Text_Objects>
+}
+
+/** aggregate fields of "text_object" */
+export type Text_Objects_Aggregate_Fields = {
+  __typename?: 'text_objects_aggregate_fields'
+  avg?: Maybe<Text_Objects_Avg_Fields>
+  count: Scalars['Int']['output']
+  max?: Maybe<Text_Objects_Max_Fields>
+  min?: Maybe<Text_Objects_Min_Fields>
+  stddev?: Maybe<Text_Objects_Stddev_Fields>
+  stddev_pop?: Maybe<Text_Objects_Stddev_Pop_Fields>
+  stddev_samp?: Maybe<Text_Objects_Stddev_Samp_Fields>
+  sum?: Maybe<Text_Objects_Sum_Fields>
+  var_pop?: Maybe<Text_Objects_Var_Pop_Fields>
+  var_samp?: Maybe<Text_Objects_Var_Samp_Fields>
+  variance?: Maybe<Text_Objects_Variance_Fields>
+}
+
+/** aggregate fields of "text_object" */
+export type Text_Objects_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Text_Objects_Select_Column>>
+  distinct?: InputMaybe<Scalars['Boolean']['input']>
+}
+
+/** aggregate avg on columns */
+export type Text_Objects_Avg_Fields = {
+  __typename?: 'text_objects_avg_fields'
+  id?: Maybe<Scalars['Float']['output']>
+}
+
+/** Boolean expression to filter rows from the table "text_object". All fields are combined with a logical 'AND'. */
+export type Text_Objects_Bool_Exp = {
+  _and?: InputMaybe<Array<Text_Objects_Bool_Exp>>
+  _not?: InputMaybe<Text_Objects_Bool_Exp>
+  _or?: InputMaybe<Array<Text_Objects_Bool_Exp>>
+  data?: InputMaybe<String_Comparison_Exp>
+  id?: InputMaybe<Numeric_Comparison_Exp>
+}
+
+/** aggregate max on columns */
+export type Text_Objects_Max_Fields = {
+  __typename?: 'text_objects_max_fields'
+  data?: Maybe<Scalars['String']['output']>
+  id?: Maybe<Scalars['numeric']['output']>
+}
+
+/** aggregate min on columns */
+export type Text_Objects_Min_Fields = {
+  __typename?: 'text_objects_min_fields'
+  data?: Maybe<Scalars['String']['output']>
+  id?: Maybe<Scalars['numeric']['output']>
+}
+
+/** Ordering options when selecting data from "text_object". */
+export type Text_Objects_Order_By = {
+  data?: InputMaybe<Order_By>
+  id?: InputMaybe<Order_By>
+}
+
+/** select columns of table "text_object" */
+export type Text_Objects_Select_Column =
+  /** column name */
+  | 'data'
+  /** column name */
+  | 'id'
+
+/** aggregate stddev on columns */
+export type Text_Objects_Stddev_Fields = {
+  __typename?: 'text_objects_stddev_fields'
+  id?: Maybe<Scalars['Float']['output']>
+}
+
+/** aggregate stddev_pop on columns */
+export type Text_Objects_Stddev_Pop_Fields = {
+  __typename?: 'text_objects_stddev_pop_fields'
+  id?: Maybe<Scalars['Float']['output']>
+}
+
+/** aggregate stddev_samp on columns */
+export type Text_Objects_Stddev_Samp_Fields = {
+  __typename?: 'text_objects_stddev_samp_fields'
+  id?: Maybe<Scalars['Float']['output']>
+}
+
+/** Streaming cursor of the table "text_objects" */
+export type Text_Objects_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Text_Objects_Stream_Cursor_Value_Input
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>
+}
+
+/** Initial value of the column from where the streaming should start */
+export type Text_Objects_Stream_Cursor_Value_Input = {
+  data?: InputMaybe<Scalars['String']['input']>
+  id?: InputMaybe<Scalars['numeric']['input']>
+}
+
+/** aggregate sum on columns */
+export type Text_Objects_Sum_Fields = {
+  __typename?: 'text_objects_sum_fields'
+  id?: Maybe<Scalars['numeric']['output']>
+}
+
+/** aggregate var_pop on columns */
+export type Text_Objects_Var_Pop_Fields = {
+  __typename?: 'text_objects_var_pop_fields'
+  id?: Maybe<Scalars['Float']['output']>
+}
+
+/** aggregate var_samp on columns */
+export type Text_Objects_Var_Samp_Fields = {
+  __typename?: 'text_objects_var_samp_fields'
+  id?: Maybe<Scalars['Float']['output']>
+}
+
+/** aggregate variance on columns */
+export type Text_Objects_Variance_Fields = {
+  __typename?: 'text_objects_variance_fields'
+  id?: Maybe<Scalars['Float']['output']>
+}
+
 /** columns and relationships of "thing" */
 export type Things = {
   __typename?: 'things'
   /** An object relationship */
   atom?: Maybe<Atoms>
-  /** An object relationship */
-  cached_image?: Maybe<Cached_Images>
+  cached_image?: Maybe<Cached_Images_Cached_Image>
   description?: Maybe<Scalars['String']['output']>
   id: Scalars['numeric']['output']
   image?: Maybe<Scalars['String']['output']>
@@ -6809,7 +8020,6 @@ export type Things_Bool_Exp = {
   _not?: InputMaybe<Things_Bool_Exp>
   _or?: InputMaybe<Array<Things_Bool_Exp>>
   atom?: InputMaybe<Atoms_Bool_Exp>
-  cached_image?: InputMaybe<Cached_Images_Bool_Exp>
   description?: InputMaybe<String_Comparison_Exp>
   id?: InputMaybe<Numeric_Comparison_Exp>
   image?: InputMaybe<String_Comparison_Exp>
@@ -6840,7 +8050,6 @@ export type Things_Min_Fields = {
 /** Ordering options when selecting data from "thing". */
 export type Things_Order_By = {
   atom?: InputMaybe<Atoms_Order_By>
-  cached_image?: InputMaybe<Cached_Images_Order_By>
   description?: InputMaybe<Order_By>
   id?: InputMaybe<Order_By>
   image?: InputMaybe<Order_By>
@@ -12267,6 +13476,9 @@ export type GetListItemsQuery = {
 export type GetListDetailsQueryVariables = Exact<{
   globalWhere?: InputMaybe<Triples_Bool_Exp>
   tagPredicateId?: InputMaybe<Scalars['numeric']['input']>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  orderBy?: InputMaybe<Array<Triples_Order_By> | Triples_Order_By>
 }>
 
 export type GetListDetailsQuery = {
@@ -12378,6 +13590,9 @@ export type GetListDetailsWithPositionQueryVariables = Exact<{
   globalWhere?: InputMaybe<Triples_Bool_Exp>
   tagPredicateId?: InputMaybe<Scalars['numeric']['input']>
   address?: InputMaybe<Scalars['String']['input']>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  orderBy?: InputMaybe<Array<Triples_Order_By> | Triples_Order_By>
 }>
 
 export type GetListDetailsWithPositionQuery = {
@@ -12510,6 +13725,9 @@ export type GetListDetailsWithUserQueryVariables = Exact<{
   userWhere?: InputMaybe<Triples_Bool_Exp>
   tagPredicateId?: InputMaybe<Scalars['numeric']['input']>
   address?: InputMaybe<Scalars['String']['input']>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  orderBy?: InputMaybe<Array<Triples_Order_By> | Triples_Order_By>
 }>
 
 export type GetListDetailsWithUserQuery = {
@@ -13627,6 +14845,311 @@ export type GetPositionsCountByTypeQuery = {
       atom_id?: any | null
       triple_id?: any | null
     }
+  }>
+}
+
+export type GetSignalsQueryVariables = Exact<{
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  orderBy?: InputMaybe<Array<Signals_Order_By> | Signals_Order_By>
+  addresses?: InputMaybe<
+    Array<Scalars['String']['input']> | Scalars['String']['input']
+  >
+}>
+
+export type GetSignalsQuery = {
+  __typename?: 'query_root'
+  total: {
+    __typename?: 'events_aggregate'
+    aggregate?: { __typename?: 'events_aggregate_fields'; count: number } | null
+  }
+  signals: Array<{
+    __typename?: 'signals'
+    id: string
+    block_number: any
+    block_timestamp: any
+    transaction_hash: string
+    atom_id?: any | null
+    triple_id?: any | null
+    deposit_id?: string | null
+    redemption_id?: string | null
+    atom?: {
+      __typename?: 'atoms'
+      id: any
+      data?: string | null
+      image?: string | null
+      label?: string | null
+      emoji?: string | null
+      type: any
+      wallet_id: string
+      vault?: {
+        __typename?: 'vaults'
+        total_shares: any
+        position_count: number
+        positions: Array<{
+          __typename?: 'positions'
+          account_id: string
+          shares: any
+          account?: {
+            __typename?: 'accounts'
+            id: string
+            label: string
+            image?: string | null
+          } | null
+        }>
+      } | null
+      creator?: {
+        __typename?: 'accounts'
+        id: string
+        label: string
+        image?: string | null
+      } | null
+      value?: {
+        __typename?: 'atom_values'
+        person?: {
+          __typename?: 'persons'
+          name?: string | null
+          image?: string | null
+          description?: string | null
+          url?: string | null
+        } | null
+        thing?: {
+          __typename?: 'things'
+          name?: string | null
+          image?: string | null
+          description?: string | null
+          url?: string | null
+        } | null
+        organization?: {
+          __typename?: 'organizations'
+          name?: string | null
+          image?: string | null
+          description?: string | null
+          url?: string | null
+        } | null
+      } | null
+    } | null
+    triple?: {
+      __typename?: 'triples'
+      id: any
+      creator?: {
+        __typename?: 'accounts'
+        label: string
+        image?: string | null
+        id: string
+        atom_id?: any | null
+        type: any
+      } | null
+      subject: {
+        __typename?: 'atoms'
+        data?: string | null
+        id: any
+        image?: string | null
+        label?: string | null
+        emoji?: string | null
+        type: any
+        creator?: {
+          __typename?: 'accounts'
+          label: string
+          image?: string | null
+          id: string
+          atom_id?: any | null
+          type: any
+        } | null
+        value?: {
+          __typename?: 'atom_values'
+          person?: {
+            __typename?: 'persons'
+            name?: string | null
+            image?: string | null
+            description?: string | null
+            url?: string | null
+          } | null
+          thing?: {
+            __typename?: 'things'
+            name?: string | null
+            image?: string | null
+            description?: string | null
+            url?: string | null
+          } | null
+          organization?: {
+            __typename?: 'organizations'
+            name?: string | null
+            image?: string | null
+            description?: string | null
+            url?: string | null
+          } | null
+        } | null
+      }
+      predicate: {
+        __typename?: 'atoms'
+        data?: string | null
+        id: any
+        image?: string | null
+        label?: string | null
+        emoji?: string | null
+        type: any
+        creator?: {
+          __typename?: 'accounts'
+          label: string
+          image?: string | null
+          id: string
+          atom_id?: any | null
+          type: any
+        } | null
+        value?: {
+          __typename?: 'atom_values'
+          person?: {
+            __typename?: 'persons'
+            name?: string | null
+            image?: string | null
+            description?: string | null
+            url?: string | null
+          } | null
+          thing?: {
+            __typename?: 'things'
+            name?: string | null
+            image?: string | null
+            description?: string | null
+            url?: string | null
+          } | null
+          organization?: {
+            __typename?: 'organizations'
+            name?: string | null
+            image?: string | null
+            description?: string | null
+            url?: string | null
+          } | null
+        } | null
+      }
+      object: {
+        __typename?: 'atoms'
+        data?: string | null
+        id: any
+        image?: string | null
+        label?: string | null
+        emoji?: string | null
+        type: any
+        creator?: {
+          __typename?: 'accounts'
+          label: string
+          image?: string | null
+          id: string
+          atom_id?: any | null
+          type: any
+        } | null
+        value?: {
+          __typename?: 'atom_values'
+          person?: {
+            __typename?: 'persons'
+            name?: string | null
+            image?: string | null
+            description?: string | null
+            url?: string | null
+          } | null
+          thing?: {
+            __typename?: 'things'
+            name?: string | null
+            image?: string | null
+            description?: string | null
+            url?: string | null
+          } | null
+          organization?: {
+            __typename?: 'organizations'
+            name?: string | null
+            image?: string | null
+            description?: string | null
+            url?: string | null
+          } | null
+        } | null
+      }
+      vault?: {
+        __typename?: 'vaults'
+        total_shares: any
+        position_count: number
+        positions: Array<{
+          __typename?: 'positions'
+          account_id: string
+          shares: any
+          account?: {
+            __typename?: 'accounts'
+            id: string
+            label: string
+            image?: string | null
+          } | null
+        }>
+      } | null
+      counter_vault?: {
+        __typename?: 'vaults'
+        total_shares: any
+        position_count: number
+        positions: Array<{
+          __typename?: 'positions'
+          account_id: string
+          shares: any
+          account?: {
+            __typename?: 'accounts'
+            id: string
+            label: string
+            image?: string | null
+          } | null
+        }>
+      } | null
+    } | null
+    deposit?: {
+      __typename?: 'deposits'
+      sender_id: string
+      receiver_id: string
+      shares_for_receiver: any
+      sender_assets_after_total_fees: any
+      sender?: {
+        __typename?: 'accounts'
+        id: string
+        label: string
+        image?: string | null
+      } | null
+      receiver: {
+        __typename?: 'accounts'
+        id: string
+        label: string
+        image?: string | null
+      }
+      vault: {
+        __typename?: 'vaults'
+        total_shares: any
+        position_count: number
+        positions: Array<{
+          __typename?: 'positions'
+          account_id: string
+          shares: any
+          account?: {
+            __typename?: 'accounts'
+            id: string
+            label: string
+            image?: string | null
+          } | null
+        }>
+      }
+    } | null
+    redemption?: {
+      __typename?: 'redemptions'
+      sender_id: string
+      receiver_id: string
+      assets_for_receiver: any
+      shares_redeemed_by_sender: any
+      sender?: {
+        __typename?: 'accounts'
+        id: string
+        label: string
+        image?: string | null
+      } | null
+      receiver: {
+        __typename?: 'accounts'
+        id: string
+        label: string
+        image?: string | null
+      }
+    } | null
   }>
 }
 
@@ -19348,13 +20871,18 @@ useGetListItemsQuery.fetcher = (
   )
 
 export const GetListDetailsDocument = `
-    query GetListDetails($globalWhere: triples_bool_exp, $tagPredicateId: numeric) {
+    query GetListDetails($globalWhere: triples_bool_exp, $tagPredicateId: numeric, $limit: Int, $offset: Int, $orderBy: [triples_order_by!]) {
   globalTriplesAggregate: triples_aggregate(where: $globalWhere) {
     aggregate {
       count
     }
   }
-  globalTriples: triples(where: $globalWhere) {
+  globalTriples: triples(
+    where: $globalWhere
+    limit: $limit
+    offset: $offset
+    order_by: $orderBy
+  ) {
     id
     vault_id
     counter_vault_id
@@ -19516,13 +21044,18 @@ useGetListDetailsQuery.fetcher = (
   )
 
 export const GetListDetailsWithPositionDocument = `
-    query GetListDetailsWithPosition($globalWhere: triples_bool_exp, $tagPredicateId: numeric, $address: String) {
+    query GetListDetailsWithPosition($globalWhere: triples_bool_exp, $tagPredicateId: numeric, $address: String, $limit: Int, $offset: Int, $orderBy: [triples_order_by!]) {
   globalTriplesAggregate: triples_aggregate(where: $globalWhere) {
     aggregate {
       count
     }
   }
-  globalTriples: triples(where: $globalWhere) {
+  globalTriples: triples(
+    where: $globalWhere
+    limit: $limit
+    offset: $offset
+    order_by: $orderBy
+  ) {
     id
     vault_id
     counter_vault_id
@@ -19710,13 +21243,18 @@ useGetListDetailsWithPositionQuery.fetcher = (
   >(GetListDetailsWithPositionDocument, variables, options)
 
 export const GetListDetailsWithUserDocument = `
-    query GetListDetailsWithUser($globalWhere: triples_bool_exp, $userWhere: triples_bool_exp, $tagPredicateId: numeric, $address: String) {
+    query GetListDetailsWithUser($globalWhere: triples_bool_exp, $userWhere: triples_bool_exp, $tagPredicateId: numeric, $address: String, $limit: Int, $offset: Int, $orderBy: [triples_order_by!]) {
   globalTriplesAggregate: triples_aggregate(where: $globalWhere) {
     aggregate {
       count
     }
   }
-  globalTriples: triples(where: $globalWhere) {
+  globalTriples: triples(
+    where: $globalWhere
+    limit: $limit
+    offset: $offset
+    order_by: $orderBy
+  ) {
     id
     vault_id
     counter_vault_id
@@ -20731,6 +22269,232 @@ useGetPositionsCountByTypeQuery.fetcher = (
 ) =>
   fetcher<GetPositionsCountByTypeQuery, GetPositionsCountByTypeQueryVariables>(
     GetPositionsCountByTypeDocument,
+    variables,
+    options,
+  )
+
+export const GetSignalsDocument = `
+    query GetSignals($limit: Int, $offset: Int, $orderBy: [signals_order_by!], $addresses: [String!]) {
+  total: events_aggregate {
+    aggregate {
+      count
+    }
+  }
+  signals(limit: $limit, offset: $offset, order_by: $orderBy) {
+    id
+    block_number
+    block_timestamp
+    transaction_hash
+    atom_id
+    triple_id
+    deposit_id
+    redemption_id
+    atom {
+      ...AtomMetadata
+      vault {
+        total_shares
+        position_count
+        positions(where: {account: {id: {_in: $addresses}}}) {
+          account_id
+          shares
+          account {
+            id
+            label
+            image
+          }
+        }
+      }
+    }
+    triple {
+      id
+      creator {
+        ...AccountMetadata
+      }
+      subject {
+        data
+        id
+        image
+        label
+        emoji
+        type
+        ...AtomValue
+        creator {
+          ...AccountMetadata
+        }
+      }
+      predicate {
+        data
+        id
+        image
+        label
+        emoji
+        type
+        ...AtomValue
+        creator {
+          ...AccountMetadata
+        }
+      }
+      object {
+        data
+        id
+        image
+        label
+        emoji
+        type
+        ...AtomValue
+        creator {
+          ...AccountMetadata
+        }
+      }
+      vault {
+        total_shares
+        position_count
+        positions(where: {account: {id: {_in: $addresses}}}) {
+          account_id
+          shares
+          account {
+            id
+            label
+            image
+          }
+        }
+      }
+      counter_vault {
+        total_shares
+        position_count
+        positions(where: {account: {id: {_in: $addresses}}}) {
+          account_id
+          shares
+          account {
+            id
+            label
+            image
+          }
+        }
+      }
+    }
+    deposit {
+      sender_id
+      sender {
+        id
+        label
+        image
+      }
+      receiver_id
+      receiver {
+        id
+        label
+        image
+      }
+      shares_for_receiver
+      sender_assets_after_total_fees
+      vault {
+        total_shares
+        position_count
+        positions(where: {account: {id: {_in: $addresses}}}) {
+          account_id
+          shares
+          account {
+            id
+            label
+            image
+          }
+        }
+      }
+    }
+    redemption {
+      sender_id
+      sender {
+        id
+        label
+        image
+      }
+      receiver_id
+      receiver {
+        id
+        label
+        image
+      }
+      assets_for_receiver
+      shares_redeemed_by_sender
+    }
+  }
+}
+    ${AtomMetadataFragmentDoc}
+${AtomValueFragmentDoc}
+${AccountMetadataFragmentDoc}`
+
+export const useGetSignalsQuery = <TData = GetSignalsQuery, TError = unknown>(
+  variables?: GetSignalsQueryVariables,
+  options?: Omit<
+    UseQueryOptions<GetSignalsQuery, TError, TData>,
+    'queryKey'
+  > & {
+    queryKey?: UseQueryOptions<GetSignalsQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useQuery<GetSignalsQuery, TError, TData>({
+    queryKey:
+      variables === undefined ? ['GetSignals'] : ['GetSignals', variables],
+    queryFn: fetcher<GetSignalsQuery, GetSignalsQueryVariables>(
+      GetSignalsDocument,
+      variables,
+    ),
+    ...options,
+  })
+}
+
+useGetSignalsQuery.document = GetSignalsDocument
+
+useGetSignalsQuery.getKey = (variables?: GetSignalsQueryVariables) =>
+  variables === undefined ? ['GetSignals'] : ['GetSignals', variables]
+
+export const useInfiniteGetSignalsQuery = <
+  TData = InfiniteData<GetSignalsQuery>,
+  TError = unknown,
+>(
+  variables: GetSignalsQueryVariables,
+  options: Omit<
+    UseInfiniteQueryOptions<GetSignalsQuery, TError, TData>,
+    'queryKey'
+  > & {
+    queryKey?: UseInfiniteQueryOptions<
+      GetSignalsQuery,
+      TError,
+      TData
+    >['queryKey']
+  },
+) => {
+  return useInfiniteQuery<GetSignalsQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey:
+          optionsQueryKey ?? variables === undefined
+            ? ['GetSignals.infinite']
+            : ['GetSignals.infinite', variables],
+        queryFn: (metaData) =>
+          fetcher<GetSignalsQuery, GetSignalsQueryVariables>(
+            GetSignalsDocument,
+            { ...variables, ...(metaData.pageParam ?? {}) },
+          )(),
+        ...restOptions,
+      }
+    })(),
+  )
+}
+
+useInfiniteGetSignalsQuery.getKey = (variables?: GetSignalsQueryVariables) =>
+  variables === undefined
+    ? ['GetSignals.infinite']
+    : ['GetSignals.infinite', variables]
+
+useGetSignalsQuery.fetcher = (
+  variables?: GetSignalsQueryVariables,
+  options?: RequestInit['headers'],
+) =>
+  fetcher<GetSignalsQuery, GetSignalsQueryVariables>(
+    GetSignalsDocument,
     variables,
     options,
   )
@@ -38434,6 +40198,39 @@ export const GetListDetails = {
           },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'numeric' } },
         },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'limit' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'offset' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'orderBy' },
+          },
+          type: {
+            kind: 'ListType',
+            type: {
+              kind: 'NonNullType',
+              type: {
+                kind: 'NamedType',
+                name: { kind: 'Name', value: 'triples_order_by' },
+              },
+            },
+          },
+        },
       ],
       selectionSet: {
         kind: 'SelectionSet',
@@ -38479,6 +40276,30 @@ export const GetListDetails = {
                 value: {
                   kind: 'Variable',
                   name: { kind: 'Name', value: 'globalWhere' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'limit' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'offset' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'offset' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'order_by' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'orderBy' },
                 },
               },
             ],
@@ -38869,6 +40690,39 @@ export const GetListDetailsWithPosition = {
           },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
         },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'limit' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'offset' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'orderBy' },
+          },
+          type: {
+            kind: 'ListType',
+            type: {
+              kind: 'NonNullType',
+              type: {
+                kind: 'NamedType',
+                name: { kind: 'Name', value: 'triples_order_by' },
+              },
+            },
+          },
+        },
       ],
       selectionSet: {
         kind: 'SelectionSet',
@@ -38914,6 +40768,30 @@ export const GetListDetailsWithPosition = {
                 value: {
                   kind: 'Variable',
                   name: { kind: 'Name', value: 'globalWhere' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'limit' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'offset' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'offset' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'order_by' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'orderBy' },
                 },
               },
             ],
@@ -39445,6 +41323,39 @@ export const GetListDetailsWithUser = {
           },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
         },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'limit' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'offset' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'orderBy' },
+          },
+          type: {
+            kind: 'ListType',
+            type: {
+              kind: 'NonNullType',
+              type: {
+                kind: 'NamedType',
+                name: { kind: 'Name', value: 'triples_order_by' },
+              },
+            },
+          },
+        },
       ],
       selectionSet: {
         kind: 'SelectionSet',
@@ -39490,6 +41401,30 @@ export const GetListDetailsWithUser = {
                 value: {
                   kind: 'Variable',
                   name: { kind: 'Name', value: 'globalWhere' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'limit' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'offset' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'offset' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'order_by' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'orderBy' },
                 },
               },
             ],
@@ -43224,6 +45159,1047 @@ export const GetPositionsCountByType = {
                 },
               ],
             },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export const GetSignals = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'GetSignals' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'limit' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'offset' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'orderBy' },
+          },
+          type: {
+            kind: 'ListType',
+            type: {
+              kind: 'NonNullType',
+              type: {
+                kind: 'NamedType',
+                name: { kind: 'Name', value: 'signals_order_by' },
+              },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'addresses' },
+          },
+          type: {
+            kind: 'ListType',
+            type: {
+              kind: 'NonNullType',
+              type: {
+                kind: 'NamedType',
+                name: { kind: 'Name', value: 'String' },
+              },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'total' },
+            name: { kind: 'Name', value: 'events_aggregate' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'aggregate' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'count' } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'signals' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'limit' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'offset' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'offset' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'order_by' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'orderBy' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'block_number' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'block_timestamp' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'transaction_hash' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'atom_id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'triple_id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'deposit_id' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'redemption_id' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'atom' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AtomMetadata' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'vault' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'total_shares' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'position_count' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'positions' },
+                              arguments: [
+                                {
+                                  kind: 'Argument',
+                                  name: { kind: 'Name', value: 'where' },
+                                  value: {
+                                    kind: 'ObjectValue',
+                                    fields: [
+                                      {
+                                        kind: 'ObjectField',
+                                        name: {
+                                          kind: 'Name',
+                                          value: 'account',
+                                        },
+                                        value: {
+                                          kind: 'ObjectValue',
+                                          fields: [
+                                            {
+                                              kind: 'ObjectField',
+                                              name: {
+                                                kind: 'Name',
+                                                value: 'id',
+                                              },
+                                              value: {
+                                                kind: 'ObjectValue',
+                                                fields: [
+                                                  {
+                                                    kind: 'ObjectField',
+                                                    name: {
+                                                      kind: 'Name',
+                                                      value: '_in',
+                                                    },
+                                                    value: {
+                                                      kind: 'Variable',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: 'addresses',
+                                                      },
+                                                    },
+                                                  },
+                                                ],
+                                              },
+                                            },
+                                          ],
+                                        },
+                                      },
+                                    ],
+                                  },
+                                },
+                              ],
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'account_id' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'shares' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'account' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'label',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'image',
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'triple' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'creator' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'FragmentSpread',
+                              name: { kind: 'Name', value: 'AccountMetadata' },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'subject' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'data' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'image' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'label' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'emoji' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'type' },
+                            },
+                            {
+                              kind: 'FragmentSpread',
+                              name: { kind: 'Name', value: 'AtomValue' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'creator' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'FragmentSpread',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'AccountMetadata',
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'predicate' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'data' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'image' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'label' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'emoji' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'type' },
+                            },
+                            {
+                              kind: 'FragmentSpread',
+                              name: { kind: 'Name', value: 'AtomValue' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'creator' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'FragmentSpread',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'AccountMetadata',
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'object' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'data' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'image' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'label' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'emoji' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'type' },
+                            },
+                            {
+                              kind: 'FragmentSpread',
+                              name: { kind: 'Name', value: 'AtomValue' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'creator' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'FragmentSpread',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'AccountMetadata',
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'vault' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'total_shares' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'position_count' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'positions' },
+                              arguments: [
+                                {
+                                  kind: 'Argument',
+                                  name: { kind: 'Name', value: 'where' },
+                                  value: {
+                                    kind: 'ObjectValue',
+                                    fields: [
+                                      {
+                                        kind: 'ObjectField',
+                                        name: {
+                                          kind: 'Name',
+                                          value: 'account',
+                                        },
+                                        value: {
+                                          kind: 'ObjectValue',
+                                          fields: [
+                                            {
+                                              kind: 'ObjectField',
+                                              name: {
+                                                kind: 'Name',
+                                                value: 'id',
+                                              },
+                                              value: {
+                                                kind: 'ObjectValue',
+                                                fields: [
+                                                  {
+                                                    kind: 'ObjectField',
+                                                    name: {
+                                                      kind: 'Name',
+                                                      value: '_in',
+                                                    },
+                                                    value: {
+                                                      kind: 'Variable',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: 'addresses',
+                                                      },
+                                                    },
+                                                  },
+                                                ],
+                                              },
+                                            },
+                                          ],
+                                        },
+                                      },
+                                    ],
+                                  },
+                                },
+                              ],
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'account_id' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'shares' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'account' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'label',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'image',
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'counter_vault' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'total_shares' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'position_count' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'positions' },
+                              arguments: [
+                                {
+                                  kind: 'Argument',
+                                  name: { kind: 'Name', value: 'where' },
+                                  value: {
+                                    kind: 'ObjectValue',
+                                    fields: [
+                                      {
+                                        kind: 'ObjectField',
+                                        name: {
+                                          kind: 'Name',
+                                          value: 'account',
+                                        },
+                                        value: {
+                                          kind: 'ObjectValue',
+                                          fields: [
+                                            {
+                                              kind: 'ObjectField',
+                                              name: {
+                                                kind: 'Name',
+                                                value: 'id',
+                                              },
+                                              value: {
+                                                kind: 'ObjectValue',
+                                                fields: [
+                                                  {
+                                                    kind: 'ObjectField',
+                                                    name: {
+                                                      kind: 'Name',
+                                                      value: '_in',
+                                                    },
+                                                    value: {
+                                                      kind: 'Variable',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: 'addresses',
+                                                      },
+                                                    },
+                                                  },
+                                                ],
+                                              },
+                                            },
+                                          ],
+                                        },
+                                      },
+                                    ],
+                                  },
+                                },
+                              ],
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'account_id' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'shares' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'account' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'label',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'image',
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'deposit' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'sender_id' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'sender' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'label' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'image' },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'receiver_id' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'receiver' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'label' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'image' },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'shares_for_receiver' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: {
+                          kind: 'Name',
+                          value: 'sender_assets_after_total_fees',
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'vault' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'total_shares' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'position_count' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'positions' },
+                              arguments: [
+                                {
+                                  kind: 'Argument',
+                                  name: { kind: 'Name', value: 'where' },
+                                  value: {
+                                    kind: 'ObjectValue',
+                                    fields: [
+                                      {
+                                        kind: 'ObjectField',
+                                        name: {
+                                          kind: 'Name',
+                                          value: 'account',
+                                        },
+                                        value: {
+                                          kind: 'ObjectValue',
+                                          fields: [
+                                            {
+                                              kind: 'ObjectField',
+                                              name: {
+                                                kind: 'Name',
+                                                value: 'id',
+                                              },
+                                              value: {
+                                                kind: 'ObjectValue',
+                                                fields: [
+                                                  {
+                                                    kind: 'ObjectField',
+                                                    name: {
+                                                      kind: 'Name',
+                                                      value: '_in',
+                                                    },
+                                                    value: {
+                                                      kind: 'Variable',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: 'addresses',
+                                                      },
+                                                    },
+                                                  },
+                                                ],
+                                              },
+                                            },
+                                          ],
+                                        },
+                                      },
+                                    ],
+                                  },
+                                },
+                              ],
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'account_id' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'shares' },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'account' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'label',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'image',
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'redemption' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'sender_id' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'sender' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'label' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'image' },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'receiver_id' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'receiver' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'label' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'image' },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'assets_for_receiver' },
+                      },
+                      {
+                        kind: 'Field',
+                        name: {
+                          kind: 'Name',
+                          value: 'shares_redeemed_by_sender',
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'AccountMetadata' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'accounts' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'atom_id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'AtomValue' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'atoms' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'value' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'person' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'description' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'thing' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'description' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'organization' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'description' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'AtomMetadata' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'atoms' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'data' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'emoji' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'wallet_id' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'creator' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+              ],
+            },
+          },
+          {
+            kind: 'FragmentSpread',
+            name: { kind: 'Name', value: 'AtomValue' },
           },
         ],
       },

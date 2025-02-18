@@ -13,17 +13,16 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@0xintuition/1ui'
-import { useGetListDetailsQuery } from '@0xintuition/graphql'
 
-import { CURRENT_ENV } from '@consts/general'
 import { useCopy } from '@lib/hooks/useCopy'
-import { getSpecialPredicate } from '@lib/utils/app'
+import { ListDetailsType } from 'app/types/list-details'
 
 export interface ShareModalProps {
   open?: boolean
   onClose: () => void
   title: string
-  tvl: number
+  listData: ListDetailsType
+  tvl?: number
   percentageChange?: number
   valueChange?: number
 }
@@ -31,6 +30,7 @@ export interface ShareModalProps {
 function ShareModalContent({
   open,
   title,
+  listData,
   tvl,
   percentageChange = 0,
   valueChange = 0,
@@ -62,30 +62,6 @@ function ShareModalContent({
     window.open(farcasterUrl, '_blank')
   }
 
-  // Fetch wallet list
-  const { data: listData } = useGetListDetailsQuery(
-    {
-      tagPredicateId: getSpecialPredicate(CURRENT_ENV).tagPredicate.id,
-      globalWhere: {
-        predicate_id: {
-          _eq: getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId,
-        },
-        object_id: {
-          _eq: getSpecialPredicate(CURRENT_ENV).web3Wallet.vaultId,
-        },
-      },
-    },
-    {
-      queryKey: [
-        'get-list-details',
-        {
-          predicateId: getSpecialPredicate(CURRENT_ENV).tagPredicate.id,
-          objectId: getSpecialPredicate(CURRENT_ENV).web3Wallet.vaultId,
-        },
-      ],
-    },
-  )
-
   return (
     <DialogContent className="bg-background backdrop-blur-sm rounded-3xl shadow-2xl border border-neutral-800 flex flex-col px-0 pb-0">
       <div className="flex flex-col gap-4">
@@ -95,18 +71,20 @@ function ShareModalContent({
           </DialogTitle>
         </div>
 
-        <div className="flex justify-between items-center px-8">
-          <div className="flex items-baseline gap-2">
-            <Text className="text-4xl font-bold text-white">
-              ${tvl.toFixed(2)}
-            </Text>
-            {(percentageChange !== 0 || valueChange !== 0) && (
-              <Text className="text-emerald-400 text-lg">
-                +{valueChange.toFixed(2)} (+{percentageChange.toFixed(2)}%)
+        {tvl && (
+          <div className="flex justify-between items-center px-8">
+            <div className="flex items-baseline gap-2">
+              <Text className="text-4xl font-bold text-white">
+                ${tvl.toFixed(2)}
               </Text>
-            )}
+              {(percentageChange !== 0 || valueChange !== 0) && (
+                <Text className="text-emerald-400 text-lg">
+                  +{valueChange.toFixed(2)} (+{percentageChange.toFixed(2)}%)
+                </Text>
+              )}
+            </div>
           </div>
-        </div>
+        )}
 
         <div className="h-[200px] overflow-y-auto px-8">
           <div className="grid grid-cols-4 gap-4">
@@ -187,6 +165,7 @@ export default function ShareModal({
   open,
   onClose,
   title,
+  listData,
   tvl,
   percentageChange,
   valueChange,
@@ -202,6 +181,7 @@ export default function ShareModal({
         onClose={onClose}
         open={open}
         title={title}
+        listData={listData}
         tvl={tvl}
         percentageChange={percentageChange}
         valueChange={valueChange}

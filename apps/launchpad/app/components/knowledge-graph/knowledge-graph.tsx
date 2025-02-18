@@ -395,7 +395,6 @@ export default function KnowledgeGraph({
         },
       }))
 
-      console.log('Generated elements:', { nodes, edges })
       return [...nodes, ...edges]
     } catch (err) {
       console.error('Error transforming data:', err)
@@ -410,18 +409,15 @@ export default function KnowledgeGraph({
 
   const handleMount = (cy: cytoscape.Core) => {
     try {
-      console.log('Setting up Cytoscape instance')
       cyRef.current = cy
 
       // Set initial zoom and center
       cy.on('layoutstart', () => {
-        console.log('Layout starting')
         cy.zoom(1.5)
         cy.center()
       })
 
       cy.on('layoutstop', () => {
-        console.log('Layout complete')
         cy.zoom(1.5)
         cy.center()
       })

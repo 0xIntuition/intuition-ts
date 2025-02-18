@@ -1,6 +1,14 @@
 import { useEffect, useState } from 'react'
 
-import { Badge, Button, Icon, Text, TextVariant, toast } from '@0xintuition/1ui'
+import {
+  Badge,
+  Button,
+  Icon,
+  Text,
+  TextVariant,
+  TextWeight,
+  toast,
+} from '@0xintuition/1ui'
 
 import SignalToast from '@components/survey-modal/signal-toast'
 import { MIN_DEPOSIT, MULTIVAULT_CONTRACT_ADDRESS } from '@consts/general'
@@ -13,9 +21,8 @@ import {
   transactionReducer,
   useGenericTxState,
 } from '@lib/hooks/useTransactionReducer'
-import logger from '@lib/utils/logger'
 import { usePrivy } from '@privy-io/react-auth'
-import { Link, useLocation } from '@remix-run/react'
+import { Link, useLocation, useRevalidator } from '@remix-run/react'
 import { useQueryClient } from '@tanstack/react-query'
 import {
   AtomType,
@@ -24,11 +31,12 @@ import {
   TripleType,
   VaultDetailsType,
 } from 'app/types'
-import { ArrowBigDown, ArrowBigUp, Book } from 'lucide-react'
+import { ArrowBigDown, ArrowBigUp, Book, List } from 'lucide-react'
 import { Address, decodeEventLog, formatUnits } from 'viem'
 import { usePublicClient } from 'wagmi'
 
 import SubmitButton from '../submit-button'
+import { SuccessStep } from './success-step'
 
 const initialTxState: TransactionStateType = {
   status: 'idle',
@@ -42,13 +50,10 @@ export interface SignalStepProps {
   atom?: AtomType
   triple?: TripleType
   vaultDetailsProp?: VaultDetailsType
-  setTxState: (txState: TransactionStateType) => void
-  onStakingSuccess: () => void
-  isLoading: boolean
-  setIsLoading: (isLoading: boolean) => void
-  direction?: 'for' | 'against'
-  mode: 'deposit' | 'redeem'
   open: boolean
+  initialTicks?: number
+  isSimplifiedRedeem?: boolean
+  onClose: () => void
 }
 
 export function SignalStep({
@@ -57,56 +62,117 @@ export function SignalStep({
   atom,
   triple,
   vaultDetailsProp,
-  setTxState,
-  onStakingSuccess,
-  isLoading,
-  setIsLoading,
-  direction,
-  mode,
   open,
+  initialTicks = 0,
+  isSimplifiedRedeem = false,
+  onClose,
 }: SignalStepProps) {
-  const [ticks, setTicks] = useState(1)
+  const [ticks, setTicks] = useState(initialTicks)
+  const [currentInitialTicks, setCurrentInitialTicks] = useState(initialTicks)
+  const [initialDirection] = useState(Math.sign(initialTicks))
+  const [hasInitialized, setHasInitialized] = useState(false)
+  const [actualValue, setActualValue] = useState<string>('0')
   const [lastTxHash, setLastTxHash] = useState<string | undefined>(undefined)
   const [validationErrors, setValidationErrors] = useState<string[]>([])
   const [showErrors, setShowErrors] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [showSuccess, setShowSuccess] = useState(false)
+  const [successTxHash, setSuccessTxHash] = useState<string | undefined>(
+    undefined,
+  )
+  const [finalMode, setFinalMode] = useState<'deposit' | 'redeem' | undefined>()
+  const [finalTicks, setFinalTicks] = useState<number>(0)
+
+  const FEE_ADJUSTMENT = 0.95 // 5% fee means 95% of deposit goes to conviction
   const publicClient = usePublicClient()
-  const queryClient = useQueryClient()
   const location = useLocation()
   const { user: privyUser } = usePrivy()
   const contract = MULTIVAULT_CONTRACT_ADDRESS
   const userWallet = privyUser?.wallet?.address
   const walletBalance = useGetWalletBalance(userWallet as `0x${string}`)
+  const queryClient = useQueryClient()
+
+  // Determine which vault to use based on initial position or new direction
+  const getActiveVaultId = () => {
+    // If there's an initial position, stick with that vault
+    if (initialTicks !== 0) {
+      return initialTicks < 0 ? counterVaultId : vaultId
+    }
+
+    // For new positions, only switch vaults if there's no existing conviction
+    if (ticks < 0 && !vaultDetailsProp?.user_conviction) {
+      return counterVaultId
+    }
+
+    return vaultId
+  }
+
+  const revalidator = useRevalidator()
+
+  const activeVaultId = getActiveVaultId()
+
   const { state: txState, dispatch } = useGenericTxState<
     TransactionStateType,
     TransactionActionType
   >(transactionReducer, initialTxState)
 
   const { data: vaultDetailsData, isLoading: isLoadingVaultDetails } =
-    useGetVaultDetails(contract, vaultId, counterVaultId, {
-      queryKey: [
-        'get-vault-details',
-        contract,
-        vaultId,
-        counterVaultId,
-        direction,
-      ],
-      enabled: open,
+    useGetVaultDetails(contract, vaultId || '', counterVaultId, {
+      queryKey: ['get-vault-details', contract, vaultId, counterVaultId],
+      enabled: open && !!vaultId,
     })
 
-  const vaultDetails = vaultDetailsData ?? vaultDetailsProp
-
-  const { data: multiVaultConfig, isLoading: isLoadingMultiVaultConfig } =
+  const { data: multiVaultConfig, isLoading: isLoadingConfig } =
     useGetMultiVaultConfig(contract)
 
-  const min_deposit = multiVaultConfig
-    ? multiVaultConfig?.formatted_min_deposit
-    : MIN_DEPOSIT
-
-  const val = (ticks * +min_deposit).toString()
+  const vaultDetails = vaultDetailsData ?? vaultDetailsProp
+  const min_deposit = multiVaultConfig?.formatted_min_deposit ?? MIN_DEPOSIT
   const userConviction = formatUnits(
-    BigInt(vaultDetails?.user_conviction ?? '0'),
+    BigInt(
+      initialTicks < 0
+        ? vaultDetails?.user_conviction_against ?? '0'
+        : vaultDetails?.user_conviction ?? '0',
+    ),
     18,
   )
+  const convictionPrice = formatUnits(
+    BigInt(
+      initialTicks < 0
+        ? vaultDetails?.against_conviction_price ?? '0'
+        : vaultDetails?.conviction_price ?? '0',
+    ),
+    18,
+  )
+
+  // Determine if we're moving towards or away from 0
+  const isMovingTowardsZero =
+    (initialTicks > 0 && ticks < initialTicks) ||
+    (initialTicks < 0 && ticks > initialTicks)
+
+  const mode: 'deposit' | 'redeem' | undefined = isSimplifiedRedeem
+    ? 'redeem'
+    : ticks === initialTicks
+      ? undefined
+      : isMovingTowardsZero
+        ? 'redeem'
+        : 'deposit'
+
+  const valuePerTick =
+    currentInitialTicks > 0 ? Number(userConviction) / currentInitialTicks : 0
+
+  // Calculate value based on the number of ticks being changed
+  const ticksToChange = isMovingTowardsZero
+    ? Math.abs(ticks - initialTicks)
+    : Math.abs(ticks) - Math.abs(initialTicks)
+
+  const val =
+    isSimplifiedRedeem || ticks === 0
+      ? actualValue
+      : mode === 'deposit'
+        ? (ticksToChange * +min_deposit).toString()
+        : mode === 'redeem'
+          ? (ticksToChange * valuePerTick).toString()
+          : '0'
 
   const {
     mutateAsync: stake,
@@ -115,62 +181,68 @@ export function SignalStep({
     awaitingOnChainConfirmation: stakeAwaitingOnChainConfirmation,
     isError: stakeIsError,
     reset: stakeReset,
-  } = useStakeMutation(contract, mode)
+  } = useStakeMutation(contract, mode as 'deposit' | 'redeem')
 
-  const handleAction = async () => {
-    if (!privyUser?.wallet?.address || !vaultId) {
+  // All effects
+  useEffect(() => {
+    // For new positions (no conviction), initialize once we have vault details
+    if (initialTicks === 0 && vaultDetails && !hasInitialized) {
+      setHasInitialized(true)
       return
     }
 
-    try {
-      const txHash = await stake({
-        val: mode === 'deposit' ? val : userConviction ?? '0',
-        userWallet: privyUser?.wallet?.address,
-        vaultId,
-        triple,
-        atom,
-        mode,
-        contract,
-      })
+    // For existing positions, calculate ticks based on conviction
+    if (userConviction && convictionPrice && Number(userConviction) > 0) {
+      const actualEthValue = (
+        Number(userConviction) * Number(convictionPrice)
+      ).toString()
+      setActualValue(actualEthValue)
+      const calculatedTicks = Math.ceil(
+        (Number(userConviction) * Number(convictionPrice)) /
+          (+MIN_DEPOSIT * FEE_ADJUSTMENT),
+      )
 
-      if (publicClient && txHash) {
-        dispatch({ type: 'TRANSACTION_PENDING' })
-        const receipt = await publicClient.waitForTransactionReceipt({
-          hash: txHash,
-        })
-
-        dispatch({
-          type: 'TRANSACTION_COMPLETE',
-          txHash,
-          txReceipt: receipt,
-        })
-
-        onStakingSuccess()
-        logger('invalidating queries')
-        await new Promise((resolve) => setTimeout(resolve, 3000)) // 1 second delay
-        await queryClient.invalidateQueries()
+      // Only update if the calculated value is significantly different
+      // For negative positions, maintain the initial direction
+      if (Math.abs(calculatedTicks - Math.abs(currentInitialTicks)) > 0.1) {
+        const newTicks =
+          initialDirection < 0 ? -calculatedTicks : calculatedTicks
+        setTicks(newTicks)
+        setCurrentInitialTicks(Math.abs(calculatedTicks))
       }
-    } catch (error) {
-      dispatch({
-        type: 'TRANSACTION_ERROR',
-        error: 'Error processing transaction',
-      })
+      setHasInitialized(true)
     }
-  }
-
-  const action = handleAction
+  }, [
+    userConviction,
+    convictionPrice,
+    MIN_DEPOSIT,
+    currentInitialTicks,
+    initialDirection,
+    initialTicks,
+    vaultDetails,
+    hasInitialized,
+  ])
 
   useEffect(() => {
     if (stakeIsError) {
       stakeReset()
       setIsLoading(false)
     }
-  }, [stakeIsError, stakeReset])
+  }, [stakeIsError, stakeReset, setIsLoading])
+
+  useEffect(() => {
+    dispatch({ type: 'START_TRANSACTION' })
+  }, [location, dispatch])
+
+  useEffect(() => {
+    setTicks(initialTicks)
+    setCurrentInitialTicks(Math.abs(initialTicks))
+  }, [initialTicks])
 
   useEffect(() => {
     let assets = ''
     const receipt = stakeTxReceipt
-    const action = mode === 'deposit' ? 'Deposited' : 'Redeemed'
+    const actionType = mode === 'deposit' ? 'Deposited' : 'Redeemed'
 
     type BuyArgs = {
       sender: Address
@@ -221,7 +293,7 @@ export function SignalStep({
 
           toast.custom(() => (
             <SignalToast
-              action={action}
+              action={actionType}
               assets={assets}
               txHash={stakeTxReceipt.transactionHash}
             />
@@ -232,7 +304,7 @@ export function SignalStep({
         console.error('Error decoding transaction log:', error)
       }
     }
-  }, [stakeTxReceipt, privyUser?.wallet?.address, stakeReset, lastTxHash])
+  }, [stakeTxReceipt, userWallet, mode, lastTxHash])
 
   useEffect(() => {
     if (stakeAwaitingWalletConfirmation) {
@@ -258,24 +330,123 @@ export function SignalStep({
     setIsLoading(
       !!stakeAwaitingWalletConfirmation ||
         !!stakeAwaitingOnChainConfirmation ||
-        isLoadingMultiVaultConfig ||
         txState.status === 'confirm' ||
         txState.status === 'transaction-pending' ||
         txState.status === 'transaction-confirmed' ||
         txState.status === 'approve-transaction' ||
         txState.status === 'awaiting' ||
-        isLoadingVaultDetails,
+        isLoadingVaultDetails ||
+        isLoadingConfig,
     )
   }, [
-    isLoadingVaultDetails,
-    isLoadingMultiVaultConfig,
     stakeAwaitingWalletConfirmation,
     stakeAwaitingOnChainConfirmation,
     txState.status,
+    isLoadingVaultDetails,
+    isLoadingConfig,
+    setIsLoading,
   ])
+
+  // If in simplified redeem mode, force ticks to 0 for full redeem
+  useEffect(() => {
+    if (isSimplifiedRedeem) {
+      setTicks(0)
+    }
+  }, [isSimplifiedRedeem])
+
+  // Early validation
+  if (!userWallet || (!vaultId && !counterVaultId)) {
+    return null
+  }
+
+  // Button handlers
+  const handleUpvote = () => {
+    // Only show error if trying to go positive while having negative position
+    if (initialTicks < 0 && ticks >= 0) {
+      setValidationErrors(['Must redeem all downvotes before upvoting'])
+      setShowErrors(true)
+      return
+    }
+    // Clear errors if no new errors are being set
+    setValidationErrors([])
+    setShowErrors(false)
+    setTicks(ticks + 1)
+  }
+
+  const handleDownvote = () => {
+    // Only show error if trying to go negative while having positive position
+    if (initialTicks > 0 && ticks <= 0) {
+      setValidationErrors(['Must redeem all upvotes before downvoting'])
+      setShowErrors(true)
+      return
+    }
+    // Clear errors if no new errors are being set
+    setValidationErrors([])
+    setShowErrors(false)
+    setTicks(ticks - 1)
+  }
+
+  const handleAction = async () => {
+    if (!privyUser?.wallet?.address || !activeVaultId) {
+      return
+    }
+
+    try {
+      const txHash = await stake({
+        val:
+          mode === 'deposit'
+            ? val
+            : val > userConviction
+              ? userConviction
+              : val,
+        userWallet: privyUser?.wallet?.address,
+        vaultId: activeVaultId,
+        triple,
+        atom,
+        mode,
+        contract,
+      })
+
+      if (publicClient && txHash) {
+        dispatch({ type: 'TRANSACTION_PENDING' })
+        const receipt = await publicClient.waitForTransactionReceipt({
+          hash: txHash,
+        })
+
+        dispatch({
+          type: 'TRANSACTION_COMPLETE',
+          txHash,
+          txReceipt: receipt,
+        })
+
+        // Invalidate relevant queries
+        await queryClient.invalidateQueries()
+        revalidator.revalidate()
+
+        // Store the final state and show success after a delay
+        setFinalMode(mode)
+        setFinalTicks(ticks)
+        setSuccessTxHash(txHash)
+        setShowSuccess(true)
+      }
+    } catch (error) {
+      dispatch({
+        type: 'TRANSACTION_ERROR',
+        error: 'Error processing transaction',
+      })
+    }
+  }
 
   const handleStakeButtonClick = async () => {
     const errors = []
+
+    // Check if trying to cross zero without redeeming
+    const isAttemptingToSwitchDirection =
+      (initialTicks > 0 && ticks <= 0) || (initialTicks < 0 && ticks >= 0)
+
+    if (isAttemptingToSwitchDirection && ticks !== 0) {
+      errors.push('Must redeem all positions before switching vote direction')
+    }
 
     if (mode === 'deposit') {
       if (+val < +min_deposit) {
@@ -284,9 +455,7 @@ export function SignalStep({
       if (+val > +walletBalance) {
         errors.push(`Insufficient balance`)
       }
-    } else {
-      // Redeem mode - no validation needed since we're redeeming all shares
-      const userConviction = vaultDetails?.user_conviction ?? '0'
+    } else if (mode === 'redeem') {
       if (+userConviction <= 0) {
         errors.push('No shares to redeem')
       }
@@ -298,140 +467,209 @@ export function SignalStep({
       return
     }
 
-    action()
-  }
-
-  useEffect(() => {
-    dispatch({ type: 'START_TRANSACTION' })
-  }, [location])
-
-  useEffect(() => {
-    setTxState(txState)
-  }, [setTxState, txState])
-
-  if (!userWallet) {
-    return null
+    handleAction()
   }
 
   return (
-    <div className="flex flex-col gap-4 p-8">
-      <div className="flex flex-col gap-2 mb-8">
-        <div className="flex flex-row items-center justify-between">
-          <Text variant="headline" className="font-semibold">
-            {mode === 'deposit'
-              ? `Signal ${atom?.label ?? triple?.subject.label} as your preferred wallet`
-              : `Redeem all shares from ${atom?.label ?? triple?.subject.label}`}
-          </Text>
-          {mode === 'deposit' && (
-            <Badge className="flex items-center gap-1 px-2">
-              <Icon name="wallet" className="h-4 w-4 text-secondary/50" />
-              <Text
-                variant={TextVariant.caption}
-                className="text-nowrap text-secondary/50"
-              >
-                {(+walletBalance).toFixed(2)} ETH
+    <>
+      {showSuccess ? (
+        <SuccessStep
+          isOpen={showSuccess}
+          name={atom?.label ?? triple?.subject?.label ?? ''}
+          txHash={successTxHash}
+          onClose={onClose}
+          mode={finalMode}
+          isFullRedeem={finalMode === 'redeem' && finalTicks === 0}
+          direction={
+            finalMode === 'redeem'
+              ? initialTicks >= 0
+                ? 'for'
+                : 'against'
+              : finalTicks >= 0
+                ? 'for'
+                : 'against'
+          }
+        />
+      ) : (
+        <div className="flex flex-col gap-4 p-8">
+          <div className="flex flex-col gap-2 mb-8">
+            <div className="flex flex-row items-center justify-between">
+              <Text variant={TextVariant.headline} weight={TextWeight.semibold}>
+                {isSimplifiedRedeem ? (
+                  <>
+                    Redeem your signal for{' '}
+                    {atom?.label ?? triple?.subject?.label ?? ''}
+                  </>
+                ) : (
+                  <>
+                    Cast your signal on {atom?.label ?? triple?.subject.label}
+                  </>
+                )}
               </Text>
-            </Badge>
-          )}
-        </div>
-        {mode === 'deposit' && (
-          <Text
-            variant={TextVariant.footnote}
-            className="text-primary/70 flex flex-row gap-1 items-center"
-          >
-            <Book className="h-4 w-4 text-primary/70" />
-            Learn how signals shape your preferences in our{' '}
-            <Link
-              to="https://tech.docs.intuition.systems/primitives-signal"
-              target="_blank"
-              rel="noreferrer"
-              className="text-primary font-semibold hover:text-accent"
+              <Badge className="flex items-center gap-1 px-2">
+                <Icon name="wallet" className="h-4 w-4 text-secondary/50" />
+                <Text
+                  variant={TextVariant.caption}
+                  className="text-nowrap text-secondary/50"
+                >
+                  {(+walletBalance).toFixed(2)} ETH
+                </Text>
+              </Badge>
+            </div>
+            <Text
+              variant={TextVariant.footnote}
+              className="text-primary/70 flex flex-row gap-1 items-center"
             >
-              documentation
-            </Link>
-          </Text>
-        )}
-      </div>
-      <div
-        className={`flex w-full items-center gap-4 rounded-lg border transition-colors h-[72px] border-[#1A1A1A]`}
-      >
-        <div className="flex items-center gap-4 w-full">
-          <div className="w-14 h-14 rounded bg-[#1A1A1A] flex-shrink-0 ml-1">
-            {(atom?.image || triple?.subject.image) && (
-              <img
-                src={atom?.image ?? triple?.subject.image ?? ''}
-                alt={atom?.label ?? triple?.subject.label ?? ''}
-                className="w-full h-full object-cover rounded-lg"
-              />
-            )}
+              <Book className="h-4 w-4 text-primary/70" />
+              Learn how signals shape your preferences in our{' '}
+              <Link
+                to="https://tech.docs.intuition.systems/primitives-signal"
+                target="_blank"
+                rel="noreferrer"
+                className="text-primary font-semibold hover:text-accent"
+              >
+                documentation
+              </Link>
+            </Text>
           </div>
-          <Text variant="title">{atom?.label ?? triple?.subject.label}</Text>
-        </div>
 
-        {mode === 'deposit' && (
-          <div className="flex flex-col gap-2 w-full pr-6">
-            <div className="flex items-center justify-end">
-              <Text variant="title" className="w-8 text-center">
-                {ticks}
-              </Text>
-              <div className="flex flex-col">
-                <Button
-                  variant="text"
-                  onClick={() => setTicks(ticks + 1)}
-                  disabled={isLoading}
-                  className="h-6 p-0"
-                >
-                  <ArrowBigUp className="text-success fill-success h-5 w-5" />
-                </Button>
-                <Button
-                  variant="text"
-                  onClick={() => setTicks(Math.max(1, ticks - 1))}
-                  disabled={ticks <= 1 || isLoading}
-                  className="h-6 p-0 disabled:opacity-30"
-                >
-                  <ArrowBigDown className="text-destructive fill-destructive h-5 w-5" />
-                </Button>
+          {!isSimplifiedRedeem ? (
+            <div className="flex w-full items-center gap-4 rounded-lg border transition-colors h-[72px] border-[#1A1A1A]">
+              <div className="flex items-center gap-4 w-full">
+                <div className="w-14 h-14 rounded bg-[#1A1A1A] flex-shrink-0 ml-1">
+                  {(atom?.image || triple?.subject.image) && (
+                    <img
+                      src={atom?.image ?? triple?.subject.image ?? ''}
+                      alt={atom?.label ?? triple?.subject.label ?? ''}
+                      className="w-full h-full object-cover rounded-lg"
+                    />
+                  )}
+                </div>
+                <div className="flex flex-col gap-0.5 w-full">
+                  <Text variant={TextVariant.headline}>
+                    {atom?.label ?? triple?.subject.label}
+                  </Text>
+                  <Text
+                    variant={TextVariant.small}
+                    className="text-primary/70 flex flex-row gap-1 items-center w-full"
+                  >
+                    <List className="h-3 w-3 text-primary/70" /> in list{' '}
+                    {triple?.object.label}
+                  </Text>
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-2 pr-6">
+                <div className="flex items-center justify-end">
+                  <Text
+                    variant={TextVariant.headline}
+                    weight={TextWeight.semibold}
+                    className={`w-8 text-center ${
+                      hasInitialized
+                        ? ticks < 0
+                          ? 'text-destructive'
+                          : ticks > 0
+                            ? 'text-success'
+                            : 'text-primary'
+                        : initialTicks < 0
+                          ? 'text-destructive'
+                          : initialTicks > 0
+                            ? 'text-success'
+                            : 'text-primary'
+                    }`}
+                  >
+                    {hasInitialized ? Math.abs(ticks) : Math.abs(initialTicks)}
+                  </Text>
+                  <div className="flex flex-col">
+                    <Button
+                      variant="text"
+                      onClick={handleUpvote}
+                      disabled={isLoading || !hasInitialized}
+                      className="h-6 p-0 disabled:opacity-30"
+                    >
+                      <ArrowBigUp className="text-success fill-success h-5 w-5" />
+                    </Button>
+                    <Button
+                      variant="text"
+                      onClick={handleDownvote}
+                      disabled={isLoading || !hasInitialized}
+                      className="h-6 p-0 disabled:opacity-30"
+                    >
+                      <ArrowBigDown className="text-destructive fill-destructive h-5 w-5" />
+                    </Button>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        )}
-      </div>
+          ) : (
+            <div className="flex flex-col gap-2">
+              <div className="flex w-full items-center gap-4 rounded-lg border transition-colors h-[72px] border-[#1A1A1A]">
+                <div className="flex items-center gap-4 w-full">
+                  <div className="w-14 h-14 rounded bg-[#1A1A1A] flex-shrink-0 ml-1">
+                    {(atom?.image || triple?.subject.image) && (
+                      <img
+                        src={atom?.image ?? triple?.subject.image ?? ''}
+                        alt={atom?.label ?? triple?.subject.label ?? ''}
+                        className="w-full h-full object-cover rounded-lg"
+                      />
+                    )}
+                  </div>
+                  <Text variant="title">
+                    {atom?.label ?? triple?.subject.label}
+                  </Text>
+                </div>
+              </div>
+            </div>
+          )}
 
-      {showErrors && validationErrors.length > 0 && (
-        <div className="flex flex-col gap-2">
-          {validationErrors.map((error, index) => (
-            <Text key={index} variant="body" className="text-destructive">
-              {error}
-            </Text>
-          ))}
+          <div className="h-6">
+            {showErrors && validationErrors.length > 0 && (
+              <div className="flex flex-col gap-2">
+                {validationErrors.map((error, index) => (
+                  <Text
+                    key={index}
+                    variant={TextVariant.footnote}
+                    className="text-destructive"
+                  >
+                    {error}
+                  </Text>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <div className="flex flex-row gap-2 justify-end mt-8">
+            <div className="flex flex-col gap-2">
+              <SubmitButton
+                loading={isLoading}
+                onClick={handleStakeButtonClick}
+                buttonText={
+                  isSimplifiedRedeem
+                    ? `Redeem ${Number(actualValue).toFixed(5)} ETH`
+                    : !mode
+                      ? 'No changes to apply'
+                      : mode === 'deposit'
+                        ? `Stake ${Number(val).toFixed(5)} ETH`
+                        : `Redeem ${Number(val).toFixed(5)} ETH`
+                }
+                disabled={!mode || isLoading}
+                loadingText={'Processing...'}
+              />
+              <Text variant="caption" className="text-end text-primary/70">
+                Standard fees apply.{' '}
+                <Link
+                  to="https://tech.docs.intuition.systems/fees"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-primary font-semibold hover:text-accent"
+                >
+                  Learn more
+                </Link>
+              </Text>
+            </div>
+          </div>
         </div>
       )}
-
-      <div className="flex flex-row gap-2 justify-end mt-8">
-        <div className="flex flex-col gap-2">
-          <SubmitButton
-            loading={isLoading}
-            onClick={handleStakeButtonClick}
-            buttonText={
-              mode === 'deposit'
-                ? `Stake ${Number(val).toFixed(5)} ETH`
-                : 'Confirm Redeem'
-            }
-            loadingText={'Processing...'}
-          />
-          <Text variant="caption" className="text-end text-primary/70">
-            Standard fees apply.{' '}
-            <Link
-              to="https://tech.docs.intuition.systems/fees"
-              target="_blank"
-              rel="noreferrer"
-              className="text-primary font-semibold hover:text-accent"
-            >
-              Learn more
-            </Link>
-          </Text>
-        </div>
-      </div>
-    </div>
+    </>
   )
 }

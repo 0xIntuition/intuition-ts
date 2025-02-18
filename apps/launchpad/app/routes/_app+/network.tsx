@@ -1,30 +1,30 @@
 import {
-  // AggregatedMetrics,
-  PageHeader,
+  AggregatedMetrics,
+  Icon,
   Text,
   TextVariant,
   TextWeight,
 } from '@0xintuition/1ui'
 import {
   fetcher,
-  GetEventsDocument,
-  GetEventsQuery,
-  GetEventsQueryVariables,
-  // GetStatsDocument,
-  // GetStatsQuery,
-  // GetStatsQueryVariables,
-  useGetEventsQuery,
-  // useGetStatsQuery,
+  GetSignalsDocument,
+  GetSignalsQuery,
+  GetSignalsQueryVariables,
+  GetStatsDocument,
+  GetStatsQuery,
+  GetStatsQueryVariables,
+  useGetSignalsQuery,
+  useGetStatsQuery,
 } from '@0xintuition/graphql'
 
-import ActivityFeed from '@components/activity-feed'
+import { ActivityFeedPortal } from '@components/activity-feed-portal'
 import { ErrorPage } from '@components/error-page'
-// import logger from '@lib/utils/logger'
+import { LoadingState } from '@components/loading-state'
+import { PageHeader } from '@components/page-header'
 import { LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData, useSearchParams } from '@remix-run/react'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
-
-// import { formatUnits } from 'viem'
+import { Radio, User } from 'lucide-react'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url)
@@ -33,25 +33,20 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   const queryClient = new QueryClient()
 
-  // await queryClient.prefetchQuery({
-  //   queryKey: ['get-stats'],
-  //   queryFn: () =>
-  //     fetcher<GetStatsQuery, GetStatsQueryVariables>(GetStatsDocument, {}),
-  // })
+  await queryClient.prefetchQuery({
+    queryKey: ['get-stats'],
+    queryFn: () =>
+      fetcher<GetStatsQuery, GetStatsQueryVariables>(GetStatsDocument, {}),
+  })
 
   await queryClient.prefetchQuery({
-    queryKey: ['get-events-global', { activityLimit, activityOffset }],
+    queryKey: ['get-signals-global', { activityLimit, activityOffset }],
     queryFn: () =>
-      fetcher<GetEventsQuery, GetEventsQueryVariables>(GetEventsDocument, {
+      fetcher<GetSignalsQuery, GetSignalsQueryVariables>(GetSignalsDocument, {
         limit: activityLimit,
         offset: activityOffset,
         addresses: [],
         orderBy: [{ block_timestamp: 'desc' }],
-        where: {
-          type: {
-            _neq: 'FeesTransfered',
-          },
-        },
       }),
   })
 
@@ -79,29 +74,23 @@ export default function Network() {
     searchParams.get('activityOffset') || String(initialParams.activityOffset),
   )
 
-  // const { data: systemStats } = useGetStatsQuery(
-  //   {},
-  //   {
-  //     queryKey: ['get-stats'],
-  //   },
-  // )
-  // logger('systemStats', systemStats)
+  const { data: systemStats, isLoading: isLoadingStats } = useGetStatsQuery(
+    {},
+    {
+      queryKey: ['get-stats'],
+    },
+  )
 
-  const { data: eventsData } = useGetEventsQuery(
+  const { data: signalsData, isLoading: isLoadingSignals } = useGetSignalsQuery(
     {
       limit: activityLimit,
       offset: activityOffset,
       addresses: [],
       orderBy: [{ block_timestamp: 'desc' }],
-      where: {
-        type: {
-          _neq: 'FeesTransfered',
-        },
-      },
     },
     {
       queryKey: [
-        'get-events-global',
+        'get-signals-global',
         {
           limit: activityLimit,
           offset: activityOffset,
@@ -115,43 +104,52 @@ export default function Network() {
     },
   )
 
-  // const stats = systemStats?.stats[0]
+  const isLoading = isLoadingStats || isLoadingSignals
+
+  if (isLoading) {
+    return <LoadingState />
+  }
+
+  const stats = systemStats?.stats[0]
 
   return (
     <>
-      <PageHeader title="Network" lastUpdated={'3s'} />
-      <div className="flex flex-col rounded-xl overflow-hidden">
-        {/* <div className="py-4 bg-gradient-to-b from-[#060504] to-[#101010]">
-          <AggregatedMetrics
-            metrics={[
-              {
-                label: 'TVL',
-                value: +formatUnits(stats?.contract_balance ?? 0, 18),
-                suffix: 'ETH',
-                precision: 2,
-              },
-              { label: 'Atoms', value: stats?.total_atoms ?? 0 },
-              { label: 'Triples', value: stats?.total_triples ?? 0 },
-              {
-                label: 'Signals',
-                value: stats?.total_signals ?? 0,
-                hideOnMobile: true,
-              },
-              { label: 'Users', value: stats?.total_accounts ?? 0 },
-            ]}
-            className="[&>div]:after:hidden sm:[&>div]:after:block"
-          />
-        </div> */}
-      </div>
+      <PageHeader title="Network" />
+      <AggregatedMetrics
+        metrics={[
+          {
+            label: 'Atoms',
+            icon: <Icon name="fingerprint" className="w-4 h-4" />,
+            value: stats?.total_atoms ?? 0,
+          },
+          {
+            label: 'Triples',
+            icon: <Icon name="claim" className="w-4 h-4" />,
+            value: stats?.total_triples ?? 0,
+          },
+          {
+            label: 'Signals',
+            icon: <Radio className="w-4 h-4" />,
+            value: stats?.total_signals ?? 0,
+            hideOnMobile: true,
+          },
+          {
+            label: 'Users',
+            icon: <User className="w-4 h-4" />,
+            value: stats?.total_accounts ?? 0,
+          },
+        ]}
+        className="[&>div]:after:hidden sm:[&>div]:after:block"
+      />
       <div className="flex flex-col gap-4">
         <Text variant={TextVariant.headline} weight={TextWeight.medium}>
-          Recent Activity
+          Activity Feed
         </Text>
-        <ActivityFeed
+        <ActivityFeedPortal
           activities={{
-            events: eventsData?.events || [],
+            signals: signalsData?.signals || [],
             total: {
-              aggregate: { count: eventsData?.total.aggregate?.count || 0 },
+              aggregate: { count: signalsData?.total.aggregate?.count || 0 },
             },
           }}
         />

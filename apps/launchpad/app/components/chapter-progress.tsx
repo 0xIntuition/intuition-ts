@@ -1,110 +1,129 @@
-import { useEffect, useState } from 'react'
+import { Card, cn, Text, TextVariant } from '@0xintuition/1ui'
 
-import { Card, Text } from '@0xintuition/1ui'
+import { toRoman } from '@lib/utils/misc'
+import { motion } from 'framer-motion'
 
-import { Lock } from 'lucide-react'
+interface ChapterStage {
+  status: 'completed' | 'in_progress' | 'locked'
+}
 
 interface ChapterProgressProps {
-  currentChapter: string
-  nextChapter: string
-  totalStages: number
-  currentStage: number
-  endTime: Date
+  stages: ChapterStage[]
+  currentStageIndex: number
+  title: string
 }
 
 export default function ChapterProgress({
-  currentChapter = 'CHAPTER I: GENESIS',
-  nextChapter = 'Chapter II: Population',
-  totalStages = 7,
-  currentStage = 2,
-  endTime = new Date(Date.now() + 172800000), // 2 days from now
+  stages,
+  currentStageIndex,
+  title,
 }: ChapterProgressProps) {
-  const [timeLeft, setTimeLeft] = useState('')
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      const now = new Date()
-      const difference = endTime.getTime() - now.getTime()
-
-      if (difference <= 0) {
-        setTimeLeft('Completed')
-        clearInterval(timer)
-        return
-      }
-
-      const days = Math.floor(difference / (1000 * 60 * 60 * 24))
-      const hours = Math.floor(
-        (difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
-      )
-      const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60))
-      const seconds = Math.floor((difference % (1000 * 60)) / 1000)
-
-      setTimeLeft(`${days}d ${hours}h ${minutes}m ${seconds}s`)
-    }, 1000)
-
-    return () => clearInterval(timer)
-  }, [endTime])
+  // Calculate total progress based on completed chapters and current chapter
+  const totalProgress = Math.min(
+    ((currentStageIndex +
+      (stages[currentStageIndex]?.status === 'in_progress' ? 0.5 : 0)) /
+      (stages.length - 1)) *
+      100,
+    100,
+  )
 
   return (
-    <Card className="w-full p-6 rounded-lg border-none bg-gradient-to-br from-[#060504] to-[#101010]">
-      <div className="flex justify-between items-start mb-6">
-        <div className="space-y-2">
-          <Text className="text-2xl uppercase font-serif">
-            {currentChapter}
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      whileHover={{ y: -5 }}
+    >
+      <Card className="flex flex-row w-full gap-6 p-6 rounded-lg bg-white/5 backdrop-blur-md backdrop-saturate-150 border border-border/10">
+        <motion.div
+          className="flex flex-col justify-between items-start min-w-[120px]"
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.2, duration: 0.5 }}
+        >
+          <div className="space-y-2 w-full">
+            <Text className="text-2xl whitespace-nowrap">{title}</Text>
+          </div>
+          <Text variant={TextVariant.footnote} className="text-primary/70">
+            {Math.round(totalProgress)}% Complete
           </Text>
-          <Text className="w-fit text-accent theme-border rounded-lg px-2">
-            Next: {nextChapter}
-          </Text>
-        </div>
-        <div className="text-accent text-xl font-medium tabular-nums">
-          {timeLeft}
-        </div>
-      </div>
+        </motion.div>
 
-      <div className="relative mt-8">
-        {/* Stage Indicators */}
-        <div className="flex justify-between">
-          {Array.from({ length: totalStages }).map((_, index) => (
-            <div
-              key={index}
-              className={`w-10 h-10 rounded flex items-center justify-center z-10 text-primary primary-gradient-subtle border border-border/10`}
-            >
-              {index < 3 ? (
-                <span className="font-medium">{toRoman(index + 1)}</span>
-              ) : (
-                <Lock className="w-4 h-4 text-muted-foreground" />
-              )}
+        <motion.div
+          className="relative w-full"
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.3, duration: 0.5 }}
+        >
+          {/* Stage Indicators */}
+          <div className="flex justify-between mb-3">
+            {stages.map((stage, index) => (
+              <motion.div
+                key={index}
+                className="flex flex-col items-center gap-1"
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 + index * 0.1, duration: 0.3 }}
+                whileHover={{ scale: 1.05 }}
+              >
+                <div
+                  className={cn(
+                    'w-10 h-10 rounded flex items-center justify-center z-10 text-primary primary-gradient-subtle border border-border/10',
+                    {
+                      'bg-primary/10 border-success':
+                        stage.status === 'completed',
+                      'bg-primary/10 border-border/10':
+                        stage.status === 'in_progress',
+                      'opacity-50': stage.status === 'locked',
+                    },
+                  )}
+                >
+                  <span className="font-medium font-serif">
+                    {toRoman(index + 1)}
+                  </span>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Progress Line */}
+          <div className="relative h-4 w-full">
+            {/* Background Track */}
+            <div className="absolute inset-0 bg-gradient-to-b from-[#000000] to-[#FFFFFF]/10 rounded-full overflow-hidden p-0.5">
+              <div className="bg-[#191919] rounded-full h-full w-full overflow-hidden p-0.5">
+                {/* Progress Fill */}
+                <motion.div
+                  className="h-full bg-gradient-to-r from-success to-success/70 rounded-full"
+                  initial={{ width: 0 }}
+                  animate={{
+                    width: `${totalProgress}%`,
+                  }}
+                  transition={{ delay: 0.8, duration: 0.8, ease: 'easeOut' }}
+                />
+              </div>
             </div>
-          ))}
-        </div>
-        {/* Progress Line */}
-        <div className="flex p-4">
-          <div className="relative h-4 w-full bg-gradient-to-b from-[#000000] to-[#FFFFFF]/10 rounded-full overflow-hidden p-0.5">
-            <div className="bg-[#191919] rounded-full h-full w-full overflow-hidden p-0.5">
-              <div
-                className="h-full bg-gradient-to-r from-[#017CC2] to-[#0F4BA5] transition-all duration-300 rounded-full"
-                style={{
-                  width: `${(currentStage / (totalStages - 1)) * 100}%`,
-                }}
-              />
-              <Text className="absolute inset-0 flex items-center justify-between text-xs text-primary/50">
-                {Array.from({ length: totalStages }).map((_, index) => (
-                  <span
-                    key={index}
-                    className="w-1.5 h-1.5 rounded-full bg-primary"
+
+            {/* Dot Markers */}
+            <div className="absolute inset-0 flex justify-between items-center px-0">
+              {stages.map((stage, index) => (
+                <div key={index} className="w-10">
+                  <motion.div
+                    className={cn('w-2 h-2 rounded-full m-auto', {
+                      'bg-success': stage.status === 'completed',
+                      'bg-primary': stage.status === 'in_progress',
+                      'bg-primary/50': stage.status === 'locked',
+                      'opacity-0': index === stages.length - 1 || index === 0, // Make last dot invisible
+                    })}
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ delay: 0.6 + index * 0.1, duration: 0.3 }}
                   />
-                ))}
-              </Text>
+                </div>
+              ))}
             </div>
           </div>
-        </div>
-      </div>
-    </Card>
+        </motion.div>
+      </Card>
+    </motion.div>
   )
-}
-
-// Helper function to convert numbers to Roman numerals
-function toRoman(num: number): string {
-  const roman = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X']
-  return roman[num - 1] || num.toString()
 }

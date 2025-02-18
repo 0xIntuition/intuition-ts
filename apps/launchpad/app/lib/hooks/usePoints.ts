@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 
 export function usePoints(accountId?: string) {
   return useQuery({
-    queryKey: ['account-points', accountId?.toLowerCase()],
+    queryKey: ['get-points', accountId?.toLowerCase()],
     queryFn: async () => {
       if (!accountId) {
         return null

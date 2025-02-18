@@ -3,18 +3,22 @@ import { useState } from 'react'
 import {
   Button,
   cn,
+  Icon,
+  IconName,
   IconNameType,
   Identity,
   IdentityTag,
   Skeleton,
   Text,
+  TextVariant,
   Trunctacular,
 } from '@0xintuition/1ui'
-import { Events, GetEventsQuery } from '@0xintuition/graphql'
+import { GetSignalsQuery, Signals } from '@0xintuition/graphql'
 
 import { BLOCK_EXPLORER_URL } from '@consts/general'
 import { formatDistanceToNow } from 'date-fns'
-import { Badge, SortAsc, SortDesc } from 'lucide-react'
+import { SortAsc, SortDesc } from 'lucide-react'
+import { formatUnits } from 'viem'
 
 export type ActivityItem = {
   id: string
@@ -38,35 +42,32 @@ export type ActivityItem = {
 }
 
 export interface ActivityFeedProps {
-  activities?: GetEventsQuery
+  activities?: GetSignalsQuery
   isLoading?: boolean
 }
 
-function ActivityRow({ activity }: { activity: Events }) {
+function ActivityRow({ activity }: { activity: Signals }) {
+  let type: 'deposited' | 'redeemed' | undefined
   let direction: 'on' | 'from' | undefined
-
-  if (activity.type === 'Deposited') {
+  if (activity.deposit !== null) {
+    type = 'deposited'
     direction = 'on'
-  } else if (activity.type === 'Redeemed') {
+  } else if (activity.redemption !== null) {
+    type = 'redeemed'
     direction = 'from'
-  } else if (activity.type === 'AtomCreated') {
-    direction = undefined
-  } else if (activity.type === 'TripleCreated') {
-    direction = undefined
   }
 
-  const value =
-    activity.type === 'Deposited'
-      ? activity.deposit?.shares_for_receiver
-      : activity.type === 'Redeemed'
-        ? activity.redemption?.shares_redeemed_by_sender
-        : null
+  const value = activity.deposit?.sender_assets_after_total_fees
+    ? activity.deposit?.sender_assets_after_total_fees
+    : activity.redemption?.assets_for_receiver
 
   const timestamp = activity.block_timestamp
     ? new Date(parseInt(activity.block_timestamp.toString()) * 1000)
     : new Date()
 
-  const creator = activity.atom?.creator || activity.triple?.creator
+  const creator = activity.deposit
+    ? activity.deposit.sender
+    : activity.redemption?.receiver
 
   const dataType = activity.atom
     ? 'atom'
@@ -99,17 +100,18 @@ function ActivityRow({ activity }: { activity: Events }) {
             {creator?.label}
           </IdentityTag>
           <span className="text-muted-foreground">
-            {activity.type.toLowerCase()}
+            {type?.toLowerCase() ?? ''}
           </span>
           {value && (
-            <Badge
-              className={cn(
-                getAmountColor(activity.type, value),
-                'bg-transparent theme-border',
-              )}
-            >
-              {value}
-            </Badge>
+            <div className="flex flex-row gap-0.5 items-center">
+              <Text
+                variant={TextVariant.caption}
+                className={cn(getAmountColor(type ?? '', value))}
+              >
+                {formatUnits(value, 18)}
+              </Text>
+              <Icon name={IconName.eth} className="w-3 h-3" />
+            </div>
           )}
           {direction && (
             <span className="text-muted-foreground">{direction}</span>
@@ -119,7 +121,8 @@ function ActivityRow({ activity }: { activity: Events }) {
             variant={
               dataType === 'triple'
                 ? Identity.user
-                : activity.atom?.type === ('Default' || 'Account')
+                : activity.atom?.type === 'Default' ||
+                    activity.atom?.type === 'Account'
                   ? Identity.user
                   : Identity.nonUser
             }
@@ -135,7 +138,7 @@ function ActivityRow({ activity }: { activity: Events }) {
                     activity.triple?.object?.label,
                   ]
                     .filter(Boolean)
-                    .join('')
+                    .join(' ')
                 }
               />
             </Text>
@@ -163,7 +166,7 @@ function ActivityRow({ activity }: { activity: Events }) {
 }
 
 const ActivityFeed = ({
-  activities = { events: [], total: { aggregate: { count: 0 } } },
+  activities = { signals: [], total: { aggregate: { count: 0 } } },
   isLoading,
 }: ActivityFeedProps) => {
   if (isLoading) {
@@ -190,8 +193,8 @@ const ActivityFeed = ({
 
       <div className="relative space-y-1 pl-3">
         <div className="absolute left-[19px] top-0 w-[2px] h-full bg-muted" />
-        {activities.events.map((activity) => (
-          <ActivityRow key={activity.id} activity={activity as Events} />
+        {activities.signals.map((activity) => (
+          <ActivityRow key={activity.id} activity={activity as Signals} />
         ))}
       </div>
     </div>
