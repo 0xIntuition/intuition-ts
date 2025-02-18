@@ -133,26 +133,19 @@ export async function fetchPoints(address: string): Promise<Points> {
 }
 
 export const GetUserRankDocument = `
-  query GetUserRank($address: String!) {
-    # Get user's points
-    user_points: epoch_points_by_pk(account_id: $address) {
+  query GetUserRank($limit: Int!, $offset: Int!) {
+    # Get all users with points, ordered by points descending
+    epoch_points(
+      where: { launchpad_quests: { _gt: 0 } }
+      order_by: { launchpad_quests: desc }
+      limit: $limit
+      offset: $offset
+    ) {
+      account_id
       launchpad_quests
     }
-    # Get count of users with more points
-    higher_ranks: epoch_points_aggregate(
-      where: {
-        _and: [
-          { account_id: { _neq: $address } },
-          { launchpad_quests: { _gt: 0 } }
-        ]
-      }
-    ) {
-      aggregate {
-        count
-      }
-    }
-    # Get total number of users with points
-    total_users: epoch_points_aggregate(
+    # Get total count for pagination
+    epoch_points_aggregate(
       where: { launchpad_quests: { _gt: 0 } }
     ) {
       aggregate {
@@ -163,15 +156,11 @@ export const GetUserRankDocument = `
 `
 
 export interface GetUserRankQuery {
-  user_points: {
+  epoch_points: Array<{
+    account_id: string
     launchpad_quests: number
-  } | null
-  higher_ranks: {
-    aggregate: {
-      count: number
-    }
-  }
-  total_users: {
+  }>
+  epoch_points_aggregate: {
     aggregate: {
       count: number
     }
@@ -179,22 +168,127 @@ export interface GetUserRankQuery {
 }
 
 export interface GetUserRankQueryVariables {
-  address: string
+  limit: number
+  offset: number
 }
 
 export async function fetchUserRank(
   address: string,
 ): Promise<{ rank: number; totalUsers: number }> {
-  const data = await pointsClient.request<
+  const PAGE_SIZE = 100
+  let offset = 0
+  let userFound = false
+  let userRank = 0
+
+  // Get total count first
+  const firstPage = await pointsClient.request<
     GetUserRankQuery,
     GetUserRankQueryVariables
   >(GetUserRankDocument, {
-    address,
+    limit: PAGE_SIZE,
+    offset: 0,
+  })
+
+  const totalUsers = firstPage.epoch_points_aggregate.aggregate.count
+
+  // If no users with points, return unranked
+  if (totalUsers === 0) {
+    return {
+      rank: 0,
+      totalUsers: 0,
+    }
+  }
+
+  // Check first page
+  const normalizedAddress = address.toLowerCase()
+  const userIndexInFirstPage = firstPage.epoch_points.findIndex(
+    (user) => user.account_id === normalizedAddress,
+  )
+
+  if (userIndexInFirstPage !== -1) {
+    // User found in first page
+    userRank = userIndexInFirstPage + 1
+    userFound = true
+  }
+
+  // If not found in first page, keep fetching until found
+  while (!userFound && offset + PAGE_SIZE < totalUsers) {
+    offset += PAGE_SIZE
+    const nextPage = await pointsClient.request<
+      GetUserRankQuery,
+      GetUserRankQueryVariables
+    >(GetUserRankDocument, {
+      limit: PAGE_SIZE,
+      offset,
+    })
+
+    const userIndexInPage = nextPage.epoch_points.findIndex(
+      (user) => user.account_id === normalizedAddress,
+    )
+
+    if (userIndexInPage !== -1) {
+      // User found in this page
+      userRank = offset + userIndexInPage + 1
+      userFound = true
+      break
+    }
+  }
+
+  console.log(
+    userFound
+      ? `Found user at rank ${userRank} out of ${totalUsers} total users`
+      : `User not found in ${totalUsers} total users`,
+  )
+
+  return {
+    rank: userFound ? userRank : 0,
+    totalUsers,
+  }
+}
+
+export const GetUserRankEfficientDocument = `
+  query GetUserRankEfficient($address: String!) {
+    # Get user's points
+    user_points: epoch_points_by_pk(account_id: $address) {
+      launchpad_quests
+    }
+    # Get all users with points, ordered by points descending
+    ranked_users: epoch_points(
+      where: { launchpad_quests: { _gt: 0 } }
+      order_by: { launchpad_quests: desc }
+    ) {
+      account_id
+      launchpad_quests
+    }
+  }
+`
+
+export interface GetUserRankEfficientQuery {
+  user_points: {
+    launchpad_quests: number
+  } | null
+  ranked_users: Array<{
+    account_id: string
+    launchpad_quests: number
+  }>
+}
+
+export interface GetUserRankEfficientQueryVariables {
+  address: string
+}
+
+export async function fetchUserRankEfficient(
+  address: string,
+): Promise<{ rank: number; totalUsers: number }> {
+  const data = await pointsClient.request<
+    GetUserRankEfficientQuery,
+    GetUserRankEfficientQueryVariables
+  >(GetUserRankEfficientDocument, {
+    address: address.toLowerCase(),
   })
 
   const userPoints = data.user_points?.launchpad_quests ?? 0
-  const higherRanks = data.higher_ranks.aggregate.count
-  const totalUsers = data.total_users.aggregate.count
+  const totalUsers = data.ranked_users.length
 
   // If user has no points, they're unranked
   if (userPoints === 0) {
@@ -204,9 +298,22 @@ export async function fetchUserRank(
     }
   }
 
-  // Add 1 to higher ranks to get user's position (1-based ranking)
+  // Find user's position in the sorted array (1-based index)
+  const userIndex = data.ranked_users.findIndex(
+    (user) => user.account_id === address.toLowerCase(),
+  )
+
+  // If user not found, they're unranked
+  if (userIndex === -1) {
+    return {
+      rank: 0,
+      totalUsers,
+    }
+  }
+
+  // Add 1 to convert from 0-based to 1-based ranking
   return {
-    rank: higherRanks + 1,
+    rank: userIndex + 1,
     totalUsers,
   }
 }

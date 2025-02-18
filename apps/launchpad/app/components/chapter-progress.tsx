@@ -2,39 +2,28 @@ import { Card, cn, Text, TextVariant } from '@0xintuition/1ui'
 
 import { toRoman } from '@lib/utils/misc'
 import { motion } from 'framer-motion'
-import { Clock, Lock } from 'lucide-react'
 
 interface ChapterStage {
-  status: 'completed' | 'expired' | 'in_progress' | 'locked'
-  progress: number
+  status: 'completed' | 'in_progress' | 'locked'
 }
 
 interface ChapterProgressProps {
   stages: ChapterStage[]
   currentStageIndex: number
   title: string
-  currentChapter?: number
 }
 
 export default function ChapterProgress({
   stages,
   currentStageIndex,
   title,
-  currentChapter,
 }: ChapterProgressProps) {
-  // Calculate total progress including expired stages
+  // Calculate total progress based on completed chapters and current chapter
   const totalProgress = Math.min(
-    stages.reduce((acc, stage, index) => {
-      const stageWeight = 100 / stages.length
-      if (index < currentStageIndex) {
-        // Past stages contribute their final progress
-        return acc + (stage.progress * stageWeight) / 100
-      } else if (index === currentStageIndex) {
-        // Current stage contributes its current progress
-        return acc + (stage.progress * stageWeight) / 100
-      }
-      return acc
-    }, 0),
+    ((currentStageIndex +
+      (stages[currentStageIndex]?.status === 'in_progress' ? 0.5 : 0)) /
+      (stages.length - 1)) *
+      100,
     100,
   )
 
@@ -53,9 +42,7 @@ export default function ChapterProgress({
           transition={{ delay: 0.2, duration: 0.5 }}
         >
           <div className="space-y-2 w-full">
-            <Text className="text-2xl whitespace-nowrap">
-              {title} {currentChapter}
-            </Text>
+            <Text className="text-2xl whitespace-nowrap">{title}</Text>
           </div>
           <Text variant={TextVariant.footnote} className="text-primary/70">
             {Math.round(totalProgress)}% Complete
@@ -85,41 +72,16 @@ export default function ChapterProgress({
                     {
                       'bg-primary/10 border-success':
                         stage.status === 'completed',
-                      'bg-primary/10 border-warning':
-                        stage.status === 'expired',
                       'bg-primary/10 border-border/10':
                         stage.status === 'in_progress',
                       'opacity-50': stage.status === 'locked',
                     },
                   )}
                 >
-                  {stage.status === 'locked' ? (
-                    <Lock className="w-4 h-4 text-muted-foreground" />
-                  ) : stage.status === 'expired' ? (
-                    <Clock className="w-4 h-4 text-warning" />
-                  ) : (
-                    <span className="font-medium font-serif">
-                      {toRoman(index + 1)}
-                    </span>
-                  )}
+                  <span className="font-medium font-serif">
+                    {toRoman(index + 1)}
+                  </span>
                 </div>
-                <Text
-                  variant={TextVariant.footnote}
-                  className={cn('text-center min-h-[1rem] text-xs', {
-                    'text-success': stage.status === 'completed',
-                    'text-warning': stage.status === 'expired',
-                    'text-info': stage.status === 'in_progress',
-                    'text-primary/50': stage.status === 'locked',
-                  })}
-                >
-                  {stage.status === 'locked'
-                    ? 'Locked'
-                    : stage.status === 'expired'
-                      ? `${stage.progress}%`
-                      : stage.status === 'completed'
-                        ? 'Complete'
-                        : `${stage.progress}%`}
-                </Text>
               </motion.div>
             ))}
           </div>
@@ -148,7 +110,6 @@ export default function ChapterProgress({
                   <motion.div
                     className={cn('w-2 h-2 rounded-full m-auto', {
                       'bg-success': stage.status === 'completed',
-                      'bg-warning': stage.status === 'expired',
                       'bg-primary': stage.status === 'in_progress',
                       'bg-primary/50': stage.status === 'locked',
                       'opacity-0': index === stages.length - 1 || index === 0, // Make last dot invisible

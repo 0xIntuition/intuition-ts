@@ -1,33 +1,7 @@
 import { pointsClient } from '@lib/graphql/client'
+import type { GetQuestionCompletionResponse } from '@lib/services/questions'
+import { GetQuestionCompletionDocument } from '@lib/services/questions'
 import type { LoaderFunctionArgs } from '@remix-run/node'
-import { gql } from 'graphql-request'
-
-interface EpochCompletion {
-  id: number
-  completed_at: string
-  points_awarded: number
-  subject_id: number
-}
-
-interface GetQuestionCompletionResponse {
-  epoch_completions: EpochCompletion[]
-}
-
-const GetQuestionCompletionQuery = gql`
-  query GetQuestionCompletion($accountId: String!, $questionId: Int!) {
-    epoch_completions(
-      where: {
-        account_id: { _eq: $accountId }
-        question_id: { _eq: $questionId }
-      }
-    ) {
-      id
-      completed_at
-      points_awarded
-      subject_id
-    }
-  }
-`
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url)
@@ -42,7 +16,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   try {
     const data = await pointsClient.request<GetQuestionCompletionResponse>(
-      GetQuestionCompletionQuery,
+      GetQuestionCompletionDocument,
       {
         accountId,
         questionId: parseInt(questionId, 10),

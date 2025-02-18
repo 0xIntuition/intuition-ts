@@ -124,6 +124,21 @@ const GetQuestionCompletionQuery = gql`
   }
 `
 
+const GetEpochByIdQuery = gql`
+  query GetEpochById($epochId: Int!) {
+    epochs(where: { id: { _eq: $epochId } }, limit: 1) {
+      id
+      name
+      description
+      start_date
+      end_date
+      is_active
+      created_at
+      updated_at
+    }
+  }
+`
+
 export async function fetchCurrentEpoch(): Promise<Epoch | null> {
   try {
     const data =
@@ -178,6 +193,22 @@ export async function fetchQuestionCompletion(
     return data.epoch_completions[0] ?? null
   } catch (error) {
     logger('Error fetching question completion:', error)
+    throw error
+  }
+}
+
+export async function fetchEpochById(epochId: number): Promise<Epoch | null> {
+  try {
+    const data = await pointsClient.request<GetCurrentEpochResponse>(
+      GetEpochByIdQuery,
+      {
+        epochId,
+      },
+    )
+    return data.epochs[0] ?? null
+  } catch (error) {
+    logger('Error fetching epoch by ID:', error)
+    logger('GraphQL Query:', GetEpochByIdQuery)
     throw error
   }
 }
