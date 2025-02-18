@@ -55,7 +55,12 @@ import {
 } from '@remix-run/react'
 import { getUser } from '@server/auth'
 // import { requireUser } from '@server/auth'
-import { dehydrate, QueryClient, useQueryClient } from '@tanstack/react-query'
+import {
+  dehydrate,
+  QueryClient,
+  useQueryClient,
+  UseQueryOptions,
+} from '@tanstack/react-query'
 import {
   ColumnDef,
   getCoreRowModel,
@@ -160,7 +165,23 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     >(GetListDetailsWithPositionDocument, variables)()
   }
 
-  await queryClient.setQueryData(['get-list-details', variables], listData)
+  await queryClient.setQueryData(
+    [
+      'get-list-details',
+      {
+        tagPredicateId: predicateId,
+        globalWhere: {
+          predicate_id: {
+            _eq: predicateId,
+          },
+          object_id: {
+            _eq: objectId,
+          },
+        },
+      },
+    ],
+    listData,
+  )
 
   const { origin } = new URL(request.url)
   const ogImageUrl = `${origin}/resources/create-og?id=${objectId}&type=list`
@@ -428,13 +449,51 @@ export default function MiniGameOne() {
   }, [predicateId, objectId, userWallet, pageSize, pageIndex, sorting])
 
   const { data: withUserData, isLoading: isLoadingUserData } =
-    useGetListDetailsWithUserQuery(queryVariables, {
-      enabled: !!userWallet,
-    })
+    useGetListDetailsWithUserQuery(
+      {
+        ...queryVariables,
+      },
+      {
+        queryKey: [
+          'get-list-details',
+          {
+            tagPredicateId: predicateId,
+            globalWhere: {
+              predicate_id: {
+                _eq: predicateId,
+              },
+              object_id: {
+                _eq: objectId,
+              },
+            },
+          },
+        ],
+        enabled: !!userWallet,
+      } as UseQueryOptions<GetListDetailsWithUserQuery>,
+    )
   const { data: withoutUserData, isLoading: isLoadingPositionData } =
-    useGetListDetailsWithPositionQuery(queryVariables, {
-      enabled: !userWallet,
-    })
+    useGetListDetailsWithPositionQuery(
+      {
+        ...queryVariables,
+      },
+      {
+        queryKey: [
+          'get-list-details',
+          {
+            tagPredicateId: predicateId,
+            globalWhere: {
+              predicate_id: {
+                _eq: predicateId,
+              },
+              object_id: {
+                _eq: objectId,
+              },
+            },
+          },
+        ],
+        enabled: !userWallet,
+      } as UseQueryOptions<GetListDetailsWithPositionQuery>,
+    )
 
   const listData = userWallet ? withUserData : withoutUserData
   const isLoading = userWallet ? isLoadingUserData : isLoadingPositionData

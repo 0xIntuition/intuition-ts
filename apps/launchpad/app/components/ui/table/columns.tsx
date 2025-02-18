@@ -11,6 +11,8 @@ import { SignalButton } from '@components/signal-modal/signal-button'
 import { SignalModal } from '@components/signal-modal/signal-modal'
 import { MIN_DEPOSIT } from '@consts/general'
 import { usePrivy } from '@privy-io/react-auth'
+import { useRevalidator } from '@remix-run/react'
+import { useQueryClient } from '@tanstack/react-query'
 import { ColumnDef } from '@tanstack/react-table'
 import { AtomType, TripleType } from 'app/types'
 import { ArrowBigDown, ArrowBigUp } from 'lucide-react'
@@ -58,11 +60,13 @@ function SignalCell({
   const [isSignalModalOpen, setIsSignalModalOpen] = useState(false)
   const [signalMode, setSignalMode] = useState<'deposit' | 'redeem'>('deposit')
   const userWallet = privyUser?.wallet?.address
-
+  const queryClient = useQueryClient()
   const handleSignal = (mode: 'deposit' | 'redeem') => {
     setSignalMode(mode)
     setIsSignalModalOpen(true)
   }
+
+  const revalidator = useRevalidator()
 
   const handleClose = () => {
     // Lock table clicks and close modal
@@ -75,6 +79,8 @@ function SignalCell({
       // @ts-ignore - Added by DataTable
       window.__lockTableClicks?.()
     }, 0)
+    queryClient.invalidateQueries()
+    revalidator.revalidate()
   }
 
   // Calculate initial ticks based on position direction
