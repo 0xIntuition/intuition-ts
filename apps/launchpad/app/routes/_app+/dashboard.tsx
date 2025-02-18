@@ -268,7 +268,7 @@ export default function Dashboard() {
   })
 
   return (
-    <>
+    <div className="flex flex-col gap-4">
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -329,6 +329,6 @@ export default function Dashboard() {
       </AuthCover>
       <ChapterProgress title="Chapters" stages={stages} currentStageIndex={0} />
       <EarnSection quests={earnCards} />
-    </>
+    </div>
   )
 }
