@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from 'react'
+import { createContext, useContext, useEffect, useState } from 'react'
 
 import { toast } from '@0xintuition/1ui'
 
@@ -16,12 +16,27 @@ interface AuthContextType {
   disconnect: () => Promise<void>
 }
 
-export const AuthContext = createContext<AuthContextType | null>(null)
+const defaultAuthContext: AuthContextType = {
+  isReady: false,
+  isAuthenticated: false,
+  isLoading: false,
+  connect: async () => {},
+  disconnect: async () => {},
+}
+
+export const AuthContext = createContext<AuthContextType>(defaultAuthContext)
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const { ready: privyReady, authenticated } = usePrivy()
   const [isLoading, setIsLoading] = useState(false)
+  const [isInitializing, setIsInitializing] = useState(true)
   const revalidator = useRevalidator()
+
+  useEffect(() => {
+    if (privyReady) {
+      setIsInitializing(false)
+    }
+  }, [privyReady])
 
   const { login } = useLogin({
     onComplete: (params) => {
@@ -44,23 +59,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       revalidator.revalidate()
     },
   })
-
-  // Return early if Privy is not ready to prevent hooks from being called too early
-  if (!privyReady) {
-    return (
-      <AuthContext.Provider
-        value={{
-          isReady: false,
-          isAuthenticated: false,
-          isLoading: true,
-          connect: async () => {},
-          disconnect: async () => {},
-        }}
-      >
-        {children}
-      </AuthContext.Provider>
-    )
-  }
 
   const connect = async () => {
     setIsLoading(true)
@@ -86,7 +84,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const value: AuthContextType = {
     isReady: privyReady,
     isAuthenticated: authenticated,
-    isLoading,
+    isLoading: isLoading || isInitializing,
     connect,
     disconnect,
   }
@@ -95,16 +93,5 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 }
 
 export function useAuth() {
-  const context = useContext(AuthContext)
-  if (!context) {
-    // Return a default state during hot reloads or when context is not available
-    return {
-      isReady: false,
-      isAuthenticated: false,
-      isLoading: true,
-      connect: async () => {},
-      disconnect: async () => {},
-    }
-  }
-  return context
+  return useContext(AuthContext)
 }

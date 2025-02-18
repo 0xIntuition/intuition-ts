@@ -19,11 +19,12 @@ import {
   configureClient,
 } from '@0xintuition/graphql'
 
+import { LoadingState } from '@components/loading-state'
 import { VideoBackground } from '@components/video-background'
 import { CURRENT_ENV } from '@consts/general'
 import { json } from '@remix-run/node'
-import { setupAPI } from '@server/auth'
 import { getEnv } from '@server/env'
+import { ClientOnly } from 'remix-utils/client-only'
 
 // Configure GraphQL client at module initialization using the URLs from the package. For now, we should use the local URL for development
 // This can be updated to use the same environment approach that we use in Portal in the future, or leave up to the template user to configure however makes sense for their use case
@@ -35,8 +36,6 @@ configureClient({
 })
 
 export async function loader() {
-  setupAPI()
-
   return json({
     env: getEnv(),
   })
@@ -106,9 +105,13 @@ export default function App() {
   return (
     <Document theme="dark">
       <Toaster position="top-right" />
-      <Providers env={env}>
-        <AppLayout />
-      </Providers>
+      <ClientOnly fallback={<LoadingState />}>
+        {() => (
+          <Providers env={env}>
+            <AppLayout />
+          </Providers>
+        )}
+      </ClientOnly>
     </Document>
   )
 }
