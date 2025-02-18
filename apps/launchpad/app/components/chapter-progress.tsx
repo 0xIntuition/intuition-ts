@@ -87,7 +87,7 @@ export default function ChapterProgress({
                         stage.status === 'completed',
                       'bg-primary/10 border-warning':
                         stage.status === 'expired',
-                      'bg-primary/10 border-info':
+                      'bg-primary/10 border-border/10':
                         stage.status === 'in_progress',
                       'opacity-50': stage.status === 'locked',
                     },
