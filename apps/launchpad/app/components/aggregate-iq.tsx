@@ -9,7 +9,6 @@ import {
   TextWeight,
 } from '@0xintuition/1ui'
 
-import { EpochProgress } from '@routes/resources+/get-epoch-progress'
 import { motion, useAnimation } from 'framer-motion'
 import { Award, BrainCircuit, ListCheck, Sparkle } from 'lucide-react'
 
