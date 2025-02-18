@@ -74,6 +74,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, [privyReady, authenticated, user])
 
+  useEffect(() => {
+    if (privyReady) {
+      setIsInitializing(false)
+    }
+  }, [privyReady])
+
   const { login } = useLogin({
     onComplete: (params) => {
       logger('Login complete:', params)
