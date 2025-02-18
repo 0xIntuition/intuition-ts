@@ -29,6 +29,7 @@ import {
 import { AtomDetailsModal } from '@components/atom-details-modal'
 import { AuthCover } from '@components/auth-cover'
 import LoadingLogo from '@components/loading-logo'
+import { Navigation } from '@components/lore/chapter-navigation'
 import { PageHeader } from '@components/page-header'
 import ShareModal from '@components/share-modal'
 import { OnboardingModal } from '@components/survey-modal/survey-modal'
@@ -38,7 +39,7 @@ import { MIN_DEPOSIT, ZERO_ADDRESS } from '@consts/general'
 import { Question } from '@lib/graphql/types'
 import { useGoBack } from '@lib/hooks/useGoBack'
 import { useQuestionData } from '@lib/hooks/useQuestionData'
-import { fetchEpochQuestion } from '@lib/services/epochs'
+import { fetchEpochQuestion, fetchEpochQuestions } from '@lib/services/epochs'
 import {
   atomDetailsModalAtom,
   onboardingModalAtom,
@@ -89,6 +90,18 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const questionData = await fetchEpochQuestion(Number(params.questionId))
   const predicateId = questionData?.predicate_id
   const objectId = questionData?.object_id
+
+  // Get adjacent questions
+  const allQuestions = await fetchEpochQuestions(Number(params.epochId))
+  const currentIndex = allQuestions.findIndex(
+    (q) => q.id === Number(params.questionId),
+  )
+  const prevQuestion =
+    currentIndex > 0 ? allQuestions[currentIndex - 1] : undefined
+  const nextQuestion =
+    currentIndex < allQuestions.length - 1
+      ? allQuestions[currentIndex + 1]
+      : undefined
 
   // Get question completion if user is logged in
   let completion = null
@@ -159,6 +172,8 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     objectResult: listData?.globalTriples[0]?.object,
     completion,
     questionTitle: questionData?.title,
+    prevQuestion,
+    nextQuestion,
   }
 }
 
@@ -227,7 +242,8 @@ export default function MiniGameOne() {
   const location = useLocation()
   const { epochId, questionId } = useParams()
   const goBack = useGoBack({ fallbackRoute: `/quests/questions/${epochId}` })
-  const { userWallet, completion } = useLoaderData<typeof loader>()
+  const { userWallet, completion, prevQuestion, nextQuestion } =
+    useLoaderData<typeof loader>()
   const [shareModalActive, setShareModalActive] = useAtom(shareModalAtom)
   const [onboardingModal, setOnboardingModal] = useAtom(onboardingModalAtom)
   const [atomDetailsModal, setAtomDetailsModal] = useAtom(atomDetailsModalAtom)
@@ -812,7 +828,7 @@ export default function MiniGameOne() {
       /> */}
 
       {/* Space for table */}
-      <div className="mt-6">
+      <div className="mt-6 !mb-24">
         <DataTable
           columns={columns as ColumnDef<TableRowData>[]}
           data={tableData}
@@ -848,6 +864,28 @@ export default function MiniGameOne() {
         }
         atomId={atomDetailsModal.atomId}
         data={atomDetailsModal.data}
+      />
+      <Navigation
+        prevItem={
+          prevQuestion
+            ? {
+                id: String(prevQuestion.id),
+                title: prevQuestion.title,
+                order: prevQuestion.order,
+              }
+            : undefined
+        }
+        nextItem={
+          nextQuestion
+            ? {
+                id: String(nextQuestion.id),
+                title: nextQuestion.title,
+                order: nextQuestion.order,
+              }
+            : undefined
+        }
+        type="question"
+        baseUrl={`/quests/questions/${epochId}`}
       />
     </>
   )
