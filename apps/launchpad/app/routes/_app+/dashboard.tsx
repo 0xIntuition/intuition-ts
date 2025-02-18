@@ -15,6 +15,7 @@ import { ErrorPage } from '@components/error-page'
 import { LoadingState } from '@components/loading-state'
 import { CHAPTERS } from '@consts/chapters'
 import { ZERO_ADDRESS } from '@consts/general'
+import { CHAPTERS } from '@lib/consts/chapters'
 import { useEpochProgress } from '@lib/hooks/useEpochProgress'
 import { usePoints } from '@lib/hooks/usePoints'
 import { useTotalCompletedQuestions } from '@lib/hooks/useTotalCompletedQuestions'
@@ -127,7 +128,7 @@ export default function Dashboard() {
     protocolPointsBeforeCutoff + protocolPoitnsAfterCutoff,
   )
 
-  const combinedTotal = (points?.total_points ?? 0) + protocolPointsTotal
+  const combinedTotal = (points?.totalPoints ?? 0) + protocolPointsTotal
 
   const stages = CHAPTERS.CHAPTERS
 
@@ -251,6 +252,6 @@ export default function Dashboard() {
         currentStageIndex={CHAPTERS.CURRENT_CHAPTER - 1}
       />
       <EarnSection quests={earnCards} />
-    </>
+    </div>
   )
 }
