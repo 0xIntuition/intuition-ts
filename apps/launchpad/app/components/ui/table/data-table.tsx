@@ -89,16 +89,6 @@ export function DataTable<TData extends { id: string | number }, TValue>({
     state: {
       sorting,
     },
-    initialState: {
-      pagination: {
-        pageIndex: 0,
-        pageSize: 50,
-      },
-      columnPinning: {
-        left: ['index'],
-        right: ['actions'],
-      },
-    },
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),

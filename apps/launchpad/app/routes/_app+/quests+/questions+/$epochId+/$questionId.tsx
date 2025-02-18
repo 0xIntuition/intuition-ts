@@ -323,6 +323,8 @@ export default function MiniGameOne() {
   const [shareModalActive, setShareModalActive] = useAtom(shareModalAtom)
   const [onboardingModal, setOnboardingModal] = useAtom(onboardingModalAtom)
   const [atomDetailsModal, setAtomDetailsModal] = useAtom(atomDetailsModalAtom)
+  const [searchParams, setSearchParams] = useSearchParams()
+  const queryClient = useQueryClient()
 
   const { authenticated } = usePrivy()
 
@@ -361,8 +363,6 @@ export default function MiniGameOne() {
   const fullPath = hasUserParam
     ? `${location?.pathname}${location?.search}`
     : `${location?.pathname}${location?.search}${location?.search ? '&' : '?'}`
-
-  const [searchParams, setSearchParams] = useSearchParams()
 
   const [sorting, setSorting] = React.useState<SortingState>(() => {
     const sortParam = searchParams.get('sort')
@@ -434,11 +434,11 @@ export default function MiniGameOne() {
   // Update URL when pagination changes
   const updatePaginationParams = React.useCallback(
     (newPage: number, newSize: number) => {
-      // Update URL params immediately
+      // Update URL params
       const newParams = new URLSearchParams(searchParams)
-      newParams.set('page', (newPage + 1).toString())
+      newParams.set('page', (newPage + 1).toString()) // Convert to 1-based for URL
       newParams.set('limit', newSize.toString())
-      setSearchParams(newParams, { replace: true }) // Use replace to avoid adding to history
+      setSearchParams(newParams, { replace: true })
 
       // Update local state
       setPageIndex(newPage)
@@ -522,43 +522,18 @@ export default function MiniGameOne() {
         ...queryVariables,
       },
       {
-        queryKey: [
-          'get-list-details',
-          {
-            tagPredicateId: predicateId,
-            globalWhere: {
-              predicate_id: {
-                _eq: predicateId,
-              },
-              object_id: {
-                _eq: objectId,
-              },
-            },
-          },
-        ],
+        queryKey: ['get-list-details', predicateId, objectId, queryVariables],
         enabled: !!userWallet,
       } as UseQueryOptions<GetListDetailsWithUserQuery>,
     )
+
   const { data: withoutUserData, isLoading: isLoadingPositionData } =
     useGetListDetailsWithPositionQuery(
       {
         ...queryVariables,
       },
       {
-        queryKey: [
-          'get-list-details',
-          {
-            tagPredicateId: predicateId,
-            globalWhere: {
-              predicate_id: {
-                _eq: predicateId,
-              },
-              object_id: {
-                _eq: objectId,
-              },
-            },
-          },
-        ],
+        queryKey: ['get-list-details', predicateId, objectId, queryVariables],
         enabled: !userWallet,
       } as UseQueryOptions<GetListDetailsWithPositionQuery>,
     )
@@ -589,7 +564,7 @@ export default function MiniGameOne() {
   const tableData = React.useMemo(() => {
     const data =
       (listData?.globalTriples?.map((triple) => ({
-        id: String(pageIndex * pageSize + triple.id),
+        id: String(triple.vault_id),
         triple: triple as TripleType,
         image: triple.subject.image || '',
         name: triple.subject.label || 'Untitled Entry',
@@ -681,8 +656,7 @@ export default function MiniGameOne() {
           pageIndex,
           pageSize,
         })
-        setPageIndex(newState.pageIndex)
-        setPageSize(newState.pageSize)
+        // Only update UI state after data is fetched
         updatePaginationParams(newState.pageIndex, newState.pageSize)
       }
     },
@@ -702,8 +676,6 @@ export default function MiniGameOne() {
       },
     },
   })
-
-  const queryClient = useQueryClient()
 
   const handleStartOnboarding = () => {
     // Ensure we have the complete question object with required fields
