@@ -129,7 +129,7 @@ export default function Dashboard() {
   const { initialParams } = useLoaderData<typeof loader>()
   const address = initialParams?.address?.toLowerCase()
 
-  const { data: user, isLoading: isLoadingUser } = useGetAccountQuery({
+  const { data: user } = useGetAccountQuery({
     address: address ?? ZERO_ADDRESS,
   })
 
@@ -157,16 +157,22 @@ export default function Dashboard() {
   const { data: totalCompletedQuestions, isLoading: isLoadingTotalCompleted } =
     useTotalCompletedQuestions()
 
-  const isLoading =
-    isLoadingUser ||
-    isLoadingPoints ||
-    isLoadingFees ||
-    isLoadingEpoch ||
-    isLoadingProgress ||
-    isLoadingRank ||
-    isLoadingTotalCompleted
+  // Only show loading state on initial mount when we have no data
+  const isInitialLoading =
+    isLoadingPoints &&
+    isLoadingFees &&
+    isLoadingEpoch &&
+    isLoadingProgress &&
+    isLoadingRank &&
+    isLoadingTotalCompleted &&
+    !points &&
+    !protocolFees &&
+    !currentEpoch &&
+    !epochProgress &&
+    !rankData &&
+    !totalCompletedQuestions
 
-  if (isLoading) {
+  if (isInitialLoading) {
     return <LoadingState />
   }
 
