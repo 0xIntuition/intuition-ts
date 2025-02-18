@@ -39,7 +39,13 @@ import { MIN_DEPOSIT, ZERO_ADDRESS } from '@consts/general'
 import { Question } from '@lib/graphql/types'
 import { useGoBack } from '@lib/hooks/useGoBack'
 import { useQuestionData } from '@lib/hooks/useQuestionData'
-import { fetchEpochQuestion, fetchEpochQuestions } from '@lib/services/epochs'
+import {
+  fetchEpochById,
+  fetchEpochQuestion,
+  fetchEpochQuestions,
+} from '@lib/services/epochs'
+import type { EpochCompletion, EpochQuestion } from '@lib/services/epochs'
+import { fetchQuestionCompletion } from '@lib/services/questions'
 import {
   atomDetailsModalAtom,
   onboardingModalAtom,
@@ -54,10 +60,10 @@ import {
   useSearchParams,
 } from '@remix-run/react'
 import { getUser } from '@server/auth'
-// import { requireUser } from '@server/auth'
 import {
   dehydrate,
   QueryClient,
+  useQuery,
   useQueryClient,
   UseQueryOptions,
 } from '@tanstack/react-query'
@@ -92,14 +98,40 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const user = await getUser(request)
   const userWallet = user?.wallet?.address?.toLowerCase()
 
-  const questionData = await fetchEpochQuestion(Number(params.questionId))
-  const predicateId = questionData?.predicate_id
-  const objectId = questionData?.object_id
+  // Prefetch epoch data
+  await queryClient.prefetchQuery({
+    queryKey: ['get-epoch', params.epochId],
+    queryFn: async () => {
+      const epochData = await fetchEpochById(Number(params.epochId))
+      return epochData
+    },
+  })
 
-  // Get adjacent questions
-  const allQuestions = await fetchEpochQuestions(Number(params.epochId))
+  // Prefetch question data
+  await queryClient.prefetchQuery({
+    queryKey: ['get-question', params.questionId],
+    queryFn: async () => {
+      const questionData = await fetchEpochQuestion(Number(params.questionId))
+      return questionData
+    },
+  })
+
+  // Prefetch all questions for navigation
+  await queryClient.prefetchQuery({
+    queryKey: ['get-questions', params.epochId],
+    queryFn: async () => {
+      const allQuestions = await fetchEpochQuestions(Number(params.epochId))
+      return allQuestions
+    },
+  })
+
+  // Get adjacent questions from prefetched data
+  const allQuestions = (await queryClient.ensureQueryData({
+    queryKey: ['get-questions', params.epochId],
+  })) as EpochQuestion[]
+
   const currentIndex = allQuestions.findIndex(
-    (q) => q.id === Number(params.questionId),
+    (q: EpochQuestion) => q.id === Number(params.questionId),
   )
   const prevQuestion =
     currentIndex > 0 ? allQuestions[currentIndex - 1] : undefined
@@ -108,15 +140,30 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
       ? allQuestions[currentIndex + 1]
       : undefined
 
-  // Get question completion if user is logged in
-  let completion = null
+  // Prefetch question completion if user is logged in
   if (userWallet) {
-    const completionResponse = await fetch(
-      `${new URL(request.url).origin}/resources/get-question-completion?accountId=${userWallet}&questionId=${params.questionId}`,
-    )
-    const completionData = await completionResponse.json()
-    completion = completionData.completion
+    await queryClient.prefetchQuery({
+      queryKey: [
+        'question-completion',
+        userWallet.toLowerCase(),
+        params.questionId,
+      ],
+      queryFn: async () => {
+        return fetchQuestionCompletion(userWallet, Number(params.questionId))
+      },
+    })
   }
+
+  // Get completion from prefetched data
+  const completion = userWallet
+    ? ((await queryClient.ensureQueryData({
+        queryKey: [
+          'question-completion',
+          userWallet.toLowerCase(),
+          params.questionId,
+        ],
+      })) as EpochCompletion)
+    : null
 
   // If user has completed the question, prefetch their atom data
   if (completion?.subject_id) {
@@ -131,6 +178,14 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
       },
     })
   }
+
+  // Get question data from prefetched data for predicateId and objectId
+  const questionData = (await queryClient.ensureQueryData({
+    queryKey: ['get-question', params.questionId],
+  })) as EpochQuestion
+
+  const predicateId = questionData.predicate_id
+  const objectId = questionData.object_id
 
   const variables: GetListDetailsWithPositionQueryVariables = {
     tagPredicateId: predicateId,
@@ -270,6 +325,19 @@ export default function MiniGameOne() {
   const [atomDetailsModal, setAtomDetailsModal] = useAtom(atomDetailsModalAtom)
 
   const { authenticated } = usePrivy()
+
+  // Get epoch data
+  const { data: epoch } = useQuery({
+    queryKey: ['get-epoch', epochId],
+    queryFn: async () => {
+      const response = await fetch(`/resources/get-epoch?epochId=${epochId}`)
+      const data = await response.json()
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to fetch epoch')
+      }
+      return data.epoch
+    },
+  })
 
   const questionData = useQuestionData({
     questionId: parseInt(questionId || '1', 10),
@@ -635,17 +703,6 @@ export default function MiniGameOne() {
     },
   })
 
-  // Calculate total users and TVL
-  // const totalUsers = tableData.reduce((sum, item) => sum + item.users, 0)
-  // const forTvl = tableData.reduce((sum, item) => sum + item.forTvl, 0)
-  // const againstTvl = tableData.reduce((sum, item) => sum + item.againstTvl, 0)
-  // const totalUpVotes = tableData.reduce((sum, item) => sum + item.upvotes, 0)
-  // const totalDownVotes = tableData.reduce(
-  //   (sum, item) => sum + item.downvotes,
-  //   0,
-  // )
-  // const totalTvl = forTvl + againstTvl
-
   const queryClient = useQueryClient()
 
   const handleStartOnboarding = () => {
@@ -740,7 +797,7 @@ export default function MiniGameOne() {
         </Button>
         <div className="flex flex-1 justify-between items-center">
           <PageHeader
-            title={`Epoch ${questionData?.epochId} | Question ${questionData?.order}`}
+            title={`${epoch?.name ?? ''} | Question ${questionData?.order}`}
           />
           <div className="flex items-center gap-2">
             <Button

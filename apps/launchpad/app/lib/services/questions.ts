@@ -80,3 +80,49 @@ export async function fetchQuestion(id: number): Promise<Question | null> {
 
   return data.question
 }
+
+export interface QuestionCompletion {
+  id: number
+  completed_at: string
+  points_awarded: number
+  subject_id: number
+}
+
+export interface GetQuestionCompletionResponse {
+  epoch_completions: QuestionCompletion[]
+}
+
+export const GetQuestionCompletionDocument = `
+  query GetQuestionCompletion($accountId: String!, $questionId: Int!) {
+    epoch_completions(
+      where: {
+        account_id: { _eq: $accountId }
+        question_id: { _eq: $questionId }
+      }
+    ) {
+      id
+      completed_at
+      points_awarded
+      subject_id
+    }
+  }
+`
+
+export async function fetchQuestionCompletion(
+  accountId: string,
+  questionId: number,
+): Promise<QuestionCompletion | null> {
+  // Import pointsClient only when this function is called
+  const { pointsClient } = await import('@lib/graphql/client')
+
+  // Use the pointsClient directly since we're in a server context
+  const data = await pointsClient.request<GetQuestionCompletionResponse>(
+    GetQuestionCompletionDocument,
+    {
+      accountId: accountId.toLowerCase(),
+      questionId,
+    },
+  )
+
+  return data.epoch_completions[0] ?? null
+}
