@@ -116,8 +116,6 @@ export default function RewardsRoute() {
     return <LoadingState />
   }
 
-  console.log('points', points)
-
   const feesPaidBeforeCutoff = formatUnits(
     protocolFees?.before_cutoff?.aggregate?.sum?.amount ?? 0n,
     18,
