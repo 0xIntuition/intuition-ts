@@ -18,6 +18,7 @@ import { EarnSection } from '@components/earn-section'
 import { ErrorPage } from '@components/error-page'
 import { LoadingState } from '@components/loading-state'
 import { ZERO_ADDRESS } from '@consts/general'
+import { CHAPTERS } from '@lib/consts/chapters'
 import { useEpochProgress } from '@lib/hooks/useEpochProgress'
 import { usePoints } from '@lib/hooks/usePoints'
 import { useTotalCompletedQuestions } from '@lib/hooks/useTotalCompletedQuestions'
@@ -25,13 +26,41 @@ import { useUserRank } from '@lib/hooks/useUserRank'
 import { fetchPoints, fetchUserRank } from '@lib/services/points'
 import { fetchTotalCompletedQuestions } from '@lib/services/questions'
 import logger from '@lib/utils/logger'
-import { LoaderFunctionArgs } from '@remix-run/node'
+import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 import { getUser } from '@server/auth'
 import { dehydrate, QueryClient, useQuery } from '@tanstack/react-query'
 import { motion } from 'framer-motion'
 import { Code, Compass, Scroll } from 'lucide-react'
 import { formatUnits } from 'viem'
+
+const earnCards = [
+  {
+    id: '1',
+    earnIQ: 100000,
+    title: 'Earn IQ with Quests',
+    icon: <Scroll className="w-4 h-4" />,
+    description: 'Complete quests to obtain IQ reward points',
+    buttonText: 'View Quests',
+    link: '/quests',
+  },
+  {
+    id: '2',
+    title: 'Earn IQ in the Ecosystem',
+    icon: <Compass className="w-4 h-4" />,
+    description: 'Explore and use apps from our product hub',
+    buttonText: 'Explore',
+    link: '/discover',
+  },
+  {
+    id: '3',
+    title: 'Start Building on Intuition',
+    icon: <Code className="w-4 h-4" />,
+    description: 'Build your own apps and tools on Intuition',
+    buttonText: 'Start Building',
+    link: 'https://tech.docs.intuition.systems/',
+  },
+]
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await getUser(request)
@@ -68,25 +97,25 @@ export async function loader({ request }: LoaderFunctionArgs) {
       queryClient.prefetchQuery({
         queryKey: ['get-protocol-fees', { address }],
         queryFn: async () => {
-          const response = fetcher<
+          const response = await fetcher<
             GetFeeTransfersQuery,
             GetFeeTransfersQueryVariables
           >(GetFeeTransfersDocument, {
             address,
             cutoff_timestamp: 1733356800,
-          })
+          })()
           return response
         },
       }),
-      await queryClient.prefetchQuery({
+      queryClient.prefetchQuery({
         queryKey: ['get-user-atom', { address }],
         queryFn: async () => {
-          const response = fetcher<GetAccountQuery, GetAccountQueryVariables>(
-            GetAccountDocument,
-            {
-              address,
-            },
-          )
+          const response = await fetcher<
+            GetAccountQuery,
+            GetAccountQueryVariables
+          >(GetAccountDocument, {
+            address,
+          })()
           return response
         },
       }),
@@ -111,14 +140,14 @@ export async function loader({ request }: LoaderFunctionArgs) {
     )
   }
 
-  return {
+  return json({
     dehydratedState: dehydrate(queryClient),
     initialParams: {
       address,
       activityLimit,
       activityOffset,
     },
-  }
+  })
 }
 
 export function ErrorBoundary() {
@@ -192,80 +221,9 @@ export default function Dashboard() {
     protocolPointsBeforeCutoff + protocolPoitnsAfterCutoff,
   )
 
-  const combinedTotal = (points?.total_points ?? 0) + protocolPointsTotal
+  const combinedTotal = (points?.totalPoints ?? 0) + protocolPointsTotal
 
-  const earnCards = [
-    {
-      id: '1',
-      earnIQ: 100000,
-      title: 'Earn IQ with Quests',
-      icon: <Scroll className="w-4 h-4" />,
-      description: 'Complete quests to obtain IQ reward points',
-      buttonText: 'View Quests',
-      link: '/quests',
-    },
-    {
-      id: '2',
-      title: 'Earn IQ in the Ecosystem',
-      icon: <Compass className="w-4 h-4" />,
-      description: 'Explore and use apps from our product hub',
-      buttonText: 'Explore',
-      link: '/discover',
-    },
-    {
-      id: '3',
-      title: 'Start Building on Intuition',
-      icon: <Code className="w-4 h-4" />,
-      description: 'Build your own apps and tools on Intuition',
-      buttonText: 'Start Building',
-      link: 'https://tech.docs.intuition.systems/',
-    },
-  ]
-
-  // Mock data for now - replace with real data later
-  const epochs = [
-    {
-      completion_percentage: epochProgress?.completion_percentage ?? 0,
-      completed_count: epochProgress?.completed_count ?? 0,
-      total_count: epochProgress?.total_count ?? 0,
-      total_points: epochProgress?.total_points ?? 0,
-    },
-    // Add more epochs as they become available
-  ]
-
-  // Convert epoch data into chapter stages
-  const stages = Array.from({ length: 5 }).map((_, index) => {
-    if (!currentEpoch) {
-      return {
-        status: 'locked' as const,
-        progress: 0,
-      }
-    }
-
-    if (index < (currentEpoch.id ?? 1) - 1) {
-      // Past epochs
-      const pastEpoch = epochs[index]
-      return {
-        status:
-          pastEpoch?.completion_percentage === 100 ? 'completed' : 'expired',
-        progress: pastEpoch?.completion_percentage ?? 0,
-      } as const
-    }
-
-    if (index === (currentEpoch.id ?? 1) - 1) {
-      // Current epoch
-      return {
-        status: 'in_progress' as const,
-        progress: epochProgress?.completion_percentage ?? 0,
-      }
-    }
-
-    // Future epochs
-    return {
-      status: 'locked' as const,
-      progress: 0,
-    }
-  })
+  const stages = CHAPTERS.CHAPTERS
 
   return (
     <div className="flex flex-col gap-4">
@@ -327,7 +285,11 @@ export default function Dashboard() {
           totalCompletedQuestions={totalCompletedQuestions?.count ?? 0}
         />
       </AuthCover>
-      <ChapterProgress title="Chapters" stages={stages} currentStageIndex={0} />
+      <ChapterProgress
+        title="Chapters"
+        stages={stages}
+        currentStageIndex={CHAPTERS.CURRENT_CHAPTER - 1}
+      />
       <EarnSection quests={earnCards} />
     </div>
   )
