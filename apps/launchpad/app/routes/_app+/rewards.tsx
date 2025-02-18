@@ -292,6 +292,14 @@ export default function RewardsRoute() {
           levels={
             actCategories.find((c) => c.name === selectedCategory)?.levels ?? []
           }
+          actionButton={
+            selectedCategory === 'Launchpad'
+              ? { text: 'Earn More IQ', to: '../quests' }
+              : undefined
+          }
+          totalPoints={
+            actCategories.find((c) => c.name === selectedCategory)?.totalPoints
+          }
           className="mb-8"
         />
       )}
