@@ -5,10 +5,18 @@
 
 import { Suspense } from 'react'
 
-import { Button, Card, Icon, Text } from '@0xintuition/1ui'
+import {
+  Button,
+  Card,
+  cn,
+  Icon,
+  Text,
+  TextVariant,
+  TextWeight,
+} from '@0xintuition/1ui'
 
 import { AtomDetailsModal } from '@components/atom-details-modal'
-import ChapterProgress from '@components/chapter-progress'
+import { EpochStatus } from '@components/epoch-status'
 import { ErrorPage } from '@components/error-page'
 import { PageHeader } from '@components/page-header'
 import { QuestionCardWrapper } from '@components/question-card-wrapper'
@@ -23,11 +31,6 @@ import { getUser } from '@server/auth'
 import { dehydrate, QueryClient, useQuery } from '@tanstack/react-query'
 import { useAtom } from 'jotai'
 
-interface QuestionStage {
-  status: 'completed' | 'in_progress'
-  progress: number
-}
-
 export async function loader({ request, params }: LoaderFunctionArgs) {
   try {
     logger('Starting epoch questions loader')
@@ -38,14 +41,14 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     const userWallet = user?.wallet?.address?.toLowerCase()
     logger('User wallet:', userWallet)
 
-    // Prefetch current epoch
-    logger('Fetching current epoch')
+    // Prefetch epoch
+    logger('Fetching epoch')
     const epochResponse = await fetch(
-      `${new URL(request.url).origin}/resources/get-current-epoch`,
+      `${new URL(request.url).origin}/resources/get-epoch?epochId=${epochId}`,
     )
     const epochData = await epochResponse.json()
-    logger('Current epoch data:', epochData)
-    await queryClient.setQueryData(['current-epoch'], epochData.epoch)
+    logger('Epoch data:', epochData)
+    await queryClient.setQueryData(['get-epoch', epochId], epochData.epoch)
 
     // Prefetch questions for this epoch
     logger('Fetching questions for epoch', epochId)
@@ -172,6 +175,19 @@ export default function EpochQuestions() {
   const [atomDetailsModal, setAtomDetailsModal] = useAtom(atomDetailsModalAtom)
   const { userWallet } = useLoaderData<typeof loader>()
 
+  // Get epoch data
+  const { data: epoch, isLoading: isLoadingEpoch } = useQuery({
+    queryKey: ['get-epoch', epochId],
+    queryFn: async () => {
+      const response = await fetch(`/resources/get-epoch?epochId=${epochId}`)
+      const data = await response.json()
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to fetch epoch')
+      }
+      return data.epoch
+    },
+  })
+
   // Get questions for this specific epoch
   const { data: questions, isLoading: isLoadingQuestions } = useQuery({
     queryKey: ['get-questions', epochId],
@@ -202,24 +218,6 @@ export default function EpochQuestions() {
     enabled: !!userWallet && !!epochId,
   })
 
-  // Convert questions into stages
-  const stages: QuestionStage[] =
-    questions?.map((question: Question, index: number) => {
-      // Use completion count to determine if this question is completed
-      const questionsCompleted = epochProgress?.completed_count || 0
-      const isCompleted = index < questionsCompleted
-
-      return {
-        status: isCompleted ? 'completed' : 'in_progress',
-        progress: isCompleted ? 100 : 0,
-      }
-    }) || Array(4).fill({ status: 'in_progress', progress: 0 } as QuestionStage)
-
-  // Calculate current question index (first incomplete question)
-  const currentStageIndex = stages.findIndex(
-    (stage: QuestionStage) => stage.status !== 'completed',
-  )
-
   const handleStartOnboarding = (
     question: Question,
     predicateId: number,
@@ -237,9 +235,18 @@ export default function EpochQuestions() {
     })
   }
 
-  if (isLoadingQuestions) {
+  if (isLoadingQuestions || isLoadingEpoch) {
     return <QuestionsSkeleton />
   }
+
+  if (!epoch) {
+    return <ErrorPage routeName="epoch questions" />
+  }
+
+  const totalPoints = questions?.reduce(
+    (acc: number, q: Question) => acc + (q.point_award_amount || 0),
+    0,
+  )
 
   return (
     <>
@@ -253,25 +260,76 @@ export default function EpochQuestions() {
           <Icon name="chevron-left" className="h-4 w-4" />
         </Button>
         <PageHeader
-          title={`Epoch ${epochId} Questions`}
+          title={`${epoch.name} Questions`}
           subtitle="Answer questions to earn IQ"
         />
       </div>
-      <div className="mb-8">
-        <ChapterProgress
-          title="Epoch"
-          currentChapter={Number(epochId)}
-          stages={stages}
-          currentStageIndex={
-            currentStageIndex === -1 ? stages.length - 1 : currentStageIndex
-          }
-        />
-        <div className="mt-4 flex justify-between text-sm text-primary/70">
-          <span>
-            Completed {epochProgress?.completed_count || 0} of{' '}
-            {questions?.length || 4} questions
-          </span>
-          <span>Total Points: {epochProgress?.total_points || 0}</span>
+      <div
+        className={cn(
+          'relative overflow-hidden rounded-lg transition-all duration-200',
+          'bg-white/5 backdrop-blur-md backdrop-saturate-150 group border border-border/10',
+          !epoch.is_active && 'opacity-90',
+        )}
+      >
+        <div className="hover:no-underline w-full px-6 py-4">
+          <div className="flex flex-col w-full gap-4">
+            {/* Header Section */}
+            <div className="flex justify-between items-start w-full">
+              <div className="flex items-center gap-3">
+                <Text
+                  variant={TextVariant.heading4}
+                  weight={TextWeight.semibold}
+                  className="text-left"
+                >
+                  {epoch.name}
+                </Text>
+              </div>
+              <EpochStatus
+                startDate={epoch.start_date}
+                endDate={epoch.end_date}
+                isActive={epoch.is_active}
+              />
+            </div>
+
+            {/* Progress Section */}
+            {epochProgress && (
+              <div className="w-full">
+                <div className="flex justify-between text-sm mb-2">
+                  <Text
+                    variant={TextVariant.footnote}
+                    weight={TextWeight.medium}
+                    className="flex items-center gap-2 text-primary/70"
+                  >
+                    <Icon name="circle-question-mark" className="w-4 h-4" />
+                    {epochProgress.completed_count} of {questions?.length || 0}{' '}
+                    Questions Completed
+                  </Text>
+                  <Text
+                    variant={TextVariant.footnote}
+                    weight={TextWeight.medium}
+                    className="text-primary/70 flex flex-row gap-1 items-center"
+                  >
+                    <Text
+                      variant={TextVariant.body}
+                      weight={TextWeight.semibold}
+                      className="text-success"
+                    >
+                      {epochProgress.total_points}
+                    </Text>{' '}
+                    / {totalPoints} IQ Earned
+                  </Text>
+                </div>
+                <div className="h-1 bg-background rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-success transition-all duration-300"
+                    style={{
+                      width: `${(epochProgress.completed_count / (questions?.length || 1)) * 100}%`,
+                    }}
+                  />
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
       <div className="grid gap-6 md:grid-cols-2">
