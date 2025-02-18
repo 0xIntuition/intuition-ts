@@ -19,6 +19,7 @@ import {
 
 import { ActivityFeedPortal } from '@components/activity-feed-portal'
 import { ErrorPage } from '@components/error-page'
+import { LoadingState } from '@components/loading-state'
 import { PageHeader } from '@components/page-header'
 import { LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData, useSearchParams } from '@remix-run/react'
@@ -73,14 +74,14 @@ export default function Network() {
     searchParams.get('activityOffset') || String(initialParams.activityOffset),
   )
 
-  const { data: systemStats } = useGetStatsQuery(
+  const { data: systemStats, isLoading: isLoadingStats } = useGetStatsQuery(
     {},
     {
       queryKey: ['get-stats'],
     },
   )
 
-  const { data: signalsData } = useGetSignalsQuery(
+  const { data: signalsData, isLoading: isLoadingSignals } = useGetSignalsQuery(
     {
       limit: activityLimit,
       offset: activityOffset,
@@ -102,6 +103,12 @@ export default function Network() {
       ],
     },
   )
+
+  const isLoading = isLoadingStats || isLoadingSignals
+
+  if (isLoading) {
+    return <LoadingState />
+  }
 
   const stats = systemStats?.stats[0]
 

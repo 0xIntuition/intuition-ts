@@ -11,6 +11,7 @@ import {
 
 import { EarnSection } from '@components/earn-section'
 import { LevelIndicator } from '@components/level-indicator'
+import { LoadingState } from '@components/loading-state'
 import { MasteryCard } from '@components/mastery-card'
 import { MasteryPreview } from '@components/mastery-preview'
 import { ZERO_ADDRESS } from '@consts/general'
@@ -99,11 +100,21 @@ export default function RewardsRoute() {
   const { initialParams } = useLoaderData<typeof loader>()
   const address = initialParams?.address?.toLowerCase()
 
-  const { data: points } = usePoints(address)
-  const { data: protocolFees } = useGetFeeTransfersQuery({
-    address: address ?? ZERO_ADDRESS,
-    cutoff_timestamp: 1733356800,
-  })
+  const { data: points, isLoading: isLoadingPoints } = usePoints(address)
+  const { data: protocolFees, isLoading: isLoadingFees } =
+    useGetFeeTransfersQuery({
+      address: address ?? ZERO_ADDRESS,
+      cutoff_timestamp: 1733356800,
+    })
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(
+    'Launchpad',
+  )
+
+  const isLoading = isLoadingPoints || isLoadingFees
+
+  if (isLoading) {
+    return <LoadingState />
+  }
 
   console.log('points', points)
 
@@ -224,10 +235,6 @@ export default function RewardsRoute() {
       })),
     },
   ]
-
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(
-    'Launchpad',
-  )
 
   return (
     <div className="relative z-10">
