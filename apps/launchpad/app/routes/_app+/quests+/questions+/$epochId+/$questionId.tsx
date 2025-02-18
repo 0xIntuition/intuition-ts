@@ -523,7 +523,7 @@ export default function MiniGameOne() {
             : triple.counter_vault?.positions?.[0]?.shares > 0
               ? +formatUnits(triple.counter_vault?.current_share_price, 18)
               : undefined,
-        stakingDisabled: !isCompleted,
+        stakingDisabled: questionData.enabled && !isCompleted,
       })) as TableRowData[]) ?? []
     return data
   }, [listData, isCompleted])
@@ -681,7 +681,7 @@ export default function MiniGameOne() {
         </Button>
         <div className="flex flex-1 justify-between items-center">
           <PageHeader
-            title={`${currentEpoch?.name} | Question ${questionData?.order}`}
+            title={`Epoch ${questionData?.epochId} | Question ${questionData?.order}`}
           />
           <div className="flex items-center gap-2">
             <Button
@@ -776,7 +776,8 @@ export default function MiniGameOne() {
                     </div>
                   </div>
                 ) : (
-                  authenticated && (
+                  authenticated &&
+                  enabled && (
                     <Button
                       variant="primary"
                       size="lg"

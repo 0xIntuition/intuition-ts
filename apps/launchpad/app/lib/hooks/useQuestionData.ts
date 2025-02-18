@@ -104,6 +104,7 @@ export function useQuestionData({ questionId }: UseQuestionDataProps) {
     completedAt: completionData?.completed_at,
     isQuestionActive: questionData?.enabled,
     isEpochActive: currentEpoch?.is_active,
+    epochId: questionData?.epoch_id,
     currentEpoch,
     listData,
     atoms: listData?.globalTriplesAggregate?.aggregate?.count ?? 0,
