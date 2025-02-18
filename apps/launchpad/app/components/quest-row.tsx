@@ -21,7 +21,7 @@ export function QuestRow({
   const BaseRow = (
     <Card
       className={cn(
-        'h-32 rounded-lg w-full relative bg-black/5 backdrop-blur-md backdrop-saturate-150 p-6 border border-border/10',
+        'h-32 rounded-lg w-full relative bg-white/5 backdrop-blur-md backdrop-saturate-150 p-6 border border-border/10',
       )}
     >
       <div className={cn('absolute inset-0 p-8', !enabled && 'blur-sm')}>

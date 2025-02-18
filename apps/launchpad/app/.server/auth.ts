@@ -1,7 +1,4 @@
-import { OpenAPI } from '@0xintuition/api'
-
-import logger from '@lib/utils/logger'
-import { combineHeaders, getAuthHeaders } from '@lib/utils/misc'
+import { combineHeaders } from '@lib/utils/misc'
 import { User } from '@privy-io/server-auth'
 import { redirect } from '@remix-run/node'
 
@@ -11,18 +8,6 @@ import {
   getPrivyUserById,
   verifyPrivyAccessToken,
 } from './privy'
-
-export async function setupAPI() {
-  const apiUrl = process.env.API_URL
-
-  const apiKey = process.env.API_KEY
-
-  OpenAPI.BASE = apiUrl ?? ''
-
-  const headers = getAuthHeaders(apiKey !== null ? apiKey : '')
-  logger('headers', headers)
-  OpenAPI.HEADERS = headers as Record<string, string>
-}
 
 export async function getUserId(request: Request): Promise<string | null> {
   const verifiedClaims = await verifyPrivyAccessToken(request)

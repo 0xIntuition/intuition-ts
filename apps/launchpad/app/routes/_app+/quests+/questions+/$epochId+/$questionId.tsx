@@ -20,6 +20,7 @@ import {
   GetListDetailsWithUserDocument,
   GetListDetailsWithUserQuery,
   GetListDetailsWithUserQueryVariables,
+  Triples_Order_By,
   useGetAtomQuery,
   useGetListDetailsWithPositionQuery,
   useGetListDetailsWithUserQuery,
@@ -28,6 +29,7 @@ import {
 import { AtomDetailsModal } from '@components/atom-details-modal'
 import { AuthCover } from '@components/auth-cover'
 import LoadingLogo from '@components/loading-logo'
+import { Navigation } from '@components/lore/chapter-navigation'
 import { PageHeader } from '@components/page-header'
 import ShareModal from '@components/share-modal'
 import { OnboardingModal } from '@components/survey-modal/survey-modal'
@@ -37,7 +39,7 @@ import { MIN_DEPOSIT, ZERO_ADDRESS } from '@consts/general'
 import { Question } from '@lib/graphql/types'
 import { useGoBack } from '@lib/hooks/useGoBack'
 import { useQuestionData } from '@lib/hooks/useQuestionData'
-import { fetchEpochQuestion } from '@lib/services/epochs'
+import { fetchEpochQuestion, fetchEpochQuestions } from '@lib/services/epochs'
 import {
   atomDetailsModalAtom,
   onboardingModalAtom,
@@ -53,7 +55,12 @@ import {
 } from '@remix-run/react'
 import { getUser } from '@server/auth'
 // import { requireUser } from '@server/auth'
-import { dehydrate, QueryClient, useQueryClient } from '@tanstack/react-query'
+import {
+  dehydrate,
+  QueryClient,
+  useQueryClient,
+  UseQueryOptions,
+} from '@tanstack/react-query'
 import {
   ColumnDef,
   getCoreRowModel,
@@ -88,6 +95,18 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const questionData = await fetchEpochQuestion(Number(params.questionId))
   const predicateId = questionData?.predicate_id
   const objectId = questionData?.object_id
+
+  // Get adjacent questions
+  const allQuestions = await fetchEpochQuestions(Number(params.epochId))
+  const currentIndex = allQuestions.findIndex(
+    (q) => q.id === Number(params.questionId),
+  )
+  const prevQuestion =
+    currentIndex > 0 ? allQuestions[currentIndex - 1] : undefined
+  const nextQuestion =
+    currentIndex < allQuestions.length - 1
+      ? allQuestions[currentIndex + 1]
+      : undefined
 
   // Get question completion if user is logged in
   let completion = null
@@ -126,6 +145,11 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     address: userWallet ?? ZERO_ADDRESS,
     limit: pageSize,
     offset: pageIndex * pageSize,
+    orderBy: {
+      vault: {
+        total_shares: 'desc',
+      },
+    },
   }
 
   let listData
@@ -141,7 +165,23 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     >(GetListDetailsWithPositionDocument, variables)()
   }
 
-  await queryClient.setQueryData(['get-list-details', variables], listData)
+  await queryClient.setQueryData(
+    [
+      'get-list-details',
+      {
+        tagPredicateId: predicateId,
+        globalWhere: {
+          predicate_id: {
+            _eq: predicateId,
+          },
+          object_id: {
+            _eq: objectId,
+          },
+        },
+      },
+    ],
+    listData,
+  )
 
   const { origin } = new URL(request.url)
   const ogImageUrl = `${origin}/resources/create-og?id=${objectId}&type=list`
@@ -153,6 +193,8 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     objectResult: listData?.globalTriples[0]?.object,
     completion,
     questionTitle: questionData?.title,
+    prevQuestion,
+    nextQuestion,
   }
 }
 
@@ -218,11 +260,11 @@ export function ErrorBoundary() {
 }
 
 export default function MiniGameOne() {
-  console.time('MiniGameOne render')
   const location = useLocation()
   const { epochId, questionId } = useParams()
   const goBack = useGoBack({ fallbackRoute: `/quests/questions/${epochId}` })
-  const { userWallet, completion } = useLoaderData<typeof loader>()
+  const { userWallet, completion, prevQuestion, nextQuestion } =
+    useLoaderData<typeof loader>()
   const [shareModalActive, setShareModalActive] = useAtom(shareModalAtom)
   const [onboardingModal, setOnboardingModal] = useAtom(onboardingModalAtom)
   const [atomDetailsModal, setAtomDetailsModal] = useAtom(atomDetailsModalAtom)
@@ -252,14 +294,62 @@ export default function MiniGameOne() {
     ? `${location?.pathname}${location?.search}`
     : `${location?.pathname}${location?.search}${location?.search ? '&' : '?'}`
 
-  const [sorting, setSorting] = React.useState<SortingState>([
-    {
-      id: 'upvotes',
-      desc: true,
-    },
-  ])
-
   const [searchParams, setSearchParams] = useSearchParams()
+
+  const [sorting, setSorting] = React.useState<SortingState>(() => {
+    const sortParam = searchParams.get('sort')
+    const orderParam = searchParams.get('order')
+    return sortParam
+      ? [
+          {
+            id: sortParam,
+            desc: orderParam === 'desc',
+          },
+        ]
+      : [
+          {
+            id: 'upvotes',
+            desc: true,
+          },
+        ]
+  })
+
+  // Update URL when sorting changes
+  const updateSortingParams = React.useCallback(
+    (newSorting: SortingState) => {
+      // Preserve all existing params
+      const existingParams = Object.fromEntries(searchParams.entries())
+      const updatedParams: Record<string, string> = {
+        ...existingParams,
+        page: '1', // Reset to first page
+      }
+
+      if (newSorting.length > 0) {
+        updatedParams.sort = newSorting[0].id
+        updatedParams.order = newSorting[0].desc ? 'desc' : 'asc'
+      } else {
+        delete updatedParams.sort
+        delete updatedParams.order
+      }
+
+      setSearchParams(updatedParams)
+    },
+    [searchParams, setSearchParams],
+  )
+
+  // Effect to sync sorting state with URL params
+  React.useEffect(() => {
+    const sortParam = searchParams.get('sort')
+    const orderParam = searchParams.get('order')
+    if (sortParam) {
+      setSorting([
+        {
+          id: sortParam,
+          desc: orderParam === 'desc',
+        },
+      ])
+    }
+  }, [searchParams])
 
   // Get pagination values from URL or use defaults
   const [pageSize, setPageSize] = React.useState(() => {
@@ -289,33 +379,121 @@ export default function MiniGameOne() {
     [searchParams, setSearchParams],
   )
 
-  const queryVariables = React.useMemo(
-    () =>
-      ({
-        tagPredicateId: predicateId,
-        globalWhere: {
-          predicate_id: {
-            _eq: predicateId,
+  const queryVariables = React.useMemo(() => {
+    // Convert table sorting to GraphQL ordering
+    const sortField = sorting[0]?.id
+    const sortDirection = sorting[0]?.desc ? 'desc' : 'asc'
+
+    let orderBy: Triples_Order_By = {
+      vault: {
+        total_shares: 'desc',
+      },
+    }
+
+    // Map sorting fields to their corresponding GraphQL paths
+    switch (sortField) {
+      case 'upvotes':
+        orderBy = {
+          vault: {
+            total_shares: sortDirection,
           },
-          object_id: {
-            _eq: objectId,
+        }
+        break
+      case 'downvotes':
+        orderBy = {
+          counter_vault: {
+            total_shares: sortDirection,
           },
+        }
+        break
+      case 'name':
+        orderBy = {
+          subject: {
+            label: sortDirection,
+          },
+        }
+        break
+      case 'users':
+        orderBy = {
+          vault: {
+            position_count: sortDirection,
+          },
+        }
+        break
+      case 'tvl':
+        orderBy = {
+          vault: {
+            total_shares: sortDirection,
+          },
+        }
+        break
+    }
+
+    const variables = {
+      tagPredicateId: predicateId,
+      globalWhere: {
+        predicate_id: {
+          _eq: predicateId,
         },
-        address: userWallet ?? ZERO_ADDRESS,
-        limit: pageSize,
-        offset: pageIndex * pageSize,
-      }) as const,
-    [predicateId, objectId, userWallet, pageSize, pageIndex],
-  )
+        object_id: {
+          _eq: objectId,
+        },
+      },
+      address: userWallet ?? ZERO_ADDRESS,
+      limit: pageSize,
+      offset: pageIndex * pageSize,
+      orderBy,
+    } as const
+
+    return variables
+  }, [predicateId, objectId, userWallet, pageSize, pageIndex, sorting])
 
   const { data: withUserData, isLoading: isLoadingUserData } =
-    useGetListDetailsWithUserQuery(queryVariables, {
-      enabled: !!userWallet,
-    })
+    useGetListDetailsWithUserQuery(
+      {
+        ...queryVariables,
+      },
+      {
+        queryKey: [
+          'get-list-details',
+          {
+            tagPredicateId: predicateId,
+            globalWhere: {
+              predicate_id: {
+                _eq: predicateId,
+              },
+              object_id: {
+                _eq: objectId,
+              },
+            },
+          },
+        ],
+        enabled: !!userWallet,
+      } as UseQueryOptions<GetListDetailsWithUserQuery>,
+    )
   const { data: withoutUserData, isLoading: isLoadingPositionData } =
-    useGetListDetailsWithPositionQuery(queryVariables, {
-      enabled: !userWallet,
-    })
+    useGetListDetailsWithPositionQuery(
+      {
+        ...queryVariables,
+      },
+      {
+        queryKey: [
+          'get-list-details',
+          {
+            tagPredicateId: predicateId,
+            globalWhere: {
+              predicate_id: {
+                _eq: predicateId,
+              },
+              object_id: {
+                _eq: objectId,
+              },
+            },
+          },
+        ],
+        enabled: !userWallet,
+      } as UseQueryOptions<GetListDetailsWithPositionQuery>,
+    )
 
   const listData = userWallet ? withUserData : withoutUserData
   const isLoading = userWallet ? isLoadingUserData : isLoadingPositionData
@@ -351,21 +529,30 @@ export default function MiniGameOne() {
         vaultId: triple.vault_id,
         counterVaultId: triple.counter_vault_id,
         users: Number(triple.vault?.positions_aggregate?.aggregate?.count ?? 0),
-        upvotes:
-          (+formatUnits(
-            triple.vault?.positions_aggregate?.aggregate?.sum?.shares ?? 0,
-            18,
-          ) *
-            +formatUnits(triple.vault?.current_share_price ?? 0, 18)) /
-          +MIN_DEPOSIT,
-        downvotes:
-          (+formatUnits(
-            triple.counter_vault?.positions_aggregate?.aggregate?.sum?.shares ??
-              0,
-            18,
-          ) *
-            +formatUnits(triple.counter_vault?.current_share_price ?? 0, 18)) /
-          +MIN_DEPOSIT,
+        upvotes: (() => {
+          const amount =
+            (+formatUnits(
+              triple.vault?.positions_aggregate?.aggregate?.sum?.shares ?? 0,
+              18,
+            ) *
+              +formatUnits(triple.vault?.current_share_price ?? 0, 18)) /
+            +MIN_DEPOSIT
+          return amount < 0.1 ? 0 : amount
+        })(),
+        downvotes: (() => {
+          const amount =
+            (+formatUnits(
+              triple.counter_vault?.positions_aggregate?.aggregate?.sum
+                ?.shares ?? 0,
+              18,
+            ) *
+              +formatUnits(
+                triple.counter_vault?.current_share_price ?? 0,
+                18,
+              )) /
+            +MIN_DEPOSIT
+          return amount < 0.1 ? 0 : amount
+        })(),
         forTvl:
           +formatUnits(
             triple.vault?.positions_aggregate?.aggregate?.sum?.shares ?? 0,
@@ -395,9 +582,8 @@ export default function MiniGameOne() {
             : triple.counter_vault?.positions?.[0]?.shares > 0
               ? +formatUnits(triple.counter_vault?.current_share_price, 18)
               : undefined,
-        stakingDisabled: !isCompleted,
+        stakingDisabled: questionData.enabled && !isCompleted,
       })) as TableRowData[]) ?? []
-    console.timeEnd('tableData transform')
     return data
   }, [listData, isCompleted])
 
@@ -407,7 +593,13 @@ export default function MiniGameOne() {
     columnResizeMode: 'onChange',
     enableColumnPinning: true,
     enableColumnResizing: true,
-    onSortingChange: setSorting,
+    enableHiding: false,
+    onSortingChange: (updater) => {
+      const newSorting =
+        typeof updater === 'function' ? updater(sorting) : updater
+      setSorting(newSorting)
+      updateSortingParams(newSorting)
+    },
     state: {
       sorting,
       pagination: {
@@ -416,7 +608,6 @@ export default function MiniGameOne() {
       },
     },
     onPaginationChange: (updater) => {
-      console.time('pagination change')
       if (typeof updater === 'function') {
         const newState = updater({
           pageIndex,
@@ -426,10 +617,10 @@ export default function MiniGameOne() {
         setPageSize(newState.pageSize)
         updatePaginationParams(newState.pageIndex, newState.pageSize)
       }
-      console.timeEnd('pagination change')
     },
     pageCount: Math.ceil(totalCount / pageSize),
     manualPagination: true,
+    manualSorting: true,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -514,7 +705,7 @@ export default function MiniGameOne() {
     if (rowData) {
       setAtomDetailsModal({
         isOpen: true,
-        atomId: id,
+        atomId: Number(rowData.triple.vault_id),
         data: rowData,
       })
     }
@@ -549,7 +740,7 @@ export default function MiniGameOne() {
         </Button>
         <div className="flex flex-1 justify-between items-center">
           <PageHeader
-            title={`${currentEpoch?.name} | Question ${questionId}`}
+            title={`Epoch ${questionData?.epochId} | Question ${questionData?.order}`}
           />
           <div className="flex items-center gap-2">
             <Button
@@ -608,7 +799,7 @@ export default function MiniGameOne() {
                             if (rowData) {
                               setAtomDetailsModal({
                                 isOpen: true,
-                                atomId: Number(rowData.id),
+                                atomId: Number(rowData.triple.vault_id),
                                 data: rowData,
                               })
                             }
@@ -644,7 +835,8 @@ export default function MiniGameOne() {
                     </div>
                   </div>
                 ) : (
-                  authenticated && (
+                  authenticated &&
+                  enabled && (
                     <Button
                       variant="primary"
                       size="lg"
@@ -696,7 +888,7 @@ export default function MiniGameOne() {
       /> */}
 
       {/* Space for table */}
-      <div className="mt-6">
+      <div className="mt-6 !mb-24">
         <DataTable
           columns={columns as ColumnDef<TableRowData>[]}
           data={tableData}
@@ -732,6 +924,28 @@ export default function MiniGameOne() {
         }
         atomId={atomDetailsModal.atomId}
         data={atomDetailsModal.data}
+      />
+      <Navigation
+        prevItem={
+          prevQuestion
+            ? {
+                id: String(prevQuestion.id),
+                title: prevQuestion.title,
+                order: prevQuestion.order,
+              }
+            : undefined
+        }
+        nextItem={
+          nextQuestion
+            ? {
+                id: String(nextQuestion.id),
+                title: nextQuestion.title,
+                order: nextQuestion.order,
+              }
+            : undefined
+        }
+        type="question"
+        baseUrl={`/quests/questions/${epochId}`}
       />
     </>
   )

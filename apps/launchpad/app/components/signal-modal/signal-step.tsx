@@ -22,7 +22,7 @@ import {
   useGenericTxState,
 } from '@lib/hooks/useTransactionReducer'
 import { usePrivy } from '@privy-io/react-auth'
-import { Link, useLocation } from '@remix-run/react'
+import { Link, useLocation, useRevalidator } from '@remix-run/react'
 import { useQueryClient } from '@tanstack/react-query'
 import {
   AtomType,
@@ -106,6 +106,8 @@ export function SignalStep({
 
     return vaultId
   }
+
+  const revalidator = useRevalidator()
 
   const activeVaultId = getActiveVaultId()
 
@@ -417,7 +419,11 @@ export function SignalStep({
           txReceipt: receipt,
         })
 
-        // Store the final state when success is shown
+        // Invalidate relevant queries
+        await queryClient.invalidateQueries()
+        revalidator.revalidate()
+
+        // Store the final state and show success after a delay
         setFinalMode(mode)
         setFinalTicks(ticks)
         setSuccessTxHash(txHash)
@@ -429,15 +435,6 @@ export function SignalStep({
         error: 'Error processing transaction',
       })
     }
-  }
-
-  const handleClose = async () => {
-    // Close the modal first
-    onClose()
-    // Then invalidate queries after a short delay to ensure modal is closed
-    setTimeout(() => {
-      queryClient.invalidateQueries()
-    }, 100)
   }
 
   const handleStakeButtonClick = async () => {
@@ -480,7 +477,7 @@ export function SignalStep({
           isOpen={showSuccess}
           name={atom?.label ?? triple?.subject?.label ?? ''}
           txHash={successTxHash}
-          onClose={handleClose}
+          onClose={onClose}
           mode={finalMode}
           isFullRedeem={finalMode === 'redeem' && finalTicks === 0}
           direction={
@@ -501,7 +498,7 @@ export function SignalStep({
                 {isSimplifiedRedeem ? (
                   <>
                     Redeem your signal for{' '}
-                    {atom?.label ?? triple?.subject.label}
+                    {atom?.label ?? triple?.subject?.label ?? ''}
                   </>
                 ) : (
                   <>

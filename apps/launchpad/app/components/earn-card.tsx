@@ -2,6 +2,7 @@ import {
   Button,
   ButtonVariant,
   Card,
+  cn,
   Text,
   TextVariant,
   TextWeight,
@@ -14,9 +15,10 @@ import { BrainCircuit } from 'lucide-react'
 interface EarnCardProps {
   title: string
   description: string
-  earnIQ: number
+  earnIQ?: number
   buttonText: string
   icon: React.ReactNode
+  link: string
 }
 
 export const EarnCard = ({
@@ -25,6 +27,7 @@ export const EarnCard = ({
   earnIQ,
   buttonText,
   icon,
+  link,
 }: EarnCardProps) => {
   return (
     <motion.div
@@ -33,7 +36,7 @@ export const EarnCard = ({
       transition={{ duration: 0.5 }}
       whileHover={{ y: -5 }}
     >
-      <Card className="relative flex flex-col rounded-lg justify-between bg-black/5 before:absolute before:inset-0 before:bg-gradient-to-t before:from-black/5 before:via-for/10 before:to-black/5 before:-z-10 backdrop-blur-sm backdrop-saturate-150 p-6 border border-border/10 h-64">
+      <Card className="relative flex flex-col rounded-lg justify-between bg-white/5 before:absolute before:inset-0 before:bg-gradient-to-t before:from-black/5 before:via-for/10 before:to-black/5 before:-z-10 backdrop-blur-md backdrop-saturate-150 p-6 border border-border/10 h-64">
         <div className="flex flex-col">
           <motion.div
             className="absolute left-6 top-6 border border-border/10 rounded-lg p-2.5 bg-primary/10"
@@ -81,24 +84,38 @@ export const EarnCard = ({
           transition={{ delay: 0.5, duration: 0.5 }}
         >
           <motion.div
-            className="flex items-center gap-2"
+            className={cn(
+              'invisible flex items-center gap-2',
+              earnIQ && 'visible',
+            )}
             whileHover={{ scale: 1.05 }}
             transition={{ duration: 0.2 }}
           >
             <BrainCircuit className="h-5 w-5 text-primary" />
             <span className="font-medium">
-              Earn {earnIQ.toLocaleString()} IQ
+              Earn up to {earnIQ?.toLocaleString()} IQ
             </span>
           </motion.div>
 
-          <Link to="/quests">
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              transition={{ duration: 0.2 }}
-            >
-              <Button variant={ButtonVariant.secondary}>{buttonText}</Button>
-            </motion.div>
-          </Link>
+          {link.startsWith('http') ? (
+            <a href={link} target="_blank" rel="noopener noreferrer">
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                transition={{ duration: 0.2 }}
+              >
+                <Button variant={ButtonVariant.secondary}>{buttonText}</Button>
+              </motion.div>
+            </a>
+          ) : (
+            <Link to={link}>
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                transition={{ duration: 0.2 }}
+              >
+                <Button variant={ButtonVariant.secondary}>{buttonText}</Button>
+              </motion.div>
+            </Link>
+          )}
         </motion.div>
       </Card>
     </motion.div>

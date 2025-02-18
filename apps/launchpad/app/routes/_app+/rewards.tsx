@@ -11,6 +11,7 @@ import {
 
 import { EarnSection } from '@components/earn-section'
 import { LevelIndicator } from '@components/level-indicator'
+import { LoadingState } from '@components/loading-state'
 import { MasteryCard } from '@components/mastery-card'
 import { MasteryPreview } from '@components/mastery-preview'
 import { ZERO_ADDRESS } from '@consts/general'
@@ -70,27 +71,28 @@ export async function loader({ request }: LoaderFunctionArgs) {
 const earnCards = [
   {
     id: '1',
-    earnIQ: 500,
+    earnIQ: 100000,
     title: 'Earn IQ with Quests',
     icon: <Scroll className="w-4 h-4" />,
     description: 'Complete quests to obtain IQ reward points',
     buttonText: 'View Quests',
+    link: '/quests',
   },
   {
     id: '2',
-    earnIQ: 750,
     title: 'Earn IQ in the Ecosystem',
     icon: <Compass className="w-4 h-4" />,
     description: 'Explore and use apps from our product hub',
     buttonText: 'Explore',
+    link: '/discover',
   },
   {
     id: '3',
-    earnIQ: 1250,
     title: 'Start Building on Intuition',
     icon: <Code className="w-4 h-4" />,
     description: 'Build your own apps and tools on Intuition',
     buttonText: 'Start Building',
+    link: 'https://tech.docs.intuition.systems/',
   },
 ]
 
@@ -98,11 +100,21 @@ export default function RewardsRoute() {
   const { initialParams } = useLoaderData<typeof loader>()
   const address = initialParams?.address?.toLowerCase()
 
-  const { data: points } = usePoints(address)
-  const { data: protocolFees } = useGetFeeTransfersQuery({
-    address: address ?? ZERO_ADDRESS,
-    cutoff_timestamp: 1733356800,
-  })
+  const { data: points, isLoading: isLoadingPoints } = usePoints(address)
+  const { data: protocolFees, isLoading: isLoadingFees } =
+    useGetFeeTransfersQuery({
+      address: address ?? ZERO_ADDRESS,
+      cutoff_timestamp: 1733356800,
+    })
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(
+    'Launchpad',
+  )
+
+  const isLoading = isLoadingPoints || isLoadingFees
+
+  if (isLoading) {
+    return <LoadingState />
+  }
 
   console.log('points', points)
 
@@ -224,17 +236,13 @@ export default function RewardsRoute() {
     },
   ]
 
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(
-    'Launchpad',
-  )
-
   return (
     <div className="relative z-10">
       <div className="flex flex-col items-center text-center space-y-4 mb-12">
         <LevelIndicator level={level} progress={progress} />
 
         <div>
-          <Text variant={TextVariant.heading1} weight={TextWeight.semibold}>
+          <Text variant={TextVariant.heading2} weight={TextWeight.semibold}>
             {combinedTotal.toLocaleString()}
           </Text>
           <Text variant={TextVariant.body} className="text-primary/70">
@@ -284,6 +292,14 @@ export default function RewardsRoute() {
           levels={
             actCategories.find((c) => c.name === selectedCategory)?.levels ?? []
           }
+          actionButton={
+            selectedCategory === 'Launchpad'
+              ? { text: 'Earn More IQ', to: '../quests' }
+              : undefined
+          }
+          totalPoints={
+            actCategories.find((c) => c.name === selectedCategory)?.totalPoints
+          }
           className="mb-8"
         />
       )}
@@ -305,17 +321,17 @@ export default function RewardsRoute() {
 function getCategoryDescription(category: string): string {
   switch (category) {
     case 'Launchpad':
-      return 'Complete quests and challenges in the Launchpad to earn mastery points.'
+      return 'Complete quests and challenges in the Launchpad to earn IQ.'
     case 'Portal':
-      return 'Explore and interact with the Portal to unlock achievements.'
+      return 'Explore and interact with the Portal to earn IQ.'
     case 'Protocol':
-      return 'Engage with the protocol and earn points through network participation.'
+      return 'Engage with the protocol and earn IQ through network participation.'
     case 'Relic':
-      return 'Discover and collect relics to increase your mastery level.'
+      return 'Discover and collect relics to earn IQ.'
     case 'Community':
-      return 'Participate in community events and discussions.'
+      return 'Participate in community events and discussions to earn IQ.'
     case 'Social':
-      return 'Connect and share with other members of the community.'
+      return 'Connect and share with other members of the community to earn IQ.'
     default:
       return ''
   }

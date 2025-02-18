@@ -1,4 +1,6 @@
-import { cn, Text, TextVariant, TextWeight } from '@0xintuition/1ui'
+import { Button, cn, Text, TextVariant, TextWeight } from '@0xintuition/1ui'
+
+import { useNavigate } from '@remix-run/react'
 
 interface MasteryPreviewProps {
   title: string
@@ -12,6 +14,11 @@ interface MasteryPreviewProps {
   }>
   className?: string
   background?: string
+  actionButton?: {
+    text: string
+    to: string
+  }
+  totalPoints?: number
 }
 
 export function MasteryPreview({
@@ -22,7 +29,19 @@ export function MasteryPreview({
   levels,
   className,
   background,
+  actionButton,
+  totalPoints,
 }: MasteryPreviewProps) {
+  const navigate = useNavigate()
+
+  const handleClick = (e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    if (actionButton?.to) {
+      navigate(actionButton.to)
+    }
+  }
+
   return (
     <div
       className={cn(
@@ -40,10 +59,44 @@ export function MasteryPreview({
       />
       {/* Header */}
       <div className="mb-6">
-        <Text variant={TextVariant.heading2} weight={TextWeight.semibold}>
-          {title}
-        </Text>
-        <Text variant={TextVariant.body} className="text-primary/70 mt-2">
+        <div className="flex justify-between items-center mb-2">
+          <Text variant={TextVariant.heading2} weight={TextWeight.semibold}>
+            {title}
+          </Text>
+          <div className="flex items-center gap-4">
+            {totalPoints !== undefined && (
+              <Text
+                variant={TextVariant.headline}
+                weight={TextWeight.medium}
+                className="text-muted-foreground flex flex-row gap-2 items-center"
+              >
+                <Text
+                  variant={TextVariant.heading4}
+                  weight={TextWeight.semibold}
+                  className={cn(totalPoints > 0 && 'text-success')}
+                >
+                  {totalPoints.toLocaleString()}
+                </Text>{' '}
+                IQ Earned
+              </Text>
+            )}
+            {actionButton && (
+              <Button
+                variant="primary"
+                size="lg"
+                onClick={handleClick}
+                onMouseDown={(e) => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                }}
+                className="z-50 relative"
+              >
+                {actionButton.text}
+              </Button>
+            )}
+          </div>
+        </div>
+        <Text variant={TextVariant.body} className="text-primary/70">
           {description}
         </Text>
       </div>
@@ -76,7 +129,7 @@ export function MasteryPreview({
                   level.isLocked ? 'text-primary/50' : 'text-primary',
                 )}
               >
-                {level.points.toLocaleString()} points
+                {level.points.toLocaleString()} IQ
               </Text>
             </div>
             <div className="h-1.5 bg-background/20 rounded-full overflow-hidden">

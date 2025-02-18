@@ -163,10 +163,10 @@ export function DataTable<TData extends { id: string | number }, TValue>({
           Filter
         </Button> */}
       </div>
-      <div className="rounded-lg bg-black/5 backdrop-blur-md backdrop-saturate-150 border border-border/10 overflow-hidden">
+      <div className="rounded-lg bg-white/5 backdrop-blur-md backdrop-saturate-150 border border-border/10 overflow-hidden">
         <div className="overflow-x-auto w-full">
           <Table className="w-full" style={{ minWidth: table.getTotalSize() }}>
-            <TableHeader className="bg-gradient-to-l from-[#060504] to-[#101010] rounded-md">
+            <TableHeader className="rounded-md">
               {table
                 .getHeaderGroups()
                 .map((headerGroup: HeaderGroup<TData>) => (

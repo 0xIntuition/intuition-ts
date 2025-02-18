@@ -30,6 +30,7 @@ const GetQuestionQuery = gql`
       enabled
       order
       link
+      epoch_id
       predicate_id
       object_id
       created_at

@@ -129,7 +129,7 @@ const CategorySection: React.FC<ActCategory> = ({
 )
 
 export const ActsProgress: React.FC<ActsProgressProps> = ({ categories }) => (
-  <Card className="p-6 bg-black/5 backdrop-blur-md backdrop-saturate-150 border border-border/10">
+  <Card className="p-6 bg-white/5 backdrop-blur-md backdrop-saturate-150 border border-border/10">
     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
       {categories.map((category, index) => (
         <CategorySection key={index} {...category} />

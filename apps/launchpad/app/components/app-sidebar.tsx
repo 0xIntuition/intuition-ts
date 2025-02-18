@@ -26,7 +26,7 @@ import LoadingButton from '@components/loading-button'
 import { useAuth } from '@lib/hooks/use-auth'
 import { usePrivy } from '@privy-io/react-auth'
 import { Link, useLocation } from '@remix-run/react'
-import { BookOpenText } from 'lucide-react'
+import { BookOpenText, BrainCircuit } from 'lucide-react'
 
 import { ConnectButton } from './connect-button'
 
@@ -105,7 +105,7 @@ export function AppSidebar({
       isAccent: location.pathname.startsWith('/lore'),
     },
     {
-      iconName: 'lightning-bolt',
+      icon: <BrainCircuit className="w-5 h-5" />,
       label: 'Rewards',
       href: '/rewards',
       isAccent: location.pathname === '/rewards',
@@ -369,7 +369,7 @@ export function AppSidebar({
         </Sheet>
       ) : (
         <Sidebar
-          className="border-r border-border/10 bg-background/60"
+          className="border-r border-border/10 bg-white/5 backdrop-blur-md backdrop-saturate-150"
           collapsible="icon"
           {...props}
         >

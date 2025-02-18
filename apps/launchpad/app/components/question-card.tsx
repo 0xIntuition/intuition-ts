@@ -21,6 +21,7 @@ interface QuestionCardProps {
   image: string
   points: number
   pointAwardAmount: number
+  isActive: boolean
   isLoading?: boolean
   resultsLink?: string
   completedAtom?: {
@@ -40,6 +41,7 @@ export function QuestionCard({
   image,
   points,
   pointAwardAmount,
+  isActive,
   isLoading = false,
   resultsLink,
   completedAtom,
@@ -67,7 +69,7 @@ export function QuestionCard({
         </div>
 
         <div className="flex flex-col gap-4 items-center justify-between">
-          {points <= 0 && (
+          {points <= 0 && isActive && (
             <SubmitButton
               onClick={() => onStart()}
               className="min-w-[200px]"

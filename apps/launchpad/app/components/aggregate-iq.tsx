@@ -9,24 +9,25 @@ import {
   TextWeight,
 } from '@0xintuition/1ui'
 
-import { EpochProgress } from '@routes/resources+/get-epoch-progress'
 import { motion, useAnimation } from 'framer-motion'
 import { Award, BrainCircuit, ListCheck, Sparkle } from 'lucide-react'
 
 interface AggregateIQProps {
   totalIQ: number
   address?: string
-  epochProgress?: EpochProgress | null
   rank?: number
   totalUsers?: number
+  earnedIQ?: number
+  totalCompletedQuestions?: number
 }
 
 export function AggregateIQ({
   totalIQ,
   address,
-  epochProgress,
   rank,
   totalUsers,
+  earnedIQ,
+  totalCompletedQuestions,
 }: AggregateIQProps) {
   const [count, setCount] = useState(0)
   const controls = useAnimation()
@@ -58,7 +59,7 @@ export function AggregateIQ({
       transition={{ duration: 0.5 }}
       whileHover={{ y: -5 }}
     >
-      <Card className="flex flex-row w-full gap-6 rounded-lg bg-black/5 backdrop-blur-md backdrop-saturate-150 p-6 border border-border/10">
+      <Card className="flex flex-row w-full gap-6 rounded-lg bg-white/5 backdrop-blur-md backdrop-saturate-150 p-6 border border-border/10">
         <div className="absolute inset-0 shadow-inner-pop" />
         <CardContent className="relative p-0 w-full">
           <motion.div
@@ -103,13 +104,13 @@ export function AggregateIQ({
               {
                 label: 'IQ Earned on Launchpad',
                 icon: <Sparkle className="w-4 h-4" />,
-                value: epochProgress?.total_points ?? 0,
+                value: earnedIQ ?? 0,
                 subtext: '+25% in the last month',
               },
               {
                 label: 'Questions Completed',
                 icon: <ListCheck className="w-4 h-4" />,
-                value: epochProgress?.completed_count ?? 0,
+                value: totalCompletedQuestions ?? 0,
                 subtext: '+10% in the last month',
               },
               {

@@ -16,11 +16,14 @@ import { AuthCover } from '@components/auth-cover'
 import ChapterProgress from '@components/chapter-progress'
 import { EarnSection } from '@components/earn-section'
 import { ErrorPage } from '@components/error-page'
+import { LoadingState } from '@components/loading-state'
 import { ZERO_ADDRESS } from '@consts/general'
 import { useEpochProgress } from '@lib/hooks/useEpochProgress'
 import { usePoints } from '@lib/hooks/usePoints'
+import { useTotalCompletedQuestions } from '@lib/hooks/useTotalCompletedQuestions'
 import { useUserRank } from '@lib/hooks/useUserRank'
 import { fetchPoints, fetchUserRank } from '@lib/services/points'
+import { fetchTotalCompletedQuestions } from '@lib/services/questions'
 import logger from '@lib/utils/logger'
 import { LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
@@ -87,6 +90,10 @@ export async function loader({ request }: LoaderFunctionArgs) {
           return response
         },
       }),
+      queryClient.prefetchQuery({
+        queryKey: ['total-completed-questions', address.toLowerCase()],
+        queryFn: async () => fetchTotalCompletedQuestions(address),
+      }),
     ])
   }
 
@@ -122,16 +129,17 @@ export default function Dashboard() {
   const { initialParams } = useLoaderData<typeof loader>()
   const address = initialParams?.address?.toLowerCase()
 
-  const { data: user } = useGetAccountQuery({
+  const { data: user, isLoading: isLoadingUser } = useGetAccountQuery({
     address: address ?? ZERO_ADDRESS,
   })
 
-  const { data: points } = usePoints(address)
-  const { data: protocolFees } = useGetFeeTransfersQuery({
-    address: address ?? ZERO_ADDRESS,
-    cutoff_timestamp: 1733356800,
-  })
-  const { data: currentEpoch } = useQuery({
+  const { data: points, isLoading: isLoadingPoints } = usePoints(address)
+  const { data: protocolFees, isLoading: isLoadingFees } =
+    useGetFeeTransfersQuery({
+      address: address ?? ZERO_ADDRESS,
+      cutoff_timestamp: 1733356800,
+    })
+  const { data: currentEpoch, isLoading: isLoadingEpoch } = useQuery({
     queryKey: ['current-epoch'],
     queryFn: async () => {
       const response = await fetch('/resources/get-current-epoch')
@@ -142,8 +150,25 @@ export default function Dashboard() {
       return data.epoch
     },
   })
-  const { data: epochProgress } = useEpochProgress(currentEpoch?.id)
-  const { data: rankData } = useUserRank(address)
+  const { data: epochProgress, isLoading: isLoadingProgress } =
+    useEpochProgress(currentEpoch?.id)
+  const { data: rankData, isLoading: isLoadingRank } = useUserRank(address)
+
+  const { data: totalCompletedQuestions, isLoading: isLoadingTotalCompleted } =
+    useTotalCompletedQuestions()
+
+  const isLoading =
+    isLoadingUser ||
+    isLoadingPoints ||
+    isLoadingFees ||
+    isLoadingEpoch ||
+    isLoadingProgress ||
+    isLoadingRank ||
+    isLoadingTotalCompleted
+
+  if (isLoading) {
+    return <LoadingState />
+  }
 
   const feesPaidBeforeCutoff = formatUnits(
     protocolFees?.before_cutoff?.aggregate?.sum?.amount ?? 0n,
@@ -166,27 +191,28 @@ export default function Dashboard() {
   const earnCards = [
     {
       id: '1',
-      earnIQ: 500,
+      earnIQ: 100000,
       title: 'Earn IQ with Quests',
       icon: <Scroll className="w-4 h-4" />,
       description: 'Complete quests to obtain IQ reward points',
       buttonText: 'View Quests',
+      link: '/quests',
     },
     {
       id: '2',
-      earnIQ: 750,
       title: 'Earn IQ in the Ecosystem',
       icon: <Compass className="w-4 h-4" />,
       description: 'Explore and use apps from our product hub',
       buttonText: 'Explore',
+      link: '/discover',
     },
     {
       id: '3',
-      earnIQ: 1250,
       title: 'Start Building on Intuition',
       icon: <Code className="w-4 h-4" />,
       description: 'Build your own apps and tools on Intuition',
       buttonText: 'Start Building',
+      link: 'https://tech.docs.intuition.systems/',
     },
   ]
 
@@ -288,17 +314,14 @@ export default function Dashboard() {
       >
         <AggregateIQ
           totalIQ={combinedTotal}
-          epochProgress={epochProgress}
           rank={rankData?.rank}
           totalUsers={rankData?.totalUsers}
           address={address}
+          earnedIQ={points?.launchpad_quests ?? 0}
+          totalCompletedQuestions={totalCompletedQuestions?.count ?? 0}
         />
       </AuthCover>
-      <ChapterProgress
-        title="Chapters"
-        stages={stages}
-        currentStageIndex={(currentEpoch?.id ?? 1) - 1}
-      />
+      <ChapterProgress title="Chapters" stages={stages} currentStageIndex={0} />
       <EarnSection quests={earnCards} />
     </>
   )
