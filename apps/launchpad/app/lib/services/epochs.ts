@@ -100,6 +100,7 @@ const GetEpochQuestionQuery = gql`
       order
       link
       predicate_id
+      object_id
     }
   }
 `

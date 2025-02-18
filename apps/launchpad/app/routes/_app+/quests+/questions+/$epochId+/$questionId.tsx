@@ -20,6 +20,7 @@ import {
   GetListDetailsWithUserDocument,
   GetListDetailsWithUserQuery,
   GetListDetailsWithUserQueryVariables,
+  Triples_Order_By,
   useGetAtomQuery,
   useGetListDetailsWithPositionQuery,
   useGetListDetailsWithUserQuery,
@@ -126,6 +127,11 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     address: userWallet ?? ZERO_ADDRESS,
     limit: pageSize,
     offset: pageIndex * pageSize,
+    orderBy: {
+      vault: {
+        total_shares: 'desc',
+      },
+    },
   }
 
   let listData
@@ -218,7 +224,6 @@ export function ErrorBoundary() {
 }
 
 export default function MiniGameOne() {
-  console.time('MiniGameOne render')
   const location = useLocation()
   const { epochId, questionId } = useParams()
   const goBack = useGoBack({ fallbackRoute: `/quests/questions/${epochId}` })
@@ -244,8 +249,6 @@ export default function MiniGameOne() {
     objectId,
   } = questionData
 
-  console.log('questionData', questionData)
-
   // Add defensive check for location
   const hasUserParam = location?.search
     ? location.search.includes('user=')
@@ -254,14 +257,62 @@ export default function MiniGameOne() {
     ? `${location?.pathname}${location?.search}`
     : `${location?.pathname}${location?.search}${location?.search ? '&' : '?'}`
 
-  const [sorting, setSorting] = React.useState<SortingState>([
-    {
-      id: 'upvotes',
-      desc: true,
-    },
-  ])
-
   const [searchParams, setSearchParams] = useSearchParams()
+
+  const [sorting, setSorting] = React.useState<SortingState>(() => {
+    const sortParam = searchParams.get('sort')
+    const orderParam = searchParams.get('order')
+    return sortParam
+      ? [
+          {
+            id: sortParam,
+            desc: orderParam === 'desc',
+          },
+        ]
+      : [
+          {
+            id: 'upvotes',
+            desc: true,
+          },
+        ]
+  })
+
+  // Update URL when sorting changes
+  const updateSortingParams = React.useCallback(
+    (newSorting: SortingState) => {
+      // Preserve all existing params
+      const existingParams = Object.fromEntries(searchParams.entries())
+      const updatedParams: Record<string, string> = {
+        ...existingParams,
+        page: '1', // Reset to first page
+      }
+
+      if (newSorting.length > 0) {
+        updatedParams.sort = newSorting[0].id
+        updatedParams.order = newSorting[0].desc ? 'desc' : 'asc'
+      } else {
+        delete updatedParams.sort
+        delete updatedParams.order
+      }
+
+      setSearchParams(updatedParams)
+    },
+    [searchParams, setSearchParams],
+  )
+
+  // Effect to sync sorting state with URL params
+  React.useEffect(() => {
+    const sortParam = searchParams.get('sort')
+    const orderParam = searchParams.get('order')
+    if (sortParam) {
+      setSorting([
+        {
+          id: sortParam,
+          desc: orderParam === 'desc',
+        },
+      ])
+    }
+  }, [searchParams])
 
   // Get pagination values from URL or use defaults
   const [pageSize, setPageSize] = React.useState(() => {
@@ -291,24 +342,74 @@ export default function MiniGameOne() {
     [searchParams, setSearchParams],
   )
 
-  const queryVariables = React.useMemo(
-    () =>
-      ({
-        tagPredicateId: predicateId,
-        globalWhere: {
-          predicate_id: {
-            _eq: predicateId,
+  const queryVariables = React.useMemo(() => {
+    // Convert table sorting to GraphQL ordering
+    const sortField = sorting[0]?.id
+    const sortDirection = sorting[0]?.desc ? 'desc' : 'asc'
+
+    let orderBy: Triples_Order_By = {
+      vault: {
+        total_shares: 'desc',
+      },
+    }
+
+    // Map sorting fields to their corresponding GraphQL paths
+    switch (sortField) {
+      case 'upvotes':
+        orderBy = {
+          vault: {
+            total_shares: sortDirection,
           },
-          object_id: {
-            _eq: objectId,
+        }
+        break
+      case 'downvotes':
+        orderBy = {
+          counter_vault: {
+            total_shares: sortDirection,
           },
+        }
+        break
+      case 'name':
+        orderBy = {
+          subject: {
+            label: sortDirection,
+          },
+        }
+        break
+      case 'users':
+        orderBy = {
+          vault: {
+            position_count: sortDirection,
+          },
+        }
+        break
+      case 'tvl':
+        orderBy = {
+          vault: {
+            total_shares: sortDirection,
+          },
+        }
+        break
+    }
+
+    const variables = {
+      tagPredicateId: predicateId,
+      globalWhere: {
+        predicate_id: {
+          _eq: predicateId,
         },
-        address: userWallet ?? ZERO_ADDRESS,
-        limit: pageSize,
-        offset: pageIndex * pageSize,
-      }) as const,
-    [predicateId, objectId, userWallet, pageSize, pageIndex],
-  )
+        object_id: {
+          _eq: objectId,
+        },
+      },
+      address: userWallet ?? ZERO_ADDRESS,
+      limit: pageSize,
+      offset: pageIndex * pageSize,
+      orderBy,
+    } as const
+
+    return variables
+  }, [predicateId, objectId, userWallet, pageSize, pageIndex, sorting])
 
   const { data: withUserData, isLoading: isLoadingUserData } =
     useGetListDetailsWithUserQuery(queryVariables, {
@@ -408,8 +509,6 @@ export default function MiniGameOne() {
               : undefined,
         stakingDisabled: !isCompleted,
       })) as TableRowData[]) ?? []
-    console.timeEnd('tableData transform')
-    console.log('tableData', data)
     return data
   }, [listData, isCompleted])
 
@@ -420,7 +519,12 @@ export default function MiniGameOne() {
     enableColumnPinning: true,
     enableColumnResizing: true,
     enableHiding: false,
-    onSortingChange: setSorting,
+    onSortingChange: (updater) => {
+      const newSorting =
+        typeof updater === 'function' ? updater(sorting) : updater
+      setSorting(newSorting)
+      updateSortingParams(newSorting)
+    },
     state: {
       sorting,
       pagination: {
@@ -429,7 +533,6 @@ export default function MiniGameOne() {
       },
     },
     onPaginationChange: (updater) => {
-      console.time('pagination change')
       if (typeof updater === 'function') {
         const newState = updater({
           pageIndex,
@@ -439,10 +542,10 @@ export default function MiniGameOne() {
         setPageSize(newState.pageSize)
         updatePaginationParams(newState.pageIndex, newState.pageSize)
       }
-      console.timeEnd('pagination change')
     },
     pageCount: Math.ceil(totalCount / pageSize),
     manualPagination: true,
+    manualSorting: true,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
