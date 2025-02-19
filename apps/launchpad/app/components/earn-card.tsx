@@ -84,17 +84,20 @@ export const EarnCard = ({
           transition={{ delay: 0.5, duration: 0.5 }}
         >
           <motion.div
-            className={cn(
-              'invisible flex items-center gap-2',
-              earnIQ && 'visible',
-            )}
+            className={cn('flex items-center gap-2')}
             whileHover={{ scale: 1.05 }}
             transition={{ duration: 0.2 }}
           >
-            <BrainCircuit className="h-5 w-5 text-primary" />
-            <span className="font-medium">
-              Earn up to {earnIQ?.toLocaleString()} IQ
-            </span>
+            {earnIQ ? (
+              <>
+                <BrainCircuit className="h-5 w-5 text-primary" />
+                <span className="font-medium">
+                  Earn up to ${earnIQ?.toLocaleString()} IQ
+                </span>
+              </>
+            ) : (
+              <span className="font-medium">??? Rewards</span>
+            )}
           </motion.div>
 
           {link.startsWith('http') ? (
