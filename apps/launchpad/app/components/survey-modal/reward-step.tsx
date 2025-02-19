@@ -32,6 +32,7 @@ export function RewardStep({
   const [confettiTriggered, setConfettiTriggered] = useState(false)
   const [isAwarding, setIsAwarding] = useState(false)
   const [awardingFailed, setAwardingFailed] = useState(false)
+  const [retryCount, setRetryCount] = useState(0)
 
   const { reward: triggerReward } = useReward('rewardId', 'confetti', {
     lifetime: 1000,
@@ -48,6 +49,18 @@ export function RewardStep({
   })
 
   useEffect(() => {
+    // Reset states when modal opens/closes
+    if (!isOpen) {
+      setRewardReady(false)
+      setHasRewardAnimated(false)
+      setHasAwardedPoints(false)
+      setConfettiTriggered(false)
+      setIsAwarding(false)
+      setAwardingFailed(false)
+      setRetryCount(0)
+      return
+    }
+
     // Only run this once when the component mounts and conditions are met
     const shouldAwardPoints =
       isOpen &&
@@ -57,7 +70,8 @@ export function RewardStep({
       userWallet &&
       awardPoints &&
       questionId &&
-      epochId
+      epochId &&
+      retryCount < 3
 
     if (shouldAwardPoints) {
       const awardPointsAsync = async () => {
@@ -66,12 +80,15 @@ export function RewardStep({
           const success = await awardPoints(userWallet.toLowerCase())
           if (success) {
             setHasAwardedPoints(true)
+            setAwardingFailed(false)
           } else {
             setAwardingFailed(true)
+            setRetryCount((prev) => prev + 1)
           }
         } catch (error) {
-          setAwardingFailed(true)
           console.error('Failed to award points:', error)
+          setAwardingFailed(true)
+          setRetryCount((prev) => prev + 1)
         } finally {
           setIsAwarding(false)
         }
@@ -87,6 +104,7 @@ export function RewardStep({
     awardPoints,
     questionId,
     epochId,
+    retryCount,
   ])
 
   useEffect(() => {
@@ -103,14 +121,6 @@ export function RewardStep({
       }, 500)
 
       return () => clearTimeout(timer)
-    }
-
-    if (!isOpen) {
-      setHasRewardAnimated(false)
-      setHasAwardedPoints(false)
-      setConfettiTriggered(false)
-      setIsAwarding(false)
-      setAwardingFailed(false)
     }
   }, [
     isOpen,
@@ -210,7 +220,8 @@ export function RewardStep({
                   : 'Preparing Reward...'}
           </h2>
           <Text variant={TextVariant.body} className="text-primary/70">
-            You&apos;ve successfully answered the question and earned points
+            Your answer has been woven into Intuition&apos;s living memory,
+            guiding the path for future seekers.
           </Text>
         </div>
 

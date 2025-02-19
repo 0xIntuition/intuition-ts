@@ -164,7 +164,7 @@ export function AppSidebar({
     <>
       <SidebarHeader className="px-5 py-3">
         <SidebarMenu className="gap-3">
-          <Link to="/dashboard" prefetch="intent">
+          <Link to="/dashboard">
             <SidebarMenuItem className="flex flex-row gap-3 px-4 py-3 items-center">
               <svg
                 width="22"

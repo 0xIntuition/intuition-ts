@@ -109,7 +109,7 @@ export function QuestionRow({
                   IQ Earned
                 </span>
               </div>
-            ) : (
+            ) : isActive ? (
               <div className="flex items-baseline gap-2">
                 <span className="text-sm font-semibold text-muted-foreground">
                   Earn
@@ -121,13 +121,13 @@ export function QuestionRow({
                   IQ
                 </span>
               </div>
-            )}
+            ) : null}
           </div>
 
           <div className="flex gap-2">
             {points <= 0 && isActive && (
               <SubmitButton
-                onClick={() => onStart()}
+                onClick={onStart}
                 disabled={isLoading}
                 buttonText="Answer"
                 loading={isLoading}
@@ -136,7 +136,7 @@ export function QuestionRow({
               />
             )}
             {resultsLink && (
-              <Link to={resultsLink} prefetch="intent">
+              <Link to={resultsLink}>
                 <Button
                   variant={ButtonVariant.secondary}
                   className="!bg-background primary-gradient-subtle"

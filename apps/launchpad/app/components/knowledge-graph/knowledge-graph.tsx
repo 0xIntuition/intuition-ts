@@ -454,7 +454,7 @@ export default function KnowledgeGraph({
           y: renderedPosition.y + (type === 'node' ? 20 : 10), // Offset to prevent overlap
         }
 
-        console.log('Click event:', {
+        logger('Click event:', {
           type,
           position,
           data: type === 'node' ? target.data('atom') : target.data('triple'),

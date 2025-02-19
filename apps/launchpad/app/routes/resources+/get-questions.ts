@@ -66,7 +66,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
       GetQuestionsResponse,
       GetQuestionsVariables
     >(GetQuestionsQuery, variables)
-    logger('Questions response:', data)
 
     return new Response(
       JSON.stringify({ epoch_questions: data.epoch_questions }),

@@ -2,6 +2,7 @@ import React from 'react'
 
 import type { PrivyClientConfig } from '@privy-io/react-auth'
 import { PrivyProvider } from '@privy-io/react-auth'
+import { base, baseSepolia, mainnet } from 'viem/chains'
 
 const privyConfig: PrivyClientConfig = {
   loginMethods: ['wallet'],
@@ -9,6 +10,8 @@ const privyConfig: PrivyClientConfig = {
     theme: 'dark' as const,
     showWalletLoginFirst: true,
   },
+  defaultChain: base,
+  supportedChains: [mainnet, base, baseSepolia],
 }
 
 interface PrivyConfigProps {

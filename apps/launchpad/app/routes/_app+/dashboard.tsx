@@ -1,13 +1,8 @@
 import { Avatar, Text, TextVariant, TextWeight } from '@0xintuition/1ui'
 import {
   fetcher,
-  GetAccountDocument,
-  GetAccountQuery,
-  GetAccountQueryVariables,
-  GetFeeTransfersDocument,
-  GetFeeTransfersQuery,
-  GetFeeTransfersQueryVariables,
-  useGetAccountQuery,
+  GetAccountMetadataDocument,
+  useGetAccountMetadataQuery,
   useGetFeeTransfersQuery,
 } from '@0xintuition/graphql'
 
@@ -17,19 +12,15 @@ import ChapterProgress from '@components/chapter-progress'
 import { EarnSection } from '@components/earn-section'
 import { ErrorPage } from '@components/error-page'
 import { LoadingState } from '@components/loading-state'
+import { CHAPTERS } from '@consts/chapters'
 import { ZERO_ADDRESS } from '@consts/general'
-import { CHAPTERS } from '@lib/consts/chapters'
-import { useEpochProgress } from '@lib/hooks/useEpochProgress'
 import { usePoints } from '@lib/hooks/usePoints'
 import { useTotalCompletedQuestions } from '@lib/hooks/useTotalCompletedQuestions'
 import { useUserRank } from '@lib/hooks/useUserRank'
-import { fetchPoints, fetchUserRank } from '@lib/services/points'
-import { fetchTotalCompletedQuestions } from '@lib/services/questions'
-import logger from '@lib/utils/logger'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 import { getUser } from '@server/auth'
-import { dehydrate, QueryClient, useQuery } from '@tanstack/react-query'
+import { dehydrate, QueryClient } from '@tanstack/react-query'
 import { motion } from 'framer-motion'
 import { Code, Compass, Scroll } from 'lucide-react'
 import { formatUnits } from 'viem'
@@ -63,89 +54,27 @@ const earnCards = [
 ]
 
 export async function loader({ request }: LoaderFunctionArgs) {
+  const queryClient = new QueryClient()
+
   const user = await getUser(request)
   const address = user?.wallet?.address?.toLowerCase()
 
-  const url = new URL(request.url)
-  const activityLimit = parseInt(url.searchParams.get('activityLimit') || '10')
-  const activityOffset = parseInt(url.searchParams.get('activityOffset') || '0')
-
-  const queryClient = new QueryClient()
-
-  const epochResponse = await fetch(
-    `${new URL(request.url).origin}/resources/get-current-epoch`,
-  )
-  const epochData = await epochResponse.json()
-  await queryClient.setQueryData(['current-epoch'], epochData.epoch)
-
   if (address) {
-    await Promise.all([
-      queryClient.prefetchQuery({
-        queryKey: ['get-points', { address }],
-        queryFn: async () => {
-          const response = await fetchPoints(address.toLowerCase())
-          return response
-        },
-      }),
-      queryClient.prefetchQuery({
-        queryKey: ['get-user-rank', address.toLowerCase()],
-        queryFn: async () => {
-          const response = await fetchUserRank(address.toLowerCase())
-          return response
-        },
-      }),
-      queryClient.prefetchQuery({
-        queryKey: ['get-protocol-fees', { address }],
-        queryFn: async () => {
-          const response = await fetcher<
-            GetFeeTransfersQuery,
-            GetFeeTransfersQueryVariables
-          >(GetFeeTransfersDocument, {
-            address,
-            cutoff_timestamp: 1733356800,
-          })()
-          return response
-        },
-      }),
-      queryClient.prefetchQuery({
-        queryKey: ['get-user-atom', { address }],
-        queryFn: async () => {
-          const response = await fetcher<
-            GetAccountQuery,
-            GetAccountQueryVariables
-          >(GetAccountDocument, {
-            address,
-          })()
-          return response
-        },
-      }),
-      queryClient.prefetchQuery({
-        queryKey: ['total-completed-questions', address.toLowerCase()],
-        queryFn: async () => fetchTotalCompletedQuestions(address),
-      }),
-    ])
-  }
-
-  // Prefetch epoch progress if we have both wallet and epoch
-  if (address && epochData.epoch?.id) {
-    logger('Fetching epoch progress')
-    const progressResponse = await fetch(
-      `${new URL(request.url).origin}/resources/get-epoch-progress?accountId=${address}&epochId=${epochData.epoch.id}`,
-    )
-    const progressData = await progressResponse.json()
-    logger('Progress data:', progressData)
-    await queryClient.setQueryData(
-      ['epoch-progress', address.toLowerCase(), epochData.epoch.id],
-      progressData.progress,
-    )
+    await queryClient.prefetchQuery({
+      queryKey: ['get-user-atom', { address }],
+      queryFn: async () => {
+        const response = await fetcher(GetAccountMetadataDocument, {
+          address,
+        })()
+        return response
+      },
+    })
   }
 
   return json({
     dehydratedState: dehydrate(queryClient),
     initialParams: {
       address,
-      activityLimit,
-      activityOffset,
     },
   })
 }
@@ -158,53 +87,26 @@ export default function Dashboard() {
   const { initialParams } = useLoaderData<typeof loader>()
   const address = initialParams?.address?.toLowerCase()
 
-  const { data: user } = useGetAccountQuery({
+  const { data: user } = useGetAccountMetadataQuery({
     address: address ?? ZERO_ADDRESS,
   })
 
-  const { data: points, isLoading: isLoadingPoints } = usePoints(address)
-  const { data: protocolFees, isLoading: isLoadingFees } =
-    useGetFeeTransfersQuery({
-      address: address ?? ZERO_ADDRESS,
-      cutoff_timestamp: 1733356800,
-    })
-  const { data: currentEpoch, isLoading: isLoadingEpoch } = useQuery({
-    queryKey: ['current-epoch'],
-    queryFn: async () => {
-      const response = await fetch('/resources/get-current-epoch')
-      const data = await response.json()
-      if (!response.ok) {
-        throw new Error(data.error || 'Failed to fetch current epoch')
-      }
-      return data.epoch
-    },
+  // Client-side queries with loading states
+  const { data: points } = usePoints(address)
+  const { data: protocolFees } = useGetFeeTransfersQuery({
+    address: address ?? ZERO_ADDRESS,
+    cutoff_timestamp: 1733356800,
   })
-  const { data: epochProgress, isLoading: isLoadingProgress } =
-    useEpochProgress(currentEpoch?.id)
-  const { data: rankData, isLoading: isLoadingRank } = useUserRank(address)
+  const { data: rankData } = useUserRank(address)
+  const { data: totalCompletedQuestions } = useTotalCompletedQuestions()
 
-  const { data: totalCompletedQuestions, isLoading: isLoadingTotalCompleted } =
-    useTotalCompletedQuestions()
-
-  // Only show loading state on initial mount when we have no data
-  const isInitialLoading =
-    isLoadingPoints &&
-    isLoadingFees &&
-    isLoadingEpoch &&
-    isLoadingProgress &&
-    isLoadingRank &&
-    isLoadingTotalCompleted &&
-    !points &&
-    !protocolFees &&
-    !currentEpoch &&
-    !epochProgress &&
-    !rankData &&
-    !totalCompletedQuestions
-
-  if (isInitialLoading) {
+  // Show loading state only for the critical data
+  const isLoadingCriticalData = !user
+  if (isLoadingCriticalData) {
     return <LoadingState />
   }
 
+  // Calculate protocol points even if some data is still loading
   const feesPaidBeforeCutoff = formatUnits(
     protocolFees?.before_cutoff?.aggregate?.sum?.amount ?? 0n,
     18,
@@ -221,7 +123,7 @@ export default function Dashboard() {
     protocolPointsBeforeCutoff + protocolPoitnsAfterCutoff,
   )
 
-  const combinedTotal = (points?.totalPoints ?? 0) + protocolPointsTotal
+  const combinedTotal = (points?.total_points ?? 0) + protocolPointsTotal
 
   const stages = CHAPTERS.CHAPTERS
 

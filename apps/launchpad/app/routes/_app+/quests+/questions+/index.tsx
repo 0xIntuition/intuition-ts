@@ -1,4 +1,13 @@
-import { Button, Icon } from '@0xintuition/1ui'
+import { Suspense } from 'react'
+
+import {
+  Button,
+  Card,
+  Icon,
+  Text,
+  TextVariant,
+  TextWeight,
+} from '@0xintuition/1ui'
 
 import { AtomDetailsModal } from '@components/atom-details-modal'
 import { EpochAccordion } from '@components/epoch-accordion'
@@ -8,7 +17,6 @@ import { OnboardingModal } from '@components/survey-modal/survey-modal'
 import { useGoBack } from '@lib/hooks/useGoBack'
 import type { Question } from '@lib/services/questions'
 import { atomDetailsModalAtom, onboardingModalAtom } from '@lib/state/store'
-import logger from '@lib/utils/logger'
 import type { LoaderFunctionArgs, MetaFunction } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 import { getUser } from '@server/auth'
@@ -38,68 +46,39 @@ interface Progress {
 }
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  try {
-    logger('Starting questions loader')
-    const queryClient = new QueryClient()
+  const timings: Record<string, number> = {}
+  const markTiming = (label: string, startTime: number) => {
+    timings[label] = Date.now() - startTime
+  }
 
-    const user = await getUser(request)
-    const userWallet = user?.wallet?.address?.toLowerCase()
-    logger('User wallet:', userWallet)
+  const loaderStart = Date.now()
+  const queryClient = new QueryClient()
 
-    // Fetch all epochs
-    logger('Fetching epochs')
-    const epochsResponse = await fetch(
-      `${new URL(request.url).origin}/resources/get-epochs`,
-    )
-    const epochsData = await epochsResponse.json()
-    logger('Epochs data:', epochsData)
-    if (!epochsData.epochs) {
-      throw new Error('No epochs data received')
-    }
-    await queryClient.setQueryData(['get-epochs'], epochsData.epochs)
+  // Start parallel fetches for critical data
+  const criticalStart = Date.now()
+  const [user, epochsResponse] = await Promise.all([
+    getUser(request),
+    fetch(`${new URL(request.url).origin}/resources/get-epochs`),
+  ])
+  markTiming('Critical data parallel fetch', criticalStart)
 
-    // Fetch all questions at once
-    logger('Fetching all questions')
-    const questionsResponse = await fetch(
-      `${new URL(request.url).origin}/resources/get-questions`,
-    )
-    const questionsData = await questionsResponse.json()
-    logger('Questions data:', questionsData)
-    if (!questionsData.epoch_questions) {
-      throw new Error('No questions data received')
-    }
-    await queryClient.setQueryData(
-      ['get-questions'],
-      questionsData.epoch_questions,
-    )
+  const userWallet = user?.wallet?.address?.toLowerCase()
 
-    // For each epoch, fetch its progress if user is logged in
-    if (userWallet && Array.isArray(epochsData.epochs)) {
-      for (const epoch of epochsData.epochs) {
-        logger('Fetching progress for epoch', epoch.id)
-        const progressResponse = await fetch(
-          `${new URL(request.url).origin}/resources/get-epoch-progress?accountId=${userWallet}&epochId=${epoch.id}`,
-        )
-        const progressData = await progressResponse.json()
-        logger('Progress data:', progressData)
-        await queryClient.setQueryData(
-          ['epoch-progress', userWallet.toLowerCase(), epoch.id],
-          progressData.progress,
-        )
-      }
-    }
+  const epochsData = await epochsResponse.json()
+  if (!epochsData.epochs) {
+    throw new Error('No epochs data received')
+  }
+  await queryClient.setQueryData(['get-epochs'], epochsData.epochs)
 
-    const { origin } = new URL(request.url)
-    const ogImageUrl = `${origin}/resources/create-og?type=questions`
+  const { origin } = new URL(request.url)
+  const ogImageUrl = `${origin}/resources/create-og?type=questions`
 
-    return {
-      dehydratedState: dehydrate(queryClient),
-      userWallet,
-      ogImageUrl,
-    }
-  } catch (error) {
-    logger('Error in questions loader:', error)
-    throw error
+  markTiming('Total loader execution', loaderStart)
+
+  return {
+    dehydratedState: dehydrate(queryClient),
+    userWallet,
+    ogImageUrl,
   }
 }
 
@@ -152,16 +131,42 @@ export function ErrorBoundary() {
   return <ErrorPage routeName="questions" />
 }
 
+function EpochsSkeleton() {
+  return (
+    <div className="relative">
+      <Card className="h-[400px] rounded-lg border-none bg-gradient-to-br from-[#060504] to-[#101010] min-w-[480px] blur-sm brightness-50">
+        <div className="absolute inset-0 flex flex-col justify-between p-8">
+          <div className="space-y-2">
+            <Text
+              variant={TextVariant.headline}
+              weight={TextWeight.medium}
+              className="text-foreground"
+            >
+              Loading...
+            </Text>
+          </div>
+        </div>
+      </Card>
+      <div className="absolute inset-0 flex items-center justify-center">
+        <div className="bg-background/80 px-6 py-3 rounded-lg backdrop-blur-sm">
+          <span className="text-xl font-semibold text-foreground">
+            Loading...
+          </span>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function useEpochsData() {
   const { userWallet } = useLoaderData<typeof loader>()
 
-  // Get all epochs data
+  // Get all epochs data (prefetched in loader)
   const { data: epochs = [] } = useQuery<Epoch[]>({
     queryKey: ['get-epochs'],
     queryFn: async () => {
       const response = await fetch('/resources/get-epochs')
       const data = await response.json()
-      logger('Epochs response:', data)
       if (!response.ok) {
         throw new Error(data.error || 'Failed to fetch epochs')
       }
@@ -169,18 +174,19 @@ function useEpochsData() {
     },
   })
 
-  // Get all questions at once
+  // Get questions for each epoch as they're expanded
   const { data: allQuestions = [] } = useQuery<Question[]>({
     queryKey: ['get-questions'],
     queryFn: async () => {
       const response = await fetch('/resources/get-questions')
       const data = await response.json()
-      logger('Questions response:', data)
       if (!response.ok) {
         throw new Error(data.error || 'Failed to fetch questions')
       }
       return data.epoch_questions
     },
+    // Only fetch questions when we have epochs
+    enabled: epochs.length > 0,
   })
 
   // Fetch progress for all epochs
@@ -188,37 +194,20 @@ function useEpochsData() {
     queries: epochs.map((epoch) => ({
       queryKey: ['epoch-progress', userWallet?.toLowerCase(), epoch.id],
       queryFn: async () => {
-        logger(
-          `Fetching progress for epoch ${epoch.id} with wallet ${userWallet}`,
-        )
         const response = await fetch(
           `/resources/get-epoch-progress?accountId=${userWallet}&epochId=${epoch.id}`,
         )
         const data = await response.json()
-        logger(`Progress response for epoch ${epoch.id}:`, data)
         if (!response.ok) {
           throw new Error(data.error || 'Failed to fetch epoch progress')
         }
         return data.progress
       },
-      enabled: Boolean(userWallet),
+      enabled: Boolean(userWallet) && Boolean(epoch.id),
       staleTime: 1000 * 60 * 5, // Cache for 5 minutes
       retry: 2,
     })),
   })
-
-  logger('Epochs:', epochs)
-  logger('Questions:', allQuestions)
-  logger(
-    'Progress Results:',
-    progressResults.map((result) => ({
-      epochId: epochs[progressResults.indexOf(result)]?.id,
-      enabled: Boolean(userWallet),
-      data: result.data,
-      error: result.error,
-      status: result.status,
-    })),
-  )
 
   // Combine the data
   return epochs.map((epoch, index) => ({
@@ -234,6 +223,14 @@ export default function Questions() {
   const [atomDetailsModal, setAtomDetailsModal] = useAtom(atomDetailsModalAtom)
 
   const epochsWithQuestions = useEpochsData()
+  const { isLoading: isLoadingEpochs } = useQuery({
+    queryKey: ['get-epochs'],
+  })
+
+  // Show skeleton for initial loading
+  if (isLoadingEpochs || !epochsWithQuestions.length) {
+    return <EpochsSkeleton />
+  }
 
   const handleStartOnboarding = (
     question: Question,
@@ -265,10 +262,12 @@ export default function Questions() {
         </Button>
         <PageHeader title="Questions" subtitle="Answer questions to earn IQ" />
       </div>
-      <EpochAccordion
-        epochs={epochsWithQuestions}
-        onStartQuestion={handleStartOnboarding}
-      />
+      <Suspense fallback={<EpochsSkeleton />}>
+        <EpochAccordion
+          epochs={epochsWithQuestions}
+          onStartQuestion={handleStartOnboarding}
+        />
+      </Suspense>
       <OnboardingModal
         isOpen={onboardingModal.isOpen}
         onClose={handleCloseOnboarding}
