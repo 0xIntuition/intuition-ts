@@ -109,7 +109,7 @@ export function QuestionRow({
                   IQ Earned
                 </span>
               </div>
-            ) : (
+            ) : isActive ? (
               <div className="flex items-baseline gap-2">
                 <span className="text-sm font-semibold text-muted-foreground">
                   Earn
@@ -121,7 +121,7 @@ export function QuestionRow({
                   IQ
                 </span>
               </div>
-            )}
+            ) : null}
           </div>
 
           <div className="flex gap-2">
