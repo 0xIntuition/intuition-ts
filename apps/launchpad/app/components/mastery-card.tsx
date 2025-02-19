@@ -32,6 +32,7 @@ export function MasteryCard({
         'h-[120px] bg-background/80 backdrop-blur-sm group',
         isLocked && 'opacity-50 cursor-not-allowed',
         !isLocked && 'cursor-pointer',
+        isSelected && 'border border-2',
         progress === maxProgress && 'ring-2 ring-success',
         className,
       )}
