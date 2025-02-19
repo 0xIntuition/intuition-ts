@@ -163,6 +163,7 @@ export default function Dashboard() {
   })
 
   const { data: points, isLoading: isLoadingPoints } = usePoints(address)
+  console.log('points', points)
   const { data: protocolFees, isLoading: isLoadingFees } =
     useGetFeeTransfersQuery({
       address: address ?? ZERO_ADDRESS,
@@ -221,7 +222,9 @@ export default function Dashboard() {
     protocolPointsBeforeCutoff + protocolPoitnsAfterCutoff,
   )
 
-  const combinedTotal = (points?.totalPoints ?? 0) + protocolPointsTotal
+  const combinedTotal = (points?.total_points ?? 0) + protocolPointsTotal
+
+  console.log('combinedTotal', combinedTotal)
 
   const stages = CHAPTERS.CHAPTERS
 
