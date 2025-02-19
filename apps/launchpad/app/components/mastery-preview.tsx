@@ -65,11 +65,7 @@ export function MasteryPreview({
           </Text>
           <div className="flex items-center gap-4">
             {totalPoints !== undefined && (
-              <Text
-                variant={TextVariant.headline}
-                weight={TextWeight.medium}
-                className="text-muted-foreground flex flex-row gap-2 items-center"
-              >
+              <div className="flex flex-row gap-2 items-center">
                 <Text
                   variant={TextVariant.heading4}
                   weight={TextWeight.semibold}
@@ -77,8 +73,14 @@ export function MasteryPreview({
                 >
                   {totalPoints.toLocaleString()}
                 </Text>{' '}
-                IQ Earned
-              </Text>
+                <Text
+                  variant={TextVariant.headline}
+                  weight={TextWeight.medium}
+                  className="text-muted-foreground"
+                >
+                  IQ Earned
+                </Text>
+              </div>
             )}
             {actionButton && (
               <Button
