@@ -84,14 +84,13 @@ import { formatUnits } from 'viem'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const queryClient = new QueryClient()
-  const url = new URL(request.url)
 
-  // Get pagination params from URL with defaults
-  const pageSize = parseInt(url.searchParams.get('limit') ?? '20', 10)
-  const pageIndex = Math.max(
-    0,
-    parseInt(url.searchParams.get('page') ?? '1', 10) - 1,
-  )
+  // Start parallel fetches for independent data
+  const [user, questionData, allQuestions] = await Promise.all([
+    getUser(request),
+    fetchEpochQuestion(Number(params.questionId)),
+    fetchEpochQuestions(Number(params.epochId)),
+  ])
 
   // Start parallel fetches for independent data
   const [user, questionData, allQuestions, epoch, multiVaultConfig] =

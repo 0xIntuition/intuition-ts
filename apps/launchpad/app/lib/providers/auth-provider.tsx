@@ -121,6 +121,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, [privyReady])
 
+  useEffect(() => {
+    if (user) {
+      // Handle user data changes
+      logger('User data updated:', user)
+      // Update any dependent state/queries
+      revalidator.revalidate()
+    }
+  }, [user])
+
+  useEffect(() => {
+    if (!authenticated && privyReady) {
+      // Clear any session data
+      queryClient.clear()
+      // Reset any app state
+      setIsLoading(false)
+      setIsInitializing(false)
+    }
+  }, [authenticated, privyReady])
+
   const { login } = useLogin({
     onComplete: async (params) => {
       logger('Login complete:', params)
