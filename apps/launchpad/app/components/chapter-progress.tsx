@@ -1,4 +1,4 @@
-import { Card, cn, Text, TextVariant } from '@0xintuition/1ui'
+import { Card, cn, Text } from '@0xintuition/1ui'
 
 import { toRoman } from '@lib/utils/misc'
 import { motion } from 'framer-motion'
@@ -44,9 +44,6 @@ export default function ChapterProgress({
           <div className="space-y-2 w-full">
             <Text className="text-2xl whitespace-nowrap">{title}</Text>
           </div>
-          <Text variant={TextVariant.footnote} className="text-primary/70">
-            {Math.round(totalProgress)}% Complete
-          </Text>
         </motion.div>
 
         <motion.div
