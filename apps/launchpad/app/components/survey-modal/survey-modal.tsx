@@ -622,6 +622,23 @@ export function OnboardingModal({
     updateStepStatus(STEPS.CREATE, 'current')
   }, [handleTransition])
 
+  // Add error boundary logging
+  useEffect(() => {
+    if (!state) {
+      logger('Error: State is null after initialization')
+    }
+  }, [state])
+
+  // Track transitions
+  useEffect(() => {
+    logger('Transition state changed:', { isTransitioning })
+  }, [isTransitioning])
+
+  // Track step changes
+  useEffect(() => {
+    logger('Steps changed:', steps)
+  }, [steps])
+
   return (
     <ClientOnly>
       {() => {
