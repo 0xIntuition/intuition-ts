@@ -58,7 +58,7 @@ export function MasteryPreview({
         }}
       />
       {/* Header */}
-      <div className="mb-6">
+      <div className="mb-6 relative">
         <div className="flex justify-between items-center mb-2">
           <Text variant={TextVariant.heading2} weight={TextWeight.semibold}>
             {title}
@@ -104,7 +104,7 @@ export function MasteryPreview({
       </div>
 
       {/* Progress Overview */}
-      <div className="mb-8">
+      <div className="mb-8 relative">
         <div className="flex justify-between mb-2">
           <Text variant={TextVariant.body}>Overall Progress</Text>
           <Text variant={TextVariant.body} className="text-primary">
