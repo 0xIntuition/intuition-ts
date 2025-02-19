@@ -12,7 +12,7 @@ import {
   DialogFooter,
   StepIndicator,
 } from '@0xintuition/1ui'
-import { useGetListDetailsQuery } from '@0xintuition/graphql'
+import { useGetAtomsQuery, useGetListDetailsQuery } from '@0xintuition/graphql'
 
 import logger from '@lib/utils/logger'
 import { usePrivy } from '@privy-io/react-auth'
@@ -209,6 +209,24 @@ export function OnboardingModal({
     },
   )
 
+  const { data: atomsData, isLoading: isSearching } = useGetAtomsQuery(
+    {
+      where: {
+        label: { _ilike: searchTerm ? `%${searchTerm}%` : undefined },
+      },
+      limit: 25,
+      orderBy: {
+        vault: {
+          position_count: 'desc',
+        },
+      },
+    },
+    {
+      queryKey: ['atoms', searchTerm],
+      enabled: Boolean(searchTerm),
+    },
+  )
+
   useEffect(() => {
     if (isOpen) {
       setState(INITIAL_STATE)
@@ -248,7 +266,7 @@ export function OnboardingModal({
     }
 
     const newTopics = listData.globalTriples.map((triple) => ({
-      id: triple.vault_id,
+      id: triple.subject.vault_id,
       name: triple.subject.label ?? '',
       image: triple.subject.image ?? undefined,
       triple: triple as TripleType,
@@ -271,6 +289,68 @@ export function OnboardingModal({
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify({ state, topics }))
   }, [state, topics])
+
+  const handleTopicSelect = (id: string) => {
+    // First check if this atom exists in topics list
+    const existingTopic = topics.find((t) => t.id === id)
+    if (existingTopic) {
+      // Use existing topic with its triple
+      setTopics((prev) =>
+        prev.map((t) => ({
+          ...t,
+          selected: t.id === id,
+        })),
+      )
+      handleTransition((prev) => ({
+        ...prev,
+        selectedTopic: existingTopic,
+        currentStep: STEPS.SIGNAL,
+        newAtomMetadata: undefined, // Ensure we clear any existing newAtomMetadata
+      }))
+      updateStepStatus(STEPS.TOPICS, 'completed')
+      updateStepStatus(STEPS.SIGNAL, 'current')
+      return
+    }
+
+    // If we get here, this is a new atom from search results
+    if (searchTerm) {
+      const selectedAtom = atomsData?.atoms?.find(
+        (atom) => atom.vault_id === id,
+      )
+      if (selectedAtom) {
+        // Create a new topic
+        const newTopic: Topic = {
+          id: selectedAtom.vault_id,
+          name: selectedAtom.label ?? '',
+          image: selectedAtom.image ?? undefined,
+          selected: true,
+          triple: undefined,
+        }
+
+        setTopics((prev) => [
+          ...prev.map((t) => ({ ...t, selected: false })),
+          newTopic,
+        ])
+
+        // Set up metadata for triple creation since this is a new atom
+        const metadata: NewAtomMetadata = {
+          name: selectedAtom.label ?? '',
+          image: selectedAtom.image ?? undefined,
+          vaultId: selectedAtom.vault_id,
+        }
+
+        handleTransition((prev) => ({
+          ...prev,
+          selectedTopic: newTopic,
+          newAtomMetadata: metadata,
+          currentStep: STEPS.SIGNAL,
+        }))
+
+        updateStepStatus(STEPS.TOPICS, 'completed')
+        updateStepStatus(STEPS.SIGNAL, 'current')
+      }
+    }
+  }
 
   const handleNext = useCallback(() => {
     if (state.currentStep === STEPS.TOPICS) {
@@ -346,22 +426,6 @@ export function OnboardingModal({
     objectId,
   ])
 
-  const toggleTopic = useCallback((id: string) => {
-    setTopics((currentTopics) => {
-      return currentTopics.map((topic) => ({
-        ...topic,
-        selected: topic.id === id,
-      }))
-    })
-  }, [])
-
-  const handleSearchChange = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      setSearchTerm(event.target.value)
-    },
-    [],
-  )
-
   const updateStepStatus = useCallback(
     (stepId: StepId, status: Step['status']) => {
       setSteps((prev) =>
@@ -435,7 +499,10 @@ export function OnboardingModal({
       formData.append('accountId', accountId)
       formData.append('questionId', question.id?.toString() ?? '')
       formData.append('epochId', currentEpoch?.id?.toString() ?? '')
-      formData.append('pointAwardAmount', '200') // TODO: Get from question data
+      formData.append(
+        'pointAwardAmount',
+        question.point_award_amount?.toString() ?? '',
+      ) // TODO: Get from question data
       formData.append('subjectId', subjectId ?? '')
 
       const response = await fetch('/actions/reward-question-points', {
@@ -607,10 +674,13 @@ export function OnboardingModal({
                   <TopicsStep
                     topics={topics}
                     isLoadingList={isLoadingList}
-                    onToggleTopic={toggleTopic}
-                    onSearchChange={handleSearchChange}
+                    onToggleTopic={handleTopicSelect}
                     onCreateClick={handleCreateClick}
                     question={question}
+                    searchTerm={searchTerm}
+                    setSearchTerm={setSearchTerm}
+                    atomsData={atomsData}
+                    isSearching={isSearching}
                   />
                 )}
 

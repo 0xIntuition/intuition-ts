@@ -13534,6 +13534,21 @@ export type GetListDetailsQuery = {
           count: number
         } | null
       }
+      vault?: {
+        __typename?: 'vaults'
+        current_share_price: any
+        positions_aggregate: {
+          __typename?: 'positions_aggregate'
+          aggregate?: {
+            __typename?: 'positions_aggregate_fields'
+            count: number
+            sum?: {
+              __typename?: 'positions_sum_fields'
+              shares?: any | null
+            } | null
+          } | null
+        }
+      } | null
     }
     object: {
       __typename?: 'atoms'
@@ -13648,6 +13663,21 @@ export type GetListDetailsWithPositionQuery = {
           count: number
         } | null
       }
+      vault?: {
+        __typename?: 'vaults'
+        current_share_price: any
+        positions_aggregate: {
+          __typename?: 'positions_aggregate'
+          aggregate?: {
+            __typename?: 'positions_aggregate_fields'
+            count: number
+            sum?: {
+              __typename?: 'positions_sum_fields'
+              shares?: any | null
+            } | null
+          } | null
+        }
+      } | null
     }
     object: {
       __typename?: 'atoms'
@@ -13783,6 +13813,21 @@ export type GetListDetailsWithUserQuery = {
           count: number
         } | null
       }
+      vault?: {
+        __typename?: 'vaults'
+        current_share_price: any
+        positions_aggregate: {
+          __typename?: 'positions_aggregate'
+          aggregate?: {
+            __typename?: 'positions_aggregate_fields'
+            count: number
+            sum?: {
+              __typename?: 'positions_sum_fields'
+              shares?: any | null
+            } | null
+          } | null
+        }
+      } | null
     }
     object: {
       __typename?: 'atoms'
@@ -20918,6 +20963,17 @@ export const GetListDetailsDocument = `
           count
         }
       }
+      vault {
+        current_share_price
+        positions_aggregate {
+          aggregate {
+            count
+            sum {
+              shares
+            }
+          }
+        }
+      }
     }
     object {
       id
@@ -21089,6 +21145,17 @@ export const GetListDetailsWithPositionDocument = `
         }
         aggregate {
           count
+        }
+      }
+      vault {
+        current_share_price
+        positions_aggregate {
+          aggregate {
+            count
+            sum {
+              shares
+            }
+          }
         }
       }
     }
@@ -21288,6 +21355,17 @@ export const GetListDetailsWithUserDocument = `
         }
         aggregate {
           count
+        }
+      }
+      vault {
+        current_share_price
+        positions_aggregate {
+          aggregate {
+            count
+            sum {
+              shares
+            }
+          }
         }
       }
     }
@@ -40500,6 +40578,66 @@ export const GetListDetails = {
                           ],
                         },
                       },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'vault' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: {
+                                kind: 'Name',
+                                value: 'current_share_price',
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: {
+                                kind: 'Name',
+                                value: 'positions_aggregate',
+                              },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'aggregate' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'count',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'sum' },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'shares',
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
                     ],
                   },
                 },
@@ -40985,6 +41123,66 @@ export const GetListDetailsWithPosition = {
                                   {
                                     kind: 'Field',
                                     name: { kind: 'Name', value: 'count' },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'vault' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: {
+                                kind: 'Name',
+                                value: 'current_share_price',
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: {
+                                kind: 'Name',
+                                value: 'positions_aggregate',
+                              },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'aggregate' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'count',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'sum' },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'shares',
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                      ],
+                                    },
                                   },
                                 ],
                               },
@@ -41618,6 +41816,66 @@ export const GetListDetailsWithUser = {
                                   {
                                     kind: 'Field',
                                     name: { kind: 'Name', value: 'count' },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'vault' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: {
+                                kind: 'Name',
+                                value: 'current_share_price',
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: {
+                                kind: 'Name',
+                                value: 'positions_aggregate',
+                              },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'aggregate' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'count',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'sum' },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'shares',
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                      ],
+                                    },
                                   },
                                 ],
                               },

@@ -3,14 +3,15 @@ import { TripleType } from 'app/types'
 
 import { TransactionStateType } from '../../types/transaction'
 
+export type StepId = 'topics' | 'create' | 'signal' | 'reward'
+
 export const STEPS = {
-  TOPICS: 'topics',
-  CREATE: 'create',
-  SIGNAL: 'signal',
-  REWARD: 'reward',
+  TOPICS: 'topics' as const,
+  CREATE: 'create' as const,
+  SIGNAL: 'signal' as const,
+  REWARD: 'reward' as const,
 } as const
 
-export type StepId = (typeof STEPS)[keyof typeof STEPS]
 export type StepStatus = 'upcoming' | 'current' | 'completed'
 
 export type Step = {
@@ -23,8 +24,9 @@ export interface Topic {
   id: string
   name: string
   image?: string
-  triple?: TripleType
   selected: boolean
+  triple?: TripleType
+  totalSignals?: number
 }
 
 export interface NewAtomMetadata {
@@ -36,9 +38,9 @@ export interface NewAtomMetadata {
 export interface OnboardingState {
   currentStep: StepId
   ticks: number
+  showCreateStep: boolean
   selectedTopic?: Topic
   newAtomMetadata?: NewAtomMetadata
-  showCreateStep?: boolean
 }
 
 export interface OnboardingModalProps {
