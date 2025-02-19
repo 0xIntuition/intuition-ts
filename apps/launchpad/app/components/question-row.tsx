@@ -136,7 +136,7 @@ export function QuestionRow({
               />
             )}
             {resultsLink && (
-              <Link to={resultsLink} prefetch="intent">
+              <Link to={resultsLink}>
                 <Button
                   variant={ButtonVariant.secondary}
                   className="!bg-background primary-gradient-subtle"

@@ -197,18 +197,10 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     variables,
   })
 
-  let listData
-  if (userWallet) {
-    listData = await fetcher<
-      GetListDetailsSimplifiedQuery,
-      GetListDetailsSimplifiedQueryVariables
-    >(GetListDetailsSimplifiedDocument, variables)()
-  } else {
-    listData = await fetcher<
-      GetListDetailsSimplifiedQuery,
-      GetListDetailsSimplifiedQueryVariables
-    >(GetListDetailsSimplifiedDocument, variables)()
-  }
+  const listData = await fetcher<
+    GetListDetailsSimplifiedQuery,
+    GetListDetailsSimplifiedQueryVariables
+  >(GetListDetailsSimplifiedDocument, variables)()
 
   const responseSize = JSON.stringify(listData).length
   console.log('📦 List query response size:', responseSize, 'bytes')
@@ -219,19 +211,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   markTiming('List data fetch', listQueryStart)
 
   // Cache the result to prevent duplicate fetches
-  const queryKey = [
-    'get-list-details',
-    {
-      globalWhere: {
-        predicate_id: {
-          _eq: predicateId,
-        },
-        object_id: {
-          _eq: objectId,
-        },
-      },
-    },
-  ]
+  const queryKey = ['get-list-details', predicateId, objectId, variables]
 
   await queryClient.setQueryData(queryKey, listData)
 
@@ -529,36 +509,18 @@ export default function MiniGameOne() {
     return variables
   }, [predicateId, objectId, userWallet, pageSize, pageIndex, sorting])
 
-  const { data: withUserData, isLoading: isLoadingUserData } =
+  const { data: listData, isLoading: isLoadingListData } =
     useGetListDetailsSimplifiedQuery(
       {
         ...queryVariables,
       },
       {
         queryKey: ['get-list-details', predicateId, objectId, queryVariables],
-        enabled: !!userWallet,
-        onSuccess: () => {
-          console.log(`⏱️ List details with user query completed`)
-        },
-      } as UseQueryOptions<GetListDetailsSimplifiedQuery>,
-    )
-
-  const { data: withoutUserData, isLoading: isLoadingPositionData } =
-    useGetListDetailsSimplifiedQuery(
-      {
-        ...queryVariables,
-      },
-      {
-        queryKey: ['get-list-details', predicateId, objectId, queryVariables],
-        enabled: !userWallet,
         onSuccess: () => {
           console.log(`⏱️ List details without user query completed`)
         },
       } as UseQueryOptions<GetListDetailsSimplifiedQuery>,
     )
-
-  const listData = userWallet ? withUserData : withoutUserData
-  const isLoading = userWallet ? isLoadingUserData : isLoadingPositionData
   const totalCount = listData?.globalTriplesAggregate?.aggregate?.count ?? 0
 
   type TableRowData = {
@@ -771,7 +733,7 @@ export default function MiniGameOne() {
     )
   }, [])
 
-  if (isLoading) {
+  if (isLoadingListData) {
     return (
       <>
         <div className="flex items-center justify-center h-[400px]">
