@@ -40,8 +40,6 @@ export function SignalStep({
   isLoading,
   setIsLoading,
 }: SignalStepProps) {
-  console.log('selectedTopic', selectedTopic)
-  console.log('newAtomMetadata', newAtomMetadata)
   const [ticks, setTicks] = useState(1)
   const [lastTxHash, setLastTxHash] = useState<string | undefined>(undefined)
   const [validationErrors, setValidationErrors] = useState<string[]>([])
@@ -62,17 +60,12 @@ export function SignalStep({
   const { data: multiVaultConfig, isLoading: isLoadingMultiVaultConfig } =
     useGetMultiVaultConfig(contract)
 
-  console.log('multiVaultConfig', multiVaultConfig)
-
   const tripleCost = multiVaultConfig
     ? multiVaultConfig?.formatted_triple_cost
     : 0
   const min_deposit = multiVaultConfig
     ? multiVaultConfig?.formatted_min_deposit
     : MIN_DEPOSIT
-
-  console.log('tripleCost', tripleCost)
-  console.log('min_deposit', min_deposit)
 
   const val =
     newAtomMetadata && min_deposit && tripleCost

@@ -17,8 +17,8 @@ import ChapterProgress from '@components/chapter-progress'
 import { EarnSection } from '@components/earn-section'
 import { ErrorPage } from '@components/error-page'
 import { LoadingState } from '@components/loading-state'
+import { CHAPTERS } from '@consts/chapters'
 import { ZERO_ADDRESS } from '@consts/general'
-import { CHAPTERS } from '@lib/consts/chapters'
 import { useEpochProgress } from '@lib/hooks/useEpochProgress'
 import { usePoints } from '@lib/hooks/usePoints'
 import { useTotalCompletedQuestions } from '@lib/hooks/useTotalCompletedQuestions'
@@ -163,7 +163,6 @@ export default function Dashboard() {
   })
 
   const { data: points, isLoading: isLoadingPoints } = usePoints(address)
-  console.log('points', points)
   const { data: protocolFees, isLoading: isLoadingFees } =
     useGetFeeTransfersQuery({
       address: address ?? ZERO_ADDRESS,
@@ -223,8 +222,6 @@ export default function Dashboard() {
   )
 
   const combinedTotal = (points?.total_points ?? 0) + protocolPointsTotal
-
-  console.log('combinedTotal', combinedTotal)
 
   const stages = CHAPTERS.CHAPTERS
 

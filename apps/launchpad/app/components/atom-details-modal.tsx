@@ -1,5 +1,7 @@
 import { Dialog, DialogContent, DialogTitle, Icon } from '@0xintuition/1ui'
 
+import logger from '@lib/utils/logger'
+
 import { AtomDetailsCard } from './atom-details-card'
 
 interface AtomDetailsModalProps {
@@ -45,8 +47,8 @@ export function AtomDetailsModal({
     tvl: (data?.forTvl ?? 0) + (data?.againstTvl ?? 0),
     position: data?.position ?? 0,
     mutualConnections: 0, // Placeholder for now
-    onStake: () => console.log('Stake clicked'),
-    onChat: () => console.log('Chat clicked'),
+    onStake: () => logger('Stake clicked'),
+    onChat: () => logger('Chat clicked'),
   }
 
   return (

@@ -68,9 +68,6 @@ export function TopicsStep({
       })
     : topics
 
-  console.log('topics', topics)
-  console.log('displayedTopics', displayedTopics)
-
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value)
   }
