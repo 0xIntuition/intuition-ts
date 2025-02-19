@@ -426,8 +426,8 @@ export default function MiniGameOne() {
               18,
             ) *
               +formatUnits(triple.vault?.current_share_price ?? 0, 18)) /
-            +MIN_DEPOSIT
-          return amount < 0.1 ? 0 : amount
+            (+MIN_DEPOSIT * 0.95)
+          return amount < 0.1 ? 0 : Math.ceil(amount)
         })(),
         downvotes: (() => {
           const amount =
@@ -440,8 +440,8 @@ export default function MiniGameOne() {
                 triple.counter_vault?.current_share_price ?? 0,
                 18,
               )) /
-            +MIN_DEPOSIT
-          return amount < 0.1 ? 0 : amount
+            (+MIN_DEPOSIT * 0.95)
+          return amount < 0.1 ? 0 : Math.ceil(amount)
         })(),
         forTvl:
           +formatUnits(
