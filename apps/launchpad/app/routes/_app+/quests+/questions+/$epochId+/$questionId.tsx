@@ -68,25 +68,14 @@ import { CheckCircle } from 'lucide-react'
 import { formatUnits } from 'viem'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
-  const timings: Record<string, number> = {}
-  const markTiming = (label: string, startTime: number) => {
-    timings[label] = Date.now() - startTime
-    console.log(`⏱️ ${label} took ${timings[label]}ms`)
-  }
-
-  const loaderStart = Date.now()
-  console.log('🔍 Starting loader execution')
-
   const queryClient = new QueryClient()
 
   // Start parallel fetches for independent data
-  const userStart = Date.now()
   const [user, questionData, allQuestions] = await Promise.all([
     getUser(request),
     fetchEpochQuestion(Number(params.questionId)),
     fetchEpochQuestions(Number(params.epochId)),
   ])
-  markTiming('Parallel initial fetches', userStart)
 
   const userWallet = user?.wallet?.address?.toLowerCase()
 
@@ -114,8 +103,6 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const { origin } = new URL(request.url)
   const ogImageUrl = `${origin}/resources/create-og?id=${questionData.object_id}&type=list`
 
-  markTiming('Total loader execution', loaderStart)
-
   return {
     dehydratedState: dehydrate(queryClient),
     userWallet,
@@ -124,7 +111,6 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     questionData,
     prevQuestion,
     nextQuestion,
-    timings,
   }
 }
 
@@ -191,7 +177,6 @@ export function ErrorBoundary() {
 type Triple = GetListDetailsSimplifiedQuery['globalTriples'][0]
 
 export default function MiniGameOne() {
-  const componentStart = window.performance.now()
   const location = useLocation()
   const { epochId, questionId } = useParams()
   const goBack = useGoBack({ fallbackRoute: `/quests/questions/${epochId}` })
@@ -596,12 +581,6 @@ export default function MiniGameOne() {
       })
     }
   }
-
-  React.useEffect(() => {
-    console.log(
-      `🏁 Initial component render took ${(window.performance.now() - componentStart).toFixed(2)}ms`,
-    )
-  }, [])
 
   return (
     <>

@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { Avatar, Text, TextVariant, TextWeight } from '@0xintuition/1ui'
 import {
   fetcher,
@@ -56,47 +54,28 @@ const earnCards = [
 ]
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  const timings: Record<string, number> = {}
-  const markTiming = (label: string, startTime: number) => {
-    timings[label] = Date.now() - startTime
-    console.log(`⏱️ ${label} took ${timings[label]}ms`)
-  }
-
-  const loaderStart = Date.now()
-  console.log('🔍 Starting loader execution')
-
   const queryClient = new QueryClient()
 
-  // Only fetch user and atom details in loader
-  const userStart = Date.now()
   const user = await getUser(request)
-  markTiming('User fetch', userStart)
-
   const address = user?.wallet?.address?.toLowerCase()
 
-  // Only prefetch atom details if we have an address
   if (address) {
-    const atomStart = Date.now()
     await queryClient.prefetchQuery({
       queryKey: ['get-user-atom', { address }],
       queryFn: async () => {
         const response = await fetcher(GetAccountMetadataDocument, {
           address,
         })()
-        markTiming('User atom fetch', atomStart)
         return response
       },
     })
   }
-
-  markTiming('Total loader execution', loaderStart)
 
   return json({
     dehydratedState: dehydrate(queryClient),
     initialParams: {
       address,
     },
-    timings,
   })
 }
 
@@ -105,90 +84,21 @@ export function ErrorBoundary() {
 }
 
 export default function Dashboard() {
-  const componentStart = window.performance.now()
-  const { initialParams, timings } = useLoaderData<typeof loader>()
+  const { initialParams } = useLoaderData<typeof loader>()
   const address = initialParams?.address?.toLowerCase()
-
-  // Log loader timings
-  React.useEffect(() => {
-    if (timings) {
-      console.log('📊 Loader Timing Summary:')
-      Object.entries(timings).forEach(([label, duration]) => {
-        console.log(`${label}: ${duration}ms`)
-      })
-    }
-  }, [timings])
 
   const { data: user } = useGetAccountMetadataQuery({
     address: address ?? ZERO_ADDRESS,
   })
 
   // Client-side queries with loading states
-  const { data: points, isLoading: isLoadingPoints } = usePoints(address)
-  const { data: protocolFees, isLoading: isLoadingFees } =
-    useGetFeeTransfersQuery({
-      address: address ?? ZERO_ADDRESS,
-      cutoff_timestamp: 1733356800,
-    })
-  const { data: rankData, isLoading: isLoadingRank } = useUserRank(address)
-  const { data: totalCompletedQuestions, isLoading: isLoadingTotalCompleted } =
-    useTotalCompletedQuestions()
-
-  // Query timing logs
-  React.useEffect(() => {
-    if (points) {
-      console.log(
-        '⏱️ Points query completed:',
-        window.performance.now() - componentStart,
-        'ms',
-      )
-    }
-  }, [points, componentStart])
-
-  React.useEffect(() => {
-    if (protocolFees) {
-      console.log(
-        '⏱️ Protocol fees query completed:',
-        window.performance.now() - componentStart,
-        'ms',
-      )
-    }
-  }, [protocolFees, componentStart])
-
-  React.useEffect(() => {
-    if (rankData) {
-      console.log(
-        '⏱️ Rank query completed:',
-        window.performance.now() - componentStart,
-        'ms',
-      )
-    }
-  }, [rankData, componentStart])
-
-  React.useEffect(() => {
-    if (totalCompletedQuestions) {
-      console.log(
-        '⏱️ Total completed questions query completed:',
-        window.performance.now() - componentStart,
-        'ms',
-      )
-    }
-  }, [totalCompletedQuestions, componentStart])
-
-  // Log initial render time
-  React.useEffect(() => {
-    console.log(
-      '🏁 Initial component render took:',
-      window.performance.now() - componentStart,
-      'ms',
-    )
-    console.log('📊 Loading States:', {
-      points: isLoadingPoints,
-      fees: isLoadingFees,
-      rank: isLoadingRank,
-      totalCompleted: isLoadingTotalCompleted,
-    })
-  }, [])
+  const { data: points } = usePoints(address)
+  const { data: protocolFees } = useGetFeeTransfersQuery({
+    address: address ?? ZERO_ADDRESS,
+    cutoff_timestamp: 1733356800,
+  })
+  const { data: rankData } = useUserRank(address)
+  const { data: totalCompletedQuestions } = useTotalCompletedQuestions()
 
   // Show loading state only for the critical data
   const isLoadingCriticalData = !user

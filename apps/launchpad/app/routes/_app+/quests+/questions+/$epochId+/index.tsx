@@ -1,8 +1,3 @@
-/**
- * Epoch-specific questions page
- * Route: /quests/questions/:epochId
- */
-
 import { Suspense } from 'react'
 
 import {
@@ -18,6 +13,7 @@ import {
 import { AtomDetailsModal } from '@components/atom-details-modal'
 import { EpochStatus } from '@components/epoch-status'
 import { ErrorPage } from '@components/error-page'
+import { LoadingState } from '@components/loading-state'
 import { PageHeader } from '@components/page-header'
 import { QuestionCardWrapper } from '@components/question-card-wrapper'
 import { OnboardingModal } from '@components/survey-modal/survey-modal'
@@ -26,50 +22,53 @@ import type { Question } from '@lib/services/questions'
 import { atomDetailsModalAtom, onboardingModalAtom } from '@lib/state/store'
 import logger from '@lib/utils/logger'
 import type { LoaderFunctionArgs, MetaFunction } from '@remix-run/node'
-import { useLoaderData, useParams } from '@remix-run/react'
+import { json } from '@remix-run/node'
+import { useLoaderData } from '@remix-run/react'
 import { getUser } from '@server/auth'
 import { dehydrate, QueryClient, useQuery } from '@tanstack/react-query'
 import { useAtom } from 'jotai'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   try {
-    logger('Starting epoch questions loader')
     const queryClient = new QueryClient()
     const { epochId } = params
 
-    const user = await getUser(request)
-    const userWallet = user?.wallet?.address?.toLowerCase()
-    logger('User wallet:', userWallet)
+    // Start parallel fetches for critical data
+    const [user, epochResponse, questionsResponse] = await Promise.all([
+      getUser(request),
+      fetch(
+        `${new URL(request.url).origin}/resources/get-epoch?epochId=${epochId}`,
+      ),
+      fetch(
+        `${new URL(request.url).origin}/resources/get-questions?epochId=${epochId}`,
+      ),
+    ])
 
-    // Prefetch epoch
-    logger('Fetching epoch')
-    const epochResponse = await fetch(
-      `${new URL(request.url).origin}/resources/get-epoch?epochId=${epochId}`,
-    )
+    const userWallet = user?.wallet?.address?.toLowerCase()
+
+    // Process epoch data
     const epochData = await epochResponse.json()
-    logger('Epoch data:', epochData)
+    if (!epochData.epoch) {
+      throw new Error('No epoch data received')
+    }
     await queryClient.setQueryData(['get-epoch', epochId], epochData.epoch)
 
-    // Prefetch questions for this epoch
-    logger('Fetching questions for epoch', epochId)
-    const questionsResponse = await fetch(
-      `${new URL(request.url).origin}/resources/get-questions?epochId=${epochId}`,
-    )
+    // Process questions data
     const questionsData = await questionsResponse.json()
-    logger('Questions data:', questionsData)
+    if (!questionsData.epoch_questions) {
+      throw new Error('No questions data received')
+    }
     await queryClient.setQueryData(
       ['get-questions', epochId],
       questionsData.epoch_questions,
     )
 
-    // Prefetch epoch progress if we have both wallet and epoch
+    // Prefetch progress in parallel if we have a user
     if (userWallet && epochId) {
-      logger('Fetching epoch progress')
       const progressResponse = await fetch(
         `${new URL(request.url).origin}/resources/get-epoch-progress?accountId=${userWallet}&epochId=${epochId}`,
       )
       const progressData = await progressResponse.json()
-      logger('Progress data:', progressData)
       await queryClient.setQueryData(
         ['epoch-progress', userWallet.toLowerCase(), epochId],
         progressData.progress,
@@ -79,12 +78,12 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     const { origin } = new URL(request.url)
     const ogImageUrl = `${origin}/resources/create-og?type=questions&epochId=${epochId}`
 
-    return {
+    return json({
       dehydratedState: dehydrate(queryClient),
       userWallet,
       ogImageUrl,
       epochId,
-    }
+    })
   } catch (error) {
     logger('Error in epoch questions loader:', error)
     throw error
@@ -168,15 +167,13 @@ function QuestionsSkeleton() {
 }
 
 export default function EpochQuestions() {
-  const { epochId } = useParams()
+  const { epochId, userWallet } = useLoaderData<typeof loader>()
   const goBack = useGoBack({ fallbackRoute: `/quests/questions` })
-
   const [onboardingModal, setOnboardingModal] = useAtom(onboardingModalAtom)
   const [atomDetailsModal, setAtomDetailsModal] = useAtom(atomDetailsModalAtom)
-  const { userWallet } = useLoaderData<typeof loader>()
 
-  // Get epoch data
-  const { data: epoch, isLoading: isLoadingEpoch } = useQuery({
+  // Get epoch data (prefetched in loader)
+  const { data: epoch } = useQuery({
     queryKey: ['get-epoch', epochId],
     queryFn: async () => {
       const response = await fetch(`/resources/get-epoch?epochId=${epochId}`)
@@ -188,8 +185,8 @@ export default function EpochQuestions() {
     },
   })
 
-  // Get questions for this specific epoch
-  const { data: questions, isLoading: isLoadingQuestions } = useQuery({
+  // Get questions (prefetched in loader)
+  const { data: questions } = useQuery({
     queryKey: ['get-questions', epochId],
     queryFn: async () => {
       const response = await fetch(
@@ -203,6 +200,7 @@ export default function EpochQuestions() {
     },
   })
 
+  // Get progress (prefetched in loader if user exists)
   const { data: epochProgress } = useQuery({
     queryKey: ['epoch-progress', userWallet?.toLowerCase(), epochId],
     queryFn: async () => {
@@ -217,6 +215,11 @@ export default function EpochQuestions() {
     },
     enabled: !!userWallet && !!epochId,
   })
+
+  // Show skeleton while critical data loads
+  if (!epoch || !questions) {
+    return <LoadingState />
+  }
 
   const handleStartOnboarding = (
     question: Question,
@@ -233,14 +236,6 @@ export default function EpochQuestions() {
       predicateId: null,
       objectId: null,
     })
-  }
-
-  if (isLoadingQuestions || isLoadingEpoch) {
-    return <QuestionsSkeleton />
-  }
-
-  if (!epoch) {
-    return <ErrorPage routeName="epoch questions" />
   }
 
   const totalPoints = questions?.reduce(
