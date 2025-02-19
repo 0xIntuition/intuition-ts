@@ -220,7 +220,8 @@ export function RewardStep({
                   : 'Preparing Reward...'}
           </h2>
           <Text variant={TextVariant.body} className="text-primary/70">
-            You&apos;ve successfully answered the question and earned points
+            Your answer has been woven into Intuition&apos;s living memory,
+            guiding the path for future seekers.
           </Text>
         </div>
 
