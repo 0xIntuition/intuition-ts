@@ -38418,18 +38418,6 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  vite-env-only@2.4.1(vite@5.2.13(@types/node@20.17.17)(terser@5.31.1)):
-    dependencies:
-      '@babel/core': 7.24.7
-      '@babel/generator': 7.24.7
-      '@babel/parser': 7.24.7
-      '@babel/traverse': 7.24.7(supports-color@5.5.0)
-      '@babel/types': 7.24.7
-      micromatch: 4.0.8
-      vite: 5.2.13(@types/node@20.17.17)(terser@5.31.1)
-    transitivePeerDependencies:
-      - supports-color
-
   vite-node@1.6.0(@types/node@18.16.9)(terser@5.31.1):
     dependencies:
       cac: 6.7.14
@@ -38518,17 +38506,6 @@ snapshots:
       tsconfck: 3.1.0(typescript@5.4.5)
     optionalDependencies:
       vite: 5.2.13(@types/node@20.14.2)(terser@5.31.1)
-    transitivePeerDependencies:
-      - supports-color
-      - typescript
-
-  vite-tsconfig-paths@4.3.2(typescript@5.4.5)(vite@5.2.13(@types/node@20.17.17)(terser@5.31.1)):
-    dependencies:
-      debug: 4.3.5(supports-color@5.5.0)
-      globrex: 0.1.2
-      tsconfck: 3.1.0(typescript@5.4.5)
-    optionalDependencies:
-      vite: 5.2.13(@types/node@20.17.17)(terser@5.31.1)
     transitivePeerDependencies:
       - supports-color
       - typescript

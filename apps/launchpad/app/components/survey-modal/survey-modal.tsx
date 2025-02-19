@@ -74,15 +74,12 @@ const useStepTransition = (
 
   const handleTransition = useCallback(
     (updateFn: (prev: OnboardingState) => OnboardingState) => {
-      logger('Starting transition with update function')
-
       // Store the update function for later
       updateFnRef.current = updateFn
       setIsTransitioning(true)
 
       // Wait for fade out before updating state
       rafRef.current = requestAnimationFrame(() => {
-        logger('RAF callback triggered')
         timeoutRef.current = window.setTimeout(() => {
           if (!updateFnRef.current) {
             logger('Error: Update function is null during transition')
@@ -110,7 +107,6 @@ const useStepTransition = (
 
           // Wait a frame before starting fade in
           rafRef.current = requestAnimationFrame(() => {
-            logger('Final RAF callback triggered')
             setIsTransitioning(false)
           })
         }, 150) // Match the CSS transition duration
@@ -120,7 +116,6 @@ const useStepTransition = (
   )
 
   const resetTransition = useCallback(() => {
-    logger('Resetting transition')
     setIsTransitioning(false)
     updateFnRef.current = null
     if (timeoutRef.current) {
@@ -134,7 +129,6 @@ const useStepTransition = (
   // Cleanup timeouts and animation frames
   useEffect(() => {
     return () => {
-      logger('Cleaning up transition effects')
       resetTransition()
     }
   }, [resetTransition])
@@ -627,23 +621,6 @@ export function OnboardingModal({
     updateStepStatus(STEPS.TOPICS, 'completed')
     updateStepStatus(STEPS.CREATE, 'current')
   }, [handleTransition])
-
-  // Add error boundary logging
-  useEffect(() => {
-    if (!state) {
-      logger('Error: State is null after initialization')
-    }
-  }, [state])
-
-  // Track transitions
-  useEffect(() => {
-    logger('Transition state changed:', { isTransitioning })
-  }, [isTransitioning])
-
-  // Track step changes
-  useEffect(() => {
-    logger('Steps changed:', steps)
-  }, [steps])
 
   return (
     <ClientOnly>
