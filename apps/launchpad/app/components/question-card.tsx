@@ -141,7 +141,7 @@ export function QuestionCard({
                 IQ Earned
               </span>
             </div>
-          ) : (
+          ) : isActive ? (
             <div className="flex items-baseline gap-2">
               <span className="text-md font-semibold text-muted-foreground">
                 Earn
@@ -153,7 +153,7 @@ export function QuestionCard({
                 IQ Points
               </span>
             </div>
-          )}
+          ) : null}
         </div>
       </div>
     </Card>

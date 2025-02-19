@@ -68,5 +68,21 @@ export default defineConfig({
       'cytoscape',
       'react-dropzone',
     ],
+    optimizeDeps: {
+      include: ['stream-browserify'],
+    },
+  },
+  resolve: {
+    alias: {
+      stream: 'stream-browserify',
+      buffer: 'buffer',
+    },
+  },
+  optimizeDeps: {
+    esbuildOptions: {
+      define: {
+        global: 'globalThis',
+      },
+    },
   },
 })

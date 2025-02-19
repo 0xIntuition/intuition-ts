@@ -1,4 +1,5 @@
 import { pointsClient } from '@lib/graphql/client'
+import logger from '@lib/utils/logger'
 
 export const GetRelicPointsDocument = `
     query GetRelicPoints($address: String!) {
@@ -234,7 +235,7 @@ export async function fetchUserRank(
     }
   }
 
-  console.log(
+  logger(
     userFound
       ? `Found user at rank ${userRank} out of ${totalUsers} total users`
       : `User not found in ${totalUsers} total users`,

@@ -42,7 +42,8 @@ export function getPrivyErrorMessage(errorCode: string): string {
     // Wallet connection errors
     generic_connect_wallet_error: 'Failed to connect wallet. Please try again',
     unknown_connect_wallet_error: 'Unable to connect wallet. Please try again',
-    unsupported_chain_id: 'Please switch to a supported network',
+    unsupported_chain_id:
+      'This network is not supported. Please switch to Base',
     insufficient_balance: 'Insufficient balance',
     transaction_failure: 'Transaction failed',
     unable_to_sign: 'Unable to sign message',

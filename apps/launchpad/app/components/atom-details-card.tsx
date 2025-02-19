@@ -10,8 +10,13 @@ interface AtomDetailsCardProps extends React.HTMLAttributes<HTMLDivElement> {
   atomId: number
   listClaim: boolean
   userCount: number
+  forTvl?: number
+  againstTvl?: number
   tvl: number
   position?: number
+  mutualConnections?: number
+  onStake?: () => void
+  onChat?: () => void
 }
 
 export function AtomDetailsCard({
