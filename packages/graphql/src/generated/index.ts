@@ -11153,6 +11153,62 @@ export type GetAccountWithAggregatesQuery = {
   } | null
 }
 
+export type GetAccountMetadataQueryVariables = Exact<{
+  address: Scalars['String']['input']
+}>
+
+export type GetAccountMetadataQuery = {
+  __typename?: 'query_root'
+  account?: {
+    __typename?: 'accounts'
+    label: string
+    image?: string | null
+    id: string
+    atom_id?: any | null
+    type: any
+    atom?: {
+      __typename?: 'atoms'
+      id: any
+      data?: string | null
+      image?: string | null
+      label?: string | null
+      emoji?: string | null
+      type: any
+      wallet_id: string
+      creator?: {
+        __typename?: 'accounts'
+        id: string
+        label: string
+        image?: string | null
+      } | null
+      value?: {
+        __typename?: 'atom_values'
+        person?: {
+          __typename?: 'persons'
+          name?: string | null
+          image?: string | null
+          description?: string | null
+          url?: string | null
+        } | null
+        thing?: {
+          __typename?: 'things'
+          name?: string | null
+          image?: string | null
+          description?: string | null
+          url?: string | null
+        } | null
+        organization?: {
+          __typename?: 'organizations'
+          name?: string | null
+          image?: string | null
+          description?: string | null
+          url?: string | null
+        } | null
+      } | null
+    } | null
+  } | null
+}
+
 export type GetAtomsQueryVariables = Exact<{
   limit?: InputMaybe<Scalars['Int']['input']>
   offset?: InputMaybe<Scalars['Int']['input']>
@@ -19240,6 +19296,97 @@ useGetAccountWithAggregatesQuery.fetcher = (
     GetAccountWithAggregatesQuery,
     GetAccountWithAggregatesQueryVariables
   >(GetAccountWithAggregatesDocument, variables, options)
+
+export const GetAccountMetadataDocument = `
+    query GetAccountMetadata($address: String!) {
+  account(id: $address) {
+    ...AccountMetadata
+    atom {
+      ...AtomMetadata
+    }
+  }
+}
+    ${AccountMetadataFragmentDoc}
+${AtomMetadataFragmentDoc}
+${AtomValueFragmentDoc}`
+
+export const useGetAccountMetadataQuery = <
+  TData = GetAccountMetadataQuery,
+  TError = unknown,
+>(
+  variables: GetAccountMetadataQueryVariables,
+  options?: Omit<
+    UseQueryOptions<GetAccountMetadataQuery, TError, TData>,
+    'queryKey'
+  > & {
+    queryKey?: UseQueryOptions<
+      GetAccountMetadataQuery,
+      TError,
+      TData
+    >['queryKey']
+  },
+) => {
+  return useQuery<GetAccountMetadataQuery, TError, TData>({
+    queryKey: ['GetAccountMetadata', variables],
+    queryFn: fetcher<GetAccountMetadataQuery, GetAccountMetadataQueryVariables>(
+      GetAccountMetadataDocument,
+      variables,
+    ),
+    ...options,
+  })
+}
+
+useGetAccountMetadataQuery.document = GetAccountMetadataDocument
+
+useGetAccountMetadataQuery.getKey = (
+  variables: GetAccountMetadataQueryVariables,
+) => ['GetAccountMetadata', variables]
+
+export const useInfiniteGetAccountMetadataQuery = <
+  TData = InfiniteData<GetAccountMetadataQuery>,
+  TError = unknown,
+>(
+  variables: GetAccountMetadataQueryVariables,
+  options: Omit<
+    UseInfiniteQueryOptions<GetAccountMetadataQuery, TError, TData>,
+    'queryKey'
+  > & {
+    queryKey?: UseInfiniteQueryOptions<
+      GetAccountMetadataQuery,
+      TError,
+      TData
+    >['queryKey']
+  },
+) => {
+  return useInfiniteQuery<GetAccountMetadataQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey: optionsQueryKey ?? ['GetAccountMetadata.infinite', variables],
+        queryFn: (metaData) =>
+          fetcher<GetAccountMetadataQuery, GetAccountMetadataQueryVariables>(
+            GetAccountMetadataDocument,
+            { ...variables, ...(metaData.pageParam ?? {}) },
+          )(),
+        ...restOptions,
+      }
+    })(),
+  )
+}
+
+useInfiniteGetAccountMetadataQuery.getKey = (
+  variables: GetAccountMetadataQueryVariables,
+) => ['GetAccountMetadata.infinite', variables]
+
+useGetAccountMetadataQuery.fetcher = (
+  variables: GetAccountMetadataQueryVariables,
+  options?: RequestInit['headers'],
+) =>
+  fetcher<GetAccountMetadataQuery, GetAccountMetadataQueryVariables>(
+    GetAccountMetadataDocument,
+    variables,
+    options,
+  )
 
 export const GetAtomsDocument = `
     query GetAtoms($limit: Int, $offset: Int, $orderBy: [atoms_order_by!], $where: atoms_bool_exp) {
@@ -33227,6 +33374,197 @@ export const GetAccountWithAggregates = {
                 },
               ],
             },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export const GetAccountMetadata = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'GetAccountMetadata' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'address' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'account' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'address' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'AccountMetadata' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'atom' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AtomMetadata' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'AccountMetadata' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'accounts' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'atom_id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'AtomValue' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'atoms' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'value' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'person' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'description' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'thing' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'description' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'organization' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'description' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'AtomMetadata' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'atoms' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'data' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'emoji' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'wallet_id' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'creator' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+              ],
+            },
+          },
+          {
+            kind: 'FragmentSpread',
+            name: { kind: 'Name', value: 'AtomValue' },
           },
         ],
       },

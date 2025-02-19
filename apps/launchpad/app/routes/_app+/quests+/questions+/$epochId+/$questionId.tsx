@@ -9,14 +9,8 @@ import {
   IconName,
   Text,
 } from '@0xintuition/1ui'
+import type { GetListDetailsSimplifiedQuery } from '@0xintuition/graphql'
 import {
-  fetcher,
-  GetAtomDocument,
-  GetAtomQuery,
-  GetAtomQueryVariables,
-  GetListDetailsSimplifiedDocument,
-  GetListDetailsSimplifiedQuery,
-  GetListDetailsSimplifiedQueryVariables,
   Triples_Order_By,
   useGetAtomQuery,
   useGetListDetailsSimplifiedQuery,
@@ -34,14 +28,8 @@ import { DataTable } from '@components/ui/table/data-table'
 import { MIN_DEPOSIT, ZERO_ADDRESS } from '@consts/general'
 import { Question } from '@lib/graphql/types'
 import { useGoBack } from '@lib/hooks/useGoBack'
-import { useQuestionData } from '@lib/hooks/useQuestionData'
 import type { EpochQuestion } from '@lib/services/epochs'
-import {
-  fetchEpochById,
-  fetchEpochQuestion,
-  fetchEpochQuestions,
-} from '@lib/services/epochs'
-import { fetchQuestionCompletion } from '@lib/services/questions'
+import { fetchEpochQuestion, fetchEpochQuestions } from '@lib/services/epochs'
 import {
   atomDetailsModalAtom,
   onboardingModalAtom,
@@ -61,7 +49,6 @@ import {
   QueryClient,
   useQuery,
   useQueryClient,
-  UseQueryOptions,
 } from '@tanstack/react-query'
 import {
   ColumnDef,
@@ -91,20 +78,11 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   console.log('🔍 Starting loader execution')
 
   const queryClient = new QueryClient()
-  const url = new URL(request.url)
-
-  // Get pagination params from URL with defaults
-  const pageSize = parseInt(url.searchParams.get('limit') ?? '20', 10)
-  const pageIndex = Math.max(
-    0,
-    parseInt(url.searchParams.get('page') ?? '1', 10) - 1,
-  )
 
   // Start parallel fetches for independent data
   const userStart = Date.now()
-  const [user, epochData, questionData, allQuestions] = await Promise.all([
+  const [user, questionData, allQuestions] = await Promise.all([
     getUser(request),
-    fetchEpochById(Number(params.epochId)),
     fetchEpochQuestion(Number(params.questionId)),
     fetchEpochQuestions(Number(params.epochId)),
   ])
@@ -114,8 +92,6 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
   // Cache the results
   await Promise.all([
-    queryClient.setQueryData(['get-epoch', params.epochId], epochData),
-    queryClient.setQueryData(['get-question', params.questionId], questionData),
     queryClient.setQueryData(['get-questions', params.epochId], allQuestions),
   ])
 
@@ -130,99 +106,13 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
       ? allQuestions[currentIndex + 1]
       : undefined
 
-  // Fetch user-dependent data in parallel if user is logged in
-  let completion = null
-  if (userWallet) {
-    const userDataStart = Date.now()
-    completion = await fetchQuestionCompletion(
-      userWallet,
-      Number(params.questionId),
-    )
-    markTiming('User completion fetch', userDataStart)
-
-    await queryClient.setQueryData(
-      ['question-completion', userWallet.toLowerCase(), params.questionId],
-      completion,
-    )
-  }
-
-  // If user has completed the question, fetch their atom data
-  if (completion?.subject_id) {
-    const atomStart = Date.now()
-    const atomResponse = await fetcher<GetAtomQuery, GetAtomQueryVariables>(
-      GetAtomDocument,
-      { id: completion.subject_id },
-    )()
-    markTiming('Atom data fetch', atomStart)
-
-    await queryClient.setQueryData(
-      ['get-atom', { id: completion.subject_id }],
-      atomResponse,
-    )
-  }
-
   // Add null check for questionData
   if (!questionData) {
     throw new Error('Failed to fetch question data')
   }
 
-  const predicateId = questionData.predicate_id
-  const objectId = questionData.object_id
-
-  const variables: GetListDetailsSimplifiedQueryVariables = {
-    globalWhere: {
-      predicate_id: {
-        _eq: predicateId,
-      },
-      object_id: {
-        _eq: objectId,
-      },
-    },
-    address: userWallet ?? ZERO_ADDRESS,
-    limit: pageSize,
-    offset: pageIndex * pageSize,
-    orderBy: {
-      vault: {
-        total_shares: 'desc',
-      },
-    },
-  }
-
-  // Detailed timing for list query
-  const listQueryStart = Date.now()
-  console.log('🔍 Starting list query fetch', {
-    operation: userWallet
-      ? 'GetListDetailsSimplified'
-      : 'GetListDetailsSimplified',
-    variables,
-  })
-
-  const listData = await fetcher<
-    GetListDetailsSimplifiedQuery,
-    GetListDetailsSimplifiedQueryVariables
-  >(GetListDetailsSimplifiedDocument, variables)()
-
-  const responseSize = JSON.stringify(listData).length
-  console.log('📦 List query response size:', responseSize, 'bytes')
-  if (responseSize > 1000000) {
-    // 1MB
-    console.warn('⚠️ Large response detected:', responseSize / 1000000, 'MB')
-  }
-  markTiming('List data fetch', listQueryStart)
-
-  // Cache the result to prevent duplicate fetches
-  const queryKey = ['get-list-details', predicateId, objectId, variables]
-
-  await queryClient.setQueryData(queryKey, listData)
-
-  // Add cache time information to help debug refetching
-  console.log('📝 Query cache info:', {
-    key: queryKey,
-    timestamp: new Date().toISOString(),
-  })
-
   const { origin } = new URL(request.url)
-  const ogImageUrl = `${origin}/resources/create-og?id=${objectId}&type=list`
+  const ogImageUrl = `${origin}/resources/create-og?id=${questionData.object_id}&type=list`
 
   markTiming('Total loader execution', loaderStart)
 
@@ -230,9 +120,8 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     dehydratedState: dehydrate(queryClient),
     userWallet,
     ogImageUrl,
-    objectResult: listData?.globalTriples[0]?.object,
-    completion,
     questionTitle: questionData?.title,
+    questionData,
     prevQuestion,
     nextQuestion,
     timings,
@@ -244,9 +133,8 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
     return []
   }
 
-  const { objectResult, ogImageUrl, questionTitle } = data
-  const title =
-    questionTitle ?? objectResult?.label ?? 'Error | Intuition Launchpad'
+  const { ogImageUrl, questionTitle } = data
+  const title = questionTitle ?? 'Error | Intuition Launchpad'
 
   return [
     {
@@ -300,15 +188,14 @@ export function ErrorBoundary() {
   )
 }
 
-export default function MiniGameOne() {
-  // Use browser's performance API for client-side timing
-  const componentStart = window.performance.now()
-  console.log('🔍 Starting component render')
+type Triple = GetListDetailsSimplifiedQuery['globalTriples'][0]
 
+export default function MiniGameOne() {
+  const componentStart = window.performance.now()
   const location = useLocation()
   const { epochId, questionId } = useParams()
   const goBack = useGoBack({ fallbackRoute: `/quests/questions/${epochId}` })
-  const { userWallet, completion, prevQuestion, nextQuestion } =
+  const { userWallet, questionData, prevQuestion, nextQuestion } =
     useLoaderData<typeof loader>()
   const [shareModalActive, setShareModalActive] = useAtom(shareModalAtom)
   const [onboardingModal, setOnboardingModal] = useAtom(onboardingModalAtom)
@@ -318,37 +205,34 @@ export default function MiniGameOne() {
 
   const { authenticated } = usePrivy()
 
-  // Get epoch data
-  const { data: epoch } = useQuery({
-    queryKey: ['get-epoch', epochId],
-    queryFn: async () => {
-      const start = window.performance.now()
-      const response = await fetch(`/resources/get-epoch?epochId=${epochId}`)
-      const data = await response.json()
-      console.log(
-        `⏱️ Epoch query took ${(window.performance.now() - start).toFixed(2)}ms`,
-      )
-      if (!response.ok) {
-        throw new Error(data.error || 'Failed to fetch epoch')
-      }
-      return data.epoch
-    },
-  })
-
-  const questionData = useQuestionData({
-    questionId: parseInt(questionId || '1', 10),
-  })
-
   const {
     title,
     description,
     enabled,
-    pointAwardAmount,
-    isCompleted,
-    currentEpoch,
-    predicateId,
-    objectId,
+    point_award_amount: pointAwardAmount,
+    epoch_id: currentEpoch,
+    predicate_id: predicateId,
+    object_id: objectId,
   } = questionData
+
+  // Fetch completion data using resource route
+  const { data: completion, isLoading: isLoadingCompletion } = useQuery({
+    queryKey: ['question-completion', userWallet?.toLowerCase(), questionId],
+    queryFn: async () => {
+      const response = await fetch(
+        `/resources/get-question-completion?accountId=${userWallet}&questionId=${questionId}`,
+      )
+      const data = await response.json()
+      return data.completion
+    },
+    enabled: !!userWallet && !!questionId,
+  })
+
+  // Get the user's selected atom if they've completed the question
+  const { data: atomData, isLoading: isLoadingAtom } = useGetAtomQuery(
+    { id: completion?.subject_id ?? 0 },
+    { enabled: !!completion?.subject_id },
+  )
 
   // Add defensive check for location
   const hasUserParam = location?.search
@@ -516,10 +400,7 @@ export default function MiniGameOne() {
       },
       {
         queryKey: ['get-list-details', predicateId, objectId, queryVariables],
-        onSuccess: () => {
-          console.log(`⏱️ List details without user query completed`)
-        },
-      } as UseQueryOptions<GetListDetailsSimplifiedQuery>,
+      },
     )
   const totalCount = listData?.globalTriplesAggregate?.aggregate?.count ?? 0
 
@@ -544,7 +425,7 @@ export default function MiniGameOne() {
 
   const tableData = React.useMemo(() => {
     const data =
-      (listData?.globalTriples?.map((triple) => ({
+      (listData?.globalTriples?.map((triple: Triple) => ({
         id: String(triple.vault_id),
         triple: triple as TripleType,
         image: triple.subject.image || '',
@@ -606,10 +487,10 @@ export default function MiniGameOne() {
             : triple.counter_vault?.positions?.[0]?.shares > 0
               ? +formatUnits(triple.counter_vault?.current_share_price, 18)
               : undefined,
-        stakingDisabled: questionData.enabled && !isCompleted,
+        stakingDisabled: questionData.enabled && !completion,
       })) as TableRowData[]) ?? []
     return data
-  }, [listData, isCompleted])
+  }, [listData, completion])
 
   const table = useReactTable<TableRowData>({
     data: tableData,
@@ -667,7 +548,7 @@ export default function MiniGameOne() {
       object_id: objectId,
       point_award_amount: pointAwardAmount,
       enabled: enabled || false,
-      epoch_id: currentEpoch?.id,
+      epoch_id: currentEpoch,
       description: description || '', // These fields are optional in the Question type
       link: '', // Empty string instead of null
     }
@@ -682,21 +563,16 @@ export default function MiniGameOne() {
 
   const handleCloseOnboarding = () => {
     // Only invalidate queries if we have all required values and the modal was actually open
-    if (
-      userWallet &&
-      questionId &&
-      currentEpoch?.id &&
-      onboardingModal.isOpen
-    ) {
+    if (userWallet && questionId && currentEpoch && onboardingModal.isOpen) {
       // Invalidate queries first
       queryClient.invalidateQueries({
         queryKey: ['question-completion', userWallet.toLowerCase(), questionId],
       })
       queryClient.invalidateQueries({
-        queryKey: ['epoch-progress', userWallet.toLowerCase(), currentEpoch.id],
+        queryKey: ['epoch-progress', userWallet.toLowerCase(), currentEpoch],
       })
       queryClient.invalidateQueries({
-        queryKey: ['get-questions', currentEpoch.id],
+        queryKey: ['get-questions', currentEpoch],
       })
     }
 
@@ -721,27 +597,11 @@ export default function MiniGameOne() {
     }
   }
 
-  // Get the user's selected atom if they've completed the question
-  const { data: atomData } = useGetAtomQuery(
-    { id: completion?.subject_id ?? 0 },
-    { enabled: !!completion?.subject_id },
-  )
-
   React.useEffect(() => {
     console.log(
       `🏁 Initial component render took ${(window.performance.now() - componentStart).toFixed(2)}ms`,
     )
   }, [])
-
-  if (isLoadingListData) {
-    return (
-      <>
-        <div className="flex items-center justify-center h-[400px]">
-          <LoadingLogo size={100} />
-        </div>
-      </>
-    )
-  }
 
   return (
     <>
@@ -756,7 +616,7 @@ export default function MiniGameOne() {
         </Button>
         <div className="flex flex-1 justify-between items-center">
           <PageHeader
-            title={`${epoch?.name ?? ''} | Question ${questionData?.order}`}
+            title={`Epoch ${currentEpoch ?? ''} | Question ${questionData?.order}`}
           />
           <div className="flex items-center gap-2">
             <Button
@@ -797,49 +657,55 @@ export default function MiniGameOne() {
                 buttonContainerClassName="h-full flex items-center justify-center w-full"
                 actionText="Answer"
               >
-                {isCompleted ? (
+                {isLoadingCompletion ? (
+                  <LoadingLogo size={40} />
+                ) : completion ? (
                   <div className="flex flex-col items-center gap-2">
-                    {atomData && (
-                      <>
-                        <Text variant="body" className="text-primary/70">
-                          You selected
-                        </Text>
-                        <button
-                          onClick={() => {
-                            const rowData = tableData.find(
-                              (row) =>
-                                row.triple.subject.vault_id ===
-                                String(atomData.atom?.vault_id),
-                            )
+                    {isLoadingAtom ? (
+                      <LoadingLogo size={40} />
+                    ) : (
+                      atomData && (
+                        <>
+                          <Text variant="body" className="text-primary/70">
+                            You selected
+                          </Text>
+                          <button
+                            onClick={() => {
+                              const rowData = tableData.find(
+                                (row) =>
+                                  row.triple.subject.vault_id ===
+                                  String(atomData.atom?.vault_id),
+                              )
 
-                            if (rowData) {
-                              setAtomDetailsModal({
-                                isOpen: true,
-                                atomId: Number(rowData.triple.vault_id),
-                                data: rowData,
-                              })
-                            }
-                          }}
-                          className={`flex items-center gap-4 rounded-lg transition-colors w-full md:w-[280px] h-[72px] bg-background/50 backdrop-blur-md backdrop-saturate-150 border border-border/10`}
-                        >
-                          <div className="w-14 h-14 rounded bg-[#1A1A1A] flex-shrink-0 ml-1">
-                            <Avatar
-                              src={atomData?.atom?.image ?? ''}
-                              name={atomData?.atom?.label ?? ''}
-                              icon={IconName.fingerprint}
-                              className="w-full h-full object-cover rounded-lg"
-                            />
-                          </div>
-                          <div className="text-left w-full">
-                            <div className="text-white text-base leading-5">
-                              {atomData?.atom?.label ?? ''}
+                              if (rowData) {
+                                setAtomDetailsModal({
+                                  isOpen: true,
+                                  atomId: Number(rowData.triple.vault_id),
+                                  data: rowData,
+                                })
+                              }
+                            }}
+                            className={`flex items-center gap-4 rounded-lg transition-colors w-full md:w-[280px] h-[72px] bg-background/50 backdrop-blur-md backdrop-saturate-150 border border-border/10`}
+                          >
+                            <div className="w-14 h-14 rounded bg-[#1A1A1A] flex-shrink-0 ml-1">
+                              <Avatar
+                                src={atomData?.atom?.image ?? ''}
+                                name={atomData?.atom?.label ?? ''}
+                                icon={IconName.fingerprint}
+                                className="w-full h-full object-cover rounded-lg"
+                              />
                             </div>
-                          </div>
-                          <div className="flex justify-end px-6">
-                            <CheckCircle className="text-success h-6 w-6" />
-                          </div>
-                        </button>
-                      </>
+                            <div className="text-left w-full">
+                              <div className="text-white text-base leading-5">
+                                {atomData?.atom?.label ?? ''}
+                              </div>
+                            </div>
+                            <div className="flex justify-end px-6">
+                              <CheckCircle className="text-success h-6 w-6" />
+                            </div>
+                          </button>
+                        </>
+                      )
                     )}
                     <div className="flex items-baseline gap-2">
                       <span className="text-xl font-bold bg-gradient-to-r from-[#34C578] to-[#00FF94] bg-clip-text text-transparent">
@@ -869,49 +735,20 @@ export default function MiniGameOne() {
         </div>
       </div>
 
-      {/* TODO: Add back in once we have the metrics */}
-      {/* <AggregatedMetrics
-        metrics={[
-          {
-            label: 'TVL',
-            value: totalTvl,
-            suffix: 'ETH',
-            icon: <Icon name="moneybag" className="h-4 w-4" />,
-            precision: 2,
-          },
-          {
-            label: 'Atoms',
-            value: listData?.globalTriplesAggregate?.aggregate?.count ?? 0,
-            icon: <Icon name="fingerprint" className="h-4 w-4" />,
-          },
-          {
-            label: 'Users',
-            value: totals.users,
-            icon: <Icon name="group" className="h-4 w-4" />,
-          },
-          {
-            label: 'Upvotes',
-            value: totals.upVotes.toFixed(0),
-            icon: <ThumbsUp className="h-4 w-4" />,
-          },
-          {
-            label: 'Downvotes',
-            value: totals.downVotes.toFixed(0),
-            icon: <ThumbsDown className="h-4 w-4" />,
-          },
-        ]}
-        className="[&>div]:after:hidden sm:[&>div]:after:block"
-      /> */}
-
-      {/* Space for table */}
       <div className="mt-6 !mb-24">
-        <DataTable
-          columns={columns as ColumnDef<TableRowData>[]}
-          data={tableData}
-          onRowClick={handleRowClick}
-          table={table}
-          onPaginationChange={updatePaginationParams}
-        />
+        {isLoadingListData ? (
+          <div className="flex items-center justify-center h-[400px]">
+            <LoadingLogo size={100} />
+          </div>
+        ) : (
+          <DataTable
+            columns={columns as ColumnDef<TableRowData>[]}
+            data={tableData}
+            onRowClick={handleRowClick}
+            table={table}
+            onPaginationChange={updatePaginationParams}
+          />
+        )}
       </div>
       <ShareModal
         open={shareModalActive.isOpen}

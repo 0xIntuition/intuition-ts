@@ -178,3 +178,12 @@ query GetAccountWithAggregates(
     ...AccountTriplesAggregate
   }
 }
+
+query GetAccountMetadata($address: String!) {
+  account(id: $address) {
+    ...AccountMetadata
+    atom {
+      ...AtomMetadata
+    }
+  }
+}
