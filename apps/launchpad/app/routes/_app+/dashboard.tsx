@@ -15,8 +15,6 @@ import { ErrorPage } from '@components/error-page'
 import { LoadingState } from '@components/loading-state'
 import { CHAPTERS } from '@consts/chapters'
 import { ZERO_ADDRESS } from '@consts/general'
-import { CHAPTERS } from '@lib/consts/chapters'
-import { useEpochProgress } from '@lib/hooks/useEpochProgress'
 import { usePoints } from '@lib/hooks/usePoints'
 import { useTotalCompletedQuestions } from '@lib/hooks/useTotalCompletedQuestions'
 import { useUserRank } from '@lib/hooks/useUserRank'
@@ -24,7 +22,7 @@ import { useFeatureFlags } from '@lib/providers/feature-flags-provider'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 import { getUser } from '@server/auth'
-import { dehydrate, QueryClient, useQuery } from '@tanstack/react-query'
+import { dehydrate, QueryClient } from '@tanstack/react-query'
 import { motion } from 'framer-motion'
 import { Code, Compass, Scroll } from 'lucide-react'
 import { formatUnits } from 'viem'
@@ -128,7 +126,7 @@ export default function Dashboard() {
     protocolPointsBeforeCutoff + protocolPoitnsAfterCutoff,
   )
 
-  const combinedTotal = (points?.totalPoints ?? 0) + protocolPointsTotal
+  const combinedTotal = (points?.total_points ?? 0) + protocolPointsTotal
 
   const stages = CHAPTERS.CHAPTERS
 

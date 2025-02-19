@@ -97,6 +97,17 @@ query GetListDetails(
           count
         }
       }
+      vault {
+        current_share_price
+        positions_aggregate {
+          aggregate {
+            count
+            sum {
+              shares
+            }
+          }
+        }
+      }
     }
     object {
       id
@@ -314,6 +325,17 @@ query GetListDetailsWithUser(
         }
         aggregate {
           count
+        }
+      }
+      vault {
+        current_share_price
+        positions_aggregate {
+          aggregate {
+            count
+            sum {
+              shares
+            }
+          }
         }
       }
     }
