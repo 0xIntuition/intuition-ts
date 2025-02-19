@@ -74,17 +74,13 @@ const useStepTransition = (
 
   const handleTransition = useCallback(
     (updateFn: (prev: OnboardingState) => OnboardingState) => {
-      logger('Starting transition with update function')
-
       // Store the update function for later
       updateFnRef.current = updateFn
       setIsTransitioning(true)
 
       // Wait for fade out before updating state
       rafRef.current = requestAnimationFrame(() => {
-        logger('RAF callback triggered')
         timeoutRef.current = window.setTimeout(() => {
-          logger('Timeout callback triggered')
           if (!updateFnRef.current) {
             logger('Error: Update function is null during transition')
             setIsTransitioning(false)
@@ -99,7 +95,6 @@ const useStepTransition = (
                 return INITIAL_STATE
               }
               const newState = updateFnRef.current!(prevState)
-              logger('State updated:', { prevState, newState })
               return newState
             })
           } catch (error) {
@@ -112,7 +107,6 @@ const useStepTransition = (
 
           // Wait a frame before starting fade in
           rafRef.current = requestAnimationFrame(() => {
-            logger('Final RAF callback triggered')
             setIsTransitioning(false)
           })
         }, 150) // Match the CSS transition duration
@@ -122,7 +116,6 @@ const useStepTransition = (
   )
 
   const resetTransition = useCallback(() => {
-    logger('Resetting transition')
     setIsTransitioning(false)
     updateFnRef.current = null
     if (timeoutRef.current) {
@@ -136,7 +129,6 @@ const useStepTransition = (
   // Cleanup timeouts and animation frames
   useEffect(() => {
     return () => {
-      logger('Cleaning up transition effects')
       resetTransition()
     }
   }, [resetTransition])
@@ -579,8 +571,6 @@ export function OnboardingModal({
   ])
 
   const onCreationSuccess = (metadata: NewAtomMetadata) => {
-    logger('Creation success called with metadata:', metadata)
-
     // Ensure we have valid state before transition
     if (!state) {
       logger('Error: State is null in onCreationSuccess')
@@ -588,7 +578,6 @@ export function OnboardingModal({
     }
 
     handleTransition((prev) => {
-      logger('Transitioning from state:', prev)
       const newState = {
         ...prev,
         currentStep: STEPS.SIGNAL,
@@ -601,7 +590,6 @@ export function OnboardingModal({
           triple: listData?.globalTriples[0] as TripleType,
         },
       }
-      logger('New state after transition:', newState)
       return newState
     })
 
@@ -633,23 +621,6 @@ export function OnboardingModal({
     updateStepStatus(STEPS.TOPICS, 'completed')
     updateStepStatus(STEPS.CREATE, 'current')
   }, [handleTransition])
-
-  // Add error boundary logging
-  useEffect(() => {
-    if (!state) {
-      logger('Error: State is null after initialization')
-    }
-  }, [state])
-
-  // Track transitions
-  useEffect(() => {
-    logger('Transition state changed:', { isTransitioning })
-  }, [isTransitioning])
-
-  // Track step changes
-  useEffect(() => {
-    logger('Steps changed:', steps)
-  }, [steps])
 
   return (
     <ClientOnly>
