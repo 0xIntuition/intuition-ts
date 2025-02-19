@@ -14,16 +14,12 @@ import {
   GetAtomDocument,
   GetAtomQuery,
   GetAtomQueryVariables,
-  GetListDetailsWithPositionDocument,
-  GetListDetailsWithPositionQuery,
-  GetListDetailsWithPositionQueryVariables,
-  GetListDetailsWithUserDocument,
-  GetListDetailsWithUserQuery,
-  GetListDetailsWithUserQueryVariables,
+  GetListDetailsSimplifiedDocument,
+  GetListDetailsSimplifiedQuery,
+  GetListDetailsSimplifiedQueryVariables,
   Triples_Order_By,
   useGetAtomQuery,
-  useGetListDetailsWithPositionQuery,
-  useGetListDetailsWithUserQuery,
+  useGetListDetailsSimplifiedQuery,
 } from '@0xintuition/graphql'
 
 import { AtomDetailsModal } from '@components/atom-details-modal'
@@ -39,12 +35,12 @@ import { MIN_DEPOSIT, ZERO_ADDRESS } from '@consts/general'
 import { Question } from '@lib/graphql/types'
 import { useGoBack } from '@lib/hooks/useGoBack'
 import { useQuestionData } from '@lib/hooks/useQuestionData'
+import type { EpochQuestion } from '@lib/services/epochs'
 import {
   fetchEpochById,
   fetchEpochQuestion,
   fetchEpochQuestions,
 } from '@lib/services/epochs'
-import type { EpochCompletion, EpochQuestion } from '@lib/services/epochs'
 import { fetchQuestionCompletion } from '@lib/services/questions'
 import {
   atomDetailsModalAtom,
@@ -85,6 +81,15 @@ import { CheckCircle } from 'lucide-react'
 import { formatUnits } from 'viem'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
+  const timings: Record<string, number> = {}
+  const markTiming = (label: string, startTime: number) => {
+    timings[label] = Date.now() - startTime
+    console.log(`⏱️ ${label} took ${timings[label]}ms`)
+  }
+
+  const loaderStart = Date.now()
+  console.log('🔍 Starting loader execution')
+
   const queryClient = new QueryClient()
   const url = new URL(request.url)
 
@@ -95,41 +100,26 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     parseInt(url.searchParams.get('page') ?? '1', 10) - 1,
   )
 
-  const user = await getUser(request)
+  // Start parallel fetches for independent data
+  const userStart = Date.now()
+  const [user, epochData, questionData, allQuestions] = await Promise.all([
+    getUser(request),
+    fetchEpochById(Number(params.epochId)),
+    fetchEpochQuestion(Number(params.questionId)),
+    fetchEpochQuestions(Number(params.epochId)),
+  ])
+  markTiming('Parallel initial fetches', userStart)
+
   const userWallet = user?.wallet?.address?.toLowerCase()
 
-  // Prefetch epoch data
-  await queryClient.prefetchQuery({
-    queryKey: ['get-epoch', params.epochId],
-    queryFn: async () => {
-      const epochData = await fetchEpochById(Number(params.epochId))
-      return epochData
-    },
-  })
+  // Cache the results
+  await Promise.all([
+    queryClient.setQueryData(['get-epoch', params.epochId], epochData),
+    queryClient.setQueryData(['get-question', params.questionId], questionData),
+    queryClient.setQueryData(['get-questions', params.epochId], allQuestions),
+  ])
 
-  // Prefetch question data
-  await queryClient.prefetchQuery({
-    queryKey: ['get-question', params.questionId],
-    queryFn: async () => {
-      const questionData = await fetchEpochQuestion(Number(params.questionId))
-      return questionData
-    },
-  })
-
-  // Prefetch all questions for navigation
-  await queryClient.prefetchQuery({
-    queryKey: ['get-questions', params.epochId],
-    queryFn: async () => {
-      const allQuestions = await fetchEpochQuestions(Number(params.epochId))
-      return allQuestions
-    },
-  })
-
-  // Get adjacent questions from prefetched data
-  const allQuestions = (await queryClient.ensureQueryData({
-    queryKey: ['get-questions', params.epochId],
-  })) as EpochQuestion[]
-
+  // Get adjacent questions
   const currentIndex = allQuestions.findIndex(
     (q: EpochQuestion) => q.id === Number(params.questionId),
   )
@@ -140,55 +130,46 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
       ? allQuestions[currentIndex + 1]
       : undefined
 
-  // Prefetch question completion if user is logged in
+  // Fetch user-dependent data in parallel if user is logged in
+  let completion = null
   if (userWallet) {
-    await queryClient.prefetchQuery({
-      queryKey: [
-        'question-completion',
-        userWallet.toLowerCase(),
-        params.questionId,
-      ],
-      queryFn: async () => {
-        return fetchQuestionCompletion(userWallet, Number(params.questionId))
-      },
-    })
+    const userDataStart = Date.now()
+    completion = await fetchQuestionCompletion(
+      userWallet,
+      Number(params.questionId),
+    )
+    markTiming('User completion fetch', userDataStart)
+
+    await queryClient.setQueryData(
+      ['question-completion', userWallet.toLowerCase(), params.questionId],
+      completion,
+    )
   }
 
-  // Get completion from prefetched data
-  const completion = userWallet
-    ? ((await queryClient.ensureQueryData({
-        queryKey: [
-          'question-completion',
-          userWallet.toLowerCase(),
-          params.questionId,
-        ],
-      })) as EpochCompletion)
-    : null
-
-  // If user has completed the question, prefetch their atom data
+  // If user has completed the question, fetch their atom data
   if (completion?.subject_id) {
-    await queryClient.prefetchQuery({
-      queryKey: ['get-atom', { id: completion.subject_id }],
-      queryFn: async () => {
-        const response = await fetcher<GetAtomQuery, GetAtomQueryVariables>(
-          GetAtomDocument,
-          { id: completion.subject_id },
-        )()
-        return response
-      },
-    })
+    const atomStart = Date.now()
+    const atomResponse = await fetcher<GetAtomQuery, GetAtomQueryVariables>(
+      GetAtomDocument,
+      { id: completion.subject_id },
+    )()
+    markTiming('Atom data fetch', atomStart)
+
+    await queryClient.setQueryData(
+      ['get-atom', { id: completion.subject_id }],
+      atomResponse,
+    )
   }
 
-  // Get question data from prefetched data for predicateId and objectId
-  const questionData = (await queryClient.ensureQueryData({
-    queryKey: ['get-question', params.questionId],
-  })) as EpochQuestion
+  // Add null check for questionData
+  if (!questionData) {
+    throw new Error('Failed to fetch question data')
+  }
 
   const predicateId = questionData.predicate_id
   const objectId = questionData.object_id
 
-  const variables: GetListDetailsWithPositionQueryVariables = {
-    tagPredicateId: predicateId,
+  const variables: GetListDetailsSimplifiedQueryVariables = {
     globalWhere: {
       predicate_id: {
         _eq: predicateId,
@@ -207,39 +188,63 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     },
   }
 
+  // Detailed timing for list query
+  const listQueryStart = Date.now()
+  console.log('🔍 Starting list query fetch', {
+    operation: userWallet
+      ? 'GetListDetailsSimplified'
+      : 'GetListDetailsSimplified',
+    variables,
+  })
+
   let listData
   if (userWallet) {
     listData = await fetcher<
-      GetListDetailsWithUserQuery,
-      GetListDetailsWithUserQueryVariables
-    >(GetListDetailsWithUserDocument, variables)()
+      GetListDetailsSimplifiedQuery,
+      GetListDetailsSimplifiedQueryVariables
+    >(GetListDetailsSimplifiedDocument, variables)()
   } else {
     listData = await fetcher<
-      GetListDetailsWithPositionQuery,
-      GetListDetailsWithPositionQueryVariables
-    >(GetListDetailsWithPositionDocument, variables)()
+      GetListDetailsSimplifiedQuery,
+      GetListDetailsSimplifiedQueryVariables
+    >(GetListDetailsSimplifiedDocument, variables)()
   }
 
-  await queryClient.setQueryData(
-    [
-      'get-list-details',
-      {
-        tagPredicateId: predicateId,
-        globalWhere: {
-          predicate_id: {
-            _eq: predicateId,
-          },
-          object_id: {
-            _eq: objectId,
-          },
+  const responseSize = JSON.stringify(listData).length
+  console.log('📦 List query response size:', responseSize, 'bytes')
+  if (responseSize > 1000000) {
+    // 1MB
+    console.warn('⚠️ Large response detected:', responseSize / 1000000, 'MB')
+  }
+  markTiming('List data fetch', listQueryStart)
+
+  // Cache the result to prevent duplicate fetches
+  const queryKey = [
+    'get-list-details',
+    {
+      globalWhere: {
+        predicate_id: {
+          _eq: predicateId,
+        },
+        object_id: {
+          _eq: objectId,
         },
       },
-    ],
-    listData,
-  )
+    },
+  ]
+
+  await queryClient.setQueryData(queryKey, listData)
+
+  // Add cache time information to help debug refetching
+  console.log('📝 Query cache info:', {
+    key: queryKey,
+    timestamp: new Date().toISOString(),
+  })
 
   const { origin } = new URL(request.url)
   const ogImageUrl = `${origin}/resources/create-og?id=${objectId}&type=list`
+
+  markTiming('Total loader execution', loaderStart)
 
   return {
     dehydratedState: dehydrate(queryClient),
@@ -250,6 +255,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     questionTitle: questionData?.title,
     prevQuestion,
     nextQuestion,
+    timings,
   }
 }
 
@@ -315,6 +321,10 @@ export function ErrorBoundary() {
 }
 
 export default function MiniGameOne() {
+  // Use browser's performance API for client-side timing
+  const componentStart = window.performance.now()
+  console.log('🔍 Starting component render')
+
   const location = useLocation()
   const { epochId, questionId } = useParams()
   const goBack = useGoBack({ fallbackRoute: `/quests/questions/${epochId}` })
@@ -332,8 +342,12 @@ export default function MiniGameOne() {
   const { data: epoch } = useQuery({
     queryKey: ['get-epoch', epochId],
     queryFn: async () => {
+      const start = window.performance.now()
       const response = await fetch(`/resources/get-epoch?epochId=${epochId}`)
       const data = await response.json()
+      console.log(
+        `⏱️ Epoch query took ${(window.performance.now() - start).toFixed(2)}ms`,
+      )
       if (!response.ok) {
         throw new Error(data.error || 'Failed to fetch epoch')
       }
@@ -498,7 +512,6 @@ export default function MiniGameOne() {
     }
 
     const variables = {
-      tagPredicateId: predicateId,
       globalWhere: {
         predicate_id: {
           _eq: predicateId,
@@ -517,25 +530,31 @@ export default function MiniGameOne() {
   }, [predicateId, objectId, userWallet, pageSize, pageIndex, sorting])
 
   const { data: withUserData, isLoading: isLoadingUserData } =
-    useGetListDetailsWithUserQuery(
+    useGetListDetailsSimplifiedQuery(
       {
         ...queryVariables,
       },
       {
         queryKey: ['get-list-details', predicateId, objectId, queryVariables],
         enabled: !!userWallet,
-      } as UseQueryOptions<GetListDetailsWithUserQuery>,
+        onSuccess: () => {
+          console.log(`⏱️ List details with user query completed`)
+        },
+      } as UseQueryOptions<GetListDetailsSimplifiedQuery>,
     )
 
   const { data: withoutUserData, isLoading: isLoadingPositionData } =
-    useGetListDetailsWithPositionQuery(
+    useGetListDetailsSimplifiedQuery(
       {
         ...queryVariables,
       },
       {
         queryKey: ['get-list-details', predicateId, objectId, queryVariables],
         enabled: !userWallet,
-      } as UseQueryOptions<GetListDetailsWithPositionQuery>,
+        onSuccess: () => {
+          console.log(`⏱️ List details without user query completed`)
+        },
+      } as UseQueryOptions<GetListDetailsSimplifiedQuery>,
     )
 
   const listData = userWallet ? withUserData : withoutUserData
@@ -745,6 +764,12 @@ export default function MiniGameOne() {
     { id: completion?.subject_id ?? 0 },
     { enabled: !!completion?.subject_id },
   )
+
+  React.useEffect(() => {
+    console.log(
+      `🏁 Initial component render took ${(window.performance.now() - componentStart).toFixed(2)}ms`,
+    )
+  }, [])
 
   if (isLoading) {
     return (

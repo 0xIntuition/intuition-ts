@@ -127,7 +127,7 @@ export function QuestionRow({
           <div className="flex gap-2">
             {points <= 0 && isActive && (
               <SubmitButton
-                onClick={() => onStart()}
+                onClick={onStart}
                 disabled={isLoading}
                 buttonText="Answer"
                 loading={isLoading}
