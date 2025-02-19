@@ -74,15 +74,12 @@ const useStepTransition = (
 
   const handleTransition = useCallback(
     (updateFn: (prev: OnboardingState) => OnboardingState) => {
-      logger('Starting transition with update function')
-
       // Store the update function for later
       updateFnRef.current = updateFn
       setIsTransitioning(true)
 
       // Wait for fade out before updating state
       rafRef.current = requestAnimationFrame(() => {
-        logger('RAF callback triggered')
         timeoutRef.current = window.setTimeout(() => {
           if (!updateFnRef.current) {
             setIsTransitioning(false)
@@ -107,7 +104,6 @@ const useStepTransition = (
 
           // Wait a frame before starting fade in
           rafRef.current = requestAnimationFrame(() => {
-            logger('Final RAF callback triggered')
             setIsTransitioning(false)
           })
         }, 150) // Match the CSS transition duration
@@ -117,7 +113,6 @@ const useStepTransition = (
   )
 
   const resetTransition = useCallback(() => {
-    logger('Resetting transition')
     setIsTransitioning(false)
     updateFnRef.current = null
     if (timeoutRef.current) {
@@ -131,7 +126,6 @@ const useStepTransition = (
   // Cleanup timeouts and animation frames
   useEffect(() => {
     return () => {
-      logger('Cleaning up transition effects')
       resetTransition()
     }
   }, [resetTransition])
