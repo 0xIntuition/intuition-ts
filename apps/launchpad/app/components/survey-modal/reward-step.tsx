@@ -15,6 +15,7 @@ interface RewardStepProps {
   userWallet?: string
   questionId?: number | null
   epochId?: number
+  pointAwardAmount?: number
   awardPoints?: (accountId: string) => Promise<boolean>
 }
 
@@ -25,6 +26,7 @@ export function RewardStep({
   awardPoints,
   questionId,
   epochId,
+  pointAwardAmount,
 }: RewardStepProps) {
   const [rewardReady, setRewardReady] = useState(false)
   const [hasRewardAnimated, setHasRewardAnimated] = useState(false)
@@ -229,7 +231,7 @@ export function RewardStep({
           <h3 className="text-xl text-gray-400">You earned</h3>
           <div className="flex items-center justify-center space-x-2">
             <span className="text-4xl font-bold bg-gradient-to-r from-[#34C578] to-[#00FF94] bg-clip-text text-transparent">
-              200
+              {pointAwardAmount}
             </span>
             <span className="text-2xl font-semibold text-gray-300">
               IQ POINTS

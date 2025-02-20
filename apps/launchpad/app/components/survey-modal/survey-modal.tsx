@@ -699,6 +699,7 @@ export function OnboardingModal({
                     newAtomMetadata={state.newAtomMetadata}
                     txHash={txState?.txHash}
                     userWallet={userWallet}
+                    pointAwardAmount={question?.point_award_amount}
                     awardPoints={awardPoints}
                     questionId={question?.id}
                     epochId={currentEpoch?.id}
