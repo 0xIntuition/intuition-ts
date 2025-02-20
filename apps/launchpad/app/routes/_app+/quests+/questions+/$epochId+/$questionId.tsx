@@ -472,7 +472,6 @@ export default function MiniGameOne() {
             : triple.counter_vault?.positions?.[0]?.shares > 0
               ? +formatUnits(triple.counter_vault?.current_share_price, 18)
               : undefined,
-        stakingDisabled: questionData.enabled && !completion,
       })) as TableRowData[]) ?? []
     return data
   }, [listData, completion])
