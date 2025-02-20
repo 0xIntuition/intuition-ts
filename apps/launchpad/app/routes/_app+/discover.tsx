@@ -88,7 +88,7 @@ export default function Discover() {
       buttonText: 'Explore',
       onAction: () =>
         window.open('https://beta.portal.intuition.systems/', '_blank'),
-      imageUrl: '/images/discover/portal.png',
+      imageUrl: '/images/discover/portal.webp',
     },
     {
       id: '2',
@@ -97,7 +97,7 @@ export default function Discover() {
       buttonText: 'Upload',
       onAction: () =>
         window.open('https://www.upload.intuition.systems/', '_blank'),
-      imageUrl: '/images/discover/data-populator.png',
+      imageUrl: '/images/discover/upload.webp',
     },
     {
       id: '3',
@@ -106,7 +106,7 @@ export default function Discover() {
       buttonText: 'Download',
       onAction: () =>
         window.open('https://github.com/0xIntuition/trustbar/', '_blank'),
-      imageUrl: '/images/discover/chrome-extension.png',
+      imageUrl: '/images/discover/extension.webp',
     },
     {
       id: '4',
@@ -118,7 +118,7 @@ export default function Discover() {
           'https://github.com/0xIntuition/intuition-raycast',
           '_blank',
         ),
-      imageUrl: '/images/discover/raycast.webp',
+      imageUrl: '/images/discover/extension.webp',
     },
     {
       id: '5',
@@ -136,7 +136,7 @@ export default function Discover() {
       buttonText: 'Learn More',
       onAction: () =>
         window.open('https://intuition-snap.onrender.com/', '_blank'),
-      imageUrl: '/images/discover/metamask-snap.png',
+      imageUrl: '/images/discover/metamask.webp',
     },
     {
       id: '7',
@@ -144,7 +144,7 @@ export default function Discover() {
       description: 'Social Posts on Chain',
       buttonText: 'Learn More',
       onAction: () => window.open('https://www.hellospoc.com/', '_blank'),
-      imageUrl: '/images/discover/spoc.png',
+      imageUrl: '/images/discover/spoc.webp',
     },
     {
       id: '9',
