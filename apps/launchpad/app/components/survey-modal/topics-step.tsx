@@ -182,7 +182,7 @@ export function TopicsStep({
                 ))}
               </div>
             </div>
-            {searchTerm === '' && (
+            {searchTerm && (
               <div className="flex flex-col gap-2 items-center justify-center mt-10">
                 <Text
                   variant={TextVariant.body}
