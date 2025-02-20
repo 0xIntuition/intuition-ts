@@ -164,8 +164,8 @@ export function ErrorBoundary() {
   return (
     <Banner
       variant="error"
-      title="Error Loading Game"
-      message="There was an error loading the game data. Please try again."
+      title="Error Loading Question"
+      message="There was an error loading the question data. Please try again."
     >
       <Button variant="secondary" onClick={() => window.location.reload()}>
         Refresh

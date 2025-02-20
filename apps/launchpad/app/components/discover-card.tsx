@@ -11,7 +11,7 @@ import {
 export interface DiscoverCardProps {
   title: string
   description: string
-  buttonText: string
+  buttonText?: string
   onAction?: () => void
   className?: string
   imageUrl?: string
@@ -20,7 +20,6 @@ export interface DiscoverCardProps {
 export function DiscoverCard({
   title,
   description,
-  buttonText,
   onAction,
   className,
   imageUrl = 'https://placehold.co/600x400/1a1a1a/ffffff', // Default placeholder
@@ -28,31 +27,38 @@ export function DiscoverCard({
   return (
     <Card
       className={cn(
-        'rounded-lg shadow-sm overflow-hidden h-80 bg-black/5 backdrop-blur-md backdrop-saturate-150 border border-border/10 p-0',
+        'rounded-lg shadow-sm overflow-hidden aspect-square bg-black/5 backdrop-blur-md backdrop-saturate-150 border border-border/10 p-0 relative group',
         className,
       )}
     >
-      <div className="relative justify-between flex flex-col h-full">
-        <div className="w-full relative h-40">
-          <img src={imageUrl} alt="" className="w-full h-full object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black" />
-        </div>
-        <div className="p-6 -mt-8 relative space-y-4">
-          <div className="flex flex-col gap-2">
-            <Text variant={TextVariant.headline} weight={TextWeight.semibold}>
+      <img
+        src={imageUrl}
+        alt=""
+        className="absolute inset-0 w-full -mt-[15%] object-cover object-center"
+      />
+      <div className="absolute inset-0 to-transparent" />
+
+      <div className="relative h-full p-6 flex flex-col justify-end">
+        <div className="flex flex-col gap-4">
+          <div className="space-y-2">
+            <Text
+              variant={TextVariant.headline}
+              weight={TextWeight.semibold}
+              className="text-white"
+            >
               {title}
             </Text>
-            <Text variant={TextVariant.body} className="text-primary/50">
+            <Text variant={TextVariant.body} className="text-white/70">
               {description}
             </Text>
           </div>
-          <div className="flex border-t border-border/20">
+          <div className="flex border-t border-white/10 pt-4">
             <Button
               onClick={onAction}
               variant={ButtonVariant.secondary}
-              className="w-full justify-center mt-4"
+              className="w-full justify-center bg-white/10 hover:bg-white/20 transition-colors"
             >
-              {buttonText}
+              Launch
             </Button>
           </div>
         </div>

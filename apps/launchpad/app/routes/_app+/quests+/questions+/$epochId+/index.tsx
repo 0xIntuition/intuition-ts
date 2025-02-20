@@ -2,7 +2,6 @@ import { Suspense } from 'react'
 
 import {
   Button,
-  Card,
   cn,
   Icon,
   Text,
@@ -139,32 +138,32 @@ export function ErrorBoundary() {
   return <ErrorPage routeName="epoch questions" />
 }
 
-function QuestionsSkeleton() {
-  return (
-    <div className="relative">
-      <Card className="h-[400px] rounded-lg border-none bg-gradient-to-br from-[#060504] to-[#101010] min-w-[480px] blur-sm brightness-50">
-        <div className="absolute inset-0 flex flex-col justify-between p-8">
-          <div className="space-y-2">
-            <Text
-              variant="headline"
-              weight="medium"
-              className="text-foreground"
-            >
-              Loading...
-            </Text>
-          </div>
-        </div>
-      </Card>
-      <div className="absolute inset-0 flex items-center justify-center">
-        <div className="bg-background/80 px-6 py-3 rounded-lg backdrop-blur-sm">
-          <span className="text-xl font-semibold text-foreground">
-            Loading...
-          </span>
-        </div>
-      </div>
-    </div>
-  )
-}
+// function QuestionsSkeleton() {
+//   return (
+//     <div className="relative">
+//       <Card className="h-[400px] rounded-lg border-none bg-gradient-to-br from-[#060504] to-[#101010] min-w-[480px] blur-sm brightness-50">
+//         <div className="absolute inset-0 flex flex-col justify-between p-8">
+//           <div className="space-y-2">
+//             <Text
+//               variant="headline"
+//               weight="medium"
+//               className="text-foreground"
+//             >
+//               Loading...
+//             </Text>
+//           </div>
+//         </div>
+//       </Card>
+//       <div className="absolute inset-0 flex items-center justify-center">
+//         <div className="bg-background/80 px-6 py-3 rounded-lg backdrop-blur-sm">
+//           <span className="text-xl font-semibold text-foreground">
+//             Loading...
+//           </span>
+//         </div>
+//       </div>
+//     </div>
+//   )
+// }
 
 export default function EpochQuestions() {
   const { epochId, userWallet } = useLoaderData<typeof loader>()
@@ -329,7 +328,7 @@ export default function EpochQuestions() {
       </div>
       <div className="grid gap-6 md:grid-cols-2">
         {questions?.map((question: Question) => (
-          <Suspense key={question.id} fallback={<QuestionsSkeleton />}>
+          <Suspense key={question.id} fallback={<LoadingState />}>
             <QuestionCardWrapper
               question={question}
               onStart={() =>
