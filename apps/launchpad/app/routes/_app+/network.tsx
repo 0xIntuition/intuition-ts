@@ -136,7 +136,7 @@ export default function Network() {
           {
             label: 'Users',
             icon: <User className="w-4 h-4" />,
-            value: stats?.total_accounts ?? 0,
+            value: (stats?.total_accounts ?? 0) - (stats?.total_atoms ?? 0),
           },
         ]}
         className="[&>div]:after:hidden sm:[&>div]:after:block"
