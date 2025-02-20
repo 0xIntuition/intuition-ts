@@ -246,11 +246,6 @@ export default function EpochQuestions() {
     return <ErrorPage routeName="epoch questions" />
   }
 
-  const totalPoints = questions?.reduce(
-    (acc: number, q: Question) => acc + (q.point_award_amount || 0),
-    0,
-  )
-
   return (
     <>
       <div className="flex items-center gap-4 mb-6">
