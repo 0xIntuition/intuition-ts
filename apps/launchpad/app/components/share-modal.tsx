@@ -49,14 +49,14 @@ function ShareModalContent({
   }
 
   const handleTwitterShare = () => {
-    const text = `Check out my ${title.toLowerCase()} performance!`
+    const text = `${title}`
     const url = encodeURIComponent(window.location.href)
     const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${url}`
     window.open(twitterUrl, '_blank')
   }
 
   const handleFarcasterShare = () => {
-    const text = `Check out my ${title.toLowerCase()} performance!`
+    const text = `${title}`
     const url = encodeURIComponent(window.location.href)
     const farcasterUrl = `https://warpcast.com/~/compose?text=${encodeURIComponent(text)}&embeds[]=${url}`
     window.open(farcasterUrl, '_blank')
