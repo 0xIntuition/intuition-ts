@@ -53,7 +53,7 @@ export function AtomDetailsModal({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[600px] rounded-lg bg-gradient-to-b from-[#060504] to-[#101010] min-w-[480px]">
+      <DialogContent className="sm:max-w-[600px] rounded-lg bg-gradient-to-b from-[#060504] to-[#101010] min-w-[480px] border-0">
         <DialogTitle className="justify-end" />
         <AtomDetailsCard {...cardData} className="bg-transparent" />
       </DialogContent>
