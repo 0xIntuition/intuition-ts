@@ -68,19 +68,22 @@ function SignalCell({
 
   const revalidator = useRevalidator()
 
-  const handleClose = () => {
-    // Lock table clicks and close modal
+  const handleClose = (e?: React.MouseEvent) => {
+    // Prevent event from bubbling up to the row click handler
+    e?.stopPropagation()
+
+    // Lock table clicks
     // @ts-ignore - Added by DataTable
     window.__lockTableClicks?.()
-    // Use setTimeout to ensure state updates don't conflict
+
+    // Close modal immediately
+    setIsSignalModalOpen(false)
+
+    // Add a small delay before revalidating to ensure modal is fully closed
     setTimeout(() => {
-      setIsSignalModalOpen(false)
-      // Lock again after state update
-      // @ts-ignore - Added by DataTable
-      window.__lockTableClicks?.()
-    }, 0)
-    queryClient.invalidateQueries()
-    revalidator.revalidate()
+      queryClient.invalidateQueries()
+      revalidator.revalidate()
+    }, 100)
   }
 
   // Calculate initial ticks based on position direction
@@ -238,14 +241,16 @@ export const columns: ColumnDef<TableItem>[] = [
       const position = row.original.userPosition ?? 0
       const positionDirection = row.original.positionDirection
       return (
-        <SignalCell
-          vaultId={row.original.vaultId}
-          triple={row.original.triple}
-          atom={row.original.atom}
-          userPosition={position as number}
-          positionDirection={positionDirection}
-          stakingDisabled={row.original.stakingDisabled}
-        />
+        <div data-prevent-row-click="true">
+          <SignalCell
+            vaultId={row.original.vaultId}
+            triple={row.original.triple}
+            atom={row.original.atom}
+            userPosition={position as number}
+            positionDirection={positionDirection}
+            stakingDisabled={row.original.stakingDisabled}
+          />
+        </div>
       )
     },
     size: 96,

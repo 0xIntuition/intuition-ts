@@ -19,20 +19,9 @@ interface StepTransition {
 const useTransition = (): StepTransition => {
   const [isTransitioning, setIsTransitioning] = useState(false)
   const timeoutRef = useRef<number>()
-  const rafRef = useRef<number>()
 
   const handleTransition = useCallback(() => {
     setIsTransitioning(true)
-
-    // Wait for fade out before updating state
-    rafRef.current = requestAnimationFrame(() => {
-      timeoutRef.current = window.setTimeout(() => {
-        // Wait a frame before starting fade in
-        rafRef.current = requestAnimationFrame(() => {
-          setIsTransitioning(false)
-        })
-      }, 150) // Match the CSS transition duration
-    })
   }, [])
 
   const resetTransition = useCallback(() => {
@@ -40,12 +29,9 @@ const useTransition = (): StepTransition => {
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current)
     }
-    if (rafRef.current) {
-      cancelAnimationFrame(rafRef.current)
-    }
   }, [])
 
-  // Cleanup timeouts and animation frames
+  // Cleanup timeouts
   useEffect(() => {
     return () => {
       resetTransition()
@@ -78,6 +64,7 @@ export function SignalModal({
 }: Omit<SignalModalProps, 'mode' | 'setMode'>) {
   const transition = useTransition()
   const { isTransitioning, handleTransition, resetTransition } = transition
+  const timeoutRef = useRef<number>()
 
   useEffect(() => {
     if (isOpen) {
@@ -85,17 +72,37 @@ export function SignalModal({
     }
   }, [isOpen, resetTransition])
 
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current)
+      }
+    }
+  }, [])
+
   const handleClose = useCallback(() => {
     handleTransition()
-    setTimeout(() => {
+    // Use a single timeout that's slightly longer than the CSS transition
+    timeoutRef.current = window.setTimeout(() => {
       onClose()
-    }, 150)
+    }, 200)
   }, [handleTransition, onClose])
 
   return (
     <ClientOnly>
       {() => (
-        <Dialog open={isOpen} onOpenChange={handleClose}>
+        <Dialog
+          open={isOpen}
+          onOpenChange={(open) => {
+            if (!open) {
+              // Lock clicks and close with transition
+              // @ts-ignore - Added by DataTable
+              window.__lockTableClicks?.()
+              handleClose()
+            }
+          }}
+        >
           <DialogContent className="sm:max-w-[600px] p-0 h-[380px] flex flex-col bg-gradient-to-b from-[#060504] to-[#101010] border-none">
             <div
               className={`transition-all duration-150 ease-in-out ${

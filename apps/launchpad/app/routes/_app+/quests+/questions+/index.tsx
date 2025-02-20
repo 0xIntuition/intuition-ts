@@ -1,17 +1,11 @@
 import { Suspense } from 'react'
 
-import {
-  Button,
-  Card,
-  Icon,
-  Text,
-  TextVariant,
-  TextWeight,
-} from '@0xintuition/1ui'
+import { Button, Icon } from '@0xintuition/1ui'
 
 import { AtomDetailsModal } from '@components/atom-details-modal'
 import { EpochAccordion } from '@components/epoch-accordion'
 import { ErrorPage } from '@components/error-page'
+import { LoadingState } from '@components/loading-state'
 import { PageHeader } from '@components/page-header'
 import { OnboardingModal } from '@components/survey-modal/survey-modal'
 import { useGoBack } from '@lib/hooks/useGoBack'
@@ -131,32 +125,32 @@ export function ErrorBoundary() {
   return <ErrorPage routeName="questions" />
 }
 
-function EpochsSkeleton() {
-  return (
-    <div className="relative">
-      <Card className="h-[400px] rounded-lg border-none bg-gradient-to-br from-[#060504] to-[#101010] min-w-[480px] blur-sm brightness-50">
-        <div className="absolute inset-0 flex flex-col justify-between p-8">
-          <div className="space-y-2">
-            <Text
-              variant={TextVariant.headline}
-              weight={TextWeight.medium}
-              className="text-foreground"
-            >
-              Loading...
-            </Text>
-          </div>
-        </div>
-      </Card>
-      <div className="absolute inset-0 flex items-center justify-center">
-        <div className="bg-background/80 px-6 py-3 rounded-lg backdrop-blur-sm">
-          <span className="text-xl font-semibold text-foreground">
-            Loading...
-          </span>
-        </div>
-      </div>
-    </div>
-  )
-}
+// function EpochsSkeleton() {
+//   return (
+//     <div className="relative">
+//       <Card className="h-[400px] rounded-lg border-none bg-gradient-to-br from-[#060504] to-[#101010] min-w-[480px] blur-sm brightness-50">
+//         <div className="absolute inset-0 flex flex-col justify-between p-8">
+//           <div className="space-y-2">
+//             <Text
+//               variant={TextVariant.headline}
+//               weight={TextWeight.medium}
+//               className="text-foreground"
+//             >
+//               Loading...
+//             </Text>
+//           </div>
+//         </div>
+//       </Card>
+//       <div className="absolute inset-0 flex items-center justify-center">
+//         <div className="bg-background/80 px-6 py-3 rounded-lg backdrop-blur-sm">
+//           <span className="text-xl font-semibold text-foreground">
+//             Loading...
+//           </span>
+//         </div>
+//       </div>
+//     </div>
+//   )
+// }
 
 function useEpochsData() {
   const { userWallet } = useLoaderData<typeof loader>()
@@ -229,7 +223,7 @@ export default function Questions() {
 
   // Show skeleton for initial loading
   if (isLoadingEpochs || !epochsWithQuestions.length) {
-    return <EpochsSkeleton />
+    return <LoadingState />
   }
 
   const handleStartOnboarding = (
@@ -262,7 +256,7 @@ export default function Questions() {
         </Button>
         <PageHeader title="Questions" subtitle="Answer questions to earn IQ" />
       </div>
-      <Suspense fallback={<EpochsSkeleton />}>
+      <Suspense fallback={<LoadingState />}>
         <EpochAccordion
           epochs={epochsWithQuestions}
           onStartQuestion={handleStartOnboarding}
