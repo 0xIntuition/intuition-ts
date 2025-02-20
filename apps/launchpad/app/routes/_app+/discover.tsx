@@ -1,7 +1,85 @@
+import { Text, TextVariant, TextWeight } from '@0xintuition/1ui'
+
 import { DiscoverSection, Product } from '@components/discover-section'
+import { PageHeader } from '@components/page-header'
+import { SocialLink, SocialLinks } from '@components/social-links'
+import { motion } from 'framer-motion'
 
 export default function Discover() {
-  // Mock products data based on the image
+  // Social links data (items 14-22)
+  const socialLinks: SocialLink[] = [
+    {
+      id: '14',
+      title: 'Github',
+      username: '0xintuition',
+      onAction: () => window.open('https://github.com/0xIntuition', '_blank'),
+      imageUrl: '/images/discover/social/github.webp',
+    },
+    {
+      id: '15',
+      title: 'Twitter',
+      username: '0xintuition',
+      onAction: () => window.open('https://twitter.com/0xintuition', '_blank'),
+      imageUrl: '/images/discover/social/twitter.webp',
+    },
+    {
+      id: '16',
+      title: 'Telegram',
+      username: 't.me/intuitionsystems',
+      onAction: () => window.open('http://t.me/intuitionsystems', '_blank'),
+      imageUrl: '/images/discover/social/telegram.webp',
+    },
+    {
+      id: '17',
+      title: 'Discord',
+      username: '0xintuition',
+      onAction: () => window.open('https://discord.gg/0xintuition', '_blank'),
+      imageUrl: '/images/discover/social/discord.webp',
+    },
+    {
+      id: '18',
+      title: 'Medium',
+      username: '0xintuition',
+      onAction: () => window.open('https://medium.com/@0xintuition', '_blank'),
+      imageUrl: '/images/discover/social/medium.webp',
+    },
+    {
+      id: '19',
+      title: 'Guild',
+      username: 'intuition',
+      onAction: () => window.open('https://guild.xyz/intuition', '_blank'),
+      imageUrl: '/images/discover/social/guild.webp',
+    },
+    {
+      id: '20',
+      title: 'Mirror',
+      username: 'intuition',
+      onAction: () =>
+        window.open(
+          'https://mirror.xyz/0x0bcAFff6B45769B53DE34169f08AB220d2b9F910',
+          '_blank',
+        ),
+      imageUrl: '/images/discover/social/mirror.webp',
+    },
+    {
+      id: '21',
+      title: 'Warpcast',
+      username: 'intuition',
+      onAction: () => window.open('https://warpcast.com/intuition', '_blank'),
+      imageUrl: '/images/discover/social/warpcast.webp',
+    },
+    // {
+    //   id: '22',
+    //   title: 'LinkedIn',
+    //   description: 'Join the Intuition community',
+    //   buttonText: 'Join',
+    //   onAction: () =>
+    //     window.open('https://www.linkedin.com/company/0xintuition/', '_blank'),
+    //   imageUrl: '/images/discover/social/linkedin.webp',
+    // },
+  ]
+
+  // Products data (items 1-13)
   const products: Product[] = [
     {
       id: '1',
@@ -10,7 +88,7 @@ export default function Discover() {
       buttonText: 'Explore',
       onAction: () =>
         window.open('https://beta.portal.intuition.systems/', '_blank'),
-      imageUrl: 'https://placehold.co/600x400/4f46e5/ffffff?text=The Portal',
+      imageUrl: '/images/discover/portal.png',
     },
     {
       id: '2',
@@ -19,17 +97,16 @@ export default function Discover() {
       buttonText: 'Upload',
       onAction: () =>
         window.open('https://www.upload.intuition.systems/', '_blank'),
-      imageUrl: 'https://placehold.co/600x400/22c55e/ffffff?text=Upload',
+      imageUrl: '/images/discover/data-populator.png',
     },
     {
       id: '3',
       title: 'Chrome Extension',
-      description: `Decentralized 'community notes' for the entire internet`,
+      description: `Decentralized 'community notes' for the entire web`,
       buttonText: 'Download',
       onAction: () =>
         window.open('https://github.com/0xIntuition/trustbar/', '_blank'),
-      imageUrl:
-        'https://placehold.co/600x400/3b82f6/ffffff?text=Chrome Extension',
+      imageUrl: '/images/discover/chrome-extension.png',
     },
     {
       id: '4',
@@ -41,8 +118,7 @@ export default function Discover() {
           'https://github.com/0xIntuition/intuition-raycast',
           '_blank',
         ),
-      imageUrl:
-        'https://placehold.co/600x400/3b82f6/ffffff?text=Raycast Extension',
+      imageUrl: '/images/discover/raycast.webp',
     },
     {
       id: '5',
@@ -51,7 +127,7 @@ export default function Discover() {
       buttonText: 'Download',
       onAction: () =>
         window.open('https://github.com/0xIntuition/intuition-slack', '_blank'),
-      imageUrl: 'https://placehold.co/600x400/3b82f6/ffffff?text=Slack Bot',
+      imageUrl: '/images/discover/slack-bot.webp',
     },
     {
       id: '6',
@@ -60,7 +136,7 @@ export default function Discover() {
       buttonText: 'Learn More',
       onAction: () =>
         window.open('https://intuition-snap.onrender.com/', '_blank'),
-      imageUrl: 'https://placehold.co/600x400/f59e0b/ffffff?text=Metamask',
+      imageUrl: '/images/discover/metamask-snap.png',
     },
     {
       id: '7',
@@ -68,7 +144,7 @@ export default function Discover() {
       description: 'Social Posts on Chain',
       buttonText: 'Learn More',
       onAction: () => window.open('https://www.hellospoc.com/', '_blank'),
-      imageUrl: 'https://placehold.co/600x400/8b5cf6/ffffff?text=SPOC',
+      imageUrl: '/images/discover/spoc.png',
     },
     {
       id: '8',
@@ -76,7 +152,7 @@ export default function Discover() {
       description: 'Community values platform by ConsenSys',
       buttonText: 'Learn More',
       onAction: () => window.open('#', '_blank'),
-      imageUrl: 'https://placehold.co/600x400/8b5cf6/ffffff?text=ValueSys',
+      imageUrl: '/images/discover/valuesys.png',
     },
     {
       id: '9',
@@ -84,7 +160,7 @@ export default function Discover() {
       description: 'Create Lists. Share Insights. Earn Together.',
       buttonText: 'Learn More',
       onAction: () => window.open('https://collections.systems', '_blank'),
-      imageUrl: 'https://placehold.co/600x400/8b5cf6/ffffff?text=Collections',
+      imageUrl: '/images/discover/collections.webp',
     },
     {
       id: '10',
@@ -92,7 +168,7 @@ export default function Discover() {
       description: 'Social creditiblity meets on-chain transparency',
       buttonText: 'Learn More',
       onAction: () => window.open('https://www.repustation.xyz', '_blank'),
-      imageUrl: 'https://placehold.co/600x400/8b5cf6/ffffff?text=RepuStation',
+      imageUrl: '/images/discover/repustation.webp',
     },
     {
       id: '11',
@@ -104,7 +180,7 @@ export default function Discover() {
           'https://cdn.prod.website-files.com/65cdf366e68587fd384547f0/66ccda1f1b3bbf2d30c4f522_intuition_whitepaper.pdf',
           '_blank',
         ),
-      imageUrl: 'https://placehold.co/600x400/8b5cf6/ffffff?text=Whitepaper',
+      imageUrl: '/images/discover/whitepaper.webp',
     },
     {
       id: '12',
@@ -116,7 +192,7 @@ export default function Discover() {
           'https://cdn.prod.website-files.com/65cdf366e68587fd384547f0/6758a6296b2770b26226b940_intuition_litepaper.pdf',
           '_blank',
         ),
-      imageUrl: 'https://placehold.co/600x400/8b5cf6/ffffff?text=Litepaper',
+      imageUrl: '/images/discover/litepaper.webp',
     },
     {
       id: '13',
@@ -124,89 +200,32 @@ export default function Discover() {
       description: 'Read the intuition litepaper',
       buttonText: 'Download',
       onAction: () => window.open('https://docs.intuition.systems/', '_blank'),
-      imageUrl: 'https://placehold.co/600x400/8b5cf6/ffffff?text=Documentation',
-    },
-    {
-      id: '14',
-      title: 'Github',
-      description: 'Keep up to date with the latest Intuition developments',
-      buttonText: 'Learn More',
-      onAction: () => window.open('https://github.com/0xIntuition', '_blank'),
-      imageUrl: 'https://placehold.co/600x400/8b5cf6/ffffff?text=Github',
-    },
-    {
-      id: '15',
-      title: 'Twitter',
-      description: 'Follow the latest Intuition developments',
-      buttonText: 'Follow',
-      onAction: () => window.open('https://twitter.com/0xintuition', '_blank'),
-      imageUrl: 'https://placehold.co/600x400/8b5cf6/ffffff?text=Twitter',
-    },
-    {
-      id: '16',
-      title: 'Telegram',
-      description: 'Join the Intuition community',
-      buttonText: 'Join',
-      onAction: () => window.open('http://t.me/intuitionsystems', '_blank'),
-      imageUrl: 'https://placehold.co/600x400/8b5cf6/ffffff?text=Telegram',
-    },
-    {
-      id: '17',
-      title: 'Discord',
-      description: 'Join the Intuition community',
-      buttonText: 'Join',
-      onAction: () => window.open('https://discord.gg/0xintuition', '_blank'),
-      imageUrl: 'https://placehold.co/600x400/8b5cf6/ffffff?text=Discord',
-    },
-    {
-      id: '18',
-      title: 'Medium',
-      description: 'Read the latest Intuition developments',
-      buttonText: 'Read',
-      onAction: () => window.open('https://medium.com/@0xintuition', '_blank'),
-      imageUrl: 'https://placehold.co/600x400/8b5cf6/ffffff?text=Medium',
-    },
-    {
-      id: '19',
-      title: 'Guild',
-      description: 'Join the Intuition community',
-      buttonText: 'Join',
-      onAction: () => window.open('https://guild.xyz/intuition', '_blank'),
-      imageUrl: 'https://placehold.co/600x400/8b5cf6/ffffff?text=Guild',
-    },
-    {
-      id: '20',
-      title: 'Mirror',
-      description: 'Read the latest Intuition developments',
-      buttonText: 'Read',
-      onAction: () =>
-        window.open(
-          'https://mirror.xyz/0x0bcAFff6B45769B53DE34169f08AB220d2b9F910',
-          '_blank',
-        ),
-      imageUrl: 'https://placehold.co/600x400/8b5cf6/ffffff?text=Mirror',
-    },
-    {
-      id: '21',
-      title: 'Warpcast',
-      description: 'Join the Intuition community',
-      buttonText: 'Join',
-      onAction: () => window.open('https://warpcast.com/intuition', '_blank'),
-      imageUrl: 'https://placehold.co/600x400/8b5cf6/ffffff?text=Warpcast',
-    },
-    {
-      id: '22',
-      title: 'LinkedIn',
-      description: 'Join the Intuition community',
-      buttonText: 'Join',
-      onAction: () =>
-        window.open('https://www.linkedin.com/company/0xintuition/', '_blank'),
-      imageUrl: 'https://placehold.co/600x400/8b5cf6/ffffff?text=LinkedIn',
+      imageUrl: '/images/discover/documentation.webp',
     },
   ]
+
   return (
-    <>
-      <DiscoverSection products={products} />
-    </>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+      className="flex flex-col gap-12"
+    >
+      <PageHeader
+        title="Discover"
+        subtitle="Our ecosystem is working together to build a more intuitive Web3 experience"
+      />
+
+      <div className="space-y-12">
+        <DiscoverSection products={products} />
+
+        <div className="space-y-4">
+          <Text variant={TextVariant.heading4} weight={TextWeight.semibold}>
+            Find your tribe
+          </Text>
+          <SocialLinks links={socialLinks} />
+        </div>
+      </div>
+    </motion.div>
   )
 }
