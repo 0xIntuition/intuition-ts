@@ -92,7 +92,7 @@ export const EarnCard = ({
               <>
                 <BrainCircuit className="h-5 w-5 text-primary" />
                 <span className="font-medium">
-                  Earn up to ${earnIQ?.toLocaleString()} IQ
+                  Earn up to {earnIQ?.toLocaleString()} IQ
                 </span>
               </>
             ) : (

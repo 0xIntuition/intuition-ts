@@ -40,7 +40,7 @@ export default function Discover() {
       id: '18',
       title: 'Medium',
       username: '0xintuition',
-      onAction: () => window.open('https://medium.com/@0xintuition', '_blank'),
+      onAction: () => window.open('https://medium.com/0xintuition', '_blank'),
       imageUrl: '/images/discover/social/medium.webp',
     },
     {
@@ -145,14 +145,6 @@ export default function Discover() {
       buttonText: 'Learn More',
       onAction: () => window.open('https://www.hellospoc.com/', '_blank'),
       imageUrl: '/images/discover/spoc.png',
-    },
-    {
-      id: '8',
-      title: 'ValueSys',
-      description: 'Community values platform by ConsenSys',
-      buttonText: 'Learn More',
-      onAction: () => window.open('#', '_blank'),
-      imageUrl: '/images/discover/valuesys.png',
     },
     {
       id: '9',

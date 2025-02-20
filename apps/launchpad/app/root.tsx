@@ -44,7 +44,7 @@ export const meta: MetaFunction = () => {
     {
       property: 'og:image',
       content:
-        'https://res.cloudinary.com/dfpwy9nyv/image/upload/f_auto,q_auto/v1/Portal%20Assets/Site%20Metadata/site-og-image',
+        'https://res.cloudinary.com/dfpwy9nyv/image/upload/v1740069816/Launchpad%20Assets/Site%20Metadata/launchpad-og-image_snmcvd.png',
     },
     { property: 'og:site_name', content: 'Intuition Launchpad' },
     { property: 'og:locale', content: 'en_US' },
