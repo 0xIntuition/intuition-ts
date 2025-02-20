@@ -40,7 +40,7 @@ export default function Discover() {
       id: '18',
       title: 'Medium',
       username: '0xintuition',
-      onAction: () => window.open('https://medium.com/@0xintuition', '_blank'),
+      onAction: () => window.open('https://medium.com/0xintuition', '_blank'),
       imageUrl: '/images/discover/social/medium.webp',
     },
     {
