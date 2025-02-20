@@ -127,51 +127,6 @@ export default function Dashboard() {
 
   const stages = CHAPTERS.CHAPTERS
 
-  // Mock data for now - replace with real data later
-  const epochs = [
-    {
-      completion_percentage: epochProgress?.completion_percentage ?? 0,
-      completed_count: epochProgress?.completed_count ?? 0,
-      total_count: epochProgress?.total_count ?? 0,
-      total_points: epochProgress?.total_points ?? 0,
-    },
-    // Add more epochs as they become available
-  ]
-
-  // Convert epoch data into chapter stages
-  const stages = Array.from({ length: 5 }).map((_, index) => {
-    if (!currentEpoch) {
-      return {
-        status: 'locked' as const,
-        progress: 0,
-      }
-    }
-
-    if (index < (currentEpoch.id ?? 1) - 1) {
-      // Past epochs
-      const pastEpoch = epochs[index]
-      return {
-        status:
-          pastEpoch?.completion_percentage === 100 ? 'completed' : 'expired',
-        progress: pastEpoch?.completion_percentage ?? 0,
-      } as const
-    }
-
-    if (index === (currentEpoch.id ?? 1) - 1) {
-      // Current epoch
-      return {
-        status: 'in_progress' as const,
-        progress: epochProgress?.completion_percentage ?? 0,
-      }
-    }
-
-    // Future epochs
-    return {
-      status: 'locked' as const,
-      progress: 0,
-    }
-  })
-
   return (
     <div className="flex flex-col gap-4">
       <motion.div
