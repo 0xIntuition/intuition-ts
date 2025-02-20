@@ -99,10 +99,6 @@ function ActivityItemNew({
 
   const creatorAddress = creator?.id || '0x'
 
-  function formatTransactionHash(txHash: string): string {
-    return `0x${txHash.replace('\\x', '')}`
-  }
-
   return (
     <div className="rounded-xl p-4 last:mb-0 flex flex-col w-full max-sm:p-3 border border-border/10">
       <div className="flex flex-col justify-between gap-3 min-w-full max-md:flex-col max-md:gap-3">
@@ -175,7 +171,7 @@ function ActivityItemNew({
             {formatDistance(timestamp, new Date())} ago
           </Text>
           <a
-            href={`${BLOCK_EXPLORER_URL}/tx/${formatTransactionHash(activity.transaction_hash)}`}
+            href={`${BLOCK_EXPLORER_URL}/tx/${activity.transaction_hash}`}
             target="_blank"
             rel="noreferrer noopener"
           >
