@@ -84,13 +84,6 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const queryClient = new QueryClient()
 
   // Start parallel fetches for independent data
-  const [user, questionData, allQuestions] = await Promise.all([
-    getUser(request),
-    fetchEpochQuestion(Number(params.questionId)),
-    fetchEpochQuestions(Number(params.epochId)),
-  ])
-
-  // Start parallel fetches for independent data
   const [user, questionData, allQuestions, epoch, multiVaultConfig] =
     await Promise.all([
       getUser(request),
@@ -335,61 +328,6 @@ export default function MiniGameOne() {
   const fullPath = hasUserParam
     ? `${location?.pathname}${location?.search}`
     : `${location?.pathname}${location?.search}${location?.search ? '&' : '?'}`
-
-  const [sorting, setSorting] = React.useState<SortingState>(() => {
-    const sortParam = searchParams.get('sort')
-    const orderParam = searchParams.get('order')
-    return sortParam
-      ? [
-          {
-            id: sortParam,
-            desc: orderParam === 'desc',
-          },
-        ]
-      : [
-          {
-            id: 'upvotes',
-            desc: true,
-          },
-        ]
-  })
-
-  // Update URL when sorting changes
-  const updateSortingParams = React.useCallback(
-    (newSorting: SortingState) => {
-      // Preserve all existing params
-      const existingParams = Object.fromEntries(searchParams.entries())
-      const updatedParams: Record<string, string> = {
-        ...existingParams,
-        page: '1', // Reset to first page
-      }
-
-      if (newSorting.length > 0) {
-        updatedParams.sort = newSorting[0].id
-        updatedParams.order = newSorting[0].desc ? 'desc' : 'asc'
-      } else {
-        delete updatedParams.sort
-        delete updatedParams.order
-      }
-
-      setSearchParams(updatedParams)
-    },
-    [searchParams, setSearchParams],
-  )
-
-  // Effect to sync sorting state with URL params
-  React.useEffect(() => {
-    const sortParam = searchParams.get('sort')
-    const orderParam = searchParams.get('order')
-    if (sortParam) {
-      setSorting([
-        {
-          id: sortParam,
-          desc: orderParam === 'desc',
-        },
-      ])
-    }
-  }, [searchParams])
 
   const [sorting, setSorting] = React.useState<SortingState>(() => {
     const sortParam = searchParams.get('sort')
