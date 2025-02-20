@@ -96,7 +96,10 @@ export const EarnCard = ({
                 </span>
               </>
             ) : (
-              <span className="font-medium">??? Rewards</span>
+              <>
+                <BrainCircuit className="h-5 w-5 text-primary" />
+                <span className="font-medium">IQ Rewards Available</span>
+              </>
             )}
           </motion.div>
 
