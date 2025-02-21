@@ -9,27 +9,9 @@ interface QuestPointsDisplayProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const getStatusComponentData = (status: QuestStatus) => {
-  switch (status) {
-    case QuestStatus.NOT_STARTED:
-      return {
-        statusClass: 'text-muted-foreground',
-      }
-    case QuestStatus.STARTED:
-      return {
-        statusClass: 'text-muted-foreground',
-      }
-    case QuestStatus.CLAIMABLE:
-      return {
-        statusClass: 'text-foreground',
-      }
-    case QuestStatus.COMPLETED:
-      return {
-        statusClass: 'text-success',
-      }
-    default:
-      return {
-        statusClass: 'text-muted-foreground',
-      }
+  const isCompleted = status === QuestStatus.COMPLETED
+  return {
+    statusClass: isCompleted ? 'text-success' : 'text-muted-foreground',
   }
 }
 

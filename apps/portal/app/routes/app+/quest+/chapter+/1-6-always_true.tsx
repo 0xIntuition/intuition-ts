@@ -1,11 +1,6 @@
-import { Suspense, useEffect } from 'react'
+import { Suspense } from 'react'
 
-import {
-  Button,
-  ButtonSize,
-  ButtonVariant,
-  ProfileCardHeader,
-} from '@0xintuition/1ui'
+import { Banner, BannerVariant, ProfileCardHeader } from '@0xintuition/1ui'
 import {
   ClaimsService,
   IdentityPresenter,
@@ -23,11 +18,8 @@ import {
   QuestBackButton,
 } from '@components/quest/detail/layout'
 import { QuestCriteriaCard } from '@components/quest/quest-criteria-card'
-import { QuestPointsDisplay } from '@components/quest/quest-points-display'
-import QuestSuccessModal from '@components/quest/quest-success-modal'
 import SaveListModal from '@components/save-list/save-list-modal'
 import { PaginatedListSkeleton } from '@components/skeleton'
-import { useQuestCompletion } from '@lib/hooks/useQuestCompletion'
 import { useQuestMdxContent } from '@lib/hooks/useQuestMdxContent'
 import { getListClaims } from '@lib/services/lists'
 import { saveListModalAtom } from '@lib/state/store'
@@ -36,7 +28,7 @@ import logger from '@lib/utils/logger'
 import { invariant } from '@lib/utils/misc'
 import { getQuestCriteria, getQuestId, QuestRouteId } from '@lib/utils/quest'
 import { ActionFunctionArgs, json, LoaderFunctionArgs } from '@remix-run/node'
-import { Await, Form, useActionData, useLoaderData } from '@remix-run/react'
+import { Await, useLoaderData } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUser, requireUserId } from '@server/auth'
 import { getUserQuest } from '@server/quest'
@@ -45,6 +37,9 @@ import {
   CURRENT_ENV,
   MIN_DEPOSIT,
   MULTIVAULT_CONTRACT_ADDRESS,
+  QUESTS_DISABLED_BANNER_MESSAGE,
+  QUESTS_DISABLED_BANNER_TITLE,
+  QUESTS_ENABLED,
 } from 'app/consts'
 import { MDXContentVariant } from 'app/types'
 import { useAtom } from 'jotai'
@@ -82,10 +77,10 @@ export async function loader({ request }: LoaderFunctionArgs) {
   })
   if (
     status === QuestStatus.CLAIMABLE &&
-    userQuest.status !== QuestStatus.COMPLETED
+    userQuest?.status !== QuestStatus.COMPLETED
   ) {
     logger('Setting user quest status to claimable', status)
-    userQuest.status = QuestStatus.CLAIMABLE
+    userQuest && (userQuest.status = QuestStatus.CLAIMABLE)
   }
 
   const url = new URL(request.url)
@@ -143,22 +138,20 @@ export async function action({ request }: ActionFunctionArgs) {
 export default function Quests() {
   const { quest, userQuest, userWallet, claim, globalListClaims } =
     useLoaderData<typeof loader>()
-  const actionData = useActionData<typeof action>()
-  const { successModalOpen, setSuccessModalOpen } =
-    useQuestCompletion(userQuest)
   const { introBody, mainBody, closingBody } = useQuestMdxContent(quest.id)
-
-  useEffect(() => {
-    if (actionData?.success) {
-      setSuccessModalOpen(true)
-    }
-  }, [actionData])
 
   const [saveListModalActive, setSaveListModalActive] =
     useAtom(saveListModalAtom)
 
   return (
     <div className="px-10 w-full max-w-7xl mx-auto flex flex-col gap-10 max-lg:px-4 max-md:gap-4">
+      {!QUESTS_ENABLED && (
+        <Banner
+          variant={BannerVariant.warning}
+          title={QUESTS_DISABLED_BANNER_TITLE}
+          message={QUESTS_DISABLED_BANNER_MESSAGE}
+        />
+      )}
       <div className="flex flex-col gap-10 mb-5 max-md:gap-5 max-md:mb-2">
         <Hero imgSrc={`${quest.image}-header`} />
         <div className="flex flex-col gap-10 max-md:gap-4">
@@ -235,34 +228,7 @@ export default function Quests() {
             userQuest?.status === QuestStatus.COMPLETED
           }
         />
-
-        <div className="flex flex-col items-center justify-center w-full gap-2 pb-20 max-md:pb-5">
-          <Form method="post">
-            <input type="hidden" name="questId" value={quest.id} />
-            <Button
-              type="submit"
-              variant={ButtonVariant.primary}
-              size={ButtonSize.lg}
-              disabled={userQuest?.status !== QuestStatus.CLAIMABLE}
-            >
-              {userQuest?.status === QuestStatus.COMPLETED
-                ? 'Complete'
-                : 'Complete Quest'}
-            </Button>
-          </Form>
-          <QuestPointsDisplay
-            points={quest.points}
-            questStatus={userQuest?.status ?? QuestStatus.NOT_STARTED}
-          />
-        </div>
       </div>
-      <QuestSuccessModal
-        quest={quest}
-        userQuest={userQuest}
-        routeId={ROUTE_ID}
-        isOpen={successModalOpen}
-        onClose={() => setSuccessModalOpen(false)}
-      />
     </div>
   )
 }

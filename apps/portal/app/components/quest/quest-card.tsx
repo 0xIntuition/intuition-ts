@@ -15,6 +15,7 @@ export interface QuestCardProps extends React.HTMLAttributes<HTMLDivElement> {
   points: number
   questCriteria: string
   disabled: boolean
+  buttonText?: string
   handleClick: (e: React.MouseEvent<HTMLButtonElement>) => void
 }
 
@@ -27,9 +28,12 @@ const QuestCard = ({
   points,
   questCriteria,
   disabled = false,
+  buttonText,
   handleClick,
   ...props
 }: QuestCardProps) => {
+  const isCompleted = questStatus === QuestStatus.COMPLETED
+
   return (
     <div
       className={cn(
@@ -71,15 +75,23 @@ const QuestCard = ({
               {description}
             </Text>
           </div>
-          <QuestCriteriaDisplay criteria={questCriteria} status={questStatus} />
+          {isCompleted && (
+            <QuestCriteriaDisplay
+              criteria={questCriteria}
+              status={questStatus}
+            />
+          )}
         </div>
         <div className="flex flex-col gap-2 items-center p-6">
           <QuestCardButton
             questStatus={questStatus}
             disabled={disabled}
+            buttonText={buttonText}
             onClick={handleClick}
           />
-          <QuestPointsDisplay points={points} questStatus={questStatus} />
+          {isCompleted && (
+            <QuestPointsDisplay points={points} questStatus={questStatus} />
+          )}
         </div>
       </div>
     </div>

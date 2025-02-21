@@ -5,6 +5,7 @@ import {
   ButtonSize,
   ButtonVariant,
   ClaimStakeCard,
+  cn,
   PieChartVariant,
   PositionCard,
   PositionCardLastUpdated,
@@ -82,7 +83,14 @@ export default function StakeClaimActivity({
   const directionTagText = +userConviction > 0 ? 'FOR' : 'AGAINST'
 
   return (
-    <ActivityContainer status={status} {...props} className="pb-5">
+    <ActivityContainer
+      status={status}
+      {...props}
+      className={cn(
+        'pb-5',
+        status !== QuestStatus.COMPLETED && 'opacity-50 pointer-events-none',
+      )}
+    >
       {position ? (
         <div className="flex flex-col items-start gap-5 rounded-md p-5">
           {claim.subject && claim.predicate && claim.object && (

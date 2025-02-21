@@ -20,7 +20,11 @@ const QuestCriteriaCard = ({
 }: QuestCriteriaCardProps) => {
   return (
     <div
-      className={cn('p-5 rounded-lg theme-border space-y-8 max-md:space-y-4')}
+      className={cn(
+        'p-5 rounded-lg theme-border space-y-8 max-md:space-y-4',
+        questStatus !== QuestStatus.COMPLETED &&
+          'opacity-50 pointer-events-none',
+      )}
       {...props}
     >
       <div className="space-y-2.5 max-md:space-y-2">

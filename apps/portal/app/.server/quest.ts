@@ -119,7 +119,7 @@ export async function getUserQuest(
   request: Request,
   questId: string,
 ): Promise<{
-  userQuest: UserQuest
+  userQuest: UserQuest | null
   quest: GetQuestResponse
 }> {
   const [quest, userQuest] = await Promise.all([
@@ -136,7 +136,7 @@ export async function getUserQuest(
       },
     }),
   ])
-  // leave erro handling to implementation
+  // leave error handling to implementation
   return {
     userQuest: userQuest ?? null,
     quest: quest ?? null,

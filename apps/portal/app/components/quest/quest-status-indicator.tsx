@@ -10,37 +10,11 @@ export interface QuestStatusIndicatorProps
 }
 
 const getStatusComponentData = (status: QuestStatus) => {
-  switch (status) {
-    case QuestStatus.NOT_STARTED:
-      return {
-        iconName: IconName.awaitAction,
-        iconClass: 'text-muted-foreground',
-        bgClass: 'fill-muted',
-      }
-    case QuestStatus.STARTED:
-      return {
-        iconName: IconName.awaitAction,
-        iconClass: 'text-warning',
-        bgClass: 'fill-muted',
-      }
-    case QuestStatus.CLAIMABLE:
-      return {
-        iconName: IconName.awaitAction,
-        iconClass: 'text-success',
-        bgClass: 'fill-muted',
-      }
-    case QuestStatus.COMPLETED:
-      return {
-        iconName: IconName.circleCheck,
-        iconClass: 'text-primary',
-        bgClass: 'fill-success',
-      }
-    default:
-      return {
-        iconName: IconName.awaitAction,
-        iconClass: 'text-muted-foreground',
-        bgClass: 'fill-muted',
-      }
+  const isCompleted = status === QuestStatus.COMPLETED
+  return {
+    iconName: isCompleted ? IconName.circleCheck : IconName.awaitAction,
+    iconClass: isCompleted ? 'text-primary' : 'text-muted-foreground',
+    bgClass: isCompleted ? 'fill-success' : 'fill-muted',
   }
 }
 

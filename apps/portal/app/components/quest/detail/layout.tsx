@@ -44,7 +44,9 @@ export function Header({
         </Text>
         {questAudio && <AudioPlayer audioSrc={questAudio} />}
       </div>
-      <QuestStatusCard status={questStatus ?? QuestStatus.NOT_STARTED} />
+      {questStatus === QuestStatus.COMPLETED && (
+        <QuestStatusCard status={questStatus ?? QuestStatus.NOT_STARTED} />
+      )}
     </div>
   )
 }

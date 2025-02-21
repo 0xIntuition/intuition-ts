@@ -1,6 +1,8 @@
 import { Suspense } from 'react'
 
 import {
+  Banner,
+  BannerVariant,
   formatWalletAddress,
   IconName,
   ProfileCardHeader,
@@ -33,6 +35,9 @@ import {
   COMING_SOON_QUEST_SET,
   HEADER_BANNER_HELP_CENTER,
   QUEST_LOG_DESCRIPTION,
+  QUESTS_DISABLED_BANNER_MESSAGE,
+  QUESTS_DISABLED_BANNER_TITLE,
+  QUESTS_ENABLED,
   STANDARD_QUEST_SET,
 } from 'app/consts'
 import { fetchProtocolFees } from 'app/lib/services/protocol'
@@ -103,6 +108,13 @@ export default function Quests() {
 
   return (
     <div className="p-10 w-full max-w-7xl mx-auto flex flex-col gap-5 max-md:p-5 max-sm:p-2">
+      {!QUESTS_ENABLED && (
+        <Banner
+          variant={BannerVariant.warning}
+          title={QUESTS_DISABLED_BANNER_TITLE}
+          message={QUESTS_DISABLED_BANNER_MESSAGE}
+        />
+      )}
       <ExploreHeader
         title="Quests"
         content="Explore the Intuition ecosystem, and earn IQ points along the way."

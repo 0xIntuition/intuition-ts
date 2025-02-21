@@ -1,6 +1,4 @@
-import { useEffect } from 'react'
-
-import { Button, ButtonSize, ButtonVariant } from '@0xintuition/1ui'
+import { Banner, BannerVariant } from '@0xintuition/1ui'
 import {
   ClaimPresenter,
   ClaimsService,
@@ -24,8 +22,6 @@ import {
   QuestBackButton,
 } from '@components/quest/detail/layout'
 import { QuestCriteriaCard } from '@components/quest/quest-criteria-card'
-import { QuestPointsDisplay } from '@components/quest/quest-points-display'
-import QuestSuccessModal from '@components/quest/quest-success-modal'
 import StakeModal from '@components/stake/stake-modal'
 import { useQuestCompletion } from '@lib/hooks/useQuestCompletion'
 import { useQuestMdxContent } from '@lib/hooks/useQuestMdxContent'
@@ -35,17 +31,18 @@ import logger from '@lib/utils/logger'
 import { invariant } from '@lib/utils/misc'
 import { getQuestCriteria, getQuestId, QuestRouteId } from '@lib/utils/quest'
 import { ActionFunctionArgs, json, LoaderFunctionArgs } from '@remix-run/node'
-import {
-  Form,
-  useActionData,
-  useLoaderData,
-  useRevalidator,
-} from '@remix-run/react'
+import { useLoaderData, useRevalidator } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUser, requireUserId } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
 import { getUserQuest } from '@server/quest'
-import { CHAPTER_4_MP3, CURRENT_ENV } from 'app/consts'
+import {
+  CHAPTER_4_MP3,
+  CURRENT_ENV,
+  QUESTS_DISABLED_BANNER_MESSAGE,
+  QUESTS_DISABLED_BANNER_TITLE,
+  QUESTS_ENABLED,
+} from 'app/consts'
 import {
   ClaimElement,
   ClaimElementType,
@@ -237,17 +234,12 @@ export default function Quests() {
     userWallet,
     identities,
   } = useLoaderData<typeof loader>()
-  const actionData = useActionData<typeof action>()
   const { introBody, mainBody, mainBody2, closingBody } = useQuestMdxContent(
     quest.id,
   )
   const { revalidate } = useRevalidator()
-  const {
-    checkQuestSuccess,
-    isLoading: checkQuestSuccessLoading,
-    successModalOpen,
-    setSuccessModalOpen,
-  } = useQuestCompletion(userQuest)
+  const { checkQuestSuccess, isLoading: checkQuestSuccessLoading } =
+    useQuestCompletion(userQuest)
   const [stakeModalActive, setStakeModalActive] = useAtom(stakeModalAtom)
 
   function handleOpenForActivityModal() {
@@ -324,14 +316,15 @@ export default function Quests() {
     }
   }
 
-  useEffect(() => {
-    if (actionData?.success) {
-      setSuccessModalOpen(true)
-    }
-  }, [actionData])
-
   return (
     <div className="px-10 w-full max-w-7xl mx-auto flex flex-col gap-10 max-lg:px-4 max-md:gap-4">
+      {!QUESTS_ENABLED && (
+        <Banner
+          variant={BannerVariant.warning}
+          title={QUESTS_DISABLED_BANNER_TITLE}
+          message={QUESTS_DISABLED_BANNER_MESSAGE}
+        />
+      )}
       <div className="flex flex-col gap-10 mb-5 max-md:gap-5 max-md:mb-2">
         <Hero imgSrc={`${quest.image}-header`} />
         <div className="flex flex-col gap-10 max-md:gap-4">
@@ -359,10 +352,7 @@ export default function Quests() {
           handleSellClick={handleSellClick}
           vaultDetails={vaultDetails}
           isLoading={checkQuestSuccessLoading}
-          isDisabled={
-            userQuest?.status === QuestStatus.CLAIMABLE ||
-            checkQuestSuccessLoading
-          }
+          isDisabled
         />
         <MDXContentView
           body={mainBody2}
@@ -391,26 +381,6 @@ export default function Quests() {
             !!position
           }
         />
-
-        <div className="flex flex-col items-center justify-center w-full gap-2 pb-20 max-md:pb-5">
-          <Form method="post">
-            <input type="hidden" name="questId" value={quest.id} />
-            <Button
-              type="submit"
-              variant={ButtonVariant.primary}
-              size={ButtonSize.lg}
-              disabled={userQuest?.status !== QuestStatus.CLAIMABLE}
-            >
-              {userQuest?.status === QuestStatus.COMPLETED
-                ? 'Complete'
-                : 'Complete Quest'}
-            </Button>
-          </Form>
-          <QuestPointsDisplay
-            points={quest.points}
-            questStatus={userQuest?.status ?? QuestStatus.NOT_STARTED}
-          />
-        </div>
       </div>
       <StakeModal
         open={stakeModalActive.isOpen}
@@ -437,13 +407,6 @@ export default function Quests() {
         onClose={handleCloseActivityModal}
         onSuccess={handleActivitySuccess}
         direction={stakeModalActive.direction}
-      />
-      <QuestSuccessModal
-        quest={quest}
-        userQuest={userQuest}
-        routeId={ROUTE_ID}
-        isOpen={successModalOpen}
-        onClose={() => setSuccessModalOpen(false)}
       />
     </div>
   )

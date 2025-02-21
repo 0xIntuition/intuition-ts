@@ -1,4 +1,6 @@
 import {
+  Banner,
+  BannerVariant,
   Button,
   ButtonSize,
   ButtonVariant,
@@ -10,15 +12,21 @@ import { QuestsService, QuestStatus, UserQuestsService } from '@0xintuition/api'
 
 import { ErrorPage } from '@components/error-page'
 import { QuestCriteriaCard } from '@components/quest/quest-criteria-card'
+import { QuestPointsDisplay } from '@components/quest/quest-points-display'
 import QuestStatusCard from '@components/quest/quest-status-card'
 import { MDXContent } from '@content-collections/mdx/react'
 import { invariant } from '@lib/utils/misc'
 import { getQuestContentBySlug, getQuestCriteria } from '@lib/utils/quest'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
-import { Link, useLoaderData } from '@remix-run/react'
+import { Form, Link, useLoaderData } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUserId } from '@server/auth'
-import { FALLBACK_QUEST_PLACEHOLDER_IMAGE } from 'app/consts'
+import {
+  FALLBACK_QUEST_PLACEHOLDER_IMAGE,
+  QUESTS_DISABLED_BANNER_MESSAGE,
+  QUESTS_DISABLED_BANNER_TITLE,
+  QUESTS_ENABLED,
+} from 'app/consts'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const id = params.id
@@ -66,6 +74,14 @@ export default function Quests() {
 
   return (
     <div className="px-10 w-full max-w-7xl mx-auto flex flex-col gap-10 max-lg:px-5 max-md:gap-4">
+      {!QUESTS_ENABLED && (
+        <Banner
+          variant={BannerVariant.warning}
+          title={QUESTS_DISABLED_BANNER_TITLE}
+          message={QUESTS_DISABLED_BANNER_MESSAGE}
+        />
+      )}
+
       <div className="flex flex-col gap-10 mb-5 max-md:gap-5 max-md:mb-2">
         <img
           src={quest.image ?? FALLBACK_QUEST_PLACEHOLDER_IMAGE}
@@ -97,8 +113,15 @@ export default function Quests() {
         {questContent?.body && <MDXContentWrapper code={questContent.body} />}
         <div className="bg-warning/5 rounded-lg theme-border p-5 flex justify-center align-items h-96 border-warning/30 border-dashed text-warning/30 text-bold">
           Quest Activity
+          {!QUESTS_ENABLED && status === QuestStatus.NOT_STARTED && (
+            <div className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-lg">
+              <Text className="text-warning">
+                Quests are currently disabled
+              </Text>
+            </div>
+          )}
         </div>
-        {questClosing?.body && status === QuestStatus.COMPLETED && (
+        {questClosing?.body && (
           <div className="flex flex-col gap-5 py-5 max-md:py-2 max-md:gap-3">
             <MDXContentWrapper code={questClosing.body} />
           </div>
@@ -110,22 +133,38 @@ export default function Quests() {
         )}
 
         {questContent2 && (
-          <div className="bg-warning/5 rounded-lg theme-border p-5 flex justify-center align-items h-96 border-warning/30 border-dashed text-warning/30 text-bold">
+          <div className="bg-warning/5 rounded-lg theme-border p-5 flex justify-center align-items h-96 border-warning/30 border-dashed text-warning/30 text-bold relative">
             Quest Activity 2
+            {!QUESTS_ENABLED && status === QuestStatus.NOT_STARTED && (
+              <div className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-lg">
+                <Text className="text-warning">
+                  Quests are currently disabled
+                </Text>
+              </div>
+            )}
           </div>
         )}
 
         <div className="flex flex-col items-center justify-center w-full gap-2 pb-20 max-md:pb-5">
-          <Button
-            variant={ButtonVariant.primary}
-            size={ButtonSize.lg}
-            disabled={status !== QuestStatus.CLAIMABLE}
-          >
-            Complete Quest
-          </Button>
-          <Text variant="bodyLarge" className="text-foreground/50">
-            +{quest.points} IQ Points
-          </Text>
+          <Form method="post">
+            <input type="hidden" name="questId" value={quest.id} />
+            <Button
+              type="submit"
+              variant={ButtonVariant.primary}
+              size={ButtonSize.lg}
+              disabled={!QUESTS_ENABLED || status !== QuestStatus.CLAIMABLE}
+            >
+              {status === QuestStatus.COMPLETED
+                ? 'Completed'
+                : status === QuestStatus.NOT_STARTED && !QUESTS_ENABLED
+                  ? 'Quests Disabled'
+                  : 'Complete Quest'}
+            </Button>
+          </Form>
+          <QuestPointsDisplay
+            points={quest.points}
+            questStatus={status ?? QuestStatus.NOT_STARTED}
+          />
         </div>
       </div>
     </div>

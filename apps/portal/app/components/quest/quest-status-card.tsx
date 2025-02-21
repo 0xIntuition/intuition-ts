@@ -13,58 +13,13 @@ import {
 } from '@0xintuition/1ui'
 import { QuestStatus } from '@0xintuition/api'
 
-const getInProgressLabel = (status: QuestStatus) => {
-  switch (status) {
-    case QuestStatus.NOT_STARTED:
-      return 'Not Started'
-    case QuestStatus.STARTED:
-      return 'In Progress'
-    case QuestStatus.CLAIMABLE:
-      return 'Ready to Claim'
-    case QuestStatus.COMPLETED:
-      return 'Complete'
-    default:
-      return 'Not Started'
-  }
-}
-
 const getStatusComponentData = (status: QuestStatus) => {
-  switch (status) {
-    case QuestStatus.NOT_STARTED:
-      return {
-        iconName: IconName.awaitAction,
-        iconClass: 'text-muted-foreground',
-        bgClass: 'bg-primary/10',
-        label: getInProgressLabel(status),
-      }
-    case QuestStatus.STARTED:
-      return {
-        iconName: IconName.awaitAction,
-        iconClass: 'text-warning',
-        bgClass: 'bg-warning/20',
-        label: getInProgressLabel(status),
-      }
-    case QuestStatus.CLAIMABLE:
-      return {
-        iconName: IconName.circleCheck,
-        iconClass: 'text-success',
-        bgClass: 'bg-primary/10',
-        label: getInProgressLabel(status),
-      }
-    case QuestStatus.COMPLETED:
-      return {
-        iconName: IconName.circleCheckFilled,
-        iconClass: 'text-success',
-        bgClass: 'bg-success/20',
-        label: getInProgressLabel(status),
-      }
-    default:
-      return {
-        iconName: IconName.awaitAction,
-        iconClass: 'text-muted-foreground',
-        bgClass: 'bg-primary/10',
-        label: getInProgressLabel(QuestStatus.NOT_STARTED),
-      }
+  const isCompleted = status === QuestStatus.COMPLETED
+  return {
+    iconName: isCompleted ? IconName.circleCheckFilled : IconName.awaitAction,
+    iconClass: isCompleted ? 'text-success' : 'text-muted-foreground',
+    bgClass: isCompleted ? 'bg-success/20' : 'bg-primary/10',
+    label: isCompleted ? 'Complete' : 'Not Started',
   }
 }
 

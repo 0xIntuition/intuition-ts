@@ -35,3 +35,9 @@ export const COMING_SOON_QUEST_SET: QuestSet = {
 
 export const FALLBACK_QUEST_PLACEHOLDER_IMAGE =
   'https://res.cloudinary.com/dfpwy9nyv/image/upload/f_auto,q_auto/v1/Portal%20Assets/quests/quest-placeholder'
+
+// Quest Configuration
+export const QUESTS_ENABLED = false
+export const QUESTS_DISABLED_BANNER_TITLE = 'Quests have concluded'
+export const QUESTS_DISABLED_BANNER_MESSAGE =
+  'You can view your past progress, but new quests cannot be started.'

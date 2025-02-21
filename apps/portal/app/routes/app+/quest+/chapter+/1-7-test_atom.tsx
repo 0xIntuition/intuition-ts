@@ -1,6 +1,12 @@
 import { useEffect, useState } from 'react'
 
-import { Button, ButtonSize, ButtonVariant } from '@0xintuition/1ui'
+import {
+  Banner,
+  BannerVariant,
+  Button,
+  ButtonSize,
+  ButtonVariant,
+} from '@0xintuition/1ui'
 import {
   ApiError,
   IdentitiesService,
@@ -24,6 +30,11 @@ import {
 import { QuestCriteriaCard } from '@components/quest/quest-criteria-card'
 import { QuestPointsDisplay } from '@components/quest/quest-points-display'
 import QuestSuccessModal from '@components/quest/quest-success-modal'
+import {
+  QUESTS_DISABLED_BANNER_MESSAGE,
+  QUESTS_DISABLED_BANNER_TITLE,
+  QUESTS_ENABLED,
+} from '@consts/quest'
 import { useQuestCompletion } from '@lib/hooks/useQuestCompletion'
 import { useQuestMdxContent } from '@lib/hooks/useQuestMdxContent'
 import logger from '@lib/utils/logger'
@@ -145,6 +156,13 @@ export default function Quests() {
 
   return (
     <div className="px-10 w-full max-w-7xl mx-auto flex flex-col gap-10 max-lg:px-0 max-md:gap-4">
+      {!QUESTS_ENABLED && (
+        <Banner
+          variant={BannerVariant.warning}
+          title={QUESTS_DISABLED_BANNER_TITLE}
+          message={QUESTS_DISABLED_BANNER_MESSAGE}
+        />
+      )}
       <div className="flex flex-col gap-10 mb-5 max-md:gap-5 max-md:mb-2">
         <Hero imgSrc={quest.image} />
         <div className="flex flex-col gap-10 max-md:gap-4">
@@ -188,7 +206,7 @@ export default function Quests() {
               type="submit"
               variant={ButtonVariant.primary}
               size={ButtonSize.lg}
-              disabled={userQuest?.status !== QuestStatus.CLAIMABLE}
+              disabled
             >
               {userQuest?.status === QuestStatus.COMPLETED
                 ? 'Complete'

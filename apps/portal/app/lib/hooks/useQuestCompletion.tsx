@@ -6,13 +6,13 @@ import logger from '@lib/utils/logger'
 import { useFetcher, useRevalidator } from '@remix-run/react'
 import { CheckQuestSuccessLoaderData } from '@routes/resources+/check-quest-success'
 
-export function useQuestCompletion(userQuest: GetUserQuestByIdResponse) {
+export function useQuestCompletion(userQuest: GetUserQuestByIdResponse | null) {
   const [successModalOpen, setSuccessModalOpen] = useState(false)
   const fetcher = useFetcher<CheckQuestSuccessLoaderData>()
   const { revalidate } = useRevalidator()
 
   useEffect(() => {
-    if (fetcher.state === 'idle' && fetcher.data) {
+    if (fetcher.state === 'idle' && fetcher.data && userQuest) {
       if (
         fetcher.data.success &&
         userQuest.status !== QuestStatus.COMPLETED &&
@@ -22,7 +22,7 @@ export function useQuestCompletion(userQuest: GetUserQuestByIdResponse) {
         revalidate()
       }
     }
-  }, [fetcher.data, fetcher.state, revalidate, userQuest.status])
+  }, [fetcher.data, fetcher.state, revalidate, userQuest?.status])
 
   const checkQuestSuccess = () => {
     if (userQuest) {

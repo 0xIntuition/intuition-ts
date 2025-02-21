@@ -1,14 +1,15 @@
 import { getProgressPercentage, ProgressBar, Text } from '@0xintuition/1ui'
 
 import NavigationButton from '@components/navigation-link'
+import { QUESTS_ENABLED } from 'app/consts'
 
-export interface QuestSetProgressCardProps
-  extends React.HTMLAttributes<HTMLDivElement> {
+export interface QuestSetProgressCardProps {
   imgSrc: string
   title: string
   numberQuests: number
   numberCompletedQuests: number
   to: string
+  disabled?: boolean
 }
 
 const QuestSetProgressCard = ({
@@ -62,11 +63,13 @@ const QuestSetProgressCard = ({
               variant="secondary"
               size="md"
             >
-              {progressPercentage === 0
-                ? 'Get Started'
-                : progressPercentage === 100
-                  ? 'Completed'
-                  : 'Continue'}
+              {!QUESTS_ENABLED
+                ? 'View'
+                : progressPercentage === 0
+                  ? 'Get Started'
+                  : progressPercentage === 100
+                    ? 'Completed'
+                    : 'Continue'}
             </NavigationButton>
           </div>
         </div>
@@ -74,5 +77,4 @@ const QuestSetProgressCard = ({
     </div>
   )
 }
-
 export { QuestSetProgressCard }

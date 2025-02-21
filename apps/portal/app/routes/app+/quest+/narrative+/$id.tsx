@@ -1,4 +1,6 @@
 import {
+  Banner,
+  BannerVariant,
   Button,
   ButtonVariant,
   Icon,
@@ -29,7 +31,13 @@ import { Link, useLoaderData, useSubmit } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
 import { requireUser } from '@server/auth'
 import { getQuestsProgress } from '@server/quest'
-import { PRIMITIVE_ISLAND_INTRO_MP3, STANDARD_QUEST_SET } from 'app/consts'
+import {
+  PRIMITIVE_ISLAND_INTRO_MP3,
+  QUESTS_DISABLED_BANNER_MESSAGE,
+  QUESTS_DISABLED_BANNER_TITLE,
+  QUESTS_ENABLED,
+  STANDARD_QUEST_SET,
+} from 'app/consts'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const id = params.id
@@ -106,6 +114,7 @@ export default function Quests() {
     status: QuestStatus
     available: boolean
   }) {
+    // When quests are disabled, we'll still allow viewing any quest
     const formData = new FormData()
     formData.append('questId', questId)
     formData.append('redirectTo', redirectTo)
@@ -116,6 +125,13 @@ export default function Quests() {
 
   return (
     <div className="px-10 w-full max-w-7xl mx-auto flex flex-col gap-10 pb-20 max-lg:p-0 max-md:gap-4">
+      {!QUESTS_ENABLED && (
+        <Banner
+          variant={BannerVariant.warning}
+          title={QUESTS_DISABLED_BANNER_TITLE}
+          message={QUESTS_DISABLED_BANNER_MESSAGE}
+        />
+      )}
       <div className="space-y-10 mb-5 max-md:space-y-5">
         <img
           src={`${STANDARD_QUEST_SET.imgSrc}-header`}
@@ -160,6 +176,13 @@ export default function Quests() {
           {quests.map((quest) => {
             const available = isQuestAvailable(quest)
             const userQuestStatus = getUserQuestStatus(quest)
+            // Only disable if quest is not active (coming soon), not based on availability
+            const isDisabled = !quest.active
+            const buttonText = !QUESTS_ENABLED
+              ? userQuestStatus === QuestStatus.COMPLETED
+                ? 'Completed'
+                : 'View'
+              : undefined // Use default button text from QuestCard
             return (
               <QuestCard
                 key={`${quest.id}-quest-card`}
@@ -170,7 +193,8 @@ export default function Quests() {
                 label={`Chapter ${quest.position}`}
                 points={quest.points}
                 questCriteria={getQuestCriteriaShort(quest.condition)}
-                disabled={!available || !quest.active}
+                disabled={isDisabled}
+                buttonText={buttonText}
                 id={quest.id}
                 handleClick={(e) => {
                   e.preventDefault()
