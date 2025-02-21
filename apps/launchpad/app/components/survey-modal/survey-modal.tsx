@@ -10,12 +10,10 @@ import {
   Dialog,
   DialogContent,
   DialogFooter,
-  DialogTitle,
   StepIndicator,
 } from '@0xintuition/1ui'
 import { useGetAtomsQuery, useGetListDetailsQuery } from '@0xintuition/graphql'
 
-import logger from '@lib/utils/logger'
 import { usePrivy } from '@privy-io/react-auth'
 import { useLocation, useNavigate } from '@remix-run/react'
 import { useQueryClient } from '@tanstack/react-query'

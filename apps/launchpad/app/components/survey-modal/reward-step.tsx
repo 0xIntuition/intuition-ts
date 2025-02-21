@@ -58,6 +58,70 @@ export function RewardStep({
     },
   })
 
+  // Add completion check query
+  const { data: existingCompletion } = useQuery({
+    queryKey: [
+      'question-completion',
+      userWallet?.toLowerCase(),
+      questionId,
+      epochId,
+    ],
+    queryFn: async () => {
+      if (!userWallet || !questionId || !epochId) {
+        return null
+      }
+
+      try {
+        const response = await fetch(
+          `/resources/get-question-completion?accountId=${userWallet.toLowerCase()}&questionId=${questionId}`,
+        )
+
+        if (!response.ok) {
+          return null
+        }
+
+        const data = await response.json()
+        return data.completion
+      } catch (error) {
+        return null
+      }
+    },
+    enabled: Boolean(userWallet && questionId && epochId),
+  })
+
+  const handleRetry = async () => {
+    if (!userWallet || !awardPoints) {
+      setError('Missing required data for awarding points')
+      return
+    }
+
+    setIsAwarding(true)
+    setAwardingFailed(false)
+    setError(undefined)
+
+    try {
+      const success = await awardPoints(userWallet.toLowerCase())
+      if (success) {
+        setHasAwardedPoints(true)
+        setJustAwarded(true)
+        setAwardingFailed(false)
+        setRetryCount(0)
+        setError(undefined) // Clear error on success
+      } else {
+        throw new Error('Failed to award points')
+      }
+    } catch (error) {
+      setAwardingFailed(true)
+      setRetryCount((prev) => prev + 1)
+      setError(
+        error instanceof Error ? error.message : 'Failed to award points',
+      )
+      logger('Error in manual retry:', error)
+    } finally {
+      setIsAwarding(false)
+    }
+  }
+
   useEffect(() => {
     // Add logging for component mount and key props
     logger('RewardStep mounted with props:', {
@@ -294,7 +358,7 @@ export function RewardStep({
   }
 
   return (
-    <div className="p-8 h-[460px]">
+    <div className="p-8 h-[460px] relative overflow-hidden">
       <div className="flex flex-col items-center space-y-6">
         <span
           id="rewardId"
