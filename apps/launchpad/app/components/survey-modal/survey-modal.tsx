@@ -10,6 +10,7 @@ import {
   Dialog,
   DialogContent,
   DialogFooter,
+  DialogTitle,
   StepIndicator,
 } from '@0xintuition/1ui'
 import { useGetAtomsQuery, useGetListDetailsQuery } from '@0xintuition/graphql'
