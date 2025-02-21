@@ -1,19 +1,25 @@
 import React from 'react'
 
+import { cn } from '@0xintuition/1ui'
+
 interface LoadingLogoProps {
   size?: number
+  animate?: boolean
 }
 
-const LoadingLogo: React.FC<LoadingLogoProps> = ({ size = 300 }) => {
+const LoadingLogo: React.FC<LoadingLogoProps> = ({
+  size = 300,
+  animate = true,
+}) => {
   return (
-    <div className="animate-pulse">
+    <div className={cn(animate && 'animate-spin animate-pulse')}>
       <svg
         width={size}
         height={size}
         viewBox="0 0 300 300"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        className="animate-spin"
+        className={cn(animate && 'animate-spin animate-pulse')}
       >
         <g>
           <path

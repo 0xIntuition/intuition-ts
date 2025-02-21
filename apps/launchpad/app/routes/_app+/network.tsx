@@ -131,7 +131,6 @@ export default function Network() {
             label: 'Signals',
             icon: <Radio className="w-4 h-4" />,
             value: stats?.total_signals ?? 0,
-            hideOnMobile: true,
           },
           {
             label: 'Users',

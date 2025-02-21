@@ -26,6 +26,7 @@ import { useLoaderData } from '@remix-run/react'
 import { getUser } from '@server/auth'
 import { dehydrate, QueryClient, useQuery } from '@tanstack/react-query'
 import { useAtom } from 'jotai'
+import { MessageCircleQuestion } from 'lucide-react'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   try {
@@ -237,11 +238,6 @@ export default function EpochQuestions() {
     })
   }
 
-  const totalPoints = questions?.reduce(
-    (acc: number, q: Question) => acc + (q.point_award_amount || 0),
-    0,
-  )
-
   if (!epoch) {
     return <ErrorPage routeName="epoch questions" />
   }
@@ -275,9 +271,8 @@ export default function EpochQuestions() {
             <div className="flex justify-between items-start w-full">
               <div className="flex items-center gap-3">
                 <Text
-                  variant={TextVariant.heading4}
                   weight={TextWeight.semibold}
-                  className="text-left"
+                  className="text-left text-2xl md:text-3xl"
                 >
                   {epoch.name}
                 </Text>
@@ -292,20 +287,20 @@ export default function EpochQuestions() {
             {/* Progress Section */}
             {epochProgress && (
               <div className="w-full">
-                <div className="flex justify-between text-sm mb-2">
+                <div className="flex flex-col sm:flex-row sm:justify-between text-sm mb-2 gap-1 sm:gap-0">
                   <Text
                     variant={TextVariant.footnote}
                     weight={TextWeight.medium}
-                    className="flex items-center gap-2 text-primary/70"
+                    className="flex items-center gap-1 sm:gap-2 text-primary/70 text-sm sm:text-base"
                   >
-                    <Icon name="circle-question-mark" className="w-4 h-4" />
-                    {epochProgress.completed_count} of {questions?.length || 0}{' '}
+                    <MessageCircleQuestion className="w-3 h-3 sm:w-4 sm:h-4" />
+                    {epochProgress.completed_count} of {questions.length}{' '}
                     Questions Completed
                   </Text>
                   <Text
                     variant={TextVariant.footnote}
                     weight={TextWeight.medium}
-                    className="text-primary/70 flex flex-row gap-1 items-center"
+                    className="text-primary/70 flex flex-row gap-1 items-center text-sm sm:text-base"
                   >
                     <Text
                       variant={TextVariant.body}
@@ -314,14 +309,14 @@ export default function EpochQuestions() {
                     >
                       {epochProgress.total_points}
                     </Text>{' '}
-                    / {totalPoints} IQ Earned
+                    / {epoch.total_points_available} IQ Earned
                   </Text>
                 </div>
                 <div className="h-1 bg-background rounded-full overflow-hidden">
                   <div
                     className="h-full bg-success transition-all duration-300"
                     style={{
-                      width: `${(epochProgress.completed_count / (questions?.length || 1)) * 100}%`,
+                      width: `${(epochProgress.completed_count / questions.length) * 100}%`,
                     }}
                   />
                 </div>

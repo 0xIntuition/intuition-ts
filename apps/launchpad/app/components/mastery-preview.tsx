@@ -45,7 +45,7 @@ export function MasteryPreview({
   return (
     <div
       className={cn(
-        'relative overflow-hidden rounded-lg p-6',
+        'relative overflow-hidden rounded-lg p-4 sm:p-6',
         'bg-background/80 backdrop-blur-sm',
         className,
       )}
@@ -58,12 +58,16 @@ export function MasteryPreview({
         }}
       />
       {/* Header */}
-      <div className="mb-6 relative">
-        <div className="flex justify-between items-center mb-2">
-          <Text variant={TextVariant.heading2} weight={TextWeight.semibold}>
+      <div className="mb-4 sm:mb-6 relative">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-2">
+          <Text
+            variant={TextVariant.heading2}
+            weight={TextWeight.semibold}
+            className="break-words"
+          >
             {title}
           </Text>
-          <div className="flex items-center gap-4">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
             {totalPoints !== undefined && (
               <div className="flex flex-row gap-2 items-center">
                 <Text
@@ -76,7 +80,7 @@ export function MasteryPreview({
                 <Text
                   variant={TextVariant.headline}
                   weight={TextWeight.medium}
-                  className="text-muted-foreground"
+                  className="text-muted-foreground whitespace-nowrap"
                 >
                   IQ Earned
                 </Text>
@@ -91,7 +95,7 @@ export function MasteryPreview({
                   e.preventDefault()
                   e.stopPropagation()
                 }}
-                className="z-50 relative"
+                className="z-50 relative w-full sm:w-auto"
               >
                 {actionButton.text}
               </Button>
@@ -104,7 +108,7 @@ export function MasteryPreview({
       </div>
 
       {/* Progress Overview */}
-      <div className="mb-8 relative">
+      <div className="mb-6 sm:mb-8 relative">
         <div className="flex justify-between mb-2">
           <Text variant={TextVariant.body}>Overall Progress</Text>
           <Text variant={TextVariant.body} className="text-primary">
@@ -120,7 +124,7 @@ export function MasteryPreview({
       </div>
 
       {/* Level Progress */}
-      <div className="grid gap-4">
+      <div className="grid gap-3 sm:gap-4">
         {levels.map((level, index) => (
           <div key={index} className="relative">
             <div className="flex justify-between mb-1">

@@ -324,114 +324,118 @@ export function SignalStep({
   }
 
   return (
-    <div className="flex flex-col gap-4 p-8">
-      <div className="flex flex-col gap-2 mb-8">
-        <Text variant="headline" className="font-semibold">
-          Signal {newAtomMetadata?.name ?? selectedTopic?.triple?.subject.label}{' '}
-          as the best {selectedTopic?.triple?.object.label}
-          {/* {selectedTopic?.triple?.predicate.label}{' '}
-        {selectedTopic?.triple?.object.label} */}
-        </Text>
-        <Text
-          variant={TextVariant.footnote}
-          className="text-primary/70 flex flex-row gap-1 items-center"
-        >
-          <Book className="h-4 w-4 text-primary/70" />
-          Learn how signals shape your preferences in our{' '}
-          <Link
-            to="https://tech.docs.intuition.systems/primitives-signal"
-            target="_blank"
-            rel="noreferrer"
-            className="text-primary font-semibold hover:text-accent"
-          >
-            documentation
-          </Link>
-        </Text>
-      </div>
-
-      <div className="flex w-full items-center gap-4 rounded-lg border transition-colors h-[72px] border-[#1A1A1A]">
-        <div className="flex items-center gap-4 w-full">
-          <div className="w-14 h-14 rounded bg-[#1A1A1A] flex-shrink-0 ml-1">
-            {(newAtomMetadata?.image || selectedTopic?.image) && (
-              <img
-                src={newAtomMetadata?.image ?? selectedTopic?.image}
-                alt={newAtomMetadata?.name ?? selectedTopic?.name}
-                className="w-full h-full object-cover rounded-lg"
-              />
-            )}
-          </div>
-          <Text variant="title">
-            {newAtomMetadata?.name ?? selectedTopic?.name}
+    <div className="flex flex-col min-h-full">
+      <div className="flex flex-col gap-4 p-8">
+        <div className="flex flex-col gap-2 mb-8">
+          <Text variant="headline" className="font-semibold">
+            Signal{' '}
+            {newAtomMetadata?.name ?? selectedTopic?.triple?.subject.label} as
+            the best {selectedTopic?.triple?.object.label}
+            {/* {selectedTopic?.triple?.predicate.label}{' '}
+          {selectedTopic?.triple?.object.label} */}
+          </Text>
+          <Text variant={TextVariant.footnote} className="text-primary/70">
+            <span className="inline-flex items-center gap-1">
+              <Book className="h-4 w-4 text-primary/70 flex-shrink-0" />
+              <span>
+                Learn how signals shape your preferences in our{' '}
+                <Link
+                  to="https://tech.docs.intuition.systems/primitives-signal"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-primary font-semibold hover:text-accent"
+                >
+                  documentation
+                </Link>
+              </span>
+            </span>
           </Text>
         </div>
 
-        <div className="flex flex-col gap-2 w-full pr-6">
-          <div className="flex items-center justify-end">
-            <Text
-              variant={TextVariant.headline}
-              weight={TextWeight.semibold}
-              className="w-8 text-center text-success"
-            >
-              {ticks}
+        <div className="flex w-full items-center gap-4 rounded-lg border transition-colors h-[72px] border-[#1A1A1A]">
+          <div className="flex items-center gap-4 w-full">
+            <div className="w-14 h-14 rounded bg-[#1A1A1A] flex-shrink-0 ml-1">
+              {(newAtomMetadata?.image || selectedTopic?.image) && (
+                <img
+                  src={newAtomMetadata?.image ?? selectedTopic?.image}
+                  alt={newAtomMetadata?.name ?? selectedTopic?.name}
+                  className="w-full h-full object-cover rounded-lg"
+                />
+              )}
+            </div>
+            <Text variant="title">
+              {newAtomMetadata?.name ?? selectedTopic?.name}
             </Text>
-            <div className="flex flex-col">
-              <Button
-                variant="text"
-                onClick={() => setTicks(ticks + 1)}
-                disabled={isLoading}
-                className="h-6 p-0 disabled:opacity-30"
+          </div>
+
+          <div className="flex flex-col gap-2 w-full pr-6">
+            <div className="flex items-center justify-end">
+              <Text
+                variant={TextVariant.headline}
+                weight={TextWeight.semibold}
+                className="w-8 text-center text-success"
               >
-                <ArrowBigUp className="text-success fill-success h-5 w-5" />
-              </Button>
-              <Button
-                variant="text"
-                onClick={() => setTicks(Math.max(1, ticks - 1))}
-                disabled={ticks <= 1 || isLoading}
-                className="h-6 p-0 disabled:opacity-30"
-              >
-                <ArrowBigDown className="text-destructive fill-destructive h-5 w-5" />
-              </Button>
+                {ticks}
+              </Text>
+              <div className="flex flex-col">
+                <Button
+                  variant="text"
+                  onClick={() => setTicks(ticks + 1)}
+                  disabled={isLoading}
+                  className="h-6 p-0 disabled:opacity-30"
+                >
+                  <ArrowBigUp className="text-success fill-success h-5 w-5" />
+                </Button>
+                <Button
+                  variant="text"
+                  onClick={() => setTicks(Math.max(1, ticks - 1))}
+                  disabled={ticks <= 1 || isLoading}
+                  className="h-6 p-0 disabled:opacity-30"
+                >
+                  <ArrowBigDown className="text-destructive fill-destructive h-5 w-5" />
+                </Button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <div className="h-6">
-        {showErrors && validationErrors.length > 0 && (
+        <div className="h-6">
+          {showErrors && validationErrors.length > 0 && (
+            <div className="flex flex-col gap-2">
+              {validationErrors.map((error, index) => (
+                <Text
+                  key={index}
+                  variant={TextVariant.footnote}
+                  className="text-destructive"
+                >
+                  {error}
+                </Text>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div className="flex flex-row gap-2 justify-end mt-8">
           <div className="flex flex-col gap-2">
-            {validationErrors.map((error, index) => (
-              <Text
-                key={index}
-                variant={TextVariant.footnote}
-                className="text-destructive"
+            <SubmitButton
+              loading={isLoading}
+              onClick={handleStakeButtonClick}
+              buttonText={`Stake ${Number(val).toFixed(5)} ETH`}
+              loadingText={'Processing...'}
+              actionText="Stake"
+            />
+            <Text variant="caption" className="text-end text-primary/70">
+              Standard fees apply.{' '}
+              <Link
+                to="https://tech.docs.intuition.systems/fees"
+                target="_blank"
+                rel="noreferrer"
+                className="text-primary font-semibold hover:text-accent"
               >
-                {error}
-              </Text>
-            ))}
+                Learn more
+              </Link>
+            </Text>
           </div>
-        )}
-      </div>
-
-      <div className="flex flex-row gap-2 justify-end mt-8">
-        <div className="flex flex-col gap-2">
-          <SubmitButton
-            loading={isLoading}
-            onClick={handleStakeButtonClick}
-            buttonText={`Stake ${Number(val).toFixed(5)} ETH`}
-            loadingText={'Processing...'}
-            actionText="Stake"
-          />
-          <Text variant="caption" className="text-end text-primary/70">
-            Standard fees apply.{' '}
-            <Link
-              to="https://tech.docs.intuition.systems/fees"
-              target="_blank"
-              rel="noreferrer"
-              className="text-primary font-semibold hover:text-accent"
-            >
-              Learn more
-            </Link>
-          </Text>
         </div>
       </div>
     </div>

@@ -10,6 +10,7 @@ import {
   Dialog,
   DialogContent,
   DialogFooter,
+  DialogTitle,
   StepIndicator,
 } from '@0xintuition/1ui'
 import { useGetAtomsQuery, useGetListDetailsQuery } from '@0xintuition/graphql'
@@ -186,6 +187,13 @@ export function OnboardingModal({
         },
         object_id: {
           _eq: objectId,
+        },
+      },
+      orderBy: {
+        subject: {
+          vault: {
+            position_count: 'desc',
+          },
         },
       },
     },
@@ -633,64 +641,69 @@ export function OnboardingModal({
 
         return (
           <Dialog open={isOpen} onOpenChange={handleClose}>
-            <DialogContent className="p-0 bg-gradient-to-br from-[#060504] to-[#101010] md:max-w-[720px] w-full border-none">
-              <div
-                className={`transition-all duration-150 ease-in-out ${
-                  isTransitioning
-                    ? 'opacity-0 translate-y-1'
-                    : 'opacity-100 translate-y-0'
-                }`}
-              >
-                {state.currentStep === STEPS.TOPICS && (
-                  <TopicsStep
-                    topics={topics}
-                    isLoadingList={isLoadingList}
-                    onToggleTopic={handleTopicSelect}
-                    onCreateClick={handleCreateClick}
-                    question={question}
-                    searchTerm={searchTerm}
-                    setSearchTerm={setSearchTerm}
-                    atomsData={atomsData}
-                    isSearching={isSearching}
-                  />
-                )}
+            <DialogContent className="p-0 bg-gradient-to-br from-[#060504] to-[#101010] md:max-w-[720px] w-full border-none flex flex-col">
+              <DialogTitle className="justify-end" />
+              <div className="flex-1 overflow-y-auto">
+                <div
+                  className={`transition-all duration-150 ease-in-out ${
+                    isTransitioning
+                      ? 'opacity-0 translate-y-1'
+                      : 'opacity-100 translate-y-0'
+                  }`}
+                >
+                  {state.currentStep === STEPS.TOPICS && (
+                    <TopicsStep
+                      topics={topics}
+                      isLoadingList={isLoadingList}
+                      onToggleTopic={handleTopicSelect}
+                      onCreateClick={handleCreateClick}
+                      question={question}
+                      searchTerm={searchTerm}
+                      setSearchTerm={setSearchTerm}
+                      atomsData={atomsData}
+                      isSearching={isSearching}
+                    />
+                  )}
 
-                {state.currentStep === STEPS.CREATE && (
-                  <CreateStep
-                    onCreationSuccess={onCreationSuccess}
-                    initialName={searchTerm}
-                  />
-                )}
+                  {state.currentStep === STEPS.CREATE && (
+                    <CreateStep
+                      onCreationSuccess={onCreationSuccess}
+                      initialName={searchTerm}
+                    />
+                  )}
 
-                {state.currentStep === STEPS.SIGNAL && state.selectedTopic && (
-                  <SignalStep
-                    selectedTopic={state.selectedTopic}
-                    newAtomMetadata={state.newAtomMetadata}
-                    predicateId={predicateId}
-                    objectId={objectId}
-                    setTxState={setTxState}
-                    onStakingSuccess={onStakingSuccess}
-                    isLoading={isLoading}
-                    setIsLoading={setIsLoading}
-                  />
-                )}
+                  {state.currentStep === STEPS.SIGNAL &&
+                    state.selectedTopic && (
+                      <SignalStep
+                        selectedTopic={state.selectedTopic}
+                        newAtomMetadata={state.newAtomMetadata}
+                        predicateId={predicateId}
+                        objectId={objectId}
+                        setTxState={setTxState}
+                        onStakingSuccess={onStakingSuccess}
+                        isLoading={isLoading}
+                        setIsLoading={setIsLoading}
+                      />
+                    )}
 
-                {state.currentStep === STEPS.REWARD && state.selectedTopic && (
-                  <RewardStep
-                    isOpen={state.currentStep === STEPS.REWARD}
-                    selectedTopic={state.selectedTopic}
-                    newAtomMetadata={state.newAtomMetadata}
-                    txHash={txState?.txHash}
-                    userWallet={userWallet}
-                    pointAwardAmount={question?.point_award_amount}
-                    awardPoints={awardPoints}
-                    questionId={question?.id}
-                    epochId={currentEpoch?.id}
-                  />
-                )}
+                  {state.currentStep === STEPS.REWARD &&
+                    state.selectedTopic && (
+                      <RewardStep
+                        isOpen={state.currentStep === STEPS.REWARD}
+                        selectedTopic={state.selectedTopic}
+                        newAtomMetadata={state.newAtomMetadata}
+                        txHash={txState?.txHash}
+                        userWallet={userWallet}
+                        pointAwardAmount={question?.point_award_amount}
+                        awardPoints={awardPoints}
+                        questionId={question?.id}
+                        epochId={currentEpoch?.id}
+                      />
+                    )}
+                </div>
               </div>
-              <DialogFooter className="w-full items-center">
-                <div className="flex flex-row justify-between px-5 py-5 w-full rounded-b-xl bg-[#0A0A0A]">
+              <DialogFooter className="w-full items-center sticky bottom-0 bg-[#0A0A0A] rounded-b-xl">
+                <div className="flex flex-row justify-between px-5 py-5 w-full">
                   <StepIndicator<StepId>
                     steps={steps}
                     onStepClick={handleStepClick}

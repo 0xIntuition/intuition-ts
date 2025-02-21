@@ -18,7 +18,11 @@ export function PageHeader({
   return (
     <div className={cn('flex flex-col gap-1', className)} {...props}>
       <div className="flex items-center justify-between">
-        <Text variant={TextVariant.heading3} weight={TextWeight.semibold}>
+        <Text
+          variant={TextVariant.heading3}
+          weight={TextWeight.semibold}
+          className="text-3xl sm:text-4xl"
+        >
           {title}
         </Text>
         {lastUpdated && (

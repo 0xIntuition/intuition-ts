@@ -32,20 +32,17 @@ export function AtomDetailsCard({
 }: AtomDetailsCardProps) {
   return (
     <div
-      className={cn(
-        'rounded-lg bg-gradient-to-b from-[#060504] to-[#101010] min-w-[480px]',
-        className,
-      )}
+      className={cn('rounded-lg w-full md:min-w-[480px]', className)}
       {...props}
     >
       <div className="flex flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between p-4">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-3 sm:p-4 gap-3 sm:gap-0">
           <div className="flex items-center gap-3">
             <div className="size-10 rounded flex items-center justify-center">
               {icon}
             </div>
-            <div className="flex flex-col ">
+            <div className="flex flex-col min-w-0">
               <Text
                 variant="footnote"
                 weight="normal"
@@ -53,14 +50,18 @@ export function AtomDetailsCard({
               >
                 {list}
               </Text>
-              <div className="flex items-center gap-3">
-                <Text variant="headline" weight="medium" className="text-white">
+              <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+                <Text
+                  variant="headline"
+                  weight="medium"
+                  className="text-white truncate max-w-[200px] sm:max-w-none"
+                >
                   {name}
                 </Text>
                 <Text
                   variant="body"
                   weight="normal"
-                  className="rounded-xl border border-border/10 px-2 py-0.5 text-[#E6B17E]"
+                  className="rounded-xl border border-border/10 px-2 py-0.5 text-[#E6B17E] shrink-0"
                 >
                   ID: {atomId}
                 </Text>
@@ -71,8 +72,12 @@ export function AtomDetailsCard({
             href={`${PORTAL_URL}/${listClaim ? 'claim' : 'identity'}/${atomId}`}
             target="_blank"
             rel="noopener noreferrer"
+            className="w-full sm:w-auto"
           >
-            <Button variant={ButtonVariant.secondary}>
+            <Button
+              variant={ButtonVariant.secondary}
+              className="w-full sm:w-auto"
+            >
               <ExternalLink className="h-4 w-4" />
               View on Portal
             </Button>
@@ -93,9 +98,9 @@ export function AtomDetailsCard({
             <div className="border-t border-dashed border-border/10" />
           </div>
 
-          <div className="flex justify-between items-center px-4 pb-4">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center px-3 sm:px-4 pb-4 gap-2 sm:gap-0">
             <div className="flex items-center gap-2">
-              <Users className="h-4 w-4 text-amber-500" />
+              <Users className="h-4 w-4 text-amber-500 shrink-0" />
               <Text
                 variant="body"
                 weight="normal"
@@ -105,7 +110,7 @@ export function AtomDetailsCard({
               </Text>
             </div>
             <div className="flex items-center gap-2">
-              <Coins className="h-4 w-4 text-green-500" />
+              <Coins className="h-4 w-4 text-green-500 shrink-0" />
               <Text
                 variant="body"
                 weight="normal"

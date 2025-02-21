@@ -77,8 +77,8 @@ export function TopicsStep({
   }
 
   return (
-    <div className="p-8">
-      <div className="flex flex-col gap-8">
+    <div className="flex flex-col h-full">
+      <div className="flex flex-col gap-8 p-8">
         <div className="flex items-start justify-between gap-4 pb-5">
           <div className="space-y-1">
             <Text variant="headline" className="font-semibold">
@@ -114,7 +114,7 @@ export function TopicsStep({
             </div>
           </div>
         ) : displayedTopics.length > 0 ? (
-          <ScrollArea className="h-[350px]">
+          <ScrollArea className="h-[calc(100vh-20rem)] md:h-[350px]">
             <div className="flex justify-center">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-4 justify-items-center w-full">
                 {displayedTopics.map((topic) => (

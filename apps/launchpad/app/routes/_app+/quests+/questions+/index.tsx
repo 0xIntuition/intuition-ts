@@ -245,7 +245,7 @@ export default function Questions() {
 
   return (
     <>
-      <div className="flex items-center gap-4 mb-6">
+      <div className="flex items-center gap-4 mb-4 md:mb-6">
         <Button
           variant="ghost"
           size="icon"
