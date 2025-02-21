@@ -10,12 +10,10 @@ import {
   Dialog,
   DialogContent,
   DialogFooter,
-  DialogTitle,
   StepIndicator,
 } from '@0xintuition/1ui'
 import { useGetAtomsQuery, useGetListDetailsQuery } from '@0xintuition/graphql'
 
-import logger from '@lib/utils/logger'
 import { usePrivy } from '@privy-io/react-auth'
 import { useLocation, useNavigate } from '@remix-run/react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
@@ -83,7 +81,6 @@ const useStepTransition = (
       rafRef.current = requestAnimationFrame(() => {
         timeoutRef.current = window.setTimeout(() => {
           if (!updateFnRef.current) {
-            logger('Error: Update function is null during transition')
             setIsTransitioning(false)
             return
           }
@@ -92,14 +89,12 @@ const useStepTransition = (
             // Update state after fade out
             setState((prevState) => {
               if (!prevState) {
-                logger('Error: Previous state is null during transition')
                 return INITIAL_STATE
               }
               const newState = updateFnRef.current!(prevState)
               return newState
             })
           } catch (error) {
-            logger('Error during state update:', error)
             setIsTransitioning(false)
             return
           }
@@ -156,6 +151,7 @@ export function OnboardingModal({
   const [txState, setTxState] = useState<TransactionStateType>()
   const [subjectId, setSubjectId] = useState<string>()
   const [hasAwardedPoints, setHasAwardedPoints] = useState(false)
+  const [hasExistingCompletion, setHasExistingCompletion] = useState(false)
 
   const transition = useStepTransition(setState)
   const { isTransitioning, handleTransition, resetTransition } = transition
@@ -244,13 +240,7 @@ export function OnboardingModal({
           },
         ],
       })
-
-      document.body.style.paddingRight = 'var(--removed-body-scroll-bar-size)'
-      document.body.style.overflow = 'hidden'
     } else {
-      document.body.style.paddingRight = ''
-      document.body.style.overflow = ''
-
       const timer = setTimeout(() => {
         setState(INITIAL_STATE)
         setSearchTerm('')
@@ -464,7 +454,6 @@ export function OnboardingModal({
   const onStakingSuccess = useCallback(
     (subject_id: string) => {
       if (!userWallet) {
-        logger('Missing userWallet')
         return
       }
 
@@ -497,16 +486,7 @@ export function OnboardingModal({
   )
 
   const awardPoints = async (accountId: string): Promise<boolean> => {
-    const logContext = {
-      accountId,
-      questionId: question.id,
-      epochId: currentEpoch?.id,
-      subjectId,
-      pointAmount: question.point_award_amount,
-    }
-
     try {
-      logger('Starting points award process:', logContext)
       setIsLoading(true)
       const formData = new FormData()
       formData.append('accountId', accountId)
@@ -529,30 +509,18 @@ export function OnboardingModal({
           errorData?.error ||
           errorData?.details ||
           `Failed to award points: ${response.status}`
-        logger('Points award request failed:', {
-          ...logContext,
-          error,
-          status: response.status,
-        })
         throw new Error(error)
       }
 
       const data = await response.json()
       if (!data.success) {
-        logger('Points award response indicated failure:', {
-          ...logContext,
-          responseData: data,
-        })
         throw new Error(data.error || 'Failed to award points')
       }
-
-      logger('Points award successful:', { ...logContext, responseData: data })
 
       // Set points awarded state before invalidating queries
       setHasAwardedPoints(true)
 
       // Invalidate relevant queries
-      logger('Invalidating queries after points award')
       await Promise.all([
         queryClient.invalidateQueries({
           queryKey: [
@@ -572,12 +540,6 @@ export function OnboardingModal({
 
       return true
     } catch (error) {
-      const errorDetails = {
-        ...logContext,
-        error: error instanceof Error ? error.message : 'Unknown error',
-        stack: error instanceof Error ? error.stack : undefined,
-      }
-      logger('Error in points award process:', errorDetails)
       setHasAwardedPoints(false)
       return false
     } finally {
@@ -590,9 +552,9 @@ export function OnboardingModal({
       state.currentStep === STEPS.REWARD &&
       txState?.status === 'complete' &&
       !isLoading && // Only consider complete if not still loading
-      hasAwardedPoints // Add this condition to ensure points were awarded
+      (hasAwardedPoints || hasExistingCompletion) // Allow closing for both new and existing completions
 
-    // Only close if we're not in the reward step or points have been awarded
+    // Only close if we're not in the reward step or points have been awarded/existed
     if (state.currentStep !== STEPS.REWARD || (isFlowComplete && userWallet)) {
       onClose()
 
@@ -616,6 +578,7 @@ export function OnboardingModal({
     isLoading,
     userWallet,
     hasAwardedPoints,
+    hasExistingCompletion,
     onClose,
     resetTransition,
     question?.id,
@@ -627,7 +590,6 @@ export function OnboardingModal({
   const onCreationSuccess = (metadata: NewAtomMetadata) => {
     // Ensure we have valid state before transition
     if (!state) {
-      logger('Error: State is null in onCreationSuccess')
       return
     }
 
@@ -681,7 +643,6 @@ export function OnboardingModal({
       {() => {
         // Safeguard against null state
         if (!state) {
-          logger('Error: Attempting to render with null state')
           return null
         }
 
@@ -702,7 +663,6 @@ export function OnboardingModal({
                 }
               }}
             >
-              <DialogTitle className="justify-end" />
               <div className="flex-1 overflow-y-auto">
                 <div
                   className={`transition-all duration-150 ease-in-out ${
@@ -758,11 +718,12 @@ export function OnboardingModal({
                         awardPoints={awardPoints}
                         questionId={question?.id}
                         epochId={currentEpoch?.id}
+                        onExistingCompletionChange={setHasExistingCompletion}
                       />
                     )}
                 </div>
               </div>
-              <DialogFooter className="w-full items-center sticky bottom-0 bg-[#0A0A0A] rounded-b-xl">
+              <DialogFooter className="w-full items-center md:px-4">
                 <div className="flex flex-row justify-between px-5 py-5 w-full">
                   <StepIndicator<StepId>
                     steps={steps}
@@ -771,7 +732,8 @@ export function OnboardingModal({
                     onNext={
                       state.currentStep !== STEPS.REWARD
                         ? handleNext
-                        : state.currentStep === STEPS.REWARD && hasAwardedPoints
+                        : state.currentStep === STEPS.REWARD &&
+                            (hasAwardedPoints || hasExistingCompletion)
                           ? handleClose
                           : undefined
                     }
@@ -787,7 +749,7 @@ export function OnboardingModal({
                         : state.currentStep === STEPS.SIGNAL
                           ? txState?.status !== 'complete'
                           : state.currentStep === STEPS.REWARD
-                            ? !hasAwardedPoints
+                            ? !hasAwardedPoints && !hasExistingCompletion
                             : state.currentStep === STEPS.CREATE
                     }
                     disableBack={

@@ -22,6 +22,7 @@ interface RewardStepProps {
   epochId?: number
   pointAwardAmount?: number
   awardPoints?: (accountId: string) => Promise<boolean>
+  onExistingCompletionChange?: (hasCompletion: boolean) => void
 }
 
 export function RewardStep({
@@ -32,10 +33,12 @@ export function RewardStep({
   questionId,
   epochId,
   pointAwardAmount,
+  onExistingCompletionChange,
 }: RewardStepProps) {
   const [rewardReady, setRewardReady] = useState(false)
   const [hasRewardAnimated, setHasRewardAnimated] = useState(false)
   const [hasAwardedPoints, setHasAwardedPoints] = useState(false)
+  const [justAwarded, setJustAwarded] = useState(false)
   const [confettiTriggered, setConfettiTriggered] = useState(false)
   const [isAwarding, setIsAwarding] = useState(false)
   const [awardingFailed, setAwardingFailed] = useState(false)
@@ -68,14 +71,21 @@ export function RewardStep({
       if (!userWallet || !questionId || !epochId) {
         return null
       }
-      const response = await fetch(
-        `/resources/check-question-completion?accountId=${userWallet.toLowerCase()}&questionId=${questionId}&epochId=${epochId}`,
-      )
-      if (!response.ok) {
+
+      try {
+        const response = await fetch(
+          `/resources/get-question-completion?accountId=${userWallet.toLowerCase()}&questionId=${questionId}`,
+        )
+
+        if (!response.ok) {
+          return null
+        }
+
+        const data = await response.json()
+        return data.completion
+      } catch (error) {
         return null
       }
-      const data = await response.json()
-      return data.completion
     },
     enabled: Boolean(userWallet && questionId && epochId),
   })
@@ -94,8 +104,10 @@ export function RewardStep({
       const success = await awardPoints(userWallet.toLowerCase())
       if (success) {
         setHasAwardedPoints(true)
+        setJustAwarded(true)
         setAwardingFailed(false)
         setRetryCount(0)
+        setError(undefined) // Clear error on success
       } else {
         throw new Error('Failed to award points')
       }
@@ -114,18 +126,21 @@ export function RewardStep({
   useEffect(() => {
     // If we find an existing completion, mark points as awarded
     if (existingCompletion) {
-      logger('Found existing completion:', { existingCompletion })
       setHasAwardedPoints(true)
       setIsAwarding(false)
       setAwardingFailed(false)
+      onExistingCompletionChange?.(true)
       return
     }
+
+    onExistingCompletionChange?.(false)
 
     // Reset states when modal opens/closes
     if (!isOpen) {
       setRewardReady(false)
       setHasRewardAnimated(false)
       setHasAwardedPoints(false)
+      setJustAwarded(false)
       setConfettiTriggered(false)
       setIsAwarding(false)
       setAwardingFailed(false)
@@ -145,38 +160,44 @@ export function RewardStep({
       questionId &&
       epochId &&
       retryCount < MAX_RETRIES &&
-      !existingCompletion // Don't attempt if we already found a completion
+      !existingCompletion
 
     if (shouldAwardPoints) {
       const awardPointsAsync = async () => {
         try {
           setIsAwarding(true)
           setError(undefined)
+
           const success = await awardPoints(userWallet.toLowerCase())
+
           if (success) {
             setHasAwardedPoints(true)
+            setJustAwarded(true)
             setAwardingFailed(false)
             setRetryCount(0)
+            setError(undefined)
           } else {
             throw new Error('Failed to award points')
           }
         } catch (error) {
-          setAwardingFailed(true)
-          setRetryCount((prev) => prev + 1)
-          setError(
-            error instanceof Error ? error.message : 'Failed to award points',
-          )
-          logger('Error awarding points:', error)
+          const errorMessage =
+            error instanceof Error ? error.message : 'Failed to award points'
 
-          // Auto-retry after delay if we haven't hit max retries
-          if (retryCount < MAX_RETRIES - 1) {
+          // Only set failure state if we've hit max retries
+          if (retryCount >= MAX_RETRIES - 1) {
+            setAwardingFailed(true)
+            setError(errorMessage)
+          } else {
+            // Schedule retry
+            setRetryCount((prev) => prev + 1)
             setTimeout(() => {
-              setAwardingFailed(false)
               setIsAwarding(false)
             }, RETRY_DELAY)
           }
         } finally {
-          setIsAwarding(false)
+          if (!error || retryCount >= MAX_RETRIES - 1) {
+            setIsAwarding(false)
+          }
         }
       }
       awardPointsAsync()
@@ -192,6 +213,7 @@ export function RewardStep({
     epochId,
     retryCount,
     existingCompletion,
+    onExistingCompletionChange,
   ])
 
   useEffect(() => {
@@ -219,17 +241,18 @@ export function RewardStep({
   ])
 
   return (
-    <div className="p-8 h-[460px]">
+    <div className="p-8 h-[460px] relative overflow-hidden">
       <div className="flex flex-col items-center space-y-6">
         <span
           id="rewardId"
+          className="absolute top-[88px] left-1/2 -translate-x-1/2 pointer-events-none"
           ref={(el) => {
             if (el && !rewardReady) {
               setRewardReady(true)
             }
           }}
         />
-        <div className="w-16 h-16 rounded-full bg-green-500/10 flex items-center justify-center">
+        <div className="w-16 h-16 rounded-full bg-green-500/10 flex items-center justify-center relative">
           {isAwarding ? (
             <svg
               className="w-8 h-8 text-green-500 animate-spin"
@@ -299,19 +322,23 @@ export function RewardStep({
         <div className="text-center space-y-2">
           <h2 className="text-2xl font-bold">
             {isAwarding
-              ? `Awarding Points${retryCount > 0 ? ` (Attempt ${retryCount + 1}/${MAX_RETRIES})` : '...'}`
-              : awardingFailed
-                ? retryCount >= MAX_RETRIES
-                  ? 'Failed to Award Points'
-                  : 'Retrying...'
+              ? 'Awarding Points...'
+              : awardingFailed && retryCount >= MAX_RETRIES
+                ? 'Failed to Award Points'
                 : hasAwardedPoints
-                  ? 'Question Completed!'
+                  ? justAwarded
+                    ? 'Question Completed!'
+                    : 'Points Already Awarded'
                   : 'Preparing Reward...'}
           </h2>
           <Text variant={TextVariant.body} className="text-primary/70">
             {awardingFailed && retryCount >= MAX_RETRIES
               ? 'We encountered an issue while awarding your points. Please try again.'
-              : "Your answer has been woven into Intuition's living memory, guiding the path for future seekers."}
+              : justAwarded
+                ? "Your answer has been woven into Intuition's living memory, guiding the path for future seekers."
+                : existingCompletion
+                  ? `You previously earned ${existingCompletion.points_awarded} IQ Points for this question on ${new Date(existingCompletion.completed_at).toLocaleDateString()}`
+                  : "Your answer has been woven into Intuition's living memory, guiding the path for future seekers."}
           </Text>
           {error && (
             <Text variant={TextVariant.body} className="text-red-500 mt-2">
@@ -321,10 +348,18 @@ export function RewardStep({
         </div>
 
         <div className="text-center space-y-1">
-          <h3 className="text-xl text-gray-400">You earned</h3>
+          <h3 className="text-xl text-gray-400">
+            {justAwarded
+              ? 'You earned'
+              : existingCompletion
+                ? 'Previously Earned'
+                : 'You earned'}
+          </h3>
           <div className="flex items-center justify-center space-x-2">
             <span className="text-4xl font-bold bg-gradient-to-r from-[#34C578] to-[#00FF94] bg-clip-text text-transparent">
-              {pointAwardAmount}
+              {existingCompletion
+                ? existingCompletion.points_awarded
+                : pointAwardAmount}
             </span>
             <span className="text-2xl font-semibold text-gray-300">
               IQ POINTS
