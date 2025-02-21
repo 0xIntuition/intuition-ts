@@ -81,7 +81,9 @@ export function Navigation({
             to={baseUrl}
             className="justify-self-center px-6 py-2.5 text-foreground/60 hover:text-foreground transition-colors bg-primary/5 hover:bg-primary/10 rounded-full"
           >
-            <Text variant={TextVariant.footnote}>{labels[type].all}</Text>
+            <Text variant={TextVariant.footnote} className="whitespace-nowrap">
+              {labels[type].all}
+            </Text>
           </Link>
 
           {nextItem ? (

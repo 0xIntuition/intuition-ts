@@ -1,7 +1,18 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 
-import { Dialog, DialogContent } from '@0xintuition/1ui'
+import {
+  Badge,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Icon,
+  Text,
+  TextVariant,
+  TextWeight,
+} from '@0xintuition/1ui'
 
+import { useGetWalletBalance } from '@lib/hooks/useGetWalletBalance'
+import { usePrivy } from '@privy-io/react-auth'
 import { AtomType, TripleType } from 'app/types'
 import { ClientOnly } from 'remix-utils/client-only'
 
@@ -89,6 +100,10 @@ export function SignalModal({
     }, 200)
   }, [handleTransition, onClose])
 
+  const { user: privyUser } = usePrivy()
+  const userWallet = privyUser?.wallet?.address
+  const walletBalance = useGetWalletBalance(userWallet as `0x${string}`)
+
   return (
     <ClientOnly>
       {() => (
@@ -103,7 +118,34 @@ export function SignalModal({
             }
           }}
         >
-          <DialogContent className="sm:max-w-[600px] p-0 h-[380px] flex flex-col bg-gradient-to-b from-[#060504] to-[#101010] border-none">
+          <DialogContent className="sm:max-w-[600px] flex flex-col bg-gradient-to-b from-[#060504] to-[#101010] border-none pb-4">
+            <DialogTitle className="flex items-center">
+              <Text
+                variant={TextVariant.headline}
+                weight={TextWeight.semibold}
+                className="flex-1"
+              >
+                {isSimplifiedRedeem ? (
+                  <>
+                    Redeem your signal for{' '}
+                    {atom?.label ?? triple?.subject?.label ?? ''}
+                  </>
+                ) : (
+                  <>
+                    Cast your signal on {atom?.label ?? triple?.subject.label}
+                  </>
+                )}
+              </Text>
+              <Badge className="flex items-center gap-1 px-2 mr-2">
+                <Icon name="wallet" className="h-4 w-4 text-secondary/50" />
+                <Text
+                  variant={TextVariant.caption}
+                  className="text-nowrap text-secondary/50"
+                >
+                  {(+walletBalance).toFixed(2)} ETH
+                </Text>
+              </Badge>
+            </DialogTitle>
             <div
               className={`transition-all duration-150 ease-in-out ${
                 isTransitioning
@@ -120,6 +162,8 @@ export function SignalModal({
                 onClose={handleClose}
                 initialTicks={initialTicks}
                 isSimplifiedRedeem={isSimplifiedRedeem}
+                userWallet={userWallet as `0x${string}`}
+                walletBalance={walletBalance}
               />
             </div>
           </DialogContent>

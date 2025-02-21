@@ -1,0 +1,43 @@
+.embla {
+  overflow: hidden;
+  margin: 0 auto;
+}
+
+.embla__viewport {
+  overflow: hidden;
+  width: 100%;
+  touch-action: pan-y;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+@media (max-width: 640px) {
+  .embla__viewport {
+    max-width: 340px;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 768px) {
+  .embla__viewport {
+    max-width: 600px;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .embla__viewport {
+    max-width: 800px;
+  }
+}
+
+.embla__container {
+  display: flex;
+  user-select: none;
+  -webkit-touch-callout: none;
+  -khtml-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.embla__slide {
+  position: relative;
+  min-width: 0;
+}

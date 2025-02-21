@@ -137,14 +137,14 @@ export const columns: ColumnDef<TableItem>[] = [
   {
     accessorKey: 'name',
     header: () => (
-      <div className="flex items-center gap-3 pl-2">
+      <div className="flex items-center gap-3">
         <span>Entries</span>
       </div>
     ),
     cell: ({ row }) => {
       const image = row.original.image
       return (
-        <div className="flex items-center gap-3 pl-6">
+        <div className="flex items-center gap-3">
           {image && image !== 'null' ? (
             <img
               src={image}
@@ -157,11 +157,11 @@ export const columns: ColumnDef<TableItem>[] = [
               className="w-8 h-8 text-primary/40"
             />
           )}
-          <span className="font-medium">{row.getValue('name')}</span>
+          <span className="font-medium truncate">{row.getValue('name')}</span>
         </div>
       )
     },
-    size: 480,
+    size: 600,
   },
   {
     accessorKey: 'upvotes',
@@ -169,9 +169,14 @@ export const columns: ColumnDef<TableItem>[] = [
       <div className="flex justify-center">
         <DataTableColumnHeader
           column={column}
-          title="Upvotes"
+          title={<span className="hidden sm:inline">Upvotes</span>}
           className="p-0"
-        />
+        >
+          <div className="flex justify-center items-center gap-1 min-w-[60px]">
+            <span className="hidden sm:inline">Upvotes</span>
+            <ArrowBigUp className="sm:hidden w-4 h-4 fill-success text-success" />
+          </div>
+        </DataTableColumnHeader>
       </div>
     ),
     cell: ({ row }) => {
@@ -179,39 +184,48 @@ export const columns: ColumnDef<TableItem>[] = [
       const roundedUpVotes = Math.ceil(upvotes)
 
       return (
-        <div className="flex justify-center items-center gap-1">
-          <ArrowBigUp className="w-4 h-4 fill-success text-success" />
+        <div className="flex justify-center items-center gap-1 min-w-[60px]">
+          <ArrowBigUp className="w-4 h-4 flex-shrink-0 fill-success text-success" />
           {roundedUpVotes}
         </div>
       )
     },
-    size: 24,
+    size: 80,
     sortDescFirst: true,
   },
   {
     accessorKey: 'downvotes',
     header: ({ column }) => (
       <div className="flex justify-center">
-        <DataTableColumnHeader column={column} title="Downvotes" />
+        <DataTableColumnHeader
+          column={column}
+          title={<span className="hidden sm:inline">Downvotes</span>}
+          className="p-0"
+        >
+          <div className="flex justify-center items-center gap-1 min-w-[60px]">
+            <span className="hidden sm:inline">Downvotes</span>
+            <ArrowBigDown className="sm:hidden w-4 h-4 fill-destructive text-destructive" />
+          </div>
+        </DataTableColumnHeader>
       </div>
     ),
     cell: ({ row }) => {
       const downvotes = row.original.downvotes
       const roundedDownVotes = Math.ceil(downvotes)
       return (
-        <div className="flex justify-center items-center gap-1">
+        <div className="flex justify-center items-center gap-1 min-w-[60px]">
           {roundedDownVotes}
-          <ArrowBigDown className="w-4 h-4 fill-destructive text-destructive" />
+          <ArrowBigDown className="w-4 h-4 flex-shrink-0 fill-destructive text-destructive" />
         </div>
       )
     },
-    size: 24,
+    size: 80,
     sortDescFirst: true,
   },
   {
     accessorKey: 'tvl',
     header: ({ column }) => (
-      <div className="flex justify-end pr-6">
+      <div className="flex justify-center items-center">
         <DataTableColumnHeader column={column} title="TVL" />
       </div>
     ),
@@ -221,7 +235,7 @@ export const columns: ColumnDef<TableItem>[] = [
       const tvl = Number(forTvl) + Number(againstTvl)
 
       return (
-        <div className="pr-10 flex justify-end items-center gap-0.5">
+        <div className="pr-10 flex items-center gap-0.5">
           {tvl ? Number(tvl).toFixed(4) : '0'}
           <Icon name="eth" className="w-3 h-3" />
         </div>

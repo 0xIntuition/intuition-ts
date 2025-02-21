@@ -58,7 +58,7 @@ export function Step({ step, label, status, onClick }: StepProps) {
       </div>
       <Text
         variant={TextVariant.body}
-        className={cn('ml-1.5', {
+        className={cn('ml-1.5 hidden md:block', {
           'text-primary font-medium': status === 'current',
           'text-muted-foreground': status !== 'current',
         })}

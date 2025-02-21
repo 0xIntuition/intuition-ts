@@ -51,7 +51,7 @@ export function QuestionCard({
 
   return (
     <Card
-      className={`relative h-[400px] rounded-lg border-none min-w-[480px] overflow-hidden ${className}`}
+      className={`relative h-[400px] rounded-lg border-none w-full md:min-w-[480px] overflow-hidden ${className}`}
       style={{
         backgroundImage: `linear-gradient(to bottom right, rgba(6, 5, 4, 0.9), rgba(16, 16, 16, 0.9)), url(${image})`,
         backgroundSize: 'cover',
@@ -94,12 +94,12 @@ export function QuestionCard({
 
         <div
           className={cn(
-            `flex items-end`,
+            `flex md:items-end flex-col md:flex-row gap-2 md:gap-0`,
             completedAtom ? 'justify-between' : 'justify-end',
           )}
         >
           {completedAtom && (
-            <div className="flex flex-col gap-1 items-start">
+            <div className="flex flex-col gap-1 items-center md:items-start">
               <Text
                 variant="body"
                 weight="medium"
@@ -133,7 +133,7 @@ export function QuestionCard({
             </div>
           )}
           {points > 0 ? (
-            <div className="flex items-baseline gap-2">
+            <div className="flex items-baseline gap-2 justify-center md:justify-start">
               <span className="text-xl font-bold bg-gradient-to-r from-[#34C578] to-[#00FF94] bg-clip-text text-transparent">
                 {points}
               </span>
@@ -142,7 +142,7 @@ export function QuestionCard({
               </span>
             </div>
           ) : isActive ? (
-            <div className="flex items-baseline gap-2">
+            <div className="flex items-baseline gap-2 justify-center md:justify-start">
               <span className="text-md font-semibold text-muted-foreground">
                 Earn
               </span>

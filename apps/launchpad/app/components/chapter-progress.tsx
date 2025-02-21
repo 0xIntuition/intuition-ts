@@ -34,7 +34,7 @@ export default function ChapterProgress({
       transition={{ duration: 0.5 }}
       whileHover={{ y: -5 }}
     >
-      <Card className="flex flex-row w-full gap-6 p-6 rounded-lg bg-white/5 backdrop-blur-md backdrop-saturate-150 border border-border/10">
+      <Card className="flex flex-col sm:flex-row w-full gap-4 sm:gap-6 p-4 sm:p-6 rounded-lg bg-white/5 backdrop-blur-md backdrop-saturate-150 border border-border/10">
         <motion.div
           className="flex flex-col justify-between items-start min-w-[120px]"
           initial={{ opacity: 0, x: -20 }}
@@ -42,7 +42,9 @@ export default function ChapterProgress({
           transition={{ delay: 0.2, duration: 0.5 }}
         >
           <div className="space-y-2 w-full">
-            <Text className="text-2xl whitespace-nowrap">{title}</Text>
+            <Text className="text-xl sm:text-2xl whitespace-nowrap">
+              {title}
+            </Text>
           </div>
         </motion.div>
 
@@ -65,7 +67,7 @@ export default function ChapterProgress({
               >
                 <div
                   className={cn(
-                    'w-10 h-10 rounded flex items-center justify-center z-10 text-primary primary-gradient-subtle border border-border/10',
+                    'w-8 h-8 sm:w-10 sm:h-10 rounded flex items-center justify-center z-10 text-primary primary-gradient-subtle border border-border/10',
                     {
                       'bg-primary/10 border-success':
                         stage.status === 'completed',
@@ -75,7 +77,7 @@ export default function ChapterProgress({
                     },
                   )}
                 >
-                  <span className="font-medium font-serif">
+                  <span className="font-medium font-serif text-sm sm:text-base">
                     {toRoman(index + 1)}
                   </span>
                 </div>
@@ -84,7 +86,7 @@ export default function ChapterProgress({
           </div>
 
           {/* Progress Line */}
-          <div className="relative h-4 w-full">
+          <div className="relative h-3 sm:h-4 w-full">
             {/* Background Track */}
             <div className="absolute inset-0 bg-gradient-to-b from-[#000000] to-[#FFFFFF]/10 rounded-full overflow-hidden p-0.5">
               <div className="bg-[#191919] rounded-full h-full w-full overflow-hidden p-0.5">
@@ -103,14 +105,17 @@ export default function ChapterProgress({
             {/* Dot Markers */}
             <div className="absolute inset-0 flex justify-between items-center px-0">
               {stages.map((stage, index) => (
-                <div key={index} className="w-10">
+                <div key={index} className="w-8 sm:w-10">
                   <motion.div
-                    className={cn('w-2 h-2 rounded-full m-auto', {
-                      'bg-success': stage.status === 'completed',
-                      'bg-primary': stage.status === 'in_progress',
-                      'bg-primary/50': stage.status === 'locked',
-                      'opacity-0': index === stages.length - 1 || index === 0, // Make last dot invisible
-                    })}
+                    className={cn(
+                      'w-1.5 sm:w-2 h-1.5 sm:h-2 rounded-full m-auto',
+                      {
+                        'bg-success': stage.status === 'completed',
+                        'bg-primary': stage.status === 'in_progress',
+                        'bg-primary/50': stage.status === 'locked',
+                        'opacity-0': index === stages.length - 1 || index === 0, // Make last dot invisible
+                      },
+                    )}
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                     transition={{ delay: 0.6 + index * 0.1, duration: 0.3 }}

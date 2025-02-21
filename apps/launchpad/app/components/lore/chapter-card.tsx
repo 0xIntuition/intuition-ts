@@ -20,7 +20,7 @@ export function ChapterCard({
     <Link
       to={`/lore/${chapter.id}`}
       className={cn(
-        'group relative block lg:h-[72vh] md:h-[80vh] w-full overflow-hidden rounded-2xl bg-black/20 transition-all duration-300 hover:scale-[1.02]',
+        'group relative block h-[72vh] md:h-[80vh] w-full overflow-hidden rounded-2xl bg-black/20 transition-all duration-300 hover:scale-[1.02]',
         isSelected && 'ring-2 ring-primary',
       )}
     >

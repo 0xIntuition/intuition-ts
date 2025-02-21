@@ -18,16 +18,18 @@ import {
   PinIcon,
 } from 'lucide-react'
 
-interface DataTableColumnHeaderProps<TData, TValue>
-  extends React.HTMLAttributes<HTMLDivElement> {
+interface DataTableColumnHeaderProps<TData, TValue> {
   column: Column<TData, TValue>
-  title: string
+  title: string | React.ReactNode
+  children?: React.ReactNode
+  className?: string
 }
 
 export function DataTableColumnHeader<TData, TValue>({
   column,
   title,
   className,
+  children,
 }: DataTableColumnHeaderProps<TData, TValue>) {
   if (!column.getCanSort()) {
     return <div className={cn(className)}>{title}</div>
@@ -42,7 +44,7 @@ export function DataTableColumnHeader<TData, TValue>({
             size={ButtonSize.md}
             className="px-0"
           >
-            <span>{title}</span>
+            {children || <span>{title}</span>}
             {column.getIsSorted() === 'desc' ? (
               <ArrowDownIcon className="h-4 w-4" />
             ) : column.getIsSorted() === 'asc' ? (

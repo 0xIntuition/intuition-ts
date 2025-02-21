@@ -9,6 +9,8 @@ import type { EmblaOptionsType } from 'embla-carousel'
 import useEmblaCarousel from 'embla-carousel-react'
 import { motion } from 'framer-motion'
 
+import '@styles/embla.css'
+
 import { chapters } from '../../../components/lore/chapters'
 
 export const meta: MetaFunction = () => {
@@ -53,6 +55,7 @@ export default function LoreIndex() {
       loop: false,
       dragFree: true,
       containScroll: 'trimSnaps',
+      draggable: true,
     }),
     [],
   )
@@ -103,7 +106,7 @@ export default function LoreIndex() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
           >
-            <Text variant={TextVariant.heading3} weight={TextWeight.semibold}>
+            <Text weight={TextWeight.semibold} className="text-2xl md:text-4xl">
               The Intuition Story
             </Text>
           </motion.div>
@@ -118,12 +121,9 @@ export default function LoreIndex() {
           </motion.div>
         </div>
 
-        <div className="relative px-4 md:px-8">
-          <div
-            className="overflow-hidden max-w-[340px] sm:max-w-[600px] md:max-w-[800px] lg:max-w-[1200px] mx-auto"
-            ref={emblaRef}
-          >
-            <div className="flex ml-4 md:-ml-4">
+        <div className="embla">
+          <div className="embla__viewport relative px-4 md:px-8" ref={emblaRef}>
+            <div className="embla__container flex ml-4 md:-ml-4">
               {chapters
                 .sort(
                   (a: Chapter, b: Chapter) => (a.order ?? 0) - (b.order ?? 0),
@@ -131,7 +131,7 @@ export default function LoreIndex() {
                 .map((chapter: Chapter, index: number) => (
                   <div
                     key={chapter.id}
-                    className="flex-[0_0_90%] min-w-0 pl-4 last:mr-8 sm:flex-[0_0_85%] md:flex-[0_0_45%] lg:flex-[0_0_30%]"
+                    className="embla__slide flex-[0_0_90%] min-w-0 pl-4 last:mr-8 sm:flex-[0_0_85%] md:flex-[0_0_45%] lg:flex-[0_0_30%]"
                   >
                     <ChapterCard order={index} chapter={chapter} />
                   </div>

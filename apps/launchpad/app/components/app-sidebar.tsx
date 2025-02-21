@@ -23,6 +23,7 @@ import {
 
 import { AccountButton } from '@components/account-button'
 import LoadingButton from '@components/loading-button'
+import LoadingLogo from '@components/loading-logo'
 import { useAuth } from '@lib/hooks/use-auth'
 import { usePrivy } from '@privy-io/react-auth'
 import { Link, useLocation } from '@remix-run/react'
@@ -79,12 +80,6 @@ export function AppSidebar({
       label: 'Quests',
       href: '/quests/',
       isAccent: location.pathname === '/quests/',
-    },
-    {
-      iconName: 'book',
-      label: 'Questions',
-      href: '/quests/questions',
-      isAccent: location.pathname.startsWith('/quests/questions'),
     },
     {
       iconName: 'rocket',
@@ -357,12 +352,14 @@ export function AppSidebar({
         <Sheet>
           <div className="fixed top-4 left-4 z-50">
             <SheetTrigger asChild>
-              <SidebarTrigger className="bg-background/80 backdrop-blur-sm border border-border/10 shadow-sm" />
+              <SidebarTrigger className="primary-gradient-subtle backdrop-blur-sm border border-border/10 shadow-sm h-10 w-10 rounded-lg p-2">
+                <LoadingLogo animate={false} size={28} />
+              </SidebarTrigger>
             </SheetTrigger>
           </div>
           <SheetContent
             side="left"
-            className="w-[300px] p-0 block md:hidden border-border/20"
+            className="w-[300px] p-0 block md:hidden border-r border-border/10 bg-black/5 backdrop-blur-md backdrop-saturate-150"
           >
             {sidebarContent}
           </SheetContent>
