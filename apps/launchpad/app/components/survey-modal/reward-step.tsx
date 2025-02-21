@@ -1,11 +1,16 @@
 import { useEffect, useState } from 'react'
 
-import { Text, TextVariant } from '@0xintuition/1ui'
+import { Button, Text, TextVariant } from '@0xintuition/1ui'
 
 import { BLOCK_EXPLORER_URL } from '@consts/general'
+import logger from '@lib/utils/logger'
+import { useQuery } from '@tanstack/react-query'
 import { useReward } from 'react-rewards'
 
 import { NewAtomMetadata, Topic } from './types'
+
+const MAX_RETRIES = 3
+const RETRY_DELAY = 2000 // 2 seconds
 
 interface RewardStepProps {
   isOpen: boolean
@@ -35,6 +40,7 @@ export function RewardStep({
   const [isAwarding, setIsAwarding] = useState(false)
   const [awardingFailed, setAwardingFailed] = useState(false)
   const [retryCount, setRetryCount] = useState(0)
+  const [error, setError] = useState<string>()
 
   const { reward: triggerReward } = useReward('rewardId', 'confetti', {
     lifetime: 1000,
@@ -50,7 +56,71 @@ export function RewardStep({
     },
   })
 
+  // Add completion check query
+  const { data: existingCompletion } = useQuery({
+    queryKey: [
+      'question-completion',
+      userWallet?.toLowerCase(),
+      questionId,
+      epochId,
+    ],
+    queryFn: async () => {
+      if (!userWallet || !questionId || !epochId) {
+        return null
+      }
+      const response = await fetch(
+        `/resources/check-question-completion?accountId=${userWallet.toLowerCase()}&questionId=${questionId}&epochId=${epochId}`,
+      )
+      if (!response.ok) {
+        return null
+      }
+      const data = await response.json()
+      return data.completion
+    },
+    enabled: Boolean(userWallet && questionId && epochId),
+  })
+
+  const handleRetry = async () => {
+    if (!userWallet || !awardPoints) {
+      setError('Missing required data for awarding points')
+      return
+    }
+
+    setIsAwarding(true)
+    setAwardingFailed(false)
+    setError(undefined)
+
+    try {
+      const success = await awardPoints(userWallet.toLowerCase())
+      if (success) {
+        setHasAwardedPoints(true)
+        setAwardingFailed(false)
+        setRetryCount(0)
+      } else {
+        throw new Error('Failed to award points')
+      }
+    } catch (error) {
+      setAwardingFailed(true)
+      setRetryCount((prev) => prev + 1)
+      setError(
+        error instanceof Error ? error.message : 'Failed to award points',
+      )
+      logger('Error in manual retry:', error)
+    } finally {
+      setIsAwarding(false)
+    }
+  }
+
   useEffect(() => {
+    // If we find an existing completion, mark points as awarded
+    if (existingCompletion) {
+      logger('Found existing completion:', { existingCompletion })
+      setHasAwardedPoints(true)
+      setIsAwarding(false)
+      setAwardingFailed(false)
+      return
+    }
+
     // Reset states when modal opens/closes
     if (!isOpen) {
       setRewardReady(false)
@@ -60,6 +130,7 @@ export function RewardStep({
       setIsAwarding(false)
       setAwardingFailed(false)
       setRetryCount(0)
+      setError(undefined)
       return
     }
 
@@ -73,24 +144,37 @@ export function RewardStep({
       awardPoints &&
       questionId &&
       epochId &&
-      retryCount < 3
+      retryCount < MAX_RETRIES &&
+      !existingCompletion // Don't attempt if we already found a completion
 
     if (shouldAwardPoints) {
       const awardPointsAsync = async () => {
         try {
           setIsAwarding(true)
+          setError(undefined)
           const success = await awardPoints(userWallet.toLowerCase())
           if (success) {
             setHasAwardedPoints(true)
             setAwardingFailed(false)
+            setRetryCount(0)
           } else {
-            setAwardingFailed(true)
-            setRetryCount((prev) => prev + 1)
+            throw new Error('Failed to award points')
           }
         } catch (error) {
-          console.error('Failed to award points:', error)
           setAwardingFailed(true)
           setRetryCount((prev) => prev + 1)
+          setError(
+            error instanceof Error ? error.message : 'Failed to award points',
+          )
+          logger('Error awarding points:', error)
+
+          // Auto-retry after delay if we haven't hit max retries
+          if (retryCount < MAX_RETRIES - 1) {
+            setTimeout(() => {
+              setAwardingFailed(false)
+              setIsAwarding(false)
+            }, RETRY_DELAY)
+          }
         } finally {
           setIsAwarding(false)
         }
@@ -107,6 +191,7 @@ export function RewardStep({
     questionId,
     epochId,
     retryCount,
+    existingCompletion,
   ])
 
   useEffect(() => {
@@ -214,17 +299,25 @@ export function RewardStep({
         <div className="text-center space-y-2">
           <h2 className="text-2xl font-bold">
             {isAwarding
-              ? 'Awarding Points...'
+              ? `Awarding Points${retryCount > 0 ? ` (Attempt ${retryCount + 1}/${MAX_RETRIES})` : '...'}`
               : awardingFailed
-                ? 'Failed to Award Points'
+                ? retryCount >= MAX_RETRIES
+                  ? 'Failed to Award Points'
+                  : 'Retrying...'
                 : hasAwardedPoints
                   ? 'Question Completed!'
                   : 'Preparing Reward...'}
           </h2>
           <Text variant={TextVariant.body} className="text-primary/70">
-            Your answer has been woven into Intuition&apos;s living memory,
-            guiding the path for future seekers.
+            {awardingFailed && retryCount >= MAX_RETRIES
+              ? 'We encountered an issue while awarding your points. Please try again.'
+              : "Your answer has been woven into Intuition's living memory, guiding the path for future seekers."}
           </Text>
+          {error && (
+            <Text variant={TextVariant.body} className="text-red-500 mt-2">
+              Error: {error}
+            </Text>
+          )}
         </div>
 
         <div className="text-center space-y-1">
@@ -238,6 +331,17 @@ export function RewardStep({
             </span>
           </div>
         </div>
+
+        {awardingFailed && retryCount >= MAX_RETRIES && (
+          <Button
+            variant="secondary"
+            onClick={handleRetry}
+            disabled={isAwarding}
+            className="mt-4"
+          >
+            {isAwarding ? 'Retrying...' : 'Try Again'}
+          </Button>
+        )}
 
         {txHash && (
           <div className="w-full p-4 rounded-lg bg-black/20 border border-gray-800">

@@ -155,6 +155,7 @@ export function OnboardingModal({
   const [steps, setSteps] = useState<Step[]>(STEPS_CONFIG)
   const [txState, setTxState] = useState<TransactionStateType>()
   const [subjectId, setSubjectId] = useState<string>()
+  const [hasAwardedPoints, setHasAwardedPoints] = useState(false)
 
   const transition = useStepTransition(setState)
   const { isTransitioning, handleTransition, resetTransition } = transition
@@ -462,6 +463,14 @@ export function OnboardingModal({
 
   const onStakingSuccess = useCallback(
     (subject_id: string) => {
+      if (!userWallet) {
+        logger('Missing userWallet')
+        return
+      }
+
+      // Reset points awarded state first
+      setHasAwardedPoints(false)
+
       startTransition(() => {
         setSteps((prev) => {
           const newSteps = prev.map((step) => {
@@ -483,17 +492,21 @@ export function OnboardingModal({
 
         setSubjectId(subject_id)
       })
-
-      if (!userWallet) {
-        logger('Missing userWallet')
-        return
-      }
     },
     [handleTransition, userWallet],
   )
 
   const awardPoints = async (accountId: string): Promise<boolean> => {
+    const logContext = {
+      accountId,
+      questionId: question.id,
+      epochId: currentEpoch?.id,
+      subjectId,
+      pointAmount: question.point_award_amount,
+    }
+
     try {
+      logger('Starting points award process:', logContext)
       setIsLoading(true)
       const formData = new FormData()
       formData.append('accountId', accountId)
@@ -502,7 +515,7 @@ export function OnboardingModal({
       formData.append(
         'pointAwardAmount',
         question.point_award_amount?.toString() ?? '',
-      ) // TODO: Get from question data
+      )
       formData.append('subjectId', subjectId ?? '')
 
       const response = await fetch('/actions/reward-question-points', {
@@ -511,10 +524,35 @@ export function OnboardingModal({
       })
 
       if (!response.ok) {
-        throw new Error('Failed to award points')
+        const errorData = await response.json().catch(() => null)
+        const error =
+          errorData?.error ||
+          errorData?.details ||
+          `Failed to award points: ${response.status}`
+        logger('Points award request failed:', {
+          ...logContext,
+          error,
+          status: response.status,
+        })
+        throw new Error(error)
       }
 
+      const data = await response.json()
+      if (!data.success) {
+        logger('Points award response indicated failure:', {
+          ...logContext,
+          responseData: data,
+        })
+        throw new Error(data.error || 'Failed to award points')
+      }
+
+      logger('Points award successful:', { ...logContext, responseData: data })
+
+      // Set points awarded state before invalidating queries
+      setHasAwardedPoints(true)
+
       // Invalidate relevant queries
+      logger('Invalidating queries after points award')
       await Promise.all([
         queryClient.invalidateQueries({
           queryKey: [
@@ -534,7 +572,13 @@ export function OnboardingModal({
 
       return true
     } catch (error) {
-      logger('Error awarding points:', error)
+      const errorDetails = {
+        ...logContext,
+        error: error instanceof Error ? error.message : 'Unknown error',
+        stack: error instanceof Error ? error.stack : undefined,
+      }
+      logger('Error in points award process:', errorDetails)
+      setHasAwardedPoints(false)
       return false
     } finally {
       setIsLoading(false)
@@ -545,7 +589,8 @@ export function OnboardingModal({
     const isFlowComplete =
       state.currentStep === STEPS.REWARD &&
       txState?.status === 'complete' &&
-      !isLoading // Only consider complete if not still loading
+      !isLoading && // Only consider complete if not still loading
+      hasAwardedPoints // Add this condition to ensure points were awarded
 
     // Only close if we're not in the reward step or points have been awarded
     if (state.currentStep !== STEPS.REWARD || (isFlowComplete && userWallet)) {
@@ -570,6 +615,7 @@ export function OnboardingModal({
     txState?.status,
     isLoading,
     userWallet,
+    hasAwardedPoints,
     onClose,
     resetTransition,
     question?.id,
@@ -640,8 +686,22 @@ export function OnboardingModal({
         }
 
         return (
-          <Dialog open={isOpen} onOpenChange={handleClose}>
-            <DialogContent className="p-0 bg-gradient-to-br from-[#060504] to-[#101010] md:max-w-[720px] w-full border-none flex flex-col">
+          <Dialog open={isOpen} onOpenChange={handleClose} modal={true}>
+            <DialogContent
+              className="p-0 bg-gradient-to-br from-[#060504] to-[#101010] md:max-w-[720px] w-full border-none flex flex-col"
+              onPointerDownOutside={(e) => {
+                // Prevent closing if points haven't been awarded yet
+                if (state.currentStep === STEPS.REWARD && !hasAwardedPoints) {
+                  e.preventDefault()
+                }
+              }}
+              onEscapeKeyDown={(e) => {
+                // Prevent closing if points haven't been awarded yet
+                if (state.currentStep === STEPS.REWARD && !hasAwardedPoints) {
+                  e.preventDefault()
+                }
+              }}
+            >
               <DialogTitle className="justify-end" />
               <div className="flex-1 overflow-y-auto">
                 <div
@@ -711,7 +771,7 @@ export function OnboardingModal({
                     onNext={
                       state.currentStep !== STEPS.REWARD
                         ? handleNext
-                        : state.currentStep === STEPS.REWARD
+                        : state.currentStep === STEPS.REWARD && hasAwardedPoints
                           ? handleClose
                           : undefined
                     }
@@ -726,11 +786,14 @@ export function OnboardingModal({
                         ? !topics.some((t) => t.selected)
                         : state.currentStep === STEPS.SIGNAL
                           ? txState?.status !== 'complete'
-                          : state.currentStep === STEPS.CREATE
+                          : state.currentStep === STEPS.REWARD
+                            ? !hasAwardedPoints
+                            : state.currentStep === STEPS.CREATE
                     }
                     disableBack={
                       isLoading ||
-                      (txState?.status && txState?.status !== 'idle')
+                      (txState?.status && txState?.status !== 'idle') ||
+                      (state.currentStep === STEPS.REWARD && !hasAwardedPoints)
                     }
                     customNextButton={
                       state.currentStep === STEPS.REWARD
