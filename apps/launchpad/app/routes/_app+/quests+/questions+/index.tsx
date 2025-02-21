@@ -254,7 +254,10 @@ export default function Questions() {
         >
           <Icon name="chevron-left" className="h-4 w-4" />
         </Button>
-        <PageHeader title="Questions" subtitle="Answer questions to earn IQ" />
+        <PageHeader
+          title="Bootstrap your Intuition"
+          subtitle="Seed the Intuition Graph with your unique thoughts, knowledge, and insights"
+        />
       </div>
       <Suspense fallback={<LoadingState />}>
         <EpochAccordion

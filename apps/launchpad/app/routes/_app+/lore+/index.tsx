@@ -15,14 +15,14 @@ import { chapters } from '../../../components/lore/chapters'
 
 export const meta: MetaFunction = () => {
   return [
-    { title: 'The Intuition Story | Intuition Launchpad' },
+    { title: 'Intuition Lore | Intuition Launchpad' },
     {
       name: 'description',
       content:
         'Explore the story of Intuition, a journey through consciousness, technology, and human potential.',
     },
     // Open Graph
-    { property: 'og:title', content: 'The Intuition Story' },
+    { property: 'og:title', content: 'Intuition Lore' },
     {
       property: 'og:description',
       content:
@@ -34,7 +34,7 @@ export const meta: MetaFunction = () => {
     { property: 'og:locale', content: 'en_US' },
     // Twitter
     { name: 'twitter:card', content: 'summary_large_image' },
-    { name: 'twitter:title', content: 'The Intuition Story' },
+    { name: 'twitter:title', content: 'Intuition Lore' },
     {
       name: 'twitter:description',
       content:
@@ -107,7 +107,7 @@ export default function LoreIndex() {
             transition={{ delay: 0.2 }}
           >
             <Text weight={TextWeight.semibold} className="text-2xl md:text-4xl">
-              The Intuition Story
+              Intuition Lore
             </Text>
           </motion.div>
           <motion.div
@@ -116,7 +116,7 @@ export default function LoreIndex() {
             transition={{ delay: 0.3 }}
           >
             <Text variant={TextVariant.body} className="text-primary/70">
-              Where it all begins
+              The story so far
             </Text>
           </motion.div>
         </div>

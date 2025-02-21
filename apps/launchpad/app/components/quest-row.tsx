@@ -1,4 +1,11 @@
-import { Button, Card, cn, Text } from '@0xintuition/1ui'
+import {
+  Button,
+  Card,
+  cn,
+  Text,
+  TextVariant,
+  TextWeight,
+} from '@0xintuition/1ui'
 
 import { toRomanNumeral } from '@lib/utils/misc'
 import { Link } from '@remix-run/react'
@@ -9,6 +16,7 @@ interface QuestRowProps {
   link: string
   enabled?: boolean
   index: number
+  iqPoints?: number
 }
 
 export function QuestRow({
@@ -17,6 +25,7 @@ export function QuestRow({
   link,
   enabled = true,
   index,
+  iqPoints,
 }: QuestRowProps) {
   const BaseRow = (
     <Card
@@ -48,15 +57,38 @@ export function QuestRow({
             </div>
           </div>
           {enabled && (
-            <Link to={link} className="sm:ml-4 shrink-0">
-              <Button
-                variant="primary"
-                size="lg"
-                className="w-full sm:w-32 h-fit"
-              >
-                Start
-              </Button>
-            </Link>
+            <div className="flex flex-row md:flex-col items-center gap-2 md:items-end justify-between">
+              {iqPoints && (
+                <div className="flex items-baseline gap-2 order-first">
+                  <Text
+                    variant={TextVariant.body}
+                    weight={TextWeight.medium}
+                    className="text-muted-foreground"
+                  >
+                    Earn up to
+                  </Text>
+                  <Text
+                    variant={TextVariant.bodyLarge}
+                    weight={TextWeight.bold}
+                    className="bg-gradient-to-r from-[#34C578] to-[#00FF94] bg-clip-text text-transparent"
+                  >
+                    {iqPoints.toLocaleString()}
+                  </Text>
+                  <Text
+                    variant={TextVariant.body}
+                    weight={TextWeight.medium}
+                    className="text-muted-foreground"
+                  >
+                    IQ
+                  </Text>
+                </div>
+              )}
+              <Link to={link}>
+                <Button variant="primary" size="lg" className="w-32 h-fit">
+                  Start
+                </Button>
+              </Link>
+            </div>
           )}
         </div>
       </div>
