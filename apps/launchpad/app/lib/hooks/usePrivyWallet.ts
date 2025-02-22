@@ -20,23 +20,10 @@ export interface PrivyWallet {
 }
 
 export function usePrivyWallet(): PrivyWallet | null {
-  const { ready, logout, user } = usePrivy()
+  const { ready, logout } = usePrivy()
   const { wallets } = useWallets()
   const activeWallet = wallets[0]
   const previousAddressRef = useRef<string | null>(null)
-
-  // Debug log all state changes
-  useEffect(() => {
-    console.debug('Privy State Debug:', {
-      ready,
-      hasActiveWallet: !!activeWallet,
-      privyUserAddress: user?.wallet?.address?.toLowerCase(),
-      activeWalletAddress: activeWallet?.address?.toLowerCase(),
-      previousAddress: previousAddressRef.current,
-      walletCount: wallets.length,
-      walletAddresses: wallets.map((w) => w.address.toLowerCase()),
-    })
-  }, [ready, activeWallet, user, wallets])
 
   // Check for wallet changes
   useEffect(() => {

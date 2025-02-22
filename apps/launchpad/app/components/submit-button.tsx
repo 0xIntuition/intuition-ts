@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 
 import { Button, Icon } from '@0xintuition/1ui'
 
 import { useAuth } from '@lib/providers/auth-provider'
+import logger from '@lib/utils/logger'
 import { Network, Wallet } from 'lucide-react'
 import { base, baseSepolia } from 'viem/chains'
 
@@ -46,36 +47,10 @@ const SubmitButton: React.FC<SubmitButtonProps> = ({
   const currentChainId = parseChainId(wallet?.chainId)
   const correctChain = currentChainId === targetChainId
 
-  // Debug state changes
-  useEffect(() => {
-    console.debug('SubmitButton State:', {
-      isAuthenticated,
-      isReady,
-      isLoading,
-      isSwitchingChain,
-      rawChainId: wallet?.chainId,
-      parsedChainId: currentChainId,
-      targetChainId,
-      correctChain,
-      walletAddress: wallet?.address,
-      isWalletConnected: wallet?.isConnected,
-      isWalletReady: wallet?.isReady,
-    })
-  }, [
-    isAuthenticated,
-    isReady,
-    isLoading,
-    isSwitchingChain,
-    wallet,
-    currentChainId,
-    targetChainId,
-    correctChain,
-  ])
-
   // Handle chain switching
   const handleSwitch = async () => {
     if (!wallet?.isConnected || isSwitchingChain || !wallet?.isReady) {
-      console.debug('Cannot switch chain:', {
+      logger('Cannot switch chain:', {
         isConnected: wallet?.isConnected,
         isSwitchingChain,
         isReady: wallet?.isReady,
@@ -85,7 +60,7 @@ const SubmitButton: React.FC<SubmitButtonProps> = ({
 
     try {
       setIsSwitchingChain(true)
-      console.debug('Initiating chain switch:', {
+      logger('Initiating chain switch:', {
         from: wallet.chainId,
         parsedFrom: currentChainId,
         to: targetChainId,
@@ -97,9 +72,9 @@ const SubmitButton: React.FC<SubmitButtonProps> = ({
         params: [{ chainId: `0x${targetChainId.toString(16)}` }],
       })
 
-      console.debug('Chain switch succeeded')
+      logger('Chain switch succeeded')
     } catch (error) {
-      console.error('Chain switch failed:', error)
+      logger('Chain switch failed:', error)
     } finally {
       setIsSwitchingChain(false)
     }

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 
+import logger from '@lib/utils/logger'
 import { usePrivy, useWallets } from '@privy-io/react-auth'
 import type { Abi, Address, Hash, TransactionReceipt } from 'viem'
 import {
@@ -42,7 +43,7 @@ export function usePrivyContract(
   const write = useCallback(
     async (args?: unknown[]) => {
       if (!activeWallet || !ready) {
-        console.debug('Cannot write: wallet not ready', {
+        logger('Cannot write: wallet not ready', {
           hasWallet: !!activeWallet,
           ready,
         })
@@ -54,7 +55,7 @@ export function usePrivyContract(
       setReceipt(null)
 
       try {
-        console.debug('Sending transaction:', {
+        logger('Sending transaction:', {
           address: config.address,
           functionName: config.functionName,
           args,
@@ -77,7 +78,7 @@ export function usePrivyContract(
           params: [txRequest],
         })) as Hash
 
-        console.debug('Transaction sent:', hash)
+        logger('Transaction sent:', hash)
 
         // Create a public client to watch the transaction
         const client = createPublicClient({

@@ -64,7 +64,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     // Handle user data changes
     if (user) {
-      logger('User data updated:', user)
       revalidator.revalidate()
     }
 
