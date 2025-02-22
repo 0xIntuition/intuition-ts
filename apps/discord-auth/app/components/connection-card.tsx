@@ -1,5 +1,6 @@
 import { Button } from '@0xintuition/1ui'
 
+import { Wallet } from 'lucide-react'
 import { useEnsName } from 'wagmi'
 
 import type { DiscordUser, PrivyUser } from '../types/auth'
@@ -29,24 +30,12 @@ export function ConnectionCard({
   })
 
   return (
-    <div className="w-full max-w-md bg-black/20 backdrop-blur-sm rounded-xl p-6 border border-gray-800">
+    <div className="w-full max-w-md rounded-lg bg-white/5 backdrop-blur-md backdrop-saturate-150 p-6 border border-border/10">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-3">
           {type === 'wallet' ? (
             <div className="w-10 h-10 rounded-full bg-green-500/10 flex items-center justify-center">
-              <svg
-                className="w-6 h-6 text-green-500"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 6h16M4 10h16M4 14h16M4 18h16"
-                />
-              </svg>
+              <Wallet className="w-6 h-6 text-green-500" />
             </div>
           ) : (
             <div className="w-10 h-10 rounded-full overflow-hidden">
@@ -91,17 +80,11 @@ export function ConnectionCard({
             variant="secondary"
             onClick={onDisconnect}
             disabled={isLoading}
-            size="sm"
           >
             Disconnect
           </Button>
         ) : (
-          <Button
-            variant="primary"
-            onClick={onConnect}
-            disabled={isLoading}
-            size="sm"
-          >
+          <Button variant="primary" onClick={onConnect} disabled={isLoading}>
             Connect
           </Button>
         )}
@@ -122,11 +105,6 @@ export function ConnectionCard({
       )}
       {isConnected && type === 'discord' && discordUser && (
         <div className="mt-2 space-y-3">
-          {(() => {
-            console.log('ConnectionCard discord user:', discordUser)
-            console.log('ConnectionCard roles:', discordUser.roles)
-            return null
-          })()}
           <div className="p-3 bg-black/20 rounded-lg">
             <div className="flex items-center justify-between text-sm">
               <span className="text-gray-400">Username</span>
@@ -147,47 +125,34 @@ export function ConnectionCard({
                 </span>
               </div>
               <div className="flex flex-wrap gap-2">
-                {discordUser.roles.map((role) => {
-                  console.log('Rendering role:', role)
-                  console.log('Role style:', {
-                    backgroundColor: role.color
-                      ? `${role.color}15`
-                      : 'rgba(99, 102, 241, 0.1)',
-                    borderColor: role.color
-                      ? `${role.color}30`
-                      : 'rgba(99, 102, 241, 0.2)',
-                    color: role.color || '#818cf8',
-                  })
-                  return (
-                    <div
-                      key={role.id}
-                      className="flex items-center gap-1 px-2 py-1 text-xs rounded-md border"
-                      style={{
-                        backgroundColor: role.color
-                          ? `${role.color}15`
-                          : 'rgba(99, 102, 241, 0.1)',
-                        borderColor: role.color
-                          ? `${role.color}30`
-                          : 'rgba(99, 102, 241, 0.2)',
-                        color: role.color || '#818cf8',
-                      }}
-                    >
-                      {role.unicodeEmoji && (
-                        <span className="mr-1">{role.unicodeEmoji}</span>
-                      )}
-                      {role.icon && (
-                        <img
-                          src={`https://cdn.discordapp.com/role-icons/${role.id}/${role.icon}.png`}
-                          alt=""
-                          className="w-4 h-4 mr-1"
-                        />
-                      )}
-                      <span className="whitespace-nowrap font-medium">
-                        {role.name}
-                      </span>
-                    </div>
-                  )
-                })}
+                {discordUser.roles.map((role) => (
+                  <div
+                    key={role.id}
+                    className="flex items-center gap-1 px-2 py-1 text-xs rounded-md"
+                    style={{
+                      backgroundColor: role.color
+                        ? `${role.color}10`
+                        : 'rgba(99, 102, 241, 0.1)',
+                      borderColor: role.color
+                        ? `${role.color}20`
+                        : 'rgba(99, 102, 241, 0.2)',
+                      color: role.color || '#818cf8',
+                      borderWidth: '1px',
+                    }}
+                  >
+                    {role.unicodeEmoji && (
+                      <span className="mr-1">{role.unicodeEmoji}</span>
+                    )}
+                    {role.icon && (
+                      <img
+                        src={`https://cdn.discordapp.com/role-icons/${role.id}/${role.icon}.png`}
+                        alt=""
+                        className="w-4 h-4 mr-1"
+                      />
+                    )}
+                    {role.name}
+                  </div>
+                ))}
               </div>
             </div>
           )}
