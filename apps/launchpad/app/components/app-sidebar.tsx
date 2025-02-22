@@ -24,7 +24,6 @@ import {
 import { AccountButton } from '@components/account-button'
 import LoadingButton from '@components/loading-button'
 import LoadingLogo from '@components/loading-logo'
-import { useAuth } from '@lib/hooks/use-auth'
 import { usePrivy } from '@privy-io/react-auth'
 import { Link, useLocation } from '@remix-run/react'
 import { BookOpenText, BrainCircuit } from 'lucide-react'
@@ -65,8 +64,27 @@ export function AppSidebar({
   const isMinimal = variant === SidebarVariant.minimal
   const isMobile = useIsMobile()
   const location = useLocation()
-  const { isReady, isAuthenticated } = useAuth()
-  const { user: privyUser } = usePrivy()
+  const {
+    ready: isReady,
+    authenticated: isAuthenticated,
+    user: privyUser,
+  } = usePrivy()
+
+  // Determine which button to show
+  const renderAuthButton = () => {
+    // If we have both auth and wallet, show account
+    if (isAuthenticated && privyUser?.wallet) {
+      return <AccountButton privyUser={privyUser} isMinimal={isMinimal} />
+    }
+
+    // If we're not ready, show loading
+    if (!isReady) {
+      return <LoadingButton />
+    }
+
+    // Otherwise show connect
+    return <ConnectButton />
+  }
 
   const mainNavItems: NavItem[] = [
     {
@@ -290,15 +308,7 @@ export function AppSidebar({
               </svg>
             </SidebarMenuItem>
           </Link>
-          <SidebarMenuItem>
-            {!isReady ? (
-              <LoadingButton />
-            ) : isAuthenticated && privyUser ? (
-              <AccountButton privyUser={privyUser} isMinimal={isMinimal} />
-            ) : (
-              <ConnectButton />
-            )}
-          </SidebarMenuItem>
+          <SidebarMenuItem>{renderAuthButton()}</SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent className="flex flex-col gap-6 px-3">

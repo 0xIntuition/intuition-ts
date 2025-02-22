@@ -5,7 +5,6 @@ import { getUser } from '@server/auth'
 import { getMultiVaultConfig } from '@server/multivault'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
 
-import { WalletSync } from '../.client/wallet-sync'
 import { AppShell } from '../components/layouts/app-shell'
 
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -33,10 +32,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
   })
 }
 
-export default function AppLayout() {
+export default function App() {
   return (
     <AppShell>
-      <WalletSync />
       <Outlet />
     </AppShell>
   )
