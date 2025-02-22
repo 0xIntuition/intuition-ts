@@ -18,6 +18,7 @@ import type { Question } from '@lib/services/questions'
 import { Link } from '@remix-run/react'
 import { MessageCircleQuestion } from 'lucide-react'
 
+import { QuestionCardWrapper } from './question-card-wrapper'
 import { QuestionRowWrapper } from './question-row-wrapper'
 
 interface EpochAccordionProps {
@@ -77,21 +78,20 @@ export function EpochAccordion({
             !epoch.is_active && 'opacity-90',
           )}
         >
-          <AccordionTrigger className="hover:no-underline w-full px-6 py-4">
-            <div className="flex flex-col w-full gap-4">
+          <AccordionTrigger className="hover:no-underline w-full px-4 sm:px-6 py-3 sm:py-4">
+            <div className="flex flex-col w-full gap-2 sm:gap-4">
               {/* Header Section */}
-              <div className="flex justify-between items-start w-full">
-                <div className="flex items-center gap-3">
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start w-full gap-2 sm:gap-0">
+                <div className="flex items-center gap-2 sm:gap-3">
                   <Text
-                    variant={TextVariant.heading4}
                     weight={TextWeight.semibold}
-                    className="text-left"
+                    className="text-left text-lg sm:text-lg"
                   >
                     {epoch.name}
                   </Text>
                   <Link
                     to={`/quests/questions/${epoch.id}`}
-                    className="text-sm text-primary/70 hover:text-primary"
+                    className="text-xs sm:text-sm text-primary/70 hover:text-primary"
                   >
                     View All
                   </Link>
@@ -106,20 +106,20 @@ export function EpochAccordion({
               {/* Progress Section */}
               {epoch.progress && (
                 <div className="w-full">
-                  <div className="flex justify-between text-sm mb-2">
+                  <div className="flex flex-col sm:flex-row sm:justify-between text-sm mb-2 gap-1 sm:gap-0">
                     <Text
                       variant={TextVariant.footnote}
                       weight={TextWeight.medium}
-                      className="flex items-center gap-2 text-primary/70"
+                      className="flex items-center gap-1 sm:gap-2 text-primary/70 text-sm sm:text-base"
                     >
-                      <MessageCircleQuestion className="w-4 h-4" />
+                      <MessageCircleQuestion className="w-3 h-3 sm:w-4 sm:h-4" />
                       {epoch.progress.completed_count} of{' '}
                       {epoch.questions.length} Questions Completed
                     </Text>
                     <Text
                       variant={TextVariant.footnote}
                       weight={TextWeight.medium}
-                      className="text-primary/70 flex flex-row gap-1 items-center"
+                      className="text-primary/70 flex flex-row gap-1 items-center text-sm sm:text-base"
                     >
                       <Text
                         variant={TextVariant.body}
@@ -145,19 +145,33 @@ export function EpochAccordion({
           </AccordionTrigger>
 
           <AccordionContent>
-            <div className="flex flex-col gap-4 px-6 py-4">
+            <div className="flex flex-col gap-3 sm:gap-4 px-4 sm:px-6 py-3 sm:py-4">
               {epoch.questions.map((question) => (
                 <Suspense key={question.id} fallback={<div>Loading...</div>}>
-                  <QuestionRowWrapper
-                    question={question}
-                    onStart={() =>
-                      onStartQuestion(
-                        question,
-                        question.predicate_id,
-                        question.object_id,
-                      )
-                    }
-                  />
+                  <div className="md:hidden">
+                    <QuestionCardWrapper
+                      question={question}
+                      onStart={() =>
+                        onStartQuestion(
+                          question,
+                          question.predicate_id,
+                          question.object_id,
+                        )
+                      }
+                    />
+                  </div>
+                  <div className="hidden md:block">
+                    <QuestionRowWrapper
+                      question={question}
+                      onStart={() =>
+                        onStartQuestion(
+                          question,
+                          question.predicate_id,
+                          question.object_id,
+                        )
+                      }
+                    />
+                  </div>
                 </Suspense>
               ))}
             </div>

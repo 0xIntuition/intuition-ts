@@ -25,7 +25,7 @@ export default function Discover() {
     {
       id: '16',
       title: 'Telegram',
-      username: 't.me/intuitionsystems',
+      username: 'intuitionsystems',
       onAction: () => window.open('http://t.me/intuitionsystems', '_blank'),
       imageUrl: '/images/discover/social/telegram.webp',
     },

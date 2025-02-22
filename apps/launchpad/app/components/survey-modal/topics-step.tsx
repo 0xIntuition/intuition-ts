@@ -77,8 +77,8 @@ export function TopicsStep({
   }
 
   return (
-    <div className="p-8">
-      <div className="flex flex-col gap-8">
+    <div className="flex flex-col h-full">
+      <div className="flex flex-col gap-8 p-8">
         <div className="flex items-start justify-between gap-4 pb-5">
           <div className="space-y-1">
             <Text variant="headline" className="font-semibold">
@@ -114,7 +114,7 @@ export function TopicsStep({
             </div>
           </div>
         ) : displayedTopics.length > 0 ? (
-          <ScrollArea className="h-[350px]">
+          <ScrollArea className="h-[calc(100vh-20rem)] md:h-[350px]">
             <div className="flex justify-center">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-4 justify-items-center w-full">
                 {displayedTopics.map((topic) => (
@@ -182,19 +182,17 @@ export function TopicsStep({
                 ))}
               </div>
             </div>
-            {searchTerm && (
-              <div className="flex flex-col gap-2 items-center justify-center mt-10">
-                <Text
-                  variant={TextVariant.body}
-                  className="italic text-primary/70"
-                >
-                  Don&apos;t see the atom you&apos;re looking for?
-                </Text>
-                <Button variant="secondary" onClick={onCreateClick}>
-                  Create Atom
-                </Button>
-              </div>
-            )}
+            <div className="flex flex-col gap-2 items-center justify-center mt-10">
+              <Text
+                variant={TextVariant.body}
+                className="italic text-primary/70"
+              >
+                Don&apos;t see the atom you&apos;re looking for?
+              </Text>
+              <Button variant="secondary" onClick={onCreateClick}>
+                Create Atom
+              </Button>
+            </div>
           </ScrollArea>
         ) : (
           <div className="flex flex-col gap-2 justify-center items-center h-[350px] w-full">

@@ -14,7 +14,6 @@ import {
 } from '@0xintuition/1ui'
 import { useGetAtomsQuery, useGetListDetailsQuery } from '@0xintuition/graphql'
 
-import logger from '@lib/utils/logger'
 import { usePrivy } from '@privy-io/react-auth'
 import { useLocation, useNavigate } from '@remix-run/react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
@@ -82,7 +81,6 @@ const useStepTransition = (
       rafRef.current = requestAnimationFrame(() => {
         timeoutRef.current = window.setTimeout(() => {
           if (!updateFnRef.current) {
-            logger('Error: Update function is null during transition')
             setIsTransitioning(false)
             return
           }
@@ -91,14 +89,12 @@ const useStepTransition = (
             // Update state after fade out
             setState((prevState) => {
               if (!prevState) {
-                logger('Error: Previous state is null during transition')
                 return INITIAL_STATE
               }
               const newState = updateFnRef.current!(prevState)
               return newState
             })
           } catch (error) {
-            logger('Error during state update:', error)
             setIsTransitioning(false)
             return
           }
@@ -154,6 +150,8 @@ export function OnboardingModal({
   const [steps, setSteps] = useState<Step[]>(STEPS_CONFIG)
   const [txState, setTxState] = useState<TransactionStateType>()
   const [subjectId, setSubjectId] = useState<string>()
+  const [hasAwardedPoints, setHasAwardedPoints] = useState(false)
+  const [hasExistingCompletion, setHasExistingCompletion] = useState(false)
 
   const transition = useStepTransition(setState)
   const { isTransitioning, handleTransition, resetTransition } = transition
@@ -186,6 +184,13 @@ export function OnboardingModal({
         },
         object_id: {
           _eq: objectId,
+        },
+      },
+      orderBy: {
+        subject: {
+          vault: {
+            position_count: 'desc',
+          },
         },
       },
     },
@@ -235,13 +240,7 @@ export function OnboardingModal({
           },
         ],
       })
-
-      document.body.style.paddingRight = 'var(--removed-body-scroll-bar-size)'
-      document.body.style.overflow = 'hidden'
     } else {
-      document.body.style.paddingRight = ''
-      document.body.style.overflow = ''
-
       const timer = setTimeout(() => {
         setState(INITIAL_STATE)
         setSearchTerm('')
@@ -454,6 +453,13 @@ export function OnboardingModal({
 
   const onStakingSuccess = useCallback(
     (subject_id: string) => {
+      if (!userWallet) {
+        return
+      }
+
+      // Reset points awarded state first
+      setHasAwardedPoints(false)
+
       startTransition(() => {
         setSteps((prev) => {
           const newSteps = prev.map((step) => {
@@ -475,11 +481,6 @@ export function OnboardingModal({
 
         setSubjectId(subject_id)
       })
-
-      if (!userWallet) {
-        logger('Missing userWallet')
-        return
-      }
     },
     [handleTransition, userWallet],
   )
@@ -494,7 +495,7 @@ export function OnboardingModal({
       formData.append(
         'pointAwardAmount',
         question.point_award_amount?.toString() ?? '',
-      ) // TODO: Get from question data
+      )
       formData.append('subjectId', subjectId ?? '')
 
       const response = await fetch('/actions/reward-question-points', {
@@ -503,8 +504,21 @@ export function OnboardingModal({
       })
 
       if (!response.ok) {
-        throw new Error('Failed to award points')
+        const errorData = await response.json().catch(() => null)
+        const error =
+          errorData?.error ||
+          errorData?.details ||
+          `Failed to award points: ${response.status}`
+        throw new Error(error)
       }
+
+      const data = await response.json()
+      if (!data.success) {
+        throw new Error(data.error || 'Failed to award points')
+      }
+
+      // Set points awarded state before invalidating queries
+      setHasAwardedPoints(true)
 
       // Invalidate relevant queries
       await Promise.all([
@@ -526,7 +540,7 @@ export function OnboardingModal({
 
       return true
     } catch (error) {
-      logger('Error awarding points:', error)
+      setHasAwardedPoints(false)
       return false
     } finally {
       setIsLoading(false)
@@ -537,9 +551,10 @@ export function OnboardingModal({
     const isFlowComplete =
       state.currentStep === STEPS.REWARD &&
       txState?.status === 'complete' &&
-      !isLoading // Only consider complete if not still loading
+      !isLoading && // Only consider complete if not still loading
+      (hasAwardedPoints || hasExistingCompletion) // Allow closing for both new and existing completions
 
-    // Only close if we're not in the reward step or points have been awarded
+    // Only close if we're not in the reward step or points have been awarded/existed
     if (state.currentStep !== STEPS.REWARD || (isFlowComplete && userWallet)) {
       onClose()
 
@@ -562,6 +577,8 @@ export function OnboardingModal({
     txState?.status,
     isLoading,
     userWallet,
+    hasAwardedPoints,
+    hasExistingCompletion,
     onClose,
     resetTransition,
     question?.id,
@@ -573,7 +590,6 @@ export function OnboardingModal({
   const onCreationSuccess = (metadata: NewAtomMetadata) => {
     // Ensure we have valid state before transition
     if (!state) {
-      logger('Error: State is null in onCreationSuccess')
       return
     }
 
@@ -622,92 +638,93 @@ export function OnboardingModal({
     updateStepStatus(STEPS.CREATE, 'current')
   }, [handleTransition])
 
-  // Add error boundary logging
-  useEffect(() => {
-    if (!state) {
-      logger('Error: State is null after initialization')
-    }
-  }, [state])
-
-  // Track transitions
-  useEffect(() => {
-    logger('Transition state changed:', { isTransitioning })
-  }, [isTransitioning])
-
-  // Track step changes
-  useEffect(() => {
-    logger('Steps changed:', steps)
-  }, [steps])
-
   return (
     <ClientOnly>
       {() => {
         // Safeguard against null state
         if (!state) {
-          logger('Error: Attempting to render with null state')
           return null
         }
 
         return (
-          <Dialog open={isOpen} onOpenChange={handleClose}>
-            <DialogContent className="p-0 bg-gradient-to-br from-[#060504] to-[#101010] md:max-w-[720px] w-full border-none">
-              <div
-                className={`transition-all duration-150 ease-in-out ${
-                  isTransitioning
-                    ? 'opacity-0 translate-y-1'
-                    : 'opacity-100 translate-y-0'
-                }`}
-              >
-                {state.currentStep === STEPS.TOPICS && (
-                  <TopicsStep
-                    topics={topics}
-                    isLoadingList={isLoadingList}
-                    onToggleTopic={handleTopicSelect}
-                    onCreateClick={handleCreateClick}
-                    question={question}
-                    searchTerm={searchTerm}
-                    setSearchTerm={setSearchTerm}
-                    atomsData={atomsData}
-                    isSearching={isSearching}
-                  />
-                )}
+          <Dialog open={isOpen} onOpenChange={handleClose} modal={true}>
+            <DialogContent
+              className="p-0 bg-gradient-to-br from-[#060504] to-[#101010] md:max-w-[720px] w-full border-none flex flex-col"
+              onPointerDownOutside={(e) => {
+                // Prevent closing if points haven't been awarded yet
+                if (state.currentStep === STEPS.REWARD && !hasAwardedPoints) {
+                  e.preventDefault()
+                }
+              }}
+              onEscapeKeyDown={(e) => {
+                // Prevent closing if points haven't been awarded yet
+                if (state.currentStep === STEPS.REWARD && !hasAwardedPoints) {
+                  e.preventDefault()
+                }
+              }}
+            >
+              <div className="flex-1 overflow-y-auto">
+                <div
+                  className={`transition-all duration-150 ease-in-out ${
+                    isTransitioning
+                      ? 'opacity-0 translate-y-1'
+                      : 'opacity-100 translate-y-0'
+                  }`}
+                >
+                  {state.currentStep === STEPS.TOPICS && (
+                    <TopicsStep
+                      topics={topics}
+                      isLoadingList={isLoadingList}
+                      onToggleTopic={handleTopicSelect}
+                      onCreateClick={handleCreateClick}
+                      question={question}
+                      searchTerm={searchTerm}
+                      setSearchTerm={setSearchTerm}
+                      atomsData={atomsData}
+                      isSearching={isSearching}
+                    />
+                  )}
 
-                {state.currentStep === STEPS.CREATE && (
-                  <CreateStep
-                    onCreationSuccess={onCreationSuccess}
-                    initialName={searchTerm}
-                  />
-                )}
+                  {state.currentStep === STEPS.CREATE && (
+                    <CreateStep
+                      onCreationSuccess={onCreationSuccess}
+                      initialName={searchTerm}
+                    />
+                  )}
 
-                {state.currentStep === STEPS.SIGNAL && state.selectedTopic && (
-                  <SignalStep
-                    selectedTopic={state.selectedTopic}
-                    newAtomMetadata={state.newAtomMetadata}
-                    predicateId={predicateId}
-                    objectId={objectId}
-                    setTxState={setTxState}
-                    onStakingSuccess={onStakingSuccess}
-                    isLoading={isLoading}
-                    setIsLoading={setIsLoading}
-                  />
-                )}
+                  {state.currentStep === STEPS.SIGNAL &&
+                    state.selectedTopic && (
+                      <SignalStep
+                        selectedTopic={state.selectedTopic}
+                        newAtomMetadata={state.newAtomMetadata}
+                        predicateId={predicateId}
+                        objectId={objectId}
+                        setTxState={setTxState}
+                        onStakingSuccess={onStakingSuccess}
+                        isLoading={isLoading}
+                        setIsLoading={setIsLoading}
+                      />
+                    )}
 
-                {state.currentStep === STEPS.REWARD && state.selectedTopic && (
-                  <RewardStep
-                    isOpen={state.currentStep === STEPS.REWARD}
-                    selectedTopic={state.selectedTopic}
-                    newAtomMetadata={state.newAtomMetadata}
-                    txHash={txState?.txHash}
-                    userWallet={userWallet}
-                    pointAwardAmount={question?.point_award_amount}
-                    awardPoints={awardPoints}
-                    questionId={question?.id}
-                    epochId={currentEpoch?.id}
-                  />
-                )}
+                  {state.currentStep === STEPS.REWARD &&
+                    state.selectedTopic && (
+                      <RewardStep
+                        isOpen={state.currentStep === STEPS.REWARD}
+                        selectedTopic={state.selectedTopic}
+                        newAtomMetadata={state.newAtomMetadata}
+                        txHash={txState?.txHash}
+                        userWallet={userWallet}
+                        pointAwardAmount={question?.point_award_amount}
+                        awardPoints={awardPoints}
+                        questionId={question?.id}
+                        epochId={currentEpoch?.id}
+                        onExistingCompletionChange={setHasExistingCompletion}
+                      />
+                    )}
+                </div>
               </div>
-              <DialogFooter className="w-full items-center">
-                <div className="flex flex-row justify-between px-5 py-5 w-full rounded-b-xl bg-[#0A0A0A]">
+              <DialogFooter className="w-full items-center md:px-4">
+                <div className="flex flex-row justify-between px-5 py-5 w-full">
                   <StepIndicator<StepId>
                     steps={steps}
                     onStepClick={handleStepClick}
@@ -715,7 +732,8 @@ export function OnboardingModal({
                     onNext={
                       state.currentStep !== STEPS.REWARD
                         ? handleNext
-                        : state.currentStep === STEPS.REWARD
+                        : state.currentStep === STEPS.REWARD &&
+                            (hasAwardedPoints || hasExistingCompletion)
                           ? handleClose
                           : undefined
                     }
@@ -730,11 +748,14 @@ export function OnboardingModal({
                         ? !topics.some((t) => t.selected)
                         : state.currentStep === STEPS.SIGNAL
                           ? txState?.status !== 'complete'
-                          : state.currentStep === STEPS.CREATE
+                          : state.currentStep === STEPS.REWARD
+                            ? !hasAwardedPoints && !hasExistingCompletion
+                            : state.currentStep === STEPS.CREATE
                     }
                     disableBack={
                       isLoading ||
-                      (txState?.status && txState?.status !== 'idle')
+                      (txState?.status && txState?.status !== 'idle') ||
+                      (state.currentStep === STEPS.REWARD && !hasAwardedPoints)
                     }
                     customNextButton={
                       state.currentStep === STEPS.REWARD

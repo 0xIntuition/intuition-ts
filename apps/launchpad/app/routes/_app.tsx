@@ -1,12 +1,11 @@
 import { MULTIVAULT_CONTRACT_ADDRESS } from '@consts/general'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
-import { Outlet, useLoaderData } from '@remix-run/react'
+import { Outlet } from '@remix-run/react'
 import { getUser } from '@server/auth'
 import { getMultiVaultConfig } from '@server/multivault'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
-import { ClientOnly } from 'remix-utils/client-only'
 
-import PrivyLogout from '../.client/privy-logout'
+import { WalletSync } from '../.client/wallet-sync'
 import { AppShell } from '../components/layouts/app-shell'
 
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -35,13 +34,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export default function AppLayout() {
-  const { wallet } = useLoaderData<typeof loader>()
-
   return (
     <AppShell>
-      <ClientOnly fallback={null}>
-        {() => (wallet ? <PrivyLogout wallet={wallet} /> : null)}
-      </ClientOnly>
+      <WalletSync />
       <Outlet />
     </AppShell>
   )

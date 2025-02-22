@@ -28,6 +28,7 @@ import { DataTable } from '@components/ui/table/data-table'
 import { MIN_DEPOSIT, ZERO_ADDRESS } from '@consts/general'
 import { Question } from '@lib/graphql/types'
 import { useGoBack } from '@lib/hooks/useGoBack'
+import { useMediaQuery } from '@lib/hooks/useMediaQuery'
 import type { EpochQuestion } from '@lib/services/epochs'
 import { fetchEpochQuestion, fetchEpochQuestions } from '@lib/services/epochs'
 import {
@@ -476,13 +477,50 @@ export default function MiniGameOne() {
     return data
   }, [listData, completion])
 
+  const isMobile = useMediaQuery('(max-width: 768px)')
+  const isTablet = useMediaQuery('(max-width: 1024px)')
+
+  const columnVisibility = React.useMemo(() => {
+    if (isMobile) {
+      return {
+        position: false,
+        name: true,
+        upvotes: true,
+        downvotes: true,
+        userPosition: true,
+        users: true,
+        tvl: false,
+      }
+    }
+    if (isTablet) {
+      return {
+        position: true,
+        name: true,
+        upvotes: true,
+        downvotes: true,
+        userPosition: true,
+        users: true,
+        tvl: false,
+      }
+    }
+    return {
+      position: true,
+      name: true,
+      upvotes: true,
+      downvotes: true,
+      users: true,
+      tvl: true,
+      userPosition: true,
+    }
+  }, [isMobile, isTablet])
+
   const table = useReactTable<TableRowData>({
     data: tableData,
     columns: columns as ColumnDef<TableRowData>[],
     columnResizeMode: 'onChange',
-    enableColumnPinning: true,
-    enableColumnResizing: true,
-    enableHiding: false,
+    enableColumnPinning: !isMobile,
+    enableColumnResizing: !isMobile,
+    enableHiding: true,
     onSortingChange: (updater) => {
       const newSorting =
         typeof updater === 'function' ? updater(sorting) : updater
@@ -495,6 +533,7 @@ export default function MiniGameOne() {
         pageIndex,
         pageSize,
       },
+      columnVisibility,
     },
     onPaginationChange: (updater) => {
       if (typeof updater === 'function') {
@@ -517,8 +556,8 @@ export default function MiniGameOne() {
     getFacetedUniqueValues: getFacetedUniqueValues(),
     initialState: {
       columnPinning: {
-        left: ['index'],
-        right: ['actions'],
+        left: ['position'],
+        right: ['userPosition'],
       },
     },
   })
@@ -583,42 +622,41 @@ export default function MiniGameOne() {
 
   return (
     <>
-      <div className="flex items-center gap-4 mb-6">
-        <Button
-          variant="ghost"
-          size="icon"
-          className="border-none bg-background-muted"
-          onClick={goBack}
-        >
-          <Icon name="chevron-left" className="h-4 w-4" />
-        </Button>
-        <div className="flex flex-1 justify-between items-center">
+      <div className="flex flex-col md:flex-row items-center gap-4 justify-between">
+        <div className="flex flex-row w-full gap-4 items-center">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="border-none bg-background-muted"
+            onClick={goBack}
+          >
+            <Icon name="chevron-left" className="h-4 w-4" />
+          </Button>
           <PageHeader
             title={`Epoch ${currentEpoch ?? ''} | Question ${questionData?.order}`}
+            className="text-xl sm:text-2xl"
           />
-          <div className="flex items-center gap-2">
-            <Button
-              variant="secondary"
-              className="border border-border/10"
-              onClick={() =>
-                setShareModalActive({
-                  isOpen: true,
-                  currentPath: fullPath,
-                  title,
-                })
-              }
-            >
-              <Icon name="square-arrow-top-right" className="h-4 w-4" />
-              Share
-            </Button>
-          </div>
         </div>
+        <Button
+          variant="secondary"
+          className="border border-border/10 w-full sm:w-auto"
+          onClick={() =>
+            setShareModalActive({
+              isOpen: true,
+              currentPath: fullPath,
+              title,
+            })
+          }
+        >
+          <Icon name="square-arrow-top-right" className="h-4 w-4 mr-2" />
+          Share
+        </Button>
       </div>
 
       <div className="bg-gradient-to-b from-[#060504] to-[#101010] rounded-xl">
         <div className="relative">
           <Card
-            className="border-none min-w-[480px] min-h-80 relative overflow-hidden"
+            className="border-none w-full md:min-w-[480px] min-h-80 relative overflow-hidden"
             style={{
               backgroundImage: `linear-gradient(to bottom right, rgba(6, 5, 4, 0.9), rgba(16, 16, 16, 0.9)), url(${listData?.globalTriples?.[0]?.object?.image || ''})`,
               backgroundSize: 'cover',
@@ -627,7 +665,7 @@ export default function MiniGameOne() {
           >
             <div className="absolute inset-0 flex flex-col justify-center items-center">
               <div className="space-y-2 items-center pb-8">
-                <Text variant="heading3" className="text-foreground">
+                <Text className="text-foreground text-center text-2xl md:text-3xl px-4">
                   {title}
                 </Text>
               </div>
@@ -728,6 +766,7 @@ export default function MiniGameOne() {
           />
         )}
       </div>
+
       <ShareModal
         open={shareModalActive.isOpen}
         onClose={() =>

@@ -1,3 +1,4 @@
+import logger from '@lib/utils/logger'
 import { invariant } from '@lib/utils/misc'
 import type { ActionFunctionArgs } from '@remix-run/node'
 import { gql, GraphQLClient } from 'graphql-request'
@@ -16,6 +17,10 @@ interface InsertEpochCompletionResponse {
   }
 }
 
+interface GetExistingCompletionResponse {
+  epoch_completions: Array<{ id: number }>
+}
+
 const api_url = process.env.HASURA_POINTS_ENDPOINT
 const client = new GraphQLClient(api_url!, {
   headers: {
@@ -31,7 +36,31 @@ const InsertEpochCompletionMutation = gql`
   }
 `
 
+// Check if completion already exists to prevent duplicates
+const GetExistingCompletionQuery = gql`
+  query GetExistingCompletion(
+    $accountId: String!
+    $questionId: Int!
+    $epochId: Int!
+  ) {
+    epoch_completions(
+      where: {
+        account_id: { _eq: $accountId }
+        question_id: { _eq: $questionId }
+        epoch_id: { _eq: $epochId }
+      }
+    ) {
+      id
+    }
+  }
+`
+
 export async function action({ request }: ActionFunctionArgs) {
+  const logContext = {
+    method: request.method,
+    url: request.url,
+  }
+
   if (request.method !== 'POST') {
     return new Response('Method not allowed', { status: 405 })
   }
@@ -43,29 +72,73 @@ export async function action({ request }: ActionFunctionArgs) {
   const pointAwardAmount = formData.get('pointAwardAmount')
   const subjectId = formData.get('subjectId')
 
-  invariant(accountId, 'accountId is required')
-  invariant(questionId, 'questionId is required')
-  invariant(epochId, 'epochId is required')
-  invariant(pointAwardAmount, 'pointAwardAmount is required')
-  invariant(subjectId, 'subjectId is required')
-  invariant(typeof accountId === 'string', 'accountId must be a string')
-  invariant(typeof questionId === 'string', 'questionId must be a string')
-  invariant(typeof epochId === 'string', 'epochId must be a string')
-  invariant(
-    typeof pointAwardAmount === 'string',
-    'pointAwardAmount must be a string',
-  )
-  invariant(typeof subjectId === 'string', 'subjectId must be a string')
-
-  const completion: EpochCompletion = {
-    account_id: accountId,
-    question_id: parseInt(questionId, 10),
-    epoch_id: parseInt(epochId, 10),
-    points_awarded: parseInt(pointAwardAmount, 10),
-    subject_id: parseInt(subjectId, 10),
-  }
+  Object.assign(logContext, {
+    accountId,
+    questionId,
+    epochId,
+    pointAwardAmount,
+    subjectId,
+  })
 
   try {
+    // Validate all required fields
+    invariant(accountId, 'accountId is required')
+    invariant(questionId, 'questionId is required')
+    invariant(epochId, 'epochId is required')
+    invariant(pointAwardAmount, 'pointAwardAmount is required')
+    invariant(subjectId, 'subjectId is required')
+    invariant(typeof accountId === 'string', 'accountId must be a string')
+    invariant(typeof questionId === 'string', 'questionId must be a string')
+    invariant(typeof epochId === 'string', 'epochId must be a string')
+    invariant(
+      typeof pointAwardAmount === 'string',
+      'pointAwardAmount must be a string',
+    )
+    invariant(typeof subjectId === 'string', 'subjectId must be a string')
+
+    const parsedQuestionId = parseInt(questionId, 10)
+    const parsedEpochId = parseInt(epochId, 10)
+    const parsedPointAwardAmount = parseInt(pointAwardAmount, 10)
+    const parsedSubjectId = parseInt(subjectId, 10)
+
+    // Check for NaN values
+    if (
+      isNaN(parsedQuestionId) ||
+      isNaN(parsedEpochId) ||
+      isNaN(parsedPointAwardAmount) ||
+      isNaN(parsedSubjectId)
+    ) {
+      logger('Invalid numeric values:', logContext)
+      throw new Error('Invalid numeric values provided')
+    }
+
+    // Check for existing completion
+    const existingCompletion =
+      await client.request<GetExistingCompletionResponse>(
+        GetExistingCompletionQuery,
+        {
+          accountId,
+          questionId: parsedQuestionId,
+          epochId: parsedEpochId,
+        },
+      )
+
+    if (existingCompletion.epoch_completions.length > 0) {
+      logger('Points already awarded:', {
+        ...logContext,
+        existing: existingCompletion.epoch_completions[0],
+      })
+      return { success: true, data: existingCompletion.epoch_completions[0] }
+    }
+
+    const completion: EpochCompletion = {
+      account_id: accountId,
+      question_id: parsedQuestionId,
+      epoch_id: parsedEpochId,
+      points_awarded: parsedPointAwardAmount,
+      subject_id: parsedSubjectId,
+    }
+
     const result = await client.request<InsertEpochCompletionResponse>(
       InsertEpochCompletionMutation,
       {
@@ -73,11 +146,29 @@ export async function action({ request }: ActionFunctionArgs) {
       },
     )
 
+    logger('Points awarded successfully:', { ...logContext, result })
     return { success: true, data: result }
   } catch (error) {
-    if (error instanceof Response) {
-      throw error
+    logger('Error in reward-question-points:', {
+      ...logContext,
+      error: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined,
+      timestamp: new Date().toISOString(),
+    })
+
+    if (error instanceof Error) {
+      return {
+        success: false,
+        error: error.message,
+        details:
+          error instanceof Response ? await error.text() : error.toString(),
+      }
     }
-    return { success: false, error: 'Failed to record completion' }
+
+    return {
+      success: false,
+      error: 'Failed to record completion',
+      details: 'Unknown error occurred',
+    }
   }
 }

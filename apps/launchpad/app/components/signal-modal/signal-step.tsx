@@ -1,14 +1,6 @@
 import { useEffect, useState } from 'react'
 
-import {
-  Badge,
-  Button,
-  Icon,
-  Text,
-  TextVariant,
-  TextWeight,
-  toast,
-} from '@0xintuition/1ui'
+import { Button, Text, TextVariant, TextWeight, toast } from '@0xintuition/1ui'
 
 import SignalToast from '@components/survey-modal/signal-toast'
 import { MIN_DEPOSIT, MULTIVAULT_CONTRACT_ADDRESS } from '@consts/general'
@@ -16,12 +8,10 @@ import { multivaultAbi } from '@lib/abis/multivault'
 import { useStakeMutation } from '@lib/hooks/mutations/useStakeMutation'
 import { useGetMultiVaultConfig } from '@lib/hooks/useGetMultiVaultConfig'
 import { useGetVaultDetails } from '@lib/hooks/useGetVaultDetails'
-import { useGetWalletBalance } from '@lib/hooks/useGetWalletBalance'
 import {
   transactionReducer,
   useGenericTxState,
 } from '@lib/hooks/useTransactionReducer'
-import { usePrivy } from '@privy-io/react-auth'
 import { Link, useLocation, useRevalidator } from '@remix-run/react'
 import { useQueryClient } from '@tanstack/react-query'
 import {
@@ -53,6 +43,8 @@ export interface SignalStepProps {
   open: boolean
   initialTicks?: number
   isSimplifiedRedeem?: boolean
+  userWallet: string
+  walletBalance: string
   onClose: () => void
 }
 
@@ -66,6 +58,8 @@ export function SignalStep({
   initialTicks = 0,
   isSimplifiedRedeem = false,
   onClose,
+  userWallet,
+  walletBalance,
 }: SignalStepProps) {
   const [ticks, setTicks] = useState(initialTicks)
   const [currentInitialTicks, setCurrentInitialTicks] = useState(initialTicks)
@@ -86,10 +80,7 @@ export function SignalStep({
   const FEE_ADJUSTMENT = 0.95 // 5% fee means 95% of deposit goes to conviction
   const publicClient = usePublicClient()
   const location = useLocation()
-  const { user: privyUser } = usePrivy()
   const contract = MULTIVAULT_CONTRACT_ADDRESS
-  const userWallet = privyUser?.wallet?.address
-  const walletBalance = useGetWalletBalance(userWallet as `0x${string}`)
   const queryClient = useQueryClient()
 
   // Determine which vault to use based on initial position or new direction
@@ -387,7 +378,7 @@ export function SignalStep({
   }
 
   const handleAction = async () => {
-    if (!privyUser?.wallet?.address || !activeVaultId) {
+    if (!userWallet || !activeVaultId) {
       return
     }
 
@@ -399,7 +390,7 @@ export function SignalStep({
             : val > userConviction
               ? userConviction
               : val,
-        userWallet: privyUser?.wallet?.address,
+        userWallet,
         vaultId: activeVaultId,
         triple,
         atom,
@@ -491,45 +482,23 @@ export function SignalStep({
           }
         />
       ) : (
-        <div className="flex flex-col gap-4 p-8">
+        <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-2 mb-8">
-            <div className="flex flex-row items-center justify-between">
-              <Text variant={TextVariant.headline} weight={TextWeight.semibold}>
-                {isSimplifiedRedeem ? (
-                  <>
-                    Redeem your signal for{' '}
-                    {atom?.label ?? triple?.subject?.label ?? ''}
-                  </>
-                ) : (
-                  <>
-                    Cast your signal on {atom?.label ?? triple?.subject.label}
-                  </>
-                )}
-              </Text>
-              <Badge className="flex items-center gap-1 px-2">
-                <Icon name="wallet" className="h-4 w-4 text-secondary/50" />
-                <Text
-                  variant={TextVariant.caption}
-                  className="text-nowrap text-secondary/50"
-                >
-                  {(+walletBalance).toFixed(2)} ETH
-                </Text>
-              </Badge>
-            </div>
-            <Text
-              variant={TextVariant.footnote}
-              className="text-primary/70 flex flex-row gap-1 items-center"
-            >
-              <Book className="h-4 w-4 text-primary/70" />
-              Learn how signals shape your preferences in our{' '}
-              <Link
-                to="https://tech.docs.intuition.systems/primitives-signal"
-                target="_blank"
-                rel="noreferrer"
-                className="text-primary font-semibold hover:text-accent"
-              >
-                documentation
-              </Link>
+            <Text variant={TextVariant.footnote} className="text-primary/70">
+              <span className="inline-flex items-center gap-1">
+                <Book className="h-4 w-4 text-primary/70 flex-shrink-0" />
+                <span>
+                  Learn how signals shape your preferences in our{' '}
+                  <Link
+                    to="https://tech.docs.intuition.systems/primitives-signal"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-primary font-semibold hover:text-accent"
+                  >
+                    documentation
+                  </Link>
+                </span>
+              </span>
             </Text>
           </div>
 

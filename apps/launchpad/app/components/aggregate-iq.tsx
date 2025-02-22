@@ -59,11 +59,11 @@ export function AggregateIQ({
       transition={{ duration: 0.5 }}
       whileHover={{ y: -5 }}
     >
-      <Card className="flex flex-row w-full gap-6 rounded-lg bg-white/5 backdrop-blur-md backdrop-saturate-150 p-6 border border-border/10">
+      <Card className="flex flex-row w-full gap-4 sm:gap-6 rounded-lg bg-white/5 backdrop-blur-md backdrop-saturate-150 p-4 sm:p-6 border border-border/10">
         <div className="absolute inset-0 shadow-inner-pop" />
         <CardContent className="relative p-0 w-full">
           <motion.div
-            className="flex items-start gap-4 mb-6"
+            className="flex items-start gap-4 mb-4 sm:mb-6"
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.2, duration: 0.5 }}
@@ -83,7 +83,7 @@ export function AggregateIQ({
           </motion.div>
 
           <motion.div
-            className="relative flex flex-row gap-4 pb-6"
+            className="relative flex flex-row gap-4 pb-4 sm:pb-6"
             animate={controls}
           >
             <motion.div
@@ -91,15 +91,15 @@ export function AggregateIQ({
               whileHover={{ scale: 1.05 }}
               transition={{ duration: 0.2 }}
             >
-              <div className="p-3 rounded-xl bg-analytics-copper/10 shadow-pop-lg">
-                <BrainCircuit className="w-12 h-12 text-analytics-copper" />
+              <div className="p-2 sm:p-3 rounded-xl bg-analytics-copper/10 shadow-pop-lg">
+                <BrainCircuit className="w-8 h-8 sm:w-12 sm:h-12 text-analytics-copper" />
               </div>
               <Text variant={TextVariant.heading2} weight={TextWeight.bold}>
                 {count.toLocaleString()}
               </Text>
             </motion.div>
           </motion.div>
-          <div className="mt-6 grid grid-cols-3 gap-4 w-full">
+          <div className="mt-4 sm:mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 w-full">
             {[
               {
                 label: 'IQ Earned on Launchpad',
@@ -124,7 +124,7 @@ export function AggregateIQ({
             ].map((metric) => (
               <div
                 key={metric.label}
-                className="bg-analytics-white p-4 shadow-pop-lg border-t border-border/10"
+                className="bg-analytics-white p-3 sm:p-4 shadow-pop-lg border-t border-border/10"
               >
                 <div className="text-sm text-analytics-shadow/60 mb-1 flex items-center gap-2">
                   {metric.icon} {metric.label}
@@ -141,9 +141,6 @@ export function AggregateIQ({
                   >
                     {metric.value}
                   </Text>
-                  {/* <Text variant={TextVariant.small} className="text-primary/50">
-                    {metric.subtext}
-                  </Text> */}
                 </div>
               </div>
             ))}

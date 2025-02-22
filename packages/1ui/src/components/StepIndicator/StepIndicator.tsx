@@ -47,7 +47,7 @@ export function StepIndicator<T = string>({
 }: StepIndicatorProps<T>) {
   const StepIndicatorContent = (
     <div
-      className="flex items-center md:justify-between space-x-2 w-full px-8"
+      className="flex items-center justify-between md:space-x-2 w-full md:px-8"
       role="navigation"
       aria-label="Step progress"
     >

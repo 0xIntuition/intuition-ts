@@ -133,7 +133,7 @@ export default function Dashboard() {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="flex items-center gap-4 border-none rounded-lg px-6 pb-6 text-palette-neutral-900 shadow-pop-lg"
+        className="flex flex-col sm:flex-row items-center sm:items-start gap-4 border-none rounded-lg px-4 sm:px-6 pb-4 sm:pb-6 text-palette-neutral-900 shadow-pop-lg text-center sm:text-left"
       >
         <motion.div
           initial={{ scale: 0 }}
@@ -153,7 +153,11 @@ export default function Dashboard() {
             animate={{ opacity: 1 }}
             transition={{ delay: 0.2, duration: 0.5 }}
           >
-            <Text variant={TextVariant.heading3} weight={TextWeight.semibold}>
+            <Text
+              variant={TextVariant.heading3}
+              weight={TextWeight.semibold}
+              className="text-3xl sm:text-4xl break-words max-w-[300px] sm:max-w-none"
+            >
               {user?.account?.label
                 ? `Welcome back, ${user.account.label}!`
                 : `Welcome!`}

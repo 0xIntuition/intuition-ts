@@ -11,8 +11,9 @@ export const QUESTIONS_METADATA = {
 
 export const QUESTS = [
   {
-    title: 'Questions',
-    description: 'Answer questions and cast your signal to earn IQ!',
+    title: 'Bootstrap your Intuition',
+    description:
+      'Seed the Intuition Graph with your unique thoughts, knowledge, and insights.',
     link: '/quests/questions',
     enabled: true,
     index: 1,

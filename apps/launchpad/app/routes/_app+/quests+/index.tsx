@@ -10,7 +10,10 @@ export function ErrorBoundary() {
 export default function Quests() {
   return (
     <>
-      <PageHeader title="Quests" subtitle="Complete quests to earn IQ" />
+      <PageHeader
+        title="The Awakening"
+        subtitle="Dive into a series of experiences meant to awaken your intuition"
+      />
       <div className="flex flex-col gap-6">
         {QUESTS.map((quest) => (
           <QuestRow
@@ -20,6 +23,7 @@ export default function Quests() {
             link={quest.link}
             enabled={quest.enabled}
             index={quest.index}
+            iqPoints={quest.index === 1 ? 100000 : undefined}
           />
         ))}
       </div>

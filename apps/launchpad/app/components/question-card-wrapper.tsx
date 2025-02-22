@@ -19,12 +19,20 @@ interface QuestionCardProps {
 
 function LoadingCard() {
   return (
-    <div className="relative">
-      <Card className="h-[400px] rounded-lg border-none bg-gradient-to-br from-[#060504] to-[#101010] min-w-[480px] blur-sm brightness-50"></Card>
-      <div className="absolute inset-0 flex items-center justify-center">
-        <LoadingLogo size={100} />
-      </div>
-    </div>
+    <>
+      <Card
+        className={`relative h-[400px] rounded-lg border-none w-full md:min-w-[480px] overflow-hidden`}
+        style={{
+          backgroundImage: `linear-gradient(to bottom right, rgba(6, 5, 4, 0.9), rgba(16, 16, 16, 0.9)))`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
+      >
+        <div className="absolute inset-0 flex items-center justify-center">
+          <LoadingLogo size={100} />
+        </div>
+      </Card>
+    </>
   )
 }
 
