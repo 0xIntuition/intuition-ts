@@ -1,0 +1,32 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --green-500: #34c578 !important;
+    --removed-body-scroll-bar-size: 15px;
+  }
+
+  .dark {
+    --green-500: #34c578 !important;
+  }
+}
+
+/* Prevent content shift when scrollbar appears/disappears */
+:root {
+  scrollbar-gutter: stable;
+}
+
+/* Ensure content doesn't shift when modal opens */
+body {
+  overflow-x: hidden;
+  padding-right: 0 !important; /* Override Radix UI's padding */
+  touch-action: pan-y;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Remove tap highlight on mobile */
+* {
+  -webkit-tap-highlight-color: transparent;
+}

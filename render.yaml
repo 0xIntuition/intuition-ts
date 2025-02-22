@@ -1,10 +1,10 @@
 services:
   - type: web
-    name: launchpad
+    name: discord-auth
     env: docker
     region: oregon
     rootDir: .
-    dockerfilePath: ./apps/launchpad/Dockerfile
+    dockerfilePath: ./apps/discord-auth/Dockerfile
     dockerContext: .
     envVars:
       - key: NODE_ENV
@@ -36,4 +36,14 @@ services:
       - key: ORIGIN_URL
         sync: false
       - key: VITE_DEPLOY_ENV
+        sync: false
+      - key: DISCORD_CLIENT_ID
+        sync: false
+      - key: DISCORD_CLIENT_SECRET
+        sync: false
+      - key: DISCORD_GUILD_ID
+        sync: false
+      - key: DISCORD_BOT_TOKEN
+        sync: false
+      - key: DISCORD_REDIRECT_URI
         sync: false

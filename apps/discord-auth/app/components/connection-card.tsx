@@ -1,0 +1,198 @@
+import { Button } from '@0xintuition/1ui'
+
+import { useEnsName } from 'wagmi'
+
+import type { DiscordUser, PrivyUser } from '../types/auth'
+
+interface ConnectionCardProps {
+  type: 'wallet' | 'discord'
+  isConnected: boolean
+  onConnect: () => void
+  onDisconnect?: () => void
+  privyUser?: PrivyUser
+  discordUser?: DiscordUser
+  isLoading?: boolean
+}
+
+export function ConnectionCard({
+  type,
+  isConnected,
+  onConnect,
+  onDisconnect,
+  privyUser,
+  discordUser,
+  isLoading,
+}: ConnectionCardProps) {
+  const { data: ensName } = useEnsName({
+    address: privyUser?.wallet?.address as `0x${string}`,
+    chainId: 1, // mainnet
+  })
+
+  return (
+    <div className="w-full max-w-md bg-black/20 backdrop-blur-sm rounded-xl p-6 border border-gray-800">
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-3">
+          {type === 'wallet' ? (
+            <div className="w-10 h-10 rounded-full bg-green-500/10 flex items-center justify-center">
+              <svg
+                className="w-6 h-6 text-green-500"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 6h16M4 10h16M4 14h16M4 18h16"
+                />
+              </svg>
+            </div>
+          ) : (
+            <div className="w-10 h-10 rounded-full overflow-hidden">
+              {discordUser?.avatar ? (
+                <img
+                  src={`https://cdn.discordapp.com/avatars/${discordUser.id}/${discordUser.avatar}.png`}
+                  alt={discordUser.username}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <div className="w-full h-full bg-indigo-500/10 flex items-center justify-center">
+                  <svg
+                    className="w-6 h-6 text-indigo-500"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M20.317 4.492c-1.53-.69-3.17-1.2-4.885-1.49a.075.075 0 0 0-.079.036c-.21.369-.444.85-.608 1.23a18.566 18.566 0 0 0-5.487 0 12.36 12.36 0 0 0-.617-1.23A.077.077 0 0 0 8.562 3c-1.714.29-3.354.8-4.885 1.491a.07.07 0 0 0-.032.027C.533 9.093-.32 13.555.099 17.961a.08.08 0 0 0 .031.055 20.03 20.03 0 0 0 5.993 2.98.078.078 0 0 0 .084-.026 13.83 13.83 0 0 0 1.226-1.963.074.074 0 0 0-.041-.104 13.175 13.175 0 0 1-1.872-.878.075.075 0 0 1-.008-.125c.126-.093.252-.19.372-.287a.075.075 0 0 1 .078-.01c3.927 1.764 8.18 1.764 12.061 0a.075.075 0 0 1 .079.009c.12.098.245.195.372.288a.075.075 0 0 1-.006.125c-.598.344-1.22.635-1.873.877a.075.075 0 0 0-.041.105c.36.687.772 1.341 1.225 1.962a.077.077 0 0 0 .084.028 19.963 19.963 0 0 0 6.002-2.981.076.076 0 0 0 .032-.054c.5-5.094-.838-9.52-3.549-13.442a.06.06 0 0 0-.031-.028zM8.02 15.278c-1.182 0-2.157-1.069-2.157-2.38 0-1.312.956-2.38 2.157-2.38 1.21 0 2.176 1.077 2.157 2.38 0 1.312-.956 2.38-2.157 2.38zm7.975 0c-1.183 0-2.157-1.069-2.157-2.38 0-1.312.955-2.38 2.157-2.38 1.21 0 2.176 1.077 2.157 2.38 0 1.312-.946 2.38-2.157 2.38z" />
+                  </svg>
+                </div>
+              )}
+            </div>
+          )}
+          <div>
+            <h3 className="text-lg font-semibold">
+              {type === 'wallet' ? 'Wallet' : 'Discord'}
+            </h3>
+            {isConnected && (
+              <p className="text-sm text-gray-400">
+                {type === 'wallet'
+                  ? ensName ||
+                    `${privyUser?.wallet?.address.slice(
+                      0,
+                      6,
+                    )}...${privyUser?.wallet?.address.slice(-4)}`
+                  : discordUser?.username}
+              </p>
+            )}
+          </div>
+        </div>
+        {isConnected ? (
+          <Button
+            variant="secondary"
+            onClick={onDisconnect}
+            disabled={isLoading}
+            size="sm"
+          >
+            Disconnect
+          </Button>
+        ) : (
+          <Button
+            variant="primary"
+            onClick={onConnect}
+            disabled={isLoading}
+            size="sm"
+          >
+            Connect
+          </Button>
+        )}
+      </div>
+      {isConnected && type === 'wallet' && (
+        <div className="mt-2 p-3 bg-black/20 rounded-lg">
+          <div className="flex items-center justify-between text-sm">
+            <span className="text-gray-400">Address</span>
+            <span className="font-mono">{privyUser?.wallet?.address}</span>
+          </div>
+          {ensName && (
+            <div className="flex items-center justify-between text-sm mt-2">
+              <span className="text-gray-400">ENS Name</span>
+              <span>{ensName}</span>
+            </div>
+          )}
+        </div>
+      )}
+      {isConnected && type === 'discord' && discordUser && (
+        <div className="mt-2 space-y-3">
+          {(() => {
+            console.log('ConnectionCard discord user:', discordUser)
+            console.log('ConnectionCard roles:', discordUser.roles)
+            return null
+          })()}
+          <div className="p-3 bg-black/20 rounded-lg">
+            <div className="flex items-center justify-between text-sm">
+              <span className="text-gray-400">Username</span>
+              <span>{discordUser.username}</span>
+            </div>
+            <div className="flex items-center justify-between text-sm mt-2">
+              <span className="text-gray-400">ID</span>
+              <span className="font-mono">{discordUser.id}</span>
+            </div>
+          </div>
+          {discordUser.roles.length > 0 && (
+            <div className="p-3 bg-black/20 rounded-lg">
+              <div className="flex items-center justify-between text-sm mb-2">
+                <span className="text-gray-400">Roles</span>
+                <span className="text-xs text-gray-500">
+                  {discordUser.roles.length} role
+                  {discordUser.roles.length !== 1 ? 's' : ''}
+                </span>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {discordUser.roles.map((role) => {
+                  console.log('Rendering role:', role)
+                  console.log('Role style:', {
+                    backgroundColor: role.color
+                      ? `${role.color}15`
+                      : 'rgba(99, 102, 241, 0.1)',
+                    borderColor: role.color
+                      ? `${role.color}30`
+                      : 'rgba(99, 102, 241, 0.2)',
+                    color: role.color || '#818cf8',
+                  })
+                  return (
+                    <div
+                      key={role.id}
+                      className="flex items-center gap-1 px-2 py-1 text-xs rounded-md border"
+                      style={{
+                        backgroundColor: role.color
+                          ? `${role.color}15`
+                          : 'rgba(99, 102, 241, 0.1)',
+                        borderColor: role.color
+                          ? `${role.color}30`
+                          : 'rgba(99, 102, 241, 0.2)',
+                        color: role.color || '#818cf8',
+                      }}
+                    >
+                      {role.unicodeEmoji && (
+                        <span className="mr-1">{role.unicodeEmoji}</span>
+                      )}
+                      {role.icon && (
+                        <img
+                          src={`https://cdn.discordapp.com/role-icons/${role.id}/${role.icon}.png`}
+                          alt=""
+                          className="w-4 h-4 mr-1"
+                        />
+                      )}
+                      <span className="whitespace-nowrap font-medium">
+                        {role.name}
+                      </span>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  )
+}
