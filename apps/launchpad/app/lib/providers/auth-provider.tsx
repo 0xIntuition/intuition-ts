@@ -30,7 +30,6 @@ export const AuthContext = createContext<AuthContextType>(defaultAuthContext)
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const { ready: privyReady, authenticated, user } = usePrivy()
   const [isLoading, setIsLoading] = useState(false)
-  const [isInitializing, setIsInitializing] = useState(true)
   const revalidator = useRevalidator()
   const reconnectTimeoutRef = useRef<NodeJS.Timeout>()
   const maxReconnectAttempts = 3
@@ -46,8 +45,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, [])
 
-  // Handle unexpected disconnects
+  // Handle unexpected disconnects and state changes
   useEffect(() => {
+    // Handle unexpected disconnects
     if (privyReady && !authenticated && user?.wallet?.address) {
       logger('Detected unexpected disconnect, attempting to reconnect...')
       if (reconnectAttempts.current < maxReconnectAttempts) {
@@ -61,57 +61,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         reconnectAttempts.current = 0
       }
     }
-  }, [privyReady, authenticated, user?.wallet?.address])
 
-  useEffect(() => {
-    if (privyReady) {
-      setIsInitializing(false)
-    }
-  }, [privyReady])
-
-  useEffect(() => {
+    // Handle user data changes
     if (user) {
-      // Handle user data changes
       logger('User data updated:', user)
-      // Update any dependent state/queries
       revalidator.revalidate()
     }
-  }, [user])
 
-  useEffect(() => {
+    // Handle disconnects
     if (!authenticated && privyReady) {
-      // Clear any session data
       queryClient.clear()
-      // Reset any app state
       setIsLoading(false)
-      setIsInitializing(false)
     }
-  }, [authenticated, privyReady])
-
-  useEffect(() => {
-    if (privyReady) {
-      setIsInitializing(false)
-    }
-  }, [privyReady])
-
-  useEffect(() => {
-    if (user) {
-      // Handle user data changes
-      logger('User data updated:', user)
-      // Update any dependent state/queries
-      revalidator.revalidate()
-    }
-  }, [user])
-
-  useEffect(() => {
-    if (!authenticated && privyReady) {
-      // Clear any session data
-      queryClient.clear()
-      // Reset any app state
-      setIsLoading(false)
-      setIsInitializing(false)
-    }
-  }, [authenticated, privyReady])
+  }, [privyReady, authenticated, user])
 
   const { login } = useLogin({
     onComplete: (params) => {
@@ -173,7 +135,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const value: AuthContextType = {
     isReady: privyReady,
     isAuthenticated: authenticated,
-    isLoading: isLoading || isInitializing,
+    isLoading,
     connect,
     disconnect,
   }
