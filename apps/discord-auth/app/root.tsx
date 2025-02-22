@@ -36,7 +36,7 @@ export async function loader() {
 
 export const meta: MetaFunction = () => {
   return [
-    { title: 'Intuition Launchpad' },
+    { title: 'Intuition | The All Seeing Eye' },
     {
       name: 'description',
       content: `Intuition is an ecosystem of technologies composing a universal and permissionless knowledge graph, capable of handling both objective facts and subjective opinions - delivering superior data for intelligences across the spectrum, from human to artificial.`,
@@ -44,9 +44,9 @@ export const meta: MetaFunction = () => {
     {
       property: 'og:image',
       content:
-        'https://res.cloudinary.com/dfpwy9nyv/image/upload/v1740069816/Launchpad%20Assets/Site%20Metadata/launchpad-og-image_snmcvd.png',
+        'https://res.cloudinary.com/dfpwy9nyv/image/upload/v1740204578/Launchpad%20Assets/all-seeing-eye.webp',
     },
-    { property: 'og:site_name', content: 'Intuition Launchpad' },
+    { property: 'og:site_name', content: 'Intuition | The All Seeing Eye' },
     { property: 'og:locale', content: 'en_US' },
     {
       name: 'twitter:card',
@@ -54,7 +54,7 @@ export const meta: MetaFunction = () => {
     },
     {
       name: 'twitter:title',
-      content: 'Intuition Launchpad',
+      content: 'Intuition | The All Seeing Eye',
     },
     {
       name: 'twitter:description',
