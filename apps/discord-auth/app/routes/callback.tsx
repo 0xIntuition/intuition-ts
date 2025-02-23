@@ -18,13 +18,13 @@ export async function loader({ request }: LoaderFunctionArgs) {
     console.log('Callback received Discord user:', discordUser)
     console.log('Discord user roles:', discordUser.roles)
 
-    // Create session with Discord user info and redirect to dashboard
+    // Create session with Discord user info and redirect to login
     return createSession(
       {
         discordUser,
         walletAuth: null,
       },
-      '/dashboard',
+      '/login',
     )
   } catch (error) {
     console.error('Discord auth error:', error)

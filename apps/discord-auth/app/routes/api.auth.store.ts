@@ -81,7 +81,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
     console.log('Hasura response:', result)
 
-    // Update session with wallet info and redirect to dashboard
+    // Update session with wallet info and redirect to login
     return createSession(
       {
         discordUser: session.discordUser,
@@ -89,7 +89,7 @@ export async function action({ request }: ActionFunctionArgs) {
           address: walletAddress,
         },
       },
-      '/dashboard',
+      '/login',
     )
   } catch (error) {
     console.error('Detailed error:', error)

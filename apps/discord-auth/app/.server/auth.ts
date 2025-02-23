@@ -40,7 +40,7 @@ export async function requireUserId(
 
 export async function requireUser(
   request: Request,
-  redirectTo: string = '/dashboard',
+  redirectTo: string = '/login',
 ): Promise<User> {
   const user = await getUser(request)
   if (!user) {
