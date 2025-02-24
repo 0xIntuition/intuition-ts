@@ -82,6 +82,16 @@ export function Document({
         />
         <Meta />
         <Links />
+        <script src="https://widgets.claimr.io/hl.claimr.min.js" />
+        <script
+          src="https://widgets.claimr.io/claimr.min.js"
+          id="claimr-script"
+          data-addons="sup,wcc,fcm,smc,aam,mcc,shc,clt,sls,scd,rcc"
+          data-organization="intuition"
+          data-campaign="launchpad"
+          data-autoresize="true"
+          data-container="myClaimrWidget"
+        />
       </head>
       <body>
         {children}
