@@ -49,10 +49,6 @@ export default defineConfig({
   ],
   server: {
     port: 3000,
-    hmr: {
-      protocol: 'ws',
-      clientPort: 3000,
-    },
   },
   build: {
     target: 'ES2022',
@@ -63,21 +59,6 @@ export default defineConfig({
         return false
       }
     },
-    rollupOptions: {
-      output: {
-        manualChunks(id) {
-          if (id.includes('node_modules')) {
-            if (id.includes('@privy-io')) {
-              return 'privy'
-            }
-            if (id.includes('react') || id.includes('@remix-run/react')) {
-              return 'vendor'
-            }
-          }
-          return undefined
-        },
-      },
-    },
   },
   ssr: {
     noExternal: [
@@ -86,8 +67,6 @@ export default defineConfig({
       'react-cytoscapejs',
       'cytoscape',
       'react-dropzone',
-      'viem',
-      'wagmi',
     ],
     optimizeDeps: {
       include: ['stream-browserify'],
@@ -105,7 +84,5 @@ export default defineConfig({
         global: 'globalThis',
       },
     },
-    include: ['viem', 'wagmi'],
-    exclude: ['@privy-io/react-auth', '@privy-io/wagmi'],
   },
 })

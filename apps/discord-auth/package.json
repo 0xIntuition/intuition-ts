@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "build": "remix vite:build --emptyOutDir",
-    "dev": "node --expose-gc --max-old-space-size=512 ./dev.js",
-    "start": "NODE_ENV=production NODE_OPTIONS='--max-old-space-size=512' PORT=3000 remix-serve ./build/server/index.js",
+    "dev": "NODE_OPTIONS=remix vite:dev",
+    "start": "NODE_OPTIONS=PORT=3000 remix-serve ./build/server/index.js",
     "lint:fix": "pnpm lint --fix"
   },
   "repository": {

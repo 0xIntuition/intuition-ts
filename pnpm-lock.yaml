@@ -496,6 +496,9 @@ importers:
       tailwind-merge:
         specifier: ^2.3.0
         version: 2.3.0
+      util:
+        specifier: ^0.12.5
+        version: 0.12.5
       viem:
         specifier: ^2.21.55
         version: 2.21.55(bufferutil@4.0.8)(typescript@5.4.5)(utf-8-validate@5.0.10)(zod@3.23.8)
