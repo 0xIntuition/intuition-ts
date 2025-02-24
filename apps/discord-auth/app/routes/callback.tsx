@@ -5,94 +5,68 @@ import { createSession, getSession } from '../.server/session'
 import type { DiscordUser, SessionDiscordUser } from '../types/discord'
 
 function getMemoryUsage() {
+  if (global.gc) {
+    global.gc()
+  }
   const used = process.memoryUsage()
   return {
-    rss: `${Math.round(used.rss / 1024 / 1024)}MB`,
-    heapTotal: `${Math.round(used.heapTotal / 1024 / 1024)}MB`,
-    heapUsed: `${Math.round(used.heapUsed / 1024 / 1024)}MB`,
-    external: `${Math.round(used.external / 1024 / 1024)}MB`,
+    rss: Math.round(used.rss / 1024 / 1024),
+    heapTotal: Math.round(used.heapTotal / 1024 / 1024),
+    heapUsed: Math.round(used.heapUsed / 1024 / 1024),
+    external: Math.round(used.external / 1024 / 1024),
   }
 }
 
 function minimizeDiscordUser(user: DiscordUser): SessionDiscordUser {
-  const minimalUser = {
+  return {
     id: user.id,
     username: user.username,
     discriminator: user.discriminator,
     avatar: user.avatar,
     roleIds: user.roles.map((role) => role.id),
   }
-
-  // Log sizes for comparison
-  console.log('Size comparison:', {
-    fullUserSize: JSON.stringify(user).length,
-    minimalUserSize: JSON.stringify(minimalUser).length,
-    reduction: `${Math.round((1 - JSON.stringify(minimalUser).length / JSON.stringify(user).length) * 100)}%`,
-  })
-
-  return minimalUser
 }
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  console.log('Memory usage at start:', getMemoryUsage())
+  const initialMemory = getMemoryUsage()
+  console.log('Memory usage at start:', initialMemory)
 
   const url = new URL(request.url)
   const code = url.searchParams.get('code')
   const userAgent = request.headers.get('User-Agent') || ''
 
-  console.log('Discord callback URL:', url.toString())
-  console.log('Request cookies:', request.headers.get('Cookie'))
-  console.log('User Agent:', userAgent)
-
-  // Block known bots that might consume the auth code
-  if (
-    userAgent.includes('bot') ||
-    userAgent.includes('Bot') ||
-    userAgent.includes('Slack')
-  ) {
-    console.log('Blocked bot access:', userAgent)
+  // Block known bots
+  if (userAgent.toLowerCase().includes('bot') || userAgent.includes('Slack')) {
     return new Response('Not allowed', { status: 403 })
   }
 
   if (!code) {
-    console.error('No code provided in Discord callback')
     return redirect('/login')
   }
 
   try {
     const currentSession = await getSession(request)
-    console.log('Memory after getting session:', getMemoryUsage())
+    console.log('Memory after getting session:', {
+      ...getMemoryUsage(),
+      rssDiff: `${Math.round((process.memoryUsage().rss - initialMemory.rss * 1024 * 1024) / 1024)}KB`,
+    })
 
-    let access_token: string
+    let discordUser: SessionDiscordUser | null = null
     try {
-      const tokens = await getDiscordTokens(code)
-      access_token = tokens.access_token
-      console.log('Successfully got Discord access token')
-      console.log('Memory after getting tokens:', getMemoryUsage())
-    } catch (error) {
-      console.error('Failed to get Discord tokens:', error)
-      return redirect('/login')
-    }
+      // Get tokens and extract access token
+      const { access_token } = await getDiscordTokens(code)
 
-    let discordUser
-    try {
+      // Get user and immediately minimize
       const fullUser = await getDiscordUser(access_token)
-      console.log('Memory after getting full user:', getMemoryUsage())
-
-      // Only store minimal auth data in session
       discordUser = minimizeDiscordUser(fullUser)
-      console.log('Memory after minimizing user:', getMemoryUsage())
+
+      if (global.gc) {
+        global.gc()
+      }
     } catch (error) {
-      console.error('Failed to get Discord user:', error)
+      console.error('Discord auth error:', error)
       return redirect('/login')
     }
-
-    console.log('Preserving wallet auth:', currentSession.walletAuth)
-    console.log(
-      'Session size estimate:',
-      JSON.stringify(discordUser).length,
-      'bytes',
-    )
 
     try {
       const response = await createSession(
@@ -103,43 +77,24 @@ export async function loader({ request }: LoaderFunctionArgs) {
         '/login',
       )
 
-      // Log final cookie size
-      const setCookie = response.headers.get('Set-Cookie')
-      console.log('Final cookie details:', {
-        size: setCookie?.length || 0,
-        memorySummary: getMemoryUsage(),
+      // Force GC and log final memory
+      if (global.gc) {
+        global.gc()
+      }
+      console.log('Final memory usage:', {
+        ...getMemoryUsage(),
+        rssDiff: `${Math.round((process.memoryUsage().rss - initialMemory.rss * 1024 * 1024) / 1024)}KB`,
       })
 
       return response
     } catch (error) {
-      console.error('Failed to create session:', error)
       return createSession(
-        {
-          discordUser: null,
-          walletAuth: currentSession.walletAuth,
-        },
+        { discordUser: null, walletAuth: currentSession.walletAuth },
         '/login',
       )
     }
   } catch (error) {
-    console.error('Unhandled Discord callback error:', {
-      error,
-      stack: error instanceof Error ? error.stack : undefined,
-      message: error instanceof Error ? error.message : String(error),
-    })
-
-    try {
-      const currentSession = await getSession(request)
-      return createSession(
-        {
-          discordUser: null,
-          walletAuth: currentSession.walletAuth,
-        },
-        '/login',
-      )
-    } catch (sessionError) {
-      console.error('Failed to handle error gracefully:', sessionError)
-      return redirect('/login')
-    }
+    console.error('Session error:', error)
+    return redirect('/login')
   }
 }

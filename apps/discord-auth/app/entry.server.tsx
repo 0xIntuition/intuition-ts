@@ -14,6 +14,18 @@ import { renderToPipeableStream } from 'react-dom/server'
 
 const ABORT_DELAY = 5_000
 
+function getMemoryUsage() {
+  if (global.gc) {
+    global.gc()
+  }
+  const used = process.memoryUsage()
+  return {
+    rss: Math.round(used.rss / 1024 / 1024),
+    heapTotal: Math.round(used.heapTotal / 1024 / 1024),
+    heapUsed: Math.round(used.heapUsed / 1024 / 1024),
+  }
+}
+
 export default function handleRequest(
   request: Request,
   responseStatusCode: number,
@@ -24,6 +36,9 @@ export default function handleRequest(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   loadContext: AppLoadContext,
 ) {
+  const requestStart = getMemoryUsage()
+  console.log(`[${request.url}] Memory at request start:`, requestStart)
+
   return isbot(request.headers.get('user-agent') || '')
     ? handleBotRequest(
         request,
@@ -69,6 +84,8 @@ function handleBotRequest(
           )
 
           pipe(body)
+          const requestEnd = getMemoryUsage()
+          console.log(`[${request.url}] Memory at request end:`, requestEnd)
         },
         onShellError(error: unknown) {
           reject(error)
@@ -85,7 +102,11 @@ function handleBotRequest(
       },
     )
 
-    setTimeout(abort, ABORT_DELAY)
+    setTimeout(() => {
+      if (!shellRendered) {
+        abort()
+      }
+    }, ABORT_DELAY)
   })
 }
 
@@ -119,6 +140,8 @@ function handleBrowserRequest(
           )
 
           pipe(body)
+          const requestEnd = getMemoryUsage()
+          console.log(`[${request.url}] Memory at request end:`, requestEnd)
         },
         onShellError(error: unknown) {
           reject(error)
@@ -135,6 +158,10 @@ function handleBrowserRequest(
       },
     )
 
-    setTimeout(abort, ABORT_DELAY)
+    setTimeout(() => {
+      if (!shellRendered) {
+        abort()
+      }
+    }, ABORT_DELAY)
   })
 }

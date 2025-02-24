@@ -15,9 +15,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const session = await getSession(request)
   const discordAuthUrl = getDiscordAuthURL()
 
-  console.log('Login loader session:', session)
-  console.log('Login loader discord user:', session.discordUser)
-
   return json({
     discordUser: session.discordUser,
     discordAuthUrl,
@@ -36,13 +33,10 @@ export default function Login() {
     hasDiscord: boolean
   } | null>(null)
 
-  console.log('Login component discordUser:', discordUser)
-  console.log('Login component discordUser roleIds:', discordUser?.roleIds)
-
   // Handle Discord disconnect
   const handleDiscordDisconnect = async () => {
     try {
-      const response = await fetch('/resources/_auth.logout', {
+      const response = await fetch('/resources/logout', {
         method: 'POST',
       })
       if (!response.ok) {
@@ -51,7 +45,6 @@ export default function Login() {
       // Reload the page to reflect the session changes
       window.location.reload()
     } catch (error) {
-      console.error('Error disconnecting Discord:', error)
       setError(
         error instanceof Error ? error.message : 'Failed to disconnect Discord',
       )
@@ -67,13 +60,17 @@ export default function Login() {
 
       try {
         const response = await fetch(
-          `/resources/_auth.exists?walletAddress=${privyUser.wallet.address}`,
+          `/resources/exists?walletAddress=${privyUser.wallet.address}`,
         )
         const data = await response.json()
         setUserExists(data.exists)
         setExistingDetails(data.details)
       } catch (error) {
-        console.error('Error checking user existence:', error)
+        setError(
+          error instanceof Error
+            ? error.message
+            : 'Failed to check user existence',
+        )
       }
     }
 
@@ -135,7 +132,7 @@ export default function Login() {
     setIsComplete(false)
 
     try {
-      const response = await fetch('/resources/_auth.store', {
+      const response = await fetch('/resources/store', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -151,7 +148,6 @@ export default function Login() {
       setIsComplete(true)
       setUserExists(true)
     } catch (error) {
-      console.error('Error storing user data:', error)
       setError(
         error instanceof Error ? error.message : 'Failed to store auth data',
       )

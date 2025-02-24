@@ -59,23 +59,18 @@ export async function getDiscordUser(
   accessToken: string,
 ): Promise<DiscordUser> {
   // First get the user's basic info
-  console.log('Fetching Discord user info...')
   const userResponse = await fetch(`${DISCORD_ENDPOINT}/users/@me`, {
     headers: { Authorization: `Bearer ${accessToken}` },
   })
 
   if (!userResponse.ok) {
     const errorData = await userResponse.json().catch(() => ({}))
-    console.error('Failed to get Discord user:', {
-      status: userResponse.status,
-      statusText: userResponse.statusText,
-      error: errorData,
-    })
-    throw new Error('Failed to get Discord user')
+    throw new Error(
+      `Failed to get Discord user: ${errorData.message || userResponse.statusText}`,
+    )
   }
 
   const user: DiscordAPIUser = await userResponse.json()
-  console.log('Got Discord user:', { id: user.id, username: user.username })
 
   // Then get the guild member info (including roles)
   const guildId = process.env.DISCORD_GUILD_ID
@@ -83,7 +78,6 @@ export async function getDiscordUser(
     throw new Error('Missing DISCORD_GUILD_ID environment variable')
   }
 
-  console.log('Fetching guild member info...', { guildId })
   const memberResponse = await fetch(
     `${DISCORD_ENDPOINT}/users/@me/guilds/${guildId}/member`,
     {
@@ -93,24 +87,14 @@ export async function getDiscordUser(
 
   if (!memberResponse.ok) {
     const errorData = await memberResponse.json().catch(() => ({}))
-    console.error('Failed to get guild member:', {
-      status: memberResponse.status,
-      statusText: memberResponse.statusText,
-      error: errorData,
-      guildId,
-    })
-    throw new Error('Failed to get Discord guild member')
+    throw new Error(
+      `Failed to get Discord guild member: ${errorData.message || memberResponse.statusText}`,
+    )
   }
 
   const member: DiscordGuildMember = await memberResponse.json()
-  console.log('Got guild member:', { roles: member.roles })
 
   // Get guild roles
-  console.log('Fetching guild roles...', {
-    guildId,
-    botTokenPrefix: process.env.DISCORD_BOT_TOKEN?.slice(0, 10),
-  })
-
   const rolesResponse = await fetch(
     `${DISCORD_ENDPOINT}/guilds/${guildId}/roles`,
     {
@@ -121,48 +105,25 @@ export async function getDiscordUser(
   )
 
   if (!rolesResponse.ok) {
-    const errorData = await rolesResponse.json().catch(() => ({}))
-    console.error('Failed to fetch roles:', {
-      status: rolesResponse.status,
-      statusText: rolesResponse.statusText,
-      error: errorData,
-      guildId,
-      botTokenLength: process.env.DISCORD_BOT_TOKEN?.length,
-      headers: rolesResponse.headers,
-    })
     throw new Error(
       `Failed to get Discord guild roles: ${rolesResponse.status} ${rolesResponse.statusText}`,
     )
   }
 
   const roles: DiscordAPIRole[] = await rolesResponse.json()
-  console.log('Successfully fetched roles:', {
-    guildId,
-    roleCount: roles.length,
-    roles: roles.map((r) => ({ id: r.id, name: r.name })),
-  })
-  console.log('Member roles:', member.roles)
 
   // Map role IDs to role objects
   const userRoles = roles
     .filter((role) => member.roles.includes(role.id))
     .sort((a, b) => b.position - a.position) // Sort by position (highest first)
-    .map((role) => {
-      const mappedRole = {
-        id: role.id,
-        name: role.name,
-        color: role.color
-          ? `#${role.color.toString(16).padStart(6, '0')}`
-          : null,
-        position: role.position,
-        icon: role.icon ?? null,
-        unicodeEmoji: role.unicode_emoji ?? null,
-      }
-      console.log('Mapped role:', mappedRole)
-      return mappedRole
-    })
-
-  console.log('Final user roles:', userRoles)
+    .map((role) => ({
+      id: role.id,
+      name: role.name,
+      color: role.color ? `#${role.color.toString(16).padStart(6, '0')}` : null,
+      position: role.position,
+      icon: role.icon ?? null,
+      unicodeEmoji: role.unicode_emoji ?? null,
+    }))
 
   return {
     id: user.id,
@@ -207,6 +168,7 @@ export async function fetchGuildRoles(): Promise<DiscordRole[]> {
   }
 
   const roles: DiscordAPIRole[] = await response.json()
+
   return roles.map(
     (role): DiscordRole => ({
       id: role.id,

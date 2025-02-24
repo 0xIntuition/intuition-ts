@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import type { DiscordRole } from '../types/discord'
 
@@ -7,14 +7,16 @@ interface UseDiscordRolesProps {
 }
 
 export function useDiscordRoles({ roleIds }: UseDiscordRolesProps) {
-  const [roles, setRoles] = useState<DiscordRole[]>([])
+  const [allRoles, setAllRoles] = useState<DiscordRole[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
+  // Fetch all roles once
   useEffect(() => {
     async function fetchRoles() {
       if (!roleIds?.length) {
-        setRoles([])
+        console.log('useDiscordRoles: No roleIds provided, skipping fetch')
+        setAllRoles([])
         return
       }
 
@@ -22,20 +24,18 @@ export function useDiscordRoles({ roleIds }: UseDiscordRolesProps) {
       setError(null)
 
       try {
-        const response = await fetch('/resources/_discord.roles')
+        const response = await fetch('/resources/roles')
+
         if (!response.ok) {
-          throw new Error('Failed to fetch roles')
+          throw new Error(
+            `Failed to fetch roles: ${response.status} ${response.statusText}`,
+          )
         }
-        const allRoles: DiscordRole[] = await response.json()
 
-        // Filter to only the roles the user has
-        const userRoles = allRoles
-          .filter((role) => roleIds.includes(role.id))
-          .sort((a, b) => b.position - a.position) // Sort by position (highest first)
-
-        setRoles(userRoles)
+        const roles: DiscordRole[] = await response.json()
+        setAllRoles(roles)
       } catch (error) {
-        console.error('Error fetching roles:', error)
+        console.error('useDiscordRoles: Error fetching roles:', error)
         setError(
           error instanceof Error ? error.message : 'Failed to fetch roles',
         )
@@ -45,7 +45,23 @@ export function useDiscordRoles({ roleIds }: UseDiscordRolesProps) {
     }
 
     fetchRoles()
-  }, [roleIds])
+  }, []) // Only fetch once when the hook mounts
+
+  // Filter roles based on roleIds
+  const roles = useMemo(() => {
+    if (!roleIds?.length || !allRoles.length) {
+      return []
+    }
+
+    const userRoles = allRoles
+      .filter((role) => {
+        const hasRole = roleIds.includes(role.id)
+        return hasRole
+      })
+      .sort((a, b) => b.position - a.position)
+
+    return userRoles
+  }, [roleIds, allRoles])
 
   return { roles, isLoading, error }
 }

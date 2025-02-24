@@ -15,7 +15,7 @@ import './styles/globals.css'
 import { Toaster } from '@0xintuition/1ui'
 import { configureClient } from '@0xintuition/graphql'
 
-import { LoadingState } from '@components/loading-state'
+import LoadingState from '@components/loading-state'
 import { VideoBackground } from '@components/video-background'
 import { API_URL_DEV, API_URL_PROD, CURRENT_ENV } from '@consts/general'
 import { json } from '@remix-run/node'

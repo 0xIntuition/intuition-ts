@@ -26,7 +26,10 @@ const sessionStorage = createCookieSessionStorage({
   },
 })
 
-async function fetchGuildRoles(roleIds: string[]): Promise<DiscordRole[]> {
+// Moved to separate export for client-side use
+export async function fetchGuildRoles(
+  roleIds: string[],
+): Promise<DiscordRole[]> {
   const guildId = process.env.DISCORD_GUILD_ID
   if (!guildId || !process.env.DISCORD_BOT_TOKEN) {
     throw new Error('Missing Discord environment variables')
@@ -65,40 +68,11 @@ async function fetchGuildRoles(roleIds: string[]): Promise<DiscordRole[]> {
 }
 
 export async function getSession(request: Request): Promise<AuthSession> {
-  console.log('Request headers:', {
-    host: request.headers.get('host'),
-    origin: request.headers.get('origin'),
-    cookie: request.headers.get('Cookie'),
-  })
-
   const session = await sessionStorage.getSession(request.headers.get('Cookie'))
-  const data = {
+  return {
     discordUser: session.get('discordUser'),
     walletAuth: session.get('walletAuth'),
   }
-
-  console.log('Getting session data:', {
-    hasWalletAuth: Boolean(data.walletAuth),
-    walletAddress: data.walletAuth?.address,
-    hasDiscordUser: Boolean(data.discordUser),
-    host: request.headers.get('host'),
-  })
-
-  // If we have a discord user with role IDs, fetch the full role information
-  if (
-    data.discordUser?.roles?.length > 0 &&
-    Array.isArray(data.discordUser.roles) &&
-    typeof data.discordUser.roles[0] === 'string'
-  ) {
-    try {
-      const fullRoles = await fetchGuildRoles(data.discordUser.roles)
-      data.discordUser.roles = fullRoles
-    } catch (error) {
-      console.error('Failed to fetch role information:', error)
-    }
-  }
-
-  return data
 }
 
 export async function createSession(
@@ -109,13 +83,9 @@ export async function createSession(
   session.set('discordUser', data.discordUser)
   session.set('walletAuth', data.walletAuth)
 
-  // No need for domain options since we're on a single domain
-  const cookie = await sessionStorage.commitSession(session)
-  console.log('Generated Set-Cookie header:', cookie)
-
   return redirect(redirectTo, {
     headers: {
-      'Set-Cookie': cookie,
+      'Set-Cookie': await sessionStorage.commitSession(session),
     },
   })
 }
