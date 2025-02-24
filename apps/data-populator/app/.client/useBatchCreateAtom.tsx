@@ -251,8 +251,9 @@ export function useBatchCreateAtom(onSuccess?: () => void) {
 
         const confirmedHashes: `0x${string}`[] = []
 
+        // Process transactions sequentially with proper async/await
         for (const tx of state.calls) {
-          await new Promise<void>((resolve, reject) => {
+          const hash = await new Promise<`0x${string}`>((resolve, reject) => {
             console.log('sending transaction: ', tx)
             sendTransaction(
               {
@@ -270,19 +271,17 @@ export function useBatchCreateAtom(onSuccess?: () => void) {
                     logger(
                       `Transaction confirmed: ${receipt?.transactionHash ?? hash}`,
                     )
-                    resolve()
+                    resolve(receipt?.transactionHash ?? hash)
                   } catch (confirmError) {
                     console.error('Error confirming transaction:', confirmError)
                     reject(confirmError)
                   }
                 },
-                onError: (error) => {
-                  console.error('Error sending transaction:', error)
-                  reject(error)
-                },
+                onError: reject,
               },
             )
           })
+          logger(`Transaction confirmed: ${hash}`)
         }
         // Use the last transaction hash as the overall txHash
         console.log('confirmedHashes: ', confirmedHashes)

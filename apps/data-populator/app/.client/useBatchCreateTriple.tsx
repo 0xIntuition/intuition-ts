@@ -251,7 +251,7 @@ export function useBatchCreateTriple() {
         const confirmedHashes: `0x${string}`[] = []
 
         for (const tx of state.calls) {
-          await new Promise<void>((resolve, reject) => {
+          const hash = await new Promise<`0x${string}`>((resolve, reject) => {
             sendTransaction(
               {
                 to: tx.to as `0x${string}`,
@@ -263,23 +263,18 @@ export function useBatchCreateTriple() {
                   try {
                     const receipt =
                       await publicClient?.waitForTransactionReceipt({ hash })
-                    confirmedHashes.push(receipt?.transactionHash ?? hash)
-                    logger(
-                      `Transaction confirmed: ${receipt?.transactionHash ?? hash}`,
-                    )
-                    resolve()
+                    resolve(receipt?.transactionHash ?? hash)
                   } catch (confirmError) {
                     console.error('Error confirming transaction:', confirmError)
                     reject(confirmError)
                   }
                 },
-                onError: (error) => {
-                  console.error('Error sending transaction:', error)
-                  reject(error)
-                },
+                onError: reject,
               },
             )
           })
+          confirmedHashes.push(hash)
+          logger(`Transaction confirmed: ${hash}`)
         }
         // Use the last transaction hash as the overall txHash
         txHash = confirmedHashes[confirmedHashes.length - 1]
