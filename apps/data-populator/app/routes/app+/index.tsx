@@ -75,7 +75,7 @@ import type { SortDirection } from '@lib/utils/sort'
 import { getNextSortDirection, sortData } from '@lib/utils/sort'
 import { getTooltip, TooltipKey } from '@lib/utils/tooltips'
 import { json, type ActionFunctionArgs } from '@remix-run/node'
-import { useActionData, useNavigation } from '@remix-run/react'
+import { useActionData, useNavigation, useSearchParams } from '@remix-run/react'
 import {
   Atom,
   BookCheck,
@@ -436,6 +436,9 @@ export default function CSVEditor() {
     isOpen: boolean
     onResponse: (response: 'cancel' | 'proceed') => void
   }>({ isOpen: false, onResponse: () => {} })
+
+  const [searchParams] = useSearchParams()
+  const csvDataParam = searchParams.get('csvData')
 
   const recheckAtomExistence = useCallback(() => {
     checkExistingAtoms(csvData, selectedType)
@@ -1581,6 +1584,23 @@ export default function CSVEditor() {
       setIsLoadingCSV(false)
     }
   }, [csvData, isLoadingCSV])
+
+  // Effect to handle CSV data from URL parameter
+  useEffect(() => {
+    if (csvDataParam) {
+      try {
+        const data = JSON.parse(decodeURIComponent(csvDataParam))
+        if (Array.isArray(data) && data.length > 0) {
+          const detectedType = detectAtomDataType(data[0])
+          setSelectedType(detectedType)
+          setBatchCreateAtomSelectedType(detectedType)
+          processLoadedData(data, detectedType)
+        }
+      } catch (error) {
+        console.error('Error parsing CSV data from URL:', error)
+      }
+    }
+  }, [csvDataParam])
 
   return (
     <>
