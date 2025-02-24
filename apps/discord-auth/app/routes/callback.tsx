@@ -1,7 +1,7 @@
 import { type LoaderFunctionArgs } from '@remix-run/node'
 
 import { getDiscordTokens, getDiscordUser } from '../.server/discord'
-import { createSession } from '../.server/session'
+import { createSession, getSession } from '../.server/session'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url)
@@ -15,14 +15,18 @@ export async function loader({ request }: LoaderFunctionArgs) {
     const { access_token } = await getDiscordTokens(code)
     const discordUser = await getDiscordUser(access_token)
 
+    // Get current session to preserve wallet info
+    const session = await getSession(request)
+
     console.log('Callback received Discord user:', discordUser)
     console.log('Discord user roles:', discordUser.roles)
+    console.log('Preserving wallet auth:', session.walletAuth)
 
-    // Create session with Discord user info and redirect to login
+    // Create session preserving wallet info
     return createSession(
       {
         discordUser,
-        walletAuth: null,
+        walletAuth: session.walletAuth, // Preserve existing wallet auth
       },
       '/login',
     )
