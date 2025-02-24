@@ -16,12 +16,12 @@ if (
 const sessionStorage = createCookieSessionStorage({
   cookie: {
     name: '_session',
-    sameSite: 'none',
+    sameSite: 'lax', // Since we're on the same domain, lax is fine
     path: '/',
     httpOnly: true,
     secrets: [process.env.SESSION_SECRET || 'default-secret'],
-    secure: true,
-    domain: process.env.COOKIE_DOMAIN,
+    secure: process.env.NODE_ENV === 'production', // Secure in production
+    // Don't set domain - let the browser use the current domain
   },
 })
 
@@ -74,11 +74,24 @@ async function fetchGuildRoles(
 }
 
 export async function getSession(request: Request): Promise<AuthSession> {
+  console.log('Request headers:', {
+    host: request.headers.get('host'),
+    origin: request.headers.get('origin'),
+    cookie: request.headers.get('Cookie'),
+  })
+
   const session = await sessionStorage.getSession(request.headers.get('Cookie'))
   const data = {
     discordUser: session.get('discordUser'),
     walletAuth: session.get('walletAuth'),
   }
+
+  console.log('Getting session data:', {
+    hasWalletAuth: Boolean(data.walletAuth),
+    walletAddress: data.walletAuth?.address,
+    hasDiscordUser: Boolean(data.discordUser),
+    host: request.headers.get('host'),
+  })
 
   // If we have a discord user with role IDs, fetch the full role information
   if (
@@ -105,9 +118,13 @@ export async function createSession(
   session.set('discordUser', data.discordUser)
   session.set('walletAuth', data.walletAuth)
 
+  // No need for domain options since we're on a single domain
+  const cookie = await sessionStorage.commitSession(session)
+  console.log('Generated Set-Cookie header:', cookie)
+
   return redirect(redirectTo, {
     headers: {
-      'Set-Cookie': await sessionStorage.commitSession(session),
+      'Set-Cookie': cookie,
     },
   })
 }

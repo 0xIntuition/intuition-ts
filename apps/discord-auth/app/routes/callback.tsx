@@ -6,6 +6,8 @@ import { createSession, getSession } from '../.server/session'
 export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url)
   const code = url.searchParams.get('code')
+  console.log('Discord callback URL:', url.toString())
+  console.log('Request cookies:', request.headers.get('Cookie'))
 
   if (!code) {
     throw new Error('No code provided')
@@ -16,7 +18,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
     const currentSession = await getSession(request)
     console.log('Current session data:', {
       hasWalletAuth: Boolean(currentSession.walletAuth),
+      walletAddress: currentSession.walletAuth?.address,
       hasDiscordUser: Boolean(currentSession.discordUser),
+      host: request.headers.get('host'),
     })
 
     const { access_token } = await getDiscordTokens(code)
