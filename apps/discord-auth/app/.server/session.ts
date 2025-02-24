@@ -2,14 +2,26 @@ import { createCookieSessionStorage, redirect } from '@remix-run/node'
 
 import type { AuthSession, DiscordUser } from '../types/auth'
 
+// Ensure we have a proper session secret in production
+if (
+  process.env.NODE_ENV === 'production' &&
+  (!process.env.SESSION_SECRET ||
+    process.env.SESSION_SECRET === 'default-secret')
+) {
+  throw new Error(
+    'SESSION_SECRET must be set in production. Generate one with: openssl rand -base64 32',
+  )
+}
+
 const sessionStorage = createCookieSessionStorage({
   cookie: {
     name: '_session',
-    sameSite: 'lax',
+    sameSite: 'none',
     path: '/',
     httpOnly: true,
     secrets: [process.env.SESSION_SECRET || 'default-secret'],
-    secure: process.env.NODE_ENV === 'production',
+    secure: true,
+    domain: process.env.COOKIE_DOMAIN,
   },
 })
 

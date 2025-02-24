@@ -12,26 +12,39 @@ export async function loader({ request }: LoaderFunctionArgs) {
   }
 
   try {
+    // Get current session first to preserve any existing data
+    const currentSession = await getSession(request)
+    console.log('Current session data:', {
+      hasWalletAuth: Boolean(currentSession.walletAuth),
+      hasDiscordUser: Boolean(currentSession.discordUser),
+    })
+
     const { access_token } = await getDiscordTokens(code)
     const discordUser = await getDiscordUser(access_token)
 
-    // Get current session to preserve wallet info
-    const session = await getSession(request)
-
     console.log('Callback received Discord user:', discordUser)
     console.log('Discord user roles:', discordUser.roles)
-    console.log('Preserving wallet auth:', session.walletAuth)
+    console.log('Preserving wallet auth:', currentSession.walletAuth)
 
-    // Create session preserving wallet info
+    // Create new session preserving existing wallet auth
     return createSession(
       {
         discordUser,
-        walletAuth: session.walletAuth, // Preserve existing wallet auth
+        walletAuth: currentSession.walletAuth, // Preserve existing wallet auth
       },
       '/login',
     )
   } catch (error) {
     console.error('Discord auth error:', error)
-    throw new Error('Failed to authenticate with Discord')
+
+    // On error, try to preserve the current session
+    const currentSession = await getSession(request)
+    return createSession(
+      {
+        discordUser: null,
+        walletAuth: currentSession.walletAuth, // Keep wallet auth even on error
+      },
+      '/login',
+    )
   }
 }
