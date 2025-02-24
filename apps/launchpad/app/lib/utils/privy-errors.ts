@@ -1,3 +1,5 @@
+import { toast } from '@0xintuition/1ui'
+
 /**
  * Converts Privy error codes to user-friendly messages
  * Error codes are in snake_case format
@@ -124,3 +126,51 @@ export function getPrivyErrorMessage(errorCode: string): string {
 
   return customMessages[errorCode] ?? formatPrivyErrorMessage(errorCode)
 }
+
+interface PrivyError extends Error {
+  code?: number
+  reason?: string
+}
+
+export function handlePrivyError(error: unknown): void {
+  console.error('Privy error:', error)
+
+  if (error instanceof Error) {
+    const privyError = error as PrivyError
+
+    // Handle specific error codes
+    if (privyError.code === 4001) {
+      toast.error('Transaction rejected by user')
+      return
+    }
+
+    if (privyError.code === 4902) {
+      toast.error('Network not added to wallet')
+      return
+    }
+
+    if (privyError.reason) {
+      toast.error(privyError.reason)
+      return
+    }
+
+    // Default error message
+    toast.error(privyError.message || 'Transaction failed')
+    return
+  }
+
+  // Fallback error message
+  toast.error('An unexpected error occurred')
+}
+
+export function isPrivyError(error: unknown): error is PrivyError {
+  return error instanceof Error && 'code' in error
+}
+
+// Common Privy error messages
+export const PRIVY_ERROR_MESSAGES = {
+  USER_REJECTED: 'User rejected the request',
+  NETWORK_ERROR: 'Network error occurred',
+  CHAIN_NOT_ADDED: 'Chain not added to wallet',
+  UNKNOWN_ERROR: 'An unknown error occurred',
+} as const

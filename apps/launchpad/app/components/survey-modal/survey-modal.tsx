@@ -14,6 +14,7 @@ import {
 } from '@0xintuition/1ui'
 import { useGetAtomsQuery, useGetListDetailsQuery } from '@0xintuition/graphql'
 
+import logger from '@lib/utils/logger'
 import { usePrivy } from '@privy-io/react-auth'
 import { useLocation, useNavigate } from '@remix-run/react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
@@ -459,6 +460,7 @@ export function OnboardingModal({
 
       // Reset points awarded state first
       setHasAwardedPoints(false)
+      setHasExistingCompletion(false)
 
       startTransition(() => {
         setSteps((prev) => {
@@ -487,7 +489,16 @@ export function OnboardingModal({
 
   const awardPoints = async (accountId: string): Promise<boolean> => {
     try {
+      logger('Starting points award process:', {
+        accountId,
+        questionId: question.id,
+        epochId: currentEpoch?.id,
+        pointAwardAmount: question.point_award_amount,
+        subjectId,
+      })
+
       setIsLoading(true)
+
       const formData = new FormData()
       formData.append('accountId', accountId)
       formData.append('questionId', question.id?.toString() ?? '')
@@ -503,8 +514,15 @@ export function OnboardingModal({
         body: formData,
       })
 
+      const data = await response.json()
+      logger('Award points response:', data)
+
       if (!response.ok) {
-        const errorData = await response.json().catch(() => null)
+        const errorData = data
+        logger('Award points request failed:', {
+          status: response.status,
+          errorData,
+        })
         const error =
           errorData?.error ||
           errorData?.details ||
@@ -512,15 +530,14 @@ export function OnboardingModal({
         throw new Error(error)
       }
 
-      const data = await response.json()
       if (!data.success) {
         throw new Error(data.error || 'Failed to award points')
       }
 
-      // Set points awarded state before invalidating queries
-      setHasAwardedPoints(true)
+      logger('Successfully awarded points')
 
       // Invalidate relevant queries
+      logger('Invalidating queries...')
       await Promise.all([
         queryClient.invalidateQueries({
           queryKey: [
@@ -540,7 +557,7 @@ export function OnboardingModal({
 
       return true
     } catch (error) {
-      setHasAwardedPoints(false)
+      logger('Error in awardPoints:', error)
       return false
     } finally {
       setIsLoading(false)
@@ -663,7 +680,7 @@ export function OnboardingModal({
                 }
               }}
             >
-              <div className="flex-1 overflow-y-auto">
+              <div className="flex-1">
                 <div
                   className={`transition-all duration-150 ease-in-out ${
                     isTransitioning
