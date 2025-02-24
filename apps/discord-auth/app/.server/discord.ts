@@ -1,6 +1,13 @@
 import { redirect } from '@remix-run/node'
 
-import type { DiscordUser } from '../types/auth'
+import type {
+  DiscordAPIRole,
+  DiscordAPIUser,
+  DiscordGuildMember,
+  DiscordRole,
+  DiscordTokenResponse,
+  DiscordUser,
+} from '../types/discord'
 import { getSession } from './session'
 
 const DISCORD_CLIENT_ID = process.env.DISCORD_CLIENT_ID!
@@ -9,47 +16,6 @@ const DISCORD_REDIRECT_URI = process.env.DISCORD_REDIRECT_URI!
 
 if (!DISCORD_CLIENT_ID || !DISCORD_CLIENT_SECRET || !DISCORD_REDIRECT_URI) {
   throw new Error('Missing Discord environment variables')
-}
-
-interface DiscordTokenResponse {
-  access_token: string
-  token_type: string
-  expires_in: number
-  refresh_token: string
-  scope: string
-}
-
-interface DiscordAPIRole {
-  id: string
-  name: string
-  color: number
-  position: number
-  permissions: string
-  managed: boolean
-  mentionable: boolean
-  icon?: string | null
-  unicode_emoji?: string | null
-}
-
-interface DiscordGuildMember {
-  roles: string[]
-  nick: string | null
-  avatar: string | null
-  premium_since: string | null
-  joined_at: string
-  pending: boolean
-  communication_disabled_until: string | null
-}
-
-interface DiscordAPIUser {
-  id: string
-  username: string
-  discriminator: string
-  avatar: string | null
-  bot?: boolean
-  system?: boolean
-  mfa_enabled?: boolean
-  verified?: boolean
 }
 
 const DISCORD_ENDPOINT = 'https://discord.com/api/v10'
@@ -189,8 +155,8 @@ export async function getDiscordUser(
           ? `#${role.color.toString(16).padStart(6, '0')}`
           : null,
         position: role.position,
-        icon: role.icon,
-        unicodeEmoji: role.unicode_emoji,
+        icon: role.icon ?? null,
+        unicodeEmoji: role.unicode_emoji ?? null,
       }
       console.log('Mapped role:', mappedRole)
       return mappedRole
@@ -219,4 +185,36 @@ export async function requireDiscordUser(request: Request) {
   }
 
   return session.discordUser
+}
+
+export async function fetchGuildRoles(): Promise<DiscordRole[]> {
+  const guildId = process.env.DISCORD_GUILD_ID
+  if (!guildId || !process.env.DISCORD_BOT_TOKEN) {
+    throw new Error('Missing Discord environment variables')
+  }
+
+  const response = await fetch(
+    `https://discord.com/api/v10/guilds/${guildId}/roles`,
+    {
+      headers: {
+        Authorization: `Bot ${process.env.DISCORD_BOT_TOKEN}`,
+      },
+    },
+  )
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch Discord roles')
+  }
+
+  const roles: DiscordAPIRole[] = await response.json()
+  return roles.map(
+    (role): DiscordRole => ({
+      id: role.id,
+      name: role.name,
+      color: role.color ? `#${role.color.toString(16).padStart(6, '0')}` : null,
+      position: role.position,
+      icon: role.icon ?? null,
+      unicodeEmoji: role.unicode_emoji ?? null,
+    }),
+  )
 }

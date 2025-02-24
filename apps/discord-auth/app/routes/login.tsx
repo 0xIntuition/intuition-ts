@@ -26,7 +26,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 export default function Login() {
   const { discordUser, discordAuthUrl } = useLoaderData<typeof loader>()
-  const { user: privyUser, ready, login, logout } = usePrivy()
+  const { user: privyUser, login, logout } = usePrivy()
   const [isConnecting, setIsConnecting] = useState(false)
   const [error, setError] = useState<string>()
   const [isComplete, setIsComplete] = useState(false)
@@ -37,12 +37,14 @@ export default function Login() {
   } | null>(null)
 
   console.log('Login component discordUser:', discordUser)
-  console.log('Login component discordUser roles:', discordUser?.roles)
+  console.log('Login component discordUser roleIds:', discordUser?.roleIds)
 
   // Handle Discord disconnect
   const handleDiscordDisconnect = async () => {
     try {
-      const response = await fetch('/api/auth/logout', { method: 'POST' })
+      const response = await fetch('/resources/_auth.logout', {
+        method: 'POST',
+      })
       if (!response.ok) {
         throw new Error('Failed to disconnect Discord')
       }
@@ -65,7 +67,7 @@ export default function Login() {
 
       try {
         const response = await fetch(
-          `/api/auth/exists?walletAddress=${privyUser.wallet.address}`,
+          `/resources/_auth.exists?walletAddress=${privyUser.wallet.address}`,
         )
         const data = await response.json()
         setUserExists(data.exists)
@@ -133,7 +135,7 @@ export default function Login() {
     setIsComplete(false)
 
     try {
-      const response = await fetch('/api/auth/store', {
+      const response = await fetch('/resources/_auth.store', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -173,7 +175,6 @@ export default function Login() {
           onConnect={login}
           onDisconnect={logout}
           privyUser={privyUser as PrivyUser}
-          isLoading={!ready}
         />
 
         {/* Discord Connection - Only show after wallet is connected */}

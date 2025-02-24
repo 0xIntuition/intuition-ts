@@ -1,7 +1,7 @@
 import { json, type LoaderFunctionArgs } from '@remix-run/node'
 import { gql, GraphQLClient } from 'graphql-request'
 
-import { getSession } from '../.server/session'
+import { getSession } from '../../.server/session'
 
 const api_url = process.env.HASURA_POINTS_ENDPOINT
 const client = new GraphQLClient(api_url!, {

@@ -1,7 +1,7 @@
 import { json, type ActionFunctionArgs } from '@remix-run/node'
 import { gql, GraphQLClient } from 'graphql-request'
 
-import { createSession, getSession } from '../.server/session.ts'
+import { createSession, getSession } from '../../.server/session.ts'
 
 const api_url = process.env.HASURA_POINTS_ENDPOINT
 const client = new GraphQLClient(api_url!, {
@@ -97,7 +97,7 @@ export async function action({ request }: ActionFunctionArgs) {
     const variables = {
       discordId: session.discordUser.id,
       username: session.discordUser.username,
-      roles: session.discordUser.roles || [],
+      roles: session.discordUser.roleIds || [],
       walletAddress,
     }
 

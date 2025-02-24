@@ -1,6 +1,6 @@
 import { type ActionFunctionArgs } from '@remix-run/node'
 
-import { createSession, getSession } from '../.server/session'
+import { createSession, getSession } from '../../.server/session'
 
 export async function action({ request }: ActionFunctionArgs) {
   const session = await getSession(request)

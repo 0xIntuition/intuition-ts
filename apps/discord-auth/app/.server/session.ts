@@ -1,6 +1,7 @@
 import { createCookieSessionStorage, redirect } from '@remix-run/node'
 
-import type { AuthSession, DiscordUser } from '../types/auth'
+import type { AuthSession } from '../types/auth'
+import type { DiscordAPIRole, DiscordRole } from '../types/discord'
 
 // Ensure we have a proper session secret in production
 if (
@@ -25,21 +26,7 @@ const sessionStorage = createCookieSessionStorage({
   },
 })
 
-interface DiscordAPIRole {
-  id: string
-  name: string
-  color: number
-  position: number
-  permissions: string
-  managed: boolean
-  mentionable: boolean
-  icon?: string | null
-  unicode_emoji?: string | null
-}
-
-async function fetchGuildRoles(
-  roleIds: string[],
-): Promise<DiscordUser['roles']> {
+async function fetchGuildRoles(roleIds: string[]): Promise<DiscordRole[]> {
   const guildId = process.env.DISCORD_GUILD_ID
   if (!guildId || !process.env.DISCORD_BOT_TOKEN) {
     throw new Error('Missing Discord environment variables')
@@ -63,14 +50,18 @@ async function fetchGuildRoles(
   return allRoles
     .filter((role) => roleIds.includes(role.id))
     .sort((a, b) => b.position - a.position)
-    .map((role) => ({
-      id: role.id,
-      name: role.name,
-      color: role.color ? `#${role.color.toString(16).padStart(6, '0')}` : null,
-      position: role.position,
-      icon: role.icon,
-      unicodeEmoji: role.unicode_emoji,
-    }))
+    .map(
+      (role): DiscordRole => ({
+        id: role.id,
+        name: role.name,
+        color: role.color
+          ? `#${role.color.toString(16).padStart(6, '0')}`
+          : null,
+        position: role.position,
+        icon: role.icon ?? null,
+        unicodeEmoji: role.unicode_emoji ?? null,
+      }),
+    )
 }
 
 export async function getSession(request: Request): Promise<AuthSession> {
