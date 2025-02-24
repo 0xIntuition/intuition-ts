@@ -442,12 +442,6 @@ importers:
       '@0xintuition/graphql':
         specifier: workspace:^
         version: link:../../packages/graphql
-      '@hookform/resolvers':
-        specifier: ^3.10.0
-        version: 3.10.0(react-hook-form@7.54.2(react@18.3.1))
-      '@popperjs/core':
-        specifier: ^2.11.8
-        version: 2.11.8
       '@privy-io/react-auth':
         specifier: ^2.0.6
         version: 2.0.7(@solana/web3.js@1.98.0(bufferutil@4.0.8)(encoding@0.1.13)(utf-8-validate@5.0.10))(@types/react@18.3.1)(bs58@5.0.0)(bufferutil@4.0.8)(permissionless@0.2.13(viem@2.21.55(bufferutil@4.0.8)(typescript@5.4.5)(utf-8-validate@5.0.10)(zod@3.23.8)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.4.5)(use-sync-external-store@1.2.0(react@18.3.1))(utf-8-validate@5.0.10)(zod@3.23.8)
@@ -457,9 +451,6 @@ importers:
       '@privy-io/wagmi':
         specifier: ^0.2.13
         version: 0.2.13(@privy-io/react-auth@2.0.7(@solana/web3.js@1.98.0(bufferutil@4.0.8)(encoding@0.1.13)(utf-8-validate@5.0.10))(@types/react@18.3.1)(bs58@5.0.0)(bufferutil@4.0.8)(permissionless@0.2.13(viem@2.21.55(bufferutil@4.0.8)(typescript@5.4.5)(utf-8-validate@5.0.10)(zod@3.23.8)))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.4.5)(use-sync-external-store@1.2.0(react@18.3.1))(utf-8-validate@5.0.10)(zod@3.23.8))(react@18.3.1)(viem@2.21.55(bufferutil@4.0.8)(typescript@5.4.5)(utf-8-validate@5.0.10)(zod@3.23.8))(wagmi@2.10.0(@tanstack/query-core@5.45.0)(@tanstack/react-query@5.45.0(react@18.3.1))(@types/react@18.3.1)(bufferutil@4.0.8)(encoding@0.1.13)(react-dom@18.3.1(react@18.3.1))(react-i18next@13.5.0(i18next@22.5.1)(react-dom@18.3.1(react@18.3.1))(react-native@0.74.2(@babel/core@7.24.7)(@babel/preset-env@7.24.7(@babel/core@7.24.7))(@types/react@18.3.1)(bufferutil@4.0.8)(encoding@0.1.13)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1))(react-native@0.74.2(@babel/core@7.24.7)(@babel/preset-env@7.24.7(@babel/core@7.24.7))(@types/react@18.3.1)(bufferutil@4.0.8)(encoding@0.1.13)(react@18.3.1)(utf-8-validate@5.0.10))(react@18.3.1)(rollup@4.18.0)(typescript@5.4.5)(utf-8-validate@5.0.10)(viem@2.21.55(bufferutil@4.0.8)(typescript@5.4.5)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8))
-      '@radix-ui/react-tabs':
-        specifier: ^1.1.0
-        version: 1.1.0(@types/react-dom@18.3.0)(@types/react@18.3.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@remix-run/node':
         specifier: ^2.15.1
         version: 2.15.1(typescript@5.4.5)
@@ -469,63 +460,18 @@ importers:
       '@remix-run/serve':
         specifier: ^2.15.1
         version: 2.15.1(typescript@5.4.5)
-      '@resvg/resvg-js':
-        specifier: ^2.6.2
-        version: 2.6.2
       '@tanstack/react-query':
         specifier: ^5.32.0
         version: 5.45.0(react@18.3.1)
-      '@tanstack/react-table':
-        specifier: ^8.20.6
-        version: 8.20.6(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@types/cookie':
-        specifier: ^0.6.0
-        version: 0.6.0
-      '@types/cytoscape':
-        specifier: ^3.21.8
-        version: 3.21.8
-      '@vidstack/react':
-        specifier: ^1.10.9
-        version: 1.11.22(@types/react@18.3.1)(react@18.3.1)
       class-variance-authority:
         specifier: ^0.7.0
         version: 0.7.0
-      cloudinary:
-        specifier: ^2.2.0
-        version: 2.2.0
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
       cookie:
         specifier: ^0.6.0
         version: 0.6.0
-      cytoscape:
-        specifier: ^3.30.4
-        version: 3.30.4
-      cytoscape-cola:
-        specifier: ^2.5.1
-        version: 2.5.1(cytoscape@3.30.4)
-      cytoscape-fcose:
-        specifier: ^2.2.0
-        version: 2.2.0(cytoscape@3.30.4)
-      cytoscape-popper:
-        specifier: ^4.0.1
-        version: 4.0.1(cytoscape@3.30.4)
-      date-fns:
-        specifier: ^3.6.0
-        version: 3.6.0
-      embla-carousel:
-        specifier: ^8.5.2
-        version: 8.5.2
-      embla-carousel-autoplay:
-        specifier: ^8.5.2
-        version: 8.5.2(embla-carousel@8.5.2)
-      embla-carousel-react:
-        specifier: ^8.5.2
-        version: 8.5.2(react@18.3.1)
-      framer-motion:
-        specifier: ^11.2.10
-        version: 11.2.10(@emotion/is-prop-valid@1.2.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       graphql-request:
         specifier: ^7.1.0
         version: 7.1.0(graphql@16.9.0)
@@ -541,33 +487,12 @@ importers:
       react:
         specifier: ^18.2.0
         version: 18.3.1
-      react-cytoscapejs:
-        specifier: ^2.0.0
-        version: 2.0.0(cytoscape@3.30.4)(react@18.3.1)
       react-dom:
         specifier: ^18.2.0
         version: 18.3.1(react@18.3.1)
-      react-dropzone:
-        specifier: ^14.3.5
-        version: 14.3.5(react@18.3.1)
-      react-hook-form:
-        specifier: ^7.54.2
-        version: 7.54.2(react@18.3.1)
-      react-intersection-observer:
-        specifier: ^9.15.1
-        version: 9.15.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      react-rewards:
-        specifier: ^2.0.4
-        version: 2.0.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      recharts:
-        specifier: ^2.15.0
-        version: 2.15.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       remix-utils:
         specifier: ^7.6.0
         version: 7.6.0(@remix-run/node@2.15.1(typescript@5.4.5))(@remix-run/react@2.15.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.4.5))(@remix-run/router@1.21.0)(is-ip@3.1.0)(react@18.3.1)(zod@3.23.8)
-      satori:
-        specifier: ^0.10.14
-        version: 0.10.14
       tailwind-merge:
         specifier: ^2.3.0
         version: 2.3.0
@@ -584,6 +509,9 @@ importers:
       '@remix-run/dev':
         specifier: ^2.15.1
         version: 2.15.1(@remix-run/react@2.15.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.4.5))(@remix-run/serve@2.15.1(typescript@5.4.5))(@types/node@20.17.17)(babel-plugin-macros@2.8.0)(bufferutil@4.0.8)(terser@5.31.1)(ts-node@10.9.1(@swc/core@1.3.107(@swc/helpers@0.5.11))(@types/node@20.17.17)(typescript@5.4.5))(typescript@5.4.5)(utf-8-validate@5.0.10)(vite@5.2.13(@types/node@20.17.17)(terser@5.31.1))
+      '@types/cookie':
+        specifier: ^0.6.0
+        version: 0.6.0
       '@types/react':
         specifier: ^18.2.20
         version: 18.3.1
@@ -37635,7 +37563,7 @@ snapshots:
       chokidar: 3.6.0
       didyoumean: 1.2.2
       dlv: 1.1.3
-      fast-glob: 3.3.3
+      fast-glob: 3.3.2
       glob-parent: 6.0.2
       is-glob: 4.0.3
       jiti: 1.21.6
@@ -37643,14 +37571,14 @@ snapshots:
       micromatch: 4.0.8
       normalize-path: 3.0.0
       object-hash: 3.0.0
-      picocolors: 1.1.1
+      picocolors: 1.0.1
       postcss: 8.4.38
       postcss-import: 15.1.0(postcss@8.4.38)
       postcss-js: 4.0.1(postcss@8.4.38)
       postcss-load-config: 4.0.2(postcss@8.4.38)(ts-node@10.9.1(@swc/core@1.3.107(@swc/helpers@0.5.11))(@types/node@20.17.17)(typescript@5.4.5))
       postcss-nested: 6.0.1(postcss@8.4.38)
       postcss-selector-parser: 6.1.0
-      resolve: 1.22.10
+      resolve: 1.22.8
       sucrase: 3.35.0
     transitivePeerDependencies:
       - ts-node
