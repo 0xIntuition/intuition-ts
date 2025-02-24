@@ -25,6 +25,7 @@ const UpsertDiscordUserMutation = gql`
     $roles: jsonb!
     $walletAddress: String!
   ) {
+    # Try discord_id conflict first
     insert_discord_users_one(
       object: {
         discord_id: $discordId
@@ -35,6 +36,34 @@ const UpsertDiscordUserMutation = gql`
       on_conflict: {
         constraint: discord_users_discord_id_key
         update_columns: [username, roles, wallet_address]
+      }
+    ) {
+      id
+      discord_id
+      wallet_address
+    }
+  }
+`
+
+// Add a new mutation for wallet address conflict
+const UpdateByWalletMutation = gql`
+  mutation UpdateByWallet(
+    $discordId: String!
+    $username: String!
+    $roles: jsonb!
+    $walletAddress: String!
+  ) {
+    # Try wallet_address conflict
+    insert_discord_users_one(
+      object: {
+        discord_id: $discordId
+        username: $username
+        roles: $roles
+        wallet_address: $walletAddress
+      }
+      on_conflict: {
+        constraint: discord_users_wallet_address_key
+        update_columns: [discord_id, username, roles]
       }
     ) {
       id
@@ -74,12 +103,22 @@ export async function action({ request }: ActionFunctionArgs) {
 
     console.log('Mutation variables:', variables)
 
-    const result = await client.request<UpsertDiscordUserResponse>(
-      UpsertDiscordUserMutation,
-      variables,
-    )
-
-    console.log('Hasura response:', result)
+    // Try discord_id conflict first
+    try {
+      const result = await client.request<UpsertDiscordUserResponse>(
+        UpsertDiscordUserMutation,
+        variables,
+      )
+      console.log('Hasura response (discord_id):', result)
+    } catch (error) {
+      // If it fails due to wallet_address conflict, try the wallet update
+      console.log('Trying wallet address conflict resolution...')
+      const result = await client.request<UpsertDiscordUserResponse>(
+        UpdateByWalletMutation,
+        variables,
+      )
+      console.log('Hasura response (wallet_address):', result)
+    }
 
     // Update session with wallet info and redirect to login
     return createSession(
