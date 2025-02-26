@@ -734,7 +734,7 @@ export function OnboardingModal({
                         pointAwardAmount={question?.point_award_amount}
                         awardPoints={awardPoints}
                         questionId={question?.id}
-                        epochId={currentEpoch?.id}
+                        epochId={question?.epoch_id}
                         onExistingCompletionChange={setHasExistingCompletion}
                       />
                     )}
