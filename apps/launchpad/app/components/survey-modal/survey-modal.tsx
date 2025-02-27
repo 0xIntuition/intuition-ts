@@ -17,7 +17,7 @@ import { useGetAtomsQuery, useGetListDetailsQuery } from '@0xintuition/graphql'
 import logger from '@lib/utils/logger'
 import { usePrivy } from '@privy-io/react-auth'
 import { useLocation, useNavigate } from '@remix-run/react'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQueryClient } from '@tanstack/react-query'
 import { TripleType } from 'app/types'
 import { ClientOnly } from 'remix-utils/client-only'
 
@@ -158,18 +158,6 @@ export function OnboardingModal({
   const { isTransitioning, handleTransition, resetTransition } = transition
   const navigate = useNavigate()
   const location = useLocation()
-
-  const { data: currentEpoch } = useQuery({
-    queryKey: ['current-epoch'],
-    queryFn: async () => {
-      const response = await fetch('/resources/get-current-epoch')
-      const data = await response.json()
-      if (!response.ok) {
-        throw new Error(data.error || 'Failed to fetch current epoch')
-      }
-      return data.epoch
-    },
-  })
 
   const { data: listData, isLoading: isLoadingList } = useGetListDetailsQuery(
     {
@@ -492,7 +480,7 @@ export function OnboardingModal({
       logger('Starting points award process:', {
         accountId,
         questionId: question.id,
-        epochId: currentEpoch?.id,
+        epochId: question?.epoch_id,
         pointAwardAmount: question.point_award_amount,
         subjectId,
       })
@@ -502,7 +490,7 @@ export function OnboardingModal({
       const formData = new FormData()
       formData.append('accountId', accountId)
       formData.append('questionId', question.id?.toString() ?? '')
-      formData.append('epochId', currentEpoch?.id?.toString() ?? '')
+      formData.append('epochId', question?.epoch_id?.toString() ?? '')
       formData.append(
         'pointAwardAmount',
         question.point_award_amount?.toString() ?? '',
@@ -550,7 +538,7 @@ export function OnboardingModal({
           queryKey: [
             'epoch-progress',
             accountId.toLowerCase(),
-            currentEpoch?.id,
+            question?.epoch_id,
           ],
         }),
       ])
@@ -581,8 +569,8 @@ export function OnboardingModal({
         setSteps(STEPS_CONFIG)
         resetTransition()
 
-        if (isFlowComplete && question?.id && currentEpoch?.id) {
-          const targetPath = `/quests/questions/${currentEpoch.id}/${question.id}`
+        if (isFlowComplete && question?.id && question?.epoch_id) {
+          const targetPath = `/quests/questions/${question.epoch_id}/${question.id}`
           if (location.pathname !== targetPath) {
             navigate(targetPath)
           }
@@ -599,7 +587,7 @@ export function OnboardingModal({
     onClose,
     resetTransition,
     question?.id,
-    currentEpoch?.id,
+    question?.epoch_id,
     location.pathname,
     navigate,
   ])
