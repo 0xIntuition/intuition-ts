@@ -12,16 +12,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const user = await getUser(request)
 
   try {
-    // await queryClient.prefetchQuery({
-    //   queryKey: ['get-protocol-stats'],
-    //   queryFn: () =>
-    //     fetcher<GetStatsQuery, GetStatsQueryVariables>(GetStatsDocument, {}),
-    // })
-
-    await queryClient.prefetchQuery({
-      queryKey: ['get-multivault-config'],
-      queryFn: () => getMultiVaultConfig(MULTIVAULT_CONTRACT_ADDRESS),
-    })
+    // Prefetch the MultiVault config
+    const multiVaultConfig = await getMultiVaultConfig(
+      MULTIVAULT_CONTRACT_ADDRESS,
+    )
+    await queryClient.setQueryData(['get-multivault-config'], multiVaultConfig)
   } catch (error) {
     console.error('Error prefetching data:', error)
   }

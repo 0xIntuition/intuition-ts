@@ -19,14 +19,20 @@ import {
 import { AtomDetailsModal } from '@components/atom-details-modal'
 import { AuthCover } from '@components/auth-cover'
 import LoadingLogo from '@components/loading-logo'
+import { LoadingState } from '@components/loading-state'
 import { Navigation } from '@components/lore/chapter-navigation'
 import { PageHeader } from '@components/page-header'
 import ShareModal from '@components/share-modal'
 import { OnboardingModal } from '@components/survey-modal/survey-modal'
 import { columns } from '@components/ui/table/columns'
 import { DataTable } from '@components/ui/table/data-table'
-import { MIN_DEPOSIT, ZERO_ADDRESS } from '@consts/general'
+import {
+  MIN_DEPOSIT,
+  MULTIVAULT_CONTRACT_ADDRESS,
+  ZERO_ADDRESS,
+} from '@consts/general'
 import { Question } from '@lib/graphql/types'
+import { useGetMultiVaultConfig } from '@lib/hooks/useGetMultiVaultConfig'
 import { useGoBack } from '@lib/hooks/useGoBack'
 import { useMediaQuery } from '@lib/hooks/useMediaQuery'
 import type { EpochQuestion } from '@lib/services/epochs'
@@ -213,6 +219,9 @@ export default function MiniGameOne() {
     },
     enabled: !!userWallet && !!questionId,
   })
+
+  const { data: multiVaultConfig, isLoading: isLoadingMultiVaultConfig } =
+    useGetMultiVaultConfig(MULTIVAULT_CONTRACT_ADDRESS)
 
   // Get the user's selected atom if they've completed the question
   const { data: atomData, isLoading: isLoadingAtom } = useGetAtomQuery(
@@ -427,7 +436,10 @@ export default function MiniGameOne() {
               18,
             ) *
               +formatUnits(triple.vault?.current_share_price ?? 0, 18)) /
-            (+MIN_DEPOSIT * 0.95)
+            (+(multiVaultConfig?.formatted_min_deposit || MIN_DEPOSIT) *
+              (1 -
+                +(multiVaultConfig?.entry_fee ?? 0) /
+                  +(multiVaultConfig?.fee_denominator ?? 1)))
           return amount < 0.1 ? 0 : Math.ceil(amount)
         })(),
         downvotes: (() => {
@@ -441,7 +453,10 @@ export default function MiniGameOne() {
                 triple.counter_vault?.current_share_price ?? 0,
                 18,
               )) /
-            (+MIN_DEPOSIT * 0.95)
+            (+(multiVaultConfig?.formatted_min_deposit || MIN_DEPOSIT) *
+              (1 -
+                +(multiVaultConfig?.entry_fee ?? 0) /
+                  +(multiVaultConfig?.fee_denominator ?? 1)))
           return amount < 0.1 ? 0 : Math.ceil(amount)
         })(),
         forTvl:
@@ -620,6 +635,10 @@ export default function MiniGameOne() {
     }
   }
 
+  if (isLoadingMultiVaultConfig || isLoadingListData) {
+    return <LoadingState />
+  }
+
   return (
     <>
       <div className="flex flex-col md:flex-row items-center gap-4 justify-between">
@@ -752,19 +771,13 @@ export default function MiniGameOne() {
       </div>
 
       <div className="mt-6 !mb-24">
-        {isLoadingListData ? (
-          <div className="flex items-center justify-center h-[400px]">
-            <LoadingLogo size={100} />
-          </div>
-        ) : (
-          <DataTable
-            columns={columns as ColumnDef<TableRowData>[]}
-            data={tableData}
-            onRowClick={handleRowClick}
-            table={table}
-            onPaginationChange={updatePaginationParams}
-          />
-        )}
+        <DataTable
+          columns={columns as ColumnDef<TableRowData>[]}
+          data={tableData}
+          onRowClick={handleRowClick}
+          table={table}
+          onPaginationChange={updatePaginationParams}
+        />
       </div>
 
       <ShareModal

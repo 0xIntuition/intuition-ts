@@ -7,9 +7,11 @@ import {
   IconName,
 } from '@0xintuition/1ui'
 
+import { LoadingState } from '@components/loading-state'
 import { SignalButton } from '@components/signal-modal/signal-button'
 import { SignalModal } from '@components/signal-modal/signal-modal'
-import { MIN_DEPOSIT } from '@consts/general'
+import { MULTIVAULT_CONTRACT_ADDRESS } from '@consts/general'
+import { useGetMultiVaultConfig } from '@lib/hooks/useGetMultiVaultConfig'
 import { usePrivy } from '@privy-io/react-auth'
 import { useRevalidator } from '@remix-run/react'
 import { useQueryClient } from '@tanstack/react-query'
@@ -86,9 +88,19 @@ function SignalCell({
     }, 100)
   }
 
+  const { data: multiVaultConfig } = useGetMultiVaultConfig(
+    MULTIVAULT_CONTRACT_ADDRESS,
+  )
+
+  if (!multiVaultConfig) {
+    return <LoadingState />
+  }
+
   // Calculate initial ticks based on position direction
   const calculatedInitialTicks = Math.ceil(
-    (userPosition ?? 0) / (+MIN_DEPOSIT * 0.95),
+    (userPosition ?? 0) /
+      (+multiVaultConfig?.formatted_min_deposit *
+        (1 - +multiVaultConfig.entry_fee / +multiVaultConfig?.fee_denominator)),
   )
   const initialTicks =
     positionDirection === ClaimPosition.claimAgainst
