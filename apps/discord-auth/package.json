@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "build": "remix vite:build --emptyOutDir",
-    "dev": "NODE_OPTIONS=remix vite:dev",
-    "start": "NODE_OPTIONS=PORT=3000 remix-serve ./build/server/index.js",
+    "dev": "remix vite:dev",
+    "start": "PORT=3000 remix-serve ./build/server/index.js",
     "lint:fix": "pnpm lint --fix"
   },
   "repository": {
