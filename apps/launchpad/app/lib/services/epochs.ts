@@ -12,6 +12,7 @@ export interface Epoch {
   is_active: boolean
   created_at: string
   updated_at: string
+  order: number
 }
 
 export interface GetCurrentEpochResponse {
@@ -130,6 +131,7 @@ const GetEpochByIdQuery = gql`
       id
       name
       description
+      order
       start_date
       end_date
       is_active
