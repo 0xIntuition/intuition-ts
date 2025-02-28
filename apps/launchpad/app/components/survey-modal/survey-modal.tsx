@@ -17,7 +17,7 @@ import { useGetAtomsQuery, useGetListDetailsQuery } from '@0xintuition/graphql'
 import logger from '@lib/utils/logger'
 import { usePrivy } from '@privy-io/react-auth'
 import { useLocation, useNavigate } from '@remix-run/react'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQueryClient } from '@tanstack/react-query'
 import { TripleType } from 'app/types'
 import { ClientOnly } from 'remix-utils/client-only'
 
@@ -158,18 +158,6 @@ export function OnboardingModal({
   const { isTransitioning, handleTransition, resetTransition } = transition
   const navigate = useNavigate()
   const location = useLocation()
-
-  const { data: currentEpoch } = useQuery({
-    queryKey: ['current-epoch'],
-    queryFn: async () => {
-      const response = await fetch('/resources/get-current-epoch')
-      const data = await response.json()
-      if (!response.ok) {
-        throw new Error(data.error || 'Failed to fetch current epoch')
-      }
-      return data.epoch
-    },
-  })
 
   const { data: listData, isLoading: isLoadingList } = useGetListDetailsQuery(
     {
