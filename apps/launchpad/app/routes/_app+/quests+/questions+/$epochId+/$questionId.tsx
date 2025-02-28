@@ -652,7 +652,7 @@ export default function MiniGameOne() {
             <Icon name="chevron-left" className="h-4 w-4" />
           </Button>
           <PageHeader
-            title={`Epoch ${currentEpoch ?? ''} | Question ${questionData?.order}`}
+            title={`Epoch ${questionData?.epoch_id ?? ''} | Question ${questionData?.order}`}
             className="text-xl sm:text-2xl"
           />
         </div>
