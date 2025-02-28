@@ -36,7 +36,11 @@ import { useGetMultiVaultConfig } from '@lib/hooks/useGetMultiVaultConfig'
 import { useGoBack } from '@lib/hooks/useGoBack'
 import { useMediaQuery } from '@lib/hooks/useMediaQuery'
 import type { EpochQuestion } from '@lib/services/epochs'
-import { fetchEpochQuestion, fetchEpochQuestions } from '@lib/services/epochs'
+import {
+  fetchEpochById,
+  fetchEpochQuestion,
+  fetchEpochQuestions,
+} from '@lib/services/epochs'
 import {
   atomDetailsModalAtom,
   onboardingModalAtom,
@@ -78,10 +82,11 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const queryClient = new QueryClient()
 
   // Start parallel fetches for independent data
-  const [user, questionData, allQuestions] = await Promise.all([
+  const [user, questionData, allQuestions, epoch] = await Promise.all([
     getUser(request),
     fetchEpochQuestion(Number(params.questionId)),
     fetchEpochQuestions(Number(params.epochId)),
+    fetchEpochById(Number(params.epochId)),
   ])
 
   const userWallet = user?.wallet?.address?.toLowerCase()
@@ -118,6 +123,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     questionData,
     prevQuestion,
     nextQuestion,
+    epoch,
   }
 }
 
@@ -187,7 +193,7 @@ export default function MiniGameOne() {
   const location = useLocation()
   const { epochId, questionId } = useParams()
   const goBack = useGoBack({ fallbackRoute: `/quests/questions/${epochId}` })
-  const { userWallet, questionData, prevQuestion, nextQuestion } =
+  const { userWallet, questionData, prevQuestion, nextQuestion, epoch } =
     useLoaderData<typeof loader>()
   const [shareModalActive, setShareModalActive] = useAtom(shareModalAtom)
   const [onboardingModal, setOnboardingModal] = useAtom(onboardingModalAtom)
@@ -652,7 +658,7 @@ export default function MiniGameOne() {
             <Icon name="chevron-left" className="h-4 w-4" />
           </Button>
           <PageHeader
-            title={`${title ?? ''} | Question ${questionData?.order}`}
+            title={`Epoch ${epoch?.order ?? ''} | Question ${questionData?.order}`}
             className="text-xl sm:text-2xl"
           />
         </div>
