@@ -126,79 +126,27 @@ export function RewardStep({
     })
 
   useEffect(() => {
-    // Add logging for component mount and key props
-    logger('RewardStep mounted with props:', {
-      isOpen,
-      userWallet,
-      questionId,
-      epochId,
-      hasAwardedPoints,
-      isAwarding,
-      awardingFailed,
-      retryCount,
-      // Don't reference existingCompletion here since it's not defined yet
-    })
-  }, [])
+    // Handle existing completion state
+    if (existingCompletion) {
+      logger('Found existing completion:', existingCompletion)
+      setHasAwardedPoints(true)
+      setIsAwarding(false)
+      setAwardingFailed(false)
+      onExistingCompletionChange?.(true)
+      return
+    }
 
-  // Add logging for completion check query
-  const { data: existingCompletion, isLoading: isCheckingCompletion } =
-    useQuery({
-      queryKey: [
-        'question-completion',
-        userWallet?.toLowerCase(),
-        questionId,
-        epochId,
-      ],
-      queryFn: async () => {
-        logger('Fetching existing completion for:', {
-          userWallet: userWallet?.toLowerCase(),
-          questionId,
-          epochId,
-        })
+    // Only attempt to award points if we've confirmed there's no existing completion
+    if (existingCompletion === null && !isCheckingCompletion) {
+      logger('No existing completion found, proceeding with award')
+      onExistingCompletionChange?.(false)
 
-        if (!userWallet || !questionId || !epochId) {
-          logger('Missing required data for completion check:', {
-            userWallet,
-            questionId,
-            epochId,
-          })
-          return null
-        }
-
-        try {
-          const response = await fetch(
-            `/resources/get-question-completion?accountId=${userWallet.toLowerCase()}&questionId=${questionId}`,
-          )
-
-          if (!response.ok) {
-            logger('Completion check failed:', response.status)
-            return null
-          }
-
-          const data = await response.json()
-          logger('Completion check result:', data)
-          // Add defensive check when accessing data.completion
-          return data && data.completion ? data.completion : null
-        } catch (error) {
-          logger('Error checking completion:', error)
-          return null
-        }
-      },
-      enabled: Boolean(userWallet && questionId && epochId),
-      // Disable retries and cache to prevent race conditions
-      retry: false,
-      gcTime: 0,
-      staleTime: 0,
-      refetchOnMount: true,
-      refetchOnWindowFocus: false,
-    })
-
-  useEffect(() => {
-    try {
-      // Handle existing completion state
-      if (existingCompletion) {
-        logger('Found existing completion:', existingCompletion)
-        setHasAwardedPoints(true)
+      // Reset states when modal opens/closes
+      if (!isOpen) {
+        setRewardReady(false)
+        setHasRewardAnimated(false)
+        setHasAwardedPoints(false)
+        setConfettiTriggered(false)
         setIsAwarding(false)
         setAwardingFailed(false)
         if (onExistingCompletionChange) {
