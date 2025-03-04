@@ -38,7 +38,6 @@ export function RewardStep({
   const [rewardReady, setRewardReady] = useState(false)
   const [hasRewardAnimated, setHasRewardAnimated] = useState(false)
   const [hasAwardedPoints, setHasAwardedPoints] = useState(false)
-  const [justAwarded, setJustAwarded] = useState(false)
   const [confettiTriggered, setConfettiTriggered] = useState(false)
   const [isAwarding, setIsAwarding] = useState(false)
   const [awardingFailed, setAwardingFailed] = useState(false)
@@ -131,7 +130,6 @@ export function RewardStep({
     if (existingCompletion) {
       logger('Found existing completion:', existingCompletion)
       setHasAwardedPoints(true)
-      setJustAwarded(false) // Set to false since this was previously awarded
       setIsAwarding(false)
       setAwardingFailed(false)
       onExistingCompletionChange?.(true)
@@ -148,7 +146,6 @@ export function RewardStep({
         setRewardReady(false)
         setHasRewardAnimated(false)
         setHasAwardedPoints(false)
-        setJustAwarded(false)
         setConfettiTriggered(false)
         setIsAwarding(false)
         setAwardingFailed(false)
@@ -179,11 +176,10 @@ export function RewardStep({
 
             if (success) {
               setHasAwardedPoints(true)
-              setJustAwarded(true) // Always true for new awards
               setAwardingFailed(false)
               setRetryCount(0)
               setError(undefined)
-              onExistingCompletionChange?.(false) // Ensure this is false since it's a new award
+              onExistingCompletionChange?.(false)
             } else {
               throw new Error('Failed to award points')
             }
@@ -230,18 +226,10 @@ export function RewardStep({
   useEffect(() => {
     logger('Reward step state update:', {
       hasAwardedPoints,
-      justAwarded,
-      hasExistingCompletion: !!existingCompletion,
       isAwarding,
       awardingFailed,
     })
-  }, [
-    hasAwardedPoints,
-    justAwarded,
-    existingCompletion,
-    isAwarding,
-    awardingFailed,
-  ])
+  }, [hasAwardedPoints, isAwarding, awardingFailed])
 
   useEffect(() => {
     if (
@@ -287,7 +275,6 @@ export function RewardStep({
       logger('Retry result:', { success })
       if (success) {
         setHasAwardedPoints(true)
-        setJustAwarded(true)
         setAwardingFailed(false)
         setRetryCount(0)
         setError(undefined)
@@ -340,7 +327,7 @@ export function RewardStep({
                 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
               />
             </svg>
-          ) : awardingFailed ? (
+          ) : awardingFailed && retryCount >= MAX_RETRIES ? (
             <svg
               className="w-8 h-8 text-red-500"
               fill="none"
@@ -392,19 +379,13 @@ export function RewardStep({
               : awardingFailed && retryCount >= MAX_RETRIES
                 ? 'Failed to Award Points'
                 : hasAwardedPoints
-                  ? justAwarded
-                    ? 'Question Completed!'
-                    : 'Points Already Awarded'
+                  ? 'Question Completed!'
                   : 'Preparing Reward...'}
           </h2>
           <Text variant={TextVariant.body} className="text-primary/70">
             {awardingFailed && retryCount >= MAX_RETRIES
               ? 'We encountered an issue while awarding your points. Please try again.'
-              : justAwarded
-                ? "Your answer has been woven into Intuition's living memory, guiding the path for future seekers."
-                : existingCompletion
-                  ? `You previously earned ${existingCompletion.points_awarded} IQ Points for this question on ${new Date(existingCompletion.completed_at).toLocaleDateString()}`
-                  : "Your answer has been woven into Intuition's living memory, guiding the path for future seekers."}
+              : "Your answer has been woven into Intuition's living memory, guiding the path for future seekers."}
           </Text>
           {error && (
             <Text variant={TextVariant.body} className="text-red-500 mt-2">
@@ -414,13 +395,7 @@ export function RewardStep({
         </div>
 
         <div className="text-center space-y-1">
-          <h3 className="text-xl text-gray-400">
-            {justAwarded
-              ? 'You earned'
-              : existingCompletion
-                ? 'Previously Earned'
-                : 'You earned'}
-          </h3>
+          <h3 className="text-xl text-gray-400">You earned</h3>
           <div className="flex items-center justify-center space-x-2">
             <span className="text-4xl font-bold bg-gradient-to-r from-[#34C578] to-[#00FF94] bg-clip-text text-transparent">
               {existingCompletion

@@ -242,6 +242,10 @@ export default function EpochQuestions() {
     return <ErrorPage routeName="epoch questions" />
   }
 
+  if (!epoch) {
+    return <ErrorPage routeName="epoch questions" />
+  }
+
   return (
     <>
       <div className="flex items-center gap-4 mb-6">

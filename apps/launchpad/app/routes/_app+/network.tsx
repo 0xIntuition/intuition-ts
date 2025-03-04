@@ -24,6 +24,7 @@ import { PageHeader } from '@components/page-header'
 import { LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData, useSearchParams } from '@remix-run/react'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
+import { useLineaStats } from 'app/hooks/useLineaStats'
 import { Radio, User } from 'lucide-react'
 
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -74,12 +75,14 @@ export default function Network() {
     searchParams.get('activityOffset') || String(initialParams.activityOffset),
   )
 
-  const { data: systemStats, isLoading: isLoadingStats } = useGetStatsQuery(
+  const { data: baseStats, isLoading: isLoadingBaseStats } = useGetStatsQuery(
     {},
     {
       queryKey: ['get-stats'],
     },
   )
+
+  const { data: lineaStats, isLoading: isLoadingLineaStats } = useLineaStats()
 
   const { data: signalsData, isLoading: isLoadingSignals } = useGetSignalsQuery(
     {
@@ -104,13 +107,32 @@ export default function Network() {
     },
   )
 
-  const isLoading = isLoadingStats || isLoadingSignals
+  const isLoading =
+    isLoadingBaseStats || isLoadingLineaStats || isLoadingSignals
 
   if (isLoading) {
     return <LoadingState />
   }
 
-  const stats = systemStats?.stats[0]
+  const baseStatsData = baseStats?.stats[0]
+  const lineaStatsData = lineaStats?.stats[0]
+
+  // Combine stats from both networks
+  const combinedStats = {
+    total_atoms:
+      (baseStatsData?.total_atoms ?? 0) + (lineaStatsData?.total_atoms ?? 0),
+    total_triples:
+      (baseStatsData?.total_triples ?? 0) +
+      (lineaStatsData?.total_triples ?? 0),
+    total_signals:
+      (baseStatsData?.total_signals ?? 0) +
+      (lineaStatsData?.total_signals ?? 0),
+    total_accounts:
+      (baseStatsData?.total_accounts ?? 0) +
+      (lineaStatsData?.total_accounts ?? 0),
+    total_atoms_base: baseStatsData?.total_atoms ?? 0,
+    total_atoms_linea: lineaStatsData?.total_atoms ?? 0,
+  }
 
   return (
     <>
@@ -120,22 +142,22 @@ export default function Network() {
           {
             label: 'Atoms',
             icon: <Icon name="fingerprint" className="w-4 h-4" />,
-            value: stats?.total_atoms ?? 0,
+            value: combinedStats.total_atoms,
           },
           {
             label: 'Triples',
             icon: <Icon name="claim" className="w-4 h-4" />,
-            value: stats?.total_triples ?? 0,
+            value: combinedStats.total_triples,
           },
           {
             label: 'Signals',
             icon: <Radio className="w-4 h-4" />,
-            value: stats?.total_signals ?? 0,
+            value: combinedStats.total_signals,
           },
           {
-            label: 'Users',
+            label: 'Accounts',
             icon: <User className="w-4 h-4" />,
-            value: (stats?.total_accounts ?? 0) - (stats?.total_atoms ?? 0),
+            value: combinedStats.total_accounts,
           },
         ]}
         className="[&>div]:after:hidden sm:[&>div]:after:block"
