@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-import { Button, Text, TextVariant, TextWeight, toast } from '@0xintuition/1ui'
+import { Button, Text, TextVariant, toast } from '@0xintuition/1ui'
 
 import SignalToast from '@components/survey-modal/signal-toast'
 import { MIN_DEPOSIT, MULTIVAULT_CONTRACT_ADDRESS } from '@consts/general'
@@ -76,11 +76,45 @@ export function SignalStep({
   )
   const [finalMode, setFinalMode] = useState<'deposit' | 'redeem' | undefined>()
   const [finalTicks, setFinalTicks] = useState<number>(0)
+  const [inputValue, setInputValue] = useState(initialTicks.toString())
 
   const publicClient = usePublicClient()
   const location = useLocation()
   const contract = MULTIVAULT_CONTRACT_ADDRESS
   const queryClient = useQueryClient()
+
+  // Helper function to validate ticks and prevent crossing zero
+  const validateTicksChange = (newTicks: number): boolean => {
+    // Check if trying to cross zero
+    if (
+      (initialTicks > 0 && newTicks < 0) ||
+      (initialTicks < 0 && newTicks > 0)
+    ) {
+      const errorMessage =
+        initialTicks > 0
+          ? 'Must redeem all upvotes before downvoting'
+          : 'Must redeem all downvotes before upvoting'
+      setValidationErrors([errorMessage])
+      setShowErrors(true)
+      return false
+    }
+
+    // Check if at zero and trying to go in opposite direction
+    if (
+      ticks === 0 &&
+      ((initialTicks > 0 && newTicks < 0) || (initialTicks < 0 && newTicks > 0))
+    ) {
+      const errorMessage =
+        initialTicks > 0
+          ? 'Must redeem all upvotes before downvoting'
+          : 'Must redeem all downvotes before upvoting'
+      setValidationErrors([errorMessage])
+      setShowErrors(true)
+      return false
+    }
+
+    return true
+  }
 
   // Determine which vault to use based on initial position or new direction
   const getActiveVaultId = () => {
@@ -197,13 +231,21 @@ export function SignalStep({
           (+MIN_DEPOSIT * FEE_ADJUSTMENT),
       )
 
-      // Only update if the calculated value is significantly different
-      // For negative positions, maintain the initial direction
       if (Math.abs(calculatedTicks - Math.abs(currentInitialTicks)) > 0.1) {
         const newTicks =
           initialDirection < 0 ? -calculatedTicks : calculatedTicks
-        setTicks(newTicks)
-        setCurrentInitialTicks(Math.abs(calculatedTicks))
+
+        // Validate the calculated ticks
+        if (validateTicksChange(newTicks)) {
+          setTicks(newTicks)
+          setInputValue(newTicks.toString())
+          setCurrentInitialTicks(Math.abs(calculatedTicks))
+        } else {
+          // If validation fails, force to 0
+          setTicks(0)
+          setInputValue('0')
+          setCurrentInitialTicks(0)
+        }
       }
       setHasInitialized(true)
     }
@@ -230,8 +272,17 @@ export function SignalStep({
   }, [location, dispatch])
 
   useEffect(() => {
-    setTicks(initialTicks)
-    setCurrentInitialTicks(Math.abs(initialTicks))
+    // Validate the initialTicks to ensure they don't cross zero
+    if (validateTicksChange(initialTicks)) {
+      setTicks(initialTicks)
+      setCurrentInitialTicks(Math.abs(initialTicks))
+      setInputValue(initialTicks.toString())
+    } else {
+      // If validation fails, force to 0
+      setTicks(0)
+      setCurrentInitialTicks(0)
+      setInputValue('0')
+    }
   }, [initialTicks])
 
   useEffect(() => {
@@ -346,6 +397,10 @@ export function SignalStep({
   useEffect(() => {
     if (isSimplifiedRedeem) {
       setTicks(0)
+      setInputValue('0')
+      // Clear any validation errors
+      setValidationErrors([])
+      setShowErrors(false)
     }
   }, [isSimplifiedRedeem])
 
@@ -356,29 +411,29 @@ export function SignalStep({
 
   // Button handlers
   const handleUpvote = () => {
-    // Only show error if trying to go positive while having negative position
-    if (initialTicks < 0 && ticks >= 0) {
-      setValidationErrors(['Must redeem all downvotes before upvoting'])
-      setShowErrors(true)
+    const newValue = ticks + 1
+    if (!validateTicksChange(newValue)) {
       return
     }
+
     // Clear errors if no new errors are being set
     setValidationErrors([])
     setShowErrors(false)
-    setTicks(ticks + 1)
+    setTicks(newValue)
+    setInputValue(newValue.toString())
   }
 
   const handleDownvote = () => {
-    // Only show error if trying to go negative while having positive position
-    if (initialTicks > 0 && ticks <= 0) {
-      setValidationErrors(['Must redeem all upvotes before downvoting'])
-      setShowErrors(true)
+    const newValue = ticks - 1
+    if (!validateTicksChange(newValue)) {
       return
     }
+
     // Clear errors if no new errors are being set
     setValidationErrors([])
     setShowErrors(false)
-    setTicks(ticks - 1)
+    setTicks(newValue)
+    setInputValue(newValue.toString())
   }
 
   const handleAction = async () => {
@@ -534,25 +589,94 @@ export function SignalStep({
 
               <div className="flex flex-col gap-2 pr-6">
                 <div className="flex items-center justify-end">
-                  <Text
-                    variant={TextVariant.headline}
-                    weight={TextWeight.semibold}
-                    className={`w-8 text-center ${
-                      hasInitialized
-                        ? ticks < 0
-                          ? 'text-destructive'
-                          : ticks > 0
-                            ? 'text-success'
-                            : 'text-primary'
-                        : initialTicks < 0
-                          ? 'text-destructive'
-                          : initialTicks > 0
-                            ? 'text-success'
-                            : 'text-primary'
-                    }`}
-                  >
-                    {hasInitialized ? Math.abs(ticks) : Math.abs(initialTicks)}
-                  </Text>
+                  <input
+                    type="text"
+                    value={inputValue}
+                    onChange={(e) => {
+                      const newValue = e.target.value
+                      if (
+                        newValue === '' ||
+                        newValue === '-' ||
+                        /^-?\d+$/.test(newValue)
+                      ) {
+                        // For empty or minus sign, just update the input value
+                        if (newValue === '' || newValue === '-') {
+                          setInputValue(newValue)
+                          if (newValue === '') {
+                            setTicks(1) // Default to 1 for empty input
+                          }
+                          return
+                        }
+
+                        // For actual numbers, validate the change
+                        const parsedValue = parseInt(newValue, 10)
+                        if (!isNaN(parsedValue)) {
+                          if (parsedValue === 0) {
+                            // Zero is always allowed
+                            setInputValue(newValue)
+                            setTicks(parsedValue)
+                            return
+                          }
+
+                          if (!validateTicksChange(parsedValue)) {
+                            // If validation fails, force to 0
+                            setInputValue('0')
+                            setTicks(0)
+                            return
+                          }
+
+                          // Valid change
+                          setInputValue(newValue)
+                          setTicks(parsedValue)
+                        }
+                      }
+                      // Ignore invalid input
+                    }}
+                    onBlur={() => {
+                      // Ensure value is valid when focus is lost
+                      if (
+                        inputValue === '' ||
+                        inputValue === '-' ||
+                        parseInt(inputValue, 10) === 0
+                      ) {
+                        // If we're at 0, that's valid - don't force back to 1
+                        if (parseInt(inputValue, 10) === 0) {
+                          setInputValue('0')
+                          setTicks(0)
+                          return
+                        }
+
+                        // For empty or invalid inputs, set to 1 or -1 based on initial direction
+                        const defaultValue = initialTicks < 0 ? -1 : 1
+                        if (validateTicksChange(defaultValue)) {
+                          setInputValue(defaultValue.toString())
+                          setTicks(defaultValue)
+                        } else {
+                          // If validation fails, force to 0
+                          setInputValue('0')
+                          setTicks(0)
+                        }
+                        return
+                      }
+
+                      // Double-check for cross-zero validation
+                      const parsedValue = parseInt(inputValue, 10)
+                      if (!validateTicksChange(parsedValue)) {
+                        // If validation fails, force to 0
+                        setInputValue('0')
+                        setTicks(0)
+                      }
+                    }}
+                    disabled={isLoading || !hasInitialized}
+                    className={`w-12 h-8 text-center ${
+                      parseInt(inputValue, 10) > 0
+                        ? 'text-success'
+                        : inputValue === '' || inputValue === '0'
+                          ? 'text-primary/70'
+                          : 'text-destructive'
+                    } bg-transparent border border-[#1A1A1A] rounded focus:outline-none focus:border-accent font-semibold`}
+                    aria-label="Number of votes to allocate"
+                  />
                   <div className="flex flex-col">
                     <Button
                       variant="text"
