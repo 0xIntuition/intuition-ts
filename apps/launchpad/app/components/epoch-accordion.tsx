@@ -57,9 +57,12 @@ export function EpochAccordion({
     )
   }
 
+  // Sort epochs by id in ascending order
+  const sortedEpochs = [...epochs].sort((a, b) => a.id - b.id)
+
   const defaultValue = currentEpochData?.epoch
     ? `epoch-${currentEpochData.epoch.id}`
-    : `epoch-${epochs[0].id}`
+    : `epoch-${sortedEpochs[sortedEpochs.length - 1].id}`
 
   return (
     <Accordion
@@ -68,7 +71,7 @@ export function EpochAccordion({
       className="w-full space-y-4"
       defaultValue={defaultValue}
     >
-      {epochs.map((epoch) => (
+      {sortedEpochs.map((epoch) => (
         <AccordionItem
           key={epoch.id}
           value={`epoch-${epoch.id}`}
