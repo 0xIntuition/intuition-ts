@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-import { Button, Text, TextVariant, TextWeight, toast } from '@0xintuition/1ui'
+import { Button, Text, TextVariant, toast } from '@0xintuition/1ui'
 
 import SignalToast from '@components/survey-modal/signal-toast'
 import { MIN_DEPOSIT, MULTIVAULT_CONTRACT_ADDRESS } from '@consts/general'
@@ -41,6 +41,7 @@ export function SignalStep({
   setIsLoading,
 }: SignalStepProps) {
   const [ticks, setTicks] = useState(1)
+  const [inputValue, setInputValue] = useState('1')
   const [lastTxHash, setLastTxHash] = useState<string | undefined>(undefined)
   const [validationErrors, setValidationErrors] = useState<string[]>([])
   const [showErrors, setShowErrors] = useState(false)
@@ -67,10 +68,14 @@ export function SignalStep({
     ? multiVaultConfig?.formatted_min_deposit
     : MIN_DEPOSIT
 
+  // Compute vote direction based on ticks value
+  const voteDirection = ticks >= 0 ? 'upvote' : 'downvote'
+  const absTickValue = Math.abs(ticks)
+
   const val =
     newAtomMetadata && min_deposit && tripleCost
-      ? (ticks * +min_deposit + +tripleCost).toString()
-      : (ticks * +min_deposit).toString()
+      ? (absTickValue * +min_deposit + +tripleCost).toString()
+      : (absTickValue * +min_deposit).toString()
 
   const {
     mutateAsync: stake,
@@ -97,6 +102,7 @@ export function SignalStep({
       }
 
       try {
+        // For new atoms, we're creating a triple
         const txHash = await createTriple({
           val,
           userWallet: privyUser?.wallet?.address,
@@ -136,10 +142,16 @@ export function SignalStep({
       }
 
       try {
+        // For existing triples, determine which vault to use based on vote direction
+        const vaultId =
+          voteDirection === 'upvote'
+            ? selectedTopic?.triple?.vault_id.toString() ?? ''
+            : selectedTopic?.triple?.counter_vault_id?.toString() ?? ''
+
         const txHash = await stake({
           val,
           userWallet: privyUser?.wallet?.address,
-          vaultId: selectedTopic?.triple?.vault_id.toString() ?? '',
+          vaultId,
           triple: selectedTopic?.triple,
           mode: 'deposit',
           contract,
@@ -319,6 +331,14 @@ export function SignalStep({
     setTxState(txState)
   }, [setTxState, txState])
 
+  // Update ticks when inputValue changes
+  useEffect(() => {
+    const parsedValue = parseInt(inputValue, 10)
+    if (!isNaN(parsedValue) && parsedValue !== 0) {
+      setTicks(parsedValue)
+    }
+  }, [inputValue])
+
   if (!userWallet) {
     return null
   }
@@ -331,8 +351,6 @@ export function SignalStep({
             Signal{' '}
             {newAtomMetadata?.name ?? selectedTopic?.triple?.subject.label} as
             the best {selectedTopic?.triple?.object.label}
-            {/* {selectedTopic?.triple?.predicate.label}{' '}
-          {selectedTopic?.triple?.object.label} */}
           </Text>
           <Text variant={TextVariant.footnote} className="text-primary/70">
             <span className="inline-flex items-center gap-1">
@@ -370,17 +388,66 @@ export function SignalStep({
 
           <div className="flex flex-col gap-2 w-full pr-6">
             <div className="flex items-center justify-end">
-              <Text
-                variant={TextVariant.headline}
-                weight={TextWeight.semibold}
-                className="w-8 text-center text-success"
-              >
-                {ticks}
-              </Text>
+              <input
+                type="text"
+                inputMode="numeric"
+                pattern="-?[0-9]*"
+                value={inputValue}
+                onChange={(e) => {
+                  const newValue = e.target.value
+
+                  // Allow empty input, minus sign, or valid number pattern
+                  if (
+                    newValue === '' ||
+                    newValue === '-' ||
+                    /^-?\d+$/.test(newValue)
+                  ) {
+                    // Update the raw input value
+                    setInputValue(newValue)
+
+                    // Handle special cases
+                    if (newValue === '') {
+                      setTicks(1) // Default to 1 for empty input
+                    } else if (newValue === '-') {
+                      // Just keep the minus sign, don't convert to number yet
+                    } else {
+                      const parsedValue = parseInt(newValue, 10)
+                      if (!isNaN(parsedValue) && parsedValue !== 0) {
+                        setTicks(parsedValue)
+                      }
+                    }
+                  }
+                  // Ignore invalid input
+                }}
+                onBlur={() => {
+                  // Ensure value is valid when focus is lost
+                  if (
+                    inputValue === '' ||
+                    inputValue === '-' ||
+                    parseInt(inputValue, 10) === 0
+                  ) {
+                    setInputValue('1')
+                    setTicks(1)
+                  }
+                }}
+                disabled={isLoading}
+                className={`w-12 h-8 text-center ${
+                  parseInt(inputValue, 10) > 0
+                    ? 'text-success'
+                    : inputValue === '' || inputValue === '0'
+                      ? 'text-primary/70'
+                      : 'text-destructive'
+                } bg-transparent border border-[#1A1A1A] rounded focus:outline-none focus:border-accent font-semibold`}
+                aria-label="Number of votes to allocate"
+              />
               <div className="flex flex-col">
                 <Button
                   variant="text"
-                  onClick={() => setTicks(ticks + 1)}
+                  onClick={() => {
+                    const newValue = ticks + 1
+                    setTicks(newValue)
+                    setInputValue(newValue.toString())
+                  }}
                   disabled={isLoading}
                   className="h-6 p-0 disabled:opacity-30"
                 >
@@ -388,8 +455,12 @@ export function SignalStep({
                 </Button>
                 <Button
                   variant="text"
-                  onClick={() => setTicks(Math.max(1, ticks - 1))}
-                  disabled={ticks <= 1 || isLoading}
+                  onClick={() => {
+                    const newValue = ticks - 1
+                    setTicks(newValue)
+                    setInputValue(newValue.toString())
+                  }}
+                  disabled={isLoading}
                   className="h-6 p-0 disabled:opacity-30"
                 >
                   <ArrowBigDown className="text-destructive fill-destructive h-5 w-5" />
@@ -423,6 +494,13 @@ export function SignalStep({
               buttonText={`Stake ${Number(val).toFixed(5)} ETH`}
               loadingText={'Processing...'}
               actionText="Stake"
+              disabled={
+                isLoading ||
+                !userWallet ||
+                !privyUser ||
+                val === '0' ||
+                val === ''
+              }
             />
             <Text variant="caption" className="text-end text-primary/70">
               Standard fees apply.{' '}
