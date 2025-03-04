@@ -155,9 +155,9 @@ export default function Network() {
             value: combinedStats.total_signals,
           },
           {
-            label: 'Users',
+            label: 'Accounts',
             icon: <User className="w-4 h-4" />,
-            value: combinedStats.total_accounts - combinedStats.total_atoms,
+            value: combinedStats.total_accounts,
           },
         ]}
         className="[&>div]:after:hidden sm:[&>div]:after:block"
