@@ -77,7 +77,6 @@ export function SignalStep({
   const [finalMode, setFinalMode] = useState<'deposit' | 'redeem' | undefined>()
   const [finalTicks, setFinalTicks] = useState<number>(0)
 
-  const FEE_ADJUSTMENT = 0.95 // 5% fee means 95% of deposit goes to conviction
   const publicClient = usePublicClient()
   const location = useLocation()
   const contract = MULTIVAULT_CONTRACT_ADDRESS
@@ -115,6 +114,11 @@ export function SignalStep({
 
   const { data: multiVaultConfig, isLoading: isLoadingConfig } =
     useGetMultiVaultConfig(contract)
+
+  const FEE_ADJUSTMENT =
+    1 -
+    +(multiVaultConfig?.entry_fee ?? 0) /
+      +(multiVaultConfig?.fee_denominator ?? 1)
 
   const vaultDetails = vaultDetailsData ?? vaultDetailsProp
   const min_deposit = multiVaultConfig?.formatted_min_deposit ?? MIN_DEPOSIT
