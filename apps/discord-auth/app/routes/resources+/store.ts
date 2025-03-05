@@ -93,7 +93,7 @@ export async function action({ request }: ActionFunctionArgs) {
   const body = await request.json()
   console.log('Request body:', body)
 
-  const walletAddress = body.walletAddress
+  const walletAddress = body.walletAddress.toLowerCase()
 
   if (!walletAddress) {
     return json({ error: 'No wallet address provided' }, { status: 400 })
