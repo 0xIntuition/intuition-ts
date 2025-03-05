@@ -1,6 +1,7 @@
 export const PITCH_DECK = 'https://docsend.com/view/6tnfzez7ajzaqn47'
 export const EXECUTIVE_SUMMARY = 'https://docsend.com/view/9hb3pvhcrcwpb3gf'
-export const PODCASTS = 'https://docsend.com/view/nesbgtfi4x7jg46x'
+export const PODCASTS =
+  'https://intuition-systems.notion.site/108450d37d06808fbd43f863e3daca22?v=13c450d37d0680f499eb000c7b7ffa90'
 export const DEMO_VIDEOS = 'https://docsend.com/view/uhwwkvcprbxfcj88'
 export const WHITE_PAPER = 'https://docsend.com/view/zjaxy5xhpswzi94e'
 export const LITE_PAPER = 'https://docsend.com/view/mw8sp8gcjxv7jx5r'
