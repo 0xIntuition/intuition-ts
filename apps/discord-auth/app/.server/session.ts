@@ -74,12 +74,6 @@ export async function getSession(request: Request): Promise<AuthSession> {
     walletAuth: session.get('walletAuth'),
   }
 
-  console.log('Session debug - getSession:', {
-    hasDiscordUser: Boolean(authSession.discordUser),
-    discordUserRoleIds: authSession.discordUser?.roleIds,
-    discordUserTotalPoints: authSession.discordUser?.totalPoints,
-  })
-
   return authSession
 }
 
@@ -87,12 +81,6 @@ export async function createSession(
   data: AuthSession,
   redirectTo: string,
 ): Promise<Response> {
-  console.log('Session debug - createSession:', {
-    hasDiscordUser: Boolean(data.discordUser),
-    discordUserRoleIds: data.discordUser?.roleIds,
-    discordUserTotalPoints: data.discordUser?.totalPoints,
-  })
-
   const session = await sessionStorage.getSession()
   session.set('discordUser', data.discordUser)
   session.set('walletAuth', data.walletAuth)

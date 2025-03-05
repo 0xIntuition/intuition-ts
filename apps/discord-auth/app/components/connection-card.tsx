@@ -36,18 +36,11 @@ export function ConnectionCard({
   // Memoize the roleIds to prevent unnecessary re-renders
   const roleIds = useMemo(() => {
     if (!discordUser) {
-      console.log('useDiscordRoles debug: No discordUser provided')
       return undefined
     }
 
-    console.log(
-      'useDiscordRoles debug: discordUser:',
-      JSON.stringify(discordUser, null, 2),
-    )
-
     // Check if roleIds exists directly on the discordUser
     if (discordUser.roleIds) {
-      console.log('useDiscordRoles debug: Found roleIds:', discordUser.roleIds)
       // Even if roleIds is empty, return it as an empty array rather than undefined
       return discordUser.roleIds
     }
@@ -57,16 +50,9 @@ export function ConnectionCard({
       ?.roles
     if (legacyRoles) {
       const mappedRoleIds = legacyRoles.map((r) => r.id)
-      console.log(
-        'useDiscordRoles debug: Found legacy roles, mapped to:',
-        mappedRoleIds,
-      )
       return mappedRoleIds
     }
 
-    console.log(
-      'useDiscordRoles debug: No roleIds or roles found on discordUser, returning empty array',
-    )
     // Return empty array instead of undefined to trigger role fetching
     return []
   }, [discordUser])

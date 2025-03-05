@@ -33,18 +33,6 @@ export default function Login() {
     hasDiscord: boolean
   } | null>(null)
 
-  // Log Discord user data for debugging
-  useEffect(() => {
-    if (discordUser) {
-      console.log('Login debug - Discord user data:', {
-        id: discordUser.id,
-        username: discordUser.username,
-        roleIds: discordUser.roleIds,
-        totalPoints: discordUser.totalPoints,
-      })
-    }
-  }, [discordUser])
-
   // Handle Discord disconnect
   const handleDiscordDisconnect = async () => {
     try {
@@ -147,14 +135,6 @@ export default function Login() {
       const requestData = {
         walletAddress: privyUser.wallet.address,
       }
-
-      console.log('Store user request data:', requestData)
-      console.log('Current Discord user data:', {
-        id: discordUser?.id,
-        username: discordUser?.username,
-        roleIds: discordUser?.roleIds,
-        totalPoints: discordUser?.totalPoints,
-      })
 
       const response = await fetch('/resources/store', {
         method: 'POST',

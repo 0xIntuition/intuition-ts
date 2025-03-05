@@ -150,11 +150,6 @@ export async function getDiscordUser(
 
   const member: DiscordGuildMember = await memberResponse.json()
 
-  console.log('Discord debug - member roles:', {
-    memberRolesCount: member.roles.length,
-    memberRoles: member.roles,
-  })
-
   // Get guild roles
   const rolesResponse = await fetch(
     `${DISCORD_ENDPOINT}/guilds/${guildId}/roles`,
@@ -173,37 +168,17 @@ export async function getDiscordUser(
 
   const roles: DiscordAPIRole[] = await rolesResponse.json()
 
-  // Log all roles from the Discord API to help identify the correct role IDs
-  console.log(
-    'Discord debug - all guild roles:',
-    roles.map((role) => ({
-      id: role.id,
-      name: role.name,
-    })),
-  )
-
-  console.log('Discord debug - all guild roles count:', roles.length)
-
   // Map role IDs to role objects
   const userRoles = roles
     .filter((role) => {
       const isInMemberRoles = member.roles.includes(role.id)
       const isInAllowedRoles = ALLOWED_ROLE_IDS.includes(role.id)
 
-      if (isInMemberRoles && !isInAllowedRoles) {
-        console.log(
-          `Discord debug - role ${role.name} (${role.id}) is in member roles but not in allowed roles`,
-        )
-      }
-
       return isInMemberRoles && isInAllowedRoles
     })
     .sort((a, b) => b.position - a.position)
     .map((role) => {
       const points = ROLE_POINTS[role.id] || 0
-      console.log(
-        `Discord debug - assigning ${points} points to role ${role.name} (${role.id})`,
-      )
 
       return {
         id: role.id,
@@ -218,24 +193,10 @@ export async function getDiscordUser(
       }
     })
 
-  console.log('Discord debug - filtered user roles:', {
-    userRolesCount: userRoles.length,
-    userRoles: userRoles.map((r) => ({
-      id: r.id,
-      name: r.name,
-      points: r.points,
-    })),
-  })
-
   // Calculate total points
   const totalPoints = userRoles.reduce(
     (sum, role) => sum + (role.points || 0),
     0,
-  )
-  console.log('Discord debug - total points:', totalPoints)
-  console.log(
-    'Discord debug - points breakdown:',
-    userRoles.map((r) => ({ role: r.name, points: r.points })),
   )
 
   // We're not going to include all roles as a fallback anymore
@@ -286,33 +247,14 @@ export async function fetchGuildRoles(): Promise<DiscordRole[]> {
 
   const roles: DiscordAPIRole[] = await response.json()
 
-  // Log all roles from the Discord API to help identify the correct role IDs
-  console.log(
-    'Discord debug - all guild roles:',
-    roles.map((role) => ({
-      id: role.id,
-      name: role.name,
-    })),
-  )
-
-  console.log('Discord debug - all guild roles count:', roles.length)
-
   // Filter roles by the allowed list
   const allowedRoles = roles
     .filter((role) => {
       const isAllowed = ALLOWED_ROLE_IDS.includes(role.id)
-      if (!isAllowed) {
-        console.log(
-          `fetchGuildRoles debug - role ${role.name} (${role.id}) is not in allowed roles`,
-        )
-      }
       return isAllowed
     })
     .map((role): DiscordRole => {
       const points = ROLE_POINTS[role.id] || 0
-      console.log(
-        `fetchGuildRoles debug - assigning ${points} points to role ${role.name} (${role.id})`,
-      )
 
       return {
         id: role.id,
@@ -326,15 +268,6 @@ export async function fetchGuildRoles(): Promise<DiscordRole[]> {
         points,
       }
     })
-
-  console.log('fetchGuildRoles debug - allowed roles:', {
-    allowedRolesCount: allowedRoles.length,
-    allowedRoles: allowedRoles.map((r) => ({
-      id: r.id,
-      name: r.name,
-      points: r.points,
-    })),
-  })
 
   return allowedRoles
 }

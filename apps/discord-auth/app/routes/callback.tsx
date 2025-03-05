@@ -4,19 +4,6 @@ import { getDiscordTokens, getDiscordUser } from '../.server/discord'
 import { createSession, getSession } from '../.server/session'
 import type { DiscordUser, SessionDiscordUser } from '../types/discord'
 
-function getMemoryUsage() {
-  if (global.gc) {
-    global.gc()
-  }
-  const used = process.memoryUsage()
-  return {
-    rss: Math.round(used.rss / 1024 / 1024),
-    heapTotal: Math.round(used.heapTotal / 1024 / 1024),
-    heapUsed: Math.round(used.heapUsed / 1024 / 1024),
-    external: Math.round(used.external / 1024 / 1024),
-  }
-}
-
 function minimizeDiscordUser(user: DiscordUser): SessionDiscordUser {
   // Ensure roles is always an array
   const roles = user.roles || []
@@ -33,23 +20,10 @@ function minimizeDiscordUser(user: DiscordUser): SessionDiscordUser {
     totalPoints,
   }
 
-  console.log(
-    'Discord callback debug: Original user roles:',
-    JSON.stringify(roles, null, 2),
-  )
-  console.log(
-    'Discord callback debug: Minimized user roleIds:',
-    sessionUser.roleIds,
-  )
-  console.log('Discord callback debug: Total points calculated:', totalPoints)
-
   return sessionUser
 }
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  const initialMemory = getMemoryUsage()
-  console.log('Memory usage at start:', initialMemory)
-
   const url = new URL(request.url)
   const code = url.searchParams.get('code')
   const userAgent = request.headers.get('User-Agent') || ''
@@ -65,10 +39,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   try {
     const currentSession = await getSession(request)
-    console.log('Memory after getting session:', {
-      ...getMemoryUsage(),
-      rssDiff: `${Math.round((process.memoryUsage().rss - initialMemory.rss * 1024 * 1024) / 1024)}KB`,
-    })
 
     let discordUser: SessionDiscordUser | null = null
     try {
@@ -100,10 +70,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
       if (global.gc) {
         global.gc()
       }
-      console.log('Final memory usage:', {
-        ...getMemoryUsage(),
-        rssDiff: `${Math.round((process.memoryUsage().rss - initialMemory.rss * 1024 * 1024) / 1024)}KB`,
-      })
 
       return response
     } catch (error) {
