@@ -24,6 +24,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 export default function Login() {
   const { discordUser, discordAuthUrl } = useLoaderData<typeof loader>()
   const { user: privyUser, login, logout } = usePrivy()
+  const walletAddress = privyUser?.wallet?.address?.toLowerCase()
   const [isConnecting, setIsConnecting] = useState(false)
   const [error, setError] = useState<string>()
   const [isComplete, setIsComplete] = useState(false)
@@ -54,13 +55,13 @@ export default function Login() {
   // Check if user exists when wallet is connected
   useEffect(() => {
     async function checkUserExists() {
-      if (!privyUser?.wallet?.address) {
+      if (!walletAddress) {
         return
       }
 
       try {
         const response = await fetch(
-          `/resources/exists?walletAddress=${privyUser.wallet.address}`,
+          `/resources/exists?walletAddress=${walletAddress}`,
         )
         const data = await response.json()
         setUserExists(data.exists)
@@ -75,7 +76,7 @@ export default function Login() {
     }
 
     checkUserExists()
-  }, [privyUser?.wallet?.address])
+  }, [walletAddress])
 
   // Get descriptive text based on existing connections
   const getSetupDescription = () => {
@@ -123,7 +124,7 @@ export default function Login() {
   }
 
   async function handleStoreUser() {
-    if (!privyUser?.wallet?.address) {
+    if (!walletAddress) {
       return
     }
 
@@ -133,7 +134,7 @@ export default function Login() {
 
     try {
       const requestData = {
-        walletAddress: privyUser.wallet.address,
+        walletAddress,
       }
 
       const response = await fetch('/resources/store', {
@@ -169,14 +170,14 @@ export default function Login() {
         {/* Wallet Connection */}
         <ConnectionCard
           type="wallet"
-          isConnected={Boolean(privyUser?.wallet?.address)}
+          isConnected={Boolean(walletAddress)}
           onConnect={login}
           onDisconnect={logout}
           privyUser={privyUser as PrivyUser}
         />
 
         {/* Discord Connection - Only show after wallet is connected */}
-        {privyUser?.wallet?.address && (
+        {walletAddress && (
           <ConnectionCard
             type="discord"
             isConnected={Boolean(discordUser)}
@@ -189,8 +190,8 @@ export default function Login() {
         )}
 
         {/* Complete Setup - Only show when both are connected */}
-        {discordUser && privyUser?.wallet?.address && (
-          <div className="w-full max-w-md bg-black/20 backdrop-blur-sm rounded-xl p-6 border border-gray-800">
+        {discordUser && walletAddress && (
+          <div className="w-full max-w-md rounded-lg bg-white/5 backdrop-blur-md backdrop-saturate-150 p-6 border border-border/10">
             <div className="flex items-center justify-between mb-2">
               <h3 className="text-lg font-semibold">Complete Setup</h3>
               {discordUser.totalPoints ? (

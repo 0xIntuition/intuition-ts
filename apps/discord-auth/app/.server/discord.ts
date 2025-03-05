@@ -49,7 +49,7 @@ const ALLOWED_ROLE_IDS = [
 ] as readonly string[]
 
 // Role points mapping based on the CSV data
-export const ROLE_POINTS: Record<string, number> = {
+const ROLE_POINTS: Record<string, number> = {
   // Main roles
   '1186312711739547699': 5000, // Seeker v2
   '1186380921570607114': 15000, // Wave

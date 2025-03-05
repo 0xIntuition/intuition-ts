@@ -32,6 +32,7 @@ export function ConnectionCard({
     address: privyUser?.wallet?.address as `0x${string}`,
     chainId: 1, // mainnet
   })
+  const walletAddress = privyUser?.wallet?.address.toLowerCase()
 
   // Memoize the roleIds to prevent unnecessary re-renders
   const roleIds = useMemo(() => {
@@ -96,10 +97,7 @@ export function ConnectionCard({
               <p className="text-sm text-gray-400">
                 {type === 'wallet'
                   ? ensName ||
-                    `${privyUser?.wallet?.address.slice(
-                      0,
-                      6,
-                    )}...${privyUser?.wallet?.address.slice(-4)}`
+                    `${walletAddress?.slice(0, 6)}...${walletAddress?.slice(-4)}`
                   : discordUser?.username}
               </p>
             )}
@@ -123,7 +121,7 @@ export function ConnectionCard({
         <div className="mt-2 p-3 bg-black/20 rounded-lg">
           <div className="flex items-center justify-between text-sm">
             <span className="text-gray-400">Address</span>
-            <span className="font-mono">{privyUser?.wallet?.address}</span>
+            <span className="font-mono">{walletAddress}</span>
           </div>
           {ensName && (
             <div className="flex items-center justify-between text-sm mt-2">
