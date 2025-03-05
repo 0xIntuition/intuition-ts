@@ -48,6 +48,7 @@ export interface DiscordRole {
   position: number
   icon: string | null
   unicodeEmoji: string | null
+  points?: number
 }
 
 export interface DiscordUser {
@@ -56,6 +57,7 @@ export interface DiscordUser {
   discriminator: string
   avatar: string | null
   roles: DiscordRole[]
+  totalPoints?: number
 }
 
 // Session types
@@ -65,4 +67,5 @@ export interface SessionDiscordUser {
   discriminator: string
   avatar: string | null
   roleIds: string[]
+  totalPoints?: number
 }

@@ -35,17 +35,46 @@ const ALLOWED_ROLE_IDS = [
   '1206583612384739349', // Tribesman v2
   '1208438051622355035', // Aligned v2
   '1212434261643362324', // Enlightened v3
-  '1211321175461077048', // Enlightened v2
+  '1211321175461077043', // Enlightened v2
   '1186381353860735016', // Enlightened
   // Orbit roles
-  '9968874649228411159', // Inquirer
-  '9226763596318969698', // Wanderer
-  '9969448442808032025', // Traveler
-  '9968308293869445584', // Disciple
-  '9226768857401999947', // Enchaner
-  '9969981494303211162', // Illuminated
-  '103284633515564250', // Conscious
+  '996887464922841159', // Inquirer
+  '922676359631896598', // Wanderer
+  '996944844280832025', // Traveler
+  '996830829386944584', // Disciple
+  '922676885740199947', // Enchaner
+  '996998149430321162', // Illuminated
+  '1032846335155642508', // Conscious
+  // Remove the @everyone role since it's not needed
 ] as readonly string[]
+
+// Role points mapping based on the CSV data
+export const ROLE_POINTS: Record<string, number> = {
+  // Main roles
+  '1186312711739547699': 5000, // Seeker v2
+  '1186380921570607114': 15000, // Wave
+  '1186381022821101758': 25000, // Energy
+  '1186381058736930867': 35000, // Atom
+  '1208418197167153243': 45000, // Molecule v2
+  '1186381150625726554': 55000, // Cell
+  '1186381180422062110': 65000, // Neuron
+  '1208418541410189352': 75000, // Synapse v2
+  '1208418723158036530': 85000, // Aura v2
+  '1186381257198817392': 95000, // Soul
+  '1206583612384739349': 105000, // Tribesman v2
+  '1208438051622355035': 115000, // Aligned v2
+  '1212434261643362324': 75000, // Enlightened v3
+  '1211321175461077043': 87500, // Enlightened v2
+  '1186381353860735016': 125000, // Enlightened
+  // Orbit roles
+  '996887464922841159': 5000, // Inquirer
+  '922676359631896598': 15000, // Wanderer
+  '996944844280832025': 20000, // Traveler
+  '996830829386944584': 30000, // Disciple
+  '922676885740199947': 50000, // Enchaner
+  '996998149430321162': 70000, // Illuminated
+  '1032846335155642508': 100000, // Conscious
+}
 
 export function getDiscordAuthURL() {
   const params = new URLSearchParams({
@@ -121,6 +150,11 @@ export async function getDiscordUser(
 
   const member: DiscordGuildMember = await memberResponse.json()
 
+  console.log('Discord debug - member roles:', {
+    memberRolesCount: member.roles.length,
+    memberRoles: member.roles,
+  })
+
   // Get guild roles
   const rolesResponse = await fetch(
     `${DISCORD_ENDPOINT}/guilds/${guildId}/roles`,
@@ -139,21 +173,73 @@ export async function getDiscordUser(
 
   const roles: DiscordAPIRole[] = await rolesResponse.json()
 
-  // Map role IDs to role objects
-  const userRoles = roles
-    .filter(
-      (role) =>
-        member.roles.includes(role.id) && ALLOWED_ROLE_IDS.includes(role.id),
-    )
-    .sort((a, b) => b.position - a.position)
-    .map((role) => ({
+  // Log all roles from the Discord API to help identify the correct role IDs
+  console.log(
+    'Discord debug - all guild roles:',
+    roles.map((role) => ({
       id: role.id,
       name: role.name,
-      color: role.color ? `#${role.color.toString(16).padStart(6, '0')}` : null,
-      position: role.position,
-      icon: role.icon ?? null,
-      unicodeEmoji: role.unicode_emoji ?? null,
-    }))
+    })),
+  )
+
+  console.log('Discord debug - all guild roles count:', roles.length)
+
+  // Map role IDs to role objects
+  const userRoles = roles
+    .filter((role) => {
+      const isInMemberRoles = member.roles.includes(role.id)
+      const isInAllowedRoles = ALLOWED_ROLE_IDS.includes(role.id)
+
+      if (isInMemberRoles && !isInAllowedRoles) {
+        console.log(
+          `Discord debug - role ${role.name} (${role.id}) is in member roles but not in allowed roles`,
+        )
+      }
+
+      return isInMemberRoles && isInAllowedRoles
+    })
+    .sort((a, b) => b.position - a.position)
+    .map((role) => {
+      const points = ROLE_POINTS[role.id] || 0
+      console.log(
+        `Discord debug - assigning ${points} points to role ${role.name} (${role.id})`,
+      )
+
+      return {
+        id: role.id,
+        name: role.name,
+        color: role.color
+          ? `#${role.color.toString(16).padStart(6, '0')}`
+          : null,
+        position: role.position,
+        icon: role.icon ?? null,
+        unicodeEmoji: role.unicode_emoji ?? null,
+        points,
+      }
+    })
+
+  console.log('Discord debug - filtered user roles:', {
+    userRolesCount: userRoles.length,
+    userRoles: userRoles.map((r) => ({
+      id: r.id,
+      name: r.name,
+      points: r.points,
+    })),
+  })
+
+  // Calculate total points
+  const totalPoints = userRoles.reduce(
+    (sum, role) => sum + (role.points || 0),
+    0,
+  )
+  console.log('Discord debug - total points:', totalPoints)
+  console.log(
+    'Discord debug - points breakdown:',
+    userRoles.map((r) => ({ role: r.name, points: r.points })),
+  )
+
+  // We're not going to include all roles as a fallback anymore
+  // Only include roles that the user actually has and are in the allowed list
 
   return {
     id: user.id,
@@ -161,6 +247,7 @@ export async function getDiscordUser(
     discriminator: user.discriminator,
     avatar: user.avatar,
     roles: userRoles,
+    totalPoints, // Add total points to the user object
   } as DiscordUser
 }
 
@@ -199,10 +286,35 @@ export async function fetchGuildRoles(): Promise<DiscordRole[]> {
 
   const roles: DiscordAPIRole[] = await response.json()
 
-  return roles
-    .filter((role) => ALLOWED_ROLE_IDS.includes(role.id))
-    .map(
-      (role): DiscordRole => ({
+  // Log all roles from the Discord API to help identify the correct role IDs
+  console.log(
+    'Discord debug - all guild roles:',
+    roles.map((role) => ({
+      id: role.id,
+      name: role.name,
+    })),
+  )
+
+  console.log('Discord debug - all guild roles count:', roles.length)
+
+  // Filter roles by the allowed list
+  const allowedRoles = roles
+    .filter((role) => {
+      const isAllowed = ALLOWED_ROLE_IDS.includes(role.id)
+      if (!isAllowed) {
+        console.log(
+          `fetchGuildRoles debug - role ${role.name} (${role.id}) is not in allowed roles`,
+        )
+      }
+      return isAllowed
+    })
+    .map((role): DiscordRole => {
+      const points = ROLE_POINTS[role.id] || 0
+      console.log(
+        `fetchGuildRoles debug - assigning ${points} points to role ${role.name} (${role.id})`,
+      )
+
+      return {
         id: role.id,
         name: role.name,
         color: role.color
@@ -211,6 +323,18 @@ export async function fetchGuildRoles(): Promise<DiscordRole[]> {
         position: role.position,
         icon: role.icon ?? null,
         unicodeEmoji: role.unicode_emoji ?? null,
-      }),
-    )
+        points,
+      }
+    })
+
+  console.log('fetchGuildRoles debug - allowed roles:', {
+    allowedRolesCount: allowedRoles.length,
+    allowedRoles: allowedRoles.map((r) => ({
+      id: r.id,
+      name: r.name,
+      points: r.points,
+    })),
+  })
+
+  return allowedRoles
 }

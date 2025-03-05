@@ -36,14 +36,39 @@ export function ConnectionCard({
   // Memoize the roleIds to prevent unnecessary re-renders
   const roleIds = useMemo(() => {
     if (!discordUser) {
+      console.log('useDiscordRoles debug: No discordUser provided')
       return undefined
     }
-    return (
-      discordUser.roleIds ??
-      (discordUser as unknown as { roles: DiscordRole[] })?.roles?.map(
-        (r) => r.id,
-      )
+
+    console.log(
+      'useDiscordRoles debug: discordUser:',
+      JSON.stringify(discordUser, null, 2),
     )
+
+    // Check if roleIds exists directly on the discordUser
+    if (discordUser.roleIds) {
+      console.log('useDiscordRoles debug: Found roleIds:', discordUser.roleIds)
+      // Even if roleIds is empty, return it as an empty array rather than undefined
+      return discordUser.roleIds
+    }
+
+    // Fallback to roles array if it exists (legacy format)
+    const legacyRoles = (discordUser as unknown as { roles: DiscordRole[] })
+      ?.roles
+    if (legacyRoles) {
+      const mappedRoleIds = legacyRoles.map((r) => r.id)
+      console.log(
+        'useDiscordRoles debug: Found legacy roles, mapped to:',
+        mappedRoleIds,
+      )
+      return mappedRoleIds
+    }
+
+    console.log(
+      'useDiscordRoles debug: No roleIds or roles found on discordUser, returning empty array',
+    )
+    // Return empty array instead of undefined to trigger role fetching
+    return []
   }, [discordUser])
 
   const { roles, isLoading: isLoadingRoles } = useDiscordRoles({ roleIds })
@@ -143,9 +168,16 @@ export function ConnectionCard({
               <div className="p-3 bg-black/20 rounded-lg">
                 <div className="flex items-center justify-between text-sm mb-2">
                   <span className="text-gray-400">Roles</span>
-                  <span className="text-xs text-gray-500">
-                    {roles.length} role{roles.length !== 1 ? 's' : ''}
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-gray-500">
+                      {roles.length} role{roles.length !== 1 ? 's' : ''}
+                    </span>
+                    {discordUser.totalPoints ? (
+                      <span className="text-xs bg-green-500/20 text-green-500 px-2 py-0.5 rounded-full">
+                        {discordUser.totalPoints.toLocaleString()} points
+                      </span>
+                    ) : null}
+                  </div>
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {roles.map((role) => (
@@ -173,7 +205,14 @@ export function ConnectionCard({
                           className="w-4 h-4 mr-1"
                         />
                       )}
-                      {role.name}
+                      <span className="flex items-center gap-1">
+                        {role.name}
+                        {role.points ? (
+                          <span className="text-[10px] opacity-75 ml-1">
+                            ({role.points.toLocaleString()})
+                          </span>
+                        ) : null}
+                      </span>
                     </div>
                   ))}
                 </div>

@@ -33,6 +33,18 @@ export default function Login() {
     hasDiscord: boolean
   } | null>(null)
 
+  // Log Discord user data for debugging
+  useEffect(() => {
+    if (discordUser) {
+      console.log('Login debug - Discord user data:', {
+        id: discordUser.id,
+        username: discordUser.username,
+        roleIds: discordUser.roleIds,
+        totalPoints: discordUser.totalPoints,
+      })
+    }
+  }, [discordUser])
+
   // Handle Discord disconnect
   const handleDiscordDisconnect = async () => {
     try {
@@ -132,12 +144,22 @@ export default function Login() {
     setIsComplete(false)
 
     try {
+      const requestData = {
+        walletAddress: privyUser.wallet.address,
+      }
+
+      console.log('Store user request data:', requestData)
+      console.log('Current Discord user data:', {
+        id: discordUser?.id,
+        username: discordUser?.username,
+        roleIds: discordUser?.roleIds,
+        totalPoints: discordUser?.totalPoints,
+      })
+
       const response = await fetch('/resources/store', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          walletAddress: privyUser.wallet.address,
-        }),
+        body: JSON.stringify(requestData),
       })
 
       if (!response.ok) {
@@ -189,7 +211,14 @@ export default function Login() {
         {/* Complete Setup - Only show when both are connected */}
         {discordUser && privyUser?.wallet?.address && (
           <div className="w-full max-w-md bg-black/20 backdrop-blur-sm rounded-xl p-6 border border-gray-800">
-            <h3 className="text-lg font-semibold mb-2">Complete Setup</h3>
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-lg font-semibold">Complete Setup</h3>
+              {discordUser.totalPoints ? (
+                <span className="text-sm bg-green-500/20 text-green-500 px-2 py-1 rounded-full">
+                  {discordUser.totalPoints.toLocaleString()} points
+                </span>
+              ) : null}
+            </div>
             <p className="text-sm text-gray-400 mb-4">
               {getSetupDescription()}
             </p>

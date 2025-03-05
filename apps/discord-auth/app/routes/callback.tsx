@@ -18,13 +18,32 @@ function getMemoryUsage() {
 }
 
 function minimizeDiscordUser(user: DiscordUser): SessionDiscordUser {
-  return {
+  // Ensure roles is always an array
+  const roles = user.roles || []
+
+  // Calculate total points from the roles
+  const totalPoints = roles.reduce((sum, role) => sum + (role.points || 0), 0)
+
+  const sessionUser = {
     id: user.id,
     username: user.username,
     discriminator: user.discriminator,
     avatar: user.avatar,
-    roleIds: user.roles.map((role) => role.id),
+    roleIds: roles.map((role) => role.id),
+    totalPoints,
   }
+
+  console.log(
+    'Discord callback debug: Original user roles:',
+    JSON.stringify(roles, null, 2),
+  )
+  console.log(
+    'Discord callback debug: Minimized user roleIds:',
+    sessionUser.roleIds,
+  )
+  console.log('Discord callback debug: Total points calculated:', totalPoints)
+
+  return sessionUser
 }
 
 export async function loader({ request }: LoaderFunctionArgs) {

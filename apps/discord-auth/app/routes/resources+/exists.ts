@@ -15,6 +15,7 @@ interface CheckUserExistsResponse {
     id: number
     discord_id: string
     wallet_address: string
+    points: number
   }[]
 }
 
@@ -31,6 +32,7 @@ const CheckUserExistsQuery = gql`
       id
       discord_id
       wallet_address
+      points
     }
   }
 `
