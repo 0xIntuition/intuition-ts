@@ -187,7 +187,7 @@ export default function Dashboard() {
           rank={rankData?.rank}
           totalUsers={rankData?.totalUsers}
           address={address}
-          earnedIQ={points?.launchpad_quests ?? 0}
+          earnedIQ={points?.launchpad_quests_points ?? 0}
           totalCompletedQuestions={totalCompletedQuestions?.count ?? 0}
         />
       </AuthCover>

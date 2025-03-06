@@ -67,7 +67,7 @@ export const GetPointsDocument = `
         portal_quests
         referral
         community
-        launchpad_quests
+        launchpad_quests_points
         relic_points
         total_points
       }
@@ -81,7 +81,7 @@ export interface GetPointsQuery {
     portal_quests: number
     referral: number
     community: number
-    launchpad_quests: number
+    launchpad_quests_points: number
     relic_points: number
     total_points: number
   }>
@@ -115,7 +115,7 @@ export async function fetchPoints(address: string): Promise<Points> {
     portal_quests: 0,
     referral: 0,
     community: 0,
-    launchpad_quests: 0,
+    launchpad_quests_points: 0,
     relic_points: 0,
     total_points: 0,
   }
@@ -125,7 +125,7 @@ export async function fetchPoints(address: string): Promise<Points> {
     portalQuests: points.portal_quests,
     referral: points.referral,
     community: points.community,
-    launchpadQuests: points.launchpad_quests,
+    launchpadQuests: points.launchpad_quests_points,
     relicPoints: points.relic_points,
     totalPoints: points.total_points,
   }
@@ -137,17 +137,17 @@ export const GetUserRankDocument = `
   query GetUserRank($limit: Int!, $offset: Int!) {
     # Get all users with points, ordered by points descending
     epoch_points(
-      where: { launchpad_quests: { _gt: 0 } }
-      order_by: { launchpad_quests: desc }
+      where: { launchpad_quests_points: { _gt: 0 } }
+      order_by: { launchpad_quests_points: desc }
       limit: $limit
       offset: $offset
     ) {
       account_id
-      launchpad_quests
+      launchpad_quests_points
     }
     # Get total count for pagination
     epoch_points_aggregate(
-      where: { launchpad_quests: { _gt: 0 } }
+      where: { launchpad_quests_points: { _gt: 0 } }
     ) {
       aggregate {
         count
@@ -159,7 +159,7 @@ export const GetUserRankDocument = `
 export interface GetUserRankQuery {
   epoch_points: Array<{
     account_id: string
-    launchpad_quests: number
+    launchpad_quests_points: number
   }>
   epoch_points_aggregate: {
     aggregate: {
@@ -251,26 +251,26 @@ export const GetUserRankEfficientDocument = `
   query GetUserRankEfficient($address: String!) {
     # Get user's points
     user_points: epoch_points_by_pk(account_id: $address) {
-      launchpad_quests
+      launchpad_quests_points
     }
     # Get all users with points, ordered by points descending
     ranked_users: epoch_points(
-      where: { launchpad_quests: { _gt: 0 } }
-      order_by: { launchpad_quests: desc }
+      where: { launchpad_quests_points: { _gt: 0 } }
+      order_by: { launchpad_quests_points: desc }
     ) {
       account_id
-      launchpad_quests
+      launchpad_quests_points
     }
   }
 `
 
 export interface GetUserRankEfficientQuery {
   user_points: {
-    launchpad_quests: number
+    launchpad_quests_points: number
   } | null
   ranked_users: Array<{
     account_id: string
-    launchpad_quests: number
+    launchpad_quests_points: number
   }>
 }
 
@@ -288,7 +288,7 @@ export async function fetchUserRankEfficient(
     address: address.toLowerCase(),
   })
 
-  const userPoints = data.user_points?.launchpad_quests ?? 0
+  const userPoints = data.user_points?.launchpad_quests_points ?? 0
   const totalUsers = data.ranked_users.length
 
   // If user has no points, they're unranked

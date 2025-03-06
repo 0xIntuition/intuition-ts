@@ -176,10 +176,8 @@ export function OnboardingModal({
         },
       },
       orderBy: {
-        subject: {
-          vault: {
-            position_count: 'desc',
-          },
+        vault: {
+          total_shares: 'desc',
         },
       },
     },

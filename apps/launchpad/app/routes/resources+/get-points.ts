@@ -5,7 +5,7 @@ import { gql } from 'graphql-request'
 interface PointsRecord {
   account_id: string
   community: number
-  launchpad_quests: number
+  launchpad_quests_points: number
   portal_quests: number
   referral: number
   social: number
@@ -22,7 +22,7 @@ const GetAccountPointsQuery = gql`
     epoch_points_by_pk(account_id: $account_id) {
       account_id
       community
-      launchpad_quests
+      launchpad_quests_points
       portal_quests
       referral
       social

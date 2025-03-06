@@ -141,9 +141,9 @@ export default function RewardsRoute() {
       name: 'Launchpad',
       image: '/images/lore/6-choosing-your-path.webp',
       align: 'bottom',
-      totalPoints: points?.launchpad_quests ?? 0,
+      totalPoints: points?.launchpad_quests_points ?? 0,
       levels: CATEGORY_MAX_POINTS.LAUNCHPAD.map((maxPoints, index) => {
-        const categoryPoints = points?.launchpad_quests ?? 0
+        const categoryPoints = points?.launchpad_quests_points ?? 0
         return {
           points: maxPoints,
           percentage: calculateLevelProgressForIndex(
