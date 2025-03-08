@@ -1,11 +1,18 @@
 import logger from '@lib/utils/logger'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
-import { getTripleHashFromAtoms, getTriplesByHash } from '@server/multivault'
+import { getMultivaultContract, publicClient } from '@server/viem'
 
 export type TagLoaderData = {
   result: string
   subjectId: string
   objectId: string
+}
+
+interface MulticallResponse {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  result?: any
+  error?: Error
+  status: 'failure' | 'success'
 }
 
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -22,17 +29,40 @@ export async function loader({ request }: LoaderFunctionArgs) {
   try {
     logger('Input values:', { subjectId, predicateId, objectId })
 
-    const getTripleHashFromAtomsHash = await getTripleHashFromAtoms({
-      subjectId: BigInt(subjectId),
-      predicateId: BigInt(predicateId),
-      objectId: BigInt(objectId),
+    const subjectIdBigInt = BigInt(subjectId)
+    const predicateIdBigInt = BigInt(predicateId)
+    const objectIdBigInt = BigInt(objectId)
+
+    const coreContractConfigs = [
+      {
+        ...getMultivaultContract,
+        functionName: 'tripleHashFromAtoms',
+        args: [subjectIdBigInt, predicateIdBigInt, objectIdBigInt],
+      },
+    ]
+
+    const resp: MulticallResponse[] = await publicClient.multicall({
+      contracts: coreContractConfigs,
     })
+
+    const getTripleHashFromAtomsHash = resp[0].result as `0x${string}`
 
     logger('Hash from atoms:', getTripleHashFromAtomsHash)
 
-    const getTriplesByHashResult = await getTriplesByHash({
-      hash: getTripleHashFromAtomsHash,
+    // Add the second call to the multicall
+    const secondCallConfigs = [
+      {
+        ...getMultivaultContract,
+        functionName: 'triplesByHash',
+        args: [getTripleHashFromAtomsHash],
+      },
+    ]
+
+    const secondResp: MulticallResponse[] = await publicClient.multicall({
+      contracts: secondCallConfigs,
     })
+
+    const getTriplesByHashResult = secondResp[0].result as bigint
 
     logger('Result for actual hash:', getTriplesByHashResult.toString())
 
