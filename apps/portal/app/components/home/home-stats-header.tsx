@@ -1,28 +1,48 @@
-import React, { Suspense } from 'react'
+import { Suspense } from 'react'
 
-import { ErrorStateCard, Separator, Text } from '@0xintuition/1ui'
+import { AggregatedMetrics, ErrorStateCard, Icon } from '@0xintuition/1ui'
 import { useGetStatsQuery } from '@0xintuition/graphql'
 
 import { RevalidateButton } from '@components/revalidate-button'
 import { HomeStatsHeaderSkeleton } from '@components/skeleton'
-import { PATHS } from '@consts/paths'
-import { formatBalance } from '@lib/utils/misc'
-import { Await, Link } from '@remix-run/react'
+import { useLineaStats } from '@lib/hooks/useLineaStats'
+import { Await } from '@remix-run/react'
+import { Radio, User } from 'lucide-react'
 
-interface HomeStatsHeaderProps extends React.HTMLAttributes<HTMLDivElement> {}
-
-export function HomeStatsHeader({ ...props }: HomeStatsHeaderProps) {
-  const { data: systemStats } = useGetStatsQuery(
+export function HomeStatsHeader() {
+  const { data: baseStats } = useGetStatsQuery(
     {},
     {
       queryKey: ['get-stats'],
     },
   )
 
+  const { data: lineaStats } = useLineaStats()
+
+  const baseStatsData = baseStats?.stats[0]
+  const lineaStatsData = lineaStats?.stats[0]
+
+  // Combine stats from both networks
+  const combinedStats = {
+    total_atoms:
+      (baseStatsData?.total_atoms ?? 0) + (lineaStatsData?.total_atoms ?? 0),
+    total_triples:
+      (baseStatsData?.total_triples ?? 0) +
+      (lineaStatsData?.total_triples ?? 0),
+    total_signals:
+      (baseStatsData?.total_signals ?? 0) +
+      (lineaStatsData?.total_signals ?? 0),
+    total_accounts:
+      (baseStatsData?.total_accounts ?? 0) +
+      (lineaStatsData?.total_accounts ?? 0),
+    total_atoms_base: baseStatsData?.total_atoms ?? 0,
+    total_atoms_linea: lineaStatsData?.total_atoms ?? 0,
+  }
+
   return (
     <Suspense fallback={<HomeStatsHeaderSkeleton />}>
       <Await
-        resolve={systemStats}
+        resolve={combinedStats}
         errorElement={
           <ErrorStateCard>
             <RevalidateButton />
@@ -30,87 +50,40 @@ export function HomeStatsHeader({ ...props }: HomeStatsHeaderProps) {
         }
       >
         {(resolvedStats) => {
-          if (!resolvedStats?.stats?.[0]) {
+          if (!resolvedStats) {
             return <HomeStatsHeaderSkeleton />
           }
 
-          const stats = resolvedStats.stats[0]
+          const stats = resolvedStats
           return (
-            <div
-              className="flex justify-between items-start md:items-center w-full py-4 px-6 bg-black rounded-xl theme-border"
-              {...props}
-            >
-              <div className="flex gap-8 max-lg:flex-col max-lg:gap-2">
-                <StatItem
-                  label="Identities"
-                  value={stats.total_atoms}
-                  link={PATHS.EXPLORE_IDENTITIES}
-                />
-                <StatItem
-                  label="Claims"
-                  value={stats.total_triples}
-                  link={PATHS.EXPLORE_CLAIMS}
-                />
-                <StatItem
-                  label="Users"
-                  value={stats.total_accounts}
-                  link={`${PATHS.EXPLORE_IDENTITIES}?isUser=true`}
-                />
-              </div>
-              <Separator
-                orientation="vertical"
-                className="mx-8 h-12 w-px bg-gradient-radial from-white via-white/20"
-              />
-              <div className="flex gap-8 max-lg:flex-col max-lg:gap-2">
-                {stats.contract_balance && (
-                  <StatItem
-                    label="TVL"
-                    value={`${formatBalance(stats.contract_balance, 18)} ETH`}
-                  />
-                )}
-                <StatItem
-                  label="Signals"
-                  value={stats.total_signals}
-                  link={PATHS.GLOBAL_ACTIVITY}
-                />
-              </div>
-            </div>
+            <AggregatedMetrics
+              metrics={[
+                {
+                  label: 'Atoms',
+                  icon: <Icon name="fingerprint" className="w-4 h-4" />,
+                  value: stats.total_atoms,
+                },
+                {
+                  label: 'Triples',
+                  icon: <Icon name="claim" className="w-4 h-4" />,
+                  value: stats.total_triples,
+                },
+                {
+                  label: 'Signals',
+                  icon: <Radio className="w-4 h-4" />,
+                  value: stats.total_signals,
+                },
+                {
+                  label: 'Accounts',
+                  icon: <User className="w-4 h-4" />,
+                  value: stats.total_accounts,
+                },
+              ]}
+              className="[&>div]:after:hidden sm:[&>div]:after:block"
+            />
           )
         }}
       </Await>
     </Suspense>
   )
-}
-
-interface StatItemProps {
-  label: string
-  value?: string | number | null | undefined
-  link?: string
-}
-
-function StatItem({ label, value, link }: StatItemProps) {
-  const content = (
-    <>
-      <Text
-        variant="caption"
-        weight="regular"
-        className="text-secondary-foreground"
-      >
-        {label}
-      </Text>
-      <Text variant="headline" weight="medium">
-        {value}
-      </Text>
-    </>
-  )
-
-  if (link) {
-    return (
-      <Link to={link} className="flex flex-col items-start">
-        {content}
-      </Link>
-    )
-  }
-
-  return <div className="flex flex-col items-start">{content}</div>
 }

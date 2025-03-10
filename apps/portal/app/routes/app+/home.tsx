@@ -56,7 +56,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
       listIds: getFeaturedListObjectIds(CURRENT_ENV),
       queryClient,
     }),
-    systemStats: getSystemStats({ request }),
+    systemStats: getSystemStats({ queryClient }),
     topUsers: fetchWrapper(request, {
       method: IdentitiesService.searchIdentity,
       args: {

@@ -102,12 +102,10 @@ export function parseMessage(message: string) {
 }
 
 export function getAuthHeaders(token?: string) {
+  // TODO: remove hardcoded API key once we move off legacy BE
   const headers: HeadersInit = {
     'Content-Type': 'application/json',
-  }
-
-  if (token) {
-    headers.authorization = `Bearer ${token}`
+    'x-api-key': 'f775ca23-8f77-45ee-89b6-232575f7571b',
   }
 
   return headers
