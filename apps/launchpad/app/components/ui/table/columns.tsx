@@ -169,11 +169,18 @@ export const columns: ColumnDef<TableItem>[] = [
               className="w-8 h-8 text-primary/40"
             />
           )}
-          <span className="font-medium truncate">{row.getValue('name')}</span>
+          <div className="max-w-[200px] sm:max-w-[250px] md:max-w-[300px] lg:max-w-[400px] overflow-hidden">
+            <span
+              className="font-medium block truncate"
+              title={row.getValue('name')}
+            >
+              {row.getValue('name')}
+            </span>
+          </div>
         </div>
       )
     },
-    size: 600,
+    size: 300,
   },
   {
     accessorKey: 'upvotes',
