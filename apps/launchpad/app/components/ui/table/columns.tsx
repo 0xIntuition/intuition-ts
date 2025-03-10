@@ -254,7 +254,7 @@ export const columns: ColumnDef<TableItem>[] = [
       const tvl = Number(forTvl) + Number(againstTvl)
 
       return (
-        <div className="pr-10 flex items-center gap-0.5">
+        <div className="flex justify-center items-center gap-0.5">
           {tvl ? Number(tvl).toFixed(4) : '0'}
           <Icon name="eth" className="w-3 h-3" />
         </div>
