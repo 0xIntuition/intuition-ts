@@ -954,7 +954,7 @@ export default function MiniGameOne() {
               value={searchTerm}
               onChange={handleSearchChange}
               ref={searchInputRef}
-              className="w-full"
+              className="w-full bg-primary/5 backdrop-blur-lg border-border/10 rounded-lg"
               startAdornment="magnifying-glass"
             />
             {searchTerm && (
@@ -979,14 +979,6 @@ export default function MiniGameOne() {
         </div>
       </div>
       <div className="mt-6 !mb-24">
-        {initialLoadComplete && isLoadingListData && (
-          <div className="flex justify-center items-center py-4">
-            <LoadingLogo size={30} />
-            <span className="ml-2 text-sm text-muted-foreground">
-              Searching...
-            </span>
-          </div>
-        )}
         <DataTable
           columns={columns as ColumnDef<TableRowData>[]}
           data={tableData}
