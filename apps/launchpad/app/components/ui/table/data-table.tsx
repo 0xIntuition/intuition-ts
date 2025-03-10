@@ -192,6 +192,7 @@ export function DataTable<TData extends { id: string | number }, TValue>({
               className="w-full table-fixed md:table-auto"
               style={{
                 minWidth: isMobile ? 'auto' : table.getTotalSize(),
+                maxWidth: '100%',
                 fontSize: isMobile ? '14px' : '16px',
               }}
             >
@@ -258,12 +259,17 @@ export function DataTable<TData extends { id: string | number }, TValue>({
                           <TableCell
                             key={cell.id}
                             className={`
-                                h-[72px] text-sm px-2 truncate !bg-transparent
+                                h-[72px] text-sm px-2 !bg-transparent
                                 ${isMobile ? 'first:pl-2' : 'first:pl-4'}
                                 ${isMobile ? 'last:pr-2' : 'last:pr-4'}
                               `}
                             style={{
                               width: isMobile ? 'auto' : cell.column.getSize(),
+                              maxWidth:
+                                cell.column.id === 'name' ? '500px' : 'auto',
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                              whiteSpace: 'nowrap',
                               ...(!isMobile
                                 ? getCommonPinningStyles(cell.column)
                                 : {}),
