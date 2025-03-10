@@ -78,7 +78,7 @@ export function TopicsStep({
 
   return (
     <div className="flex flex-col h-full">
-      <div className="flex flex-col gap-8 p-8">
+      <div className="flex flex-col gap-5 p-8">
         <div className="flex items-start justify-between gap-4 pb-5">
           <div className="space-y-1">
             <Text variant="headline" className="font-semibold">
@@ -107,7 +107,7 @@ export function TopicsStep({
               <Text variant={TextVariant.bodyLarge}>Loading your atoms...</Text>
               <Text
                 variant={TextVariant.body}
-                className="italic text-primary/70"
+                className="italic text-muted-foreground"
               >
                 This will only take a moment.
               </Text>
@@ -141,13 +141,11 @@ export function TopicsStep({
                             />
                           )}
                         </div>
-                        <div className="text-left">
-                          <Trunctacular
-                            value={topic.name}
-                            maxStringLength={24}
-                            className="text-white text-base leading-5"
-                          />
-                        </div>
+                        <Trunctacular
+                          value={topic.name}
+                          maxStringLength={24}
+                          className="text-white text-base leading-5 text-left"
+                        />
                       </div>
                       <div className="flex flex-col items-end text-right justify-between pr-2">
                         <Badge>
