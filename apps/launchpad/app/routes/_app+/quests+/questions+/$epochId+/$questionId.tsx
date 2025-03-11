@@ -23,6 +23,7 @@ import LoadingLogo from '@components/loading-logo'
 import { LoadingState } from '@components/loading-state'
 import { Navigation } from '@components/lore/chapter-navigation'
 import { PageHeader } from '@components/page-header'
+import { QuestModal } from '@components/quest-modal'
 import ShareModal from '@components/share-modal'
 import { OnboardingModal } from '@components/survey-modal/survey-modal'
 import { columns } from '@components/ui/table/columns'
@@ -76,7 +77,7 @@ import {
 import { TripleType } from 'app/types'
 import { ListDetailsType } from 'app/types/list-details'
 import { useAtom } from 'jotai'
-import { CheckCircle } from 'lucide-react'
+import { CheckCircle, PlusIcon } from 'lucide-react'
 import { formatUnits } from 'viem'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -202,7 +203,7 @@ export default function MiniGameOne() {
   const [searchParams, setSearchParams] = useSearchParams()
   const queryClient = useQueryClient()
 
-  const { authenticated } = usePrivy()
+  const { authenticated, login } = usePrivy()
 
   const {
     title,
@@ -218,11 +219,15 @@ export default function MiniGameOne() {
   const { data: completion, isLoading: isLoadingCompletion } = useQuery({
     queryKey: ['question-completion', userWallet?.toLowerCase(), questionId],
     queryFn: async () => {
-      const response = await fetch(
-        `/resources/get-question-completion?accountId=${userWallet}&questionId=${questionId}`,
-      )
-      const data = await response.json()
-      return data.completion
+      try {
+        const response = await fetch(
+          `/resources/get-question-completion?accountId=${userWallet}&questionId=${questionId}`,
+        )
+        const data = await response.json()
+        return data.completion
+      } catch (error) {
+        return null
+      }
     },
     enabled: !!userWallet && !!questionId,
   })
@@ -687,19 +692,27 @@ export default function MiniGameOne() {
   const handleCloseOnboarding = () => {
     // Only invalidate queries if we have all required values and the modal was actually open
     if (userWallet && questionId && currentEpoch && onboardingModal.isOpen) {
-      // Invalidate queries first
-      queryClient.invalidateQueries({
-        queryKey: ['question-completion', userWallet.toLowerCase(), questionId],
-      })
-      queryClient.invalidateQueries({
-        queryKey: ['epoch-progress', userWallet.toLowerCase(), currentEpoch],
-      })
-      queryClient.invalidateQueries({
-        queryKey: ['get-questions', currentEpoch],
-      })
+      // For the OnboardingModal (new completions), we need to invalidate queries
+      // For the QuestModal (repeat completions), we don't need to invalidate as much
+      if (!completion) {
+        // Invalidate queries first for new completions
+        queryClient.invalidateQueries({
+          queryKey: [
+            'question-completion',
+            userWallet.toLowerCase(),
+            questionId,
+          ],
+        })
+        queryClient.invalidateQueries({
+          queryKey: ['epoch-progress', userWallet.toLowerCase(), currentEpoch],
+        })
+        queryClient.invalidateQueries({
+          queryKey: ['get-questions', currentEpoch],
+        })
+      }
     }
 
-    // Then close the modal
+    // Close the modal
     setOnboardingModal({
       isOpen: false,
       question: null,
@@ -840,18 +853,26 @@ export default function MiniGameOne() {
                       </span>
                     </div>
                   </div>
+                ) : authenticated ? (
+                  <Button
+                    variant="primary"
+                    size="lg"
+                    onClick={handleStartOnboarding}
+                    disabled={!enabled}
+                  >
+                    {completion
+                      ? 'Do Quest Again'
+                      : `Earn ${pointAwardAmount} IQ Points`}
+                  </Button>
                 ) : (
-                  authenticated &&
-                  enabled && (
-                    <Button
-                      variant="primary"
-                      size="lg"
-                      onClick={handleStartOnboarding}
-                      disabled={!enabled}
-                    >
-                      Earn {pointAwardAmount} IQ Points
-                    </Button>
-                  )
+                  <Button
+                    variant="primary"
+                    size="lg"
+                    onClick={() => login()}
+                    disabled={!enabled}
+                  >
+                    Connect Wallet
+                  </Button>
                 )}
               </AuthCover>
             </div>
@@ -888,7 +909,12 @@ export default function MiniGameOne() {
               </div>
             )}
           </div>
-          <Button variant="primary" size="lg">
+          <Button
+            variant="secondary"
+            size="lg"
+            onClick={handleStartOnboarding}
+            aria-label="Add new entry"
+          >
             Add new entry
           </Button>
         </div>
@@ -914,15 +940,28 @@ export default function MiniGameOne() {
         title={shareModalActive.title}
         listData={listData as unknown as ListDetailsType}
       />
-      <OnboardingModal
-        isOpen={onboardingModal.isOpen}
-        onClose={handleCloseOnboarding}
-        question={
-          onboardingModal.question ?? (questionData as unknown as Question)
-        }
-        predicateId={predicateId}
-        objectId={objectId}
-      />
+      {completion && !isLoadingCompletion ? (
+        <QuestModal
+          isOpen={onboardingModal.isOpen}
+          onClose={handleCloseOnboarding}
+          question={
+            onboardingModal.question ?? (questionData as unknown as Question)
+          }
+          predicateId={predicateId}
+          objectId={objectId}
+          isCompleted={true}
+        />
+      ) : (
+        <OnboardingModal
+          isOpen={onboardingModal.isOpen}
+          onClose={handleCloseOnboarding}
+          question={
+            onboardingModal.question ?? (questionData as unknown as Question)
+          }
+          predicateId={predicateId}
+          objectId={objectId}
+        />
+      )}
       <AtomDetailsModal
         isOpen={atomDetailsModal.isOpen}
         onClose={() =>
