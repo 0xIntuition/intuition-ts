@@ -130,7 +130,7 @@ const useStepTransition = (
   return { isTransitioning, handleTransition, resetTransition }
 }
 
-export function QuestModal({
+export function AddEntryModal({
   isOpen,
   onClose,
   predicateId,
