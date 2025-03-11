@@ -12,14 +12,14 @@ export default function Maintenance() {
             Service Unavailable
           </Text>
         </div>
-        <Text variant="heading2">Maintenance in Progress</Text>
+        <Text variant="heading2">Upgrade in Progress</Text>
         <Text
           variant="headline"
           className="text-secondary-foreground/70 mt-2 mb-8"
         >
-          We&apos;re currently performing some essential maintenance on
-          Intuition. Please check back later. In the meantime, join our Discord
-          community to stay updated and connect with us!
+          We&apos;re currently upgrading the Intuition system. Please check back
+          later. In the meantime, join our Discord community to stay updated and
+          connect with us!
         </Text>
         <Link to="https://discord.gg/0xintuition" target="_blank">
           <Button variant="secondary">Join our Discord</Button>

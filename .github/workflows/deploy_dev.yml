@@ -106,8 +106,8 @@ jobs:
           --build-arg RELIC_GRAPHQL_ENDPOINT=${{ secrets.RELIC_GRAPHQL_ENDPOINT }} \
           --build-arg I7N_GRAPHQL_ENDPOINT=${{ secrets.I7N_GRAPHQL_ENDPOINT }} \
           --build-arg POINTS_GRAPHQL_ENDPOINT=${{ secrets.POINTS_GRAPHQL_ENDPOINT }} \
-          --build-arg FF_FULL_LOCKDOWN_ENABLED=false \
-          --build-arg FF_GENERIC_BANNER_ENABLED=true \
+          --build-arg FF_FULL_LOCKDOWN_ENABLED=true \
+          --build-arg FF_GENERIC_BANNER_ENABLED=false \
           --build-arg FF_INCIDENT_BANNER_ENABLED=false
           docker tag portal ${{ env.ECR_IMAGE }}
           docker push ${{ env.ECR_IMAGE }}
