@@ -17,13 +17,13 @@ import {
   useGetListDetailsSimplifiedQuery,
 } from '@0xintuition/graphql'
 
+import { AddEntryModal } from '@components/add-entry-modal'
 import { AtomDetailsModal } from '@components/atom-details-modal'
 import { AuthCover } from '@components/auth-cover'
 import LoadingLogo from '@components/loading-logo'
 import { LoadingState } from '@components/loading-state'
 import { Navigation } from '@components/lore/chapter-navigation'
 import { PageHeader } from '@components/page-header'
-import { QuestModal } from '@components/quest-modal'
 import ShareModal from '@components/share-modal'
 import { OnboardingModal } from '@components/survey-modal/survey-modal'
 import { columns } from '@components/ui/table/columns'
@@ -1026,7 +1026,7 @@ export default function MiniGameOne() {
         listData={listData as unknown as ListDetailsType}
       />
       {completion && !isLoadingCompletion ? (
-        <QuestModal
+        <AddEntryModal
           isOpen={onboardingModal.isOpen}
           onClose={handleCloseOnboarding}
           question={

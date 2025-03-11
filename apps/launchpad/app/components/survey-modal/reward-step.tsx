@@ -69,7 +69,7 @@ export function RewardStep({
       isAwarding,
       awardingFailed,
       retryCount,
-      existingCompletion,
+      // Don't reference existingCompletion here since it's not defined yet
     })
   }, [])
 
@@ -110,7 +110,8 @@ export function RewardStep({
 
           const data = await response.json()
           logger('Completion check result:', data)
-          return data.completion
+          // Add defensive check when accessing data.completion
+          return data && data.completion ? data.completion : null
         } catch (error) {
           logger('Error checking completion:', error)
           return null
@@ -126,86 +127,103 @@ export function RewardStep({
     })
 
   useEffect(() => {
-    // Handle existing completion state
-    if (existingCompletion) {
-      logger('Found existing completion:', existingCompletion)
-      setHasAwardedPoints(true)
-      setIsAwarding(false)
-      setAwardingFailed(false)
-      onExistingCompletionChange?.(true)
-      return
-    }
-
-    // Only attempt to award points if we've confirmed there's no existing completion
-    if (existingCompletion === null && !isCheckingCompletion) {
-      logger('No existing completion found, proceeding with award')
-      onExistingCompletionChange?.(false)
-
-      // Reset states when modal opens/closes
-      if (!isOpen) {
-        setRewardReady(false)
-        setHasRewardAnimated(false)
-        setHasAwardedPoints(false)
-        setConfettiTriggered(false)
+    try {
+      // Handle existing completion state
+      if (existingCompletion) {
+        logger('Found existing completion:', existingCompletion)
+        setHasAwardedPoints(true)
         setIsAwarding(false)
         setAwardingFailed(false)
-        setRetryCount(0)
-        setError(undefined)
+        if (onExistingCompletionChange) onExistingCompletionChange(true)
         return
       }
 
-      // Only run this once when the component mounts and conditions are met
-      const shouldAwardPoints =
-        isOpen &&
-        !hasAwardedPoints &&
-        !isAwarding &&
-        !awardingFailed &&
-        userWallet &&
-        awardPoints &&
-        questionId &&
-        epochId &&
-        retryCount < MAX_RETRIES
+      // Only attempt to award points if we've confirmed there's no existing completion
+      if (existingCompletion === null && !isCheckingCompletion) {
+        logger('No existing completion found, proceeding with award')
+        if (onExistingCompletionChange) onExistingCompletionChange(false)
 
-      if (shouldAwardPoints) {
-        const awardPointsAsync = async () => {
-          try {
-            setIsAwarding(true)
-            setError(undefined)
+        // Reset states when modal opens/closes
+        if (!isOpen) {
+          setRewardReady(false)
+          setHasRewardAnimated(false)
+          setHasAwardedPoints(false)
+          setConfettiTriggered(false)
+          setIsAwarding(false)
+          setAwardingFailed(false)
+          setRetryCount(0)
+          setError(undefined)
+          return
+        }
 
-            const success = await awardPoints(userWallet.toLowerCase())
+        // Only run this once when the component mounts and conditions are met
+        const shouldAwardPoints =
+          isOpen &&
+          !hasAwardedPoints &&
+          !isAwarding &&
+          !awardingFailed &&
+          !!userWallet &&
+          !!awardPoints &&
+          !!questionId &&
+          !!epochId &&
+          retryCount < MAX_RETRIES
 
-            if (success) {
-              setHasAwardedPoints(true)
-              setAwardingFailed(false)
-              setRetryCount(0)
+        if (shouldAwardPoints) {
+          const awardPointsAsync = async () => {
+            try {
+              setIsAwarding(true)
               setError(undefined)
-              onExistingCompletionChange?.(false)
-            } else {
-              throw new Error('Failed to award points')
-            }
-          } catch (error) {
-            const errorMessage =
-              error instanceof Error ? error.message : 'Failed to award points'
 
-            // Only set failure state if we've hit max retries
-            if (retryCount >= MAX_RETRIES - 1) {
-              setAwardingFailed(true)
-              setError(errorMessage)
-            } else {
-              // Schedule retry
-              setRetryCount((prev) => prev + 1)
-              setTimeout(() => {
+              // Add defensive check for userWallet
+              if (!userWallet || !awardPoints) {
+                throw new Error('Missing required data to award points')
+              }
+
+              const success = await awardPoints(userWallet.toLowerCase())
+
+              if (success) {
+                setHasAwardedPoints(true)
+                setAwardingFailed(false)
+                setRetryCount(0)
+                setError(undefined)
+                if (onExistingCompletionChange)
+                  onExistingCompletionChange(false)
+              } else {
+                throw new Error('Failed to award points')
+              }
+            } catch (error) {
+              const errorMessage =
+                error instanceof Error
+                  ? error.message
+                  : 'Failed to award points'
+              logger('Error awarding points:', errorMessage)
+
+              // Only set failure state if we've hit max retries
+              if (retryCount >= MAX_RETRIES - 1) {
+                setAwardingFailed(true)
+                setError(errorMessage)
+              } else {
+                // Schedule retry
+                setRetryCount((prev) => prev + 1)
+                setTimeout(() => {
+                  setIsAwarding(false)
+                }, RETRY_DELAY)
+              }
+            } finally {
+              if (!error || retryCount >= MAX_RETRIES - 1) {
                 setIsAwarding(false)
-              }, RETRY_DELAY)
-            }
-          } finally {
-            if (!error || retryCount >= MAX_RETRIES - 1) {
-              setIsAwarding(false)
+              }
             }
           }
+          awardPointsAsync()
         }
-        awardPointsAsync()
       }
+    } catch (err) {
+      // Global error handling for the entire effect
+      logger('Unexpected error in RewardStep effect:', err)
+      setAwardingFailed(true)
+      setError('An unexpected error occurred')
+      setIsAwarding(false)
     }
   }, [
     isOpen,
@@ -268,6 +286,7 @@ export function RewardStep({
     logger('Attempting retry...')
     setIsAwarding(true)
     setAwardingFailed(false)
+    setRetryCount(0)
     setError(undefined)
 
     try {
@@ -278,6 +297,7 @@ export function RewardStep({
         setAwardingFailed(false)
         setRetryCount(0)
         setError(undefined)
+        if (onExistingCompletionChange) onExistingCompletionChange(false)
       } else {
         throw new Error('Failed to award points')
       }
@@ -400,7 +420,7 @@ export function RewardStep({
             <span className="text-4xl font-bold bg-gradient-to-r from-[#34C578] to-[#00FF94] bg-clip-text text-transparent">
               {existingCompletion
                 ? existingCompletion.points_awarded
-                : pointAwardAmount}
+                : pointAwardAmount || 0}
             </span>
             <span className="text-2xl font-semibold text-gray-300">
               IQ POINTS
