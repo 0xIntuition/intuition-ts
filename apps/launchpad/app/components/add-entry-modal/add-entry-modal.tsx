@@ -14,7 +14,6 @@ import {
 } from '@0xintuition/1ui'
 import { useGetAtomsQuery, useGetListDetailsQuery } from '@0xintuition/graphql'
 
-import logger from '@lib/utils/logger'
 import { usePrivy } from '@privy-io/react-auth'
 import { useLocation, useNavigate } from '@remix-run/react'
 import { useQueryClient } from '@tanstack/react-query'
@@ -136,7 +135,6 @@ export function AddEntryModal({
   predicateId,
   objectId,
   question,
-  isCompleted = false,
 }: QuestModalProps) {
   const queryClient = useQueryClient()
   const { user: privyUser } = usePrivy()
@@ -148,7 +146,7 @@ export function AddEntryModal({
   const [searchTerm, setSearchTerm] = useState('')
   const [steps, setSteps] = useState<Step[]>(STEPS_CONFIG)
   const [txState, setTxState] = useState<TransactionStateType>()
-  const [subjectId, setSubjectId] = useState<string>()
+  const [, setSubjectId] = useState<string>()
 
   const transition = useStepTransition(setState)
   const { isTransitioning, handleTransition, resetTransition } = transition
@@ -340,9 +338,8 @@ export function AddEntryModal({
             return { ...step, status: 'completed' }
           } else if (idx === stepIndex) {
             return { ...step, status: 'current' }
-          } else {
-            return { ...step, status: 'upcoming' }
           }
+          return { ...step, status: 'upcoming' }
         }),
       )
     }

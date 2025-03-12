@@ -134,14 +134,18 @@ export function RewardStep({
         setHasAwardedPoints(true)
         setIsAwarding(false)
         setAwardingFailed(false)
-        if (onExistingCompletionChange) onExistingCompletionChange(true)
+        if (onExistingCompletionChange) {
+          onExistingCompletionChange(true)
+        }
         return
       }
 
       // Only attempt to award points if we've confirmed there's no existing completion
       if (existingCompletion === null && !isCheckingCompletion) {
         logger('No existing completion found, proceeding with award')
-        if (onExistingCompletionChange) onExistingCompletionChange(false)
+        if (onExistingCompletionChange) {
+          onExistingCompletionChange(false)
+        }
 
         // Reset states when modal opens/closes
         if (!isOpen) {
@@ -186,8 +190,9 @@ export function RewardStep({
                 setAwardingFailed(false)
                 setRetryCount(0)
                 setError(undefined)
-                if (onExistingCompletionChange)
+                if (onExistingCompletionChange) {
                   onExistingCompletionChange(false)
+                }
               } else {
                 throw new Error('Failed to award points')
               }
@@ -297,7 +302,9 @@ export function RewardStep({
         setAwardingFailed(false)
         setRetryCount(0)
         setError(undefined)
-        if (onExistingCompletionChange) onExistingCompletionChange(false)
+        if (onExistingCompletionChange) {
+          onExistingCompletionChange(false)
+        }
       } else {
         throw new Error('Failed to award points')
       }

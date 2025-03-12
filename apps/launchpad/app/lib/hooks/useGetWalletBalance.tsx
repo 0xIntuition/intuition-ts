@@ -11,14 +11,14 @@ export function useGetWalletBalance(wallet: `0x${string}`, enabled = true) {
   const { data: blockNumber } = useBlockNumber({
     watch: true,
     query: {
-      enabled: enabled,
+      enabled,
     },
   })
 
   const { data: balance, queryKey } = useBalance({
     address: wallet,
     query: {
-      enabled: enabled,
+      enabled,
     },
   })
 

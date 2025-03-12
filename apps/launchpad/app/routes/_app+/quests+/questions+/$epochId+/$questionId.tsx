@@ -77,7 +77,7 @@ import {
 import { TripleType } from 'app/types'
 import { ListDetailsType } from 'app/types/list-details'
 import { useAtom } from 'jotai'
-import { CheckCircle, PlusIcon } from 'lucide-react'
+import { CheckCircle } from 'lucide-react'
 import { formatUnits } from 'viem'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -949,7 +949,6 @@ export default function MiniGameOne() {
           }
           predicateId={predicateId}
           objectId={objectId}
-          isCompleted={true}
         />
       ) : (
         <OnboardingModal
