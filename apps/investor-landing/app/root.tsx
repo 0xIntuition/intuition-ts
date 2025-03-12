@@ -27,7 +27,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
     {
       property: 'og:image',
       content:
-        'https://res.cloudinary.com/dfpwy9nyv/image/upload/f_auto,q_auto/v1/investor-landing/site-og-image',
+        'https://res.cloudinary.com/dfpwy9nyv/image/upload/f_auto,q_auto/v1/investor-landing/site_og_image_strategic',
     },
     { property: 'og:site_name', content: 'Intuition Investors' },
     { property: 'og:locale', content: 'en_US' },
@@ -35,7 +35,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
     {
       name: 'twitter:image',
       content:
-        'https://res.cloudinary.com/dfpwy9nyv/image/upload/f_auto,q_auto/v1/investor-landing/site-og-image',
+        'https://res.cloudinary.com/dfpwy9nyv/image/upload/f_auto,q_auto/v1/investor-landing/site_og_image_strategic',
     },
     {
       name: 'twitter:card',
