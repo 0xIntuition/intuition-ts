@@ -1,24 +1,19 @@
 import { useEffect, useState } from 'react'
 
-import { Button, Text, TextVariant } from '@0xintuition/1ui'
+import { Text, TextVariant } from '@0xintuition/1ui'
 
 import { BLOCK_EXPLORER_URL } from '@consts/general'
 import { useReward } from 'react-rewards'
 
-import { NewAtomMetadata, Topic } from './types'
+import { NewAtomMetadata } from './types'
 
 interface SuccessStepProps {
   isOpen: boolean
-  selectedTopic: Topic
   newAtomMetadata?: NewAtomMetadata
   txHash?: string
 }
 
-export function SuccessStep({
-  isOpen,
-  selectedTopic,
-  txHash,
-}: SuccessStepProps) {
+export function SuccessStep({ isOpen, txHash }: SuccessStepProps) {
   const [hasRewardAnimated, setHasRewardAnimated] = useState(false)
   const [confettiTriggered, setConfettiTriggered] = useState(false)
 
@@ -72,8 +67,8 @@ export function SuccessStep({
           variant={TextVariant.body}
           className="text-primary/70 text-center"
         >
-          Your answer has been woven into Intuition's living memory, guiding the
-          path for future seekers.
+          {`Your answer has been woven into Intuition's living memory, guiding the
+          path for future seekers.`}
         </Text>
 
         {txHash && (

@@ -69,4 +69,4 @@ export interface SuccessStepProps {
   selectedTopic: Topic
   newAtomMetadata?: NewAtomMetadata
   txHash?: string
-} 
+}
