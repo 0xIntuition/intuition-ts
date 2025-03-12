@@ -139,6 +139,24 @@ export default function Discover() {
       imageUrl: '/images/discover/metamask.webp',
     },
     {
+      id: '14',
+      title: 'Ethereum Values',
+      description:
+        'Propose Values, Vote with ETH, Earn Rewards, Shape the future',
+      buttonText: 'Explore',
+      onAction: () =>
+        window.open('https://ethereum-values.consensys.io/', '_blank'),
+      imageUrl: '/images/discover/consensys-ethereum-values.png',
+    },
+    {
+      id: '15',
+      title: 'Tyris',
+      description: 'Crypto-focused data feed delivering real-time insights',
+      buttonText: 'Explore',
+      onAction: () => window.open('https://tyris.cyphercore.io/', '_blank'),
+      imageUrl: '/images/discover/tyris.png',
+    },
+    {
       id: '7',
       title: 'SPOC',
       description: 'Social Posts on Chain',
