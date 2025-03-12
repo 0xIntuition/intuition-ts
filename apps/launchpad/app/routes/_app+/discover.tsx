@@ -105,7 +105,10 @@ export default function Discover() {
       description: `Decentralized 'community notes' for the entire web`,
       buttonText: 'Download',
       onAction: () =>
-        window.open('https://github.com/0xIntuition/trustbar/', '_blank'),
+        window.open(
+          'https://github.com/0xIntuition/chrome-extension/',
+          '_blank',
+        ),
       imageUrl: '/images/discover/extension.webp',
     },
     {
