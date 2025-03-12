@@ -1,46 +1,30 @@
 import {
-  ActivitiesService,
-  ActivityPresenter,
-  SortColumn,
-} from '@0xintuition/api'
+  fetcher,
+  GetSignalsDocument,
+  GetSignalsQuery,
+  GetSignalsQueryVariables,
+} from '@0xintuition/graphql'
 
-import { getStandardPageParams } from '@lib/utils/params'
-import { fetchWrapper } from '@server/api'
+import { QueryClient } from '@tanstack/react-query'
 
 export async function getActivity({
-  request,
-  searchParams,
-  fromAddress,
+  queryClient,
 }: {
-  request: Request
-  searchParams: URLSearchParams
-  fromAddress?: string
+  queryClient: QueryClient
 }) {
-  const { page, limit, sortBy, direction } = getStandardPageParams({
-    searchParams,
-    defaultSortByValue: SortColumn.CREATED_AT,
+  const activityLimit = 10
+  const activityOffset = 0
+
+  await queryClient.prefetchQuery({
+    queryKey: ['get-signals-global', { activityLimit, activityOffset }],
+    queryFn: () =>
+      fetcher<GetSignalsQuery, GetSignalsQueryVariables>(GetSignalsDocument, {
+        limit: activityLimit,
+        offset: activityOffset,
+        addresses: [],
+        orderBy: [{ block_timestamp: 'desc' }],
+      }),
   })
 
-  const activityArgs = {
-    page,
-    limit,
-    sortBy: sortBy as SortColumn,
-    direction,
-    ...(fromAddress && { fromAddress }),
-  }
-
-  const activity = await fetchWrapper(request, {
-    method: ActivitiesService.getActivities,
-    args: activityArgs,
-  })
-
-  return {
-    activity: activity.data as ActivityPresenter[],
-    pagination: {
-      currentPage: page,
-      limit,
-      totalEntries: activity.total,
-      totalPages: Math.ceil(activity.total / limit),
-    },
-  }
+  return { queryKey: ['get-signals-global', { activityLimit, activityOffset }] }
 }
