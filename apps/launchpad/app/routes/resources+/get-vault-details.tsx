@@ -20,6 +20,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
       userWallet === null ? undefined : (userWallet as `0x${string}`),
       counterVaultId ?? undefined,
     )
+    console.log('[Vault Details] Prefetching data')
     return json(vaultDetails)
   } catch (error) {
     return json({ error: 'Failed to fetch vault details' }, { status: 500 })

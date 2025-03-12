@@ -10,13 +10,11 @@ import {
 import { LoadingState } from '@components/loading-state'
 import { SignalButton } from '@components/signal-modal/signal-button'
 import { SignalModal } from '@components/signal-modal/signal-modal'
-import { MULTIVAULT_CONTRACT_ADDRESS } from '@consts/general'
-import { useGetMultiVaultConfig } from '@lib/hooks/useGetMultiVaultConfig'
 import { usePrivy } from '@privy-io/react-auth'
 import { useRevalidator } from '@remix-run/react'
 import { useQueryClient } from '@tanstack/react-query'
 import { ColumnDef } from '@tanstack/react-table'
-import { AtomType, TripleType } from 'app/types'
+import { AtomType, MultivaultConfig, TripleType } from 'app/types'
 import { ArrowBigDown, ArrowBigUp } from 'lucide-react'
 
 import { DataTableColumnHeader } from './data-table-column-header'
@@ -39,6 +37,7 @@ export type TableItem = {
   atom?: AtomType
   triple?: TripleType
   stakingDisabled?: boolean
+  multiVaultConfig?: MultivaultConfig
 }
 
 interface SignalCellProps {
@@ -48,6 +47,7 @@ interface SignalCellProps {
   userPosition?: number
   positionDirection?: ClaimPositionType
   stakingDisabled?: boolean
+  multiVaultConfig?: MultivaultConfig
 }
 
 function SignalCell({
@@ -57,6 +57,7 @@ function SignalCell({
   userPosition,
   positionDirection,
   stakingDisabled,
+  multiVaultConfig,
 }: SignalCellProps) {
   const { user: privyUser } = usePrivy()
   const [isSignalModalOpen, setIsSignalModalOpen] = useState(false)
@@ -87,10 +88,6 @@ function SignalCell({
       revalidator.revalidate()
     }, 100)
   }
-
-  const { data: multiVaultConfig } = useGetMultiVaultConfig(
-    MULTIVAULT_CONTRACT_ADDRESS,
-  )
 
   if (!multiVaultConfig) {
     return <LoadingState />
@@ -275,6 +272,7 @@ export const columns: ColumnDef<TableItem>[] = [
             userPosition={position as number}
             positionDirection={positionDirection}
             stakingDisabled={row.original.stakingDisabled}
+            multiVaultConfig={row.original.multiVaultConfig}
           />
         </div>
       )

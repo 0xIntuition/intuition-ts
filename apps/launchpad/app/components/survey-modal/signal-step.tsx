@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import { Button, Text, TextVariant, toast } from '@0xintuition/1ui'
 
@@ -13,6 +13,7 @@ import {
   transactionReducer,
   useGenericTxState,
 } from '@lib/hooks/useTransactionReducer'
+import logger from '@lib/utils/logger'
 import { usePrivy } from '@privy-io/react-auth'
 import { Link, useLocation } from '@remix-run/react'
 import { useQueryClient } from '@tanstack/react-query'
@@ -62,21 +63,39 @@ export function SignalStep({
   const { data: multiVaultConfig, isLoading: isLoadingMultiVaultConfig } =
     useGetMultiVaultConfig(contract)
 
-  const tripleCost = multiVaultConfig
-    ? multiVaultConfig?.formatted_triple_cost
-    : 0
-  const min_deposit = multiVaultConfig
-    ? multiVaultConfig?.formatted_min_deposit
-    : MIN_DEPOSIT
+  // Log MultiVault config only once when it's loaded
+  useEffect(() => {
+    if (multiVaultConfig && !isLoadingMultiVaultConfig) {
+      logger('[SignalStep] MultiVault config loaded:', {
+        contract,
+        configId: Math.random().toString(36).substring(7), // Add a random ID to identify unique loads
+        timestamp: new Date().toISOString(),
+      })
+    }
+  }, [multiVaultConfig, isLoadingMultiVaultConfig, contract])
+
+  // Memoize derived values from multiVaultConfig to prevent unnecessary recalculations
+  const { tripleCost, min_deposit } = useMemo(() => {
+    return {
+      tripleCost: multiVaultConfig
+        ? multiVaultConfig?.formatted_triple_cost
+        : 0,
+      min_deposit: multiVaultConfig
+        ? multiVaultConfig?.formatted_min_deposit
+        : MIN_DEPOSIT,
+    }
+  }, [multiVaultConfig])
 
   // Compute vote direction based on ticks value
   const voteDirection = ticks >= 0 ? 'upvote' : 'downvote'
   const absTickValue = Math.abs(ticks)
 
-  const val =
-    newAtomMetadata && min_deposit && tripleCost
+  // Memoize the val calculation to prevent unnecessary recalculations
+  const val = useMemo(() => {
+    return newAtomMetadata && min_deposit && tripleCost
       ? (absTickValue * +min_deposit + +tripleCost).toString()
       : (absTickValue * +min_deposit).toString()
+  }, [absTickValue, min_deposit, tripleCost, newAtomMetadata])
 
   const {
     mutateAsync: stake,
@@ -289,7 +308,6 @@ export function SignalStep({
         !!stakeAwaitingOnChainConfirmation ||
         !!createTripleAwaitingWalletConfirmation ||
         !!createTripleAwaitingOnChainConfirmation ||
-        isLoadingMultiVaultConfig ||
         txState.status === 'confirm' ||
         txState.status === 'transaction-pending' ||
         txState.status === 'transaction-confirmed' ||
@@ -297,12 +315,12 @@ export function SignalStep({
         txState.status === 'awaiting',
     )
   }, [
-    isLoadingMultiVaultConfig,
     stakeAwaitingWalletConfirmation,
     stakeAwaitingOnChainConfirmation,
     createTripleAwaitingWalletConfirmation,
     createTripleAwaitingOnChainConfirmation,
     txState.status,
+    setIsLoading,
   ])
 
   const handleStakeButtonClick = async () => {
