@@ -102,7 +102,7 @@ export function SignalModal({
 
   const { user: privyUser } = usePrivy()
   const userWallet = privyUser?.wallet?.address
-  const walletBalance = useGetWalletBalance(userWallet as `0x${string}`)
+  const walletBalance = useGetWalletBalance(userWallet as `0x${string}`, isOpen)
 
   return (
     <ClientOnly>

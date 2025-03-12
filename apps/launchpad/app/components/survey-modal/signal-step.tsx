@@ -39,6 +39,7 @@ export function SignalStep({
   onStakingSuccess,
   isLoading,
   setIsLoading,
+  isOpen,
 }: SignalStepProps) {
   const [ticks, setTicks] = useState(1)
   const [inputValue, setInputValue] = useState('1')
@@ -52,7 +53,7 @@ export function SignalStep({
   const { user: privyUser } = usePrivy()
   const contract = MULTIVAULT_CONTRACT_ADDRESS
   const userWallet = privyUser?.wallet?.address
-  const walletBalance = useGetWalletBalance(userWallet as `0x${string}`)
+  const walletBalance = useGetWalletBalance(userWallet as `0x${string}`, isOpen)
   const { state: txState, dispatch } = useGenericTxState<
     TransactionStateType,
     TransactionActionType
