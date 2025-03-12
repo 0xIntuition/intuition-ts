@@ -32,7 +32,7 @@ import {
   ZERO_ADDRESS,
 } from '@consts/general'
 import { Question } from '@lib/graphql/types'
-import { useGetMultiVaultConfig } from '@lib/hooks/useGetMultiVaultConfig'
+import { MULTIVAULT_CONFIG_QUERY_KEY } from '@lib/hooks/useGetMultiVaultConfig'
 import { useGoBack } from '@lib/hooks/useGoBack'
 import { useMediaQuery } from '@lib/hooks/useMediaQuery'
 import type { EpochQuestion } from '@lib/services/epochs'
@@ -55,6 +55,7 @@ import {
   useSearchParams,
 } from '@remix-run/react'
 import { getUser } from '@server/auth'
+import { getMultiVaultConfig } from '@server/multivault'
 import {
   dehydrate,
   QueryClient,
@@ -82,18 +83,24 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const queryClient = new QueryClient()
 
   // Start parallel fetches for independent data
-  const [user, questionData, allQuestions, epoch] = await Promise.all([
-    getUser(request),
-    fetchEpochQuestion(Number(params.questionId)),
-    fetchEpochQuestions(Number(params.epochId)),
-    fetchEpochById(Number(params.epochId)),
-  ])
+  const [user, questionData, allQuestions, epoch, multiVaultConfig] =
+    await Promise.all([
+      getUser(request),
+      fetchEpochQuestion(Number(params.questionId)),
+      fetchEpochQuestions(Number(params.epochId)),
+      fetchEpochById(Number(params.epochId)),
+      getMultiVaultConfig(MULTIVAULT_CONTRACT_ADDRESS),
+    ])
 
   const userWallet = user?.wallet?.address?.toLowerCase()
 
   // Cache the results
   await Promise.all([
     queryClient.setQueryData(['get-questions', params.epochId], allQuestions),
+    queryClient.setQueryData(
+      [MULTIVAULT_CONFIG_QUERY_KEY, MULTIVAULT_CONTRACT_ADDRESS],
+      multiVaultConfig,
+    ),
   ])
 
   // Get adjacent questions
@@ -124,6 +131,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     prevQuestion,
     nextQuestion,
     epoch,
+    multiVaultConfig,
   }
 }
 
@@ -193,8 +201,14 @@ export default function MiniGameOne() {
   const location = useLocation()
   const { epochId, questionId } = useParams()
   const goBack = useGoBack({ fallbackRoute: `/quests/questions/${epochId}` })
-  const { userWallet, questionData, prevQuestion, nextQuestion, epoch } =
-    useLoaderData<typeof loader>()
+  const {
+    userWallet,
+    questionData,
+    prevQuestion,
+    nextQuestion,
+    epoch,
+    multiVaultConfig,
+  } = useLoaderData<typeof loader>()
   const [shareModalActive, setShareModalActive] = useAtom(shareModalAtom)
   const [onboardingModal, setOnboardingModal] = useAtom(onboardingModalAtom)
   const [atomDetailsModal, setAtomDetailsModal] = useAtom(atomDetailsModalAtom)
@@ -225,9 +239,6 @@ export default function MiniGameOne() {
     },
     enabled: !!userWallet && !!questionId,
   })
-
-  const { data: multiVaultConfig, isLoading: isLoadingMultiVaultConfig } =
-    useGetMultiVaultConfig(MULTIVAULT_CONTRACT_ADDRESS)
 
   // Get the user's selected atom if they've completed the question
   const { data: atomData, isLoading: isLoadingAtom } = useGetAtomQuery(
@@ -422,6 +433,7 @@ export default function MiniGameOne() {
     positionDirection?: 'for' | 'against'
     currentSharePrice?: number
     stakingDisabled?: boolean
+    multiVaultConfig: typeof multiVaultConfig
   }
 
   const tableData = React.useMemo(() => {
@@ -494,9 +506,10 @@ export default function MiniGameOne() {
             : triple.counter_vault?.positions?.[0]?.shares > 0
               ? +formatUnits(triple.counter_vault?.current_share_price, 18)
               : undefined,
+        multiVaultConfig,
       })) as TableRowData[]) ?? []
     return data
-  }, [listData, completion])
+  }, [listData, multiVaultConfig])
 
   const isMobile = useMediaQuery('(max-width: 768px)')
   const isTablet = useMediaQuery('(max-width: 1024px)')
@@ -641,7 +654,7 @@ export default function MiniGameOne() {
     }
   }
 
-  if (isLoadingMultiVaultConfig || isLoadingListData) {
+  if (isLoadingListData) {
     return <LoadingState />
   }
 

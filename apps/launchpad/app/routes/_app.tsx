@@ -1,8 +1,6 @@
-import { MULTIVAULT_CONTRACT_ADDRESS } from '@consts/general'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { Outlet } from '@remix-run/react'
 import { getUser } from '@server/auth'
-import { getMultiVaultConfig } from '@server/multivault'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
 
 import { AppShell } from '../components/layouts/app-shell'
@@ -10,16 +8,6 @@ import { AppShell } from '../components/layouts/app-shell'
 export async function loader({ request }: LoaderFunctionArgs) {
   const queryClient = new QueryClient()
   const user = await getUser(request)
-
-  try {
-    // Prefetch the MultiVault config
-    const multiVaultConfig = await getMultiVaultConfig(
-      MULTIVAULT_CONTRACT_ADDRESS,
-    )
-    await queryClient.setQueryData(['get-multivault-config'], multiVaultConfig)
-  } catch (error) {
-    console.error('Error prefetching data:', error)
-  }
 
   return json({
     dehydratedState: dehydrate(queryClient),

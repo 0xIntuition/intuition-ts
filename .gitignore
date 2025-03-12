@@ -21,3 +21,6 @@ act.sh
 /dist/
 **/dist/
 packages/*/dist/
+
+#Cursor Rules
+.cursorrules

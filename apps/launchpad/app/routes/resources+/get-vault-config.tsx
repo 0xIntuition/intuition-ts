@@ -11,6 +11,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   try {
     const multivaultConfig = await getMultiVaultConfig(contract)
+    console.log('[Mutlivault Config] Prefetching data')
     return json(multivaultConfig)
   } catch (error) {
     console.error('Multivault config error:', error)

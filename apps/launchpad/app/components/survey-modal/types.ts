@@ -60,4 +60,5 @@ export interface SignalStepProps {
   onStakingSuccess: (subject_id: string) => void
   isLoading: boolean
   setIsLoading: (loading: boolean) => void
+  isOpen: boolean
 }

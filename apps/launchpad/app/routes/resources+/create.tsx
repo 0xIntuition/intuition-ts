@@ -1,11 +1,5 @@
 import { json } from '@remix-run/node'
-import {
-  getAtomConfig,
-  getAtomCost,
-  getFees,
-  getGeneralConfig,
-  getTripleCost,
-} from '@server/multivault'
+import { getMultivaultContract, publicClient } from '@server/viem'
 
 export type CreateLoaderData = {
   vaultId: string
@@ -18,26 +12,59 @@ export type CreateLoaderData = {
   minDeposit: string
 }
 
+interface MulticallResponse {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  result?: any
+  error?: Error
+  status: 'failure' | 'success'
+}
+
 export async function loader() {
   // Base vault id
   const vid = BigInt(0)
 
-  // Contract reads and is batched via viem public client param
-  // See https://viem.sh/docs/clients/public.html#optimization
+  const coreContractConfigs = [
+    {
+      ...getMultivaultContract,
+      functionName: 'getAtomCost',
+      args: [],
+    },
+    {
+      ...getMultivaultContract,
+      functionName: 'getTripleCost',
+      args: [],
+    },
+    {
+      ...getMultivaultContract,
+      functionName: 'atomConfig',
+      args: [],
+    },
+    {
+      ...getMultivaultContract,
+      functionName: 'vaultFees',
+      args: [vid],
+    },
+    {
+      ...getMultivaultContract,
+      functionName: 'generalConfig',
+      args: [],
+    },
+  ]
 
-  const [
-    atomCost,
-    tripleCost,
-    [, atomCreationFee],
-    [entryFee, , protocolFee],
-    [, , feeDenominator, minDeposit],
-  ] = await Promise.all([
-    getAtomCost(),
-    getTripleCost(),
-    getAtomConfig(),
-    getFees(),
-    getGeneralConfig(),
-  ])
+  const resp: MulticallResponse[] = await publicClient.multicall({
+    contracts: coreContractConfigs,
+  })
+
+  const atomCost = resp[0].result as bigint
+  const tripleCost = resp[1].result as bigint
+  const [, atomCreationFee] = resp[2].result as bigint[]
+  const [entryFee, , protocolFee] = resp[3].result as bigint[]
+  const [, , feeDenominator, minDeposit] = resp[4].result as [
+    string,
+    string,
+    bigint,
+    bigint,
+  ]
 
   return json({
     vaultId: vid.toString(),

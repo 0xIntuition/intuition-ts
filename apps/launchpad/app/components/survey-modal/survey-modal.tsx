@@ -706,6 +706,7 @@ export function OnboardingModal({
                         onStakingSuccess={onStakingSuccess}
                         isLoading={isLoading}
                         setIsLoading={setIsLoading}
+                        isOpen={isOpen}
                       />
                     )}
 

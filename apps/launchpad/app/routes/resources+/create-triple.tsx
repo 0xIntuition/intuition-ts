@@ -1,10 +1,5 @@
 import { json } from '@remix-run/node'
-import {
-  getFees,
-  getGeneralConfig,
-  getTripleConfig,
-  getTripleCost,
-} from '@server/multivault'
+import { getMultivaultContract, publicClient } from '@server/viem'
 
 export type CreateTripleLoaderData = {
   vaultId: string
@@ -21,24 +16,51 @@ export type CreateTripleFeesType = {
   feeDenominator: string
 }
 
+interface MulticallResponse {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  result?: any
+  error?: Error
+  status: 'failure' | 'success'
+}
+
 export async function loader() {
   const vid = BigInt(0)
 
+  const coreContractConfigs = [
+    {
+      ...getMultivaultContract,
+      functionName: 'getTripleCost',
+      args: [],
+    },
+    {
+      ...getMultivaultContract,
+      functionName: 'tripleConfig',
+      args: [],
+    },
+    {
+      ...getMultivaultContract,
+      functionName: 'generalConfig',
+      args: [],
+    },
+    {
+      ...getMultivaultContract,
+      functionName: 'vaultFees',
+      args: [vid],
+    },
+  ]
+
+  const resp: MulticallResponse[] = await publicClient.multicall({
+    contracts: coreContractConfigs,
+  })
+
+  const tripleCost = resp[0].result as bigint
   const [
-    tripleCost,
-    [
-      tripleCreationFee,
-      atomDepositFractionOnCreation,
-      atomDepositFractionOnDeposit,
-    ],
-    [, , feeDenominator],
-    [entryFee, , protocolFee],
-  ] = await Promise.all([
-    getTripleCost(),
-    getTripleConfig(),
-    getGeneralConfig(),
-    getFees(),
-  ])
+    tripleCreationFee,
+    atomDepositFractionOnCreation,
+    atomDepositFractionOnDeposit,
+  ] = resp[1].result as bigint[]
+  const [, , feeDenominator] = resp[2].result as [string, string, bigint]
+  const [entryFee, , protocolFee] = resp[3].result as bigint[]
 
   return json({
     vaultId: vid.toString(),

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import { Button, Text, TextVariant, toast } from '@0xintuition/1ui'
 
@@ -12,6 +12,7 @@ import {
   transactionReducer,
   useGenericTxState,
 } from '@lib/hooks/useTransactionReducer'
+import logger from '@lib/utils/logger'
 import { Link, useLocation, useRevalidator } from '@remix-run/react'
 import { useQueryClient } from '@tanstack/react-query'
 import {
@@ -149,10 +150,24 @@ export function SignalStep({
   const { data: multiVaultConfig, isLoading: isLoadingConfig } =
     useGetMultiVaultConfig(contract)
 
-  const FEE_ADJUSTMENT =
-    1 -
-    +(multiVaultConfig?.entry_fee ?? 0) /
-      +(multiVaultConfig?.fee_denominator ?? 1)
+  // Log MultiVault config only once when it's loaded
+  useEffect(() => {
+    if (multiVaultConfig && !isLoadingConfig) {
+      logger('[SignalModal] MultiVault config loaded:', {
+        contract,
+        configId: Math.random().toString(36).substring(7), // Add a random ID to identify unique loads
+        timestamp: new Date().toISOString(),
+      })
+    }
+  }, [multiVaultConfig, isLoadingConfig, contract])
+
+  const FEE_ADJUSTMENT = useMemo(() => {
+    return (
+      1 -
+      +(multiVaultConfig?.entry_fee ?? 0) /
+        +(multiVaultConfig?.fee_denominator ?? 1)
+    )
+  }, [multiVaultConfig])
 
   const vaultDetails = vaultDetailsData ?? vaultDetailsProp
   const min_deposit = multiVaultConfig?.formatted_min_deposit ?? MIN_DEPOSIT
