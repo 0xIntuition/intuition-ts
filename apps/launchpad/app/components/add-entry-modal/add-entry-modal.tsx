@@ -571,7 +571,6 @@ export function AddEntryModal({
                     state.selectedTopic && (
                       <SuccessStep
                         isOpen={state.currentStep === STEPS.SUCCESS}
-                        selectedTopic={state.selectedTopic}
                         newAtomMetadata={state.newAtomMetadata}
                         txHash={txState?.txHash}
                       />
