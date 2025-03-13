@@ -36,10 +36,8 @@ const attestorContractsList: { [key: number]: `0x${string}` } = {
 }
 
 const alchemyRpcUrlList: { [key: number]: string } = {
-  // 84532: `https://base-sepolia.g.alchemy.com/v2/${alchemyId}`,
-  84532: `https://sepolia.base.org`,
-  // 8453: `https://base-mainnet.g.alchemy.com/v2/${alchemyId}`,
-  8453: `https://base.llamarpc.com`
+  84532: `https://base-sepolia.g.alchemy.com/v2/${alchemyId}`,
+  8453: `https://base-mainnet.g.alchemy.com/v2/${alchemyId}`,
 }
 
 const transportsList: { [key: number]: Transport } = {
