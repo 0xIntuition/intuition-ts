@@ -16,20 +16,21 @@ import {
   TextVariant,
   TextWeight,
 } from '@0xintuition/1ui'
-import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
 
 import { InfoTooltip } from '@components/info-tooltip'
 import { PATHS } from '@consts/paths'
 import {
-  getAtomDescription,
-  getAtomImage,
-  getAtomIpfsLink,
-  getAtomLabel,
-  getAtomLink,
+  getAtomDescriptionGQL,
+  getAtomImageGQL,
+  getAtomIpfsLinkGQL,
+  getAtomLabelGQL,
+  getAtomLinkGQL,
 } from '@lib/utils/misc'
 import { Link } from '@remix-run/react'
 import { VaultDetailsType } from 'app/types'
+import { AtomType } from 'app/types/atom'
 import { TransactionStateType } from 'app/types/transaction'
+import { TripleType } from 'app/types/triple'
 
 interface StakeReviewProps {
   val: string
@@ -37,8 +38,8 @@ interface StakeReviewProps {
   state: TransactionStateType
   isError?: boolean
   modalType: 'identity' | 'claim' | null | undefined
-  identity?: IdentityPresenter
-  claim?: ClaimPresenter
+  identity?: AtomType
+  claim?: TripleType
   vaultDetails?: VaultDetailsType
 }
 
@@ -200,80 +201,55 @@ export default function StakeReview({
                         <Claim
                           size="default"
                           subject={{
-                            variant: claim?.subject?.is_user
-                              ? Identity.user
-                              : Identity.nonUser,
-                            label: getAtomLabel(
-                              claim?.subject as IdentityPresenter,
-                            ),
-                            imgSrc: getAtomImage(
-                              claim?.subject as IdentityPresenter,
-                            ),
-                            id: claim?.subject?.identity_id,
-                            description: getAtomDescription(
-                              claim?.subject as IdentityPresenter,
-                            ),
-                            ipfsLink: getAtomIpfsLink(
-                              claim?.subject as IdentityPresenter,
-                            ),
-                            link: getAtomLink(
-                              claim?.subject as IdentityPresenter,
-                            ),
+                            variant:
+                              claim?.subject?.type === 'Account'
+                                ? Identity.user
+                                : Identity.nonUser,
+                            label: getAtomLabelGQL(claim?.subject),
+                            imgSrc: getAtomImageGQL(claim?.subject),
+                            id: claim?.subject?.vault_id,
+                            description: getAtomDescriptionGQL(claim?.subject),
+                            ipfsLink: getAtomIpfsLinkGQL(claim?.subject),
+                            link: getAtomLinkGQL(claim?.subject),
                           }}
                           predicate={{
-                            variant: claim?.predicate?.is_user
-                              ? Identity.user
-                              : Identity.nonUser,
-                            label: getAtomLabel(
-                              claim?.predicate as IdentityPresenter,
+                            variant:
+                              claim?.predicate?.type === 'Account'
+                                ? Identity.user
+                                : Identity.nonUser,
+                            label: getAtomLabelGQL(claim?.predicate),
+                            imgSrc: getAtomImageGQL(claim?.predicate),
+                            id: claim?.predicate?.vault_id,
+                            description: getAtomDescriptionGQL(
+                              claim?.predicate,
                             ),
-                            imgSrc: getAtomImage(
-                              claim?.predicate as IdentityPresenter,
-                            ),
-                            id: claim?.predicate?.identity_id,
-                            description: getAtomDescription(
-                              claim?.predicate as IdentityPresenter,
-                            ),
-                            ipfsLink: getAtomIpfsLink(
-                              claim?.predicate as IdentityPresenter,
-                            ),
-                            link: getAtomLink(
-                              claim?.predicate as IdentityPresenter,
-                            ),
+                            ipfsLink: getAtomIpfsLinkGQL(claim?.predicate),
+                            link: getAtomLinkGQL(claim?.predicate),
                           }}
                           object={{
-                            variant: claim?.object?.is_user
-                              ? Identity.user
-                              : Identity.nonUser,
-                            label: getAtomLabel(
-                              claim?.object as IdentityPresenter,
-                            ),
-                            imgSrc: getAtomImage(
-                              claim?.object as IdentityPresenter,
-                            ),
-                            id: claim?.object?.identity_id,
-                            description: getAtomDescription(
-                              claim?.object as IdentityPresenter,
-                            ),
-                            ipfsLink: getAtomIpfsLink(
-                              claim?.object as IdentityPresenter,
-                            ),
-                            link: getAtomLink(
-                              claim?.object as IdentityPresenter,
-                            ),
+                            variant:
+                              claim?.object?.type === 'Account'
+                                ? Identity.user
+                                : Identity.nonUser,
+                            label: getAtomLabelGQL(claim?.object),
+                            imgSrc: getAtomImageGQL(claim?.object),
+                            id: claim?.object?.vault_id,
+                            description: getAtomDescriptionGQL(claim?.object),
+                            ipfsLink: getAtomIpfsLinkGQL(claim?.object),
+                            link: getAtomLinkGQL(claim?.object),
                           }}
                           orientation="vertical"
                         />
                       ) : (
                         <IdentityTag
-                          imgSrc={identity?.user?.image ?? identity?.image}
+                          imgSrc={identity?.image}
                           variant={
-                            identity?.user ? Identity.user : Identity.nonUser
+                            identity?.type === 'Account'
+                              ? Identity.user
+                              : Identity.nonUser
                           }
                         >
-                          {identity?.user?.display_name ??
-                            identity?.display_name ??
-                            'Identity'}
+                          {identity?.label ?? 'Identity'}
                         </IdentityTag>
                       )}
                     </TableCell>
@@ -326,16 +302,14 @@ export default function StakeReview({
                         <IdentityTag
                           size="default"
                           variant={
-                            claim?.subject?.is_user
+                            claim?.subject?.type === 'Account'
                               ? Identity.user
                               : Identity.nonUser
                           }
-                          imgSrc={getAtomImage(
-                            claim?.subject as IdentityPresenter,
-                          )}
-                          id={claim?.subject?.identity_id}
+                          imgSrc={getAtomImageGQL(claim?.subject)}
+                          id={claim?.subject?.vault_id.toString()}
                         >
-                          {getAtomLabel(claim?.subject as IdentityPresenter)}
+                          {getAtomLabelGQL(claim?.subject)}
                         </IdentityTag>
                       </TableCell>
                       <TableCell className="text-right">
@@ -353,16 +327,14 @@ export default function StakeReview({
                         <IdentityTag
                           size="default"
                           variant={
-                            claim?.predicate?.is_user
+                            claim?.predicate?.type === 'Account'
                               ? Identity.user
                               : Identity.nonUser
                           }
-                          imgSrc={getAtomImage(
-                            claim?.predicate as IdentityPresenter,
-                          )}
-                          id={claim?.predicate?.identity_id}
+                          imgSrc={getAtomImageGQL(claim?.predicate)}
+                          id={claim?.predicate?.vault_id.toString()}
                         >
-                          {getAtomLabel(claim?.predicate as IdentityPresenter)}
+                          {getAtomLabelGQL(claim?.predicate)}
                         </IdentityTag>
                       </TableCell>
                       <TableCell className="text-right">
@@ -380,16 +352,14 @@ export default function StakeReview({
                         <IdentityTag
                           size="default"
                           variant={
-                            claim?.object?.is_user
+                            claim?.object?.type === 'Account'
                               ? Identity.user
                               : Identity.nonUser
                           }
-                          imgSrc={getAtomImage(
-                            claim?.object as IdentityPresenter,
-                          )}
-                          id={claim?.object?.identity_id}
+                          imgSrc={getAtomImageGQL(claim?.object)}
+                          id={claim?.object?.vault_id.toString()}
                         >
-                          {getAtomLabel(claim?.object as IdentityPresenter)}
+                          {getAtomLabelGQL(claim?.object)}
                         </IdentityTag>
                       </TableCell>
                       <TableCell className="text-right">

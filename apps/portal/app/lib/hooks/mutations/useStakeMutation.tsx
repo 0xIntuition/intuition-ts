@@ -1,9 +1,9 @@
-import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
-
 import { multivaultAbi } from '@lib/abis/multivault'
 import { useDepositAtom } from '@lib/hooks/useDepositAtom'
 import { useRedeemAtom } from '@lib/hooks/useRedeemAtom'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { AtomType } from 'app/types/atom'
+import { TripleType } from 'app/types/triple'
 import { Abi, formatUnits, parseUnits } from 'viem'
 
 interface StakeMutationParams {
@@ -11,9 +11,9 @@ interface StakeMutationParams {
   mode: 'deposit' | 'redeem' | undefined
   contract: string
   wallet: string
-  vaultId: string
-  claim?: ClaimPresenter
-  identity?: IdentityPresenter
+  vaultId: string | number
+  claim?: TripleType
+  identity?: AtomType
   conviction_price?: string
 }
 

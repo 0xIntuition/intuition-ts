@@ -18,7 +18,7 @@ interface ClaimItemProps {
   variant?: IdentityType
   label: string
   imgSrc?: string | null
-  id?: string | null
+  id?: string | number | null
   description?: string | null
   ipfsLink?: string
   link?: string
@@ -246,7 +246,7 @@ const ClaimItem = ({
             variant={item.variant}
             avatarSrc={item.imgSrc ?? ''}
             name={item.label}
-            id={item.id ?? ''}
+            id={item.id?.toString() ?? ''}
             bio={item.description ?? ''}
             ipfsLink={item.ipfsLink}
           />

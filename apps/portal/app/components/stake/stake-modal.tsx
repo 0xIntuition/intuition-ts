@@ -19,7 +19,6 @@ import {
   TextVariant,
   toast,
 } from '@0xintuition/1ui'
-import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
 
 import { InfoTooltip } from '@components/info-tooltip'
 import { MIN_DEPOSIT } from '@consts/general'
@@ -32,10 +31,12 @@ import { stakeModalAtom } from '@lib/state/store'
 import { useGenericTxState } from '@lib/utils/use-tx-reducer'
 import { useLocation } from '@remix-run/react'
 import { useQueryClient } from '@tanstack/react-query'
+import { AtomType } from 'app/types/atom'
 import {
   TransactionActionType,
   TransactionStateType,
 } from 'app/types/transaction'
+import { TripleType } from 'app/types/triple'
 import { VaultDetailsType } from 'app/types/vault'
 import { useAtom } from 'jotai'
 import { Address, decodeEventLog, formatUnits } from 'viem'
@@ -55,14 +56,14 @@ interface StakeModalProps {
   userWallet: string
   contract: string
   open: boolean
-  identity?: IdentityPresenter
-  claim?: ClaimPresenter
-  vaultId: string
+  identity?: AtomType
+  claim?: TripleType
+  vaultId: string | number
   vaultDetailsProp?: VaultDetailsType
   onClose?: () => void
   onSuccess?: (args: {
-    identity?: IdentityPresenter
-    claim?: ClaimPresenter
+    identity?: AtomType
+    claim?: TripleType
     vaultDetails?: VaultDetailsType
     direction?: 'for' | 'against'
   }) => void
@@ -109,43 +110,61 @@ export default function StakeModal({
   const identityShouldOverride = identity && identity.vault_id !== '0'
 
   if (identityShouldOverride) {
-    vaultId = identity.vault_id
+    vaultId = identity.vault_id.toString()
   } else if (claim) {
     vaultId = direction === 'for' ? claim.vault_id : claim.counter_vault_id
   }
 
-  let user_conviction: string = '0'
+  let user_conviction: string | number | undefined = '0'
   if (vaultDetails?.user_conviction) {
     user_conviction = vaultDetails.user_conviction
   } else if (identityShouldOverride) {
-    user_conviction = identity.user_conviction
+    user_conviction = identity.vault?.positions?.[0]?.shares
   } else if (claim && direction) {
     user_conviction =
       direction === 'for'
-        ? claim.user_conviction_for
-        : claim.user_conviction_against
+        ? claim.vault?.positions?.[0]?.shares
+        : claim.counter_vault?.positions?.[0]?.shares
   }
 
-  let conviction_price: string = '0'
+  let conviction_price: string | number | undefined = '0'
   if (vaultDetails?.conviction_price) {
     conviction_price = vaultDetails.conviction_price
   } else if (identityShouldOverride) {
-    conviction_price = identity.conviction_price
+    conviction_price = identity.vault?.current_share_price
   } else if (claim && direction) {
     conviction_price =
       direction === 'for'
-        ? claim.for_conviction_price
-        : claim.against_conviction_price
+        ? claim.vault?.current_share_price
+        : claim.counter_vault?.current_share_price
   }
-  let user_assets: string = '0'
 
+  let user_assets: string | number | undefined = '0'
   if (identityShouldOverride) {
-    user_assets = identity?.user_assets ?? '0'
+    user_assets = (
+      +formatUnits(BigInt(identity?.vault?.positions?.[0]?.shares ?? '0'), 18) *
+      +formatUnits(BigInt(identity?.vault?.current_share_price ?? '0'), 18)
+    ).toString()
   } else if (claim && direction) {
     user_assets =
       direction === 'for'
-        ? claim.user_assets_for ?? '0'
-        : claim.user_assets_against ?? '0'
+        ? (
+            +formatUnits(
+              BigInt(claim?.vault?.positions?.[0].shares ?? '0'),
+              18,
+            ) *
+            +formatUnits(BigInt(claim?.vault?.current_share_price ?? '0'), 18)
+          ).toString() ?? '0'
+        : (
+            +formatUnits(
+              BigInt(claim?.counter_vault?.positions?.[0].shares ?? '0'),
+              18,
+            ) *
+            +formatUnits(
+              BigInt(claim?.counter_vault?.current_share_price ?? '0'),
+              18,
+            )
+          ).toString() ?? '0'
   }
   if (vaultDetails?.user_assets) {
     user_assets = vaultDetails.user_assets
@@ -168,11 +187,11 @@ export default function StakeModal({
     try {
       const txHash = await stake({
         val,
-        userWallet,
+        wallet: userWallet,
         vaultId,
         claim,
         identity,
-        conviction_price,
+        conviction_price: conviction_price?.toString() ?? '0',
         mode,
         contract,
       })
@@ -453,9 +472,9 @@ export default function StakeModal({
           identity={identity}
           claim={claim}
           vaultDetails={vaultDetails}
-          user_conviction={user_conviction}
-          conviction_price={conviction_price}
-          user_assets={user_assets}
+          user_conviction={user_conviction?.toString() ?? '0'}
+          conviction_price={conviction_price?.toString() ?? '0'}
+          user_assets={user_assets?.toString() ?? '0'}
           direction={direction ? direction : undefined}
           val={val}
           setVal={setVal}
@@ -479,10 +498,10 @@ export default function StakeModal({
               state={state}
               min_deposit={min_deposit}
               walletBalance={walletBalance}
-              user_conviction={user_conviction ?? '0'}
+              user_conviction={user_conviction?.toString() ?? '0'}
               setValidationErrors={setValidationErrors}
               setShowErrors={setShowErrors}
-              conviction_price={conviction_price ?? '0'}
+              conviction_price={conviction_price?.toString() ?? '0'}
             />
           </DialogFooter>
         )}

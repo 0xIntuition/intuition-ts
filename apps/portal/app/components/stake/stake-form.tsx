@@ -7,21 +7,22 @@ import {
   TabsList,
   TabsTrigger,
 } from '@0xintuition/1ui'
-import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
 
 import { TransactionState } from '@components/transaction-state'
 import { MIN_DEPOSIT } from '@consts/general'
 import { stakeModalAtom } from '@lib/state/store'
 import {
   formatBalance,
-  getAtomDescription,
-  getAtomImage,
-  getAtomIpfsLink,
-  getAtomLabel,
-  getAtomLink,
+  getAtomDescriptionGQL,
+  getAtomImageGQL,
+  getAtomIpfsLinkGQL,
+  getAtomLabelGQL,
+  getAtomLinkGQL,
 } from '@lib/utils/misc'
 import { VaultDetailsType } from 'app/types'
+import { AtomType } from 'app/types/atom'
 import { TransactionStateType } from 'app/types/transaction'
+import { TripleType } from 'app/types/triple'
 import { useAtom } from 'jotai'
 import { formatUnits } from 'viem'
 
@@ -31,8 +32,8 @@ import StakeReview from './stake-review'
 
 interface StakeFormProps {
   userWallet: string
-  identity?: IdentityPresenter
-  claim?: ClaimPresenter
+  identity?: AtomType
+  claim?: TripleType
   user_conviction: string
   conviction_price: string
   user_assets: string
@@ -80,60 +81,53 @@ export default function StakeForm({
             <div className="items-center justify-center flex flex-row w-full px-10 pb-10">
               {modalType === 'identity' ? (
                 <IdentityTag
-                  imgSrc={identity?.user?.image ?? identity?.image}
-                  variant={identity?.user ? Identity.user : Identity.nonUser}
+                  imgSrc={identity?.image}
+                  variant={
+                    identity?.type === 'Account'
+                      ? Identity.user
+                      : Identity.nonUser
+                  }
                 >
-                  {identity?.user?.display_name ??
-                    identity?.display_name ??
-                    'Identity'}
+                  {identity?.label ?? 'Identity'}
                 </IdentityTag>
               ) : (
                 <Claim
                   size="default"
                   subject={{
-                    variant: claim?.subject?.is_user
-                      ? Identity.user
-                      : Identity.nonUser,
-                    label: getAtomLabel(claim?.subject as IdentityPresenter),
-                    imgSrc: getAtomImage(claim?.subject as IdentityPresenter),
-                    id: claim?.subject?.identity_id,
-                    description: getAtomDescription(
-                      claim?.subject as IdentityPresenter,
-                    ),
-                    ipfsLink: getAtomIpfsLink(
-                      claim?.subject as IdentityPresenter,
-                    ),
-                    link: getAtomLink(claim?.subject as IdentityPresenter),
+                    variant:
+                      claim?.subject?.type === 'Account'
+                        ? Identity.user
+                        : Identity.nonUser,
+                    label: getAtomLabelGQL(claim?.subject),
+                    imgSrc: getAtomImageGQL(claim?.subject),
+                    id: claim?.subject?.vault_id,
+                    description: getAtomDescriptionGQL(claim?.subject),
+                    ipfsLink: getAtomIpfsLinkGQL(claim?.subject),
+                    link: getAtomLinkGQL(claim?.subject),
                   }}
                   predicate={{
-                    variant: claim?.predicate?.is_user
-                      ? Identity.user
-                      : Identity.nonUser,
-                    label: getAtomLabel(claim?.predicate as IdentityPresenter),
-                    imgSrc: getAtomImage(claim?.predicate as IdentityPresenter),
-                    id: claim?.predicate?.identity_id,
-                    description: getAtomDescription(
-                      claim?.predicate as IdentityPresenter,
-                    ),
-                    ipfsLink: getAtomIpfsLink(
-                      claim?.predicate as IdentityPresenter,
-                    ),
-                    link: getAtomLink(claim?.predicate as IdentityPresenter),
+                    variant:
+                      claim?.predicate?.type === 'Account'
+                        ? Identity.user
+                        : Identity.nonUser,
+                    label: getAtomLabelGQL(claim?.predicate),
+                    imgSrc: getAtomImageGQL(claim?.predicate),
+                    id: claim?.predicate?.vault_id,
+                    description: getAtomDescriptionGQL(claim?.predicate),
+                    ipfsLink: getAtomIpfsLinkGQL(claim?.predicate),
+                    link: getAtomLinkGQL(claim?.predicate),
                   }}
                   object={{
-                    variant: claim?.object?.is_user
-                      ? Identity.user
-                      : Identity.nonUser,
-                    label: getAtomLabel(claim?.object as IdentityPresenter),
-                    imgSrc: getAtomImage(claim?.object as IdentityPresenter),
-                    id: claim?.object?.identity_id,
-                    description: getAtomDescription(
-                      claim?.object as IdentityPresenter,
-                    ),
-                    ipfsLink: getAtomIpfsLink(
-                      claim?.object as IdentityPresenter,
-                    ),
-                    link: getAtomLink(claim?.object as IdentityPresenter),
+                    variant:
+                      claim?.object?.type === 'Account'
+                        ? Identity.user
+                        : Identity.nonUser,
+                    label: getAtomLabelGQL(claim?.object),
+                    imgSrc: getAtomImageGQL(claim?.object),
+                    id: claim?.object?.vault_id,
+                    description: getAtomDescriptionGQL(claim?.object),
+                    ipfsLink: getAtomIpfsLinkGQL(claim?.object),
+                    link: getAtomLinkGQL(claim?.object),
                   }}
                 />
               )}

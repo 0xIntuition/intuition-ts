@@ -12,14 +12,9 @@ import {
   TagSize,
   TagVariant,
 } from '@0xintuition/1ui'
-import {
-  ClaimPresenter,
-  ClaimSortColumn,
-  SortDirection,
-} from '@0xintuition/api'
+import { ClaimSortColumn, SortDirection } from '@0xintuition/api'
 import {
   fetcher,
-  GetAtomQuery,
   GetTripleDocument,
   GetTripleQuery,
   GetTripleQueryVariables,
@@ -36,7 +31,6 @@ import StakeModal from '@components/stake/stake-modal'
 import { useGetVaultDetails } from '@lib/hooks/useGetVaultDetails'
 import { useGoBack } from '@lib/hooks/useGoBack'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
-import { getClaim } from '@lib/services/claims'
 import { shareModalAtom, stakeModalAtom } from '@lib/state/store'
 import { getSpecialPredicate } from '@lib/utils/app'
 import logger from '@lib/utils/logger'
@@ -62,8 +56,11 @@ import {
   PATHS,
 } from 'app/consts'
 import TwoPanelLayout from 'app/layouts/two-panel-layout'
+import { AtomType } from 'app/types/atom'
+import { TripleType } from 'app/types/triple'
 import { VaultDetailsType } from 'app/types/vault'
 import { useAtom } from 'jotai'
+import { formatUnits } from 'viem'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const wallet = await getUserWallet(request)
@@ -83,11 +80,6 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const direction: SortDirection =
     (searchParams.get('direction') as SortDirection) ?? 'desc'
 
-  const { claim } = await getClaim(request, id)
-  if (!claim) {
-    throw new Response('Not Found', { status: 404 })
-  }
-
   const tripleResult = await fetcher<GetTripleQuery, GetTripleQueryVariables>(
     GetTripleDocument,
     {
@@ -104,7 +96,6 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
   return json({
     wallet,
-    claim,
     sortBy,
     direction,
     dehydratedState: dehydrate(queryClient),
@@ -118,15 +109,11 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
 export interface ClaimDetailsLoaderData {
   wallet: string
-  claim: ClaimPresenter
 }
 
-type Atom = GetAtomQuery['atom']
-
 export default function ClaimDetails() {
-  const { wallet, claim, initialParams } = useLiveLoader<{
+  const { wallet, initialParams } = useLiveLoader<{
     wallet: string
-    claim: ClaimPresenter
     vaultDetails: VaultDetailsType
     initialParams: {
       id: string
@@ -174,23 +161,51 @@ export default function ClaimDetails() {
   logger('Vault Details:', vaultDetails)
 
   const direction: 'for' | 'against' =
-    (vaultDetails?.user_conviction_against ?? claim.user_conviction_against) ===
-    '0'
+    (vaultDetails?.user_conviction_against ??
+      tripleData?.triple?.counter_vault?.positions?.[0].shares) === '0'
       ? 'for'
       : 'against'
 
   const user_assets: string =
-    (vaultDetails?.user_conviction ?? claim.user_conviction_for) > '0'
-      ? vaultDetails?.user_assets ?? claim.user_assets_for
-      : vaultDetails?.user_assets_against ?? claim.user_assets_against
+    (vaultDetails?.user_conviction ??
+      tripleData?.triple?.vault?.positions?.[0].shares) > '0'
+      ? vaultDetails?.user_assets ??
+        (
+          +formatUnits(tripleData?.triple?.vault?.positions?.[0].shares, 18) *
+          +formatUnits(tripleData?.triple?.vault?.current_share_price, 18)
+        ).toString()
+      : vaultDetails?.user_assets_against ??
+        (
+          +formatUnits(
+            tripleData?.triple?.counter_vault?.positions?.[0].shares,
+            18,
+          ) *
+          +formatUnits(
+            tripleData?.triple?.counter_vault?.current_share_price,
+            18,
+          )
+        ).toString()
 
   const assets_sum: string =
-    (vaultDetails?.assets_sum ?? claim.for_assets_sum) > '0'
-      ? vaultDetails?.assets_sum ?? claim.for_assets_sum
-      : vaultDetails?.against_assets_sum ?? claim.against_assets_sum
+    (vaultDetails?.assets_sum ?? tripleData?.triple?.vault?.total_shares) > '0'
+      ? vaultDetails?.assets_sum ??
+        (
+          +formatUnits(tripleData?.triple?.vault?.total_shares, 18) *
+          +formatUnits(tripleData?.triple?.vault?.current_share_price, 18)
+        ).toString()
+      : vaultDetails?.against_assets_sum ??
+        (
+          +formatUnits(tripleData?.triple?.counter_vault?.total_shares, 18) *
+          +formatUnits(
+            tripleData?.triple?.counter_vault?.current_share_price,
+            18,
+          )
+        ).toString()
 
   const userConviction =
-    vaultDetails?.user_conviction ?? claim.user_conviction_for
+    vaultDetails?.user_conviction ?? direction === 'for'
+      ? tripleData?.triple?.vault?.positions?.[0].shares
+      : tripleData?.triple?.counter_vault?.positions?.[0].shares
 
   const directionTagVariant =
     +userConviction > 0 ? TagVariant.for : TagVariant.against
@@ -218,14 +233,16 @@ export default function ClaimDetails() {
               tripleData?.triple?.subject?.type === 'Person'
                 ? Identity.user
                 : Identity.nonUser,
-            label: getAtomLabelGQL(tripleData?.triple?.subject as Atom),
-            imgSrc: getAtomImageGQL(tripleData?.triple?.subject as Atom),
+            label: getAtomLabelGQL(tripleData?.triple?.subject as AtomType),
+            imgSrc: getAtomImageGQL(tripleData?.triple?.subject as AtomType),
             id: tripleData?.triple?.subject?.id,
             description: getAtomDescriptionGQL(
-              tripleData?.triple?.subject as Atom,
+              tripleData?.triple?.subject as AtomType,
             ),
-            ipfsLink: getAtomIpfsLinkGQL(tripleData?.triple?.subject as Atom),
-            link: getAtomLinkGQL(tripleData?.triple?.subject as Atom),
+            ipfsLink: getAtomIpfsLinkGQL(
+              tripleData?.triple?.subject as AtomType,
+            ),
+            link: getAtomLinkGQL(tripleData?.triple?.subject as AtomType),
             linkComponent: RemixLink,
           }}
           predicate={{
@@ -233,14 +250,16 @@ export default function ClaimDetails() {
               tripleData?.triple?.predicate?.type === 'Person'
                 ? Identity.user
                 : Identity.nonUser,
-            label: getAtomLabelGQL(tripleData?.triple?.predicate as Atom),
-            imgSrc: getAtomImageGQL(tripleData?.triple?.predicate as Atom),
+            label: getAtomLabelGQL(tripleData?.triple?.predicate as AtomType),
+            imgSrc: getAtomImageGQL(tripleData?.triple?.predicate as AtomType),
             id: tripleData?.triple?.predicate?.id,
             description: getAtomDescriptionGQL(
-              tripleData?.triple?.predicate as Atom,
+              tripleData?.triple?.predicate as AtomType,
             ),
-            ipfsLink: getAtomIpfsLinkGQL(tripleData?.triple?.predicate as Atom),
-            link: getAtomLinkGQL(tripleData?.triple?.predicate as Atom),
+            ipfsLink: getAtomIpfsLinkGQL(
+              tripleData?.triple?.predicate as AtomType,
+            ),
+            link: getAtomLinkGQL(tripleData?.triple?.predicate as AtomType),
             linkComponent: RemixLink,
           }}
           object={{
@@ -248,14 +267,16 @@ export default function ClaimDetails() {
               tripleData?.triple?.object?.type === 'Person'
                 ? Identity.user
                 : Identity.nonUser,
-            label: getAtomLabelGQL(tripleData?.triple?.object as Atom),
-            imgSrc: getAtomImageGQL(tripleData?.triple?.object as Atom),
+            label: getAtomLabelGQL(tripleData?.triple?.object as AtomType),
+            imgSrc: getAtomImageGQL(tripleData?.triple?.object as AtomType),
             id: tripleData?.triple?.object?.id,
             description: getAtomDescriptionGQL(
-              tripleData?.triple?.object as Atom,
+              tripleData?.triple?.object as AtomType,
             ),
-            ipfsLink: getAtomIpfsLinkGQL(tripleData?.triple?.object as Atom),
-            link: getAtomLinkGQL(tripleData?.triple?.object as Atom),
+            ipfsLink: getAtomIpfsLinkGQL(
+              tripleData?.triple?.object as AtomType,
+            ),
+            link: getAtomLinkGQL(tripleData?.triple?.object as AtomType),
             linkComponent: RemixLink,
           }}
         />
@@ -267,9 +288,11 @@ export default function ClaimDetails() {
               ...prevState,
               mode: 'redeem',
               modalType: 'claim',
-              claim,
+              triple: tripleData?.triple,
               vaultId:
-                direction === 'for' ? claim.vault_id : claim.counter_vault_id,
+                direction === 'for'
+                  ? tripleData?.triple?.vault_id
+                  : tripleData?.triple?.counter_vault_id,
               direction,
               isOpen: true,
             }))
@@ -301,7 +324,10 @@ export default function ClaimDetails() {
                 : PieChartVariant.against
             }
           />
-          <PositionCardLastUpdated timestamp={claim.updated_at} />
+          <PositionCardLastUpdated
+            // TODO: This needs to be the timestamp of the last transaction the user made on the vault
+            timestamp={tripleData?.triple?.block_timestamp}
+          />
         </PositionCard>
       ) : null}
       <ClaimStakeCard
@@ -314,21 +340,41 @@ export default function ClaimDetails() {
         }
         tvlAgainst={
           +formatBalance(
-            vaultDetails?.against_assets_sum ?? claim.against_assets_sum,
+            vaultDetails?.against_assets_sum ??
+              (
+                +formatUnits(
+                  tripleData?.triple?.counter_vault?.total_shares,
+                  18,
+                ) *
+                +formatUnits(
+                  tripleData?.triple?.counter_vault?.current_share_price,
+                  18,
+                )
+              ).toString(),
           )
         }
         tvlFor={
-          +formatBalance(vaultDetails?.assets_sum ?? claim.for_assets_sum)
+          +formatBalance(
+            vaultDetails?.assets_sum ??
+              (
+                +formatUnits(tripleData?.triple?.vault?.total_shares, 18) *
+                +formatUnits(tripleData?.triple?.vault?.current_share_price, 18)
+              ).toString(),
+          )
         }
-        numPositionsAgainst={claim.against_num_positions}
-        numPositionsFor={claim.for_num_positions}
+        numPositionsAgainst={
+          tripleData?.triple?.counter_vault?.allPositions?.aggregate?.count ?? 0
+        }
+        numPositionsFor={
+          tripleData?.triple?.vault?.allPositions?.aggregate?.count ?? 0
+        }
         onAgainstBtnClick={() =>
           setStakeModalActive((prevState) => ({
             ...prevState,
             mode: 'deposit',
             modalType: 'claim',
-            claim,
-            vaultId: claim.counter_vault_id,
+            triple: tripleData?.triple,
+            vaultId: tripleData?.triple?.counter_vault_id,
             direction: 'against',
             isOpen: true,
           }))
@@ -338,18 +384,19 @@ export default function ClaimDetails() {
             ...prevState,
             mode: 'deposit',
             modalType: 'claim',
-            claim,
-            vaultId: claim.vault_id,
+            triple: tripleData?.triple,
+            vaultId: tripleData?.triple?.vault_id,
             direction: 'for',
             isOpen: true,
           }))
         }
         disableForBtn={
           (vaultDetails?.user_conviction_against ??
-            claim.user_conviction_against) > '0'
+            tripleData?.triple?.counter_vault?.positions?.[0].shares) > '0'
         }
         disableAgainstBtn={
-          (vaultDetails?.user_conviction ?? claim.user_conviction_for) > '0'
+          (vaultDetails?.user_conviction ??
+            tripleData?.triple?.vault?.positions?.[0].shares) > '0'
         }
       />
       <DetailInfoCardNew
@@ -363,12 +410,15 @@ export default function ClaimDetails() {
         username={tripleData?.triple?.creator?.label ?? '?'}
         avatarImgSrc={tripleData?.triple?.creator?.image ?? ''}
         id={tripleData?.triple?.creator?.id ?? ''}
-        description={claim.creator?.description ?? ''}
+        // TODO: Remove description, unless we can derive it from ENS
+        description={''}
         link={
-          claim.creator?.id ? `${PATHS.PROFILE}/${claim.creator?.wallet}` : ''
+          tripleData?.triple?.creator?.id
+            ? `${PATHS.PROFILE}/${tripleData?.triple?.creator?.id}`
+            : ''
         }
-        ipfsLink={`${BLOCK_EXPLORER_URL}/address/${claim.creator?.wallet}`}
-        timestamp={claim.created_at}
+        ipfsLink={`${BLOCK_EXPLORER_URL}/address/${tripleData?.triple?.creator?.id}`}
+        timestamp={tripleData?.triple?.block_timestamp}
         className="w-full"
       />
       <ShareCta
@@ -389,10 +439,10 @@ export default function ClaimDetails() {
       <TwoPanelLayout leftPanel={leftPanel} rightPanel={rightPanel} />
       <StakeModal
         userWallet={wallet}
-        contract={claim.contract}
+        contract={MULTIVAULT_CONTRACT_ADDRESS}
         open={stakeModalActive.isOpen}
         direction={stakeModalActive.direction}
-        claim={claim}
+        claim={tripleData?.triple as TripleType}
         vaultId={stakeModalActive.vaultId}
         vaultDetailsProp={vaultDetails}
         onClose={() => {

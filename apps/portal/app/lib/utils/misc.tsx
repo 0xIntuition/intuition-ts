@@ -2,10 +2,11 @@ import React from 'react'
 
 import { Icon, IconName, Text, Theme } from '@0xintuition/1ui'
 import { IdentityPresenter } from '@0xintuition/api'
-import { GetAtomQuery, GetAtomsQuery } from '@0xintuition/graphql'
+import { GetAtomsQuery } from '@0xintuition/graphql'
 
 import { SubmitFunction } from '@remix-run/react'
 import { BLOCK_EXPLORER_URL, IPFS_GATEWAY_URL, PATHS } from 'app/consts'
+import { AtomType } from 'app/types/atom'
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import { extractChain, formatUnits } from 'viem'
@@ -461,9 +462,7 @@ export const getAtomId = (atom: IdentityPresenter) => {
 }
 
 // atom GQL helpers
-export const getAtomImageGQL = (
-  atom: GetAtomQuery['atom'] | null | undefined,
-) => {
+export const getAtomImageGQL = (atom: AtomType | null | undefined) => {
   if (!atom) {
     return ''
   }
@@ -476,9 +475,7 @@ export const getAtomImageGQL = (
   )
 }
 
-export const getAtomLabelGQL = (
-  atom: GetAtomQuery['atom'] | null | undefined,
-) => {
+export const getAtomLabelGQL = (atom: AtomType | null | undefined) => {
   if (!atom) {
     return '?'
   }
@@ -493,9 +490,7 @@ export const getAtomLabelGQL = (
   )
 }
 
-export const getAtomDescriptionGQL = (
-  atom: GetAtomQuery['atom'] | null | undefined,
-) => {
+export const getAtomDescriptionGQL = (atom: AtomType | null | undefined) => {
   return (
     atom?.value?.person?.description ??
     atom?.value?.thing?.description ??
@@ -504,9 +499,7 @@ export const getAtomDescriptionGQL = (
   )
 }
 
-export const getAtomIpfsLinkGQL = (
-  atom: GetAtomQuery['atom'] | null | undefined,
-) => {
+export const getAtomIpfsLinkGQL = (atom: AtomType | null | undefined) => {
   if (!atom) {
     return ''
   }
@@ -534,7 +527,7 @@ export const getAtomIpfsLinkGQL = (
 }
 
 export const getAtomLinkGQL = (
-  atom: GetAtomQuery['atom'] | null | undefined,
+  atom: AtomType | null | undefined,
   readOnly: boolean = false,
 ) => {
   if (!atom) {
@@ -550,7 +543,7 @@ export const getAtomLinkGQL = (
     : `${PATHS.IDENTITY}/${atom.vault_id}`
 }
 
-export const getAtomIdGQL = (atom: GetAtomQuery['atom']) => {
+export const getAtomIdGQL = (atom: AtomType | null | undefined) => {
   if (!atom) {
     return ''
   }

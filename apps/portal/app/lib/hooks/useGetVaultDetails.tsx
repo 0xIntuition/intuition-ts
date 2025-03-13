@@ -4,8 +4,8 @@ import { VaultDetailsType } from 'app/types'
 
 export function useGetVaultDetails(
   contract: string,
-  vaultId: string,
-  counterVaultId?: string,
+  vaultId: string | number,
+  counterVaultId?: string | number,
   options?: Partial<UseQueryOptions<VaultDetailsType>>,
 ) {
   return useQuery<VaultDetailsType>({
