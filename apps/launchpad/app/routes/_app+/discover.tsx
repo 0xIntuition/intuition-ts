@@ -105,7 +105,10 @@ export default function Discover() {
       description: `Decentralized 'community notes' for the entire web`,
       buttonText: 'Download',
       onAction: () =>
-        window.open('https://github.com/0xIntuition/trustbar/', '_blank'),
+        window.open(
+          'https://github.com/0xIntuition/chrome-extension/',
+          '_blank',
+        ),
       imageUrl: '/images/discover/extension.webp',
     },
     {
@@ -137,6 +140,24 @@ export default function Discover() {
       onAction: () =>
         window.open('https://intuition-snap.onrender.com/', '_blank'),
       imageUrl: '/images/discover/metamask.webp',
+    },
+    {
+      id: '14',
+      title: 'Ethereum Values',
+      description:
+        'Propose Values, Vote with ETH, Earn Rewards, Shape the future',
+      buttonText: 'Explore',
+      onAction: () =>
+        window.open('https://ethereum-values.consensys.io/', '_blank'),
+      imageUrl: '/images/discover/consensys-ethereum-values.png',
+    },
+    {
+      id: '15',
+      title: 'Tyris',
+      description: 'Crypto-focused data feed delivering real-time insights',
+      buttonText: 'Explore',
+      onAction: () => window.open('https://tyris.cyphercore.io/', '_blank'),
+      imageUrl: '/images/discover/tyris.png',
     },
     {
       id: '7',
