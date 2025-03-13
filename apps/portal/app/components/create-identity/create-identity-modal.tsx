@@ -23,7 +23,7 @@ import { IdentityForm } from './create-identity-form'
 
 export interface CreateIdentityModalProps {
   open?: boolean
-  wallet?: string
+  wallet: string
   onClose: () => void
   onSuccess?: (identity: IdentityPresenter) => void
   successAction?: 'view' | 'close'

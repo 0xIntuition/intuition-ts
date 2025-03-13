@@ -3,7 +3,7 @@ import { ClaimPresenter, ClaimsService } from '@0xintuition/api'
 import logger from '@lib/utils/logger'
 import { invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
-import { requireUserWallet } from '@server/auth'
+import { getUserWallet } from '@server/auth'
 import { NO_WALLET_ERROR } from 'app/consts'
 
 export interface ClaimLoaderData {
@@ -11,7 +11,7 @@ export interface ClaimLoaderData {
 }
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  const wallet = await requireUserWallet(request)
+  const wallet = await getUserWallet(request)
   invariant(wallet, NO_WALLET_ERROR)
 
   const url = new URL(request.url)

@@ -14,11 +14,11 @@ import { calculateTotalPages, invariant } from '@lib/utils/misc'
 import { getStandardPageParams } from '@lib/utils/params'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { fetchWrapper } from '@server/api'
-import { requireUserWallet } from '@server/auth'
+import { getUserWallet } from '@server/auth'
 import { HEADER_BANNER_IDENTITIES, NO_WALLET_ERROR } from 'app/consts'
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  const wallet = await requireUserWallet(request)
+  const wallet = await getUserWallet(request)
   invariant(wallet, NO_WALLET_ERROR)
 
   const url = new URL(request.url)

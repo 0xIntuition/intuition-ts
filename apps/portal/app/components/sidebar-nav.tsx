@@ -14,22 +14,23 @@ import {
   SidebarLayout,
   SidebarLayoutContent,
   SidebarLayoutNav,
-  SidebarLayoutNavAvatar,
   SidebarLayoutNavBody,
   SidebarLayoutNavHeader,
   SidebarLayoutNavHeaderButton,
   SidebarLayoutProvider,
   SidebarNavItem,
 } from '@0xintuition/1ui'
-import { UserPresenter } from '@0xintuition/api'
 
-import PrivyButton from '@client/privy-button'
+import { AccountButton } from '@components/account-button'
+import { ConnectButton } from '@components/connect-button'
+import LoadingButton from '@components/loading-button'
 import {
   globalCreateClaimModalAtom,
   globalCreateIdentityModalAtom,
   stakeModalAtom,
 } from '@lib/state/store'
-import { NavLink, useLocation, useNavigate, useSubmit } from '@remix-run/react'
+import { usePrivy } from '@privy-io/react-auth'
+import { NavLink, useLocation, useNavigate } from '@remix-run/react'
 import { MULTIVAULT_CONTRACT_ADDRESS, PATHS } from 'app/consts'
 import { useAtom } from 'jotai'
 
@@ -97,14 +98,32 @@ const comingSoonRoutes: SidebarNavRoute[] = [
 
 export default function SidebarNav({
   children,
-  userObject,
 }: {
   children: React.ReactNode
-  userObject: UserPresenter
 }) {
-  const submit = useSubmit()
   const navigate = useNavigate()
   const location = useLocation()
+  const {
+    ready: isReady,
+    authenticated: isAuthenticated,
+    user: privyUser,
+  } = usePrivy()
+
+  // Determine which button to show
+  const renderAuthButton = () => {
+    // If we have both auth and wallet, show account
+    if (isAuthenticated && privyUser?.wallet) {
+      return <AccountButton privyUser={privyUser} />
+    }
+
+    // If we're not ready, show loading
+    if (!isReady) {
+      return <LoadingButton />
+    }
+
+    // Otherwise show connect
+    return <ConnectButton />
+  }
 
   const [isCreateMenuOpen, setIsCreateMenuOpen] = useState(false)
 
@@ -117,13 +136,6 @@ export default function SidebarNav({
   )
 
   const [stakeModalActive, setStakeModalActive] = useAtom(stakeModalAtom)
-
-  function onLogout() {
-    submit(null, {
-      action: '/actions/logout',
-      method: 'post',
-    })
-  }
 
   const isRouteActive = (route: string) => {
     if (route === PATHS.HOME) {
@@ -361,21 +373,7 @@ export default function SidebarNav({
                     aria-selected={isRouteActive(PATHS.HELP)}
                   />
                 </NavLink>
-                <PrivyButton
-                  userObject={userObject}
-                  triggerComponent={
-                    <SidebarLayoutNavAvatar
-                      imageSrc={userObject.image ?? ''}
-                      name={
-                        userObject.display_name ??
-                        userObject.ens_name ??
-                        userObject.wallet ??
-                        ''
-                      }
-                    />
-                  }
-                  onLogout={onLogout}
-                />
+                {renderAuthButton()}
               </div>
             </SidebarLayoutNavBody>
           </SidebarLayoutNav>
@@ -384,33 +382,37 @@ export default function SidebarNav({
           </SidebarLayoutContent>
         </SidebarLayout>
       </SidebarLayoutProvider>
-      <CreateIdentityModal
-        open={createIdentityModalActive}
-        wallet={userObject.wallet}
-        onClose={() => setCreateIdentityModalActive(false)}
-      />
-      <CreateClaimModal
-        open={createClaimModalActive}
-        wallet={userObject.wallet}
-        onClose={() => setCreateClaimModalActive(false)}
-      />
-      <StakeModal
-        open={stakeModalActive.isOpen}
-        onClose={() =>
-          setStakeModalActive({
-            isOpen: false,
-            id: null,
-            vaultId: '0',
-            vaultDetails: undefined,
-          })
-        }
-        identity={stakeModalActive.identity}
-        claim={stakeModalActive.claim}
-        vaultId={stakeModalActive.vaultId}
-        direction={stakeModalActive.direction}
-        userWallet={userObject.wallet}
-        contract={MULTIVAULT_CONTRACT_ADDRESS}
-      />
+      {privyUser?.wallet?.address && (
+        <>
+          <CreateIdentityModal
+            open={createIdentityModalActive}
+            wallet={privyUser?.wallet?.address}
+            onClose={() => setCreateIdentityModalActive(false)}
+          />
+          <CreateClaimModal
+            open={createClaimModalActive}
+            wallet={privyUser?.wallet?.address}
+            onClose={() => setCreateClaimModalActive(false)}
+          />
+          <StakeModal
+            open={stakeModalActive.isOpen}
+            onClose={() =>
+              setStakeModalActive({
+                isOpen: false,
+                id: null,
+                vaultId: '0',
+                vaultDetails: undefined,
+              })
+            }
+            identity={stakeModalActive.identity}
+            claim={stakeModalActive.claim}
+            vaultId={stakeModalActive.vaultId}
+            direction={stakeModalActive.direction}
+            userWallet={privyUser?.wallet?.address}
+            contract={MULTIVAULT_CONTRACT_ADDRESS}
+          />
+        </>
+      )}
     </>
   )
 }

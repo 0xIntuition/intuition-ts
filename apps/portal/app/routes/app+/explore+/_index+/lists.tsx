@@ -25,12 +25,12 @@ import { getStandardPageParams } from '@lib/utils/params'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData, useSearchParams, useSubmit } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
-import { requireUserWallet } from '@server/auth'
+import { getUserWallet } from '@server/auth'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
 import { CURRENT_ENV, HEADER_BANNER_LISTS, NO_WALLET_ERROR } from 'app/consts'
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  const wallet = await requireUserWallet(request)
+  const wallet = await getUserWallet(request)
   invariant(wallet, NO_WALLET_ERROR)
 
   const queryClient = new QueryClient()

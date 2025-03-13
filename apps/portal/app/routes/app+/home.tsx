@@ -1,43 +1,36 @@
 import { Suspense } from 'react'
 
-import { EmptyStateCard, ErrorStateCard, Text } from '@0xintuition/1ui'
-import {
-  ActivityPresenter,
-  ClaimSortColumn,
-  ClaimsService,
-  IdentitiesService,
-  SortDirection,
-} from '@0xintuition/api'
-import { useGetListsQuery } from '@0xintuition/graphql'
+import { ErrorStateCard, Text } from '@0xintuition/1ui'
+import { useGetListsQuery, useGetSignalsQuery } from '@0xintuition/graphql'
 
 import { ErrorPage } from '@components/error-page'
 import HomeBanner from '@components/home/home-banner'
 import { HomeSectionHeader } from '@components/home/home-section-header'
 import { HomeStatsHeader } from '@components/home/home-stats-header'
-import { ActivityList } from '@components/list/activity'
-import { ClaimsList } from '@components/list/claims'
-import { IdentitiesList } from '@components/list/identities'
+import { ActivityFeed } from '@components/list/activity'
 import { FeaturedListCarouselNew as FeaturedListCarousel } from '@components/lists/featured-lists-carousel'
 import { ListClaimsSkeletonLayout } from '@components/lists/list-skeletons'
 import { RevalidateButton } from '@components/revalidate-button'
-import { ActivitySkeleton, PaginatedListSkeleton } from '@components/skeleton'
+import { ActivitySkeleton } from '@components/skeleton'
 import { getActivity } from '@lib/services/activity'
 import { getFeaturedLists } from '@lib/services/lists'
 import { getSystemStats } from '@lib/services/stats'
 import { getFeaturedListObjectIds } from '@lib/utils/app'
 import { invariant } from '@lib/utils/misc'
 import { defer, LoaderFunctionArgs } from '@remix-run/node'
-import { Await, useLoaderData } from '@remix-run/react'
-import { fetchWrapper } from '@server/api'
+import { Await, useLoaderData, useSearchParams } from '@remix-run/react'
 import { getUserWallet } from '@server/auth'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
 import { CURRENT_ENV, NO_WALLET_ERROR } from 'app/consts'
 import FullPageLayout from 'app/layouts/full-page-layout'
-import { PaginationType } from 'app/types'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const userWallet = await getUserWallet(request)
   invariant(userWallet, NO_WALLET_ERROR)
+
+  const url = new URL(request.url)
+  const activityLimit = parseInt(url.searchParams.get('activityLimit') || '10')
+  const activityOffset = parseInt(url.searchParams.get('activityOffset') || '0')
 
   const queryClient = new QueryClient()
 
@@ -49,30 +42,41 @@ export async function loader({ request }: LoaderFunctionArgs) {
       queryClient,
     }),
     systemStats: getSystemStats({ queryClient }),
-    topUsers: fetchWrapper(request, {
-      method: IdentitiesService.searchIdentity,
-      args: {
-        limit: 5,
-        direction: SortDirection.DESC,
-        sortBy: 'AssetsSum',
-        isUser: true,
-      },
-    }),
-    topClaims: fetchWrapper(request, {
-      method: ClaimsService.getClaims,
-      args: {
-        limit: 5,
-        direction: SortDirection.DESC,
-        sortBy: 'AssetsSum',
-      },
-    }),
+    // topUsers: fetchWrapper(request, {
+    //   method: IdentitiesService.searchIdentity,
+    //   args: {
+    //     limit: 5,
+    //     direction: SortDirection.DESC,
+    //     sortBy: 'AssetsSum',
+    //     isUser: true,
+    //   },
+    // }),
+    // topClaims: fetchWrapper(request, {
+    //   method: ClaimsService.getClaims,
+    //   args: {
+    //     limit: 5,
+    //     direction: SortDirection.DESC,
+    //     sortBy: 'AssetsSum',
+    //   },
+    // }),
     activity: getActivity({ queryClient }),
+    activityParams: {
+      activityLimit,
+      activityOffset,
+    },
   })
 }
 
 export default function HomePage() {
-  const { topUsers, topClaims, activity, featuredListsParams } =
-    useLoaderData<typeof loader>()
+  const { featuredListsParams, activityParams } = useLoaderData<typeof loader>()
+  const [searchParams] = useSearchParams()
+
+  const activityLimit = parseInt(
+    searchParams.get('activityLimit') || String(activityParams.activityLimit),
+  )
+  const activityOffset = parseInt(
+    searchParams.get('activityOffset') || String(activityParams.activityOffset),
+  )
 
   const { data: resolvedFeaturedLists } = useGetListsQuery(
     {
@@ -82,6 +86,29 @@ export default function HomePage() {
       queryKey: [
         'get-featured-lists',
         { where: featuredListsParams.initialParams.listsWhere },
+      ],
+    },
+  )
+
+  const { data: signalsData } = useGetSignalsQuery(
+    {
+      limit: activityLimit,
+      offset: activityOffset,
+      addresses: [],
+      orderBy: [{ block_timestamp: 'desc' }],
+    },
+    {
+      queryKey: [
+        'get-signals-global',
+        {
+          limit: activityLimit,
+          offset: activityOffset,
+          where: {
+            type: {
+              _neq: 'FeesTransfered',
+            },
+          },
+        },
       ],
     },
   )
@@ -120,7 +147,7 @@ export default function HomePage() {
             />
           </Suspense>
         </div>
-        <div className="flex flex-col gap-4">
+        {/* <div className="flex flex-col gap-4">
           <HomeSectionHeader
             title="Top Claims"
             buttonText="Explore Claims"
@@ -190,7 +217,7 @@ export default function HomePage() {
               }}
             </Await>
           </Suspense>
-        </div>
+        </div> */}
         <div className="flex flex-col gap-4">
           <HomeSectionHeader
             title="Global Feed"
@@ -199,17 +226,23 @@ export default function HomePage() {
           />
           <Suspense fallback={<ActivitySkeleton />}>
             <Await
-              resolve={activity}
+              resolve={signalsData}
               errorElement={
                 <ErrorStateCard>
                   <RevalidateButton />
                 </ErrorStateCard>
               }
             >
-              {(resolvedActivity) => (
-                <ActivityList
-                  activities={resolvedActivity.activity as ActivityPresenter[]}
-                  pagination={resolvedActivity.pagination as PaginationType}
+              {(resolvedSignals) => (
+                <ActivityFeed
+                  activities={{
+                    signals: resolvedSignals?.signals || [],
+                    total: {
+                      aggregate: {
+                        count: resolvedSignals?.total.aggregate?.count || 0,
+                      },
+                    },
+                  }}
                 />
               )}
             </Await>

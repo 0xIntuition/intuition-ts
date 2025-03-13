@@ -1,9 +1,9 @@
 import { json, LoaderFunctionArgs } from '@remix-run/node'
-import { requireUserWallet } from '@server/auth'
+import { getUserWallet } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  const userWallet = await requireUserWallet(request)
+  const userWallet = await getUserWallet(request)
   const url = new URL(request.url)
   const contract = url.searchParams.get('contract')
   const vaultId = url.searchParams.get('vaultId')

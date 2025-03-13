@@ -58,7 +58,7 @@ import {
   useRouteLoaderData,
   useSearchParams,
 } from '@remix-run/react'
-import { requireUserWallet } from '@server/auth'
+import { getUserWallet } from '@server/auth'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
 import {
   CURRENT_ENV,
@@ -77,7 +77,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   invariant(predicateId, 'Predicate ID not found in composite ID')
   invariant(objectId, 'Object ID not found in composite ID')
 
-  const wallet = await requireUserWallet(request)
+  const wallet = await getUserWallet(request)
   invariant(wallet, NO_WALLET_ERROR)
 
   const queryClient = new QueryClient()

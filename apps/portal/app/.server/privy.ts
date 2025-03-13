@@ -1,4 +1,3 @@
-import logger from '@lib/utils/logger'
 import { AuthTokenClaims, PrivyClient, User } from '@privy-io/server-auth'
 import { parse } from 'cookie'
 
@@ -15,7 +14,6 @@ export const verifyPrivyAccessToken = async (
   const privy = getPrivyClient()
   const authToken = getPrivyAccessToken(req)
   if (!authToken) {
-    logger('No privy access token found')
     return null
   }
   const verifiedClaims = await privy.verifyAuthToken(
@@ -25,14 +23,18 @@ export const verifyPrivyAccessToken = async (
   return verifiedClaims
 }
 
-// takes user privy DID (e.g. authCheck().userId)
-export const getPrivyUserById = async (id: string): Promise<User> => {
+export const getPrivyUserById = async (req: Request): Promise<User> => {
   const privy = getPrivyClient()
-  const user = await privy.getUser(id)
+  const cookies = parse(req.headers.get('Cookie') ?? '')
+  const idToken = cookies['privy-id-token']
+
+  if (!idToken) {
+    throw new Error('No identity token found')
+  }
+  const user = await privy.getUser({ idToken })
   return user
 }
 
-// get access token from cookie or header
 export const getPrivyAccessToken = (req: Request): string | null => {
   const cookies = parse(req.headers.get('Cookie') ?? '')
 
@@ -50,7 +52,6 @@ export const getPrivyAccessToken = (req: Request): string | null => {
   return authToken
 }
 
-// get session token from cookie
 export const getPrivySessionToken = (req: Request): string | null => {
   const cookies = parse(req.headers.get('Cookie') ?? '')
   return cookies['privy-session']
@@ -66,15 +67,4 @@ export const getPrivyTokens = (
     accessToken: getPrivyAccessToken(req),
     sessionToken: getPrivySessionToken(req),
   }
-}
-
-export async function isOAuthInProgress(requestUrl: string) {
-  // Check if privy_oauth_code, privy_oauth_state, or privy_oauth_provider are in query params
-  // these parameters are a required component of Privy's OAuth login flow and applying a redirect will destructively erase them.
-  const url = new URL(requestUrl)
-  return (
-    url.searchParams.has('privy_oauth_code') ||
-    url.searchParams.has('privy_oauth_state') ||
-    url.searchParams.has('privy_oauth_provider')
-  )
 }

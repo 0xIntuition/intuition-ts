@@ -41,7 +41,7 @@ import { formatBalance, invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { useNavigate, useRouteLoaderData } from '@remix-run/react'
 import { ProfileLoaderData } from '@routes/app+/profile+/_index+/_layout'
-import { requireUserWallet } from '@server/auth'
+import { getUserWallet } from '@server/auth'
 import { getQuestsProgress } from '@server/quest'
 import { QueryClient } from '@tanstack/react-query'
 import {
@@ -52,7 +52,7 @@ import {
 } from 'app/consts'
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  const userWallet = await requireUserWallet(request)
+  const userWallet = await getUserWallet(request)
   invariant(userWallet, NO_WALLET_ERROR)
   const queryAddress = userWallet.toLowerCase()
 

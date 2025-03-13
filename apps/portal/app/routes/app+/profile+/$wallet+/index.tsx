@@ -63,7 +63,7 @@ import {
   useParams,
   useRouteLoaderData,
 } from '@remix-run/react'
-import { requireUserWallet } from '@server/auth'
+import { getUserWallet } from '@server/auth'
 import { QueryClient } from '@tanstack/react-query'
 import {
   CURRENT_ENV,
@@ -75,7 +75,7 @@ import {
 import { useSetAtom } from 'jotai'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
-  const userWallet = await requireUserWallet(request)
+  const userWallet = await getUserWallet(request)
   invariant(userWallet, NO_WALLET_ERROR)
 
   const wallet = params.wallet

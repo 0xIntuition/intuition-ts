@@ -1,4 +1,3 @@
-import contentCollections from '@content-collections/remix-vite'
 import { vitePlugin as remix } from '@remix-run/dev'
 import { installGlobals } from '@remix-run/node'
 import { sentryVitePlugin } from '@sentry/vite-plugin'
@@ -37,7 +36,6 @@ export default defineConfig({
       },
     }),
     tsconfigPaths(),
-    contentCollections(),
     process.env.SENTRY_AUTH_TOKEN
       ? sentryVitePlugin({
           disable: process.env.NODE_ENV !== 'production',
@@ -62,10 +60,6 @@ export default defineConfig({
     },
   },
   ssr: {
-    noExternal: [
-      '@privy-io/react-auth',
-      '@privy-io/wagmi',
-      '@content-collections/mdx',
-    ],
+    noExternal: ['@privy-io/react-auth', '@privy-io/wagmi'],
   },
 })

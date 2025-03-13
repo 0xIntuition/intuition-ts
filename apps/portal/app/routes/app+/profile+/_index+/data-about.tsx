@@ -32,13 +32,13 @@ import { detailCreateClaimModalAtom } from '@lib/state/store'
 import logger from '@lib/utils/logger'
 import { formatBalance, invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
-import { requireUserWallet } from '@server/auth'
+import { getUserWallet } from '@server/auth'
 import { QueryClient } from '@tanstack/react-query'
 import { NO_WALLET_ERROR } from 'app/consts'
 import { useAtom } from 'jotai'
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  const userWallet = await requireUserWallet(request)
+  const userWallet = await getUserWallet(request)
   invariant(userWallet, NO_WALLET_ERROR)
   const queryAddress = userWallet.toLowerCase()
 

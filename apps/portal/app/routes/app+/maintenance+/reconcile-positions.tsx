@@ -14,10 +14,10 @@ import {
 import { invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { useFetcher } from '@remix-run/react'
-import { requireUserWallet } from '@server/auth'
+import { getUserWallet } from '@server/auth'
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  const wallet = await requireUserWallet(request)
+  const wallet = await getUserWallet(request)
   invariant(wallet, 'User wallet is required')
   return json({ message: 'Ready to reconcile positions' })
 }

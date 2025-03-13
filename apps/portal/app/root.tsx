@@ -28,7 +28,6 @@ import { API_URL_DEV, configureClient } from '@0xintuition/graphql'
 import { ErrorPage } from '@components/error-page'
 import { GlobalLoading } from '@components/global-loading'
 import { getChainEnvConfig } from '@lib/utils/environment'
-import { setupAPI } from '@server/auth'
 import { CURRENT_ENV } from 'app/consts'
 import { ClientOnly } from 'remix-utils/client-only'
 import { useAccount, useSwitchChain } from 'wagmi'
@@ -76,8 +75,6 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 }
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  setupAPI(request)
-
   return json({
     env: getEnv(),
     requestInfo: {

@@ -101,16 +101,6 @@ export function parseMessage(message: string) {
   return parsedMessage
 }
 
-export function getAuthHeaders(token?: string) {
-  // TODO: remove hardcoded API key once we move off legacy BE
-  const headers: HeadersInit = {
-    'Content-Type': 'application/json',
-    'x-api-key': 'f775ca23-8f77-45ee-89b6-232575f7571b',
-  }
-
-  return headers
-}
-
 // delay helper for use with mocking async requests
 export function delay(ms: number | undefined) {
   return new Promise((resolve) => setTimeout(resolve, ms))
@@ -520,7 +510,7 @@ export const getAtomIpfsLinkGQL = (
   if (!atom) {
     return ''
   }
-  if (atom.type === ('Account' || 'Default')) {
+  if (atom.type === 'Account' || atom.type === 'Default') {
     return `${BLOCK_EXPLORER_URL}/address/${atom.wallet_id}`
   }
   if (atom.data?.startsWith('https')) {
@@ -550,7 +540,7 @@ export const getAtomLinkGQL = (
   if (!atom) {
     return ''
   }
-  if (atom.type === ('Account' || 'Default')) {
+  if (atom.type === 'Account' || atom.type === 'Default') {
     return readOnly
       ? `${PATHS.READONLY_PROFILE}/${atom.wallet_id}`
       : `${PATHS.PROFILE}/${atom.wallet_id}`
@@ -564,7 +554,7 @@ export const getAtomIdGQL = (atom: GetAtomQuery['atom']) => {
   if (!atom) {
     return ''
   }
-  if (atom.type === ('Account' || 'Default')) {
+  if (atom.type === 'Account' || atom.type === 'Default') {
     return atom.wallet_id
   }
   return atom.id

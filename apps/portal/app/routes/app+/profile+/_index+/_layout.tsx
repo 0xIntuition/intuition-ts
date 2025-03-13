@@ -82,7 +82,7 @@ import {
   useRevalidator,
 } from '@remix-run/react'
 import { fetchWrapper } from '@server/api'
-import { requireUser, requireUserWallet } from '@server/auth'
+import { getUserWallet, requireUser } from '@server/auth'
 import { getRelicCount } from '@server/relics'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
 import {
@@ -103,7 +103,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const userWallet = user.wallet?.address
   const queryAddress = userWallet.toLowerCase()
 
-  const wallet = await requireUserWallet(request)
+  const wallet = await getUserWallet(request)
   invariant(wallet, NO_WALLET_ERROR)
 
   const queryClient = new QueryClient()

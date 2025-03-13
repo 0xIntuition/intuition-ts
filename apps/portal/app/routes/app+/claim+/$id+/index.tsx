@@ -40,7 +40,7 @@ import {
   useSearchParams,
 } from '@remix-run/react'
 import { ClaimDetailsLoaderData } from '@routes/app+/claim+/$id'
-import { requireUserWallet } from '@server/auth'
+import { getUserWallet } from '@server/auth'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
 import { NO_CLAIM_ERROR, NO_PARAM_ID_ERROR, NO_WALLET_ERROR } from 'app/consts'
 
@@ -49,7 +49,7 @@ type Atom = GetAtomQuery['atom']
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const id = params.id
   invariant(id, NO_PARAM_ID_ERROR)
-  const wallet = await requireUserWallet(request)
+  const wallet = await getUserWallet(request)
   invariant(wallet, NO_WALLET_ERROR)
 
   if (!id) {

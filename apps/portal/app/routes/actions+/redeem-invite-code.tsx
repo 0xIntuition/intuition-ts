@@ -3,12 +3,12 @@ import { ApiError, InviteCodesService } from '@0xintuition/api'
 import logger from '@lib/utils/logger'
 import { invariant } from '@lib/utils/misc'
 import { json, type ActionFunctionArgs } from '@remix-run/node'
-import { requireUserWallet } from '@server/auth'
+import { getUserWallet } from '@server/auth'
 import { NO_WALLET_ERROR } from 'app/consts'
 
 export async function action({ request }: ActionFunctionArgs) {
   logger('Validating redeem invite code form data')
-  const wallet = await requireUserWallet(request)
+  const wallet = await getUserWallet(request)
   invariant(wallet, NO_WALLET_ERROR)
 
   const formData = await request.formData()

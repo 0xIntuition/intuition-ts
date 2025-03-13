@@ -10,7 +10,7 @@ interface StakeMutationParams {
   val: string
   mode: 'deposit' | 'redeem' | undefined
   contract: string
-  userWallet: string
+  wallet: string
   vaultId: string
   claim?: ClaimPresenter
   identity?: IdentityPresenter
@@ -35,7 +35,7 @@ export function useStakeMutation(contract: string, mode: 'deposit' | 'redeem') {
   return {
     ...useMutation({
       mutationFn: async (params: StakeMutationParams) => {
-        const { val, userWallet, vaultId, claim, conviction_price } = params
+        const { val, wallet, vaultId, claim, conviction_price } = params
         const parsedValue = parseUnits(val === '' ? '0' : val, 18)
         const actionType = mode === 'deposit' ? 'buy' : 'sell'
 
@@ -52,7 +52,7 @@ export function useStakeMutation(contract: string, mode: 'deposit' | 'redeem') {
                 : 'redeemAtom',
           args:
             actionType === 'buy'
-              ? [userWallet as `0x${string}`, vaultId]
+              ? [wallet as `0x${string}`, vaultId]
               : [
                   parseUnits(
                     val === ''
@@ -65,7 +65,7 @@ export function useStakeMutation(contract: string, mode: 'deposit' | 'redeem') {
                         ).toString(),
                     18,
                   ),
-                  userWallet as `0x${string}`,
+                  wallet as `0x${string}`,
                   vaultId,
                 ],
           value: actionType === 'buy' ? parsedValue : undefined,

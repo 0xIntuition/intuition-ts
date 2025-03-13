@@ -52,7 +52,7 @@ import {
 } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { Outlet } from '@remix-run/react'
-import { requireUserWallet } from '@server/auth'
+import { getUserWallet } from '@server/auth'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
 import {
   BLOCK_EXPLORER_URL,
@@ -66,7 +66,7 @@ import { VaultDetailsType } from 'app/types/vault'
 import { useAtom } from 'jotai'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
-  const wallet = await requireUserWallet(request)
+  const wallet = await getUserWallet(request)
   invariant(wallet, NO_WALLET_ERROR)
 
   const id = params.id
