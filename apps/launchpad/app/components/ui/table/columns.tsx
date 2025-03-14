@@ -166,11 +166,18 @@ export const columns: ColumnDef<TableItem>[] = [
               className="w-8 h-8 text-primary/40"
             />
           )}
-          <span className="font-medium truncate">{row.getValue('name')}</span>
+          <div className="max-w-[200px] sm:max-w-[250px] md:max-w-[300px] lg:max-w-[400px] overflow-hidden">
+            <span
+              className="font-medium block truncate"
+              title={row.getValue('name')}
+            >
+              {row.getValue('name')}
+            </span>
+          </div>
         </div>
       )
     },
-    size: 600,
+    size: 300,
   },
   {
     accessorKey: 'upvotes',
@@ -244,7 +251,7 @@ export const columns: ColumnDef<TableItem>[] = [
       const tvl = Number(forTvl) + Number(againstTvl)
 
       return (
-        <div className="pr-10 flex items-center gap-0.5">
+        <div className="flex justify-center items-center gap-0.5">
           {tvl ? Number(tvl).toFixed(4) : '0'}
           <Icon name="eth" className="w-3 h-3" />
         </div>

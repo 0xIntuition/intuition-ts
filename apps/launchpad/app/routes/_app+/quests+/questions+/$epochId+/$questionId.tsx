@@ -7,6 +7,7 @@ import {
   Card,
   Icon,
   IconName,
+  Input,
   Text,
 } from '@0xintuition/1ui'
 import type { GetListDetailsSimplifiedQuery } from '@0xintuition/graphql'
@@ -16,6 +17,7 @@ import {
   useGetListDetailsSimplifiedQuery,
 } from '@0xintuition/graphql'
 
+import { AddEntryModal } from '@components/add-entry-modal'
 import { AtomDetailsModal } from '@components/atom-details-modal'
 import { AuthCover } from '@components/auth-cover'
 import LoadingLogo from '@components/loading-logo'
@@ -215,7 +217,7 @@ export default function MiniGameOne() {
   const [searchParams, setSearchParams] = useSearchParams()
   const queryClient = useQueryClient()
 
-  const { authenticated } = usePrivy()
+  const { authenticated, login } = usePrivy()
 
   const {
     title,
@@ -231,11 +233,15 @@ export default function MiniGameOne() {
   const { data: completion, isLoading: isLoadingCompletion } = useQuery({
     queryKey: ['question-completion', userWallet?.toLowerCase(), questionId],
     queryFn: async () => {
-      const response = await fetch(
-        `/resources/get-question-completion?accountId=${userWallet}&questionId=${questionId}`,
-      )
-      const data = await response.json()
-      return data.completion
+      try {
+        const response = await fetch(
+          `/resources/get-question-completion?accountId=${userWallet}&questionId=${questionId}`,
+        )
+        const data = await response.json()
+        return data.completion
+      } catch (error) {
+        return null
+      }
     },
     enabled: !!userWallet && !!questionId,
   })
@@ -321,6 +327,20 @@ export default function MiniGameOne() {
     return page ? Math.max(0, parseInt(page, 10) - 1) : 0
   })
 
+  // Add search state variable
+  const [searchTerm, setSearchTerm] = React.useState(() => {
+    return searchParams.get('search') || ''
+  })
+
+  // Add a ref for the search input to maintain focus
+  const searchInputRef = React.useRef<HTMLInputElement>(null)
+
+  // Track initial loading state
+  const [initialLoadComplete, setInitialLoadComplete] = React.useState(false)
+
+  // Store the background image from the initial load
+  const [backgroundImage, setBackgroundImage] = React.useState('')
+
   // Update URL when pagination changes
   const updatePaginationParams = React.useCallback(
     (newPage: number, newSize: number) => {
@@ -336,6 +356,35 @@ export default function MiniGameOne() {
     },
     [searchParams, setSearchParams],
   )
+
+  // Handle search term changes
+  const handleSearchChange = React.useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const newSearchTerm = event.target.value
+      setSearchTerm(newSearchTerm)
+
+      // Update URL params
+      const newParams = new URLSearchParams(searchParams)
+      if (newSearchTerm) {
+        newParams.set('search', newSearchTerm)
+      } else {
+        newParams.delete('search')
+      }
+      // Reset to first page when search changes
+      newParams.set('page', '1')
+      setSearchParams(newParams, { replace: true })
+
+      // Reset page index to 0 when search changes
+      setPageIndex(0)
+    },
+    [searchParams, setSearchParams],
+  )
+
+  // Effect to sync search term with URL params
+  React.useEffect(() => {
+    const searchParam = searchParams.get('search')
+    setSearchTerm(searchParam || '')
+  }, [searchParams])
 
   const queryVariables = React.useMemo(() => {
     // Convert table sorting to GraphQL ordering
@@ -395,6 +444,16 @@ export default function MiniGameOne() {
         object_id: {
           _eq: objectId,
         },
+        // Add search filter for subject label if search term exists
+        ...(searchTerm
+          ? {
+              subject: {
+                label: {
+                  _ilike: `%${searchTerm}%`,
+                },
+              },
+            }
+          : {}),
       },
       address: userWallet ?? ZERO_ADDRESS,
       limit: pageSize,
@@ -403,7 +462,15 @@ export default function MiniGameOne() {
     } as const
 
     return variables
-  }, [predicateId, objectId, userWallet, pageSize, pageIndex, sorting])
+  }, [
+    predicateId,
+    objectId,
+    userWallet,
+    pageSize,
+    pageIndex,
+    sorting,
+    searchTerm,
+  ])
 
   const { data: listData, isLoading: isLoadingListData } =
     useGetListDetailsSimplifiedQuery(
@@ -415,6 +482,23 @@ export default function MiniGameOne() {
       },
     )
   const totalCount = listData?.globalTriplesAggregate?.aggregate?.count ?? 0
+
+  // Track initial loading state and store background image
+  React.useEffect(() => {
+    if (!isLoadingListData && listData) {
+      setInitialLoadComplete(true)
+
+      // Store the background image from the initial load if we don't have one yet
+      if (
+        !backgroundImage &&
+        listData.globalTriples &&
+        listData.globalTriples.length > 0 &&
+        listData.globalTriples[0]?.object?.image
+      ) {
+        setBackgroundImage(listData.globalTriples[0].object.image)
+      }
+    }
+  }, [isLoadingListData, listData, backgroundImage])
 
   type TableRowData = {
     id: string
@@ -575,7 +659,7 @@ export default function MiniGameOne() {
           pageIndex,
           pageSize,
         })
-        // Only update UI state after data is fetched
+        // Update pagination params
         updatePaginationParams(newState.pageIndex, newState.pageSize)
       }
     },
@@ -621,19 +705,27 @@ export default function MiniGameOne() {
   const handleCloseOnboarding = () => {
     // Only invalidate queries if we have all required values and the modal was actually open
     if (userWallet && questionId && currentEpoch && onboardingModal.isOpen) {
-      // Invalidate queries first
-      queryClient.invalidateQueries({
-        queryKey: ['question-completion', userWallet.toLowerCase(), questionId],
-      })
-      queryClient.invalidateQueries({
-        queryKey: ['epoch-progress', userWallet.toLowerCase(), currentEpoch],
-      })
-      queryClient.invalidateQueries({
-        queryKey: ['get-questions', currentEpoch],
-      })
+      // For the OnboardingModal (new completions), we need to invalidate queries
+      // For the QuestModal (repeat completions), we don't need to invalidate as much
+      if (!completion) {
+        // Invalidate queries first for new completions
+        queryClient.invalidateQueries({
+          queryKey: [
+            'question-completion',
+            userWallet.toLowerCase(),
+            questionId,
+          ],
+        })
+        queryClient.invalidateQueries({
+          queryKey: ['epoch-progress', userWallet.toLowerCase(), currentEpoch],
+        })
+        queryClient.invalidateQueries({
+          queryKey: ['get-questions', currentEpoch],
+        })
+      }
     }
 
-    // Then close the modal
+    // Close the modal
     setOnboardingModal({
       isOpen: false,
       question: null,
@@ -654,7 +746,8 @@ export default function MiniGameOne() {
     }
   }
 
-  if (isLoadingListData) {
+  // Only show loading state on initial load
+  if (isLoadingListData && !initialLoadComplete) {
     return <LoadingState />
   }
 
@@ -696,7 +789,7 @@ export default function MiniGameOne() {
           <Card
             className="border-none w-full md:min-w-[480px] min-h-80 relative overflow-hidden"
             style={{
-              backgroundImage: `linear-gradient(to bottom right, rgba(6, 5, 4, 0.9), rgba(16, 16, 16, 0.9)), url(${listData?.globalTriples?.[0]?.object?.image || ''})`,
+              backgroundImage: `linear-gradient(to bottom right, rgba(6, 5, 4, 0.9), rgba(16, 16, 16, 0.9)), url(${backgroundImage || (listData?.globalTriples && listData.globalTriples.length > 0 ? listData.globalTriples[0]?.object?.image : '')})`,
               backgroundSize: 'cover',
               backgroundPosition: 'center',
             }}
@@ -770,25 +863,72 @@ export default function MiniGameOne() {
                       </span>
                     </div>
                   </div>
+                ) : authenticated ? (
+                  <Button
+                    variant="primary"
+                    size="lg"
+                    onClick={handleStartOnboarding}
+                    disabled={!enabled}
+                  >
+                    {completion
+                      ? 'Do Quest Again'
+                      : `Earn ${pointAwardAmount} IQ Points`}
+                  </Button>
                 ) : (
-                  authenticated &&
-                  enabled && (
-                    <Button
-                      variant="primary"
-                      size="lg"
-                      onClick={handleStartOnboarding}
-                      disabled={!enabled}
-                    >
-                      Earn {pointAwardAmount} IQ Points
-                    </Button>
-                  )
+                  <Button
+                    variant="primary"
+                    size="lg"
+                    onClick={() => login()}
+                    disabled={!enabled}
+                  >
+                    Connect Wallet
+                  </Button>
                 )}
               </AuthCover>
             </div>
           </Card>
         </div>
       </div>
-
+      {/* Adding placeholder button */}
+      <div>
+        <div className="flex items-center justify-between">
+          <div className="relative w-full max-w-md mr-4">
+            <Input
+              type="text"
+              id="search-entries"
+              placeholder="Search by name..."
+              value={searchTerm}
+              onChange={handleSearchChange}
+              ref={searchInputRef}
+              className="w-full bg-primary/5 backdrop-blur-lg border-border/10 rounded-lg"
+              startAdornment="magnifying-glass"
+            />
+            {searchTerm && (
+              <div className="absolute right-3 top-1/2 transform -translate-y-1/2 z-10 h-[20px]">
+                <button
+                  onClick={() =>
+                    handleSearchChange({
+                      target: { value: '' },
+                    } as React.ChangeEvent<HTMLInputElement>)
+                  }
+                  className="text-muted-foreground hover:text-foreground focus:outline-none"
+                  aria-label="Clear search"
+                >
+                  <Icon name={IconName.crossLarge} className="h-4 w-4" />
+                </button>
+              </div>
+            )}
+          </div>
+          <Button
+            variant="secondary"
+            size="lg"
+            onClick={handleStartOnboarding}
+            aria-label="Add new entry"
+          >
+            Add new entry
+          </Button>
+        </div>
+      </div>
       <div className="mt-6 !mb-24">
         <DataTable
           columns={columns as ColumnDef<TableRowData>[]}
@@ -810,15 +950,27 @@ export default function MiniGameOne() {
         title={shareModalActive.title}
         listData={listData as unknown as ListDetailsType}
       />
-      <OnboardingModal
-        isOpen={onboardingModal.isOpen}
-        onClose={handleCloseOnboarding}
-        question={
-          onboardingModal.question ?? (questionData as unknown as Question)
-        }
-        predicateId={predicateId}
-        objectId={objectId}
-      />
+      {completion && !isLoadingCompletion ? (
+        <AddEntryModal
+          isOpen={onboardingModal.isOpen}
+          onClose={handleCloseOnboarding}
+          question={
+            onboardingModal.question ?? (questionData as unknown as Question)
+          }
+          predicateId={predicateId}
+          objectId={objectId}
+        />
+      ) : (
+        <OnboardingModal
+          isOpen={onboardingModal.isOpen}
+          onClose={handleCloseOnboarding}
+          question={
+            onboardingModal.question ?? (questionData as unknown as Question)
+          }
+          predicateId={predicateId}
+          objectId={objectId}
+        />
+      )}
       <AtomDetailsModal
         isOpen={atomDetailsModal.isOpen}
         onClose={() =>
