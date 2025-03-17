@@ -1640,6 +1640,21 @@ export default function CSVEditor() {
         setIsLoading(true) // Set loading state when processing paste
         const clipboardText = e.clipboardData?.getData('text') || ''
 
+        // Get current headers
+        const headers = csvData[0]
+
+        // Handle tab-delimited text
+        if (clipboardText.includes('\t')) {
+          const values = clipboardText.trim().split('\t')
+
+          // Check if the number of values matches the number of headers
+          if (values.length === headers.length) {
+            // Create a new row using the tab-delimited values
+            addRowWithPastedData(values)
+            return
+          }
+        }
+
         // Try to parse as JSON
         let data: Record<string, string | number | boolean | null | undefined>
         try {
@@ -1667,9 +1682,6 @@ export default function CSVEditor() {
           setIsLoading(false)
           return
         }
-
-        // Get current headers
-        const headers = csvData[0]
 
         // Simply check if any of the current headers exist in the data
         const hasSchemaKeys = headers.some((key) => key in data)
