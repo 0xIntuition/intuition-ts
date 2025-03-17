@@ -1602,6 +1602,110 @@ export default function CSVEditor() {
     }
   }, [csvDataParam])
 
+  // Add global paste handler for creating new rows from JSON
+  useEffect(() => {
+    // Helper function to add a row with pasted data
+    function addRowWithPastedData(newRow: string[]) {
+      setIsLoading(true) // Set loading state when adding row
+
+      setCsvData((prev) => {
+        const newData = [...prev, newRow]
+
+        // Schedule a check for existence
+        setTimeout(() => {
+          checkExistingAtoms(newData, selectedType)
+          setIsLoading(false) // Reset loading state after operation completes
+        }, 100)
+
+        return newData
+      })
+
+      // Select the new row
+      setSelectedRows((prev) => {
+        const newIndex = csvData.length - 1 // -1 is because we haven't added the row yet
+        return [...prev, newIndex]
+      })
+    }
+
+    function handleGlobalPaste(e: ClipboardEvent) {
+      // Skip if a Textarea or Input is focused (let normal paste handling work)
+      if (
+        document.activeElement instanceof HTMLTextAreaElement ||
+        document.activeElement instanceof HTMLInputElement
+      ) {
+        return
+      }
+
+      try {
+        setIsLoading(true) // Set loading state when processing paste
+        const clipboardText = e.clipboardData?.getData('text') || ''
+
+        // Try to parse as JSON
+        let data: Record<string, string | number | boolean | null | undefined>
+        try {
+          const parsed = JSON.parse(clipboardText)
+
+          // Ensure we have an object
+          if (
+            typeof parsed !== 'object' ||
+            parsed === null ||
+            Array.isArray(parsed)
+          ) {
+            setIsLoading(false)
+            return
+          }
+
+          data = parsed
+        } catch (error) {
+          // Not valid JSON, exit
+          setIsLoading(false)
+          return
+        }
+
+        // Only proceed if we have an object
+        if (typeof data !== 'object' || data === null) {
+          setIsLoading(false)
+          return
+        }
+
+        // Get current headers
+        const headers = csvData[0]
+
+        // Simply check if any of the current headers exist in the data
+        const hasSchemaKeys = headers.some((key) => key in data)
+
+        if (hasSchemaKeys) {
+          // Create a new row based on the headers, mapping data to the right cells
+          const newRow = headers.map((header) => {
+            // For each header, look up the corresponding value in the pasted data
+            // If not found, use default value
+            if (header in data) {
+              // Convert any value to string
+              const value = data[header]
+              return value !== null && value !== undefined ? String(value) : ''
+            }
+            // Use default values when available
+            return atomDataTypes[selectedType].defaultValues?.[header] || ''
+          })
+
+          // Add the row using our helper function
+          addRowWithPastedData(newRow)
+        } else {
+          setIsLoading(false)
+        }
+      } catch (error) {
+        console.error('Error handling paste event:', error)
+        setIsLoading(false)
+      }
+    }
+
+    document.addEventListener('paste', handleGlobalPaste)
+
+    return () => {
+      document.removeEventListener('paste', handleGlobalPaste)
+    }
+  }, [csvData, selectedType, checkExistingAtoms, setIsLoading])
+
   return (
     <>
       {/* Add dialogs to the JSX */}
