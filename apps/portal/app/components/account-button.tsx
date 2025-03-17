@@ -1,10 +1,12 @@
 import {
   Avatar,
+  Button,
+  ButtonSize,
+  ButtonVariant,
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-  SidebarMenuButton,
 } from '@0xintuition/1ui'
 import { useGetAccountQuery } from '@0xintuition/graphql'
 
@@ -30,13 +32,17 @@ export function AccountButton({ privyUser }: { privyUser: User }) {
     return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <SidebarMenuButton className="w-full gap-2 py-5 border border-primary/10">
+          <Button
+            variant={ButtonVariant.ghost}
+            size={ButtonSize.lg}
+            className="w-full gap-2 py-5 border border-primary/10 justify-start"
+          >
             <Avatar
               className="h-5 w-5 border border-primary/10"
               name={walletAddress}
               src={avatarImage}
             />
-          </SidebarMenuButton>
+          </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent
           align="start"
@@ -51,9 +57,13 @@ export function AccountButton({ privyUser }: { privyUser: User }) {
   // Only show loading state during initial connection and when not authenticated
   if (!isReady) {
     return (
-      <SidebarMenuButton className="w-full gap-2 py-5 border border-primary/10">
+      <Button
+        variant={ButtonVariant.ghost}
+        size={ButtonSize.lg}
+        className="w-full gap-2 py-5 border border-primary/10 justify-start"
+      >
         <Loader2 className="h-5 w-5 animate-spin" />
-      </SidebarMenuButton>
+      </Button>
     )
   }
 

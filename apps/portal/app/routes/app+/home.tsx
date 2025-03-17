@@ -1,32 +1,52 @@
 import { Suspense } from 'react'
 
-import { ErrorStateCard, Text } from '@0xintuition/1ui'
-import { useGetListsQuery, useGetSignalsQuery } from '@0xintuition/graphql'
+import { EmptyStateCard, ErrorStateCard, Text } from '@0xintuition/1ui'
+import {
+  fetcher,
+  GetAtomsDocument,
+  GetAtomsQuery,
+  GetAtomsQueryVariables,
+  GetAtomsWithPositionsDocument,
+  GetAtomsWithPositionsQuery,
+  GetAtomsWithPositionsQueryVariables,
+  GetTriplesWithPositionsDocument,
+  GetTriplesWithPositionsQuery,
+  GetTriplesWithPositionsQueryVariables,
+  useGetAtomsQuery,
+  useGetAtomsWithPositionsQuery,
+  useGetListsQuery,
+  useGetSignalsQuery,
+  useGetTriplesQuery,
+  useGetTriplesWithPositionsQuery,
+} from '@0xintuition/graphql'
 
 import { ErrorPage } from '@components/error-page'
 import HomeBanner from '@components/home/home-banner'
 import { HomeSectionHeader } from '@components/home/home-section-header'
 import { HomeStatsHeader } from '@components/home/home-stats-header'
 import { ActivityFeed } from '@components/list/activity'
+import { ClaimsListNew } from '@components/list/claims'
+import { IdentitiesListNew } from '@components/list/identities'
 import { FeaturedListCarouselNew as FeaturedListCarousel } from '@components/lists/featured-lists-carousel'
 import { ListClaimsSkeletonLayout } from '@components/lists/list-skeletons'
 import { RevalidateButton } from '@components/revalidate-button'
-import { ActivitySkeleton } from '@components/skeleton'
+import { ActivitySkeleton, PaginatedListSkeleton } from '@components/skeleton'
 import { getActivity } from '@lib/services/activity'
 import { getFeaturedLists } from '@lib/services/lists'
 import { getSystemStats } from '@lib/services/stats'
 import { getFeaturedListObjectIds } from '@lib/utils/app'
-import { invariant } from '@lib/utils/misc'
 import { defer, LoaderFunctionArgs } from '@remix-run/node'
 import { Await, useLoaderData, useSearchParams } from '@remix-run/react'
-import { getUserWallet } from '@server/auth'
+import { getUser } from '@server/auth'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
-import { CURRENT_ENV, NO_WALLET_ERROR } from 'app/consts'
+import { CURRENT_ENV, ZERO_ADDRESS } from 'app/consts'
 import FullPageLayout from 'app/layouts/full-page-layout'
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  const userWallet = await getUserWallet(request)
-  invariant(userWallet, NO_WALLET_ERROR)
+  const user = await getUser(request)
+  const wallet = user?.wallet?.address
+    ? user.wallet.address.toLowerCase()
+    : ZERO_ADDRESS
 
   const url = new URL(request.url)
   const activityLimit = parseInt(url.searchParams.get('activityLimit') || '10')
@@ -34,31 +54,63 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   const queryClient = new QueryClient()
 
+  // Prefetch top users (replacing IdentitiesService.searchIdentity)
+  await queryClient.prefetchQuery({
+    queryKey: [
+      'get-top-users',
+      {
+        limit: 5,
+        offset: 0,
+        orderBy: [{ vault: { total_shares: 'desc' } }],
+        where: { type: { _eq: 'Account' } },
+        address: wallet,
+      },
+    ],
+    queryFn: () =>
+      fetcher<GetAtomsWithPositionsQuery, GetAtomsWithPositionsQueryVariables>(
+        GetAtomsWithPositionsDocument,
+        {
+          limit: 5,
+          offset: 0,
+          orderBy: [{ vault: { total_shares: 'desc' } }],
+          where: { type: { _eq: 'Account' } },
+        },
+      )(),
+  })
+
+  // Prefetch top claims (replacing ClaimsService.getClaims)
+  await queryClient.prefetchQuery({
+    queryKey: [
+      'get-top-claims',
+      {
+        limit: 5,
+        offset: 0,
+        orderBy: [{ vault: { total_shares: 'desc' } }],
+        address: wallet,
+      },
+    ],
+    queryFn: () =>
+      fetcher<
+        GetTriplesWithPositionsQuery,
+        GetTriplesWithPositionsQueryVariables
+      >(GetTriplesWithPositionsDocument, {
+        limit: 5,
+        offset: 0,
+        orderBy: [{ vault: { total_shares: 'desc' } }],
+      })(),
+  })
+
   return defer({
     dehydratedState: dehydrate(queryClient),
+    initialParams: {
+      wallet,
+    },
     featuredListsParams: await getFeaturedLists({
       request,
       listIds: getFeaturedListObjectIds(CURRENT_ENV),
       queryClient,
     }),
     systemStats: getSystemStats({ queryClient }),
-    // topUsers: fetchWrapper(request, {
-    //   method: IdentitiesService.searchIdentity,
-    //   args: {
-    //     limit: 5,
-    //     direction: SortDirection.DESC,
-    //     sortBy: 'AssetsSum',
-    //     isUser: true,
-    //   },
-    // }),
-    // topClaims: fetchWrapper(request, {
-    //   method: ClaimsService.getClaims,
-    //   args: {
-    //     limit: 5,
-    //     direction: SortDirection.DESC,
-    //     sortBy: 'AssetsSum',
-    //   },
-    // }),
     activity: getActivity({ queryClient }),
     activityParams: {
       activityLimit,
@@ -68,7 +120,10 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export default function HomePage() {
-  const { featuredListsParams, activityParams } = useLoaderData<typeof loader>()
+  const { featuredListsParams, activityParams, initialParams } =
+    useLoaderData<typeof loader>()
+  const wallet = initialParams.wallet
+
   const [searchParams] = useSearchParams()
 
   const activityLimit = parseInt(
@@ -86,6 +141,48 @@ export default function HomePage() {
       queryKey: [
         'get-featured-lists',
         { where: featuredListsParams.initialParams.listsWhere },
+      ],
+    },
+  )
+
+  const { data: topUsersData } = useGetAtomsWithPositionsQuery(
+    {
+      limit: 5,
+      offset: 0,
+      orderBy: [{ vault: { total_shares: 'desc' } }],
+      where: { type: { _eq: 'Account' } },
+      address: wallet,
+    },
+    {
+      queryKey: [
+        'get-top-users',
+        {
+          limit: 5,
+          offset: 0,
+          orderBy: [{ vault: { total_shares: 'desc' } }],
+          where: { type: { _eq: 'Account' } },
+          address: wallet,
+        },
+      ],
+    },
+  )
+
+  const { data: topClaimsData } = useGetTriplesWithPositionsQuery(
+    {
+      limit: 5,
+      offset: 0,
+      orderBy: [{ vault: { total_shares: 'desc' } }],
+      address: wallet,
+    },
+    {
+      queryKey: [
+        'get-top-claims',
+        {
+          limit: 5,
+          offset: 0,
+          orderBy: [{ vault: { total_shares: 'desc' } }],
+          address: wallet,
+        },
       ],
     },
   )
@@ -147,7 +244,7 @@ export default function HomePage() {
             />
           </Suspense>
         </div>
-        {/* <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4">
           <HomeSectionHeader
             title="Top Claims"
             buttonText="Explore Claims"
@@ -158,29 +255,17 @@ export default function HomePage() {
               <PaginatedListSkeleton enableSearch={false} enableSort={false} />
             }
           >
-            <Await
-              resolve={topClaims}
-              errorElement={
-                <ErrorStateCard>
-                  <RevalidateButton />
-                </ErrorStateCard>
-              }
-            >
-              {(resolvedClaims) => {
-                if (!resolvedClaims || resolvedClaims.data.length === 0) {
-                  return <EmptyStateCard message="No claims found." />
-                }
-                return (
-                  <ClaimsList
-                    claims={resolvedClaims.data}
-                    paramPrefix="claims"
-                    enableHeader={false}
-                    enableSearch={false}
-                    enableSort={false}
-                  />
-                )
-              }}
-            </Await>
+            {topClaimsData?.triples?.length ? (
+              <ClaimsListNew
+                claims={topClaimsData.triples}
+                pagination={topClaimsData.total?.aggregate?.count || 0}
+                enableHeader={false}
+                enableSearch={false}
+                enableSort={false}
+              />
+            ) : (
+              <EmptyStateCard message="No claims found." />
+            )}
           </Suspense>
         </div>
         <div className="flex flex-col gap-4">
@@ -194,30 +279,19 @@ export default function HomePage() {
               <PaginatedListSkeleton enableSearch={false} enableSort={false} />
             }
           >
-            <Await
-              resolve={topUsers}
-              errorElement={
-                <ErrorStateCard>
-                  <RevalidateButton />
-                </ErrorStateCard>
-              }
-            >
-              {(resolvedTopUsers) => {
-                if (!resolvedTopUsers || resolvedTopUsers.data.length === 0) {
-                  return <EmptyStateCard message="No users found." />
-                }
-                return (
-                  <IdentitiesList
-                    identities={resolvedTopUsers.data}
-                    enableHeader={false}
-                    enableSearch={false}
-                    enableSort={false}
-                  />
-                )
-              }}
-            </Await>
+            {topUsersData?.atoms?.length ? (
+              <IdentitiesListNew
+                identities={topUsersData.atoms}
+                pagination={topUsersData.total?.aggregate?.count || 0}
+                enableHeader={false}
+                enableSearch={false}
+                enableSort={false}
+              />
+            ) : (
+              <EmptyStateCard message="No users found." />
+            )}
           </Suspense>
-        </div> */}
+        </div>
         <div className="flex flex-col gap-4">
           <HomeSectionHeader
             title="Global Feed"

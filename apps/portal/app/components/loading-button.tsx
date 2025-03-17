@@ -1,8 +1,19 @@
-import { Avatar, IconName, SidebarMenuButton } from '@0xintuition/1ui'
+import {
+  Avatar,
+  Button,
+  ButtonSize,
+  ButtonVariant,
+  IconName,
+} from '@0xintuition/1ui'
 
 function LoadingButton() {
   return (
-    <SidebarMenuButton size="lg" disabled className="w-full gap-3 theme-border">
+    <Button
+      variant={ButtonVariant.ghost}
+      size={ButtonSize.lg}
+      disabled
+      className="w-full gap-3 theme-border justify-start"
+    >
       <Avatar
         name="Loading"
         icon={IconName.inProgress}
@@ -11,7 +22,7 @@ function LoadingButton() {
       <div className="flex flex-1 items-center justify-between">
         <span className="text-sm font-medium">Loading...</span>
       </div>
-    </SidebarMenuButton>
+    </Button>
   )
 }
 

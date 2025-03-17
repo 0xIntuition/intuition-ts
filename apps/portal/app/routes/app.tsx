@@ -1,7 +1,6 @@
 import { useEffect } from 'react'
 
 import { getMaintenanceMode } from '@lib/utils/maintenance'
-import { invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
 import { Outlet, useLoaderData, useLocation } from '@remix-run/react'
 import { getUser } from '@server/auth'
@@ -15,11 +14,12 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   const user = await getUser(request)
   const wallet = user?.wallet?.address
-  invariant(wallet, 'Unauthorized')
 
-  const isWalletSanctioned = await isSanctioned(wallet as Address)
-  if (isWalletSanctioned) {
-    return redirect('/sanctioned')
+  if (wallet) {
+    const isWalletSanctioned = await isSanctioned(wallet as Address)
+    if (isWalletSanctioned) {
+      return redirect('/sanctioned')
+    }
   }
 
   // TODO: Figure out why SiteWideBanner has no access to window.ENV values [ENG-3367]

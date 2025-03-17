@@ -1,4 +1,11 @@
-import { Avatar, cn, IconName, SidebarMenuButton } from '@0xintuition/1ui'
+import {
+  Avatar,
+  Button,
+  ButtonSize,
+  ButtonVariant,
+  cn,
+  IconName,
+} from '@0xintuition/1ui'
 
 import { useAuth } from '@lib/providers/auth-provider'
 
@@ -14,11 +21,12 @@ export function ConnectButton() {
   }
 
   return (
-    <SidebarMenuButton
-      size="lg"
+    <Button
+      variant={ButtonVariant.ghost}
+      size={ButtonSize.lg}
       onClick={handleConnect}
       disabled={isLoading}
-      className="w-full gap-3 theme-border"
+      className="w-full gap-3 theme-border justify-start"
     >
       <Avatar
         name="Connect Wallet"
@@ -32,6 +40,6 @@ export function ConnectButton() {
           {isLoading ? 'Connecting...' : 'Connect Wallet'}
         </span>
       </div>
-    </SidebarMenuButton>
+    </Button>
   )
 }
