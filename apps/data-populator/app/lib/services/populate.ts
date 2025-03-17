@@ -169,9 +169,9 @@ export async function checkAndFilterURIs(
   console.log('Updating requestHash again...')
   requestHash
     ? await pushUpdate(
-        requestHash,
-        `Checked ${URIs.length} URIs, found ${existingURIs.length} existing URIs and ${newURIs.length} new URIs`,
-      )
+      requestHash,
+      `Checked ${URIs.length} URIs, found ${existingURIs.length} existing URIs and ${newURIs.length} new URIs`,
+    )
     : null
   return { existingURIs, newURIs }
 }
@@ -701,9 +701,9 @@ export async function pinAllData(
   // Process duplicate atoms after unique atoms
   requestHash
     ? await pushUpdate(
-        requestHash,
-        'Pinning atom data with duplicate images...',
-      )
+      requestHash,
+      'Pinning atom data with duplicate images...',
+    )
     : null
   const duplicatePinnedData = await processAtomDataBatches(
     duplicateAtoms,
@@ -978,9 +978,9 @@ export async function processBatchAtoms(
   console.log('Predetermining number of chunks to process batch atoms...')
   requestHash
     ? await pushUpdate(
-        requestHash,
-        'Predetermining number of chunks to process batch atoms...',
-      )
+      requestHash,
+      'Predetermining number of chunks to process batch atoms...',
+    )
     : null
   let numChunks = 1
 
@@ -1017,9 +1017,9 @@ export async function processBatchAtoms(
     if (staticExecutionReverted) {
       requestHash
         ? await pushUpdate(
-            requestHash,
-            'static execution reverted with chunk size of 1',
-          )
+          requestHash,
+          'static execution reverted with chunk size of 1',
+        )
         : null
       throw new Error('static execution reverted with chunk size of 1')
     }
@@ -1034,9 +1034,9 @@ export async function processBatchAtoms(
     console.log('Number of batch atom chunks: ', numChunks)
     requestHash
       ? await pushUpdate(
-          requestHash,
-          `Number of batch atom chunks: ${numChunks}`,
-        )
+        requestHash,
+        `Number of batch atom chunks: ${numChunks}`,
+      )
       : null
     console.log(
       'Chunk lengths: ',
@@ -1044,9 +1044,9 @@ export async function processBatchAtoms(
     )
     requestHash
       ? await pushUpdate(
-          requestHash,
-          `Chunk lengths: ${chunks.map((chunk) => chunk.length)}`,
-        )
+        requestHash,
+        `Chunk lengths: ${chunks.map((chunk) => chunk.length)}`,
+      )
       : null
     for (const batch of chunks) {
       lastChunkForDebug = batch
@@ -1090,9 +1090,9 @@ export async function processBatchTriples(
     console.log('Predetermining number of chunks to process batch triples...')
     requestHash
       ? await pushUpdate(
-          requestHash,
-          'Predetermining number of chunks to process batch triples...',
-        )
+        requestHash,
+        'Predetermining number of chunks to process batch triples...',
+      )
       : null
     while (staticExecutionReverted && numChunks < triples.length) {
       try {
@@ -1128,9 +1128,9 @@ export async function processBatchTriples(
     if (staticExecutionReverted) {
       requestHash
         ? await pushUpdate(
-            requestHash,
-            'static execution reverted with chunk size of 1',
-          )
+          requestHash,
+          'static execution reverted with chunk size of 1',
+        )
         : null
       throw new Error('static execution reverted with chunk size of 1')
     }
@@ -1145,9 +1145,9 @@ export async function processBatchTriples(
     console.log('Number of batch triple chunks: ', numChunks)
     requestHash
       ? await pushUpdate(
-          requestHash,
-          `Number of batch triple chunks: ${numChunks}`,
-        )
+        requestHash,
+        `Number of batch triple chunks: ${numChunks}`,
+      )
       : null
     console.log(
       'Chunk lengths: ',
@@ -1155,9 +1155,9 @@ export async function processBatchTriples(
     )
     requestHash
       ? await pushUpdate(
-          requestHash,
-          `Chunk lengths: ${chunks.map((chunk) => chunk.length)}`,
-        )
+        requestHash,
+        `Chunk lengths: ${chunks.map((chunk) => chunk.length)}`,
+      )
       : null
     for (const batch of chunks) {
       lastChunkForDebug = batch
@@ -1177,9 +1177,9 @@ export async function processBatchTriples(
     console.error('Error processing batch triples...', lastChunkForDebug)
     requestHash
       ? await pushUpdate(
-          requestHash,
-          `Error processing batch triples: ${error}`,
-        )
+        requestHash,
+        `Error processing batch triples: ${error}`,
+      )
       : null
     return result
   }
