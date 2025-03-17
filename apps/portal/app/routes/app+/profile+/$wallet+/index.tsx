@@ -1,12 +1,7 @@
 import { Suspense } from 'react'
 
 import { Button, ErrorStateCard, Icon, IconName, Text } from '@0xintuition/1ui'
-import {
-  ClaimSortColumn,
-  IdentityPresenter,
-  SortDirection,
-  UserTotalsPresenter,
-} from '@0xintuition/api'
+import { IdentityPresenter, UserTotalsPresenter } from '@0xintuition/api'
 import {
   fetcher,
   GetAccountDocument,
@@ -50,8 +45,6 @@ import { OverviewCreatedHeader } from '@components/profile/overview-created-head
 import { OverviewStakingHeader } from '@components/profile/overview-staking-header'
 import { RevalidateButton } from '@components/revalidate-button'
 import { DataHeaderSkeleton, PaginatedListSkeleton } from '@components/skeleton'
-import { getIdentityOrPending } from '@lib/services/identities'
-import { getUserSavedLists } from '@lib/services/lists'
 import { globalCreateClaimModalAtom } from '@lib/state/store'
 import { getSpecialPredicate } from '@lib/utils/app'
 import logger from '@lib/utils/logger'
@@ -82,19 +75,6 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   invariant(wallet, NO_PARAM_ID_ERROR)
 
   const queryAddress = wallet.toLowerCase()
-
-  const { identity: userIdentity, isPending } = await getIdentityOrPending(
-    request,
-    wallet,
-  )
-
-  // const url = new URL(request.url)
-  // const searchParams = new URLSearchParams(url.search)
-
-  const listSearchParams = new URLSearchParams()
-  listSearchParams.set('sortsBy', ClaimSortColumn.ASSETS_SUM)
-  listSearchParams.set('direction', SortDirection.DESC)
-  listSearchParams.set('limit', '6')
 
   const queryClient = new QueryClient()
 
@@ -132,6 +112,26 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
       {
         object_id: {
           _eq: accountResult.account?.atom_id,
+        },
+      },
+    ],
+  }
+
+  const savedListsWhere = {
+    account: {
+      id: {
+        _eq: queryAddress,
+      },
+    },
+    vault: {
+      atom_id: {
+        _is_null: true,
+      },
+    },
+    _or: [
+      {
+        predicate_id: {
+          _eq: getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId,
         },
       },
     ],
@@ -240,6 +240,21 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   })
 
   await queryClient.prefetchQuery({
+    queryKey: ['get-saved-lists', { savedListsWhere }],
+    queryFn: () =>
+      fetcher<
+        GetTriplesWithPositionsQuery,
+        GetTriplesWithPositionsQueryVariables
+      >(GetTriplesWithPositionsDocument, {
+        where: savedListsWhere,
+        limit: 10,
+        offset: 0,
+        orderBy: [{ block_number: 'desc' }],
+        address: queryAddress,
+      }),
+  })
+
+  await queryClient.prefetchQuery({
     queryKey: ['get-triples-count', { where: triplesCountWhere }],
     queryFn: () =>
       fetcher<GetTriplesCountQuery, GetTriplesCountQueryVariables>(
@@ -322,23 +337,15 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
       createdAtomsWhere,
       atomPositionsWhere,
       triplePositionsWhere,
+      savedListsWhere,
       allPositionsWhere,
       followersWhere,
     },
-    ...(!isPending &&
-      !!userIdentity && {
-        savedListClaims: await getUserSavedLists({
-          request,
-          userWallet,
-          searchParams: listSearchParams,
-        }),
-      }),
   })
 }
 
 export default function ProfileOverview() {
-  const { queryAddress, initialParams, savedListClaims } =
-    useLoaderData<typeof loader>()
+  const { queryAddress, initialParams } = useLoaderData<typeof loader>()
   const { userIdentity } =
     useRouteLoaderData<{
       userIdentity: IdentityPresenter
@@ -421,6 +428,33 @@ export default function ProfileOverview() {
   )
 
   logger('Triples Result (Client):', triplesResult)
+
+  const {
+    data: savedListsResults,
+    isLoading: isLoadingSavedLists,
+    isError: isErrorSavedLists,
+    error: errorSavedLists,
+  } = useGetTriplesWithPositionsQuery(
+    {
+      where: initialParams.savedListsWhere,
+      limit: 10,
+      offset: 0,
+      orderBy: [{ block_number: 'desc' }],
+      address: queryAddress,
+    },
+    {
+      queryKey: [
+        'get-saved-lists',
+        {
+          where: initialParams.savedListsWhere,
+          limit: 10,
+          offset: 0,
+          orderBy: [{ blockNumber: 'desc' }],
+          address: queryAddress,
+        },
+      ],
+    },
+  )
 
   const { data: followerData } = useGetFollowerPositionsQuery(
     {
@@ -569,11 +603,11 @@ export default function ProfileOverview() {
           Top Lists
         </Text>
         <Suspense fallback={<ListClaimsSkeletonLayout totalItems={6} />}>
-          <Await resolve={savedListClaims}>
-            {(resolvedSavedListClaims) => {
+          <Await resolve={savedListsResults}>
+            {(resolvedSavedListsResults) => {
               return (
                 <ListClaimsList
-                  listClaims={resolvedSavedListClaims?.savedListClaims ?? []}
+                  listClaims={resolvedSavedListsResults?.triples ?? []}
                   enableSort={false}
                   enableSearch={false}
                   sourceUserAddress={wallet}

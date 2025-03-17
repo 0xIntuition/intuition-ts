@@ -17,11 +17,7 @@ import {
   TagsContent,
   TagWithValue,
 } from '@0xintuition/1ui'
-import {
-  ClaimPresenter,
-  ClaimsService,
-  IdentityPresenter,
-} from '@0xintuition/api'
+import { IdentityPresenter } from '@0xintuition/api'
 import {
   fetcher,
   GetAtomDocument,
@@ -45,8 +41,6 @@ import StakeModal from '@components/stake/stake-modal'
 import TagsModal from '@components/tags/tags-modal'
 import { useGetVaultDetails } from '@lib/hooks/useGetVaultDetails'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
-import { getIdentityOrPending } from '@lib/services/identities'
-import { getTags } from '@lib/services/tags'
 import {
   imageModalAtom,
   saveListModalAtom,
@@ -64,7 +58,7 @@ import {
 } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { Outlet, useNavigate } from '@remix-run/react'
-import { getUserWallet, requireUser } from '@server/auth'
+import { getUser, getUserWallet } from '@server/auth'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
 import {
   BLOCK_EXPLORER_URL,
@@ -74,10 +68,12 @@ import {
   PATHS,
 } from 'app/consts'
 import TwoPanelLayout from 'app/layouts/two-panel-layout'
+import { AtomType } from 'app/types/atom'
 import { useAtom } from 'jotai'
+import { formatUnits } from 'viem'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
-  const user = await requireUser(request)
+  const user = await getUser(request)
   invariant(user, 'User not found')
   invariant(user.wallet?.address, 'User wallet not found')
 
@@ -89,36 +85,6 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   }
 
   const queryClient = new QueryClient()
-
-  const { identity, isPending } = await getIdentityOrPending(request, params.id)
-
-  if (!identity) {
-    throw new Response('Not Found', { status: 404 })
-  }
-
-  let list: ClaimPresenter | null = null
-
-  try {
-    const listResult = await ClaimsService.searchClaims({
-      predicate: getSpecialPredicate(CURRENT_ENV).tagPredicate.id,
-      object: identity.id,
-    })
-
-    if (listResult && listResult.data.length > 0) {
-      list = listResult.data[0]
-    }
-  } catch (error) {
-    logger('Failed to fetch list:', error)
-  }
-
-  const url = new URL(request.url)
-  const searchParams = new URLSearchParams(url.search)
-
-  const { tagClaims } = await getTags({
-    request,
-    subjectId: identity.id,
-    searchParams,
-  })
 
   let atomResult: GetAtomQuery | null = null
 
@@ -171,11 +137,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
   logger('[$ID] -- END')
   return json({
-    identity,
-    list,
-    isPending,
     userWallet,
-    tagClaims,
     dehydratedState: dehydrate(queryClient),
     initialParams: {
       atomId: params.id,
@@ -184,18 +146,17 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 }
 
 export interface IdentityLoaderData {
-  identity: IdentityPresenter
-  list: ClaimPresenter
   userWallet: string
-  tagClaims: ClaimPresenter[]
   initialParams: {
     atomId: string
   }
 }
 
 export default function IdentityDetails() {
-  const { identity, userWallet, tagClaims, initialParams } =
-    useLiveLoader<IdentityLoaderData>(['attest', 'create'])
+  const { userWallet, initialParams } = useLiveLoader<IdentityLoaderData>([
+    'attest',
+    'create',
+  ])
   const navigate = useNavigate()
 
   // TODO: Remove this once the `status is added to atoms -- that will be what we check if something is pending. For now setting this to false and removing the legacy isPending check
@@ -261,7 +222,14 @@ export default function IdentityDetails() {
   )
 
   logger('Vault Details:', vaultDetails)
-  const { user_assets, assets_sum } = vaultDetails ? vaultDetails : identity
+  const user_assets = vaultDetails
+    ? vaultDetails.user_assets
+    : +formatUnits(atomResult?.atom?.vault?.current_share_price, 18) +
+      +formatUnits(atomResult?.atom?.vault?.positions?.[0]?.shares, 18)
+  const assets_sum = vaultDetails
+    ? vaultDetails.assets_sum
+    : +formatUnits(atomResult?.atom?.vault?.total_shares ?? 0, 18) *
+      +formatUnits(atomResult?.atom?.vault?.current_share_price ?? 0, 18)
 
   const leftPanel = (
     <div className="flex-col justify-start items-start inline-flex gap-6 max-lg:w-full">
@@ -375,12 +343,17 @@ export default function IdentityDetails() {
               <PositionCardOwnership
                 percentOwnership={
                   user_assets !== null && assets_sum
-                    ? +calculatePercentageOfTvl(user_assets ?? '0', assets_sum)
+                    ? +calculatePercentageOfTvl(
+                        user_assets?.toString() ?? '0',
+                        assets_sum?.toString() ?? '0',
+                      )
                     : 0
                 }
                 variant={PieChartVariant.default}
               />
-              <PositionCardLastUpdated timestamp={identity.updated_at} />
+              <PositionCardLastUpdated
+                timestamp={atomResult?.atom?.block_timestamp ?? ''}
+              />
             </PositionCard>
           ) : null}
           <IdentityStakeCard
@@ -434,7 +407,7 @@ export default function IdentityDetails() {
               }))
             }
             onViewAllClick={() =>
-              navigate(`${PATHS.IDENTITY}/${identity.vault_id}#positions`)
+              navigate(`${PATHS.IDENTITY}/${atomResult?.atom?.id}#positions`)
             }
           />
         </>
@@ -444,7 +417,7 @@ export default function IdentityDetails() {
         username={atomResult?.atom?.creator?.label ?? '?'}
         avatarImgSrc={atomResult?.atom?.creator?.image ?? ''}
         id={atomResult?.atom?.creator?.id ?? ''}
-        description={identity.creator?.description ?? ''}
+        description={''}
         link={
           atomResult?.atom?.creator?.id
             ? `${PATHS.PROFILE}/${atomResult?.atom?.creator?.id}`
@@ -491,9 +464,9 @@ export default function IdentityDetails() {
         <>
           <StakeModal
             userWallet={userWallet}
-            contract={identity.contract}
+            contract={MULTIVAULT_CONTRACT_ADDRESS}
             open={stakeModalActive.isOpen}
-            identity={identity}
+            identity={atomResult?.atom as AtomType}
             vaultId={stakeModalActive.vaultId}
             vaultDetailsProp={vaultDetails}
             onClose={() => {
@@ -505,8 +478,8 @@ export default function IdentityDetails() {
             }}
           />
           <TagsModal
-            identity={identity}
-            tagClaims={tagClaims}
+            identity={atomResult?.atom}
+            tagClaims={atomTagsResult?.triples ?? []}
             userWallet={userWallet}
             open={tagsModalActive.isOpen}
             mode={tagsModalActive.mode}
@@ -520,13 +493,13 @@ export default function IdentityDetails() {
           />
           {selectedTag && (
             <SaveListModal
-              contract={identity.contract ?? MULTIVAULT_CONTRACT_ADDRESS}
+              contract={MULTIVAULT_CONTRACT_ADDRESS}
               tagAtom={
                 identityToAtom(
                   saveListModalActive.tag ?? selectedTag,
                 ) as unknown as GetAtomQuery['atom']
               }
-              atom={identityToAtom(identity) as unknown as GetAtomQuery['atom']}
+              atom={atomResult?.atom}
               userWallet={userWallet}
               open={saveListModalActive.isOpen}
               onClose={() =>
@@ -542,7 +515,11 @@ export default function IdentityDetails() {
       <ImageModal
         displayName={atomResult?.atom?.value?.thing?.name ?? ''}
         imageSrc={atomResult?.atom?.value?.thing?.image ?? ''}
-        isUser={atomResult?.atom?.type === ('Account' || 'Person' || 'Default')}
+        isUser={
+          atomResult?.atom?.type === 'Account' ||
+          atomResult?.atom?.type === 'Person' ||
+          atomResult?.atom?.type === 'Default'
+        }
         open={imageModalActive.isOpen}
         onClose={() =>
           setImageModalActive({

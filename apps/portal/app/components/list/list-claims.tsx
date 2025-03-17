@@ -7,7 +7,7 @@ import {
   ListCard,
   ListGrid,
 } from '@0xintuition/1ui'
-import { ClaimPresenter, ClaimSortColumn } from '@0xintuition/api'
+import { ClaimSortColumn } from '@0xintuition/api'
 import { GetListsQuery } from '@0xintuition/graphql'
 
 import { Search } from '@components/search'
@@ -19,10 +19,12 @@ import {
 import { getListUrl } from '@lib/utils/misc'
 import { Link } from '@remix-run/react'
 import { PaginationType } from 'app/types/pagination'
+import { TripleType } from 'app/types/triple'
 
 import { SortOption } from '../sort-select'
 
 export function ListClaimsList<T extends SortColumnType = ClaimSortColumn>({
+  //TODO: Figure out what to replace SortColumnType & ClaimSortColumn with
   listClaims,
   pagination,
   paramPrefix,
@@ -33,7 +35,7 @@ export function ListClaimsList<T extends SortColumnType = ClaimSortColumn>({
   sourceUserAddress,
   readOnly = false,
 }: {
-  listClaims: ClaimPresenter[]
+  listClaims: TripleType[]
   pagination?: PaginationType
   paramPrefix?: string
   enableSearch?: boolean
@@ -60,15 +62,12 @@ export function ListClaimsList<T extends SortColumnType = ClaimSortColumn>({
 
   const uniqueClaimData = Array.from(
     new Map(
-      listClaims.map((claim) => [
-        claim.object?.identity_id || 'unknown',
-        claim,
-      ]),
+      listClaims.map((claim) => [claim.object?.vault_id || 'unknown', claim]),
     ).values(),
   ).map((claim) => ({
     object: claim.object,
     user_assets_for: claim.user_assets_for,
-    claim_id: claim.claim_id,
+    claim_id: claim.vault_id,
     vault_id: claim.vault_id,
   }))
 
@@ -108,13 +107,15 @@ export function ListClaimsList<T extends SortColumnType = ClaimSortColumn>({
             .map((claim, index) => (
               <ListCard
                 key={claim.claim_id || index}
-                displayName={claim.object?.display_name ?? 'Unknown'}
+                displayName={claim.object?.label ?? 'Unknown'}
                 imgSrc={claim.object?.image ?? undefined}
-                identitiesCount={claim.object?.tag_count ?? 0}
+                identitiesCount={
+                  claim.object?.as_object_triples?.nodes?.length ?? 0
+                }
                 buttonWrapper={(button) => (
                   <Link
                     to={getListUrl(
-                      claim.vault_id,
+                      claim.vault_id.toString(),
                       sourceUserAddress ?? '',
                       readOnly,
                     )}

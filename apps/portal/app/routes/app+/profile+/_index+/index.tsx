@@ -1,9 +1,5 @@
 import { QuestHeaderCard, Text } from '@0xintuition/1ui'
-import {
-  ClaimSortColumn,
-  QuestNarrative,
-  SortDirection,
-} from '@0xintuition/api'
+import { ClaimSortColumn, SortDirection } from '@0xintuition/api'
 import {
   fetcher,
   GetAccountDocument,
@@ -21,11 +17,15 @@ import {
   GetTriplesCountDocument,
   GetTriplesCountQuery,
   GetTriplesCountQueryVariables,
+  GetTriplesWithPositionsDocument,
+  GetTriplesWithPositionsQuery,
+  GetTriplesWithPositionsQueryVariables,
   useGetAccountQuery,
   useGetAtomsCountQuery,
   useGetPositionsCountByTypeQuery,
   useGetPositionsCountQuery,
   useGetTriplesCountQuery,
+  useGetTriplesWithPositionsQuery,
 } from '@0xintuition/graphql'
 
 import { ErrorPage } from '@components/error-page'
@@ -34,32 +34,25 @@ import { OverviewAboutHeaderNew as OverviewAboutHeader } from '@components/profi
 import { OverviewCreatedHeader } from '@components/profile/overview-created-header'
 import { OverviewStakingHeader } from '@components/profile/overview-staking-header'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
-import { getIdentityOrPending } from '@lib/services/identities'
-import { getUserSavedLists } from '@lib/services/lists'
+import { getSpecialPredicate } from '@lib/utils/app'
 import logger from '@lib/utils/logger'
 import { formatBalance, invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
-import { useNavigate, useRouteLoaderData } from '@remix-run/react'
-import { ProfileLoaderData } from '@routes/app+/profile+/_index+/_layout'
+import { useNavigate } from '@remix-run/react'
 import { getUserWallet } from '@server/auth'
-import { getQuestsProgress } from '@server/quest'
-import { QueryClient } from '@tanstack/react-query'
+import { dehydrate, QueryClient } from '@tanstack/react-query'
 import {
-  NO_USER_IDENTITY_ERROR,
+  CURRENT_ENV,
   NO_WALLET_ERROR,
   PATHS,
   STANDARD_QUEST_SET,
 } from 'app/consts'
+import { TripleType } from 'app/types/triple'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const userWallet = await getUserWallet(request)
   invariant(userWallet, NO_WALLET_ERROR)
   const queryAddress = userWallet.toLowerCase()
-
-  const { identity: userIdentity, isPending } = await getIdentityOrPending(
-    request,
-    userWallet,
-  )
 
   // const url = new URL(request.url)
   // const searchParams = new URLSearchParams(url.search)
@@ -105,6 +98,26 @@ export async function loader({ request }: LoaderFunctionArgs) {
       {
         object_id: {
           _eq: accountResult.account?.atom_id,
+        },
+      },
+    ],
+  }
+
+  const savedListsWhere = {
+    account: {
+      id: {
+        _eq: queryAddress,
+      },
+    },
+    vault: {
+      atom_id: {
+        _is_null: true,
+      },
+    },
+    _or: [
+      {
+        predicate_id: {
+          _eq: getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId,
         },
       },
     ],
@@ -176,6 +189,21 @@ export async function loader({ request }: LoaderFunctionArgs) {
   })
 
   await queryClient.prefetchQuery({
+    queryKey: ['get-saved-lists', { savedListsWhere }],
+    queryFn: () =>
+      fetcher<
+        GetTriplesWithPositionsQuery,
+        GetTriplesWithPositionsQueryVariables
+      >(GetTriplesWithPositionsDocument, {
+        where: savedListsWhere,
+        limit: 10,
+        offset: 0,
+        orderBy: [{ block_number: 'desc' }],
+        address: queryAddress,
+      }),
+  })
+
+  await queryClient.prefetchQuery({
     queryKey: ['get-positions-count', { where: positionsCountWhere }],
     queryFn: () =>
       fetcher<GetPositionsCountQuery, GetPositionsCountQueryVariables>(
@@ -230,9 +258,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
   })
 
   return json({
+    dehydratedState: dehydrate(queryClient),
     queryAddress,
     initialParams: {
       triplesCountWhere,
+      savedListsWhere,
       positionsCountWhere,
       createdTriplesWhere,
       createdAtomsWhere,
@@ -240,36 +270,18 @@ export async function loader({ request }: LoaderFunctionArgs) {
       triplePositionsWhere,
       allPositionsWhere,
     },
-    ...(!isPending &&
-      !!userIdentity && {
-        questsProgress: await getQuestsProgress({
-          request,
-          options: {
-            narrative: QuestNarrative.STANDARD,
-          },
-        }),
-        savedListClaims: await getUserSavedLists({
-          request,
-          userWallet,
-          searchParams: listSearchParams,
-        }),
-      }),
   })
 }
 
 export default function UserProfileOverview() {
-  const { questsProgress, savedListClaims, initialParams, queryAddress } =
-    useLiveLoader<typeof loader>(['attest', 'create'])
-  const { userIdentity, isPending } =
-    useRouteLoaderData<ProfileLoaderData>(
-      'routes/app+/profile+/_index+/_layout',
-    ) ?? {}
-  invariant(userIdentity, NO_USER_IDENTITY_ERROR)
-
-  const navigate = useNavigate()
+  const { initialParams, queryAddress } = useLiveLoader<typeof loader>([
+    'attest',
+    'create',
+  ])
 
   const {
     triplesCountWhere,
+    savedListsWhere,
     positionsCountWhere,
     createdTriplesWhere,
     createdAtomsWhere,
@@ -321,18 +333,35 @@ export default function UserProfileOverview() {
     where: allPositionsWhere,
   })
 
+  const {
+    data: savedListsResults,
+    isLoading: isLoadingSavedLists,
+    isError: isErrorSavedLists,
+    error: errorSavedLists,
+  } = useGetTriplesWithPositionsQuery(
+    {
+      where: savedListsWhere,
+      limit: 10,
+      offset: 0,
+      orderBy: [{ block_number: 'desc' }],
+      address: queryAddress,
+    },
+    {
+      queryKey: [
+        'get-saved-lists',
+        {
+          where: savedListsWhere,
+          limit: 10,
+          offset: 0,
+          orderBy: [{ blockNumber: 'desc' }],
+          address: queryAddress,
+        },
+      ],
+    },
+  )
+
   return (
     <div className="flex flex-col gap-12">
-      {!isPending && !!questsProgress && (
-        <QuestHeaderCard
-          title={STANDARD_QUEST_SET.title ?? ''}
-          subtitle={STANDARD_QUEST_SET.description ?? ''}
-          numberOfCompletedQuests={questsProgress.numCompletedQuests}
-          totalNumberOfQuests={questsProgress.numQuests}
-          onButtonClick={() => navigate(STANDARD_QUEST_SET.navigatePath)}
-        />
-      )}
-
       <div className="flex flex-col gap-4">
         <Text
           variant="headline"
@@ -423,7 +452,7 @@ export default function UserProfileOverview() {
           Top Lists
         </Text>
         <ListClaimsList
-          listClaims={savedListClaims?.savedListClaims ?? []}
+          listClaims={(savedListsResults?.triples ?? []) as TripleType[]}
           enableSort={false}
           enableSearch={false}
         />

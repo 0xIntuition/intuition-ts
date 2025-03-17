@@ -9,7 +9,6 @@ import {
   Identity,
   Text,
 } from '@0xintuition/1ui'
-import { GetAtomQuery } from '@0xintuition/graphql'
 
 import {
   formatBalance,
@@ -21,6 +20,7 @@ import {
   getAtomLinkGQL,
 } from '@lib/utils/misc'
 import { IPFS_GATEWAY_URL, PATHS } from 'app/consts'
+import { AtomType } from 'app/types/atom'
 import {
   TransactionActionType,
   TransactionStateType,
@@ -32,8 +32,8 @@ interface SaveReviewProps {
   dispatch: (action: TransactionActionType) => void
   state: TransactionStateType
   isError?: boolean
-  tagAtom: GetAtomQuery['atom'] | null
-  atom: GetAtomQuery['atom'] | null
+  tagAtom: AtomType
+  atom: AtomType
   user_assets: string
   entry_fee: string
   exit_fee: string
@@ -131,7 +131,7 @@ export default function SaveReview({
               }}
               object={{
                 variant: Identity.nonUser,
-                label: tagAtom?.label ?? tagAtom?.id ?? '',
+                label: tagAtom?.label ?? tagAtom?.id.toString() ?? '',
                 imgSrc: tagAtom?.image,
                 id: tagAtom?.id,
                 description: '',

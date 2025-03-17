@@ -3,7 +3,7 @@ import { ApiError, UserPresenter, UsersService } from '@0xintuition/api'
 import logger from '@lib/utils/logger'
 import { invariant } from '@lib/utils/misc'
 import { json, type ActionFunctionArgs } from '@remix-run/node'
-import { getUserWallet, requireUser } from '@server/auth'
+import { getUser, getUserWallet } from '@server/auth'
 import { NO_WALLET_ERROR } from 'app/consts'
 
 export type EditProfileActionData = {
@@ -18,7 +18,7 @@ export async function action({ request }: ActionFunctionArgs) {
   const wallet = await getUserWallet(request)
   invariant(wallet, NO_WALLET_ERROR)
 
-  const user = await requireUser(request)
+  const user = await getUser(request)
   invariant(user, 'User not found')
   invariant(user.wallet?.address, 'User wallet not found')
 

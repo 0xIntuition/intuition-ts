@@ -1,10 +1,16 @@
-import { ClaimsService } from '@0xintuition/api'
+import {
+  fetcher,
+  GetAtomDocument,
+  GetAtomQuery,
+  GetAtomQueryVariables,
+  GetTripleDocument,
+  GetTripleQuery,
+  GetTripleQueryVariables,
+} from '@0xintuition/graphql'
 
-import { getClaim } from '@lib/services/claims'
-import { getIdentityOrPending } from '@lib/services/identities'
 import { formatBalance } from '@lib/utils/misc'
 import type { LoaderFunctionArgs } from '@remix-run/node'
-import { fetchWrapper } from '@server/api'
+import { TripleType } from 'app/types/triple'
 
 import { createOGImage } from '../../.server/og'
 
@@ -23,45 +29,75 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   let title, holders, tvl, holdersFor, holdersAgainst, tvlFor, tvlAgainst
 
   if (type === 'list' || type === 'claim') {
-    const claim = await fetchWrapper(request, {
-      method: ClaimsService.getClaimById,
-      args: { id },
-    })
+    const tripleResult = await fetcher<GetTripleQuery, GetTripleQueryVariables>(
+      GetTripleDocument,
+      {
+        tripleId: id,
+      },
+    )()
 
-    if (!claim) {
+    if (!tripleResult) {
       throw new Response('Claim not found', { status: 404 })
     }
 
-    title = claim.object?.display_name
-    holders = claim.object?.tag_count
-    tvl = +formatBalance(BigInt(claim.object?.assets_sum ?? 0), 18)
+    const triple = tripleResult?.triple as TripleType
+
+    title = triple?.object?.label
+    holders = triple?.object?.vault?.allPositions?.aggregate?.count
+    tvl =
+      +formatBalance(BigInt(triple?.object?.vault?.total_shares ?? 0), 18) *
+      +formatBalance(
+        BigInt(triple?.object?.vault?.current_share_price ?? 0),
+        18,
+      )
 
     if (type === 'claim') {
-      const { claim } = await getClaim(request, id)
+      const tripleResult = await fetcher<
+        GetTripleQuery,
+        GetTripleQueryVariables
+      >(GetTripleDocument, {
+        tripleId: id,
+      })()
 
-      if (!claim) {
-        throw new Response('Not Found', { status: 404 })
+      if (!tripleResult.triple) {
+        throw new Response('Claim not found', { status: 404 })
       }
 
-      const stringifiedClaim = `${claim.subject?.display_name} - ${claim.predicate?.display_name} - ${claim.object?.display_name}`
+      const triple = tripleResult?.triple as TripleType
+
+      const stringifiedClaim = `${triple.subject?.label} - ${triple.predicate?.label} - ${triple.object?.label}`
       title = stringifiedClaim ?? 'Intuition Explorer'
-      holdersFor = claim.for_num_positions
-      holdersAgainst = claim.against_num_positions
-      tvlFor = +formatBalance(BigInt(claim.for_assets_sum ?? 0), 18)
-      tvlAgainst = +formatBalance(BigInt(claim.against_assets_sum ?? 0), 18)
+      holdersFor = triple.vault?.allPositions?.aggregate?.count
+      holdersAgainst = triple.counter_vault?.allPositions?.aggregate?.count
+      tvlFor =
+        +formatBalance(BigInt(triple?.vault?.total_shares ?? 0), 18) *
+        +formatBalance(BigInt(triple?.vault?.current_share_price ?? 0), 18)
+      tvlAgainst =
+        +formatBalance(BigInt(triple.counter_vault?.total_shares ?? 0), 18) *
+        +formatBalance(
+          BigInt(triple.counter_vault?.current_share_price ?? 0),
+          18,
+        )
     }
   } else if (type === 'identity') {
-    const { identity, isPending } = await getIdentityOrPending(request, id)
+    const atomResult = await fetcher<GetAtomQuery, GetAtomQueryVariables>(
+      GetAtomDocument,
+      {
+        id,
+      },
+    )()
 
-    if (!identity) {
-      throw new Response('Not Found', { status: 404 })
+    if (!atomResult.atom) {
+      throw new Response('Atom not found', { status: 404 })
     }
 
-    title = identity.display_name ?? 'Intuition Explorer'
-    holders = isPending ? 'Pending' : identity.num_positions
-    tvl = isPending
-      ? 'Pending'
-      : +formatBalance(BigInt(identity.assets_sum), 18)
+    const atom = atomResult?.atom
+
+    title = atom.label ?? 'Intuition Explorer'
+    holders = atom.vault?.positions_aggregate?.aggregate?.count
+    tvl =
+      +formatBalance(BigInt(atom.vault?.total_shares ?? 0), 18) *
+      +formatBalance(BigInt(atom.vault?.current_share_price ?? 0), 18)
   }
 
   const png = await createOGImage(

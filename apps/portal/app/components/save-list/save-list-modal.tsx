@@ -7,7 +7,6 @@ import {
   Skeleton,
   toast,
 } from '@0xintuition/1ui'
-import { GetAtomQuery } from '@0xintuition/graphql'
 
 import { multivaultAbi } from '@lib/abis/multivault'
 import { useSaveListMutation } from '@lib/hooks/mutations/useSaveListMutation'
@@ -19,6 +18,7 @@ import { useGenericTxState } from '@lib/utils/use-tx-reducer'
 import { useLocation } from '@remix-run/react'
 import { useQueryClient } from '@tanstack/react-query'
 import { MIN_DEPOSIT } from 'app/consts'
+import { AtomType } from 'app/types/atom'
 import {
   TransactionActionType,
   TransactionStateType,
@@ -41,8 +41,8 @@ const initialTxState: TransactionStateType = {
 interface SaveListModalProps {
   userWallet: string
   open: boolean
-  tagAtom: GetAtomQuery['atom'] | null
-  atom: GetAtomQuery['atom'] | null
+  tagAtom: AtomType
+  atom: AtomType
   contract: string
   onClose?: () => void
   min_deposit?: string

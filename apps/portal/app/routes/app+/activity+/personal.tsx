@@ -19,7 +19,7 @@ import logger from '@lib/utils/logger'
 import { invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData, useSearchParams } from '@remix-run/react'
-import { getUserWallet, requireUser } from '@server/auth'
+import { getUser, getUserWallet } from '@server/auth'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
 import { HEADER_BANNER_ACTIVITY, NO_WALLET_ERROR } from 'app/consts'
 
@@ -27,7 +27,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const wallet = await getUserWallet(request)
   invariant(wallet, NO_WALLET_ERROR)
 
-  const user = await requireUser(request)
+  const user = await getUser(request)
   invariant(user, 'User not found')
   invariant(user.wallet?.address, 'User wallet not found')
   const url = new URL(request.url)

@@ -1,11 +1,4 @@
-import { useEffect, useState } from 'react'
-
 import { IconName } from '@0xintuition/1ui'
-import {
-  ClaimPresenter,
-  ClaimSortColumn,
-  ClaimsService,
-} from '@0xintuition/api'
 import {
   fetcher,
   GetListsDocument,
@@ -23,8 +16,7 @@ import { getSpecialPredicate } from '@lib/utils/app'
 import { calculateTotalPages, invariant, loadMore } from '@lib/utils/misc'
 import { getStandardPageParams } from '@lib/utils/params'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
-import { useLoaderData, useSearchParams, useSubmit } from '@remix-run/react'
-import { fetchWrapper } from '@server/api'
+import { useSearchParams, useSubmit } from '@remix-run/react'
 import { getUserWallet } from '@server/auth'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
 import { CURRENT_ENV, HEADER_BANNER_LISTS, NO_WALLET_ERROR } from 'app/consts'
@@ -64,10 +56,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     ],
   }
 
-  // const listsLimit = parseInt(url.searchParams.get('effectiveLimit') || '200')
-  // const listsOffset = parseInt(url.searchParams.get('listsOffset') || '0')
-  // const listsOrderBy = url.searchParams.get('listsSortBy')
-
+  // Prefetch lists data
   await queryClient.prefetchQuery({
     queryKey: [
       'get-lists',
@@ -81,63 +70,64 @@ export async function loader({ request }: LoaderFunctionArgs) {
       })(),
   })
 
-  const listClaims = await fetchWrapper(request, {
-    method: ClaimsService.searchClaims,
-    args: {
-      page: 1,
-      limit,
-      sortBy: sortBy as ClaimSortColumn,
-      direction,
-      displayName,
-      predicate: getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId,
-    },
+  // Get the total count
+  const listsData = await queryClient.fetchQuery({
+    queryKey: [
+      'get-lists-count',
+      {
+        listsWhere,
+      },
+    ],
+    queryFn: () =>
+      fetcher<GetListsQuery, GetListsQueryVariables>(GetListsDocument, {
+        where: listsWhere,
+      })(),
   })
 
-  const totalPages = calculateTotalPages(listClaims?.total ?? 0, limit)
+  const totalCount =
+    listsData?.predicate_objects_aggregate?.aggregate?.count ?? 0
+  const totalPages = calculateTotalPages(totalCount, limit)
 
   return json({
     dehydratedState: dehydrate(queryClient),
     initialParams: {
       listsWhere,
+      displayName,
     },
-    listClaims: listClaims?.data as ClaimPresenter[],
     sortBy,
     direction,
     pagination: {
       currentPage: page,
       limit,
-      totalEntries: listClaims?.total ?? 0,
+      totalEntries: totalCount,
       totalPages,
     },
   })
 }
 
 export default function ExploreLists() {
-  const { initialParams } = useLoaderData<typeof loader>()
+  const { pagination, initialParams, sortBy, direction } = useLiveLoader<
+    typeof loader
+  >(['create', 'attest'])
 
   const { data: listsResult } = useGetListsQuery(
     {
       where: initialParams.listsWhere,
     },
     {
-      queryKey: ['get-lists', { where: initialParams.listsWhere }],
+      queryKey: [
+        'get-lists',
+        {
+          listsWhere: initialParams.listsWhere,
+        },
+      ],
     },
   )
 
   const submit = useSubmit()
-  const { listClaims, pagination, sortBy, direction } = useLiveLoader<
-    typeof loader
-  >(['create', 'attest'])
   const [searchParams] = useSearchParams()
 
   const currentPage = Number(searchParams.get('page') || '1')
-
-  const [, setAccumulatedClaims] = useState<ClaimPresenter[]>([])
-
-  useEffect(() => {
-    const endIndex = currentPage * pagination.limit
-    setAccumulatedClaims(listClaims.slice(0, endIndex))
-  }, [listClaims, currentPage, pagination.limit])
 
   const handleLoadMore = loadMore({
     currentPage,
@@ -158,7 +148,7 @@ export default function ExploreLists() {
       <ExploreSearch variant="list" />
       <ListClaimsList
         listClaims={listsResult?.predicate_objects ?? []}
-        pagination={{ ...pagination, currentPage }}
+        pagination={pagination}
         enableSearch={false}
         enableSort={true}
         onLoadMore={handleLoadMore}

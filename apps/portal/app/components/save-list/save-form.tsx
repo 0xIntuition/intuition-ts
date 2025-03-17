@@ -9,7 +9,6 @@ import {
   Skeleton,
   Text,
 } from '@0xintuition/1ui'
-import { GetAtomQuery } from '@0xintuition/graphql'
 
 import StakingRadioGroup from '@components/staking-radio-group'
 import { TransactionState } from '@components/transaction-state'
@@ -22,6 +21,7 @@ import {
   getAtomLinkGQL,
 } from '@lib/utils/misc'
 import { IPFS_GATEWAY_URL, PATHS } from 'app/consts'
+import { AtomType } from 'app/types/atom'
 import {
   TransactionActionType,
   TransactionStateType,
@@ -30,8 +30,8 @@ import {
 import SaveReview from './save-review'
 
 interface SaveFormProps {
-  tagAtom: GetAtomQuery['atom'] | null
-  atom: GetAtomQuery['atom'] | null
+  tagAtom: AtomType
+  atom: AtomType
   user_assets: string
   entry_fee: string
   exit_fee: string
