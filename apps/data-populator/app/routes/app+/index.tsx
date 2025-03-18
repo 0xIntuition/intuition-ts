@@ -26,6 +26,7 @@ import {
   Text,
   Textarea,
   TextVariant,
+  toast,
   Tooltip,
   TooltipContent,
   TooltipTrigger,
@@ -939,6 +940,11 @@ export default function CSVEditor() {
   // Add this helper function to identify empty rows
   const getEmptySelectedRows = useCallback(() => {
     return selectedRows.filter((rowIndex) => {
+      // Safety check to ensure the row exists
+      if (rowIndex + 1 >= csvData.length) {
+        return false
+      }
+
       return !csvData[rowIndex + 1].some((cell, cellIndex) => {
         const header = csvData[0][cellIndex]
         const defaultValue =
@@ -1567,6 +1573,11 @@ export default function CSVEditor() {
   // Add this helper function near your other helper functions
   const hasSelectedRowContent = useCallback(() => {
     return selectedRows.some((rowIndex) => {
+      // Check if the row exists in csvData
+      if (rowIndex + 1 >= csvData.length) {
+        return false
+      }
+
       // Check each cell in the row against default values
       return csvData[rowIndex + 1].some((cell, cellIndex) => {
         const header = csvData[0][cellIndex]
@@ -1608,23 +1619,13 @@ export default function CSVEditor() {
     function addRowWithPastedData(newRow: string[]) {
       setIsLoading(true) // Set loading state when adding row
 
-      setCsvData((prev) => {
-        const newData = [...prev, newRow]
+      addRow(newRow)
 
-        // Schedule a check for existence
-        setTimeout(() => {
-          checkExistingAtoms(newData, selectedType)
-          setIsLoading(false) // Reset loading state after operation completes
-        }, 100)
-
-        return newData
-      })
-
-      // Select the new row
-      setSelectedRows((prev) => {
-        const newIndex = csvData.length - 1 // -1 is because we haven't added the row yet
-        return [...prev, newIndex]
-      })
+      // Schedule a check for existence
+      setTimeout(() => {
+        checkExistingAtoms(csvData, selectedType)
+        setIsLoading(false) // Reset loading state after operation completes
+      }, 100)
     }
 
     function handleGlobalPaste(e: ClipboardEvent) {
@@ -1717,6 +1718,233 @@ export default function CSVEditor() {
       document.removeEventListener('paste', handleGlobalPaste)
     }
   }, [csvData, selectedType, checkExistingAtoms, setIsLoading])
+
+  // Add state for the numeric entry modal
+  const [numericEntryModal, setNumericEntryModal] = useState({
+    isOpen: false,
+    value: '',
+  })
+  const [isFetchingAtom, setIsFetchingAtom] = useState(false)
+
+  // Add a function to fetch atom data by ID and add it as a new row
+  const fetchAtomDataById = useCallback(
+    async (atomId: string) => {
+      try {
+        setIsFetchingAtom(true)
+
+        // Call the getAtomData loader
+        const response = await fetch(
+          `/api/csv-editor?action=getAtomData&atomID=${atomId}`,
+        )
+
+        if (!response.ok) {
+          console.error('Failed to fetch atom data')
+          return
+        }
+
+        const data = await response.json()
+
+        if (
+          data.result &&
+          data.result.atomData &&
+          !(
+            typeof data.result.atomData === 'object' &&
+            Object.keys(data.result.atomData).length === 1 &&
+            'name' in data.result.atomData &&
+            (!data.result.atomData.name || data.result.atomData.name === '')
+          )
+        ) {
+          // Process the atom data
+          let atomData = data.result.atomData
+
+          // Handle case where atomData is a string instead of an object
+          if (typeof atomData === 'string') {
+            try {
+              atomData = JSON.parse(atomData)
+            } catch (error) {
+              console.error('Error parsing atom data string:', error)
+              setIsFetchingAtom(false)
+              return
+            }
+          }
+
+          console.log('Atom data after parsing:', atomData)
+
+          // Create a new row based on the atom data - USING EXACT SAME PATTERN AS JSON PASTE
+          const headers = csvData[0]
+          const newRow = headers.map((header) => {
+            // For each header, look up the corresponding value in the pasted data
+            // If not found, use default value
+            if (header in atomData) {
+              // Convert any value to string
+              const value = atomData[header]
+              return value !== null && value !== undefined ? String(value) : ''
+            }
+            // Use default values when available
+            return atomDataTypes[selectedType].defaultValues?.[header] || ''
+          })
+
+          // Add the new row to the CSV data
+          setIsLoading(true)
+
+          addRow(newRow)
+
+          // Schedule a check for existence
+          setTimeout(() => {
+            checkExistingAtoms(csvData, selectedType)
+            setIsLoading(false)
+          }, 100)
+        } else {
+          toast.warning(`No atom data found for ID: ${atomId}`, {
+            duration: 3000,
+          })
+          console.log('No atom data found for ID:', atomId)
+        }
+      } catch (error) {
+        console.error('Error fetching atom data:', error)
+        toast.error(
+          `Error fetching atom data: ${error instanceof Error ? error.message : 'Unknown error'}`,
+          {
+            duration: 5000,
+          },
+        )
+      } finally {
+        setIsFetchingAtom(false)
+      }
+    },
+    [csvData, selectedType, checkExistingAtoms],
+  )
+
+  // Effect to handle numeric entry modal confirmation
+  const handleNumericEntryConfirm = useCallback(() => {
+    const atomId = numericEntryModal.value.trim()
+    if (atomId) {
+      fetchAtomDataById(atomId)
+    }
+    setNumericEntryModal({ isOpen: false, value: '' })
+  }, [numericEntryModal, fetchAtomDataById])
+
+  // Add global key handler for numeric entry
+  useEffect(() => {
+    function handleGlobalKeyDown(e: KeyboardEvent) {
+      // Skip if a Textarea or Input is focused or if any cells are selected
+      if (
+        document.activeElement instanceof HTMLTextAreaElement ||
+        document.activeElement instanceof HTMLInputElement
+      ) {
+        return
+      }
+
+      // Check if the key is a number
+      const isNumber = /^[0-9]$/.test(e.key)
+
+      if (isNumber) {
+        // Blur any focused element (including the dropdown) before opening the modal
+        if (document.activeElement instanceof HTMLElement) {
+          document.activeElement.blur()
+        }
+
+        // If the modal is already open, append the number
+        if (numericEntryModal.isOpen) {
+          setNumericEntryModal({
+            isOpen: true,
+            value: numericEntryModal.value + e.key,
+          })
+        } else {
+          // Open the modal with the number
+          setNumericEntryModal({
+            isOpen: true,
+            value: e.key,
+          })
+        }
+      } else if (numericEntryModal.isOpen) {
+        // Handle special keys
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault()
+          handleNumericEntryConfirm()
+        } else if (e.key === 'Escape') {
+          e.preventDefault()
+          setNumericEntryModal({ isOpen: false, value: '' })
+        } else if (e.key === 'Backspace') {
+          e.preventDefault()
+          setNumericEntryModal({
+            isOpen: true,
+            value: numericEntryModal.value.slice(0, -1),
+          })
+          // Close modal if the value is empty
+          if (numericEntryModal.value.length <= 1) {
+            setNumericEntryModal({ isOpen: false, value: '' })
+          }
+        }
+      }
+    }
+
+    document.addEventListener('keydown', handleGlobalKeyDown)
+
+    return () => {
+      document.removeEventListener('keydown', handleGlobalKeyDown)
+    }
+  }, [numericEntryModal, selectedRows, handleNumericEntryConfirm])
+
+  // Add paste handler for numeric entry
+  useEffect(() => {
+    function handleGlobalPasteForNumber(e: ClipboardEvent) {
+      // Skip if a Textarea or Input is focused or if any cells are selected
+      if (
+        document.activeElement instanceof HTMLTextAreaElement ||
+        document.activeElement instanceof HTMLInputElement
+      ) {
+        return
+      }
+
+      const clipboardText = e.clipboardData?.getData('text') || ''
+      const isNumeric = /^\d+$/.test(clipboardText.trim())
+
+      if (isNumeric) {
+        // Blur any focused element (including the dropdown) before processing
+        if (document.activeElement instanceof HTMLElement) {
+          document.activeElement.blur()
+        }
+
+        e.preventDefault()
+        fetchAtomDataById(clipboardText.trim())
+      }
+    }
+
+    document.addEventListener('paste', handleGlobalPasteForNumber)
+
+    return () => {
+      document.removeEventListener('paste', handleGlobalPasteForNumber)
+    }
+  }, [selectedRows, fetchAtomDataById])
+
+  // Function to add a row or replace empty row
+  const addRow = (newRow: string[]) => {
+    setCsvData((prev) => {
+      if (prev.length > 1) {
+        const lastRowIndex = prev.length - 1
+        const lastRow = prev[lastRowIndex]
+
+        // Check if last row has only default values (the same check used in getEmptySelectedRows)
+        const isLastRowEmpty = !lastRow.some((cell, cellIndex) => {
+          const header = prev[0][cellIndex]
+          const defaultValue =
+            atomDataTypes[selectedType].defaultValues?.[header] || ''
+          return cell.trim() !== defaultValue.trim()
+        })
+
+        if (isLastRowEmpty) {
+          const newData = [...prev]
+          newData[lastRowIndex] = newRow
+          return newData
+        }
+      }
+      return [...prev, newRow]
+    })
+
+    // Select the new row
+    setSelectedRows([csvData.length - 1])
+  }
 
   return (
     <>
@@ -2614,6 +2842,64 @@ export default function CSVEditor() {
               }}
             >
               Cancel
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Add numeric entry modal dialog */}
+      <Dialog
+        open={numericEntryModal.isOpen}
+        onOpenChange={(isOpen) => {
+          if (!isOpen) {
+            setNumericEntryModal({ isOpen: false, value: '' })
+          }
+        }}
+      >
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Enter Atom ID</DialogTitle>
+            <DialogDescription>
+              Enter the numeric ID of the atom you want to retrieve.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex items-center space-x-2">
+            <Input
+              type="text"
+              value={numericEntryModal.value}
+              onChange={(e) =>
+                setNumericEntryModal({
+                  isOpen: true,
+                  value: e.target.value.replace(/[^0-9]/g, ''),
+                })
+              }
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  handleNumericEntryConfirm()
+                }
+              }}
+              className="font-mono text-lg"
+            />
+          </div>
+          <DialogFooter className="sm:justify-end">
+            <Button
+              variant="secondary"
+              onClick={() => setNumericEntryModal({ isOpen: false, value: '' })}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleNumericEntryConfirm}
+              disabled={!numericEntryModal.value || isFetchingAtom}
+            >
+              {isFetchingAtom ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Loading...
+                </>
+              ) : (
+                'Retrieve Atom'
+              )}
             </Button>
           </DialogFooter>
         </DialogContent>

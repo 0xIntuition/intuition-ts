@@ -127,6 +127,10 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         const atomExistsResults = await checkAtomsExist([schemaObjects[index]])
         return json({ success: true, atomExistsResults })
       }
+      // Safety check to ensure the row exists
+      if (index + 1 >= csvData.length) {
+        return json({ success: false, error: 'Row index out of bounds' })
+      }
       const URI = csvData[index + 1][0] // +1 to skip header row, [0] for first column
       const atomExistsResults = await checkAtomsExistWithRawURIs([URI])
       return json({ success: true, atomExistsResults })

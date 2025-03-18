@@ -58,9 +58,9 @@ export async function resolveAndFilterImage(
     if (buffer.length > 41943040) {
       requestHash
         ? pushUpdate(
-            requestHash,
-            `Image size is too large, will be rejected by cloudinary - skipping upload`,
-          )
+          requestHash,
+          `Image size is too large, will be rejected by cloudinary - skipping upload`,
+        )
         : null
       throw new Error(
         'Image size is too large, will be rejected by cloudinary - skipping upload',
@@ -80,9 +80,9 @@ export async function resolveAndFilterImage(
     // console.log("Logging image upload");
     requestHash
       ? pushUpdate(
-          requestHash,
-          `Logging image upload from ${url} to ${cloudinaryResponse.secure_url}...`,
-        )
+        requestHash,
+        `Logging image upload from ${url} to ${cloudinaryResponse.secure_url}...`,
+      )
       : null
     logImageUploadToDB(url, cloudinaryResponse.secure_url)
 
@@ -110,6 +110,11 @@ export async function logImageUploadToDB(oldUrl: string, newUrl: string) {
 }
 
 export async function checkImageAlreadyUploaded(url: string) {
+  // TODO: Fix this in Data Populator V2, image filter cache is a mess
+  if (url.startsWith('https://res.cloudinary.com/dfpwy9nyv')) {
+    return url
+  }
+
   return await searchMapping(url)
 }
 
