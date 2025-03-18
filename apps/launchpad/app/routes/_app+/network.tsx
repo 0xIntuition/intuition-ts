@@ -21,10 +21,10 @@ import { ActivityFeedPortal } from '@components/activity-feed-portal'
 import { ErrorPage } from '@components/error-page'
 import { LoadingState } from '@components/loading-state'
 import { PageHeader } from '@components/page-header'
+import { useLineaStats } from '@lib/hooks/useLineaStats'
 import { LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData, useSearchParams } from '@remix-run/react'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
-import { useLineaStats } from 'app/hooks/useLineaStats'
 import { Radio, User } from 'lucide-react'
 
 export async function loader({ request }: LoaderFunctionArgs) {
