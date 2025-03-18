@@ -1,5 +1,4 @@
 import { GetStatsQuery } from '@0xintuition/graphql'
-
 import { useQuery } from '@tanstack/react-query'
 
 const LINEA_API_URL = 'https://prod.linea.intuition-api.com/v1/graphql'
@@ -44,4 +43,4 @@ export function useLineaStats() {
     queryKey: ['get-linea-stats'],
     queryFn: fetchLineaStats,
   })
-}
+} 
