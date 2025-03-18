@@ -17,7 +17,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     const vaultDetails = await getVaultDetails(
       contract,
       vaultId,
-      userWallet as `0x${string}`,
+      userWallet?.toString() as `0x${string}`,
       counterVaultId ?? undefined,
     )
     return json(vaultDetails)

@@ -61,11 +61,7 @@ import {
 } from '@lib/state/store'
 import { getSpecialPredicate } from '@lib/utils/app'
 import logger from '@lib/utils/logger'
-import {
-  calculatePercentageOfTvl,
-  formatBalance,
-  invariant,
-} from '@lib/utils/misc'
+import { calculatePercentageOfTvl, invariant } from '@lib/utils/misc'
 import { User } from '@privy-io/react-auth'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import {
@@ -89,7 +85,7 @@ import {
 import TwoPanelLayout from 'app/layouts/two-panel-layout'
 import { AtomType } from 'app/types/atom'
 import { useAtom } from 'jotai'
-import { formatUnits } from 'viem'
+import { formatUnits, parseUnits } from 'viem'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await getUser(request)
@@ -144,6 +140,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
     if (!accountResult.account?.atom_id) {
       throw new Error('No atom ID found for account')
     }
+
+    console.log('accountResult', accountResult)
 
     await queryClient.prefetchQuery({
       queryKey: ['get-account', { address: queryAddress }],
@@ -277,19 +275,22 @@ export default function Profile() {
     },
   )
 
+  console.log('accountResult', accountResult)
+
   const { data: vaultDetails } = useGetVaultDetails(
     MULTIVAULT_CONTRACT_ADDRESS,
-    accountResult?.account?.atom_id,
+    accountResult?.account?.atom?.vault_id,
     undefined, // no counterVaultId
     {
       queryKey: [
         'get-vault-details',
         MULTIVAULT_CONTRACT_ADDRESS,
-        accountResult?.account?.atom_id,
+        accountResult?.account?.atom?.vault_id,
       ],
     },
   )
 
+  console.log('vaultDetails', vaultDetails)
   // logger('Account Result:', accountResult)
   // logger('Account Tags Result:', accountTagsResult)
   // logger('Account Connections Count Result:', accountConnectionsCountResult)
@@ -298,14 +299,12 @@ export default function Profile() {
 
   const user_assets = vaultDetails
     ? vaultDetails.user_assets
-    : +formatUnits(
-        accountResult?.account?.atom?.vault?.current_share_price,
-        18,
-      ) +
-      +formatUnits(
-        accountResult?.account?.atom?.vault?.positions?.[0]?.shares,
-        18,
-      )
+    : accountResult?.account?.atom?.vault?.current_share_price &&
+        accountResult?.account?.atom?.vault?.positions?.[0]?.shares
+      ? (BigInt(accountResult.account.atom.vault.current_share_price) *
+          BigInt(accountResult.account.atom.vault.positions[0].shares)) /
+        BigInt(10 ** 18) // Division to get the correct decimal places
+      : 0n
   const assets_sum = vaultDetails
     ? vaultDetails.assets_sum
     : +formatUnits(accountResult?.account?.atom?.vault?.total_shares ?? 0, 18) *
@@ -313,6 +312,24 @@ export default function Profile() {
         accountResult?.account?.atom?.vault?.current_share_price ?? 0,
         18,
       )
+
+  console.log(
+    'user_assets',
+    vaultDetails?.user_assets,
+    (BigInt(accountResult.account.atom.vault.current_share_price) *
+      BigInt(accountResult.account.atom.vault.positions[0].shares)) /
+      BigInt(10 ** 18),
+  )
+  console.log(
+    'current_share_price',
+    accountResult?.account?.atom?.vault?.current_share_price,
+    vaultDetails?.conviction_price,
+  )
+  console.log(
+    'user_shares',
+    accountResult?.account?.atom?.vault?.positions?.[0]?.shares,
+    vaultDetails?.user_conviction,
+  )
 
   const { data: points } = usePoints(userWallet)
   const { data: protocolFees } = useGetFeeTransfersQuery({
@@ -478,15 +495,16 @@ export default function Profile() {
                 }))
               }
             >
-              <PositionCardStaked
-                amount={user_assets ? +formatBalance(user_assets, 18) : 0}
-              />
+              <PositionCardStaked amount={user_assets ? user_assets : 0} />
               <PositionCardOwnership
                 percentOwnership={
                   user_assets !== null && assets_sum
                     ? +calculatePercentageOfTvl(
-                        user_assets.toString() ?? '0',
-                        assets_sum,
+                        parseUnits(
+                          user_assets?.toString() ?? '0',
+                          18,
+                        ).toString(),
+                        parseUnits(assets_sum.toString() ?? '0', 18).toString(),
                       )
                     : 0
                 }
@@ -496,7 +514,7 @@ export default function Profile() {
             </PositionCard> // TODO: Add last updated when we have it available
           ) : null}
           <IdentityStakeCard
-            tvl={+formatBalance(assets_sum)}
+            tvl={assets_sum}
             holders={accountResult?.account?.atom?.vault?.position_count ?? 0}
             variant={Identity.user} // TODO: Use the atom type to determine this once we have these
             // identityImgSrc={getAtomImage(accountResult?.account)} // TODO: Modify our utils and then re-add this

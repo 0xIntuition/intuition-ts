@@ -1,3 +1,4 @@
+import { AuthProvider } from '@lib/providers/auth-provider'
 import { wagmiConfig } from '@lib/utils/wagmi'
 import type { PrivyClientConfig } from '@privy-io/react-auth'
 import { PrivyProvider } from '@privy-io/react-auth'
@@ -7,6 +8,7 @@ import {
   QueryClient,
   QueryClientProvider,
 } from '@tanstack/react-query'
+import { base, baseSepolia, mainnet } from 'viem/chains'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -21,13 +23,14 @@ const privyConfig: PrivyClientConfig = {
   embeddedWallets: {
     createOnLogin: 'users-without-wallets',
     requireUserPasswordOnCreate: true,
-    noPromptOnSignature: false,
   },
   loginMethods: ['wallet'],
   appearance: {
     theme: 'dark',
     showWalletLoginFirst: true,
   },
+  defaultChain: base,
+  supportedChains: [mainnet, base, baseSepolia],
 }
 
 export default function Providers({
@@ -49,7 +52,7 @@ export default function Providers({
       <QueryClientProvider client={queryClient}>
         <HydrationBoundary state={dehydratedState}>
           <WagmiProvider config={wagmiConfig} reconnectOnMount={false}>
-            {children}
+            <AuthProvider>{children}</AuthProvider>
           </WagmiProvider>
         </HydrationBoundary>
       </QueryClientProvider>
