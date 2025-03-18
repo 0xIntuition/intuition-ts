@@ -1,22 +1,17 @@
-import { Suspense } from 'react'
+import { Suspense, useCallback } from 'react'
 
 import { EmptyStateCard, ErrorStateCard, Text } from '@0xintuition/1ui'
 import {
   fetcher,
-  GetAtomsDocument,
-  GetAtomsQuery,
-  GetAtomsQueryVariables,
   GetAtomsWithPositionsDocument,
   GetAtomsWithPositionsQuery,
   GetAtomsWithPositionsQueryVariables,
   GetTriplesWithPositionsDocument,
   GetTriplesWithPositionsQuery,
   GetTriplesWithPositionsQueryVariables,
-  useGetAtomsQuery,
   useGetAtomsWithPositionsQuery,
   useGetListsQuery,
   useGetSignalsQuery,
-  useGetTriplesQuery,
   useGetTriplesWithPositionsQuery,
 } from '@0xintuition/graphql'
 
@@ -42,6 +37,10 @@ import { dehydrate, QueryClient } from '@tanstack/react-query'
 import { CURRENT_ENV, ZERO_ADDRESS } from 'app/consts'
 import FullPageLayout from 'app/layouts/full-page-layout'
 
+// Default pagination values
+const DEFAULT_PAGE_SIZE = 5
+const DEFAULT_PAGE = 1
+
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await getUser(request)
   const wallet = user?.wallet?.address
@@ -49,8 +48,28 @@ export async function loader({ request }: LoaderFunctionArgs) {
     : ZERO_ADDRESS
 
   const url = new URL(request.url)
+
+  // Activity feed pagination
   const activityLimit = parseInt(url.searchParams.get('activityLimit') || '10')
   const activityOffset = parseInt(url.searchParams.get('activityOffset') || '0')
+
+  // Top users pagination
+  const userLimit = parseInt(
+    url.searchParams.get('userLimit') || String(DEFAULT_PAGE_SIZE),
+  )
+  const userPage = parseInt(
+    url.searchParams.get('userPage') || String(DEFAULT_PAGE),
+  )
+  const userOffset = (userPage - 1) * userLimit
+
+  // Top claims pagination
+  const claimLimit = parseInt(
+    url.searchParams.get('claimLimit') || String(DEFAULT_PAGE_SIZE),
+  )
+  const claimPage = parseInt(
+    url.searchParams.get('claimPage') || String(DEFAULT_PAGE),
+  )
+  const claimOffset = (claimPage - 1) * claimLimit
 
   const queryClient = new QueryClient()
 
@@ -59,8 +78,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
     queryKey: [
       'get-top-users',
       {
-        limit: 5,
-        offset: 0,
+        limit: userLimit,
+        offset: userOffset,
         orderBy: [{ vault: { total_shares: 'desc' } }],
         where: { type: { _eq: 'Account' } },
         address: wallet,
@@ -70,10 +89,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
       fetcher<GetAtomsWithPositionsQuery, GetAtomsWithPositionsQueryVariables>(
         GetAtomsWithPositionsDocument,
         {
-          limit: 5,
-          offset: 0,
+          limit: userLimit,
+          offset: userOffset,
           orderBy: [{ vault: { total_shares: 'desc' } }],
           where: { type: { _eq: 'Account' } },
+          address: wallet,
         },
       )(),
   })
@@ -83,8 +103,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
     queryKey: [
       'get-top-claims',
       {
-        limit: 5,
-        offset: 0,
+        limit: claimLimit,
+        offset: claimOffset,
         orderBy: [{ vault: { total_shares: 'desc' } }],
         address: wallet,
       },
@@ -94,9 +114,10 @@ export async function loader({ request }: LoaderFunctionArgs) {
         GetTriplesWithPositionsQuery,
         GetTriplesWithPositionsQueryVariables
       >(GetTriplesWithPositionsDocument, {
-        limit: 5,
-        offset: 0,
+        limit: claimLimit,
+        offset: claimOffset,
         orderBy: [{ vault: { total_shares: 'desc' } }],
+        address: wallet,
       })(),
   })
 
@@ -104,6 +125,10 @@ export async function loader({ request }: LoaderFunctionArgs) {
     dehydratedState: dehydrate(queryClient),
     initialParams: {
       wallet,
+      userLimit,
+      userPage,
+      claimLimit,
+      claimPage,
     },
     featuredListsParams: await getFeaturedLists({
       request,
@@ -123,15 +148,33 @@ export default function HomePage() {
   const { featuredListsParams, activityParams, initialParams } =
     useLoaderData<typeof loader>()
   const wallet = initialParams.wallet
+  const [searchParams, setSearchParams] = useSearchParams()
 
-  const [searchParams] = useSearchParams()
-
+  // Activity feed pagination
   const activityLimit = parseInt(
     searchParams.get('activityLimit') || String(activityParams.activityLimit),
   )
   const activityOffset = parseInt(
     searchParams.get('activityOffset') || String(activityParams.activityOffset),
   )
+
+  // Top users pagination
+  const userLimit = parseInt(
+    searchParams.get('userLimit') || String(initialParams.userLimit),
+  )
+  const userPage = parseInt(
+    searchParams.get('userPage') || String(initialParams.userPage),
+  )
+  const userOffset = (userPage - 1) * userLimit
+
+  // Top claims pagination
+  const claimLimit = parseInt(
+    searchParams.get('claimLimit') || String(initialParams.claimLimit),
+  )
+  const claimPage = parseInt(
+    searchParams.get('claimPage') || String(initialParams.claimPage),
+  )
+  const claimOffset = (claimPage - 1) * claimLimit
 
   const { data: resolvedFeaturedLists } = useGetListsQuery(
     {
@@ -147,8 +190,8 @@ export default function HomePage() {
 
   const { data: topUsersData } = useGetAtomsWithPositionsQuery(
     {
-      limit: 5,
-      offset: 0,
+      limit: userLimit,
+      offset: userOffset,
       orderBy: [{ vault: { total_shares: 'desc' } }],
       where: { type: { _eq: 'Account' } },
       address: wallet,
@@ -157,8 +200,8 @@ export default function HomePage() {
       queryKey: [
         'get-top-users',
         {
-          limit: 5,
-          offset: 0,
+          limit: userLimit,
+          offset: userOffset,
           orderBy: [{ vault: { total_shares: 'desc' } }],
           where: { type: { _eq: 'Account' } },
           address: wallet,
@@ -169,8 +212,8 @@ export default function HomePage() {
 
   const { data: topClaimsData } = useGetTriplesWithPositionsQuery(
     {
-      limit: 5,
-      offset: 0,
+      limit: claimLimit,
+      offset: claimOffset,
       orderBy: [{ vault: { total_shares: 'desc' } }],
       address: wallet,
     },
@@ -178,8 +221,8 @@ export default function HomePage() {
       queryKey: [
         'get-top-claims',
         {
-          limit: 5,
-          offset: 0,
+          limit: claimLimit,
+          offset: claimOffset,
           orderBy: [{ vault: { total_shares: 'desc' } }],
           address: wallet,
         },
@@ -208,6 +251,32 @@ export default function HomePage() {
         },
       ],
     },
+  )
+
+  // Handle pagination for users
+  const handleUserPaginationChange = useCallback(
+    (page: number, limit: number) => {
+      const newParams = new URLSearchParams(searchParams)
+      newParams.set('userPage', String(page))
+      if (limit !== initialParams.userLimit) {
+        newParams.set('userLimit', String(limit))
+      }
+      setSearchParams(newParams, { replace: true })
+    },
+    [searchParams, setSearchParams, initialParams.userLimit],
+  )
+
+  // Handle pagination for claims
+  const handleClaimPaginationChange = useCallback(
+    (page: number, limit: number) => {
+      const newParams = new URLSearchParams(searchParams)
+      newParams.set('claimPage', String(page))
+      if (limit !== initialParams.claimLimit) {
+        newParams.set('claimLimit', String(limit))
+      }
+      setSearchParams(newParams, { replace: true })
+    },
+    [searchParams, setSearchParams, initialParams.claimLimit],
   )
 
   return (
@@ -258,10 +327,24 @@ export default function HomePage() {
             {topClaimsData?.triples?.length ? (
               <ClaimsListNew
                 claims={topClaimsData.triples}
-                pagination={topClaimsData.total?.aggregate?.count || 0}
+                pagination={{
+                  currentPage: claimPage,
+                  limit: claimLimit,
+                  totalEntries: topClaimsData.total?.aggregate?.count || 0,
+                  totalPages: Math.ceil(
+                    (topClaimsData.total?.aggregate?.count || 0) / claimLimit,
+                  ),
+                }}
+                paramPrefix="claim"
                 enableHeader={false}
                 enableSearch={false}
                 enableSort={false}
+                onPageChange={(page: number) =>
+                  handleClaimPaginationChange(page, claimLimit)
+                }
+                onLimitChange={(limit: number) =>
+                  handleClaimPaginationChange(claimPage, limit)
+                }
               />
             ) : (
               <EmptyStateCard message="No claims found." />
@@ -282,10 +365,24 @@ export default function HomePage() {
             {topUsersData?.atoms?.length ? (
               <IdentitiesListNew
                 identities={topUsersData.atoms}
-                pagination={topUsersData.total?.aggregate?.count || 0}
+                pagination={{
+                  currentPage: userPage,
+                  limit: userLimit,
+                  totalEntries: topUsersData.total?.aggregate?.count || 0,
+                  totalPages: Math.ceil(
+                    (topUsersData.total?.aggregate?.count || 0) / userLimit,
+                  ),
+                }}
+                paramPrefix="user"
                 enableHeader={false}
                 enableSearch={false}
                 enableSort={false}
+                onPageChange={(page: number) =>
+                  handleUserPaginationChange(page, userLimit)
+                }
+                onLimitChange={(limit: number) =>
+                  handleUserPaginationChange(userPage, limit)
+                }
               />
             ) : (
               <EmptyStateCard message="No users found." />

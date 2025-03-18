@@ -106,7 +106,7 @@ export type VaultDetailsType = {
   formatted_atom_deposit_fraction_for_triple?: string
 }
 
-export type VaultType = {
+export type Vault = {
   __typename?: 'vaults'
   total_shares: string | number
   current_share_price: string | number

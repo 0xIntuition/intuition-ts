@@ -9,9 +9,38 @@ import {
   PaginationNext,
   PaginationPageCounter,
   PaginationPrevious,
-  PaginationRowSelection,
   PaginationSummary,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectProps,
+  SelectTrigger,
+  SelectValue,
+  Text,
+  TextVariant,
 } from '@0xintuition/1ui'
+
+// Custom row selection component that includes "5" as an option
+const CustomPaginationRowSelection = ({ ...props }: SelectProps) => (
+  <div className="self-center px-4 flex gap-4 justify-center items-center">
+    <Text variant={TextVariant.caption} className="text-foreground/70">
+      Rows per page
+    </Text>
+    <Select {...props}>
+      <SelectTrigger className="w-max h-8 gap-2">
+        <SelectValue placeholder="Select a limit" />
+      </SelectTrigger>
+      <SelectContent side="top">
+        <SelectItem value="5">5</SelectItem>
+        <SelectItem value="10">10</SelectItem>
+        <SelectItem value="20">20</SelectItem>
+        <SelectItem value="30">30</SelectItem>
+        <SelectItem value="40">40</SelectItem>
+        <SelectItem value="50">50</SelectItem>
+      </SelectContent>
+    </Select>
+  </div>
+)
 
 interface PaginationComponentProps {
   totalEntries: number
@@ -60,7 +89,7 @@ export function PaginationComponent({
     <Pagination className="flex w-full justify-between max-sm:flex-col max-sm:items-center max-sm:gap-3">
       <PaginationSummary totalEntries={totalEntries} label={label} />
       <div className="flex max-sm:flex-col max-sm:items-center max-sm:gap-3">
-        <PaginationRowSelection
+        <CustomPaginationRowSelection
           value={limit.toString()}
           onValueChange={(newLimit) => {
             setHasUserInteracted(true)

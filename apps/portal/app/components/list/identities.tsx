@@ -1,6 +1,5 @@
 import { IconName, Identity, IdentityRow } from '@0xintuition/1ui'
 import { IdentityPresenter, SortColumn } from '@0xintuition/api'
-import { GetAtomsQuery } from '@0xintuition/graphql'
 
 import { ListHeader } from '@components/list/list-header'
 import { stakeModalAtom } from '@lib/state/store'
@@ -10,18 +9,17 @@ import {
   getAtomDescription,
   getAtomImage,
   getAtomIpfsLink,
-  getAtomIpfsLinkNew,
+  getAtomIpfsLinkGQL,
   getAtomLabel,
   getAtomLink,
-  getAtomLinkNew,
+  getAtomLinkGQL,
 } from '@lib/utils/misc'
+import { AtomArray } from 'app/types/atom'
 import { PaginationType } from 'app/types/pagination'
 import { useSetAtom } from 'jotai'
 
 import { SortOption } from '../sort-select'
 import { List } from './list'
-
-type Atom = NonNullable<GetAtomsQuery['atoms']>[number]
 
 export function IdentitiesListNew({
   identities,
@@ -31,15 +29,19 @@ export function IdentitiesListNew({
   enableSearch = true,
   enableSort = true,
   readOnly = false,
+  onPageChange,
+  onLimitChange,
 }: {
   variant?: 'explore' | 'positions'
-  identities: Atom[]
-  pagination: { aggregate?: { count: number } } | number
+  identities: AtomArray
+  pagination: PaginationType
   paramPrefix?: string
   enableHeader?: boolean
   enableSearch?: boolean
   enableSort?: boolean
   readOnly?: boolean
+  onPageChange?: (page: number) => void
+  onLimitChange?: (limit: number) => void
 }) {
   const options: SortOption<SortColumn>[] = [
     { value: 'Total ETH', sortBy: 'AssetsSum' },
@@ -52,24 +54,16 @@ export function IdentitiesListNew({
 
   logger('identities', identities)
 
-  const paginationCount =
-    typeof pagination === 'number'
-      ? pagination
-      : pagination?.aggregate?.count ?? 0
-
   return (
     <List<SortColumn>
-      pagination={{
-        currentPage: 1,
-        limit: 10,
-        totalEntries: paginationCount,
-        totalPages: Math.ceil(paginationCount / 10),
-      }}
+      pagination={pagination}
       paginationLabel="identities"
       options={options}
       paramPrefix={paramPrefix}
       enableSearch={enableSearch}
       enableSort={enableSort}
+      onPageChange={onPageChange}
+      onLimitChange={onLimitChange}
     >
       {enableHeader && (
         <ListHeader
@@ -102,8 +96,8 @@ export function IdentitiesListNew({
               )}
               currency={'ETH'}
               numPositions={identity?.vault?.position_count ?? 0}
-              link={getAtomLinkNew(identity, readOnly)}
-              ipfsLink={getAtomIpfsLinkNew(identity)}
+              link={getAtomLinkGQL(identity, readOnly)}
+              ipfsLink={getAtomIpfsLinkGQL(identity)}
               // tags={
               //   identity.tags?.map((tag) => ({
               //     label: tag.display_name,
@@ -115,14 +109,13 @@ export function IdentitiesListNew({
                 18,
               )}
               onStakeClick={() =>
-                // @ts-ignore // TODO: Fix the staking actions to use correct types
                 setStakeModalActive((prevState) => ({
                   ...prevState,
                   mode: 'deposit',
                   modalType: 'identity',
                   isOpen: true,
-                  identity: (identity as Atom) ?? undefined,
-                  vaultId: identity?.id ?? null,
+                  identity,
+                  vaultId: identity?.id.toString(),
                 }))
               }
               isFirst={!enableHeader && index === 0}
@@ -135,7 +128,6 @@ export function IdentitiesListNew({
     </List>
   )
 }
-
 // LEGACY IMPLEMENTATION -- CAN REMOVE ONCE ALL ACTIVITIES ARE CONVERTED TO NEW IMPLEMENTATION
 export function IdentitiesList({
   identities,

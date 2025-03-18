@@ -28,9 +28,9 @@ import {
 } from '@lib/utils/misc'
 import { Link } from '@remix-run/react'
 import { VaultDetailsType } from 'app/types'
-import { AtomType } from 'app/types/atom'
+import { Atom } from 'app/types/atom'
 import { TransactionStateType } from 'app/types/transaction'
-import { TripleType } from 'app/types/triple'
+import { Triple } from 'app/types/triple'
 
 interface StakeReviewProps {
   val: string
@@ -38,8 +38,8 @@ interface StakeReviewProps {
   state: TransactionStateType
   isError?: boolean
   modalType: 'identity' | 'claim' | null | undefined
-  identity?: AtomType
-  claim?: TripleType
+  identity?: Atom
+  claim?: Triple
   vaultDetails?: VaultDetailsType
 }
 

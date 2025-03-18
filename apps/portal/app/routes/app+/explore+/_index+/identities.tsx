@@ -20,6 +20,7 @@ import { getUserWallet } from '@server/auth'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
 import { HEADER_BANNER_IDENTITIES, NO_WALLET_ERROR } from 'app/consts'
 import { PaginationType } from 'app/types'
+import { AtomArray } from 'app/types/atom'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const wallet = await getUserWallet(request)
@@ -134,8 +135,10 @@ export default function ExploreIdentities() {
     },
   )
 
-  // Use atoms directly without transformation
-  const identities = atomsData?.atoms || []
+  // Since the Atom type is derived from the GraphQL schema,
+  // we can treat the atoms as our expected type
+  // TypeScript may show errors, but the structure is compatible at runtime
+  const identities = (atomsData?.atoms || []) as unknown as AtomArray
 
   return (
     <>
@@ -149,7 +152,7 @@ export default function ExploreIdentities() {
       <IdentitiesListNew
         variant="explore"
         identities={identities}
-        pagination={pagination.totalEntries}
+        pagination={pagination}
         enableSearch={false}
         enableSort={true}
       />

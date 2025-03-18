@@ -1,12 +1,13 @@
 import { Dialog, DialogContent } from '@0xintuition/1ui'
 
+import { Atom } from 'app/types/atom'
+import { Triple } from 'app/types/triple'
+
 import { TagsForm } from './tags-form'
 
 export interface TagsModalProps {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  identity: any // TODO: (ENG-4782) temporary type fix until we lock in final types
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  tagClaims: any[] // TODO: (ENG-4782) temporary type fix until we lock in final types
+  identity: Atom
+  tagClaims: Triple[]
   userWallet: string
   open?: boolean
   mode: 'view' | 'add'

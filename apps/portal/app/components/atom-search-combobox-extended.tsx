@@ -18,15 +18,16 @@ import {
   Tag,
   TagSize,
 } from '@0xintuition/1ui'
-import { GetAtomQuery, useGetAtomsQuery } from '@0xintuition/graphql'
+import { useGetAtomsQuery } from '@0xintuition/graphql'
 
 import { useDebounce } from '@lib/hooks/useDebounce'
+import { Atom } from 'app/types/atom'
 import { formatEther } from 'viem'
 
 import { AtomType, AtomTypeSelect } from './atom-type-select'
 
 interface AtomDetailsProps {
-  atom: GetAtomQuery['atom']
+  atom: Atom
 }
 
 const AtomDetails = React.memo(({ atom }: AtomDetailsProps) => {
@@ -84,7 +85,7 @@ const AtomDetails = React.memo(({ atom }: AtomDetailsProps) => {
 AtomDetails.displayName = 'AtomDetails'
 
 interface AtomSearchComboboxItemProps {
-  atom: NonNullable<GetAtomQuery['atom']>
+  atom: NonNullable<Atom>
   isSelected?: boolean
   onSelect: () => void
   onMouseEnter: () => void
@@ -217,7 +218,7 @@ AtomSearchComboboxItem.displayName = 'AtomSearchComboboxItem'
 
 export interface AtomSearchComboboxExtendedProps
   extends React.HTMLAttributes<HTMLDivElement> {
-  onAtomSelect?: (atom: GetAtomQuery['atom']) => void
+  onAtomSelect?: (atom: Atom) => void
   onCreateAtomClick?: () => void
   initialValue?: string
   placeholder?: string
@@ -235,14 +236,13 @@ export function AtomSearchComboboxExtended({
   const [isOpen, setIsOpen] = React.useState(false)
   const [searchResults, setSearchResults] = React.useState<
     Omit<
-      NonNullable<GetAtomQuery['atom']>,
+      NonNullable<Atom>,
       'as_subject_triples' | 'as_predicate_triples' | 'as_object_triples'
     >[]
   >([])
-  const [selectedAtom, setSelectedAtom] = React.useState<GetAtomQuery['atom']>()
-  const [hoveredAtom, setHoveredAtom] = React.useState<GetAtomQuery['atom']>()
-  const [lastHoveredAtom, setLastHoveredAtom] =
-    React.useState<GetAtomQuery['atom']>()
+  const [selectedAtom, setSelectedAtom] = React.useState<Atom>()
+  const [hoveredAtom, setHoveredAtom] = React.useState<Atom>()
+  const [lastHoveredAtom, setLastHoveredAtom] = React.useState<Atom>()
   const [selectedType, setSelectedType] = React.useState<AtomType>('All')
 
   const { data: atomsData, isLoading } = useGetAtomsQuery(
@@ -260,14 +260,19 @@ export function AtomSearchComboboxExtended({
   )
 
   React.useEffect(() => {
-    setSearchResults(atomsData?.atoms ?? [])
+    setSearchResults(
+      (atomsData?.atoms ?? []) as unknown as Omit<
+        Atom,
+        'as_subject_triples' | 'as_predicate_triples' | 'as_object_triples'
+      >[],
+    )
   }, [atomsData])
 
   const handleAtomSelect = (
-    atom: Omit<GetAtomQuery['atom'], 'asSubject' | 'asPredicate' | 'asObject'>,
+    atom: Omit<Atom, 'asSubject' | 'asPredicate' | 'asObject'>,
   ) => {
-    onAtomSelect(atom as GetAtomQuery['atom'])
-    setSelectedAtom(atom as GetAtomQuery['atom'])
+    onAtomSelect(atom as Atom)
+    setSelectedAtom(atom as Atom)
     setIsOpen(false)
     setSearchValue('')
     setSearchResults([])
@@ -276,9 +281,9 @@ export function AtomSearchComboboxExtended({
   const displayedAtom = (hoveredAtom ||
     lastHoveredAtom ||
     selectedAtom ||
-    searchResults[0]) as NonNullable<GetAtomQuery['atom']>
+    searchResults[0]) as NonNullable<Atom>
 
-  const handleMouseEnter = (atom: NonNullable<GetAtomQuery['atom']>) => {
+  const handleMouseEnter = (atom: NonNullable<Atom>) => {
     setHoveredAtom(atom)
     setLastHoveredAtom(atom)
   }
@@ -316,11 +321,11 @@ export function AtomSearchComboboxExtended({
               {searchResults.map((atom, index) => (
                 <AtomSearchComboboxItem
                   key={atom.vault_id || index}
-                  atom={atom as NonNullable<GetAtomQuery['atom']>}
+                  atom={atom as NonNullable<Atom>}
                   isSelected={selectedAtom?.vault_id === atom.vault_id}
                   onSelect={() => handleAtomSelect(atom)}
                   onMouseEnter={() =>
-                    handleMouseEnter(atom as NonNullable<GetAtomQuery['atom']>)
+                    handleMouseEnter(atom as NonNullable<Atom>)
                   }
                   onMouseLeave={handleMouseLeave}
                 />

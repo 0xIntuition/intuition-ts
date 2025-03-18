@@ -12,8 +12,6 @@ import {
   TabsTrigger,
   Trunctacular,
 } from '@0xintuition/1ui'
-import { IdentityPresenter } from '@0xintuition/api'
-import { GetAtomQuery } from '@0xintuition/graphql'
 
 import { TagSearchCombobox } from '@components/tags/tags-search-combobox'
 import { TransactionState } from '@components/transaction-state'
@@ -26,19 +24,20 @@ import { saveListModalAtom } from '@lib/state/store'
 import logger from '@lib/utils/logger'
 import { useNavigate } from '@remix-run/react'
 import { PATHS } from 'app/consts'
+import { Atom } from 'app/types/atom'
 import {
   TransactionActionType,
   TransactionStateType,
 } from 'app/types/transaction'
+import { Triple } from 'app/types/triple'
 import { useSetAtom } from 'jotai'
 
 import { AddTags } from './add-tags'
 import TagsReview from './tags-review'
 
 interface TagsFormProps {
-  identity: IdentityPresenter | undefined // TODO: (ENG-4782) temporary type fix until we lock in final types
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  tagClaims: any[] // TODO: (ENG-4782) temporary type fix until we lock in final types
+  identity: Atom
+  tagClaims: Triple[]
   userWallet: string
   mode: 'view' | 'add'
   readOnly?: boolean
@@ -58,7 +57,9 @@ export function TagsForm({
   const navigate = useNavigate()
   const [currentTab, setCurrentTab] = useState(mode)
 
-  const existingTagIds = tagClaims ? tagClaims.map((tag) => tag.id) : []
+  const existingTagIds = tagClaims
+    ? tagClaims.map((tag) => tag.id.toString())
+    : []
 
   const { state, dispatch } = useTransactionState<
     TransactionStateType,
@@ -75,10 +76,10 @@ export function TagsForm({
     'error',
   ].includes(state.status)
 
-  const [selectedTags, setSelectedTags] = useState<GetAtomQuery['atom'][]>([])
-  const [invalidTags, setInvalidTags] = useState<GetAtomQuery['atom'][]>([])
+  const [selectedTags, setSelectedTags] = useState<Atom[]>([])
+  const [invalidTags, setInvalidTags] = useState<Atom[]>([])
 
-  const handleAddTag = (newTag: GetAtomQuery['atom']) => {
+  const handleAddTag = (newTag: Atom) => {
     setSelectedTags((prevTags) => [...prevTags, newTag])
     logger('selectedTags', selectedTags)
   }
@@ -119,15 +120,11 @@ export function TagsForm({
               <DialogHeader className="py-4">
                 <DialogTitle>
                   <IdentityTag
-                    imgSrc={identity?.user?.image ?? identity?.image}
-                    variant={identity?.user ? 'user' : 'non-user'}
+                    imgSrc={identity?.image}
+                    variant={identity?.type === 'Account' ? 'user' : 'non-user'}
                   >
                     <Trunctacular
-                      value={
-                        identity?.user?.display_name ??
-                        identity?.display_name ??
-                        'Identity'
-                      }
+                      value={identity?.label ?? 'Unknown'}
                       maxStringLength={42}
                     />
                   </IdentityTag>
@@ -166,7 +163,7 @@ export function TagsForm({
                         dispatch={dispatch}
                         onRemoveTag={handleRemoveTag}
                         onRemoveInvalidTag={handleRemoveInvalidTag}
-                        subjectVaultId={identity?.vault_id ?? ''}
+                        subjectVaultId={identity?.vault_id?.toString() ?? ''}
                         invalidTags={invalidTags}
                         setInvalidTags={setInvalidTags}
                       />
@@ -203,7 +200,7 @@ export function TagsForm({
             <div className="h-full flex flex-col">
               <TagsReview
                 dispatch={dispatch}
-                subjectVaultId={identity?.id ?? ''}
+                subjectVaultId={identity?.id?.toString() ?? ''}
                 tags={selectedTags}
               />
             </div>
@@ -224,7 +221,7 @@ export function TagsForm({
                   className="w-40"
                   onClick={() => {
                     navigate(
-                      identity?.is_user
+                      identity?.type === 'Account'
                         ? `${PATHS.PROFILE}/${identity?.id}`
                         : `${PATHS.IDENTITY}/${identity?.id}`,
                     )
@@ -232,7 +229,7 @@ export function TagsForm({
                     onClose()
                   }}
                 >
-                  View {identity?.is_user ? 'profile' : 'identity'}
+                  View {identity?.type === 'Account' ? 'profile' : 'identity'}
                 </Button>
               )
             }

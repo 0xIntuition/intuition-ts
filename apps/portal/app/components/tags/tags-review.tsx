@@ -9,7 +9,6 @@ import {
   Text,
   toast,
 } from '@0xintuition/1ui'
-import { GetAtomQuery } from '@0xintuition/graphql'
 
 import { multivaultAbi } from '@lib/abis/multivault'
 import { useBatchCreateTriple } from '@lib/hooks/useBatchCreateTriple'
@@ -20,6 +19,7 @@ import {
   GENERIC_ERROR_MSG,
   MULTIVAULT_CONTRACT_ADDRESS,
 } from 'app/consts'
+import { Atom } from 'app/types/atom'
 import { TransactionActionType } from 'app/types/transaction'
 import { formatUnits } from 'viem'
 import { useAccount, usePublicClient, useWalletClient } from 'wagmi'
@@ -29,7 +29,7 @@ import { createTagArrays } from './tag-utils'
 interface TagsReviewProps {
   dispatch: (action: TransactionActionType) => void
   subjectVaultId: string
-  tags: GetAtomQuery['atom'][]
+  tags: Atom[]
 }
 
 export default function TagsReview({

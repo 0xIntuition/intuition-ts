@@ -91,11 +91,7 @@ const ProfileCard = ({
             />
           )}
           {stats?.points !== undefined && (
-            <ProfileCardStatItem
-              value={stats.points}
-              label="IQ Points"
-              valueClassName="text-warning"
-            />
+            <ProfileCardStatItem value={stats.points} label="IQ Points" />
           )}
         </div>
       )}

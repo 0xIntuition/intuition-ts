@@ -6,16 +6,14 @@ interface StakeActionsProps {
   action: string | undefined
   setVal: (val: string) => void
   minDeposit: string
-  userConviction?: string
-  price?: string
+  userAssets?: string
 }
 
 export default function StakeActions({
   action,
   setVal,
   minDeposit,
-  userConviction,
-  price,
+  userAssets,
 }: StakeActionsProps) {
   return (
     <div className="flex flex-row items-center justify-center gap-5">
@@ -31,11 +29,8 @@ export default function StakeActions({
       <Button
         variant="ghost"
         onClick={() => {
-          if (userConviction && price) {
-            const userConvictionValue = formatUnits(BigInt(userConviction), 18)
-            const priceValue = formatUnits(BigInt(price), 18)
-            const maxEth = +userConvictionValue * +priceValue
-            setVal(maxEth.toString())
+          if (userAssets) {
+            setVal(formatUnits(BigInt(userAssets), 18))
           }
         }}
         className={`${action === 'deposit' && 'hidden'}`}

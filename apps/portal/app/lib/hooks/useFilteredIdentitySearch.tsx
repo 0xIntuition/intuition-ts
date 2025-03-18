@@ -1,9 +1,9 @@
-import { IdentityPresenter } from '@0xintuition/api'
+import { AtomType } from 'app/types/atom'
 
 import { useIdentityServerSearch } from './useIdentityServerSearch'
 
 interface UseFilteredIdentitySearchProps {
-  selectedItems: IdentityPresenter[]
+  selectedItems: AtomType[]
 }
 
 function useFilteredIdentitySearch({

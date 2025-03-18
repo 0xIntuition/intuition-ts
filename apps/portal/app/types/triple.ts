@@ -1,7 +1,7 @@
-import { AtomType } from './atom'
-import { VaultType } from './vault'
+import { Atom } from './atom'
+import { Vault } from './vault'
 
-export type TripleType = {
+export type Triple = {
   __typename?: 'triples'
   id: string | number
   vault_id: string | number
@@ -17,9 +17,9 @@ export type TripleType = {
   creator_id?: string
 
   // Entity data
-  subject: AtomType
-  predicate: AtomType
-  object: AtomType
+  subject: Atom
+  predicate: Atom
+  object: Atom
   creator?: {
     id: string
     label?: string | null
@@ -27,7 +27,7 @@ export type TripleType = {
   }
 
   // Vault data
-  vault?: VaultType & {
+  vault?: Vault & {
     allPositions?: {
       aggregate?: {
         count: number
@@ -54,7 +54,7 @@ export type TripleType = {
       shares: string | number
     }>
   }
-  counter_vault?: VaultType & {
+  counter_vault?: Vault & {
     allPositions?: {
       aggregate?: {
         count: number
@@ -92,10 +92,10 @@ export type TripleType = {
 }
 
 // Helper type for arrays of triples
-export type TripleArrayType = Array<TripleType>
+export type TripleArray = Array<Triple>
 
 // Helper function to ensure a triple matches our type
-export function isTripleType(obj: unknown): obj is TripleType {
+export function isTriple(obj: unknown): obj is Triple {
   return Boolean(
     obj &&
       typeof obj === 'object' &&

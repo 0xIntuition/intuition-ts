@@ -1,12 +1,8 @@
-import { GetAtomQuery } from '@0xintuition/graphql'
-
 import { getSpecialPredicate } from '@lib/utils/app'
 import { CURRENT_ENV } from 'app/consts'
+import { Atom } from 'app/types/atom'
 
-export const createTagArrays = (
-  tags: GetAtomQuery['atom'][],
-  subjectVaultId: string,
-) => {
+export const createTagArrays = (tags: Atom[], subjectVaultId: string) => {
   const subjectIdentityVaultIds = tags.map(() => subjectVaultId)
   const predicateHasTagVaultIds = tags.map(
     () => getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId,

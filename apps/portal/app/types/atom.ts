@@ -1,6 +1,6 @@
-import { VaultType } from './vault'
+import { Vault } from './vault'
 
-export type AtomValueType = {
+export type AtomValue = {
   person?: {
     name: string
     image?: string
@@ -21,7 +21,7 @@ export type AtomValueType = {
   }
 }
 
-export type AtomType = {
+export type Atom = {
   __typename?: 'atoms'
   id: string | number
   vault_id: string | number
@@ -31,7 +31,7 @@ export type AtomType = {
   image?: string | null
   emoji?: string | null
   type: string
-  value?: AtomValueType
+  value?: AtomValue
 
   // Transaction data (from AtomMetadata/AtomTxn)
   block_number?: string | number
@@ -47,7 +47,7 @@ export type AtomType = {
   }
 
   // Vault data
-  vault?: VaultType & {
+  vault?: Vault & {
     position_count?: number
     total_shares?: string | number
     current_share_price?: string | number
@@ -172,15 +172,9 @@ export type AtomType = {
 }
 
 // Helper type for arrays of atoms
-export type AtomArrayType = Array<AtomType>
+export type AtomArray = Array<Atom>
 
 // Helper function to ensure an atom matches our type
-export function isAtomType(obj: unknown): obj is AtomType {
-  return Boolean(
-    obj &&
-      typeof obj === 'object' &&
-      obj !== null &&
-      'id' in obj &&
-      'vault_id' in obj,
-  )
+export function isAtom(obj: unknown): obj is Atom {
+  return Boolean(obj && typeof obj === 'object' && obj !== null && 'id' in obj)
 }

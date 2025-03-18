@@ -45,12 +45,14 @@ type Triple = NonNullable<
 // TODO: (ENG-4830) Add ReadOnly support back in and update our util functions that use it
 interface ClaimsListNewProps {
   claims: Triple[]
-  pagination: { aggregate?: { count: number } } | number
+  pagination: { aggregate?: { count: number } } | number | PaginationType
   paramPrefix?: string
   enableHeader?: boolean
   enableSearch?: boolean
   enableSort?: boolean
   readOnly?: boolean
+  onPageChange?: (page: number) => void
+  onLimitChange?: (limit: number) => void
 }
 
 export function ClaimsListNew({
@@ -61,13 +63,33 @@ export function ClaimsListNew({
   enableSearch = true,
   enableSort = true,
   readOnly = false,
+  onPageChange,
+  onLimitChange,
 }: ClaimsListNewProps) {
   const setStakeModalActive = useSetAtom(stakeModalAtom)
 
-  const paginationCount =
-    typeof pagination === 'number'
-      ? pagination
-      : pagination?.aggregate?.count ?? 0
+  // Convert pagination to the format expected by the List component
+  const formattedPagination: PaginationType = (() => {
+    if (typeof pagination === 'number') {
+      return {
+        currentPage: 1,
+        limit: 10,
+        totalEntries: pagination,
+        totalPages: Math.ceil(pagination / 10),
+      }
+    }
+
+    if ('aggregate' in pagination) {
+      return {
+        currentPage: 1,
+        limit: 10,
+        totalEntries: pagination.aggregate?.count ?? 0,
+        totalPages: Math.ceil((pagination.aggregate?.count ?? 0) / 10),
+      }
+    }
+
+    return pagination
+  })()
 
   const options: SortOption<ClaimSortColumn>[] = [
     { value: 'Total ETH', sortBy: 'AssetsSum' },
@@ -82,17 +104,14 @@ export function ClaimsListNew({
 
   return (
     <List<ClaimSortColumn>
-      pagination={{
-        currentPage: 1,
-        limit: 10,
-        totalEntries: paginationCount,
-        totalPages: Math.ceil(paginationCount / 10),
-      }}
+      pagination={formattedPagination}
       paginationLabel="claims"
       options={options}
       paramPrefix={paramPrefix}
       enableSearch={enableSearch}
       enableSort={enableSort}
+      onPageChange={onPageChange}
+      onLimitChange={onLimitChange}
     >
       {enableHeader && (
         <ListHeader

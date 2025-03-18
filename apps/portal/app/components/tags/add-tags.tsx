@@ -1,8 +1,6 @@
 import { useMemo, useState } from 'react'
 
 import { Popover, PopoverContent, PopoverTrigger, Text } from '@0xintuition/1ui'
-import { IdentityPresenter } from '@0xintuition/api'
-import { GetAtomQuery } from '@0xintuition/graphql'
 
 import { AtomSearchComboboxExtended } from '@components/atom-search-combobox-extended'
 import { InfoTooltip } from '@components/info-tooltip'
@@ -18,25 +16,24 @@ import {
 import { getSpecialPredicate } from '@lib/utils/app'
 import { TagLoaderData } from '@routes/resources+/tag'
 import { CURRENT_ENV, MULTIVAULT_CONTRACT_ADDRESS } from 'app/consts'
+import { Atom } from 'app/types/atom'
 import { TransactionActionType } from 'app/types/transaction'
 import { useAtom } from 'jotai'
 
 import { TagsListInputPortal } from './tags-list-input-portal'
 
 interface AddTagsProps {
-  selectedTags: GetAtomQuery['atom'][]
+  selectedTags: Atom[]
   existingTagIds: string[]
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  identity: any // TODO: (ENG-4782) temporary type fix until we lock in final types
+  identity: Atom
   userWallet: string
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  onAddTag: (newTag: any) => void // TODO: (ENG-4782) temporary type fix until we lock in final types
+  onAddTag: (newTag: Atom) => void
   onRemoveTag: (id: string) => void
   onRemoveInvalidTag: (id: string) => void
   dispatch: (action: TransactionActionType) => void
   subjectVaultId: string
-  invalidTags: GetAtomQuery['atom'][]
-  setInvalidTags: React.Dispatch<React.SetStateAction<GetAtomQuery['atom'][]>>
+  invalidTags: Atom[]
+  setInvalidTags: React.Dispatch<React.SetStateAction<Atom[]>>
 }
 
 export function AddTags({
@@ -50,10 +47,9 @@ export function AddTags({
   invalidTags,
   setInvalidTags,
 }: AddTagsProps) {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const formattedTags = selectedTags?.map((tag) => ({
     name: tag?.label ?? '',
-    id: tag?.vault_id ?? '',
+    id: tag?.vault_id?.toString() ?? '',
     tagCount: 0, // TODO: (ENG-4782) temporary until we have tag count
   }))
 
@@ -64,15 +60,14 @@ export function AddTags({
   const [saveListModalActive, setSaveListModalActive] =
     useAtom(saveListModalAtom)
 
-  const [selectedInvalidTag, setSelectedInvalidTag] = useState<
-    GetAtomQuery['atom'] | null
-  >(null)
+  const [selectedInvalidTag, setSelectedInvalidTag] = useState<Atom | null>(
+    null,
+  )
 
   const [isPopoverOpen, setIsPopoverOpen] = useState(false)
 
   const { setSearchQuery } = useFilteredIdentitySearch({
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    selectedItems: selectedTags as any[], // TODO: (ENG-4782) temporary type fix until we lock in final types
+    selectedItems: selectedTags,
   })
 
   const { data: claimCheckData = { result: '0' }, refetch: refetchClaimCheck } =
@@ -81,7 +76,7 @@ export function AddTags({
         subjectId: subjectVaultId,
         predicateId:
           getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId?.toString(),
-        objectId: selectedTags[selectedTags.length - 1]?.vault_id,
+        objectId: selectedTags[selectedTags.length - 1]?.vault_id?.toString(),
       },
       {
         refetchOnWindowFocus: false,
@@ -95,54 +90,18 @@ export function AddTags({
 
   console.log('claimCheckData', claimCheckData)
 
-  const handleIdentitySelect = (atom: GetAtomQuery['atom']) => {
+  const handleIdentitySelect = (atom: Atom) => {
     onAddTag(atom)
     setSearchQuery('')
     refetchClaimCheck()
     setIsPopoverOpen(false)
   }
 
-  const handleSaveClick = (
-    invalidTag: GetAtomQuery['atom'] & { tagClaimId: string },
-  ) => {
+  const handleSaveClick = (invalidTag: Atom & { tagClaimId: string }) => {
     setSelectedInvalidTag(invalidTag)
     setSaveListModalActive({
       isOpen: true,
-      identity: invalidTag
-        ? ({
-            id: invalidTag?.id ?? '',
-            label: invalidTag?.label ?? '',
-            image: invalidTag?.image ?? '',
-            vault_id: invalidTag?.vault_id,
-            assets_sum: '0',
-            user_assets: '0',
-            contract: MULTIVAULT_CONTRACT_ADDRESS,
-            asset_delta: '0',
-            conviction_price: '0',
-            conviction_price_delta: '0',
-            conviction_sum: '0',
-            num_positions: 0,
-            price: '0',
-            price_delta: '0',
-            status: 'active',
-            total_conviction: '0',
-            type: 'user',
-            updated_at: new Date().toISOString(),
-            created_at: new Date().toISOString(),
-            creator_address: '',
-            display_name: invalidTag.label ?? '',
-            follow_vault_id: '',
-            user: null,
-            creator: null,
-            identity_hash: '',
-            identity_id: '',
-            is_contract: false,
-            is_user: true,
-            pending: false,
-            pending_type: null,
-            pending_vault_id: null,
-          } as unknown as IdentityPresenter)
-        : undefined,
+      identity: invalidTag ? invalidTag : undefined,
       id: invalidTag.tagClaimId,
     })
   }
@@ -152,12 +111,12 @@ export function AddTags({
     [JSON.stringify(selectedTags)],
   )
 
-  useInvalidItems<GetAtomQuery['atom']>({
+  useInvalidItems<Atom>({
     data: claimCheckData as TagLoaderData,
     selectedItems: memoizedSelectedTags,
     setInvalidItems: setInvalidTags,
     onRemoveItem: onRemoveTag,
-    idKey: 'vaultId' as keyof GetAtomQuery['atom'],
+    idKey: 'vaultId' as keyof Atom,
     dataIdKey: 'objectId',
   })
 
@@ -207,23 +166,23 @@ export function AddTags({
         </Popover>
         {invalidTags.filter(Boolean).map((invalidTag) => (
           <AddListExistingCta
-            key={invalidTag?.vault_id ?? ''}
+            key={invalidTag?.vault_id?.toString() ?? ''}
             identity={invalidTag}
             variant="tag"
             onSaveClick={() => {
               if (invalidTag && 'tagClaimId' in invalidTag) {
-                handleSaveClick(
-                  invalidTag as GetAtomQuery['atom'] & { tagClaimId: string },
-                )
+                handleSaveClick(invalidTag as Atom & { tagClaimId: string })
               }
             }}
-            onClose={() => onRemoveInvalidTag(invalidTag?.vault_id ?? '')}
+            onClose={() =>
+              onRemoveInvalidTag(invalidTag?.vault_id?.toString() ?? '')
+            }
           />
         ))}
       </div>
       {selectedInvalidTag && (
         <SaveListModal
-          contract={identity.contract}
+          contract={MULTIVAULT_CONTRACT_ADDRESS}
           tagAtom={selectedInvalidTag}
           atom={identity}
           userWallet={userWallet}

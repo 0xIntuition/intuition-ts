@@ -1,7 +1,5 @@
 import { useEffect, useState } from 'react'
 
-import { IdentityPresenter } from '@0xintuition/api'
-
 import logger from '@lib/utils/logger'
 import { useFetcher } from '@remix-run/react'
 import {
@@ -9,17 +7,16 @@ import {
   GET_IDENTITIES_RESOURCE_ROUTE,
   SEARCH_IDENTITIES_RESOURCE_ROUTE,
 } from 'app/consts'
+import { AtomType } from 'app/types/atom'
 
 interface DefaultIdentitiesResponse {
-  identities: IdentityPresenter[]
+  identities: AtomType[]
 }
 
 export function useIdentityServerSearch() {
   const [searchQuery, setSearchQuery] = useState('')
-  const [identities, setIdentities] = useState<IdentityPresenter[]>([])
-  const identitiesFetcher = useFetcher<
-    IdentityPresenter[] | DefaultIdentitiesResponse
-  >()
+  const [identities, setIdentities] = useState<AtomType[]>([])
+  const identitiesFetcher = useFetcher<AtomType[] | DefaultIdentitiesResponse>()
 
   const handleInput = async (event: React.FormEvent<HTMLInputElement>) => {
     event.preventDefault()

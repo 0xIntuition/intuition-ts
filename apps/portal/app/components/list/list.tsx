@@ -30,6 +30,8 @@ export function List<T extends SortColumnType>({
   paramPrefix,
   enableSearch = true,
   enableSort = true,
+  onPageChange,
+  onLimitChange,
 }: {
   children: ReactNode
   pagination?: PaginationType
@@ -38,20 +40,45 @@ export function List<T extends SortColumnType>({
   paramPrefix?: string
   enableSearch?: boolean
   enableSort?: boolean
+  onPageChange?: (page: number) => void
+  onLimitChange?: (limit: number) => void
 }) {
-  const { handleSortChange, handleSearchChange, onPageChange, onLimitChange } =
-    useSearchAndSortParamsHandler<T>(paramPrefix)
+  const {
+    handleSortChange,
+    handleSearchChange,
+    onPageChange: defaultPageChange,
+    onLimitChange: defaultLimitChange,
+  } = useSearchAndSortParamsHandler<T>(paramPrefix)
 
   const listContainerRef = useRef<HTMLDivElement>(null)
 
   const setCreateIdentityModalActive = useSetAtom(globalCreateIdentityModalAtom)
   const setCreateClaimModalActive = useSetAtom(globalCreateClaimModalAtom)
 
+  // Use the provided callbacks if available, otherwise use the default
+  const handlePageChange = (newOffset: number) => {
+    if (onPageChange) {
+      onPageChange(newOffset)
+    } else {
+      defaultPageChange(newOffset)
+    }
+  }
+
+  const handleLimitChange = (newLimit: number) => {
+    if (onLimitChange) {
+      onLimitChange(newLimit)
+    } else {
+      defaultLimitChange(newLimit)
+    }
+  }
+
   return (
     <div className="flex flex-col w-full gap-6" ref={listContainerRef}>
       {(enableSearch || enableSort) && (
         <div
-          className={`flex w-full max-lg:flex-col max-lg:gap-4 ${enableSearch ? 'justify-between' : 'justify-end'}`}
+          className={`flex w-full max-lg:flex-col max-lg:gap-4 ${
+            enableSearch ? 'justify-between' : 'justify-end'
+          }`}
         >
           {enableSearch && <Search handleSearchChange={handleSearchChange} />}
           {enableSort && options && (
@@ -90,10 +117,8 @@ export function List<T extends SortColumnType>({
           currentPage={pagination.currentPage ?? 0}
           totalPages={pagination.totalPages ?? 0}
           limit={pagination.limit ?? 0}
-          onPageChange={(newOffset) => {
-            onPageChange(newOffset)
-          }}
-          onLimitChange={onLimitChange}
+          onPageChange={handlePageChange}
+          onLimitChange={handleLimitChange}
           label={paginationLabel}
           listContainerRef={listContainerRef}
         />

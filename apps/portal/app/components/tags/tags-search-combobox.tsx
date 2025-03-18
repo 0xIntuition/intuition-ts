@@ -13,7 +13,6 @@ import {
   Identity,
   ProfileCard,
 } from '@0xintuition/1ui'
-import { ClaimPresenter } from '@0xintuition/api'
 
 import { AtomSearchComboboxItem } from '@components/atom-search-combobox'
 import logger from '@lib/utils/logger'
@@ -23,14 +22,14 @@ import {
   getAtomIpfsLinkGQL,
   truncateString,
 } from '@lib/utils/misc'
+import { Triple } from 'app/types/triple'
 
 export interface TagSearchComboboxProps
   extends React.HTMLAttributes<HTMLDivElement> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  tagClaims: any[] // TODO: (ENG-4782) temporary type fix until we lock in final types
+  tagClaims: Triple[]
   placeholder?: string
   shouldFilter?: boolean
-  onTagClick?: (tag: ClaimPresenter) => void
+  onTagClick?: (tag: Triple) => void
 }
 
 const TagSearchCombobox = ({
@@ -62,11 +61,13 @@ const TagSearchCombobox = ({
                       name={truncateString(tagClaim.object?.label ?? '', 16)}
                       avatarSrc={tagClaim.object?.image ?? ''}
                       value={
-                        +formatBalance(tagClaim.vault?.totalShares ?? '0') *
-                        +formatBalance(tagClaim.vault?.currentSharePrice ?? '0')
+                        +formatBalance(tagClaim.vault?.total_shares ?? '0') *
+                        +formatBalance(
+                          tagClaim.vault?.current_share_price ?? '0',
+                        )
                       }
                       variant="non-user"
-                      attestors={tagClaim.vault?.positions?.length || 0}
+                      attestors={tagClaim.vault?.position_count || 0}
                       onClick={() => onTagClick(tagClaim)}
                       onSelect={() => onTagClick(tagClaim)}
                     />
@@ -85,7 +86,7 @@ const TagSearchCombobox = ({
                             tagClaim.object?.label ?? '',
                             18,
                           )}
-                          id={tagClaim.object?.id}
+                          id={tagClaim.object?.vault_id?.toString()}
                           bio={getAtomDescriptionGQL(tagClaim?.object)}
                           ipfsLink={getAtomIpfsLinkGQL(tagClaim?.object)}
                         />

@@ -2,9 +2,7 @@ import { useEffect, useState } from 'react'
 
 import {
   Banner,
-  Button,
   Icon,
-  IconName,
   Identity,
   IdentityStakeCard,
   PieChartVariant,
@@ -20,9 +18,9 @@ import {
 } from '@0xintuition/1ui'
 import {
   fetcher,
-  GetAccountDocument,
-  GetAccountQuery,
-  GetAccountQueryVariables,
+  GetAccountProfileDocument,
+  GetAccountProfileQuery,
+  GetAccountProfileQueryVariables,
   GetConnectionsCountDocument,
   GetConnectionsCountQuery,
   GetConnectionsCountQueryVariables,
@@ -32,7 +30,7 @@ import {
   GetTagsDocument,
   GetTagsQuery,
   GetTagsQueryVariables,
-  useGetAccountQuery,
+  useGetAccountProfileQuery,
   useGetConnectionsCountQuery,
   useGetFeeTransfersQuery,
   useGetTagsQuery,
@@ -61,7 +59,11 @@ import {
 } from '@lib/state/store'
 import { getSpecialPredicate } from '@lib/utils/app'
 import logger from '@lib/utils/logger'
-import { calculatePercentageOfTvl, invariant } from '@lib/utils/misc'
+import {
+  calculatePercentageOfTvl,
+  formatBalance,
+  invariant,
+} from '@lib/utils/misc'
 import { User } from '@privy-io/react-auth'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import {
@@ -84,6 +86,7 @@ import {
 } from 'app/consts'
 import TwoPanelLayout from 'app/layouts/two-panel-layout'
 import { AtomType } from 'app/types/atom'
+import { TripleType } from 'app/types/triple'
 import { useAtom } from 'jotai'
 import { formatUnits, parseUnits } from 'viem'
 
@@ -124,14 +127,14 @@ export async function loader({ request }: LoaderFunctionArgs) {
     ])
   }
 
-  let accountResult: GetAccountQuery | null = null
+  let accountResult: GetAccountProfileQuery | null = null
 
   try {
     logger('Fetching Account Data...')
-    accountResult = await fetcher<GetAccountQuery, GetAccountQueryVariables>(
-      GetAccountDocument,
-      { address: queryAddress },
-    )()
+    accountResult = await fetcher<
+      GetAccountProfileQuery,
+      GetAccountProfileQueryVariables
+    >(GetAccountProfileDocument, { address: queryAddress })()
 
     if (!accountResult) {
       throw new Error('No account data found for address')
@@ -141,6 +144,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
       throw new Error('No atom ID found for account')
     }
 
+    console.log('queryAddress', queryAddress)
     console.log('accountResult', accountResult)
 
     await queryClient.prefetchQuery({
@@ -227,7 +231,7 @@ export default function Profile() {
   // TODO: Remove this once the `status is added to atoms -- that will be what we check if something is pending. For now setting this to false and removing the legacy isPending check
   const isPending = false
 
-  const { data: accountResult } = useGetAccountQuery(
+  const { data: accountResult } = useGetAccountProfileQuery(
     {
       address: initialParams.queryAddress,
     },
@@ -252,6 +256,8 @@ export default function Profile() {
       enabled: !!accountResult?.account?.atom_id,
     },
   )
+
+  console.log('accountTagsResult', accountTagsResult)
 
   const { data: accountConnectionsCountResult } = useGetConnectionsCountQuery(
     {
@@ -307,17 +313,20 @@ export default function Profile() {
       : 0n
   const assets_sum = vaultDetails
     ? vaultDetails.assets_sum
-    : +formatUnits(accountResult?.account?.atom?.vault?.total_shares ?? 0, 18) *
-      +formatUnits(
-        accountResult?.account?.atom?.vault?.current_share_price ?? 0,
-        18,
-      )
+    : accountResult?.account?.atom?.vault?.current_share_price &&
+        accountResult?.account?.atom?.vault?.total_shares
+      ? (BigInt(accountResult.account.atom.vault.current_share_price) *
+          BigInt(accountResult.account.atom.vault.total_shares)) /
+        BigInt(10 ** 18) // Division to get the correct decimal places
+      : 0n
 
   console.log(
     'user_assets',
     vaultDetails?.user_assets,
-    (BigInt(accountResult.account.atom.vault.current_share_price) *
-      BigInt(accountResult.account.atom.vault.positions[0].shares)) /
+    (BigInt(accountResult?.account?.atom?.vault?.current_share_price ?? 0) *
+      BigInt(
+        accountResult?.account?.atom?.vault?.positions?.[0]?.shares ?? 0,
+      )) /
       BigInt(10 ** 18),
   )
   console.log(
@@ -425,16 +434,7 @@ export default function Profile() {
             isOpen: true,
           })
         }}
-      >
-        <Button
-          variant="secondary"
-          className="w-full"
-          onClick={() => setEditProfileModalActive(true)}
-        >
-          <Icon name={IconName.avatarSparkle} className="h-4 w-4" /> Edit
-          Profile
-        </Button>
-      </ProfileCard>
+      />
       <ProfileSocialAccounts
         privyUser={JSON.parse(JSON.stringify(privyUser))}
         handleOpenEditSocialLinksModal={() =>
@@ -455,11 +455,11 @@ export default function Profile() {
                       label={tag.object?.label ?? ''}
                       value={tag.vault?.allPositions?.aggregate?.count ?? 0}
                       onStake={() => {
-                        setSelectedTag(tag?.object)
+                        setSelectedTag(tag?.object as AtomType)
                         setSaveListModalActive({
                           isOpen: true,
                           id: tag.id,
-                          tag: tag.object,
+                          tag: tag.object as AtomType,
                         })
                       }}
                     />
@@ -490,12 +490,16 @@ export default function Profile() {
                   ...prevState,
                   mode: 'redeem',
                   modalType: 'identity',
-                  identity: accountResult?.account?.atom,
+                  identity: accountResult?.account?.atom as AtomType,
                   isOpen: true,
                 }))
               }
             >
-              <PositionCardStaked amount={user_assets ? user_assets : 0} />
+              <PositionCardStaked
+                amount={
+                  user_assets ? +formatBalance(BigInt(user_assets), 18) : 0
+                }
+              />
               <PositionCardOwnership
                 percentOwnership={
                   user_assets !== null && assets_sum
@@ -514,7 +518,7 @@ export default function Profile() {
             </PositionCard> // TODO: Add last updated when we have it available
           ) : null}
           <IdentityStakeCard
-            tvl={assets_sum}
+            tvl={+formatBalance(BigInt(assets_sum), 18)}
             holders={accountResult?.account?.atom?.vault?.position_count ?? 0}
             variant={Identity.user} // TODO: Use the atom type to determine this once we have these
             // identityImgSrc={getAtomImage(accountResult?.account)} // TODO: Modify our utils and then re-add this
@@ -526,7 +530,7 @@ export default function Profile() {
                 ...prevState,
                 mode: 'deposit',
                 modalType: 'identity',
-                identity: accountResult?.account?.atom,
+                identity: accountResult?.account?.atom as AtomType,
                 isOpen: true,
               }))
             }
@@ -586,7 +590,7 @@ export default function Profile() {
           />
           <TagsModal
             identity={accountResult?.account?.atom as AtomType}
-            tagClaims={accountTagsResult?.triples ?? []}
+            tagClaims={accountTagsResult?.triples as TripleType[]}
             userWallet={userWallet}
             open={tagsModalActive.isOpen}
             mode={tagsModalActive.mode}
@@ -602,7 +606,7 @@ export default function Profile() {
             <SaveListModal
               contract={MULTIVAULT_CONTRACT_ADDRESS}
               tagAtom={saveListModalActive.tag ?? selectedTag}
-              atom={accountResult?.account?.atom}
+              atom={accountResult?.account?.atom as AtomType}
               userWallet={userWallet}
               open={saveListModalActive.isOpen}
               onClose={() =>

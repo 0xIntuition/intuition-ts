@@ -8,13 +8,13 @@ import {
   Text,
   Trunctacular,
 } from '@0xintuition/1ui'
-import { GetAtomQuery } from '@0xintuition/graphql'
 
 import { truncateString } from '@lib/utils/misc'
+import { Atom } from 'app/types/atom'
 
 interface AddListAlertCtaProps {
   variant: 'identity' | 'tag'
-  identity: GetAtomQuery['atom']
+  identity: Atom
   onSaveClick: () => void
   onClose: () => void
 }

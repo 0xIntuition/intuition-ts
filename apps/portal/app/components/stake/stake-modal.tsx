@@ -31,12 +31,12 @@ import { stakeModalAtom } from '@lib/state/store'
 import { useGenericTxState } from '@lib/utils/use-tx-reducer'
 import { useLocation } from '@remix-run/react'
 import { useQueryClient } from '@tanstack/react-query'
-import { AtomType } from 'app/types/atom'
+import { Atom } from 'app/types/atom'
 import {
   TransactionActionType,
   TransactionStateType,
 } from 'app/types/transaction'
-import { TripleType } from 'app/types/triple'
+import { Triple } from 'app/types/triple'
 import { VaultDetailsType } from 'app/types/vault'
 import { useAtom } from 'jotai'
 import { Address, decodeEventLog, formatUnits } from 'viem'
@@ -56,14 +56,14 @@ interface StakeModalProps {
   userWallet: string
   contract: string
   open: boolean
-  identity?: AtomType
-  claim?: TripleType
+  identity?: Atom
+  claim?: Triple
   vaultId: string | number
   vaultDetailsProp?: VaultDetailsType
   onClose?: () => void
   onSuccess?: (args: {
-    identity?: AtomType
-    claim?: TripleType
+    identity?: Atom
+    claim?: Triple
     vaultDetails?: VaultDetailsType
     direction?: 'for' | 'against'
   }) => void
@@ -110,21 +110,25 @@ export default function StakeModal({
   const identityShouldOverride = identity && identity.vault_id !== '0'
 
   if (identityShouldOverride) {
-    vaultId = identity.vault_id.toString()
+    vaultId = identity.id.toString()
   } else if (claim) {
     vaultId = direction === 'for' ? claim.vault_id : claim.counter_vault_id
   }
 
   let user_conviction: string | number | undefined = '0'
-  if (vaultDetails?.user_conviction) {
-    user_conviction = vaultDetails.user_conviction
-  } else if (identityShouldOverride) {
-    user_conviction = identity.vault?.positions?.[0]?.shares
+  if (identityShouldOverride) {
+    user_conviction = vaultDetails
+      ? vaultDetails.user_conviction
+      : identity.vault?.positions?.[0]?.shares
   } else if (claim && direction) {
     user_conviction =
       direction === 'for'
-        ? claim.vault?.positions?.[0]?.shares
-        : claim.counter_vault?.positions?.[0]?.shares
+        ? vaultDetails
+          ? vaultDetails.user_conviction
+          : claim.vault?.positions?.[0]?.shares
+        : vaultDetails
+          ? vaultDetails.user_conviction_against
+          : claim.counter_vault?.positions?.[0]?.shares
   }
 
   let conviction_price: string | number | undefined = '0'
@@ -139,35 +143,35 @@ export default function StakeModal({
         : claim.counter_vault?.current_share_price
   }
 
-  let user_assets: string | number | undefined = '0'
+  let user_assets: bigint | string | number | undefined = '0'
   if (identityShouldOverride) {
-    user_assets = (
-      +formatUnits(BigInt(identity?.vault?.positions?.[0]?.shares ?? '0'), 18) *
-      +formatUnits(BigInt(identity?.vault?.current_share_price ?? '0'), 18)
-    ).toString()
+    user_assets = vaultDetails
+      ? vaultDetails.user_assets
+      : identity?.vault?.current_share_price &&
+          identity?.vault?.positions?.[0]?.shares
+        ? (BigInt(identity.vault.current_share_price) *
+            BigInt(identity.vault.positions[0].shares)) /
+          BigInt(10 ** 18) // Division to get the correct decimal places
+        : 0n
   } else if (claim && direction) {
     user_assets =
       direction === 'for'
-        ? (
-            +formatUnits(
-              BigInt(claim?.vault?.positions?.[0].shares ?? '0'),
-              18,
-            ) *
-            +formatUnits(BigInt(claim?.vault?.current_share_price ?? '0'), 18)
-          ).toString() ?? '0'
-        : (
-            +formatUnits(
-              BigInt(claim?.counter_vault?.positions?.[0].shares ?? '0'),
-              18,
-            ) *
-            +formatUnits(
-              BigInt(claim?.counter_vault?.current_share_price ?? '0'),
-              18,
-            )
-          ).toString() ?? '0'
-  }
-  if (vaultDetails?.user_assets) {
-    user_assets = vaultDetails.user_assets
+        ? vaultDetails
+          ? vaultDetails.user_assets
+          : claim?.vault?.current_share_price &&
+              claim?.vault?.positions?.[0]?.shares
+            ? (BigInt(claim.vault.current_share_price) *
+                BigInt(claim.vault.positions[0].shares)) /
+              BigInt(10 ** 18) // Division to get the correct decimal places
+            : 0n
+        : vaultDetails
+          ? vaultDetails.user_assets_against
+          : claim?.counter_vault?.current_share_price &&
+              claim?.counter_vault?.positions?.[0]?.shares
+            ? (BigInt(claim.counter_vault.current_share_price) *
+                BigInt(claim.counter_vault.positions[0].shares)) /
+              BigInt(10 ** 18) // Division to get the correct decimal places
+            : 0n
   }
 
   const min_deposit = vaultDetails

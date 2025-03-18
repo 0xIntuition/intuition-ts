@@ -1,3 +1,5 @@
+import { useEffect } from 'react'
+
 import {
   ActivePositionCard,
   Claim,
@@ -20,9 +22,9 @@ import {
   getAtomLinkGQL,
 } from '@lib/utils/misc'
 import { VaultDetailsType } from 'app/types'
-import { AtomType } from 'app/types/atom'
+import { Atom } from 'app/types/atom'
 import { TransactionStateType } from 'app/types/transaction'
-import { TripleType } from 'app/types/triple'
+import { Triple } from 'app/types/triple'
 import { useAtom } from 'jotai'
 import { formatUnits } from 'viem'
 
@@ -32,8 +34,8 @@ import StakeReview from './stake-review'
 
 interface StakeFormProps {
   userWallet: string
-  identity?: AtomType
-  claim?: TripleType
+  identity?: Atom
+  claim?: Triple
   user_conviction: string
   conviction_price: string
   user_assets: string
@@ -55,8 +57,6 @@ export default function StakeForm({
   userWallet,
   identity,
   claim,
-  user_conviction,
-  conviction_price,
   user_assets,
   vaultDetails,
   direction,
@@ -72,6 +72,13 @@ export default function StakeForm({
   setValidationErrors,
 }: StakeFormProps) {
   const [stakeModalState, setStakeModalState] = useAtom(stakeModalAtom)
+
+  // Reset input value when mode changes
+  useEffect(() => {
+    if (mode !== undefined) {
+      setVal('')
+    }
+  }, [mode, setVal])
 
   return (
     <>
@@ -150,6 +157,9 @@ export default function StakeForm({
                     label="Deposit"
                     onClick={(e) => {
                       e.preventDefault()
+                      setVal('')
+                      setShowErrors(false)
+                      setValidationErrors([])
                       setStakeModalState({
                         ...stakeModalState,
                         mode: 'deposit',
@@ -163,6 +173,9 @@ export default function StakeForm({
                     label="Redeem"
                     onClick={(e) => {
                       e.preventDefault()
+                      setVal('')
+                      setShowErrors(false)
+                      setValidationErrors([])
                       setStakeModalState({ ...stakeModalState, mode: 'redeem' })
                     }}
                     disabled={user_assets === '0'}
@@ -195,8 +208,7 @@ export default function StakeForm({
                         formatUnits(BigInt(vaultDetails.min_deposit), 18)) ??
                       MIN_DEPOSIT
                     }
-                    userConviction={user_conviction}
-                    price={conviction_price}
+                    userAssets={user_assets}
                   />
                 </div>
               </div>

@@ -276,7 +276,6 @@ export function ErrorBoundary() {
         isAtRoot
         routeName="root"
         statusCode={statusCode}
-        title={title}
         description={description}
       />
     </Document>
