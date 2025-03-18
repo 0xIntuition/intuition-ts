@@ -1705,6 +1705,9 @@ export default function CSVEditor() {
           addRowWithPastedData(newRow)
         } else {
           setIsLoading(false)
+          toast.warning('Unknown Schema', {
+            duration: 3000,
+          })
         }
       } catch (error) {
         console.error('Error handling paste event:', error)
