@@ -163,7 +163,7 @@ export default function ProfileDataAbout() {
 
   const { identity } =
     useRouteLoaderData<IdentityLoaderData>('routes/app+/identity+/$id') ?? {}
-  invariant(identity, NO_IDENTITY_ERROR)
+  // invariant(identity, NO_IDENTITY_ERROR)
 
   const [createClaimModalActive, setCreateClaimModalActive] = useAtom(
     detailCreateClaimModalAtom,

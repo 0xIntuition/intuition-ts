@@ -222,14 +222,16 @@ export default function IdentityDetails() {
   )
 
   logger('Vault Details:', vaultDetails)
-  const user_assets = vaultDetails
-    ? vaultDetails.user_assets
-    : +formatUnits(atomResult?.atom?.vault?.current_share_price, 18) +
-      +formatUnits(atomResult?.atom?.vault?.positions?.[0]?.shares, 18)
-  const assets_sum = vaultDetails
-    ? vaultDetails.assets_sum
-    : +formatUnits(atomResult?.atom?.vault?.total_shares ?? 0, 18) *
-      +formatUnits(atomResult?.atom?.vault?.current_share_price ?? 0, 18)
+
+  // something wrong with this causing things to break
+  // const user_assets = vaultDetails
+  //   ? vaultDetails.user_assets
+  //   : +formatUnits(atomResult?.atom?.vault?.current_share_price, 18) +
+  //     +formatUnits(atomResult?.atom?.vault?.positions?.[0]?.shares, 18)
+  // const assets_sum = vaultDetails
+  //   ? vaultDetails.assets_sum
+  //   : +formatUnits(atomResult?.atom?.vault?.total_shares ?? 0, 18) *
+  //     +formatUnits(atomResult?.atom?.vault?.current_share_price ?? 0, 18)
 
   const leftPanel = (
     <div className="flex-col justify-start items-start inline-flex gap-6 max-lg:w-full">
@@ -249,7 +251,6 @@ export default function IdentityDetails() {
           })
         }}
       />
-
       {!isPending && (
         <>
           <Tags>
@@ -292,7 +293,7 @@ export default function IdentityDetails() {
               }}
             />
           </Tags>
-          {vaultDetails !== null && user_assets !== '0' ? (
+          {/* {vaultDetails !== null && user_assets !== '0' ? (
             <PositionCard
               onButtonClick={() =>
                 setStakeModalActive((prevState) => ({
@@ -355,8 +356,8 @@ export default function IdentityDetails() {
                 timestamp={atomResult?.atom?.block_timestamp ?? ''}
               />
             </PositionCard>
-          ) : null}
-          <IdentityStakeCard
+          ) : null} */}
+          {/* <IdentityStakeCard
             tvl={+formatBalance(assets_sum, 18)}
             holders={atomResult?.atom?.vault?.position_count ?? 0}
             variant={Identity.nonUser} // TODO: Use the atom type to determine this once we have these
@@ -409,7 +410,7 @@ export default function IdentityDetails() {
             onViewAllClick={() =>
               navigate(`${PATHS.IDENTITY}/${atomResult?.atom?.id}#positions`)
             }
-          />
+          /> */}
         </>
       )}
       <DetailInfoCard
@@ -459,6 +460,7 @@ export default function IdentityDetails() {
   )
 
   return (
+    // <div>Test</div>
     <TwoPanelLayout leftPanel={leftPanel} rightPanel={rightPanel}>
       {!isPending && (
         <>
@@ -477,7 +479,7 @@ export default function IdentityDetails() {
               }))
             }}
           />
-          <TagsModal
+          {/* <TagsModal
             identity={atomResult?.atom}
             tagClaims={atomTagsResult?.triples ?? []}
             userWallet={userWallet}
@@ -490,7 +492,7 @@ export default function IdentityDetails() {
               })
               setSelectedTag(undefined)
             }}
-          />
+          /> */}
           {selectedTag && (
             <SaveListModal
               contract={MULTIVAULT_CONTRACT_ADDRESS}

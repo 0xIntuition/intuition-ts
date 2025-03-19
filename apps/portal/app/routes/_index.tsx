@@ -23,6 +23,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   if (!cookie) {
     throw redirect('/intro')
   }
+
   const { accessToken, sessionToken } = getPrivyTokens(request)
   if (accessToken) {
     logger('accessToken', accessToken)
