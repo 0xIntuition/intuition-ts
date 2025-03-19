@@ -52,17 +52,7 @@ export const IPFS_GATEWAY_URL = 'https://ipfs.io/ipfs'
 
 export const CREATE_RESOURCE_ROUTE = '/resources/create'
 export const CREATE_CLAIM_RESOURCE_ROUTE = '/resources/create-claim'
-export const GET_IDENTITIES_BY_IDS_RESOURCE_ROUTE =
-  '/resources/get-identities-by-ids'
-export const GET_IDENTITIES_RESOURCE_ROUTE = '/resources/get-identities'
-export const GET_IDENTITIES_BY_PARAM_RESOURCE_ROUTE =
-  '/resources/get-identities-by-param'
-export const SEARCH_IDENTITIES_RESOURCE_ROUTE = '/resources/search-identities'
-export const SEARCH_IDENTITIES_BY_TAGS_RESOURCE_ROUTE =
-  '/resources/search-identities-by-tags'
 export const TAG_RESOURCE_ROUTE = '/resources/tag'
-export const SEARCH_CLAIMS_BY_IDS_RESOURCE_ROUTE =
-  '/resources/search-claims-by-ids'
 export const GET_VAULT_DETAILS_RESOURCE_ROUTE = '/resources/get-vault-details'
 
 // Privy Social Accounts

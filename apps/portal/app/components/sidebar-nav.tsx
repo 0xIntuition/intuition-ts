@@ -35,7 +35,7 @@ import { MULTIVAULT_CONTRACT_ADDRESS, PATHS } from 'app/consts'
 import { useAtom } from 'jotai'
 
 import CreateClaimModal from './create-claim/create-claim-modal'
-import CreateIdentityModal from './create-identity/create-identity-modal'
+import { CreateIdentityModal } from './create-identity/create-identity-modal'
 import StakeModal from './stake/stake-modal'
 
 interface SidebarNavRoute {
@@ -385,9 +385,10 @@ export default function SidebarNav({
       {privyUser?.wallet?.address && (
         <>
           <CreateIdentityModal
-            open={createIdentityModalActive}
-            wallet={privyUser?.wallet?.address}
+            isOpen={createIdentityModalActive}
+            wallet={privyUser?.wallet?.address as `0x${string}`}
             onClose={() => setCreateIdentityModalActive(false)}
+            onSuccess={() => {}}
           />
           <CreateClaimModal
             open={createClaimModalActive}
