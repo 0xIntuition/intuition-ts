@@ -1,13 +1,12 @@
 import { useEffect, useState } from 'react'
 
 import {
-  Banner,
   Icon,
   Identity,
   IdentityStakeCard,
   PieChartVariant,
   PositionCard,
-  PositionCardLastUpdated,
+  PositionCardLastUpdated, // TODO: Add last updated when we have it available
   PositionCardOwnership,
   PositionCardStaked,
   ProfileCard,
@@ -32,7 +31,6 @@ import {
 
 import { DetailInfoCard } from '@components/detail-info-card'
 import { ErrorPage } from '@components/error-page'
-import NavigationButton from '@components/navigation-link'
 import ImageModal from '@components/profile/image-modal'
 import SaveListModal from '@components/save-list/save-list-modal'
 import ShareCta from '@components/share-cta'
@@ -69,6 +67,7 @@ import {
 } from 'app/consts'
 import TwoPanelLayout from 'app/layouts/two-panel-layout'
 import { Atom } from 'app/types/atom'
+import { Triple } from 'app/types/triple'
 import { useAtom } from 'jotai'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -158,9 +157,6 @@ export default function IdentityDetails() {
   ])
   const navigate = useNavigate()
 
-  // TODO: Remove this once the `status is added to atoms -- that will be what we check if something is pending. For now setting this to false and removing the legacy isPending check
-  const isPending = false
-
   const [stakeModalActive, setStakeModalActive] = useAtom(stakeModalAtom)
   const [tagsModalActive, setTagsModalActive] = useAtom(tagsModalAtom)
   const [saveListModalActive, setSaveListModalActive] =
@@ -243,7 +239,6 @@ export default function IdentityDetails() {
     <div className="flex-col justify-start items-start inline-flex gap-6 max-lg:w-full">
       <ProfileCard
         variant={Identity.nonUser}
-        // avatarSrc={getAtomImage(identity)} // TODO: Bring back our utils once we're ready!
         avatarSrc={atomResult?.atom?.value?.thing?.image ?? ''}
         name={atomResult?.atom?.value?.thing?.name ?? ''}
         id={atomResult?.atom?.id ?? ''}
@@ -334,8 +329,6 @@ export default function IdentityDetails() {
           tvl={+formatBalance(assets_sum, 18)}
           holders={atomResult?.atom?.vault?.position_count ?? 0}
           variant={Identity.nonUser} // TODO: Use the atom type to determine this once we have these
-          // identityImgSrc={getAtomImage(identity)}
-          // identityDisplayName={getAtomLabel(identity)}
           identityImgSrc={atomResult?.atom?.value?.thing?.image ?? ''}
           identityDisplayName={atomResult?.atom?.value?.thing?.name ?? ''}
           onBuyClick={() =>
@@ -343,40 +336,7 @@ export default function IdentityDetails() {
               ...prevState,
               mode: 'deposit',
               modalType: 'identity',
-              identity: {
-                // TODO: (ENG-4782) temporary type fix until we lock in final types
-                id: atomResult?.atom?.id ?? '',
-                label: atomResult?.atom?.value?.thing?.name ?? '',
-                image: atomResult?.atom?.value?.thing?.image ?? '',
-                vault_id: atomResult?.atom?.id,
-                assets_sum: '0',
-                user_assets: '0',
-                contract: MULTIVAULT_CONTRACT_ADDRESS,
-                asset_delta: '0',
-                conviction_price: '0',
-                conviction_price_delta: '0',
-                conviction_sum: '0',
-                num_positions: 0,
-                price: '0',
-                price_delta: '0',
-                status: 'active',
-                total_conviction: '0',
-                type: 'user',
-                updated_at: new Date().toISOString(),
-                created_at: new Date().toISOString(),
-                creator_address: '',
-                display_name: atomResult?.atom?.value?.thing?.name ?? '',
-                follow_vault_id: '',
-                user: null,
-                creator: null,
-                identity_hash: '',
-                identity_id: '',
-                is_contract: false,
-                is_user: true,
-                pending: false,
-                pending_type: null,
-                pending_vault_id: null,
-              } as unknown as IdentityPresenter,
+              identity: atomResult?.atom as Atom,
               isOpen: true,
             }))
           }
@@ -412,80 +372,61 @@ export default function IdentityDetails() {
     </div>
   )
 
-  const rightPanel = isPending ? (
-    <Banner
-      variant="warning"
-      title="Please Refresh the Page"
-      message="It looks like the on-chain transaction was successful, but we're still waiting for the information to update. Please refresh the page to ensure everything is up to date."
-    >
-      <NavigationButton
-        reloadDocument
-        variant="secondary"
-        to=""
-        className="max-lg:w-full"
-      >
-        Refresh
-      </NavigationButton>
-    </Banner>
-  ) : (
-    <Outlet />
-  )
+  const rightPanel = <Outlet />
 
   return (
     // <div>Test</div>
     <TwoPanelLayout leftPanel={leftPanel} rightPanel={rightPanel}>
-      {!isPending && (
-        <>
-          <StakeModal
-            userWallet={userWallet}
+      <>
+        <StakeModal
+          userWallet={userWallet}
+          contract={MULTIVAULT_CONTRACT_ADDRESS}
+          open={stakeModalActive.isOpen}
+          identity={atomResult?.atom as Atom}
+          vaultId={stakeModalActive.vaultId}
+          vaultDetailsProp={vaultDetails}
+          onClose={() => {
+            setStakeModalActive((prevState) => ({
+              ...prevState,
+              isOpen: false,
+              mode: undefined,
+            }))
+          }}
+        />
+        <TagsModal
+          identity={atomResult?.atom as Atom}
+          tagClaims={atomTagsResult?.triples as Triple[]}
+          userWallet={userWallet}
+          open={tagsModalActive.isOpen}
+          mode={tagsModalActive.mode}
+          onClose={() => {
+            setTagsModalActive({
+              ...tagsModalActive,
+              isOpen: false,
+            })
+            setSelectedTag(undefined)
+          }}
+        />
+        {selectedTag && (
+          <SaveListModal
             contract={MULTIVAULT_CONTRACT_ADDRESS}
-            open={stakeModalActive.isOpen}
-            identity={atomResult?.atom as Atom}
-            vaultId={stakeModalActive.vaultId}
-            vaultDetailsProp={vaultDetails}
-            onClose={() => {
-              setStakeModalActive((prevState) => ({
-                ...prevState,
-                isOpen: false,
-                mode: undefined,
-              }))
-            }}
-          />
-          <TagsModal
-            identity={atomResult?.atom as Atom}
-            tagClaims={atomTagsResult?.triples as Triple[]}
+            tagAtom={
+              identityToAtom(
+                saveListModalActive.tag ?? selectedTag,
+              ) as unknown as GetAtomQuery['atom']
+            }
+            atom={atomResult?.atom}
             userWallet={userWallet}
-            open={tagsModalActive.isOpen}
-            mode={tagsModalActive.mode}
-            onClose={() => {
-              setTagsModalActive({
-                ...tagsModalActive,
+            open={saveListModalActive.isOpen}
+            onClose={() =>
+              setSaveListModalActive({
+                ...saveListModalActive,
                 isOpen: false,
               })
-              setSelectedTag(undefined)
-            }}
+            }
           />
-          {selectedTag && (
-            <SaveListModal
-              contract={MULTIVAULT_CONTRACT_ADDRESS}
-              tagAtom={
-                identityToAtom(
-                  saveListModalActive.tag ?? selectedTag,
-                ) as unknown as GetAtomQuery['atom']
-              }
-              atom={atomResult?.atom}
-              userWallet={userWallet}
-              open={saveListModalActive.isOpen}
-              onClose={() =>
-                setSaveListModalActive({
-                  ...saveListModalActive,
-                  isOpen: false,
-                })
-              }
-            />
-          )}
-        </>
-      )}
+        )}
+      </>
       <ImageModal
         displayName={atomResult?.atom?.value?.thing?.name ?? ''}
         imageSrc={atomResult?.atom?.value?.thing?.image ?? ''}

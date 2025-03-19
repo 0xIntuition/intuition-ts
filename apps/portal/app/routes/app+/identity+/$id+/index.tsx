@@ -28,18 +28,12 @@ import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { detailCreateClaimModalAtom } from '@lib/state/store'
 import logger from '@lib/utils/logger'
 import { formatBalance, invariant } from '@lib/utils/misc'
-import { json, LoaderFunctionArgs } from '@remix-run/node'
-import { useRouteLoaderData } from '@remix-run/react'
+import { LoaderFunctionArgs } from '@remix-run/node'
 import { getUserWallet } from '@server/auth'
 import { QueryClient } from '@tanstack/react-query'
-import {
-  NO_IDENTITY_ERROR,
-  NO_PARAM_ID_ERROR,
-  NO_WALLET_ERROR,
-} from 'app/consts'
+import { NO_PARAM_ID_ERROR, NO_WALLET_ERROR } from 'app/consts'
+import { Triple } from 'app/types/triple'
 import { useAtom } from 'jotai'
-
-import { IdentityLoaderData } from '../$id'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const wallet = await getUserWallet(request)
@@ -138,7 +132,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
       )(),
   })
 
-  return json({
+  return {
     wallet,
     queryAddress,
     initialParams: {
@@ -153,17 +147,13 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
       atomId: params.id,
       queryAddress,
     },
-  })
+  }
 }
 
 export default function ProfileDataAbout() {
   const { wallet, initialParams, queryAddress } = useLiveLoader<typeof loader>([
     'attest',
   ])
-
-  const { identity } =
-    useRouteLoaderData<IdentityLoaderData>('routes/app+/identity+/$id') ?? {}
-  // invariant(identity, NO_IDENTITY_ERROR)
 
   const [createClaimModalActive, setCreateClaimModalActive] = useAtom(
     detailCreateClaimModalAtom,
@@ -293,7 +283,7 @@ export default function ProfileDataAbout() {
               </ErrorStateCard>
             ) : (
               <ClaimsAboutIdentity
-                claims={triplesResult?.triples ?? []}
+                claims={(triplesResult?.triples as Triple[]) ?? []}
                 pagination={triplesResult?.total?.aggregate?.count ?? {}}
                 paramPrefix="claims"
                 enableSearch={false} // TODO: (ENG-4481) Re-enable search and sort

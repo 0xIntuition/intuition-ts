@@ -83,7 +83,7 @@ import {
   ZERO_ADDRESS,
 } from 'app/consts'
 import TwoPanelLayout from 'app/layouts/two-panel-layout'
-import { AtomType } from 'app/types/atom'
+import { Atom } from 'app/types/atom'
 import { useAtom } from 'jotai'
 import { formatUnits } from 'viem'
 
@@ -339,9 +339,7 @@ export default function Profile() {
   const [shareModalActive, setShareModalActive] = useAtom(shareModalAtom)
   const [followModalActive, setFollowModalActive] = useAtom(followModalAtom)
 
-  const [selectedTag, setSelectedTag] = useState<AtomType | null | undefined>(
-    null,
-  )
+  const [selectedTag, setSelectedTag] = useState<Atom | null | undefined>(null)
 
   useEffect(() => {
     if (saveListModalActive.tag) {

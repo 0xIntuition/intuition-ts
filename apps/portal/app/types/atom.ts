@@ -76,99 +76,281 @@ export type Atom = {
   }
 
   // Triple relationships (from AtomTriple fragment)
-  as_subject_triples?: {
-    id: string | number
-    nodes?: Array<{
-      object: {
-        data?: string | null
+  as_subject_triples?:
+    | {
         id: string | number
-        image?: string | null
-        label?: string | null
-        emoji?: string | null
-        type: string
-        creator?: {
-          id: string
-          label?: string | null
+        nodes?: Array<{
+          object: {
+            data?: string | null
+            id: string | number
+            image?: string | null
+            label?: string | null
+            emoji?: string | null
+            type: string
+            creator?: {
+              id: string
+              label?: string | null
+              image?: string | null
+            }
+          }
+          predicate: {
+            data?: string | null
+            id: string | number
+            image?: string | null
+            label?: string | null
+            emoji?: string | null
+            type: string
+            creator?: {
+              id: string
+              label?: string | null
+              image?: string | null
+            }
+          }
+        }>
+      }
+    | {
+        __typename?: 'triples'
+        id: string | number
+        object: {
+          data?: string | null
+          id: string | number
           image?: string | null
+          label?: string | null
+          emoji?: string | null
+          type: string
+          creator?: {
+            id: string
+            label?: string | null
+            image?: string | null
+          }
+        }
+        predicate: {
+          data?: string | null
+          id: string | number
+          image?: string | null
+          label?: string | null
+          emoji?: string | null
+          type: string
+          creator?: {
+            id: string
+            label?: string | null
+            image?: string | null
+          }
         }
       }
-      predicate: {
-        data?: string | null
+    | Array<{
         id: string | number
-        image?: string | null
-        label?: string | null
-        emoji?: string | null
-        type: string
-        creator?: {
-          id: string
-          label?: string | null
+        object: {
+          data?: string | null
+          id: string | number
           image?: string | null
+          label?: string | null
+          emoji?: string | null
+          type: string
+          creator?: {
+            id: string
+            label?: string | null
+            image?: string | null
+          }
+        }
+        predicate: {
+          data?: string | null
+          id: string | number
+          image?: string | null
+          label?: string | null
+          emoji?: string | null
+          type: string
+          creator?: {
+            id: string
+            label?: string | null
+            image?: string | null
+          }
+        }
+      }>
+
+  as_predicate_triples?:
+    | {
+        id: string | number
+        nodes?: Array<{
+          subject: {
+            data?: string | null
+            id: string | number
+            image?: string | null
+            label?: string | null
+            emoji?: string | null
+            type: string
+            creator?: {
+              id: string
+              label?: string | null
+              image?: string | null
+            }
+          }
+          object: {
+            data?: string | null
+            id: string | number
+            image?: string | null
+            label?: string | null
+            emoji?: string | null
+            type: string
+            creator?: {
+              id: string
+              label?: string | null
+              image?: string | null
+            }
+          }
+        }>
+      }
+    | {
+        __typename?: 'triples'
+        id: string | number
+        subject: {
+          data?: string | null
+          id: string | number
+          image?: string | null
+          label?: string | null
+          emoji?: string | null
+          type: string
+          creator?: {
+            id: string
+            label?: string | null
+            image?: string | null
+          }
+        }
+        object: {
+          data?: string | null
+          id: string | number
+          image?: string | null
+          label?: string | null
+          emoji?: string | null
+          type: string
+          creator?: {
+            id: string
+            label?: string | null
+            image?: string | null
+          }
         }
       }
-    }>
-  }
-  as_predicate_triples?: {
-    id: string | number
-    nodes?: Array<{
-      subject: {
-        data?: string | null
+    | Array<{
         id: string | number
-        image?: string | null
-        label?: string | null
-        emoji?: string | null
-        type: string
-        creator?: {
-          id: string
-          label?: string | null
+        subject: {
+          data?: string | null
+          id: string | number
           image?: string | null
+          label?: string | null
+          emoji?: string | null
+          type: string
+          creator?: {
+            id: string
+            label?: string | null
+            image?: string | null
+          }
+        }
+        object: {
+          data?: string | null
+          id: string | number
+          image?: string | null
+          label?: string | null
+          emoji?: string | null
+          type: string
+          creator?: {
+            id: string
+            label?: string | null
+            image?: string | null
+          }
+        }
+      }>
+
+  as_object_triples?:
+    | {
+        id: string | number
+        nodes?: Array<{
+          subject: {
+            data?: string | null
+            id: string | number
+            image?: string | null
+            label?: string | null
+            emoji?: string | null
+            type: string
+            creator?: {
+              id: string
+              label?: string | null
+              image?: string | null
+            }
+          }
+          predicate: {
+            data?: string | null
+            id: string | number
+            image?: string | null
+            label?: string | null
+            emoji?: string | null
+            type: string
+            creator?: {
+              id: string
+              label?: string | null
+              image?: string | null
+            }
+          }
+        }>
+      }
+    | {
+        __typename?: 'triples'
+        id: string | number
+        subject: {
+          data?: string | null
+          id: string | number
+          image?: string | null
+          label?: string | null
+          emoji?: string | null
+          type: string
+          creator?: {
+            id: string
+            label?: string | null
+            image?: string | null
+          }
+        }
+        predicate: {
+          data?: string | null
+          id: string | number
+          image?: string | null
+          label?: string | null
+          emoji?: string | null
+          type: string
+          creator?: {
+            id: string
+            label?: string | null
+            image?: string | null
+          }
         }
       }
-      object: {
-        data?: string | null
+    | Array<{
         id: string | number
-        image?: string | null
-        label?: string | null
-        emoji?: string | null
-        type: string
-        creator?: {
-          id: string
-          label?: string | null
+        subject: {
+          data?: string | null
+          id: string | number
           image?: string | null
-        }
-      }
-    }>
-  }
-  as_object_triples?: {
-    id: string | number
-    nodes?: Array<{
-      subject: {
-        data?: string | null
-        id: string | number
-        image?: string | null
-        label?: string | null
-        emoji?: string | null
-        type: string
-        creator?: {
-          id: string
           label?: string | null
-          image?: string | null
+          emoji?: string | null
+          type: string
+          creator?: {
+            id: string
+            label?: string | null
+            image?: string | null
+          }
         }
-      }
-      predicate: {
-        data?: string | null
-        id: string | number
-        image?: string | null
-        label?: string | null
-        emoji?: string | null
-        type: string
-        creator?: {
-          id: string
+        predicate: {
+          data?: string | null
+          id: string | number
+          image?: string | null
           label?: string | null
-          image?: string | null
+          emoji?: string | null
+          type: string
+          creator?: {
+            id: string
+            label?: string | null
+            image?: string | null
+          }
         }
-      }
-    }>
-  }
+      }>
 }
 
 // Helper type for arrays of atoms
