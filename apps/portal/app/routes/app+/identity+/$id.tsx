@@ -375,7 +375,6 @@ export default function IdentityDetails() {
   const rightPanel = <Outlet />
 
   return (
-    // <div>Test</div>
     <TwoPanelLayout leftPanel={leftPanel} rightPanel={rightPanel}>
       <>
         <StakeModal

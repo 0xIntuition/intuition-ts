@@ -45,7 +45,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   invariant(id, NO_PARAM_ID_ERROR)
 
   const url = new URL(request.url)
-  // const searchParams = new URLSearchParams(url.search)
+
   const queryClient = new QueryClient()
 
   // TODO: once we fully fix sort/pagination, we'll want to update these to use triples instead of claims, and orderBy instead of sortBy in the actual query params

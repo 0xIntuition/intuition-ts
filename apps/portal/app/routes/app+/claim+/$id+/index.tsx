@@ -32,7 +32,7 @@ import {
   getAtomLinkGQL,
   invariant,
 } from '@lib/utils/misc'
-import { json, LoaderFunctionArgs } from '@remix-run/node'
+import { LoaderFunctionArgs } from '@remix-run/node'
 import {
   useLoaderData,
   useNavigation,
@@ -75,19 +75,16 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
       })(),
   })
 
-  return json({
+  return {
     dehydratedState: dehydrate(queryClient),
     initialParams: {
       id,
     },
-  })
+  }
 }
 
 export default function ClaimOverview() {
   const { initialParams } = useLoaderData<typeof loader>()
-  const { claim } =
-    useRouteLoaderData<ClaimDetailsLoaderData>('routes/app+/claim+/$id') ?? {}
-  invariant(claim, NO_CLAIM_ERROR)
 
   const [searchParams, setSearchParams] = useSearchParams()
   const [isNavigating, setIsNavigating] = useState(false)
