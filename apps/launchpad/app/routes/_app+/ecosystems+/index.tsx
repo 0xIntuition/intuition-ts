@@ -12,7 +12,6 @@ import { useGoBack } from '@lib/hooks/useGoBack'
 import type { Question } from '@lib/services/questions'
 import { atomDetailsModalAtom, onboardingModalAtom } from '@lib/state/store'
 import type { LoaderFunctionArgs, MetaFunction } from '@remix-run/node'
-import { json } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 import { getUser } from '@server/auth'
 import {
@@ -32,7 +31,7 @@ interface Epoch {
   is_active: boolean
   created_at: string
   updated_at: string
-  total_points: number
+  total_points_available: number
 }
 
 interface Progress {
@@ -53,7 +52,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const criticalStart = Date.now()
   const [user, epochsResponse] = await Promise.all([
     getUser(request),
-    fetch(`${new URL(request.url).origin}/resources/get-epochs`),
+    fetch(`${new URL(request.url).origin}/resources/get-epochs?type=ecosystem`),
   ])
   markTiming('Critical data parallel fetch', criticalStart)
 
@@ -63,58 +62,18 @@ export async function loader({ request }: LoaderFunctionArgs) {
   if (!epochsData.epochs) {
     throw new Error('No epochs data received')
   }
-  await queryClient.setQueryData(['get-epochs'], epochsData.epochs)
+  await queryClient.setQueryData(['get-ecosystem-epochs'], epochsData.epochs)
 
-  // Ensure we use the full ngrok URL if present and normalize the URL
-  const host = request.headers.get('host') || ''
-  const protocol = request.headers.get('x-forwarded-proto') || 'http'
-  const baseUrl = host.includes('ngrok')
-    ? `${protocol}://${host}`
-    : new URL(request.url).origin
-
-  // Normalize the path to always include trailing slash
-  const url = new URL(request.url)
-  const normalizedPath = url.pathname.endsWith('/')
-    ? url.pathname
-    : `${url.pathname}/`
-
-  // Normalize base URL to not have trailing slash
-  const normalizedBaseUrl = baseUrl.endsWith('/')
-    ? baseUrl.slice(0, -1)
-    : baseUrl
-
-  const canonicalUrl = `${normalizedBaseUrl}${normalizedPath}${url.search}`
-
-  // Construct OG image URL using URLSearchParams
-  const ogImageParams = new URLSearchParams()
-  ogImageParams.set('type', 'epochs')
-  ogImageParams.set(
-    'data',
-    JSON.stringify({
-      title: 'Bootstrap your Intuition',
-      description:
-        'Answer questions and earn IQ points across different epochs',
-      type: 'epochs',
-      holders: epochsData.epochs.length,
-      itemCount: epochsData.epochs.reduce(
-        (acc: number, epoch: Epoch) => acc + (epoch.total_points || 0),
-        0,
-      ),
-      totalEpochs: epochsData.epochs.length,
-    }),
-  )
-
-  // For OG image URL, use the non-trailing-slash version of the path
-  const ogImageUrl = `${normalizedBaseUrl}/resources/create-og?${ogImageParams.toString()}`
+  const { origin } = new URL(request.url)
+  const ogImageUrl = `${origin}/resources/create-og?type=ecosystems`
 
   markTiming('Total loader execution', loaderStart)
 
-  return json({
+  return {
     dehydratedState: dehydrate(queryClient),
     userWallet,
     ogImageUrl,
-    canonicalUrl,
-  })
+  }
 }
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
@@ -122,102 +81,61 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
     return []
   }
 
-  const { ogImageUrl, canonicalUrl } = data
+  const { ogImageUrl } = data
 
   return [
     {
-      title: 'Questions | Intuition Launchpad',
+      title: 'Ecosystems | Intuition Launchpad',
     },
     {
       name: 'description',
-      content: 'Answer questions and earn IQ points across different epochs.',
-    },
-    // Canonical URL
-    {
-      tagName: 'link',
-      rel: 'canonical',
-      href: canonicalUrl,
-    },
-    // Open Graph tags
-    {
-      property: 'og:url',
-      content: canonicalUrl,
+      content: 'Contribute to Intuition ecosystems and earn IQ points.',
     },
     {
       property: 'og:title',
-      content: 'Questions | Intuition Launchpad',
-    },
-    {
-      property: 'og:description',
-      content: 'Answer questions and earn IQ points across different epochs.',
+      content: 'Ecosystems | Intuition Launchpad',
     },
     {
       property: 'og:image',
       content: ogImageUrl,
     },
-    {
-      property: 'og:image:width',
-      content: '1200',
-    },
-    {
-      property: 'og:image:height',
-      content: '630',
-    },
-    {
-      property: 'og:type',
-      content: 'website',
-    },
     { property: 'og:site_name', content: 'Intuition Launchpad' },
     { property: 'og:locale', content: 'en_US' },
-    // Twitter specific tags
-    {
-      name: 'twitter:card',
-      content: 'summary_large_image',
-    },
-    {
-      name: 'twitter:domain',
-      content: 'intuition.systems',
-    },
     {
       name: 'twitter:image',
       content: ogImageUrl,
     },
     {
-      name: 'twitter:image:alt',
-      content: 'Questions page for Intuition Launchpad',
+      name: 'twitter:card',
+      content: 'summary_large_image',
     },
     {
       name: 'twitter:title',
-      content: 'Questions | Intuition Launchpad',
+      content: 'Ecosystems | Intuition Launchpad',
     },
     {
       name: 'twitter:description',
-      content: 'Answer questions and earn IQ points across different epochs.',
+      content: 'Contribute to Intuition ecosystems and earn IQ points.',
     },
     { name: 'twitter:site', content: '@0xIntuition' },
-    { name: 'twitter:creator', content: '@0xIntuition' },
-    // Security headers
-    { 'ngrok-skip-browser-warning': '1' },
-    { 'x-frame-options': 'SAMEORIGIN' },
-    { 'x-content-type-options': 'nosniff' },
   ]
 }
 
 export function ErrorBoundary() {
-  return <ErrorPage routeName="questions" />
+  return <ErrorPage routeName="ecosystems" />
 }
 
-function useEpochsData() {
+function useEcosystemsData() {
   const { userWallet } = useLoaderData<typeof loader>()
 
-  // Get all epochs data (prefetched in loader)
+  // Get all ecosystem epochs data (prefetched in loader)
   const { data: epochs = [] } = useQuery<Epoch[]>({
-    queryKey: ['get-epochs'],
+    queryKey: ['get-ecosystem-epochs'],
     queryFn: async () => {
-      const response = await fetch('/resources/get-epochs')
+      const response = await fetch('/resources/get-epochs?type=ecosystem')
       const data = await response.json()
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to fetch epochs')
+        throw new Error(data.error || 'Failed to fetch ecosystem epochs')
       }
       return data.epochs
     },
@@ -266,14 +184,14 @@ function useEpochsData() {
   }))
 }
 
-export default function Questions() {
+export default function Ecosystems() {
   const goBack = useGoBack({ fallbackRoute: `/quests` })
   const [onboardingModal, setOnboardingModal] = useAtom(onboardingModalAtom)
   const [atomDetailsModal, setAtomDetailsModal] = useAtom(atomDetailsModalAtom)
 
-  const epochsWithQuestions = useEpochsData()
+  const epochsWithQuestions = useEcosystemsData()
   const { isLoading: isLoadingEpochs } = useQuery({
-    queryKey: ['get-epochs'],
+    queryKey: ['get-ecosystem-epochs'],
   })
 
   // Show skeleton for initial loading
@@ -285,8 +203,15 @@ export default function Questions() {
     question: Question,
     predicateId: number,
     objectId: number,
+    tagObjectId?: number,
   ) => {
-    setOnboardingModal({ isOpen: true, question, predicateId, objectId })
+    setOnboardingModal({
+      isOpen: true,
+      question,
+      predicateId,
+      objectId,
+      tagObjectId,
+    })
   }
 
   const handleCloseOnboarding = () => {
@@ -295,6 +220,7 @@ export default function Questions() {
       question: null,
       predicateId: null,
       objectId: null,
+      tagObjectId: null,
     })
   }
 
@@ -310,8 +236,8 @@ export default function Questions() {
           <Icon name="chevron-left" className="h-4 w-4" />
         </Button>
         <PageHeader
-          title="Bootstrap your Intuition"
-          subtitle="Seed the Intuition Graph with your unique thoughts, knowledge, and insights"
+          title="Ecosystem Contributions"
+          subtitle="Contribute to Intuition ecosystems and earn IQ points"
         />
       </div>
       <Suspense fallback={<LoadingState />}>
