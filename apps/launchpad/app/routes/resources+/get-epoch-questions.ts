@@ -10,6 +10,7 @@ interface EpochQuestion {
   point_award_amount: number
   enabled: boolean
   order: number
+  tag_object_id: number
 }
 
 interface GetEpochQuestionsResponse {
@@ -29,6 +30,7 @@ const GetEpochQuestionsQuery = gql`
       enabled
       order
       epoch_id
+      tag_object_id
     }
   }
 `

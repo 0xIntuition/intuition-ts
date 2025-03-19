@@ -3,11 +3,11 @@ import { Suspense } from 'react'
 import { Button, Icon } from '@0xintuition/1ui'
 
 import { AtomDetailsModal } from '@components/atom-details-modal'
+import { EcosystemModal } from '@components/ecosystem-modal/survey-modal'
 import { EpochAccordion } from '@components/epoch-accordion'
 import { ErrorPage } from '@components/error-page'
 import { LoadingState } from '@components/loading-state'
 import { PageHeader } from '@components/page-header'
-import { OnboardingModal } from '@components/survey-modal/survey-modal'
 import { useGoBack } from '@lib/hooks/useGoBack'
 import type { Question } from '@lib/services/questions'
 import { atomDetailsModalAtom, onboardingModalAtom } from '@lib/state/store'
@@ -52,7 +52,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const criticalStart = Date.now()
   const [user, epochsResponse] = await Promise.all([
     getUser(request),
-    fetch(`${new URL(request.url).origin}/resources/get-epochs`),
+    fetch(`${new URL(request.url).origin}/resources/get-epochs?type=ecosystem`),
   ])
   markTiming('Critical data parallel fetch', criticalStart)
 
@@ -62,10 +62,10 @@ export async function loader({ request }: LoaderFunctionArgs) {
   if (!epochsData.epochs) {
     throw new Error('No epochs data received')
   }
-  await queryClient.setQueryData(['get-epochs'], epochsData.epochs)
+  await queryClient.setQueryData(['get-ecosystem-epochs'], epochsData.epochs)
 
   const { origin } = new URL(request.url)
-  const ogImageUrl = `${origin}/resources/create-og?type=questions`
+  const ogImageUrl = `${origin}/resources/create-og?type=ecosystems`
 
   markTiming('Total loader execution', loaderStart)
 
@@ -85,15 +85,15 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 
   return [
     {
-      title: 'Questions | Intuition Launchpad',
+      title: 'Ecosystems | Intuition Launchpad',
     },
     {
       name: 'description',
-      content: 'Answer questions and earn IQ points across different epochs.',
+      content: 'Answer questions and earn IQ points across different epochs.', // TODO: Update copy
     },
     {
       property: 'og:title',
-      content: 'Questions | Intuition Launchpad',
+      content: 'Ecosystems | Intuition Launchpad',
     },
     {
       property: 'og:image',
@@ -111,11 +111,11 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
     },
     {
       name: 'twitter:title',
-      content: 'Questions | Intuition Launchpad',
+      content: 'Ecosystems | Intuition Launchpad',
     },
     {
       name: 'twitter:description',
-      content: 'Answer questions and earn IQ points across different epochs.',
+      content: 'Answer questions and earn IQ points across different epochs.', // TODO: Update copy
     },
     { name: 'twitter:site', content: '@0xIntuition' },
   ]
@@ -128,14 +128,14 @@ export function ErrorBoundary() {
 function useEpochsData() {
   const { userWallet } = useLoaderData<typeof loader>()
 
-  // Get all epochs data (prefetched in loader)
+  // Get all ecosystem epochs data (prefetched in loader)
   const { data: epochs = [] } = useQuery<Epoch[]>({
-    queryKey: ['get-epochs'],
+    queryKey: ['get-ecosystem-epochs'],
     queryFn: async () => {
-      const response = await fetch('/resources/get-epochs')
+      const response = await fetch('/resources/get-epochs?type=ecosystem')
       const data = await response.json()
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to fetch epochs')
+        throw new Error(data.error || 'Failed to fetch ecosystem epochs')
       }
       return data.epochs
     },
@@ -184,14 +184,14 @@ function useEpochsData() {
   }))
 }
 
-export default function Questions() {
+export default function Ecosystems() {
   const goBack = useGoBack({ fallbackRoute: `/quests` })
   const [onboardingModal, setOnboardingModal] = useAtom(onboardingModalAtom)
   const [atomDetailsModal, setAtomDetailsModal] = useAtom(atomDetailsModalAtom)
 
   const epochsWithQuestions = useEpochsData()
   const { isLoading: isLoadingEpochs } = useQuery({
-    queryKey: ['get-epochs'],
+    queryKey: ['get-ecosystem-epochs'],
   })
 
   // Show skeleton for initial loading
@@ -204,7 +204,13 @@ export default function Questions() {
     predicateId: number,
     objectId: number,
   ) => {
-    setOnboardingModal({ isOpen: true, question, predicateId, objectId })
+    setOnboardingModal({
+      isOpen: true,
+      question,
+      predicateId,
+      objectId,
+      tagObjectId: question.tag_object_id,
+    })
   }
 
   const handleCloseOnboarding = () => {
@@ -213,6 +219,7 @@ export default function Questions() {
       question: null,
       predicateId: null,
       objectId: null,
+      tagObjectId: null,
     })
   }
 
@@ -228,7 +235,7 @@ export default function Questions() {
           <Icon name="chevron-left" className="h-4 w-4" />
         </Button>
         <PageHeader
-          title="Bootstrap your Intuition"
+          title="Map the Ecosystems"
           subtitle="Seed the Intuition Graph with your unique thoughts, knowledge, and insights"
         />
       </div>
@@ -238,12 +245,13 @@ export default function Questions() {
           onStartQuestion={handleStartOnboarding}
         />
       </Suspense>
-      <OnboardingModal
+      <EcosystemModal
         isOpen={onboardingModal.isOpen}
         onClose={handleCloseOnboarding}
         predicateId={onboardingModal.predicateId || 0}
         objectId={onboardingModal.objectId || 0}
         question={onboardingModal.question!}
+        tagObjectId={onboardingModal.tagObjectId || 0}
       />
       <AtomDetailsModal
         isOpen={atomDetailsModal.isOpen}
