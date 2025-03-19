@@ -1,9 +1,89 @@
+import { API_URL_DEV } from '@consts/general';
 import { GraphQLClient } from 'graphql-request'
 
-if (process.env.HASURA_POINTS_ENDPOINT === undefined) {
+// Safely access environment variables
+const HASURA_POINTS_ENDPOINT = typeof process !== 'undefined'
+  ? process.env.HASURA_POINTS_ENDPOINT
+  : import.meta.env?.VITE_HASURA_POINTS_ENDPOINT
+
+if (!HASURA_POINTS_ENDPOINT) {
   throw new Error('Points API endpoint not defined')
 }
 
 export const pointsClient = new GraphQLClient(
-  process.env.HASURA_POINTS_ENDPOINT,
+  HASURA_POINTS_ENDPOINT,
 )
+
+
+export interface ClientConfig {
+  headers: HeadersInit
+  apiUrl?: string
+}
+
+const DEFAULT_API_URL = API_URL_DEV
+
+let globalConfig: { apiUrl?: string } = {
+  apiUrl: DEFAULT_API_URL,
+}
+
+export function configureClient(config: { apiUrl: string }) {
+  globalConfig = { ...globalConfig, ...config }
+}
+
+export function getClientConfig(token?: string): ClientConfig {
+  return {
+    headers: {
+      ...(token && { authorization: `Bearer ${token}` }),
+      'Content-Type': 'application/json',
+    },
+    apiUrl: globalConfig.apiUrl,
+  }
+}
+
+export function createServerClient({ token }: { token?: string }) {
+  const config = getClientConfig(token)
+  if (!config.apiUrl) {
+    throw new Error(
+      'GraphQL API URL not configured. Call configureClient first.',
+    )
+  }
+  return new GraphQLClient(config.apiUrl, config)
+}
+
+export const fetchParams = () => {
+  return {
+    headers: {
+      'Content-Type': 'application/json; charset=utf-8',
+    },
+  }
+}
+
+export function fetcher<TData, TVariables>(
+  query: string,
+  variables?: TVariables,
+  options?: RequestInit['headers'],
+) {
+  return async () => {
+    if (!globalConfig.apiUrl) {
+      throw new Error(
+        'GraphQL API URL not configured. Call configureClient first.',
+      )
+    }
+
+    const res = await fetch(globalConfig.apiUrl, {
+      method: 'POST',
+      ...fetchParams(),
+      ...options,
+      body: JSON.stringify({ query, variables }),
+    })
+
+    const json = await res.json()
+
+    if (json.errors && (!json.data || Object.keys(json.data).length === 0)) {
+      const { message } = json.errors[0]
+      throw new Error(message)
+    }
+
+    return json.data as TData
+  }
+}

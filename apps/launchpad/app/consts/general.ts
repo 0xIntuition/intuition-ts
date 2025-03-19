@@ -8,7 +8,7 @@ export const API_URL_DEV =
   'https://prod.base-sepolia.intuition-api.com/v1/graphql'
 export const API_URL_PROD = 'https://prod.base.intuition-api.com/v1/graphql'
 
-export const CURRENT_ENV: ChainEnv = 'production' as ChainEnv
+export const CURRENT_ENV: ChainEnv = 'development' as ChainEnv
 
 export const DEFAULT_CHAIN_ID =
   CURRENT_ENV === 'development' ? baseSepolia.id : base.id
