@@ -68,9 +68,8 @@ import {
   PATHS,
 } from 'app/consts'
 import TwoPanelLayout from 'app/layouts/two-panel-layout'
-import { AtomType } from 'app/types/atom'
+import { Atom } from 'app/types/atom'
 import { useAtom } from 'jotai'
-import { formatUnits } from 'viem'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const user = await getUser(request)
@@ -223,15 +222,22 @@ export default function IdentityDetails() {
 
   logger('Vault Details:', vaultDetails)
 
-  // something wrong with this causing things to break
-  // const user_assets = vaultDetails
-  //   ? vaultDetails.user_assets
-  //   : +formatUnits(atomResult?.atom?.vault?.current_share_price, 18) +
-  //     +formatUnits(atomResult?.atom?.vault?.positions?.[0]?.shares, 18)
-  // const assets_sum = vaultDetails
-  //   ? vaultDetails.assets_sum
-  //   : +formatUnits(atomResult?.atom?.vault?.total_shares ?? 0, 18) *
-  //     +formatUnits(atomResult?.atom?.vault?.current_share_price ?? 0, 18)
+  const user_assets = vaultDetails
+    ? vaultDetails.user_assets
+    : atomResult?.atom?.vault?.current_share_price &&
+        atomResult?.atom?.vault?.positions?.[0]?.shares
+      ? (BigInt(atomResult?.atom.vault.current_share_price) *
+          BigInt(atomResult?.atom.vault.positions[0].shares)) /
+        BigInt(10 ** 18) // Division to get the correct decimal places
+      : 0n
+  const assets_sum = vaultDetails
+    ? vaultDetails.assets_sum
+    : atomResult?.atom?.vault?.current_share_price &&
+        atomResult?.atom?.vault?.total_shares
+      ? (BigInt(atomResult?.atom.vault.current_share_price) *
+          BigInt(atomResult?.atom.vault.total_shares)) /
+        BigInt(10 ** 18) // Division to get the correct decimal places
+      : 0n
 
   const leftPanel = (
     <div className="flex-col justify-start items-start inline-flex gap-6 max-lg:w-full">
@@ -251,168 +257,134 @@ export default function IdentityDetails() {
           })
         }}
       />
-      {!isPending && (
-        <>
-          <Tags>
-            <div className="flex flex-row gap-2 md:flex-col">
-              {atomTagsResult && atomTagsResult.triples.length > 0 ? (
-                <TagsContent numberOfTags={atomTagsResult.triples?.length ?? 0}>
-                  {atomTagsResult.triples.slice(0, 5).map((tag) => (
-                    <TagWithValue
-                      key={tag.id}
-                      label={tag.object?.label ?? ''}
-                      value={tag.vault?.allPositions?.aggregate?.count ?? 0}
-                      onStake={() => {
-                        setSelectedTag(
-                          tag?.object as unknown as IdentityPresenter,
-                        ) // TODO: (ENG-4782) temporary type fix until we lock in final types
-                        setSaveListModalActive({
-                          isOpen: true,
-                          id: tag.id,
-                          tag: tag.object as unknown as IdentityPresenter, // TODO: (ENG-4782) temporary type fix until we lock in final types
-                        })
-                      }}
-                    />
-                  ))}
-                </TagsContent>
-              ) : null}
-              <Tag
-                className="w-fit border-dashed"
-                onClick={() => {
-                  setTagsModalActive({ isOpen: true, mode: 'add' })
-                }}
-              >
-                <Icon name="plus-small" className="w-5 h-5" />
-                Add tags
-              </Tag>
-            </div>
 
-            <TagsButton
+      <>
+        <Tags>
+          <div className="flex flex-row gap-2 md:flex-col">
+            {atomTagsResult && atomTagsResult.triples.length > 0 ? (
+              <TagsContent numberOfTags={atomTagsResult.triples?.length ?? 0}>
+                {atomTagsResult.triples.slice(0, 5).map((tag) => (
+                  <TagWithValue
+                    key={tag.id}
+                    label={tag.object?.label ?? ''}
+                    value={tag.vault?.allPositions?.aggregate?.count ?? 0}
+                    onStake={() => {
+                      setSelectedTag(
+                        tag?.object as unknown as IdentityPresenter,
+                      ) // TODO: (ENG-4782) temporary type fix until we lock in final types
+                      setSaveListModalActive({
+                        isOpen: true,
+                        id: tag.id,
+                        tag: tag.object as unknown as IdentityPresenter, // TODO: (ENG-4782) temporary type fix until we lock in final types
+                      })
+                    }}
+                  />
+                ))}
+              </TagsContent>
+            ) : null}
+            <Tag
+              className="w-fit border-dashed"
               onClick={() => {
-                setTagsModalActive({ isOpen: true, mode: 'view' })
+                setTagsModalActive({ isOpen: true, mode: 'add' })
               }}
-            />
-          </Tags>
-          {/* {vaultDetails !== null && user_assets !== '0' ? (
-            <PositionCard
-              onButtonClick={() =>
-                setStakeModalActive((prevState) => ({
-                  ...prevState,
-                  mode: 'redeem',
-                  modalType: 'identity',
-                  identity: {
-                    // TODO: (ENG-4782) temporary type fix until we lock in final types
-                    id: atomResult?.atom?.id ?? '',
-                    label: atomResult?.atom?.value?.thing?.name ?? '',
-                    image: atomResult?.atom?.value?.thing?.image ?? '',
-                    vault_id: atomResult?.atom?.id,
-                    assets_sum: '0',
-                    user_assets: '0',
-                    contract: MULTIVAULT_CONTRACT_ADDRESS,
-                    asset_delta: '0',
-                    conviction_price: '0',
-                    conviction_price_delta: '0',
-                    conviction_sum: '0',
-                    num_positions: 0,
-                    price: '0',
-                    price_delta: '0',
-                    status: 'active',
-                    total_conviction: '0',
-                    type: 'user',
-                    updated_at: new Date().toISOString(),
-                    created_at: new Date().toISOString(),
-                    creator_address: '',
-                    display_name: atomResult?.atom?.value?.thing?.name ?? '',
-                    follow_vault_id: '',
-                    user: null,
-                    creator: null,
-                    identity_hash: '',
-                    identity_id: '',
-                    is_contract: false,
-                    is_user: true,
-                    pending: false,
-                    pending_type: null,
-                    pending_vault_id: null,
-                  } as unknown as IdentityPresenter,
-                  isOpen: true,
-                }))
-              }
             >
-              <PositionCardStaked
-                amount={user_assets ? +formatBalance(user_assets, 18) : 0}
-              />
-              <PositionCardOwnership
-                percentOwnership={
-                  user_assets !== null && assets_sum
-                    ? +calculatePercentageOfTvl(
-                        user_assets?.toString() ?? '0',
-                        assets_sum?.toString() ?? '0',
-                      )
-                    : 0
-                }
-                variant={PieChartVariant.default}
-              />
-              <PositionCardLastUpdated
-                timestamp={atomResult?.atom?.block_timestamp ?? ''}
-              />
-            </PositionCard>
-          ) : null} */}
-          {/* <IdentityStakeCard
-            tvl={+formatBalance(assets_sum, 18)}
-            holders={atomResult?.atom?.vault?.position_count ?? 0}
-            variant={Identity.nonUser} // TODO: Use the atom type to determine this once we have these
-            // identityImgSrc={getAtomImage(identity)}
-            // identityDisplayName={getAtomLabel(identity)}
-            identityImgSrc={atomResult?.atom?.value?.thing?.image ?? ''}
-            identityDisplayName={atomResult?.atom?.value?.thing?.name ?? ''}
-            onBuyClick={() =>
+              <Icon name="plus-small" className="w-5 h-5" />
+              Add tags
+            </Tag>
+          </div>
+
+          <TagsButton
+            onClick={() => {
+              setTagsModalActive({ isOpen: true, mode: 'view' })
+            }}
+          />
+        </Tags>
+        {vaultDetails !== null && user_assets !== '0' ? (
+          <PositionCard
+            onButtonClick={() =>
               setStakeModalActive((prevState) => ({
                 ...prevState,
-                mode: 'deposit',
+                mode: 'redeem',
                 modalType: 'identity',
-                identity: {
-                  // TODO: (ENG-4782) temporary type fix until we lock in final types
-                  id: atomResult?.atom?.id ?? '',
-                  label: atomResult?.atom?.value?.thing?.name ?? '',
-                  image: atomResult?.atom?.value?.thing?.image ?? '',
-                  vault_id: atomResult?.atom?.id,
-                  assets_sum: '0',
-                  user_assets: '0',
-                  contract: MULTIVAULT_CONTRACT_ADDRESS,
-                  asset_delta: '0',
-                  conviction_price: '0',
-                  conviction_price_delta: '0',
-                  conviction_sum: '0',
-                  num_positions: 0,
-                  price: '0',
-                  price_delta: '0',
-                  status: 'active',
-                  total_conviction: '0',
-                  type: 'user',
-                  updated_at: new Date().toISOString(),
-                  created_at: new Date().toISOString(),
-                  creator_address: '',
-                  display_name: atomResult?.atom?.value?.thing?.name ?? '',
-                  follow_vault_id: '',
-                  user: null,
-                  creator: null,
-                  identity_hash: '',
-                  identity_id: '',
-                  is_contract: false,
-                  is_user: true,
-                  pending: false,
-                  pending_type: null,
-                  pending_vault_id: null,
-                } as unknown as IdentityPresenter,
+                identity: atomResult?.atom as Atom,
                 isOpen: true,
               }))
             }
-            onViewAllClick={() =>
-              navigate(`${PATHS.IDENTITY}/${atomResult?.atom?.id}#positions`)
-            }
-          /> */}
-        </>
-      )}
+          >
+            <PositionCardStaked
+              amount={user_assets ? +formatBalance(user_assets, 18) : 0}
+            />
+            <PositionCardOwnership
+              percentOwnership={
+                user_assets !== null && assets_sum
+                  ? +calculatePercentageOfTvl(
+                      user_assets?.toString() ?? '0',
+                      assets_sum?.toString() ?? '0',
+                    )
+                  : 0
+              }
+              variant={PieChartVariant.default}
+            />
+            {/* <PositionCardLastUpdated
+                timestamp={atomResult?.atom?.block_timestamp ?? ''}
+              /> */}
+          </PositionCard> // TODO: Add last updated when we have it available
+        ) : null}
+        <IdentityStakeCard
+          tvl={+formatBalance(assets_sum, 18)}
+          holders={atomResult?.atom?.vault?.position_count ?? 0}
+          variant={Identity.nonUser} // TODO: Use the atom type to determine this once we have these
+          // identityImgSrc={getAtomImage(identity)}
+          // identityDisplayName={getAtomLabel(identity)}
+          identityImgSrc={atomResult?.atom?.value?.thing?.image ?? ''}
+          identityDisplayName={atomResult?.atom?.value?.thing?.name ?? ''}
+          onBuyClick={() =>
+            setStakeModalActive((prevState) => ({
+              ...prevState,
+              mode: 'deposit',
+              modalType: 'identity',
+              identity: {
+                // TODO: (ENG-4782) temporary type fix until we lock in final types
+                id: atomResult?.atom?.id ?? '',
+                label: atomResult?.atom?.value?.thing?.name ?? '',
+                image: atomResult?.atom?.value?.thing?.image ?? '',
+                vault_id: atomResult?.atom?.id,
+                assets_sum: '0',
+                user_assets: '0',
+                contract: MULTIVAULT_CONTRACT_ADDRESS,
+                asset_delta: '0',
+                conviction_price: '0',
+                conviction_price_delta: '0',
+                conviction_sum: '0',
+                num_positions: 0,
+                price: '0',
+                price_delta: '0',
+                status: 'active',
+                total_conviction: '0',
+                type: 'user',
+                updated_at: new Date().toISOString(),
+                created_at: new Date().toISOString(),
+                creator_address: '',
+                display_name: atomResult?.atom?.value?.thing?.name ?? '',
+                follow_vault_id: '',
+                user: null,
+                creator: null,
+                identity_hash: '',
+                identity_id: '',
+                is_contract: false,
+                is_user: true,
+                pending: false,
+                pending_type: null,
+                pending_vault_id: null,
+              } as unknown as IdentityPresenter,
+              isOpen: true,
+            }))
+          }
+          onViewAllClick={() =>
+            navigate(`${PATHS.IDENTITY}/${atomResult?.atom?.id}#positions`)
+          }
+        />
+      </>
       <DetailInfoCard
         variant={Identity.user}
         username={atomResult?.atom?.creator?.label ?? '?'}
@@ -468,7 +440,7 @@ export default function IdentityDetails() {
             userWallet={userWallet}
             contract={MULTIVAULT_CONTRACT_ADDRESS}
             open={stakeModalActive.isOpen}
-            identity={atomResult?.atom as AtomType}
+            identity={atomResult?.atom as Atom}
             vaultId={stakeModalActive.vaultId}
             vaultDetailsProp={vaultDetails}
             onClose={() => {
@@ -479,9 +451,9 @@ export default function IdentityDetails() {
               }))
             }}
           />
-          {/* <TagsModal
-            identity={atomResult?.atom}
-            tagClaims={atomTagsResult?.triples ?? []}
+          <TagsModal
+            identity={atomResult?.atom as Atom}
+            tagClaims={atomTagsResult?.triples as Triple[]}
             userWallet={userWallet}
             open={tagsModalActive.isOpen}
             mode={tagsModalActive.mode}
@@ -492,7 +464,7 @@ export default function IdentityDetails() {
               })
               setSelectedTag(undefined)
             }}
-          /> */}
+          />
           {selectedTag && (
             <SaveListModal
               contract={MULTIVAULT_CONTRACT_ADDRESS}

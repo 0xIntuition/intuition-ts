@@ -28,7 +28,7 @@ export interface ShareModalProps {
 }
 
 function getShareableUrl(path: string): string {
-  return `${window.location.origin}${path.replace('/app/', '/readonly/')}`
+  return `${window.location.origin}${path}`
 }
 
 function createShareQRCode(path: string) {
@@ -67,7 +67,7 @@ function ShareQRInner({
   useEffect(() => {
     if (qrCode.current) {
       qrCode.current.update({
-        data: `${window.location.origin}${currentPath.replace('/app/', '/readonly/')}`,
+        data: `${window.location.origin}${currentPath}`,
       })
     }
   }, [currentPath])
