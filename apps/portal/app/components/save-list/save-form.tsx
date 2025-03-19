@@ -21,7 +21,7 @@ import {
   getAtomLinkGQL,
 } from '@lib/utils/misc'
 import { IPFS_GATEWAY_URL, PATHS } from 'app/consts'
-import { AtomType } from 'app/types/atom'
+import { Atom } from 'app/types/atom'
 import {
   TransactionActionType,
   TransactionStateType,
@@ -30,8 +30,8 @@ import {
 import SaveReview from './save-review'
 
 interface SaveFormProps {
-  tagAtom: AtomType
-  atom: AtomType
+  tagAtom: Atom
+  atom: Atom
   user_assets: string
   entry_fee: string
   exit_fee: string

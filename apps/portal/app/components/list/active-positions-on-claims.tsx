@@ -1,6 +1,6 @@
 import { Claim, ClaimPosition, IconName, Identity } from '@0xintuition/1ui'
 import { ClaimPresenter, IdentityPresenter, SortColumn } from '@0xintuition/api'
-import { GetAtomQuery, GetPositionsQuery } from '@0xintuition/graphql'
+import { GetPositionsQuery } from '@0xintuition/graphql'
 
 import { ClaimPositionRow } from '@components/claim/claim-position-row'
 import { ListHeader } from '@components/list/list-header'
@@ -22,6 +22,7 @@ import {
   getClaimUrl,
   getProfileUrl,
 } from '@lib/utils/misc'
+import { Atom } from 'app/types/atom'
 import { PaginationType } from 'app/types/pagination'
 import { formatUnits } from 'viem'
 
@@ -29,7 +30,6 @@ import { SortOption } from '../sort-select'
 import { List } from './list'
 
 type Position = NonNullable<GetPositionsQuery['positions']>[number]
-type Atom = GetAtomQuery['atom']
 
 export function ActivePositionsOnClaimsNew({
   positions,

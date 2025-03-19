@@ -256,6 +256,38 @@ export default function ExploreLists() {
     direction,
   })
 
+  // Add detailed logging to debug list data
+  console.log(
+    '[LIST_DEBUG] Sorted lists (first 5):',
+    sortedLists.slice(0, 5).map((list) => ({
+      id: list.id,
+      object: {
+        id: list.object?.id,
+        label: list.object?.label,
+        image: list.object?.image,
+      },
+      claim_count: list.claim_count,
+      triple_count: list.triple_count,
+    })),
+  )
+
+  // Check for any null values that might cause errors
+  if (sortedLists.length > 0) {
+    console.log(
+      '[LIST_DEBUG] Checking for null string values in first list item:',
+      {
+        label:
+          sortedLists[0].object?.label === null
+            ? 'NULL LABEL FOUND!'
+            : 'label ok',
+        image:
+          sortedLists[0].object?.image === null
+            ? 'NULL IMAGE FOUND!'
+            : 'image ok',
+      },
+    )
+  }
+
   return (
     <>
       <ExploreHeader

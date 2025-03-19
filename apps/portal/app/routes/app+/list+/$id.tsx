@@ -1,10 +1,13 @@
 import { Button, Icon, ProfileCard } from '@0xintuition/1ui'
 import {
   fetcher,
+  GetAtomDocument,
+  GetAtomQuery,
+  GetAtomQueryVariables,
   GetTripleDocument,
   GetTripleQuery,
   GetTripleQueryVariables,
-  useGetTripleQuery,
+  useGetAtomQuery,
 } from '@0xintuition/graphql'
 
 import { ErrorPage } from '@components/error-page'
@@ -20,12 +23,10 @@ import {
   imageModalAtom,
   shareModalAtom,
 } from '@lib/state/store'
-import logger from '@lib/utils/logger'
 import { invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { Outlet, useLoaderData, useNavigate } from '@remix-run/react'
 import { getUserWallet } from '@server/auth'
-import { getVaultDetails } from '@server/multivault'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
 import {
   BLOCK_EXPLORER_URL,
@@ -34,84 +35,79 @@ import {
   PATHS,
 } from 'app/consts'
 import TwoPanelLayout from 'app/layouts/two-panel-layout'
-import { VaultDetailsType } from 'app/types'
 import { Atom } from 'app/types/atom'
 import { useAtom } from 'jotai'
 import { zeroAddress } from 'viem'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
+  const queryClient = new QueryClient()
+
   const userWallet = await getUserWallet(request)
+  const queryAddress = userWallet?.toLowerCase() ?? zeroAddress
+
   const id = params.id
   invariant(id, NO_PARAM_ID_ERROR)
 
-  const queryAddress = userWallet?.toLowerCase() ?? zeroAddress
+  const [, objectId] = id.split('-')
+  invariant(objectId, 'Object ID not found in composite ID')
 
-  // Create a new QueryClient instance
-  const queryClient = new QueryClient()
+  // const listsLimit = parseInt(url.searchParams.get('effectiveLimit') || '200')
+  // const listsOffset = parseInt(url.searchParams.get('listsOffset') || '0')
+  // const listsOrderBy = url.searchParams.get('listsSortBy')
 
-  console.log('id', id)
+  const tripleResult = await fetcher<GetTripleQuery, GetTripleQueryVariables>(
+    GetTripleDocument,
+    {
+      tripleId: objectId,
+    },
+  )()
 
-  // Prefetch triple data (replacing ClaimsService.getClaimById)
   await queryClient.prefetchQuery({
-    queryKey: ['GetTriple', { tripleId: Number(id) }],
-    queryFn: () =>
-      fetcher<GetTripleQuery, GetTripleQueryVariables>(GetTripleDocument, {
-        tripleId: Number(id),
-      })(),
+    queryKey: ['get-triple', { id: objectId }],
+    queryFn: () => tripleResult,
   })
 
-  let vaultDetails: VaultDetailsType | null = null
-  const tripleData = await queryClient.fetchQuery({
-    queryKey: ['GetTriple', { tripleId: Number(id) }],
-    queryFn: () =>
-      fetcher<GetTripleQuery, GetTripleQueryVariables>(GetTripleDocument, {
-        tripleId: Number(id),
-      })(),
+  const objectResult = await fetcher<GetAtomQuery, GetAtomQueryVariables>(
+    GetAtomDocument,
+    {
+      id: objectId,
+    },
+  )()
+
+  await queryClient.prefetchQuery({
+    queryKey: ['get-object', { id: objectId }],
+    queryFn: () => objectResult,
   })
-
-  console.log('tripleData', tripleData)
-
-  if (tripleData?.triple?.vault_id) {
-    try {
-      // Get contract address from environment or use a default
-      const contractAddress = process.env.MULTIVAULT_CONTRACT_ADDRESS || ''
-      vaultDetails = await getVaultDetails(
-        contractAddress,
-        tripleData.triple.vault_id.toString(),
-        queryAddress as `0x${string}`,
-      )
-    } catch (error) {
-      logger('Failed to fetch vaultDetails', error)
-      vaultDetails = null
-    }
-  }
 
   return json({
-    userWallet,
-    vaultDetails,
     dehydratedState: dehydrate(queryClient),
+    initialParams: {
+      id,
+      objectId,
+    },
+    userWallet: queryAddress,
+    objectResult,
+    tripleResult,
   })
 }
 
 export default function ListDetails() {
-  const { userWallet } = useLoaderData<{
+  const { initialParams, userWallet } = useLoaderData<{
+    initialParams: {
+      id: string
+      objectId: string
+    }
     userWallet: string
-    vaultDetails: VaultDetailsType
   }>()
 
-  const { data: tripleData } = useGetTripleQuery(
+  const { data: objectData } = useGetAtomQuery(
     {
-      tripleId: Number(location.pathname.split('/').pop() || '0'),
+      id: initialParams.objectId,
     },
     {
-      queryKey: [
-        'GetTriple',
-        { tripleId: Number(location.pathname.split('/').pop() || '0') },
-      ],
+      queryKey: ['get-object', { id: initialParams.objectId }],
     },
   )
-
-  const triple = tripleData?.triple
 
   const [addIdentitiesListModalActive, setAddIdentitiesListModalActive] =
     useAtom(addIdentitiesListModalAtom)
@@ -126,10 +122,6 @@ export default function ListDetails() {
     ? `${location.pathname}${location.search}`
     : `${location.pathname}${location.search}${location.search ? '&' : '?'}user=${userWallet}&tab=additional`
 
-  if (!triple) {
-    return <div>Loading...</div>
-  }
-
   const leftPanel = (
     <div className="flex-col justify-start items-start gap-6 inline-flex max-lg:w-full">
       <NavigationButton
@@ -142,30 +134,28 @@ export default function ListDetails() {
       </NavigationButton>
       <ProfileCard
         variant="non-user"
-        avatarSrc={triple.object?.image ?? ''}
-        name={triple.object?.label ?? ''}
-        id={triple.object_id?.toString() ?? ''}
-        bio={
-          triple.object?.value?.person?.description ||
-          triple.object?.value?.thing?.description ||
-          ''
-        }
+        avatarSrc={objectData?.atom?.image ?? ''}
+        name={objectData?.atom?.label ?? ''}
+        id={objectData?.atom?.id ?? ''}
+        bio={''} // TODO: Add bio when it becomes available after the migration
         ipfsLink={
-          triple.object?.type === 'person'
-            ? `${BLOCK_EXPLORER_URL}/address/${triple.object_id}`
-            : `${IPFS_GATEWAY_URL}/${triple.object?.data?.replace('ipfs://', '')}`
+          objectData?.atom?.type === 'Account'
+            ? `${BLOCK_EXPLORER_URL}/address/${objectData?.atom?.wallet_id}`
+            : `${IPFS_GATEWAY_URL}/${objectData?.atom?.data?.replace('ipfs://', '')}`
         }
         onAvatarClick={() => {
-          setImageModalActive({
-            isOpen: true,
-          })
+          if (objectData?.atom) {
+            setImageModalActive({
+              isOpen: true,
+            })
+          }
         }}
       />
       <ListIdentityDisplayCard
-        displayName={triple.object?.label ?? ''}
-        avatarImgSrc={triple.object?.image ?? ''}
+        displayName={objectData?.atom?.label ?? ''}
+        avatarImgSrc={objectData?.atom?.image ?? ''}
         onClick={() => {
-          navigate(`/app/identity/${triple.vault_id}`)
+          navigate(`/app/identity/${objectData?.atom?.id}`)
         }}
         className="hover:cursor-pointer w-full"
       />
@@ -174,21 +164,21 @@ export default function ListDetails() {
 
       <InfoCard
         variant="user"
-        username={triple.creator?.label ?? ''}
-        avatarImgSrc={triple.creator?.image ?? ''}
-        id={triple.creator?.id ?? ''}
-        description={''}
+        username={claim.creator?.display_name ?? claim.creator?.wallet ?? ''}
+        avatarImgSrc={claim.creator?.image ?? ''}
+        id={claim.creator?.wallet ?? ''}
+        description={claim.creator?.description ?? ''}
         link={
-          triple.creator?.id ? `${PATHS.PROFILE}/${triple.creator?.id}` : ''
+          claim.creator?.id ? `${PATHS.PROFILE}/${claim.creator?.wallet}` : ''
         }
-        ipfsLink={`${BLOCK_EXPLORER_URL}/address/${triple.creator?.id}`}
-        timestamp={triple.block_timestamp?.toString() ?? ''}
+        ipfsLink={`${BLOCK_EXPLORER_URL}/address/${claim.creator?.wallet}`}
+        timestamp={claim.created_at}
         className="w-full"
       /> */}
       <Button
         variant="secondary"
         onClick={() => {
-          navigate(`/app/identity/${triple.vault_id}`)
+          navigate(`/app/identity/${objectData?.atom?.id}`)
         }}
         className="w-full"
       >
@@ -209,9 +199,8 @@ export default function ListDetails() {
     <>
       <TwoPanelLayout leftPanel={leftPanel} rightPanel={<Outlet />} />
       <AddIdentitiesListModal
-        identity={triple.object as Atom}
+        identity={objectData?.atom as unknown as Atom}
         userWallet={userWallet}
-        claimId={triple.id?.toString()}
         open={addIdentitiesListModalActive.isOpen}
         onClose={() =>
           setAddIdentitiesListModalActive({
@@ -220,18 +209,20 @@ export default function ListDetails() {
           })
         }
       />
-      <ImageModal
-        displayName={triple.object?.label ?? ''}
-        imageSrc={triple.object?.image ?? ''}
-        isUser={triple.object?.type === 'person'}
-        open={imageModalActive.isOpen}
-        onClose={() =>
-          setImageModalActive({
-            ...imageModalActive,
-            isOpen: false,
-          })
-        }
-      />
+      {objectData?.atom && (
+        <ImageModal
+          displayName={objectData?.atom?.label ?? ''}
+          imageSrc={objectData?.atom?.image ?? ''}
+          isUser={objectData?.atom?.type === 'Account'}
+          open={imageModalActive.isOpen}
+          onClose={() =>
+            setImageModalActive({
+              ...imageModalActive,
+              isOpen: false,
+            })
+          }
+        />
+      )}
       <ShareModal
         currentPath={fullPath}
         open={shareModalActive.isOpen}

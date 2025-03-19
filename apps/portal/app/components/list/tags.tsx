@@ -7,11 +7,8 @@ import {
   Identity,
   IdentityRow,
 } from '@0xintuition/1ui'
-import { IdentityPresenter, SortColumn, Status } from '@0xintuition/api'
-import { GetAtomQuery, GetListDetailsQuery } from '@0xintuition/graphql'
 
 import { ListHeader } from '@components/list/list-header'
-import { MULTIVAULT_CONTRACT_ADDRESS } from '@consts/index'
 import { saveListModalAtom, stakeModalAtom } from '@lib/state/store'
 import {
   formatBalance,
@@ -22,13 +19,104 @@ import {
   getAtomLinkGQL,
   getClaimUrl,
 } from '@lib/utils/misc'
+import { Atom } from 'app/types/atom'
 import { PaginationType } from 'app/types/pagination'
 import { useSetAtom } from 'jotai'
 
 import { SortOption } from '../sort-select'
 import { List } from './list'
 
-type Triple = GetListDetailsQuery['globalTriples'][number]
+/*
+ * TagsList component for displaying tags with pagination and sorting
+ * The implementation is aligned with how the ClaimsListNew component handles pagination and sorting
+ * Key points:
+ * - Uses block_timestamp as the default sort field (matches claims implementation)
+ * - Uses mapSortToOrderBy function to translate sort parameters to GraphQL queries
+ * - Sort options match field formats used in ClaimsListNew for consistency
+ * - Uses the common List component for pagination UI
+ */
+
+// Define a more flexible interface for the triples we receive from GraphQL
+interface TripleData {
+  id: string | number
+  vault_id: string | number
+  counter_vault_id: string | number
+  subject: {
+    id?: string | number
+    wallet_id?: string
+    label?: string | null
+    type?: string
+    image?: string | null
+    description?: string | null
+    tags?: {
+      nodes?: Array<{
+        object?: {
+          label?: string
+          taggedIdentities?: { aggregate?: { count?: number } }
+        }
+      }>
+    }
+    vault?: Record<string, unknown>
+  }
+  predicate: {
+    id?: string | number
+    label?: string | null
+    description?: string | null
+    type?: string
+  }
+  object: {
+    id?: string | number
+    label?: string | null
+    description?: string | null
+    type?: string
+  }
+  vault?: {
+    positions_aggregate?: {
+      aggregate?: {
+        count?: number
+        sum?: {
+          shares?: string | number
+        }
+      }
+    }
+    current_share_price?: string | number
+    positions?: Array<{
+      id?: string | number
+      account: { id: string; label?: string | null }
+      shares: string | number
+    }>
+  }
+  __typename?: string
+  block_timestamp?: string | number
+  block_number?: string | number
+  created_at?: string
+  updated_at?: string
+}
+
+// Function to map sort parameters from URL to GraphQL order_by object
+export function mapSortToOrderBy(sortBy: string, direction: string) {
+  // Default to block_timestamp if not provided
+  if (!sortBy) {
+    return {
+      block_timestamp: direction.toLowerCase() as 'asc' | 'desc',
+    }
+  }
+
+  // Handle nested fields like 'vault.total_shares'
+  if (sortBy.includes('.')) {
+    const [parent, field] = sortBy.split('.')
+    return {
+      [parent]: {
+        [field]: direction.toLowerCase() as 'asc' | 'desc',
+      },
+    }
+  }
+
+  // Handle simple fields
+  return {
+    [sortBy]: direction.toLowerCase() as 'asc' | 'desc',
+  }
+}
 
 export function TagsList({
   triples,
@@ -38,34 +126,46 @@ export function TagsList({
   enableSearch = true,
   enableSort = true,
   readOnly = false,
+  onPageChange,
+  onLimitChange,
 }: {
-  triples: Triple[]
+  triples: TripleData[]
   pagination?: PaginationType
   paramPrefix?: string
   enableHeader?: boolean
   enableSearch?: boolean
   enableSort?: boolean
   readOnly?: boolean
+  onPageChange?: (page: number) => void
+  onLimitChange?: (limit: number) => void
 }) {
-  const options: SortOption<SortColumn>[] = [
-    { value: 'Total ETH', sortBy: 'AssetsSum' },
-    { value: 'Total Positions', sortBy: 'NumPositions' },
-    { value: 'Updated At', sortBy: 'UpdatedAt' },
-    { value: 'Created At', sortBy: 'CreatedAt' },
+  // Using GraphQL field names directly for sorting
+  const options: SortOption<string>[] = [
+    { value: 'Total ETH', sortBy: 'vault.total_shares' },
+    { value: 'Total Positions', sortBy: 'vault.position_count' },
+    { value: 'Updated At', sortBy: 'block_timestamp' },
+    { value: 'Created At', sortBy: 'block_timestamp' },
   ]
 
   const setSaveListModalActive = useSetAtom(saveListModalAtom)
   const setStakeModalActive = useSetAtom(stakeModalAtom)
 
+  // Filter out any invalid triples (where subject, predicate, or object is null)
+  const validTriples = triples.filter(
+    (triple) => triple?.subject && triple?.predicate && triple?.object,
+  )
+
   return (
     <>
-      <List<SortColumn>
+      <List<string>
         pagination={pagination}
         paginationLabel="identities"
         options={options}
         paramPrefix={paramPrefix}
         enableSearch={enableSearch}
         enableSort={enableSort}
+        onPageChange={onPageChange}
+        onLimitChange={onLimitChange}
       >
         {enableHeader && (
           <ListHeader
@@ -75,7 +175,7 @@ export function TagsList({
             ]}
           />
         )}
-        {triples.map((triple) => {
+        {validTriples.map((triple) => {
           const identity = triple.subject
           // TODO: ENG-0000: Show filled save if user has a position on claim
           // TODO: ENG-0000: Show only user position if user is on filtering by you.
@@ -93,24 +193,29 @@ export function TagsList({
                       ? Identity.user
                       : Identity.nonUser
                   }
-                  avatarSrc={getAtomImageGQL(
-                    triple.subject as unknown as GetAtomQuery['atom'],
-                  )}
-                  name={getAtomLabelGQL(
-                    triple.subject as unknown as GetAtomQuery['atom'],
-                  )}
+                  avatarSrc={getAtomImageGQL(triple.subject as unknown as Atom)}
+                  name={getAtomLabelGQL(triple.subject as unknown as Atom)}
                   description={getAtomDescriptionGQL(
-                    triple.subject as unknown as GetAtomQuery['atom'],
+                    triple.subject as unknown as Atom,
                   )}
-                  id={triple.subject?.wallet_id ?? triple.subject?.id ?? ''}
-                  claimLink={getClaimUrl(triple.vault_id ?? '', readOnly)}
-                  tags={
-                    triple.subject?.tags?.nodes?.map((tag) => ({
-                      label: tag.object?.label ?? '',
-                      value:
-                        tag.object?.taggedIdentities?.aggregate?.count ?? 0,
-                    })) ?? undefined
+                  id={
+                    typeof triple.subject?.wallet_id === 'string'
+                      ? triple.subject.wallet_id
+                      : typeof triple.subject?.id === 'string'
+                        ? triple.subject.id
+                        : triple.subject?.id?.toString() ?? ''
                   }
+                  claimLink={getClaimUrl(
+                    triple.vault_id.toString() ?? '',
+                    readOnly,
+                  )}
+                  // tags={
+                  //   triple.subject?.tags?.nodes?.map((tag) => ({
+                  //     label: tag.object?.label ?? '',
+                  //     value:
+                  //       tag.object?.taggedIdentities?.aggregate?.count ?? 0,
+                  //   })) ?? undefined
+                  // }
                   totalTVL={formatBalance(
                     BigInt(
                       triple?.vault?.positions_aggregate?.aggregate?.sum
@@ -121,13 +226,8 @@ export function TagsList({
                   numPositions={
                     triple?.vault?.positions_aggregate?.aggregate?.count || 0
                   }
-                  link={getAtomLinkGQL(
-                    identity as unknown as GetAtomQuery['atom'],
-                    readOnly,
-                  )}
-                  ipfsLink={getAtomIpfsLinkGQL(
-                    identity as unknown as GetAtomQuery['atom'],
-                  )}
+                  link={getAtomLinkGQL(identity as unknown as Atom, readOnly)}
+                  ipfsLink={getAtomIpfsLinkGQL(identity as unknown as Atom)}
                   onStakeClick={() =>
                     setStakeModalActive((prevState) => ({
                       ...prevState,
@@ -135,158 +235,17 @@ export function TagsList({
                       modalType: 'claim',
                       direction: 'for',
                       isOpen: true,
-                      claim: triple
-                        ? {
-                            id: triple.object?.id ?? '',
-                            label: triple.object?.label ?? '',
-                            image: triple.object?.image ?? '',
-                            vault_id: triple.object?.vault_id ?? '',
-                            against_assets_sum: '0',
-                            against_conviction_price: '0',
-                            against_conviction_sum: '0',
-                            against_num_positions: 0,
-                            assets_sum: '0',
-                            claim_id: triple.id ?? '',
-                            contract: MULTIVAULT_CONTRACT_ADDRESS,
-                            counter_vault_id: triple.counter_vault_id ?? '',
-                            created_at: new Date().toISOString(),
-                            status: Status.COMPLETE,
-                            creator: null,
-                            for_assets_sum: '0',
-                            for_conviction_price: '0',
-                            for_conviction_sum: '0',
-                            for_num_positions: 0,
-                            num_positions: 0,
-                            object: triple.object
-                              ? {
-                                  id: triple.object.id,
-                                  label: triple.object.label,
-                                  vaultId: triple.object.vault_id,
-                                  image: triple.object.image,
-                                  walletId: triple.object.wallet_id,
-                                  type: triple.object.type,
-                                  asset_delta: '0',
-                                  assets_sum: '0',
-                                  contract: '',
-                                  conviction_price: '0',
-                                  conviction_price_delta: '0',
-                                  conviction_sum: '0',
-                                  num_positions: 0,
-                                  price: '0',
-                                  price_delta: '0',
-                                  status: Status.COMPLETE,
-                                  total_conviction: '0',
-                                  updated_at: new Date().toISOString(),
-                                  created_at: new Date().toISOString(),
-                                  creator_address: '',
-                                  display_name: triple.object.label ?? '',
-                                  follow_vault_id: '',
-                                  user: null,
-                                  creator: null,
-                                  identity_hash: '',
-                                  identity_id: '',
-                                  is_contract: false,
-                                  is_user: true,
-                                  pending: false,
-                                  pending_type: null,
-                                  pending_vault_id: null,
-                                  predicate: false, // Default value
-                                  user_asset_delta: '0', // Default value
-                                  user_assets: '0', // Default value
-                                  user_conviction: '0', // Default value
-                                  vault_id: triple.object.vault_id ?? '', // Default value
-                                }
-                              : null,
-                            predicate: triple.predicate
-                              ? {
-                                  id: triple.predicate.id,
-                                  label: triple.predicate.label,
-                                  vaultId: triple.predicate.vault_id,
-                                  image: triple.predicate.image,
-                                  walletId: triple.predicate.wallet_id,
-                                  type: triple.predicate.type,
-                                  asset_delta: '0',
-                                  assets_sum: '0',
-                                  contract: '',
-                                  conviction_price: '0',
-                                  conviction_price_delta: '0',
-                                  conviction_sum: '0',
-                                  num_positions: 0,
-                                  price: '0',
-                                  price_delta: '0',
-                                  status: Status.COMPLETE,
-                                  total_conviction: '0',
-                                  updated_at: new Date().toISOString(),
-                                  created_at: new Date().toISOString(),
-                                  creator_address: '',
-                                  display_name: triple.predicate.label ?? '',
-                                  follow_vault_id: '',
-                                  user: null,
-                                  creator: null,
-                                  identity_hash: '',
-                                  identity_id: '',
-                                  is_contract: false,
-                                  is_user: true,
-                                  pending: false,
-                                  pending_type: null,
-                                  pending_vault_id: null,
-                                  predicate: false, // Default value
-                                  user_asset_delta: '0', // Default value
-                                  user_assets: '0', // Default value
-                                  user_conviction: '0', // Default value
-                                  vault_id: triple.predicate.vault_id ?? '', // Default value
-                                }
-                              : null,
-                            subject: triple.subject
-                              ? {
-                                  id: triple.subject.id,
-                                  label: triple.subject.label,
-                                  vaultId: triple.subject.vault_id,
-                                  image: triple.subject.image,
-                                  walletId: triple.subject.wallet_id,
-                                  type: triple.subject.type,
-                                  asset_delta: '0',
-                                  assets_sum: '0',
-                                  contract: '',
-                                  conviction_price: '0',
-                                  conviction_price_delta: '0',
-                                  conviction_sum: '0',
-                                  num_positions: 0,
-                                  price: '0',
-                                  price_delta: '0',
-                                  status: Status.COMPLETE,
-                                  total_conviction: '0',
-                                  updated_at: new Date().toISOString(),
-                                  created_at: new Date().toISOString(),
-                                  creator_address: '',
-                                  display_name: triple.subject.label ?? '',
-                                  follow_vault_id: '',
-                                  user: null,
-                                  creator: null,
-                                  identity_hash: '',
-                                  identity_id: '',
-                                  is_contract: false,
-                                  is_user: true,
-                                  pending: false,
-                                  pending_type: null,
-                                  pending_vault_id: null,
-                                  predicate: false, // Default value
-                                  user_asset_delta: '0', // Default value
-                                  user_assets: '0', // Default value
-                                  user_conviction: '0', // Default value
-                                  vault_id: triple.subject.vault_id ?? '', // Default value
-                                }
-                              : null,
-                            updated_at: new Date().toISOString(),
-                            user_assets: '0',
-                            user_assets_against: '0',
-                            user_assets_for: '0',
-                            user_conviction: '0',
-                            user_conviction_against: '0',
-                            user_conviction_for: '0',
-                          }
-                        : undefined,
-                      vaultId: triple?.vault_id ?? '0',
+                      claim: triple,
+                      predicate: triple.predicate,
+                      subject: triple.subject,
+                      updated_at: new Date().toISOString(),
+                      user_assets: '0',
+                      user_assets_against: '0',
+                      user_assets_for: '0',
+                      user_conviction: '0',
+                      user_conviction_against: '0',
+                      user_conviction_for: '0',
+                      vaultId: triple?.vault_id.toString() ?? '0',
                     }))
                   }
                   readOnly
@@ -299,77 +258,9 @@ export function TagsList({
                     onClick={() => {
                       setSaveListModalActive({
                         isOpen: true,
-                        id: triple.vault_id,
-                        identity: triple.subject
-                          ? ({
-                              id: triple.subject.id ?? '',
-                              label: triple.subject.label ?? '',
-                              image: triple.subject.image ?? '',
-                              vault_id: triple.subject.vault_id,
-                              assets_sum: '0',
-                              user_assets: '0',
-                              contract: MULTIVAULT_CONTRACT_ADDRESS,
-                              asset_delta: '0',
-                              conviction_price: '0',
-                              conviction_price_delta: '0',
-                              conviction_sum: '0',
-                              num_positions: 0,
-                              price: '0',
-                              price_delta: '0',
-                              status: 'active',
-                              total_conviction: '0',
-                              type: 'user',
-                              updated_at: new Date().toISOString(),
-                              created_at: new Date().toISOString(),
-                              creator_address: '',
-                              display_name: triple.subject?.label ?? '',
-                              follow_vault_id: '',
-                              user: null,
-                              creator: null,
-                              identity_hash: '',
-                              identity_id: '',
-                              is_contract: false,
-                              is_user: true,
-                              pending: false,
-                              pending_type: null,
-                              pending_vault_id: null,
-                            } as unknown as IdentityPresenter)
-                          : undefined,
-                        tag: triple.object
-                          ? ({
-                              id: triple.object.id ?? '',
-                              label: triple.object.label ?? '',
-                              image: triple.object.image ?? '',
-                              vault_id: triple.object.vault_id,
-                              assets_sum: '0',
-                              user_assets: '0',
-                              contract: MULTIVAULT_CONTRACT_ADDRESS,
-                              asset_delta: '0',
-                              conviction_price: '0',
-                              conviction_price_delta: '0',
-                              conviction_sum: '0',
-                              num_positions: 0,
-                              price: '0',
-                              price_delta: '0',
-                              status: 'active',
-                              total_conviction: '0',
-                              type: 'user',
-                              updated_at: new Date().toISOString(),
-                              created_at: new Date().toISOString(),
-                              creator_address: '',
-                              display_name: triple.object?.label ?? '',
-                              follow_vault_id: '',
-                              user: null,
-                              creator: null,
-                              identity_hash: '',
-                              identity_id: '',
-                              is_contract: false,
-                              is_user: true,
-                              pending: false,
-                              pending_type: null,
-                              pending_vault_id: null,
-                            } as unknown as IdentityPresenter)
-                          : undefined,
+                        id: triple.vault_id.toString(),
+                        identity: triple.subject,
+                        tag: triple.object,
                       })
                     }}
                   >

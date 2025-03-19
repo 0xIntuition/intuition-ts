@@ -1,3 +1,12 @@
+/*
+ * This route implements pagination and sorting for the List details page
+ * The implementation is aligned with how the claims.tsx handles pagination and sorting
+ * Key points:
+ * - Uses block_timestamp as the default sort field (matches claims implementation)
+ * - Uses mapSortToOrderBy function to translate sort parameters to GraphQL queries
+ * - Sort options in TagsList match those used in ClaimsListNew for consistency
+ * - Same pagination and sorting UI components are used
+ */
 import { Suspense, useEffect, useState } from 'react'
 
 import {
@@ -14,7 +23,6 @@ import {
   TabsList,
   TabsTrigger,
 } from '@0xintuition/1ui'
-import { IdentityPresenter, Status } from '@0xintuition/api'
 import {
   fetcher,
   GetAccountDocument,
@@ -40,34 +48,67 @@ import { RevalidateButton } from '@components/revalidate-button'
 import SaveListModal from '@components/save-list/save-list-modal'
 import { DataHeaderSkeleton, PaginatedListSkeleton } from '@components/skeleton'
 import { addIdentitiesListModalAtom, saveListModalAtom } from '@lib/state/store'
-import { getSpecialPredicate } from '@lib/utils/app'
 import logger from '@lib/utils/logger'
 import {
+  calculateTotalPages,
   getAtomDescriptionGQL,
   getAtomImageGQL,
   getAtomIpfsLinkGQL,
   getAtomLabelGQL,
   getAtomLinkGQL,
-  identityToAtom,
   invariant,
 } from '@lib/utils/misc'
+import { getStandardPageParams } from '@lib/utils/params'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import {
   useLoaderData,
   useNavigation,
   useRouteLoaderData,
   useSearchParams,
+  useSubmit,
 } from '@remix-run/react'
 import { getUserWallet } from '@server/auth'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
 import {
-  CURRENT_ENV,
   MULTIVAULT_CONTRACT_ADDRESS,
   NO_CLAIM_ERROR,
   NO_PARAM_ID_ERROR,
-  NO_WALLET_ERROR,
 } from 'app/consts'
+import { Atom } from 'app/types/atom'
+import { PaginationType } from 'app/types/pagination'
+import { Triple } from 'app/types/triple'
 import { useAtom, useSetAtom } from 'jotai'
+import { zeroAddress } from 'viem'
+
+// Default pagination values
+const DEFAULT_PAGE_SIZE = 10
+const DEFAULT_PAGE = 1
+
+// Function to map sort parameters from URL to GraphQL order_by object
+// Using the exact same implementation as in claims.tsx
+function mapSortToOrderBy(sortBy: string, direction: string) {
+  // Default to block_timestamp if not provided
+  if (!sortBy) {
+    return {
+      block_timestamp: direction.toLowerCase() as 'asc' | 'desc',
+    }
+  }
+
+  // Handle nested fields like 'vault.total_shares'
+  if (sortBy.includes('.')) {
+    const [parent, field] = sortBy.split('.')
+    return {
+      [parent]: {
+        [field]: direction.toLowerCase() as 'asc' | 'desc',
+      },
+    }
+  }
+
+  // Handle simple fields
+  return {
+    [sortBy]: direction.toLowerCase() as 'asc' | 'desc',
+  }
+}
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const id = params.id
@@ -78,7 +119,6 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   invariant(objectId, 'Object ID not found in composite ID')
 
   const wallet = await getUserWallet(request)
-  invariant(wallet, NO_WALLET_ERROR)
 
   const queryClient = new QueryClient()
 
@@ -86,8 +126,21 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const searchParams = new URLSearchParams(url.search)
   const paramWallet = searchParams.get('user')
 
-  const queryAddress = wallet.toLowerCase()
-  const additionalQueryAddress = paramWallet ? paramWallet.toLowerCase() : ''
+  // Get pagination, sort and search parameters
+  const { page, limit, direction } = getStandardPageParams({
+    searchParams,
+    paramPrefix: '',
+    defaultPageValue: DEFAULT_PAGE,
+    defaultLimitValue: DEFAULT_PAGE_SIZE,
+  })
+
+  const sortBy = searchParams.get('sortBy') || 'block_timestamp'
+
+  // Prepare orderBy object for GraphQL query based on sort parameters
+  const orderBy = mapSortToOrderBy(sortBy || 'block_timestamp', direction)
+
+  const queryAddress = wallet?.toLowerCase() ?? zeroAddress
+  const additionalQueryAddress = paramWallet?.toLowerCase() ?? ''
 
   const globalWhere = {
     predicate_id: { _eq: parseInt(predicateId) },
@@ -106,16 +159,20 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     },
   }
 
-  const additionalUserWhere = {
-    predicate_id: { _eq: parseInt(predicateId) },
-    object_id: { _eq: parseInt(objectId) },
-    vault: {
-      positions: {
-        account_id: {
-          _eq: additionalQueryAddress,
+  // Only add additional user where if paramWallet exists
+  let additionalUserWhere = null
+  if (paramWallet) {
+    additionalUserWhere = {
+      predicate_id: { _eq: parseInt(predicateId) },
+      object_id: { _eq: parseInt(objectId) },
+      vault: {
+        positions: {
+          account_id: {
+            _eq: additionalQueryAddress,
+          },
         },
       },
-    },
+    }
   }
 
   let accountResult: GetAccountQuery | null = null
@@ -149,31 +206,36 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
   let additionalAccountResult: GetAccountQuery | null = null
 
-  try {
-    additionalAccountResult = await fetcher<
-      GetAccountQuery,
-      GetAccountQueryVariables
-    >(GetAccountDocument, { address: queryAddress })()
+  if (additionalQueryAddress) {
+    try {
+      additionalAccountResult = await fetcher<
+        GetAccountQuery,
+        GetAccountQueryVariables
+      >(GetAccountDocument, { address: additionalQueryAddress })()
 
-    if (!additionalAccountResult) {
-      throw new Error('No account data found for address')
+      if (!additionalAccountResult) {
+        throw new Error('No account data found for address')
+      }
+
+      if (!additionalAccountResult.account?.atom_id) {
+        throw new Error('No atom ID found for account')
+      }
+
+      await queryClient.prefetchQuery({
+        queryKey: [
+          'get-additional-account',
+          { address: additionalQueryAddress },
+        ],
+        queryFn: () => additionalAccountResult,
+      })
+    } catch (error) {
+      logger('Query Error:', {
+        message: (error as Error).message,
+        stack: (error as Error).stack,
+        queryAddress,
+      })
+      throw error
     }
-
-    if (!additionalAccountResult.account?.atom_id) {
-      throw new Error('No atom ID found for account')
-    }
-
-    await queryClient.prefetchQuery({
-      queryKey: ['get-additional-account', { address: additionalQueryAddress }],
-      queryFn: () => additionalAccountResult,
-    })
-  } catch (error) {
-    logger('Query Error:', {
-      message: (error as Error).message,
-      stack: (error as Error).stack,
-      queryAddress,
-    })
-    throw error
   }
 
   const predicateResult = await fetcher<GetAtomQuery, GetAtomQueryVariables>(
@@ -188,70 +250,91 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     queryFn: () => predicateResult,
   })
 
-  await queryClient.prefetchQuery({
-    queryKey: [
-      'get-list-details',
-      { id, tagPredicateId: parseInt(predicateId) },
-    ],
-    queryFn: () =>
-      fetcher<
-        GetListDetailsWithUserQuery,
-        GetListDetailsWithUserQueryVariables
-      >(GetListDetailsWithUserDocument, {
-        globalWhere,
-        userWhere,
-        tagPredicateId: parseInt(predicateId),
-      })(),
-  })
-
-  if (paramWallet) {
-    const additionalUserWhere = {
-      predicate_id: {
-        _eq: getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId,
-      },
-      object_id: { _eq: id },
-      vault: {
-        positions: {
-          account_id: { _eq: paramWallet.toLowerCase() },
-        },
-      },
-    }
+  try {
+    const listDetailsResult = await fetcher<
+      GetListDetailsWithUserQuery,
+      GetListDetailsWithUserQueryVariables
+    >(GetListDetailsWithUserDocument, {
+      globalWhere,
+      userWhere,
+      tagPredicateId: parseInt(predicateId),
+      address: queryAddress,
+      limit,
+      offset: (page - 1) * limit,
+      orderBy: [orderBy],
+    })()
 
     await queryClient.prefetchQuery({
       queryKey: [
-        'get-additional-user-list-details',
-        { additionalUserWhere, tagPredicateId: parseInt(predicateId) },
-      ],
-      queryFn: () =>
-        fetcher<
-          GetListDetailsWithUserQuery,
-          GetListDetailsWithUserQueryVariables
-        >(GetListDetailsWithUserDocument, {
-          userWhere: additionalUserWhere,
+        'get-list-details',
+        {
+          id,
           tagPredicateId: parseInt(predicateId),
-        })(),
+          limit,
+          offset: (page - 1) * limit,
+          sortBy: sortBy || 'block_timestamp',
+          direction,
+        },
+      ],
+      queryFn: () => listDetailsResult,
     })
-  }
 
-  return json({
-    dehydratedState: dehydrate(queryClient),
-    queryAddress,
-    additionalQueryAddress,
-    initialParams: {
-      id,
-      predicateId,
-      objectId,
-      paramWallet,
-      globalWhere,
-      userWhere,
-      additionalUserWhere,
-    },
-  })
+    // Get total count for pagination
+    const totalGlobalCount =
+      listDetailsResult?.globalTriplesAggregate?.aggregate?.count ?? 0
+    const totalUserCount =
+      listDetailsResult?.userTriplesAggregate?.aggregate?.count ?? 0
+
+    const globalPagination = {
+      currentPage: page,
+      limit,
+      totalEntries: totalGlobalCount,
+      totalPages: calculateTotalPages(totalGlobalCount, limit),
+    } as PaginationType
+
+    const userPagination = {
+      currentPage: page,
+      limit,
+      totalEntries: totalUserCount,
+      totalPages: calculateTotalPages(totalUserCount, limit),
+    } as PaginationType
+
+    return json({
+      dehydratedState: dehydrate(queryClient),
+      queryAddress,
+      additionalQueryAddress,
+      initialParams: {
+        id,
+        predicateId,
+        objectId,
+        paramWallet,
+        globalWhere,
+        userWhere,
+        additionalUserWhere,
+        sortBy: sortBy || 'block_timestamp',
+        direction: direction || 'desc',
+      },
+      globalPagination,
+      userPagination,
+    })
+  } catch (error) {
+    logger('Error fetching list details:', {
+      message: (error as Error).message,
+      stack: (error as Error).stack,
+    })
+    throw error
+  }
 }
 
 export default function ListOverview() {
-  const { queryAddress, additionalQueryAddress, initialParams } =
-    useLoaderData<typeof loader>()
+  const {
+    queryAddress,
+    additionalQueryAddress,
+    initialParams,
+    globalPagination,
+    userPagination,
+  } = useLoaderData<typeof loader>()
+  const submit = useSubmit()
 
   const { data: accountResult } = useGetAccountQuery(
     {
@@ -272,6 +355,12 @@ export default function ListOverview() {
     },
   )
 
+  // Apply orderBy to query
+  const orderBy = mapSortToOrderBy(
+    initialParams.sortBy || 'block_timestamp',
+    initialParams.direction || 'desc',
+  )
+
   const {
     data: listDetailsData,
     isLoading: isLoadingTriples,
@@ -282,6 +371,10 @@ export default function ListOverview() {
       globalWhere: initialParams.globalWhere,
       userWhere: initialParams.userWhere,
       tagPredicateId: parseInt(initialParams.predicateId),
+      address: queryAddress,
+      limit: globalPagination.limit,
+      offset: (globalPagination.currentPage - 1) * globalPagination.limit,
+      orderBy: [orderBy],
     },
     {
       queryKey: [
@@ -289,6 +382,10 @@ export default function ListOverview() {
         {
           id: initialParams.id,
           tagPredicateId: parseInt(initialParams.predicateId),
+          limit: globalPagination.limit,
+          offset: (globalPagination.currentPage - 1) * globalPagination.limit,
+          sortBy: initialParams.sortBy,
+          direction: initialParams.direction,
         },
       ],
     },
@@ -304,6 +401,10 @@ export default function ListOverview() {
       ? {
           userWhere: initialParams.additionalUserWhere,
           tagPredicateId: parseInt(initialParams.predicateId),
+          address: additionalQueryAddress,
+          limit: globalPagination.limit,
+          offset: (globalPagination.currentPage - 1) * globalPagination.limit,
+          orderBy: [orderBy],
         }
       : undefined,
     {
@@ -312,6 +413,10 @@ export default function ListOverview() {
         {
           additionalUserWhere: initialParams.additionalUserWhere,
           tagPredicateId: parseInt(initialParams.predicateId),
+          limit: globalPagination.limit,
+          offset: (globalPagination.currentPage - 1) * globalPagination.limit,
+          sortBy: initialParams.sortBy,
+          direction: initialParams.direction,
         },
       ],
       enabled: !!additionalQueryAddress,
@@ -359,6 +464,19 @@ export default function ListOverview() {
       setIsNavigating(false)
     }
   }, [state])
+
+  // Handle pagination events
+  const handlePageChange = (page: number) => {
+    const formData = new FormData()
+    formData.append('page', page.toString())
+    submit(formData, { method: 'get', replace: true })
+  }
+
+  const handleLimitChange = (limit: number) => {
+    const formData = new FormData()
+    formData.append('limit', limit.toString())
+    submit(formData, { method: 'get', replace: true })
+  }
 
   return (
     <div className="flex-col justify-start items-start flex w-full gap-6">
@@ -408,10 +526,10 @@ export default function ListOverview() {
               predicate={{
                 variant: 'non-user',
                 label: getAtomLabelGQL(
-                  predicateResult?.atom as GetAtomQuery['atom'],
+                  predicateResult?.atom as unknown as Atom,
                 ),
                 imgSrc: getAtomImageGQL(
-                  predicateResult?.atom as GetAtomQuery['atom'],
+                  predicateResult?.atom as unknown as Atom,
                 ),
                 id:
                   predicateResult?.atom?.type === 'Account' ||
@@ -419,40 +537,35 @@ export default function ListOverview() {
                     ? predicateResult?.atom?.wallet_id
                     : predicateResult?.atom?.id,
                 description: getAtomDescriptionGQL(
-                  predicateResult?.atom as GetAtomQuery['atom'],
+                  predicateResult?.atom as unknown as Atom,
                 ),
-                ipfsLink: getAtomIpfsLinkGQL(
-                  predicateResult?.atom as GetAtomQuery['atom'],
-                ),
-                link: getAtomLinkGQL(
-                  predicateResult?.atom as GetAtomQuery['atom'],
-                ),
+                ipfsLink:
+                  getAtomIpfsLinkGQL(
+                    predicateResult?.atom as unknown as Atom,
+                  ) || '',
+                link:
+                  getAtomLinkGQL(predicateResult?.atom as unknown as Atom) ||
+                  '',
                 linkComponent: RemixLink,
               }}
               object={{
                 variant:
-                  objectResult.atom?.type === 'Account' ||
-                  objectResult.atom?.type === 'Default'
-                    ? 'user'
-                    : 'non-user',
-                label: getAtomLabelGQL(
-                  objectResult.atom as GetAtomQuery['atom'],
-                ),
-                imgSrc: getAtomImageGQL(
-                  objectResult.atom as GetAtomQuery['atom'],
-                ),
+                  objectResult.atom?.type === 'Account' ? 'user' : 'non-user',
+                label: getAtomLabelGQL(objectResult.atom as unknown as Atom),
+                imgSrc: getAtomImageGQL(objectResult.atom as unknown as Atom),
                 id:
                   objectResult.atom?.type === 'Account' ||
                   objectResult.atom?.type === 'Default'
                     ? objectResult.atom?.wallet_id
                     : objectResult.atom?.id,
                 description: getAtomDescriptionGQL(
-                  objectResult.atom as GetAtomQuery['atom'],
+                  objectResult.atom as unknown as Atom,
                 ),
-                ipfsLink: getAtomIpfsLinkGQL(
-                  objectResult.atom as GetAtomQuery['atom'],
-                ),
-                link: getAtomLinkGQL(objectResult.atom as GetAtomQuery['atom']),
+                ipfsLink:
+                  getAtomIpfsLinkGQL(objectResult.atom as unknown as Atom) ||
+                  '',
+                link:
+                  getAtomLinkGQL(objectResult.atom as unknown as Atom) || '',
                 linkComponent: RemixLink,
               }}
             />
@@ -553,9 +666,14 @@ export default function ListOverview() {
                   <PaginatedListSkeleton />
                 ) : (
                   <TagsList
-                    triples={listDetailsData.globalTriples}
+                    triples={
+                      listDetailsData.globalTriples as unknown as Triple[]
+                    }
+                    pagination={globalPagination}
                     enableSearch={true}
                     enableSort={true}
+                    onPageChange={handlePageChange}
+                    onLimitChange={handleLimitChange}
                   />
                 )
               ) : null}
@@ -580,9 +698,12 @@ export default function ListOverview() {
                   <PaginatedListSkeleton />
                 ) : (
                   <TagsList
-                    triples={listDetailsData.userTriples}
+                    triples={listDetailsData.userTriples as unknown as Triple[]}
+                    pagination={userPagination}
                     enableSearch={true}
                     enableSort={true}
+                    onPageChange={handlePageChange}
+                    onLimitChange={handleLimitChange}
                   />
                 )
               ) : null}
@@ -608,9 +729,14 @@ export default function ListOverview() {
                     <PaginatedListSkeleton />
                   ) : (
                     <TagsList
-                      triples={additionalUserData.userTriples}
+                      triples={
+                        additionalUserData.userTriples as unknown as Triple[]
+                      }
+                      pagination={globalPagination}
                       enableSearch={true}
                       enableSort={true}
+                      onPageChange={handlePageChange}
+                      onLimitChange={handleLimitChange}
                     />
                   )
                 ) : null}
@@ -621,33 +747,8 @@ export default function ListOverview() {
       </div>
       <SaveListModal
         contract={MULTIVAULT_CONTRACT_ADDRESS}
-        atom={
-          identityToAtom(
-            (saveListModalActive.identity ?? {
-              asset_delta: '',
-              assets_sum: '',
-              contract: '',
-              conviction_price: '',
-              conviction_price_delta: '',
-              conviction_sum: '',
-              created_at: '',
-              creator_address: '',
-              display_name: '',
-              follow_vault_id: '',
-              id: '',
-              identity_hash: '',
-              identity_id: '',
-              is_contract: false,
-              is_user: false,
-              num_positions: 0,
-              predicate: false,
-              status: 'active' as Status,
-              updated_at: '',
-              vault_id: '',
-            }) as IdentityPresenter,
-          ) as GetAtomQuery['atom']
-        }
-        tagAtom={objectResult?.atom as GetAtomQuery['atom']}
+        atom={saveListModalActive.identity as unknown as Atom}
+        tagAtom={objectResult?.atom as unknown as Atom}
         userWallet={queryAddress}
         open={saveListModalActive.isOpen}
         onClose={() =>
