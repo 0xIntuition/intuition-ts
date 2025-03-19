@@ -16,7 +16,6 @@ import {
   toast,
   Trunctacular,
 } from '@0xintuition/1ui'
-import { GetAtomQuery } from '@0xintuition/graphql'
 
 import { multivaultAbi } from '@lib/abis/multivault'
 import { useBatchCreateTriple } from '@lib/hooks/useBatchCreateTriple'
@@ -24,7 +23,6 @@ import { useLoaderFetcher } from '@lib/hooks/useLoaderFetcher'
 import logger from '@lib/utils/logger'
 import {
   getAtomDescriptionGQL,
-  getAtomIdGQL,
   getAtomImageGQL,
   getAtomIpfsLinkGQL,
   getAtomLabelGQL,
@@ -35,6 +33,7 @@ import {
   GENERIC_ERROR_MSG,
   MULTIVAULT_CONTRACT_ADDRESS,
 } from 'app/consts'
+import { Atom } from 'app/types/atom'
 import { TransactionActionType } from 'app/types/transaction'
 import { formatUnits } from 'viem'
 import { useAccount, usePublicClient, useWalletClient } from 'wagmi'
@@ -44,7 +43,7 @@ import { createIdentityArrays } from './list-utils'
 interface AddIdentitiesReviewProps {
   dispatch: (action: TransactionActionType) => void
   objectVaultId: string
-  identitiesToAdd: GetAtomQuery['atom'][]
+  identitiesToAdd: Atom[]
 }
 
 export default function AddIdentitiesReview({
@@ -192,14 +191,13 @@ export default function AddIdentitiesReview({
                     <div className="flex flex-col gap-4 w-80 max-md:w-[80%]">
                       <ProfileCard
                         variant={
-                          identity?.type ===
-                          ('Account' || 'Person' || 'Default')
+                          identity?.type === 'Account'
                             ? Identity.user
                             : Identity.nonUser
                         }
                         avatarSrc={getAtomImageGQL(identity)}
                         name={getAtomLabelGQL(identity)}
-                        id={getAtomIdGQL(identity)}
+                        id={identity.id?.toString()}
                         bio={getAtomDescriptionGQL(identity)}
                         ipfsLink={getAtomIpfsLinkGQL(identity)}
                       />

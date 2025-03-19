@@ -1,16 +1,14 @@
 import { ReactNode, useRef } from 'react'
 
 import { Button, ButtonVariant, EmptyStateCard, Icon } from '@0xintuition/1ui'
-import {
-  ClaimSortColumn,
-  PositionSortColumn,
-  SortColumn,
-} from '@0xintuition/api'
 
 import { Search } from '@components/search'
 import { Sort } from '@components/sort'
 import { SortOption } from '@components/sort-select'
-import { useSearchAndSortParamsHandler } from '@lib/hooks/useSearchAndSortParams'
+import {
+  SortColumnType,
+  useSearchAndSortParamsHandler,
+} from '@lib/hooks/useSearchAndSortParams'
 import {
   globalCreateClaimModalAtom,
   globalCreateIdentityModalAtom,
@@ -19,8 +17,6 @@ import { PaginationType } from 'app/types/pagination'
 import { useSetAtom } from 'jotai'
 
 import { PaginationComponent } from '../pagination-component'
-
-type SortColumnType = SortColumn | PositionSortColumn | ClaimSortColumn
 
 export function List<T extends SortColumnType>({
   children,

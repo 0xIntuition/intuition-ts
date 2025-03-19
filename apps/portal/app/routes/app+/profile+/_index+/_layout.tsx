@@ -85,8 +85,8 @@ import {
   ZERO_ADDRESS,
 } from 'app/consts'
 import TwoPanelLayout from 'app/layouts/two-panel-layout'
-import { AtomType } from 'app/types/atom'
-import { TripleType } from 'app/types/triple'
+import { Atom } from 'app/types/atom'
+import { Triple } from 'app/types/triple'
 import { useAtom } from 'jotai'
 import { formatUnits, parseUnits } from 'viem'
 
@@ -357,9 +357,7 @@ export default function Profile() {
     useAtom(saveListModalAtom)
   const [imageModalActive, setImageModalActive] = useAtom(imageModalAtom)
 
-  const [selectedTag, setSelectedTag] = useState<AtomType | null | undefined>(
-    null,
-  )
+  const [selectedTag, setSelectedTag] = useState<Atom | null | undefined>(null)
 
   useEffect(() => {
     if (saveListModalActive.tag) {
@@ -455,11 +453,11 @@ export default function Profile() {
                       label={tag.object?.label ?? ''}
                       value={tag.vault?.allPositions?.aggregate?.count ?? 0}
                       onStake={() => {
-                        setSelectedTag(tag?.object as AtomType)
+                        setSelectedTag(tag?.object as Atom)
                         setSaveListModalActive({
                           isOpen: true,
                           id: tag.id,
-                          tag: tag.object as AtomType,
+                          tag: tag.object as Atom,
                         })
                       }}
                     />
@@ -490,7 +488,7 @@ export default function Profile() {
                   ...prevState,
                   mode: 'redeem',
                   modalType: 'identity',
-                  identity: accountResult?.account?.atom as AtomType,
+                  identity: accountResult?.account?.atom as Atom,
                   isOpen: true,
                 }))
               }
@@ -530,7 +528,7 @@ export default function Profile() {
                 ...prevState,
                 mode: 'deposit',
                 modalType: 'identity',
-                identity: accountResult?.account?.atom as AtomType,
+                identity: accountResult?.account?.atom as Atom,
                 isOpen: true,
               }))
             }
@@ -578,7 +576,7 @@ export default function Profile() {
             userWallet={userWallet}
             contract={MULTIVAULT_CONTRACT_ADDRESS}
             open={stakeModalActive.isOpen}
-            identity={accountResult?.account?.atom as AtomType}
+            identity={accountResult?.account?.atom as Atom}
             vaultId={stakeModalActive.vaultId}
             vaultDetailsProp={vaultDetails}
             onClose={() => {
@@ -589,8 +587,8 @@ export default function Profile() {
             }}
           />
           <TagsModal
-            identity={accountResult?.account?.atom as AtomType}
-            tagClaims={accountTagsResult?.triples as TripleType[]}
+            identity={accountResult?.account?.atom as Atom}
+            tagClaims={accountTagsResult?.triples as Triple[]}
             userWallet={userWallet}
             open={tagsModalActive.isOpen}
             mode={tagsModalActive.mode}
@@ -606,7 +604,7 @@ export default function Profile() {
             <SaveListModal
               contract={MULTIVAULT_CONTRACT_ADDRESS}
               tagAtom={saveListModalActive.tag ?? selectedTag}
-              atom={accountResult?.account?.atom as AtomType}
+              atom={accountResult?.account?.atom as Atom}
               userWallet={userWallet}
               open={saveListModalActive.isOpen}
               onClose={() =>

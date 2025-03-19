@@ -1,10 +1,11 @@
 import { Dialog, DialogContent } from '@0xintuition/1ui'
-import { IdentityPresenter } from '@0xintuition/api'
+
+import { Atom } from 'app/types/atom'
 
 import { AddIdentitiesListForm } from './add-identities-list-form'
 
 export interface AddIdentitiesListModalProps {
-  identity: IdentityPresenter
+  identity: Atom
   userWallet: string
   claimId?: string
   open?: boolean

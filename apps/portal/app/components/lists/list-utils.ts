@@ -1,10 +1,9 @@
-import { GetAtomQuery } from '@0xintuition/graphql'
-
 import { getSpecialPredicate } from '@lib/utils/app'
 import { CURRENT_ENV } from 'app/consts'
+import { Atom } from 'app/types/atom'
 
 export const createIdentityArrays = (
-  identities: GetAtomQuery['atom'][],
+  identities: Atom[],
   objectVaultId: string,
 ) => {
   const subjectIdentityVaultIds = identities.map(

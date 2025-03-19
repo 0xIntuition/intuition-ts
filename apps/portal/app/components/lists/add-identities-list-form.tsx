@@ -8,8 +8,6 @@ import {
   IdentityTag,
   Trunctacular,
 } from '@0xintuition/1ui'
-import { IdentityPresenter } from '@0xintuition/api'
-import { GetAtomQuery } from '@0xintuition/graphql'
 
 import { TransactionState } from '@components/transaction-state'
 import {
@@ -17,6 +15,7 @@ import {
   transactionReducer,
   useTransactionState,
 } from '@lib/hooks/useTransactionReducer'
+import { Atom } from 'app/types/atom'
 import {
   TransactionActionType,
   TransactionStateType,
@@ -26,7 +25,7 @@ import { AddIdentities } from './add-identities'
 import AddIdentitiesReview from './add-identities-review'
 
 interface AddIdentitiesListFormProps {
-  identity: IdentityPresenter
+  identity: Atom
   userWallet: string
   claimId?: string
   onSuccess?: () => void
@@ -55,9 +54,7 @@ export function AddIdentitiesListForm({
     'error',
   ].includes(state.status)
 
-  const [selectedIdentities, setSelectedIdentities] = useState<
-    GetAtomQuery['atom'][]
-  >([])
+  const [selectedIdentities, setSelectedIdentities] = useState<Atom[]>([])
 
   const MAX_IDENTITIES_TO_ADD = 5
 
@@ -65,11 +62,9 @@ export function AddIdentitiesListForm({
   //   ? identity.tags.map((tag) => tag.identity_id)
   //   : []
 
-  const [invalidIdentities, setInvalidIdentities] = useState<
-    GetAtomQuery['atom'][]
-  >([])
+  const [invalidIdentities, setInvalidIdentities] = useState<Atom[]>([])
 
-  const handleAddIdentity = (selectedIdentity: GetAtomQuery['atom']) => {
+  const handleAddIdentity = (selectedIdentity: Atom) => {
     if (selectedIdentities.length < MAX_IDENTITIES_TO_ADD) {
       setSelectedIdentities((prev) => [...prev, selectedIdentity])
     }
@@ -98,15 +93,11 @@ export function AddIdentitiesListForm({
               <DialogHeader>
                 <DialogTitle>
                   <IdentityTag
-                    imgSrc={identity?.user?.image ?? identity?.image}
-                    variant={identity?.user ? 'user' : 'non-user'}
+                    imgSrc={identity?.image}
+                    variant={identity?.type === 'Account' ? 'user' : 'non-user'}
                   >
                     <Trunctacular
-                      value={
-                        identity?.user?.display_name ??
-                        identity?.display_name ??
-                        'Identity'
-                      }
+                      value={identity?.label ?? 'Unknown'}
                       maxStringLength={42}
                     />
                   </IdentityTag>
@@ -114,7 +105,7 @@ export function AddIdentitiesListForm({
               </DialogHeader>
               <div className="flex flex-col h-full mt-8">
                 <AddIdentities
-                  objectVaultId={identity.vault_id}
+                  objectVaultId={identity.id?.toString()}
                   identity={identity}
                   userWallet={userWallet}
                   selectedIdentities={selectedIdentities}
@@ -145,7 +136,7 @@ export function AddIdentitiesListForm({
             <div className="h-full flex flex-col">
               <AddIdentitiesReview
                 dispatch={dispatch}
-                objectVaultId={identity.vault_id}
+                objectVaultId={identity.id?.toString()}
                 identitiesToAdd={selectedIdentities}
               />
             </div>

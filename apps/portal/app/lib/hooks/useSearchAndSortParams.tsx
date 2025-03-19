@@ -1,12 +1,7 @@
-import {
-  ClaimSortColumn,
-  PositionSortColumn,
-  SortColumn,
-} from '@0xintuition/api'
-
 import { useSearchParams } from '@remix-run/react'
 
-export type SortColumnType = PositionSortColumn | ClaimSortColumn | SortColumn
+// Include string to support GraphQL field paths
+export type SortColumnType = string
 type SortDirection = 'asc' | 'desc'
 
 export const useSearchAndSortParamsHandler = <T extends SortColumnType>(

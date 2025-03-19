@@ -13,8 +13,6 @@ import {
   Text,
   Trunctacular,
 } from '@0xintuition/1ui'
-import { IdentityPresenter } from '@0xintuition/api'
-import { GetAtomQuery } from '@0xintuition/graphql'
 
 import { AtomSearchComboboxExtended } from '@components/atom-search-combobox-extended'
 import { InfoTooltip } from '@components/info-tooltip'
@@ -28,26 +26,24 @@ import {
 } from '@lib/state/store'
 import { getSpecialPredicate } from '@lib/utils/app'
 import logger from '@lib/utils/logger'
-import { identityToAtom } from '@lib/utils/misc'
 import { TagLoaderData } from '@routes/resources+/tag'
 import { CURRENT_ENV, MULTIVAULT_CONTRACT_ADDRESS } from 'app/consts'
+import { Atom } from 'app/types/atom'
 import { useAtom } from 'jotai'
 
 import { AddListExistingCta } from './add-list-existing-cta'
 
 interface AddIdentitiesProps {
   objectVaultId: string
-  identity: IdentityPresenter
+  identity: Atom
   userWallet: string
-  selectedIdentities: GetAtomQuery['atom'][]
-  onAddIdentity: (newIdentity: GetAtomQuery['atom']) => void
+  selectedIdentities: Atom[]
+  onAddIdentity: (newIdentity: Atom) => void
   onRemoveIdentity: (id: string) => void
   onRemoveInvalidIdentity: (id: string) => void
   maxIdentitiesToAdd: number
-  invalidIdentities: GetAtomQuery['atom'][]
-  setInvalidIdentities: React.Dispatch<
-    React.SetStateAction<GetAtomQuery['atom'][]>
-  >
+  invalidIdentities: Atom[]
+  setInvalidIdentities: React.Dispatch<React.SetStateAction<Atom[]>>
 }
 
 export function AddIdentities({
@@ -69,20 +65,19 @@ export function AddIdentities({
     useAtom(saveListModalAtom)
 
   const { setSearchQuery } = useFilteredIdentitySearch({
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    selectedItems: selectedIdentities as any[], // TODO: (ENG-4782) temporary type fix until we lock in final types
+    selectedItems: selectedIdentities as Atom[],
   })
 
   const [isPopoverOpen, setIsPopoverOpen] = useState(false)
 
-  const [selectedInvalidIdentity, setSelectedInvalidIdentity] = useState<
-    GetAtomQuery['atom'] | null
-  >(null)
+  const [selectedInvalidIdentity, setSelectedInvalidIdentity] =
+    useState<Atom | null>(null)
 
   const { data: claimCheckData = { result: '0' }, refetch: refetchClaimCheck } =
     useCheckClaim(
       {
-        subjectId: selectedIdentities[selectedIdentities.length - 1]?.vault_id,
+        subjectId:
+          selectedIdentities[selectedIdentities.length - 1]?.id?.toString(),
         predicateId:
           getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId?.toString(),
         objectId: objectVaultId,
@@ -92,7 +87,7 @@ export function AddIdentities({
         refetchOnMount: false,
         refetchOnReconnect: false,
         enabled: Boolean(
-          selectedIdentities[selectedIdentities.length - 1]?.vault_id,
+          selectedIdentities[selectedIdentities.length - 1]?.id?.toString(),
         ),
         staleTime: Infinity,
         cacheTime: Infinity,
@@ -101,54 +96,18 @@ export function AddIdentities({
 
   logger('claimCheckData', claimCheckData)
 
-  const handleIdentitySelect = (atom: GetAtomQuery['atom']) => {
+  const handleIdentitySelect = (atom: Atom) => {
     onAddIdentity(atom)
     setSearchQuery('')
     refetchClaimCheck()
     setIsPopoverOpen(false)
   }
 
-  const handleSaveClick = (
-    invalidIdentity: GetAtomQuery['atom'] & { tagClaimId: string },
-  ) => {
+  const handleSaveClick = (invalidIdentity: Atom & { tagClaimId: string }) => {
     setSelectedInvalidIdentity(invalidIdentity)
     setSaveListModalActive({
       isOpen: true,
-      identity: invalidIdentity
-        ? ({
-            id: invalidIdentity?.id ?? '',
-            label: invalidIdentity?.label ?? '',
-            image: invalidIdentity?.image ?? '',
-            vault_id: invalidIdentity?.vault_id,
-            assets_sum: '0',
-            user_assets: '0',
-            contract: MULTIVAULT_CONTRACT_ADDRESS,
-            asset_delta: '0',
-            conviction_price: '0',
-            conviction_price_delta: '0',
-            conviction_sum: '0',
-            num_positions: 0,
-            price: '0',
-            price_delta: '0',
-            status: 'active',
-            total_conviction: '0',
-            type: 'user',
-            updated_at: new Date().toISOString(),
-            created_at: new Date().toISOString(),
-            creator_address: '',
-            display_name: invalidIdentity.label ?? '',
-            follow_vault_id: '',
-            user: null,
-            creator: null,
-            identity_hash: '',
-            identity_id: '',
-            is_contract: false,
-            is_user: true,
-            pending: false,
-            pending_type: null,
-            pending_vault_id: null,
-          } as unknown as IdentityPresenter)
-        : undefined,
+      identity: invalidIdentity,
       id: invalidIdentity.tagClaimId,
     })
   }
@@ -163,12 +122,12 @@ export function AddIdentities({
     selectedItems: memoizedSelectedIdentities,
   })
 
-  useInvalidItems<GetAtomQuery['atom']>({
+  useInvalidItems<Atom>({
     data: claimCheckData as TagLoaderData,
     selectedItems: memoizedSelectedIdentities,
     setInvalidItems: setInvalidIdentities,
     onRemoveItem: onRemoveIdentity,
-    idKey: 'vaultId' as keyof GetAtomQuery['atom'],
+    idKey: 'vaultId' as keyof Atom,
     dataIdKey: 'subjectId',
   })
 
@@ -229,7 +188,7 @@ export function AddIdentities({
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => onRemoveIdentity(identity?.vault_id ?? '')}
+              onClick={() => onRemoveIdentity(identity?.id?.toString() ?? '')}
               className="border-none"
             >
               <Icon name="cross-large" className="h-3 w-4" />
@@ -276,21 +235,25 @@ export function AddIdentities({
             onSaveClick={() => {
               if (invalidIdentity && 'tagClaimId' in invalidIdentity) {
                 handleSaveClick(
-                  invalidIdentity as GetAtomQuery['atom'] & {
+                  invalidIdentity as Atom & {
                     tagClaimId: string
                   },
                 )
               }
             }}
-            onClose={() => onRemoveInvalidIdentity(invalidIdentity?.vault_id)}
+            onClose={() =>
+              onRemoveInvalidIdentity(
+                invalidIdentity?.vault_id?.toString() ?? '',
+              )
+            }
           />
         ))}
       </div>
       {selectedInvalidIdentity && (
         <SaveListModal
-          contract={identity.contract}
-          tagAtom={identityToAtom(identity) as unknown as GetAtomQuery['atom']}
-          atom={selectedInvalidIdentity as unknown as GetAtomQuery['atom']}
+          contract={MULTIVAULT_CONTRACT_ADDRESS}
+          tagAtom={identity}
+          atom={selectedInvalidIdentity}
           userWallet={userWallet}
           open={saveListModalActive.isOpen}
           onClose={() => {

@@ -36,6 +36,8 @@ import { getUser } from '@server/auth'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
 import { CURRENT_ENV, ZERO_ADDRESS } from 'app/consts'
 import FullPageLayout from 'app/layouts/full-page-layout'
+import { Atom } from 'app/types/atom'
+import { Triple } from 'app/types/triple'
 
 // Default pagination values
 const DEFAULT_PAGE_SIZE = 5
@@ -326,7 +328,7 @@ export default function HomePage() {
           >
             {topClaimsData?.triples?.length ? (
               <ClaimsListNew
-                claims={topClaimsData.triples}
+                claims={topClaimsData.triples as Triple[]}
                 pagination={{
                   currentPage: claimPage,
                   limit: claimLimit,
@@ -364,7 +366,7 @@ export default function HomePage() {
           >
             {topUsersData?.atoms?.length ? (
               <IdentitiesListNew
-                identities={topUsersData.atoms}
+                identities={topUsersData.atoms as Atom[]}
                 pagination={{
                   currentPage: userPage,
                   limit: userLimit,

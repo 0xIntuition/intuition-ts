@@ -1,3 +1,5 @@
+import { useCallback, useEffect, useRef, useState } from 'react'
+
 import { IconName } from '@0xintuition/1ui'
 import {
   fetcher,
@@ -11,15 +13,59 @@ import { ErrorPage } from '@components/error-page'
 import ExploreHeader from '@components/explore/ExploreHeader'
 import { ExploreSearch } from '@components/explore/ExploreSearch'
 import { ListClaimsListNew as ListClaimsList } from '@components/list/list-claims'
-import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getSpecialPredicate } from '@lib/utils/app'
-import { calculateTotalPages, invariant, loadMore } from '@lib/utils/misc'
+import { calculateTotalPages, invariant } from '@lib/utils/misc'
 import { getStandardPageParams } from '@lib/utils/params'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
-import { useSearchParams, useSubmit } from '@remix-run/react'
+import { useLoaderData } from '@remix-run/react'
 import { getUserWallet } from '@server/auth'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
 import { CURRENT_ENV, HEADER_BANNER_LISTS, NO_WALLET_ERROR } from 'app/consts'
+import { PaginationType } from 'app/types/pagination'
+
+// Default pagination values
+const DEFAULT_PAGE_SIZE = 16
+const DEFAULT_PAGE = 1
+
+// Client-side sorting function
+const sortLists = (
+  lists: GetListsQuery['predicate_objects'],
+  sortBy: string,
+  direction: string,
+) => {
+  if (!lists) {
+    return []
+  }
+
+  // Create a copy to avoid mutating the original data
+  const sortedLists = [...lists]
+
+  // Define sort functions
+  const directionMultiplier = direction.toLowerCase() === 'desc' ? -1 : 1
+
+  // Sort based on the field
+  if (sortBy === 'object.label') {
+    sortedLists.sort((a, b) => {
+      const labelA = a.object?.label?.toLowerCase() || ''
+      const labelB = b.object?.label?.toLowerCase() || ''
+      return directionMultiplier * labelA.localeCompare(labelB)
+    })
+  } else if (sortBy === 'claim_count') {
+    sortedLists.sort((a, b) => {
+      const countA = a.claim_count || 0
+      const countB = b.claim_count || 0
+      return directionMultiplier * (countA - countB)
+    })
+  } else if (sortBy === 'triple_count') {
+    sortedLists.sort((a, b) => {
+      const countA = a.triple_count || 0
+      const countB = b.triple_count || 0
+      return directionMultiplier * (countA - countB)
+    })
+  }
+
+  return sortedLists
+}
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const wallet = await getUserWallet(request)
@@ -29,17 +75,16 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   const url = new URL(request.url)
   const searchParams = new URLSearchParams(url.search)
-  const { page, sortBy, direction } = getStandardPageParams({
+  const { page, limit, sortBy, direction } = getStandardPageParams({
     searchParams,
+    paramPrefix: 'list',
+    defaultPageValue: DEFAULT_PAGE,
+    defaultLimitValue: DEFAULT_PAGE_SIZE,
   })
 
   const displayName = searchParams.get('list') || ''
 
-  const initialLimit = 200
-  const effectiveLimit = Number(
-    searchParams.get('effectiveLimit') || initialLimit,
-  )
-  const limit = Math.max(effectiveLimit, initialLimit)
+  console.log('Lists loader: sortBy:', sortBy, 'direction:', direction)
 
   const listsWhere = {
     _and: [
@@ -56,7 +101,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     ],
   }
 
-  // Prefetch lists data
+  // Prefetch lists data - we can't specify the orderBy in the API
   await queryClient.prefetchQuery({
     queryKey: [
       'get-lists',
@@ -94,22 +139,30 @@ export async function loader({ request }: LoaderFunctionArgs) {
       listsWhere,
       displayName,
     },
-    sortBy,
-    direction,
+    sortBy: sortBy || 'object.label',
+    direction: direction || 'asc',
     pagination: {
       currentPage: page,
       limit,
       totalEntries: totalCount,
       totalPages,
-    },
+    } as PaginationType,
   })
 }
 
 export default function ExploreLists() {
-  const { pagination, initialParams, sortBy, direction } = useLiveLoader<
-    typeof loader
-  >(['create', 'attest'])
+  const { pagination, initialParams, sortBy, direction } =
+    useLoaderData<typeof loader>()
 
+  // Use state to track the number of items to display
+  // Start with the initial page worth of items
+  const [visibleLimit, setVisibleLimit] = useState(pagination.limit)
+  const [isLoading, setIsLoading] = useState(false)
+
+  const observerRef = useRef<IntersectionObserver | null>(null)
+  const loadingElementRef = useRef<HTMLDivElement>(null)
+
+  // Fetch the lists data without specifying order_by
   const { data: listsResult } = useGetListsQuery(
     {
       where: initialParams.listsWhere,
@@ -124,17 +177,83 @@ export default function ExploreLists() {
     },
   )
 
-  const submit = useSubmit()
-  const [searchParams] = useSearchParams()
-
-  const currentPage = Number(searchParams.get('page') || '1')
-
-  const handleLoadMore = loadMore({
-    currentPage,
-    pagination,
+  // Apply client-side sorting based on sortBy and direction
+  const sortedLists = sortLists(
+    listsResult?.predicate_objects || [],
     sortBy,
     direction,
-    submit,
+  )
+
+  const totalLists = sortedLists.length
+
+  // Check if we have more results to load
+  const hasMoreResults = visibleLimit < totalLists
+
+  // Slice the result to just show the current number of visible items
+  const displayedLists = sortedLists.slice(0, visibleLimit)
+
+  // Function to load more lists (client-side only)
+  const loadMoreItems = useCallback(() => {
+    if (isLoading || !hasMoreResults) {
+      return
+    }
+
+    setIsLoading(true)
+
+    // Increase visible limit by the page size
+    setTimeout(() => {
+      setVisibleLimit((prev) => Math.min(prev + pagination.limit, totalLists))
+      setIsLoading(false)
+    }, 300)
+  }, [hasMoreResults, isLoading, pagination.limit, totalLists])
+
+  // Set up the intersection observer to detect when the user scrolls to the bottom
+  useEffect(() => {
+    if (!loadingElementRef.current) {
+      return
+    }
+
+    const options = {
+      root: null, // Use the viewport as the root
+      rootMargin: '0px 0px 300px 0px', // Start loading when element is 300px from viewport
+      threshold: 0.1, // Trigger when 10% of the element is visible
+    }
+
+    // Disconnect previous observer if it exists
+    if (observerRef.current) {
+      observerRef.current.disconnect()
+    }
+
+    // Create a new observer
+    observerRef.current = new IntersectionObserver((entries) => {
+      const [entry] = entries
+      if (entry.isIntersecting && hasMoreResults && !isLoading) {
+        loadMoreItems()
+      }
+    }, options)
+
+    // Start observing the loading element
+    observerRef.current.observe(loadingElementRef.current)
+
+    // Clean up the observer on component unmount
+    return () => {
+      if (observerRef.current) {
+        observerRef.current.disconnect()
+      }
+    }
+  }, [hasMoreResults, isLoading, loadMoreItems])
+
+  // Calculate the current page based on the visible limit
+  const currentPage = Math.ceil(visibleLimit / pagination.limit)
+
+  console.log('Lists result:', {
+    total: totalLists,
+    showing: displayedLists.length,
+    hasMore: hasMoreResults,
+    visibleLimit,
+    currentPage,
+    sortBy,
+    direction,
   })
 
   return (
@@ -147,12 +266,36 @@ export default function ExploreLists() {
       />
       <ExploreSearch variant="list" />
       <ListClaimsList
-        listClaims={listsResult?.predicate_objects ?? []}
-        pagination={pagination}
+        listClaims={displayedLists}
+        // pagination={{
+        //   ...pagination,
+        //   currentPage,
+        //   totalEntries: totalLists,
+        // }}
         enableSearch={false}
         enableSort={true}
-        onLoadMore={handleLoadMore}
+        paramPrefix="list"
+        onLoadMore={loadMoreItems}
+        sortOptions={[
+          { value: 'Name', sortBy: 'object.label' },
+          { value: 'Claim Count', sortBy: 'claim_count' },
+          { value: 'Triple Count', sortBy: 'triple_count' },
+        ]}
       />
+
+      {/* Invisible element to trigger infinite scrolling */}
+      {hasMoreResults && (
+        <div
+          ref={loadingElementRef}
+          className={`w-full h-20 flex items-center justify-center ${
+            isLoading ? 'opacity-100' : 'opacity-0'
+          }`}
+        >
+          {isLoading && (
+            <div className="animate-pulse">Loading more lists...</div>
+          )}
+        </div>
+      )}
     </>
   )
 }
