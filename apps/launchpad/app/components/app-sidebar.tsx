@@ -123,6 +123,12 @@ export function AppSidebar({
       href: '/rewards',
       isAccent: location.pathname === '/rewards',
     },
+    {
+      icon: <Icon name="lightning-bolt" className="w-5 h-5" />,
+      label: 'Claimr',
+      href: '/claimr',
+      isAccent: location.pathname === '/claimr',
+    },
   ]
 
   const footerNavItems: NavItem[] = [
