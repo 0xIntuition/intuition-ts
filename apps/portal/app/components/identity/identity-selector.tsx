@@ -12,25 +12,24 @@ import {
   Trunctacular,
   useSidebarLayoutContext,
 } from '@0xintuition/1ui'
-import { GetAtomQuery } from '@0xintuition/graphql'
 
 import { AtomSearchComboboxExtended } from '@components/atom-search-combobox-extended'
 import { InfoTooltip } from '@components/info-tooltip'
 import {
   getAtomDescriptionGQL,
-  getAtomIdGQL,
   getAtomImageGQL,
   getAtomIpfsLinkGQL,
   getAtomLabelGQL,
 } from '@lib/utils/misc'
 import { ClaimElementType } from 'app/types'
+import { Atom } from 'app/types/atom'
 
 interface IdentitySelectorProps {
   type: ClaimElementType
   isOpen: boolean
   onOpenChange: (open: boolean) => void
-  selectedIdentity: GetAtomQuery['atom'] | null
-  onSelect: (identity: GetAtomQuery['atom']) => void
+  selectedIdentity: Atom | null
+  onSelect: (identity: Atom) => void
 }
 
 export const IdentitySelector = ({
@@ -70,8 +69,7 @@ export const IdentitySelector = ({
               <IdentityTag
                 size="lg"
                 variant={
-                  selectedIdentity?.type ===
-                  ('Account' || 'Person' || 'Default')
+                  selectedIdentity?.type === 'Account'
                     ? Identity.user
                     : Identity.nonUser
                 }
@@ -91,14 +89,13 @@ export const IdentitySelector = ({
                 <div className="w-80 max-md:w-[80%]">
                   <ProfileCard
                     variant={
-                      selectedIdentity?.type ===
-                      ('Account' || 'Person' || 'Default')
+                      selectedIdentity?.type === 'Account'
                         ? Identity.user
                         : Identity.nonUser
                     }
                     avatarSrc={getAtomImageGQL(selectedIdentity)}
                     name={getAtomLabelGQL(selectedIdentity)}
-                    id={getAtomIdGQL(selectedIdentity)}
+                    id={selectedIdentity.id.toString()}
                     stats={undefined}
                     bio={getAtomDescriptionGQL(selectedIdentity)}
                     ipfsLink={getAtomIpfsLinkGQL(selectedIdentity)}

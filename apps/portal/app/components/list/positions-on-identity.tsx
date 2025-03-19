@@ -1,12 +1,11 @@
 import { IconName, Identity } from '@0xintuition/1ui'
-import { PositionPresenter, PositionSortColumn } from '@0xintuition/api'
 import { GetPositionsQuery } from '@0xintuition/graphql'
 
 import { IdentityPositionRow } from '@components/identity/identity-position-row'
 import { ListHeader } from '@components/list/list-header'
 import { formatBalance, getProfileUrl } from '@lib/utils/misc'
 import { BLOCK_EXPLORER_URL } from 'app/consts'
-import { PaginationType } from 'app/types'
+import { PaginationType } from 'app/types/pagination'
 import { formatUnits } from 'viem'
 
 import { SortOption } from '../sort-select'
@@ -14,37 +13,65 @@ import { List } from './list'
 
 type Position = NonNullable<GetPositionsQuery['positions']>[number]
 
+interface PositionsOnIdentityNewProps {
+  positions: Position[]
+  pagination: PaginationType | { aggregate?: { count: number } } | number
+  readOnly?: boolean
+  enableSearch?: boolean
+  enableSort?: boolean
+  onPageChange?: (page: number) => void
+  onLimitChange?: (limit: number) => void
+}
+
 export function PositionsOnIdentityNew({
   positions,
   pagination,
   readOnly = false,
-}: {
-  positions: Position[]
-  pagination: { aggregate?: { count: number } } | number
-  readOnly?: boolean
-}) {
-  const options: SortOption<PositionSortColumn>[] = [
-    { value: 'Total ETH', sortBy: 'Assets' },
-    { value: 'Updated At', sortBy: 'UpdatedAt' },
-    { value: 'Created At', sortBy: 'CreatedAt' },
+  enableSearch = true,
+  enableSort = true,
+  onPageChange,
+  onLimitChange,
+}: PositionsOnIdentityNewProps) {
+  // Using GraphQL field names directly for sorting
+  const options: SortOption<string>[] = [
+    { value: 'Total ETH', sortBy: 'shares' },
+    { value: 'Updated At', sortBy: 'block_timestamp' },
+    { value: 'Created At', sortBy: 'block_timestamp' },
   ]
 
-  const paginationCount =
-    typeof pagination === 'number'
-      ? pagination
-      : pagination?.aggregate?.count ?? 0
-
-  return (
-    <List<PositionSortColumn>
-      pagination={{
+  // Convert pagination to the format expected by the List component
+  const formattedPagination: PaginationType = (() => {
+    if (typeof pagination === 'number') {
+      return {
         currentPage: 1,
         limit: 10,
-        totalEntries: paginationCount,
-        totalPages: Math.ceil(paginationCount / 10),
-      }}
+        totalEntries: pagination,
+        totalPages: Math.ceil(pagination / 10),
+      }
+    }
+
+    if ('aggregate' in pagination) {
+      const count = pagination.aggregate?.count ?? 0
+      return {
+        currentPage: 1,
+        limit: 10,
+        totalEntries: count,
+        totalPages: Math.ceil(count / 10),
+      }
+    }
+
+    return pagination as PaginationType
+  })()
+
+  return (
+    <List<string>
+      pagination={formattedPagination}
       paginationLabel="positions"
       options={options}
-      paramPrefix="positions"
+      enableSearch={enableSearch}
+      enableSort={enableSort}
+      onPageChange={onPageChange}
+      onLimitChange={onLimitChange}
     >
       <ListHeader
         items={[
@@ -71,63 +98,8 @@ export function PositionsOnIdentityNew({
                 18,
               ),
             )}
-            // updatedAt={position.updated_at} // TODO: Fix this when we have the updated_at
             link={getProfileUrl(position.account?.id, readOnly)}
             ipfsLink={`${BLOCK_EXPLORER_URL}/address/${position.account?.id}`}
-          />
-        </div>
-      ))}
-    </List>
-  )
-}
-
-// LEGACY IMPLEMENTATION -- CAN REMOVE ONCE ALL POSITIONS ARE CONVERTED TO NEW IMPLEMENTATION
-export function PositionsOnIdentity({
-  positions,
-  pagination,
-  readOnly = false,
-}: {
-  positions: PositionPresenter[]
-  pagination: PaginationType
-  readOnly?: boolean
-}) {
-  const options: SortOption<PositionSortColumn>[] = [
-    { value: 'Total ETH', sortBy: 'Assets' },
-    { value: 'Updated At', sortBy: 'UpdatedAt' },
-    { value: 'Created At', sortBy: 'CreatedAt' },
-  ]
-
-  return (
-    <List<PositionSortColumn>
-      pagination={pagination}
-      paginationLabel="positions"
-      options={options}
-      paramPrefix="positions"
-    >
-      <ListHeader
-        items={[
-          { label: 'User', icon: IconName.cryptoPunk },
-          { label: 'Position Amount', icon: IconName.ethereum },
-        ]}
-      />
-      {positions.map((position) => (
-        <div
-          key={position.id}
-          className={`grow shrink basis-0 self-stretch bg-black first:rounded-t-xl last:rounded-b-xl theme-border flex-col justify-start items-start gap-5 inline-flex`}
-        >
-          <IdentityPositionRow
-            variant={Identity.user}
-            avatarSrc={position.user?.image ?? ''}
-            name={position.user?.display_name ?? ''}
-            description={position.user?.description ?? ''}
-            id={position.user?.wallet ?? ''}
-            amount={+formatBalance(BigInt(position.assets), 18)}
-            feesAccrued={Number(
-              formatUnits(BigInt(+position.assets - +position.value), 18),
-            )}
-            updatedAt={position.updated_at}
-            link={getProfileUrl(position.user?.wallet, readOnly)}
-            ipfsLink={`${BLOCK_EXPLORER_URL}/address/${position.user?.wallet}`}
           />
         </div>
       ))}

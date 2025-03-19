@@ -9,7 +9,6 @@ import {
   Separator,
   Text,
 } from '@0xintuition/1ui'
-import { GetAtomQuery } from '@0xintuition/graphql'
 
 import { InfoTooltip } from '@components/info-tooltip'
 import { StandardFees } from '@components/stake/stake-fee-breakdown'
@@ -21,15 +20,16 @@ import {
   getAtomLinkGQL,
 } from '@lib/utils/misc'
 import { CreateClaimFeesType } from '@routes/resources+/create-claim'
+import { Atom } from 'app/types/atom'
 import { TransactionActionType } from 'app/types/transaction'
 import { formatUnits } from 'viem'
 
 interface CreateClaimReviewProps {
   dispatch: (action: TransactionActionType) => void
   selectedIdentities: {
-    subject?: GetAtomQuery['atom'] | null
-    predicate?: GetAtomQuery['atom'] | null
-    object?: GetAtomQuery['atom'] | null
+    subject?: Atom | null
+    predicate?: Atom | null
+    object?: Atom | null
   }
   initialDeposit: string
   fees: CreateClaimFeesType
@@ -204,8 +204,7 @@ const CreateClaimReview: React.FC<CreateClaimReviewProps> = ({
             size="md"
             subject={{
               variant:
-                selectedIdentities.subject?.type ===
-                ('Account' || 'Person' || 'Default')
+                selectedIdentities.subject?.type === 'Account'
                   ? Identity.user
                   : Identity.nonUser,
               label: getAtomLabelGQL(selectedIdentities.subject),
@@ -218,8 +217,7 @@ const CreateClaimReview: React.FC<CreateClaimReviewProps> = ({
             }}
             predicate={{
               variant:
-                selectedIdentities.predicate?.type ===
-                ('Account' || 'Person' || 'Default')
+                selectedIdentities.predicate?.type === 'Account'
                   ? Identity.user
                   : Identity.nonUser,
               label: getAtomLabelGQL(selectedIdentities.predicate),
@@ -232,8 +230,7 @@ const CreateClaimReview: React.FC<CreateClaimReviewProps> = ({
             }}
             object={{
               variant:
-                selectedIdentities.object?.type ===
-                ('Account' || 'Person' || 'Default')
+                selectedIdentities.object?.type === 'Account'
                   ? Identity.user
                   : Identity.nonUser,
               label: getAtomLabelGQL(selectedIdentities.object),

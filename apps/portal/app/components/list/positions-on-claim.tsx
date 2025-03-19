@@ -1,5 +1,4 @@
 import { ClaimPosition, IconName } from '@0xintuition/1ui'
-import { PositionPresenter, PositionSortColumn } from '@0xintuition/api'
 import { GetPositionsQuery } from '@0xintuition/graphql'
 
 import { ClaimPositionRow } from '@components/claim/claim-position-row'
@@ -15,22 +14,34 @@ import { List } from './list'
 
 type Position = NonNullable<GetPositionsQuery['positions']>[number]
 
+interface PositionsOnClaimNewProps {
+  vaultPositions: Position[]
+  counterVaultPositions: Position[]
+  pagination: PaginationType | { aggregate?: { count: number } } | number
+  readOnly?: boolean
+  positionDirection?: string
+  enableSearch?: boolean
+  enableSort?: boolean
+  onPageChange?: (page: number) => void
+  onLimitChange?: (limit: number) => void
+}
+
 export function PositionsOnClaimNew({
   vaultPositions,
   counterVaultPositions,
+  pagination,
   readOnly = false,
   positionDirection,
-}: {
-  vaultPositions: Position[]
-  counterVaultPositions: Position[]
-  pagination: { aggregate?: { count: number } } | number
-  readOnly?: boolean
-  positionDirection?: string
-}) {
-  const options: SortOption<PositionSortColumn>[] = [
-    { value: 'Amount', sortBy: PositionSortColumn.ASSETS },
-    { value: 'Updated At', sortBy: PositionSortColumn.UPDATED_AT },
-    { value: 'Created At', sortBy: PositionSortColumn.CREATED_AT },
+  enableSearch = true,
+  enableSort = true,
+  onPageChange,
+  onLimitChange,
+}: PositionsOnClaimNewProps) {
+  // Using GraphQL field names directly for sorting
+  const options: SortOption<string>[] = [
+    { value: 'Amount', sortBy: 'shares' },
+    { value: 'Updated At', sortBy: 'block_timestamp' },
+    { value: 'Created At', sortBy: 'block_timestamp' },
   ]
 
   logger('positions in PositionsOnClaim', {
@@ -52,7 +63,7 @@ export function PositionsOnClaimNew({
   //         ? pagination
   //         : pagination?.aggregate?.count ?? 0
 
-  // Combining and transforming positions -- we can see if there is a better/different way to do this, but the issue is previously these were combined and now they're split so we need to recombine for the tabs UI
+  // Combining and transforming positions
   const allPositions = [
     ...vaultPositions.map((p) => ({ ...p, direction: 'for' as const })),
     ...counterVaultPositions.map((p) => ({
@@ -69,17 +80,39 @@ export function PositionsOnClaimNew({
     return true
   })
 
-  return (
-    <List<PositionSortColumn>
-      pagination={{
+  // Convert pagination to the format expected by the List component
+  const formattedPagination: PaginationType = (() => {
+    if (typeof pagination === 'number') {
+      return {
         currentPage: 1,
         limit: 10,
-        totalEntries: allPositions.length,
-        totalPages: Math.ceil(allPositions.length / 10),
-      }}
+        totalEntries: pagination,
+        totalPages: Math.ceil(pagination / 10),
+      }
+    }
+
+    if ('aggregate' in pagination) {
+      const count = pagination.aggregate?.count ?? 0
+      return {
+        currentPage: 1,
+        limit: 10,
+        totalEntries: count,
+        totalPages: Math.ceil(count / 10),
+      }
+    }
+
+    return pagination as PaginationType
+  })()
+
+  return (
+    <List<string>
+      pagination={formattedPagination}
       paginationLabel="positions"
       options={options}
-      paramPrefix="positions"
+      enableSearch={enableSearch}
+      enableSort={enableSort}
+      onPageChange={onPageChange}
+      onLimitChange={onLimitChange}
     >
       <ListHeader
         items={[
@@ -115,65 +148,6 @@ export function PositionsOnClaimNew({
 
             link={getProfileUrl(position.account?.id, readOnly)}
             ipfsLink={`${BLOCK_EXPLORER_URL}/address/${position.account?.id}`}
-          />
-        </div>
-      ))}
-    </List>
-  )
-}
-
-// Legacy component -- will be removed after migration
-export function PositionsOnClaim({
-  positions,
-  pagination,
-  readOnly = false,
-}: {
-  positions: PositionPresenter[]
-  pagination: PaginationType
-  readOnly?: boolean
-}) {
-  const options: SortOption<PositionSortColumn>[] = [
-    { value: 'Amount', sortBy: PositionSortColumn.ASSETS },
-    { value: 'Updated At', sortBy: PositionSortColumn.UPDATED_AT },
-    { value: 'Created At', sortBy: PositionSortColumn.CREATED_AT },
-  ]
-
-  return (
-    <List<PositionSortColumn>
-      pagination={pagination}
-      paginationLabel="positions"
-      options={options}
-      paramPrefix="positions"
-    >
-      <ListHeader
-        items={[
-          { label: 'User', icon: IconName.cryptoPunk },
-          { label: 'Position Amount', icon: IconName.ethereum },
-        ]}
-      />
-      {positions.map((position) => (
-        <div
-          key={position.id}
-          className={`grow shrink basis-0 self-stretch bg-black first:rounded-t-xl last:rounded-b-xl theme-border flex-col justify-start items-start gap-5 inline-flex`}
-        >
-          <ClaimPositionRow
-            variant="user"
-            avatarSrc={position.user?.image ?? ''}
-            name={position.user?.display_name ?? ''}
-            description={position.user?.description ?? ''}
-            id={position.user?.wallet ?? ''}
-            amount={+formatBalance(BigInt(position.assets), 18)}
-            position={
-              position.direction === 'for'
-                ? ClaimPosition.claimFor
-                : ClaimPosition.claimAgainst
-            }
-            feesAccrued={Number(
-              formatUnits(BigInt(+position.assets - +position.value), 18),
-            )}
-            updatedAt={position.updated_at}
-            link={getProfileUrl(position.user?.wallet, readOnly)}
-            ipfsLink={`${BLOCK_EXPLORER_URL}/address/${position.user?.wallet}`}
           />
         </div>
       ))}

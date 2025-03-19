@@ -1,5 +1,4 @@
-import { QuestHeaderCard, Text } from '@0xintuition/1ui'
-import { ClaimSortColumn, SortDirection } from '@0xintuition/api'
+import { Text } from '@0xintuition/1ui'
 import {
   fetcher,
   GetAccountDocument,
@@ -29,7 +28,7 @@ import {
 } from '@0xintuition/graphql'
 
 import { ErrorPage } from '@components/error-page'
-import { ListClaimsList } from '@components/list/list-claims'
+import { ListClaimsListNew as ListClaimsList } from '@components/list/list-claims'
 import { OverviewAboutHeaderNew as OverviewAboutHeader } from '@components/profile/overview-about-header'
 import { OverviewCreatedHeader } from '@components/profile/overview-created-header'
 import { OverviewStakingHeader } from '@components/profile/overview-staking-header'
@@ -38,16 +37,10 @@ import { getSpecialPredicate } from '@lib/utils/app'
 import logger from '@lib/utils/logger'
 import { formatBalance, invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
-import { useNavigate } from '@remix-run/react'
 import { getUserWallet } from '@server/auth'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
-import {
-  CURRENT_ENV,
-  NO_WALLET_ERROR,
-  PATHS,
-  STANDARD_QUEST_SET,
-} from 'app/consts'
-import { TripleType } from 'app/types/triple'
+import { CURRENT_ENV, NO_WALLET_ERROR, PATHS } from 'app/consts'
+import { Triple } from 'app/types/triple'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const userWallet = await getUserWallet(request)
@@ -333,12 +326,7 @@ export default function UserProfileOverview() {
     where: allPositionsWhere,
   })
 
-  const {
-    data: savedListsResults,
-    isLoading: isLoadingSavedLists,
-    isError: isErrorSavedLists,
-    error: errorSavedLists,
-  } = useGetTriplesWithPositionsQuery(
+  const { data: savedListsResults } = useGetTriplesWithPositionsQuery(
     {
       where: savedListsWhere,
       limit: 10,
@@ -452,7 +440,7 @@ export default function UserProfileOverview() {
           Top Lists
         </Text>
         <ListClaimsList
-          listClaims={(savedListsResults?.triples ?? []) as TripleType[]}
+          listClaims={(savedListsResults?.triples ?? []) as Triple[]}
           enableSort={false}
           enableSearch={false}
         />

@@ -1,17 +1,17 @@
 import { Dialog, DialogContent } from '@0xintuition/1ui'
-import { ClaimPresenter } from '@0xintuition/api'
 
 import { ClaimForm } from '@components/create-claim/create-claim-form'
 import {
   TransactionSuccessAction,
   TransactionSuccessActionType,
 } from 'app/types'
+import { Triple } from 'app/types/triple'
 
 export interface CreateClaimModalProps {
   open?: boolean
   wallet: string
   onClose: () => void
-  onSuccess?: (claim: ClaimPresenter) => void
+  onSuccess?: (claim: Triple) => void
   successAction?: TransactionSuccessActionType
 }
 

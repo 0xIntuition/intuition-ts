@@ -11,8 +11,7 @@ import {
   Text,
   toast,
 } from '@0xintuition/1ui'
-import { ClaimPresenter } from '@0xintuition/api'
-import { GetAtomQuery, useGetTripleQuery } from '@0xintuition/graphql'
+import { useGetTripleQuery } from '@0xintuition/graphql'
 
 import CreateClaimReview from '@components/create-claim/create-claim-review'
 import { IdentitySelector } from '@components/identity/identity-selector'
@@ -39,12 +38,14 @@ import {
   PATHS,
 } from 'app/consts'
 import { ClaimElement, ClaimElementType } from 'app/types'
+import { Atom } from 'app/types/atom'
 import {
   TransactionActionType,
   TransactionStateType,
   TransactionSuccessAction,
   TransactionSuccessActionType,
 } from 'app/types/transaction'
+import { Triple } from 'app/types/triple'
 import { useAtomValue } from 'jotai'
 import { Address, decodeEventLog, parseUnits } from 'viem'
 import { useAccount, usePublicClient } from 'wagmi'
@@ -53,7 +54,7 @@ import { TransactionState } from '../transaction-state'
 
 interface ClaimFormProps {
   wallet: string
-  onSuccess?: (claim: ClaimPresenter) => void
+  onSuccess?: (claim: Triple) => void
   onClose: () => void
   successAction?: TransactionSuccessActionType
 }
@@ -117,7 +118,7 @@ interface CreateClaimFormProps {
   wallet: string
   state: TransactionStateType
   dispatch: React.Dispatch<TransactionActionType>
-  onSuccess?: (claim: ClaimPresenter) => void
+  onSuccess?: (claim: Triple) => void
   successAction?: TransactionSuccessActionType
   onClose: () => void
 }
@@ -139,9 +140,9 @@ function CreateClaimForm({
   const [initialDeposit, setInitialDeposit] = useState<string>('0')
   const [vaultId, setVaultId] = useState<string | undefined>(undefined)
   const [selectedIdentities, setSelectedIdentities] = useState<{
-    subject: GetAtomQuery['atom'] | null
-    predicate: GetAtomQuery['atom'] | null
-    object: GetAtomQuery['atom'] | null
+    subject: Atom | null
+    predicate: Atom | null
+    object: Atom | null
   }>({
     subject: subject ?? null,
     predicate: predicate ?? null,
@@ -154,9 +155,9 @@ function CreateClaimForm({
   const { fees } = configData ?? {}
 
   const { data: claimCheckData, refetch: refetchClaimCheck } = useCheckClaim({
-    subjectId: selectedIdentities.subject?.vault_id,
-    predicateId: selectedIdentities.predicate?.vault_id,
-    objectId: selectedIdentities.object?.vault_id,
+    subjectId: selectedIdentities.subject?.id?.toString(),
+    predicateId: selectedIdentities.predicate?.id?.toString(),
+    objectId: selectedIdentities.object?.id?.toString(),
   })
 
   const { data: claimData, refetch: refetchClaim } = useGetTripleQuery(
@@ -299,9 +300,9 @@ function CreateClaimForm({
         selectedIdentities.object !== null
       ) {
         handleOnChainCreateTriple({
-          subjectVaultId: selectedIdentities.subject?.vault_id ?? '',
-          predicateVaultId: selectedIdentities.predicate?.vault_id ?? '',
-          objectVaultId: selectedIdentities.object?.vault_id ?? '',
+          subjectVaultId: selectedIdentities.subject?.id?.toString() ?? '',
+          predicateVaultId: selectedIdentities.predicate?.id?.toString() ?? '',
+          objectVaultId: selectedIdentities.object?.id?.toString() ?? '',
         })
       }
     } catch (error: unknown) {
@@ -309,10 +310,7 @@ function CreateClaimForm({
     }
   }
 
-  const handleIdentitySelection = (
-    type: ClaimElementType,
-    identity: GetAtomQuery['atom'],
-  ) => {
+  const handleIdentitySelection = (type: ClaimElementType, identity: Atom) => {
     setSelectedIdentities((prev) => ({
       ...prev,
       [type]: identity,

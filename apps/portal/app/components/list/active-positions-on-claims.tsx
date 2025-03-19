@@ -1,25 +1,17 @@
 import { Claim, ClaimPosition, IconName, Identity } from '@0xintuition/1ui'
-import { ClaimPresenter, IdentityPresenter, SortColumn } from '@0xintuition/api'
 import { GetPositionsQuery } from '@0xintuition/graphql'
 
 import { ClaimPositionRow } from '@components/claim/claim-position-row'
 import { ListHeader } from '@components/list/list-header'
 import RemixLink from '@components/remix-link'
 import { BLOCK_EXPLORER_URL } from '@consts/general'
-import logger from '@lib/utils/logger'
 import {
   formatBalance,
-  getAtomDescription,
   getAtomDescriptionGQL,
-  getAtomImage,
   getAtomImageGQL,
-  getAtomIpfsLink,
   getAtomIpfsLinkGQL,
-  getAtomLabel,
   getAtomLabelGQL,
-  getAtomLink,
   getAtomLinkGQL,
-  getClaimUrl,
   getProfileUrl,
 } from '@lib/utils/misc'
 import { Atom } from 'app/types/atom'
@@ -31,27 +23,27 @@ import { List } from './list'
 
 type Position = NonNullable<GetPositionsQuery['positions']>[number]
 
+interface ActivePositionsOnClaimsNewProps {
+  positions: Position[]
+  pagination: PaginationType | { aggregate?: { count: number } } | number
+  readOnly?: boolean
+  positionDirection?: string
+  enableSearch?: boolean
+  enableSort?: boolean
+  onPageChange?: (page: number) => void
+  onLimitChange?: (limit: number) => void
+}
+
 export function ActivePositionsOnClaimsNew({
   positions,
   pagination,
   readOnly = false,
   positionDirection,
-}: {
-  positions: Position[]
-  pagination: { aggregate?: { count: number } } | number
-  readOnly?: boolean
-  positionDirection?: string
-}) {
-  // const options: SortOption<SortColumn>[] = [
-  //   { value: 'Position Amount', sortBy: 'UserAssets' },
-  //   { value: 'Total ETH', sortBy: 'AssetsSum' },
-  //   { value: 'Updated At', sortBy: 'UpdatedAt' },
-  //   { value: 'Created At', sortBy: 'CreatedAt' },
-  // ]
-
-  // logger('vaultPositions', { vaultPositions })
-  // logger('counterVaultPositions', { counterVaultPositions })
-
+  enableSearch = true,
+  enableSort = true,
+  onPageChange,
+  onLimitChange,
+}: ActivePositionsOnClaimsNewProps) {
   const positionsMapped = positions
     .map((p) => ({
       ...p,
@@ -70,22 +62,47 @@ export function ActivePositionsOnClaimsNew({
       return true
     })
 
-  logger('positionsMapped', { positionsMapped })
-
-  const paginationCount =
-    typeof pagination === 'number'
-      ? pagination
-      : pagination?.aggregate?.count ?? 0
-
-  return (
-    <List<SortColumn>
-      pagination={{
+  // Convert pagination to the format expected by the List component
+  const formattedPagination: PaginationType = (() => {
+    if (typeof pagination === 'number') {
+      return {
         currentPage: 1,
         limit: 10,
-        totalEntries: paginationCount,
-        totalPages: Math.ceil(paginationCount / 10),
-      }}
+        totalEntries: pagination,
+        totalPages: Math.ceil(pagination / 10),
+      }
+    }
+
+    if ('aggregate' in pagination) {
+      const count = pagination.aggregate?.count ?? 0
+      return {
+        currentPage: 1,
+        limit: 10,
+        totalEntries: count,
+        totalPages: Math.ceil(count / 10),
+      }
+    }
+
+    return pagination as PaginationType
+  })()
+
+  // Using GraphQL field names directly for sorting
+  const options: SortOption<string>[] = [
+    { value: 'Position Amount', sortBy: 'shares' },
+    { value: 'Total ETH', sortBy: 'vault.total_shares' },
+    { value: 'Updated At', sortBy: 'block_timestamp' },
+    { value: 'Created At', sortBy: 'block_timestamp' },
+  ]
+
+  return (
+    <List<string>
+      pagination={formattedPagination}
       paginationLabel="positions"
+      options={options}
+      enableSearch={enableSearch}
+      enableSort={enableSort}
+      onPageChange={onPageChange}
+      onLimitChange={onLimitChange}
     >
       <ListHeader
         items={[
@@ -213,115 +230,6 @@ export function ActivePositionsOnClaimsNew({
                 }}
               />
             )}
-          </ClaimPositionRow>
-        </div>
-      ))}
-    </List>
-  )
-}
-
-// LEGACY IMPLEMENTAITON -- REMOVE ONCE MIGRATED
-export function ActivePositionsOnClaims({
-  claims,
-  pagination,
-  readOnly = false,
-}: {
-  claims: ClaimPresenter[]
-  pagination: PaginationType
-  readOnly?: boolean
-}) {
-  const options: SortOption<SortColumn>[] = [
-    { value: 'Position Amount', sortBy: 'UserAssets' },
-    { value: 'Total ETH', sortBy: 'AssetsSum' },
-    { value: 'Updated At', sortBy: 'UpdatedAt' },
-    { value: 'Created At', sortBy: 'CreatedAt' },
-  ]
-
-  return (
-    <List<SortColumn>
-      paginationLabel="positions"
-      pagination={pagination}
-      options={options}
-      paramPrefix="activeClaims"
-    >
-      <ListHeader
-        items={[
-          { label: 'Claim', icon: IconName.claim },
-          { label: 'Position Amount', icon: IconName.ethereum },
-        ]}
-      />
-      {claims.map((claim) => (
-        <div
-          key={claim.claim_id}
-          className={`grow shrink basis-0 self-stretch bg-black first:rounded-t-xl last:rounded-b-xl theme-border flex-col justify-start items-start gap-5 inline-flex`}
-        >
-          <ClaimPositionRow
-            variant="claim"
-            position={
-              claim.user_assets_for > '0'
-                ? ClaimPosition.claimFor
-                : ClaimPosition.claimAgainst
-            }
-            claimsFor={claim.for_num_positions}
-            claimsAgainst={claim.against_num_positions}
-            claimsForValue={+formatBalance(claim.for_assets_sum, 18)}
-            claimsAgainstValue={+formatBalance(claim.against_assets_sum, 18)}
-            amount={
-              +formatBalance(
-                claim.user_assets_for > '0'
-                  ? claim.user_assets_for
-                  : claim.user_assets_against,
-                18,
-              )
-            }
-            feesAccrued={0} // TODO: Update once BE adds deltas to the data output
-            link={getClaimUrl(claim.vault_id, readOnly)}
-          >
-            <Claim
-              size="md"
-              subject={{
-                variant: claim.subject?.is_user
-                  ? Identity.user
-                  : Identity.nonUser,
-                label: getAtomLabel(claim.subject as IdentityPresenter),
-                imgSrc: getAtomImage(claim.subject as IdentityPresenter),
-                id: claim.subject?.identity_id,
-                description: getAtomDescription(
-                  claim.subject as IdentityPresenter,
-                ),
-                ipfsLink: getAtomIpfsLink(claim.subject as IdentityPresenter),
-                link: getAtomLink(claim.subject as IdentityPresenter, readOnly),
-              }}
-              predicate={{
-                variant: claim.predicate?.is_user
-                  ? Identity.user
-                  : Identity.nonUser,
-                label: getAtomLabel(claim.predicate as IdentityPresenter),
-                imgSrc: getAtomImage(claim.predicate as IdentityPresenter),
-                id: claim.predicate?.identity_id,
-                description: getAtomDescription(
-                  claim.predicate as IdentityPresenter,
-                ),
-                ipfsLink: getAtomIpfsLink(claim.predicate as IdentityPresenter),
-                link: getAtomLink(
-                  claim.predicate as IdentityPresenter,
-                  readOnly,
-                ),
-              }}
-              object={{
-                variant: claim.object?.is_user
-                  ? Identity.user
-                  : Identity.nonUser,
-                label: getAtomLabel(claim.object as IdentityPresenter),
-                imgSrc: getAtomImage(claim.object as IdentityPresenter),
-                id: claim.object?.identity_id,
-                description: getAtomDescription(
-                  claim.object as IdentityPresenter,
-                ),
-                ipfsLink: getAtomIpfsLink(claim.object as IdentityPresenter),
-                link: getAtomLink(claim.object as IdentityPresenter, readOnly),
-              }}
-            />
           </ClaimPositionRow>
         </div>
       ))}
