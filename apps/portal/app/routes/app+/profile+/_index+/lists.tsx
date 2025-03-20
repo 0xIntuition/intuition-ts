@@ -161,15 +161,18 @@ export default function ProfileLists() {
                 ...((resolvedSavedLists?.triples as Triple[]) ?? []),
               ]
             })
+            const transformedClaims = accumulatedClaims.map((triple) => ({
+              __typename: 'predicate_objects' as const,
+              id: String(triple.id),
+              claim_count: triple.vault?.position_count ?? 0,
+              triple_count: triple.vault?.position_count ?? 0,
+              object: triple.object,
+            }))
             return (
               <ListClaimsList
-                listClaims={accumulatedClaims}
-                // TODO: Add pagination once app loads
-                // pagination={resolvedSavedLists?.pagination}
+                listClaims={transformedClaims}
                 enableSort={true}
                 enableSearch={true}
-                // TODO: Implement load more once app loads
-                // onLoadMore={() => handleLoadMore(resolvedSavedLists)}
                 sortOptions={sortOptions}
                 sourceUserAddress={initialParams.queryAddress}
               />
