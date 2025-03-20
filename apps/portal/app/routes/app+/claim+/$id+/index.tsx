@@ -9,10 +9,8 @@ import {
   TabsTrigger,
   Text,
 } from '@0xintuition/1ui'
-import { VaultType } from '@0xintuition/api'
 import {
   fetcher,
-  GetAtomQuery,
   GetTripleDocument,
   GetTripleQuery,
   GetTripleQueryVariables,
@@ -33,18 +31,11 @@ import {
   invariant,
 } from '@lib/utils/misc'
 import { LoaderFunctionArgs } from '@remix-run/node'
-import {
-  useLoaderData,
-  useNavigation,
-  useRouteLoaderData,
-  useSearchParams,
-} from '@remix-run/react'
-import { ClaimDetailsLoaderData } from '@routes/app+/claim+/$id'
+import { useLoaderData, useNavigation, useSearchParams } from '@remix-run/react'
 import { getUserWallet } from '@server/auth'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
-import { NO_CLAIM_ERROR, NO_PARAM_ID_ERROR, NO_WALLET_ERROR } from 'app/consts'
-
-type Atom = GetAtomQuery['atom']
+import { NO_PARAM_ID_ERROR, NO_WALLET_ERROR } from 'app/consts'
+import { Atom } from 'app/types'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const id = params.id
@@ -92,7 +83,7 @@ export default function ClaimOverview() {
 
   const { state } = useNavigation()
 
-  function handleTabChange(value: VaultType | null) {
+  function handleTabChange(value: string | null) {
     const newParams = new URLSearchParams(searchParams)
     if (value === null) {
       newParams.delete('positionDirection')

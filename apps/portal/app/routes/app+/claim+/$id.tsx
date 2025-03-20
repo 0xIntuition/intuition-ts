@@ -12,7 +12,6 @@ import {
   TagSize,
   TagVariant,
 } from '@0xintuition/1ui'
-import { ClaimSortColumn, SortDirection } from '@0xintuition/api'
 import {
   fetcher,
   GetTripleDocument,
@@ -42,7 +41,6 @@ import {
   getAtomIpfsLinkGQL,
   getAtomLabelGQL,
   getAtomLinkGQL,
-  invariant,
 } from '@lib/utils/misc'
 import { LoaderFunctionArgs } from '@remix-run/node'
 import { Outlet } from '@remix-run/react'
@@ -52,7 +50,6 @@ import {
   BLOCK_EXPLORER_URL,
   CURRENT_ENV,
   MULTIVAULT_CONTRACT_ADDRESS,
-  NO_WALLET_ERROR,
   PATHS,
 } from 'app/consts'
 import TwoPanelLayout from 'app/layouts/two-panel-layout'
@@ -60,11 +57,9 @@ import { Atom } from 'app/types/atom'
 import { Triple } from 'app/types/triple'
 import { VaultDetailsType } from 'app/types/vault'
 import { useAtom } from 'jotai'
-import { formatUnits } from 'viem'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const wallet = await getUserWallet(request)
-  invariant(wallet, NO_WALLET_ERROR)
 
   const id = params.id
   if (!id) {
@@ -72,13 +67,6 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   }
 
   const queryClient = new QueryClient()
-
-  const url = new URL(request.url)
-  const searchParams = new URLSearchParams(url.search)
-  const sortBy: ClaimSortColumn =
-    (searchParams.get('sortBy') as ClaimSortColumn) ?? 'CreatedAt'
-  const direction: SortDirection =
-    (searchParams.get('direction') as SortDirection) ?? 'desc'
 
   const tripleResult = await fetcher<GetTripleQuery, GetTripleQueryVariables>(
     GetTripleDocument,
@@ -96,8 +84,6 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
   return {
     wallet,
-    sortBy,
-    direction,
     dehydratedState: dehydrate(queryClient),
     initialParams: {
       id,
@@ -159,10 +145,11 @@ export default function ClaimDetails() {
     )
 
   logger('Vault Details:', vaultDetails)
+  logger('Triple Data:', tripleData)
 
   const direction: 'for' | 'against' =
     (vaultDetails?.user_conviction_against ??
-      tripleData?.triple?.counter_vault?.positions?.[0].shares) === '0'
+      tripleData?.triple?.counter_vault?.positions?.[0]?.shares) === '0'
       ? 'for'
       : 'against'
 
@@ -184,9 +171,13 @@ export default function ClaimDetails() {
       : 0n
 
   const userConviction =
-    vaultDetails?.user_conviction ?? direction === 'for'
-      ? tripleData?.triple?.vault?.positions?.[0].shares
-      : tripleData?.triple?.counter_vault?.positions?.[0].shares
+    direction === 'for'
+      ? vaultDetails
+        ? vaultDetails.user_conviction
+        : tripleData?.triple?.vault?.positions?.[0]?.shares
+      : vaultDetails
+        ? vaultDetails.user_conviction_against
+        : tripleData?.triple?.counter_vault?.positions?.[0]?.shares
 
   const directionTagVariant =
     +userConviction > 0 ? TagVariant.for : TagVariant.against
@@ -326,9 +317,38 @@ export default function ClaimDetails() {
         //       +(vaultDetails?.against_assets_sum ?? '0'),
         //   )
         // }
-        totalTVL={1}
-        tvlAgainst={1}
-        tvlFor={1}
+        totalTVL={
+          vaultDetails?.assets_sum
+            ? +formatBalance(BigInt(vaultDetails.assets_sum), 18)
+            : +formatBalance(
+                (BigInt(tripleData?.triple?.vault?.total_shares) *
+                  BigInt(tripleData?.triple?.vault?.current_share_price)) /
+                  BigInt(10 ** 18),
+                18,
+              )
+        }
+        tvlAgainst={
+          vaultDetails?.against_assets_sum
+            ? +formatBalance(BigInt(vaultDetails.against_assets_sum), 18)
+            : +formatBalance(
+                (BigInt(tripleData?.triple?.counter_vault?.total_shares) *
+                  BigInt(
+                    tripleData?.triple?.counter_vault?.current_share_price,
+                  )) /
+                  BigInt(10 ** 18),
+                18,
+              )
+        }
+        tvlFor={
+          vaultDetails?.assets_sum
+            ? +formatBalance(BigInt(vaultDetails?.assets_sum), 18)
+            : +formatBalance(
+                (BigInt(tripleData?.triple?.vault?.total_shares) *
+                  BigInt(tripleData?.triple?.vault?.current_share_price)) /
+                  BigInt(10 ** 18),
+                18,
+              )
+        }
         // tvlAgainst={
         //   +formatBalance(
         //     (
@@ -382,11 +402,11 @@ export default function ClaimDetails() {
         }
         disableForBtn={
           (vaultDetails?.user_conviction_against ??
-            tripleData?.triple?.counter_vault?.positions?.[0].shares) > '0'
+            tripleData?.triple?.counter_vault?.positions?.[0]?.shares) > '0'
         }
         disableAgainstBtn={
           (vaultDetails?.user_conviction ??
-            tripleData?.triple?.vault?.positions?.[0].shares) > '0'
+            tripleData?.triple?.vault?.positions?.[0]?.shares) > '0'
         }
       />
       <DetailInfoCardNew
