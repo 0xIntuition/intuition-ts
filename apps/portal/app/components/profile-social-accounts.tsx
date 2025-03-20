@@ -1,6 +1,6 @@
 import { Button, Icon, IconName } from '@0xintuition/1ui'
 
-import { VerifiedLinkBadges } from '@client/privy-verified-links'
+import { VerifiedLinkBadges } from '@components/auth/privy-verified-links'
 import { verifiedPlatforms } from 'app/consts'
 import { ExtendedPrivyUser } from 'app/types/user'
 

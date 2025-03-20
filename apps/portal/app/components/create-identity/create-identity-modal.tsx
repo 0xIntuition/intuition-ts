@@ -32,6 +32,7 @@ import { MIN_DEPOSIT, MULTIVAULT_CONTRACT_ADDRESS } from '@consts/general'
 import { multivaultAbi } from '@lib/abis/multivault'
 import { useCreateAtomMutation } from '@lib/hooks/mutations/useCreateAtomMutation'
 import { useCreateAtomConfig } from '@lib/hooks/useCreateAtomConfig'
+import { useGetWalletBalance } from '@lib/hooks/useGetWalletBalance'
 import { ipfsUrl } from '@lib/utils/app'
 import { usePrivy } from '@privy-io/react-auth'
 import { ClientOnly } from 'remix-utils/client-only'
@@ -97,6 +98,7 @@ export function CreateIdentityModal({
   const { data: createAtomConfig, isLoading: isLoadingConfig } =
     useCreateAtomConfig()
   const { atomCost, minDeposit } = createAtomConfig ?? {}
+  const walletBalance = useGetWalletBalance(wallet?.address as `0x${string}`)
 
   const {
     mutateAsync: createAtom,
@@ -285,7 +287,7 @@ export function CreateIdentityModal({
           return (
             <DepositForm
               onSubmit={handleDepositSubmit}
-              // minDeposit={atomCost?.formatted ?? '0.1'}
+              walletBalance={walletBalance}
               minDeposit={
                 (minDeposit && formatUnits(BigInt(minDeposit), 18)) ??
                 MIN_DEPOSIT

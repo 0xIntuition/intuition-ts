@@ -1,6 +1,3 @@
-// DEPRECATED: This file is no longer used. Please use the implementation in @client/providers.tsx instead.
-// This file is maintained for backward compatibility but will be removed in a future release.
-
 import { WagmiProvider } from '@privy-io/wagmi'
 import {
   HydrationBoundary,
@@ -29,14 +26,10 @@ interface ProvidersProps {
 }
 
 export function Providers({ children, env, dehydratedState }: ProvidersProps) {
-  console.warn(
-    'DEPRECATED: Using deprecated providers implementation. Please use @client/providers.tsx instead.',
-  )
-
   return (
     <PrivyConfig env={env}>
       <QueryClientProvider client={queryClient}>
-        <WagmiProvider config={wagmiConfig}>
+        <WagmiProvider config={wagmiConfig} reconnectOnMount={false}>
           <AuthProvider>
             <HydrationBoundary state={dehydratedState}>
               {children}

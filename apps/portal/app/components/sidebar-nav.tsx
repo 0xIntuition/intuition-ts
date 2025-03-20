@@ -301,7 +301,8 @@ export default function SidebarNav({
               />
             </SidebarLayoutNavHeader>
             <SidebarLayoutNavBody className="flex flex-col justify-between">
-              <div className="flex flex-col gap-6">
+              <div className="flex flex-col gap-4">
+                {renderAuthButton()}
                 <div className="flex flex-col gap-1">
                   {sidebarNavRoutes.map((sidebarNavItem, index) => (
                     <NavLink
@@ -373,7 +374,6 @@ export default function SidebarNav({
                     aria-selected={isRouteActive(PATHS.HELP)}
                   />
                 </NavLink>
-                {renderAuthButton()}
               </div>
             </SidebarLayoutNavBody>
           </SidebarLayoutNav>

@@ -1,4 +1,4 @@
-import Providers from '@client/providers'
+import { Providers } from '@lib/providers'
 import { ClientHintCheck, getHints } from '@lib/utils/client-hints'
 import { useNonce } from '@lib/utils/nonce-provider'
 import { json, LoaderFunctionArgs, type MetaFunction } from '@remix-run/node'
@@ -219,9 +219,9 @@ function App() {
     <Document nonce={nonce} theme={theme} gtmTrackingId={env.GTM_TRACKING_ID}>
       <GlobalLoading />
       <Toaster position="top-right" />
-      <ClientOnly>
+      <ClientOnly fallback={<GlobalLoading />}>
         {() => (
-          <Providers privyAppId={env.PRIVY_APP_ID}>
+          <Providers env={env}>
             <AppLayout />
           </Providers>
         )}

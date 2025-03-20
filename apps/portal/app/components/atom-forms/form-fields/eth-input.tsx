@@ -6,7 +6,9 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  Icon,
   Input,
+  Text,
 } from '@0xintuition/1ui'
 
 import { useDebounce } from '@lib/hooks/useDebounce'
@@ -15,6 +17,7 @@ import { useFormContext } from 'react-hook-form'
 interface EthInputProps {
   name: string
   label: string
+  walletBalance: string
   placeholder?: string
   disabled?: boolean
 }
@@ -22,6 +25,7 @@ interface EthInputProps {
 export function EthInput({
   name,
   label,
+  walletBalance,
   placeholder,
   disabled,
 }: EthInputProps) {
@@ -65,7 +69,19 @@ export function EthInput({
       name={name}
       render={({ field }) => (
         <FormItem>
-          <FormLabel>{label}</FormLabel>
+          <FormLabel className="flex flex-row items-center justify-between">
+            <Text>{label}</Text>
+            <div className="flex items-center justify-end gap-4 text-sm">
+              <div className="flex items-center gap-2 justify-end">
+                {walletBalance && (
+                  <span className="flex flex-row items-center gap-1 text-muted-foreground">
+                    <Icon name="wallet" className="w-4 h-4" />{' '}
+                    {Number(walletBalance).toFixed(5)} ETH
+                  </span>
+                )}
+              </div>
+            </div>
+          </FormLabel>
           <FormControl>
             <div className="relative">
               <Input
