@@ -17,12 +17,12 @@ import { SortOption } from '@components/sort-select'
 import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getSpecialPredicate } from '@lib/utils/app'
 import { invariant } from '@lib/utils/misc'
-import { defer, LoaderFunctionArgs } from '@remix-run/node'
-import { Await, useSearchParams, useSubmit } from '@remix-run/react'
+import { LoaderFunctionArgs } from '@remix-run/node'
+import { Await, useSearchParams } from '@remix-run/react' // add useSubmit back in once we add submit again
 import { getUserWallet } from '@server/auth'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
 import { CURRENT_ENV, NO_WALLET_ERROR } from 'app/consts'
-import { TripleType } from 'app/types/triple'
+import { Triple } from 'app/types/triple'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const userWallet = await getUserWallet(request)
@@ -67,20 +67,20 @@ export async function loader({ request }: LoaderFunctionArgs) {
       }),
   })
 
-  return defer({
+  return {
     dehydratedState: dehydrate(queryClient),
     initialParams: {
       savedListsWhere,
       queryAddress,
     },
-  })
+  }
 }
 
 export default function ProfileLists() {
   const { initialParams } = useLiveLoader<typeof loader>(['create', 'attest'])
   const [searchParams] = useSearchParams()
-  const submit = useSubmit()
-  const [accumulatedClaims, setAccumulatedClaims] = useState<TripleType[]>([])
+  // const submit = useSubmit()
+  const [accumulatedClaims, setAccumulatedClaims] = useState<Triple[]>([])
 
   const currentPage = Number(searchParams.get('page') || '1')
 
@@ -92,9 +92,9 @@ export default function ProfileLists() {
 
   const {
     data: savedListsResults,
-    isLoading: isLoadingSavedLists,
-    isError: isErrorSavedLists,
-    error: errorSavedLists,
+    // isLoading: isLoadingSavedLists, // add these back in once handling loading and error states again
+    // isError: isErrorSavedLists,
+    // error: errorSavedLists,
   } = useGetTriplesWithPositionsQuery(
     {
       where: initialParams.savedListsWhere,
@@ -154,11 +154,11 @@ export default function ProfileLists() {
           {(resolvedSavedLists) => {
             setAccumulatedClaims((prev) => {
               if (currentPage === 1) {
-                return (resolvedSavedLists?.triples as TripleType[]) ?? []
+                return (resolvedSavedLists?.triples as Triple[]) ?? []
               }
               return [
                 ...prev,
-                ...((resolvedSavedLists?.triples as TripleType[]) ?? []),
+                ...((resolvedSavedLists?.triples as Triple[]) ?? []),
               ]
             })
             return (

@@ -49,7 +49,7 @@ import { globalCreateClaimModalAtom } from '@lib/state/store'
 import { getSpecialPredicate } from '@lib/utils/app'
 import logger from '@lib/utils/logger'
 import { formatBalance, invariant } from '@lib/utils/misc'
-import { json, LoaderFunctionArgs } from '@remix-run/node'
+import { LoaderFunctionArgs } from '@remix-run/node'
 import {
   Await,
   useLoaderData,
@@ -326,7 +326,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
       )(),
   })
 
-  return json({
+  return {
     queryAddress,
     initialParams: {
       atomId: accountResult.account?.atom_id,
@@ -341,7 +341,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
       allPositionsWhere,
       followersWhere,
     },
-  })
+  }
 }
 
 export default function ProfileOverview() {
@@ -431,9 +431,9 @@ export default function ProfileOverview() {
 
   const {
     data: savedListsResults,
-    isLoading: isLoadingSavedLists,
-    isError: isErrorSavedLists,
-    error: errorSavedLists,
+    // isLoading: isLoadingSavedLists, // add back in once we have loading/error states
+    // isError: isErrorSavedLists,
+    // error: errorSavedLists,
   } = useGetTriplesWithPositionsQuery(
     {
       where: initialParams.savedListsWhere,

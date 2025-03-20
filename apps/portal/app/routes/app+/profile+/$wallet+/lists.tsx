@@ -18,11 +18,11 @@ import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getSpecialPredicate } from '@lib/utils/app'
 import { invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
-import { Await, useSearchParams, useSubmit } from '@remix-run/react'
+import { Await, useSearchParams } from '@remix-run/react' // add useSubmit back in once we add submit again
 import { getUserWallet } from '@server/auth'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
 import { CURRENT_ENV, NO_PARAM_ID_ERROR, NO_WALLET_ERROR } from 'app/consts'
-import { TripleType } from 'app/types/triple'
+import { Triple } from 'app/types/triple'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const userWallet = await getUserWallet(request)
@@ -84,8 +84,8 @@ export default function ProfileLists() {
   ])
   const [searchParams] = useSearchParams()
 
-  const submit = useSubmit()
-  const [accumulatedClaims, setAccumulatedClaims] = useState<TripleType[]>([])
+  // const submit = useSubmit() // add back in once we have submit again
+  const [accumulatedClaims, setAccumulatedClaims] = useState<Triple[]>([])
 
   const currentPage = Number(searchParams.get('page') || '1')
 
@@ -97,9 +97,9 @@ export default function ProfileLists() {
 
   const {
     data: savedListsResults,
-    isLoading: isLoadingSavedLists,
-    isError: isErrorSavedLists,
-    error: errorSavedLists,
+    // isLoading: isLoadingSavedLists, // add back in once we have loading/error states
+    // isError: isErrorSavedLists,
+    // error: errorSavedLists,
   } = useGetTriplesWithPositionsQuery(
     {
       where: initialParams.savedListsWhere,
@@ -159,11 +159,11 @@ export default function ProfileLists() {
           {(resolvedSavedLists) => {
             setAccumulatedClaims((prev) => {
               if (currentPage === 1) {
-                return (resolvedSavedLists?.triples as TripleType[]) ?? []
+                return (resolvedSavedLists?.triples as Triple[]) ?? []
               }
               return [
                 ...prev,
-                ...((resolvedSavedLists?.triples as TripleType[]) ?? []),
+                ...((resolvedSavedLists?.triples as Triple[]) ?? []),
               ]
             })
             return (
