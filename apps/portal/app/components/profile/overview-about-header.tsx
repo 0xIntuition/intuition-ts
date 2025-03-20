@@ -10,9 +10,9 @@ import {
   Text,
   Trunctacular,
 } from '@0xintuition/1ui'
-import { IdentityPresenter } from '@0xintuition/api'
 
 import { Link } from '@remix-run/react'
+import { Atom } from 'app/types'
 
 export const DataAboutHeaderVariants = {
   positions: 'positions',
@@ -106,7 +106,7 @@ export function OverviewAboutHeaderNew({
 interface OverviewAboutHeaderProps
   extends React.HTMLAttributes<HTMLDivElement> {
   variant: OverviewAboutHeaderVariantType
-  userIdentity: IdentityPresenter
+  userIdentity: Atom
   totalClaims?: number
   totalPositions?: number
   totalStake: number
@@ -137,13 +137,11 @@ export function OverviewAboutHeader({
           {variant === 'claims' ? 'Claims about' : 'Conviction in'}
         </Text>
         <IdentityTag
-          imgSrc={userIdentity?.user?.image ?? userIdentity?.image}
-          variant={userIdentity?.user ? 'user' : 'non-user'}
+          imgSrc={userIdentity?.image}
+          variant={userIdentity?.type === 'Account' ? 'user' : 'non-user'}
         >
           <Trunctacular
-            value={
-              userIdentity?.user?.display_name ?? userIdentity?.display_name
-            }
+            value={userIdentity?.label ?? ''}
             maxStringLength={40}
           />
         </IdentityTag>

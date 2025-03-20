@@ -14,7 +14,6 @@ import {
   Atom,
   DepositFormData,
   FormContainer,
-  NewAtomMetadata,
   organizationAtomSchema,
   personAtomSchema,
   registerAtomForm,
@@ -71,13 +70,11 @@ const INITIAL_STEPS: Step[] = [
 export interface CreateIdentityModalProps {
   isOpen?: boolean
   onClose: () => void
-  onCreationSuccess: (metadata: NewAtomMetadata) => void
 }
 
 export function CreateIdentityModal({
   isOpen,
   onClose,
-  onCreationSuccess,
 }: CreateIdentityModalProps) {
   const [currentStep, setCurrentStep] = useState('metadata')
   const [steps, setSteps] = useState<Step[]>(INITIAL_STEPS)
@@ -242,12 +239,6 @@ export function CreateIdentityModal({
             event.args.creator === (wallet?.address as `0x${string}`)
           ) {
             const vaultId = event.args.vaultID.toString()
-
-            onCreationSuccess({
-              name: atomData?.name ?? '',
-              image: atomData?.image ?? '',
-              vaultId,
-            })
 
             toast.custom(() => (
               <CreateAtomToast

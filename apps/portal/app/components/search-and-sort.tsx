@@ -1,7 +1,7 @@
 import { Input } from '@0xintuition/1ui'
-import { SortDirection } from '@0xintuition/api'
 
 import { SortOption, SortSelect } from '@components/sort-select'
+import { SortDirection } from '@lib/utils/params'
 
 interface SearchAndSortProps<T> {
   options: SortOption<T>[]

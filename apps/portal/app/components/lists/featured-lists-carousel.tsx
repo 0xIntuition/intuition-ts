@@ -1,16 +1,16 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { FeaturedListCard } from '@0xintuition/1ui'
-import { ClaimPresenter } from '@0xintuition/api'
 import { GetListsQuery } from '@0xintuition/graphql'
 
 import { cn, getListUrl } from '@lib/utils/misc'
 import { Link } from '@remix-run/react'
+import { Triple } from 'app/types'
 import type { EmblaOptionsType } from 'embla-carousel'
 import useEmblaCarousel from 'embla-carousel-react'
 
 interface FeaturedListCarouselProps {
-  lists: ClaimPresenter[]
+  lists: Triple[]
 }
 
 export function FeaturedListCarousel({ lists }: FeaturedListCarouselProps) {
@@ -103,17 +103,17 @@ export function FeaturedListCarousel({ lists }: FeaturedListCarouselProps) {
       <div className="overflow-hidden" ref={emblaRef}>
         <div className="flex gap-6">
           {lists.map((list) => (
-            <div key={list.claim_id} className="flex-shrink-0">
+            <div key={list.id} className="flex-shrink-0">
               <Link
-                to={getListUrl(list.vault_id, '')}
+                to={getListUrl(String(list.vault_id), '')}
                 prefetch="intent"
                 className="block"
                 onClick={(e) => e.stopPropagation()}
               >
                 <FeaturedListCard
-                  displayName={list.object?.display_name ?? ''}
+                  displayName={list.object?.label ?? ''}
                   imgSrc={list.object?.image ?? ''}
-                  identitiesCount={list.object?.tag_count ?? 0}
+                  identitiesCount={0} // TODO: I think we need to update the query to get this value
                   // TODO: Update TVL and holders count when it becomes available. Because the list is identified by the object, the tvl and holders count are related to specific claim used for the query rather than the list itself.
                   // tvl={formatBalance(list.assets_sum ?? 0, 18)}
                   // holdersCount={list.num_positions ?? 0}

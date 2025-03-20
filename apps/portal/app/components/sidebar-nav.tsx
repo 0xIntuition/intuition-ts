@@ -386,9 +386,7 @@ export default function SidebarNav({
         <>
           <CreateIdentityModal
             isOpen={createIdentityModalActive}
-            wallet={privyUser?.wallet?.address as `0x${string}`}
             onClose={() => setCreateIdentityModalActive(false)}
-            onSuccess={() => {}}
           />
           <CreateClaimModal
             open={createClaimModalActive}

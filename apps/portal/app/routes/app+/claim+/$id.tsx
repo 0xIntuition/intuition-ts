@@ -414,7 +414,7 @@ export default function ClaimDetails() {
         list={
           String(tripleData?.triple?.predicate?.id) ===
           String(getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId)
-            ? tripleData?.triple
+            ? (tripleData?.triple as Triple)
             : undefined
         }
         username={tripleData?.triple?.creator?.label ?? '?'}

@@ -1,11 +1,10 @@
 import * as React from 'react'
 
 import { Separator, Text } from '@0xintuition/1ui'
-import { GetAtomQuery } from '@0xintuition/graphql'
 
 import { IdentitySelector } from '@components/identity/identity-selector'
 import { useNavigate } from '@remix-run/react'
-import { ClaimElement, ClaimElementType } from 'app/types'
+import { Atom, ClaimElement, ClaimElementType } from 'app/types'
 
 export interface ExploreSearchClaimInputProps
   extends React.HTMLAttributes<HTMLDivElement> {}
@@ -13,9 +12,9 @@ export interface ExploreSearchClaimInputProps
 const ExploreSearchClaimInput = () => {
   const navigate = useNavigate()
   const [selectedIdentities, setSelectedIdentities] = React.useState<{
-    subject: GetAtomQuery['atom'] | null
-    predicate: GetAtomQuery['atom'] | null
-    object: GetAtomQuery['atom'] | null
+    subject: Atom | null
+    predicate: Atom | null
+    object: Atom | null
   }>({
     subject: null,
     predicate: null,
@@ -31,10 +30,7 @@ const ExploreSearchClaimInput = () => {
     object: false,
   })
 
-  const handleIdentitySelection = (
-    type: ClaimElementType,
-    identity: GetAtomQuery['atom'],
-  ) => {
+  const handleIdentitySelection = (type: ClaimElementType, identity: Atom) => {
     const updatedIdentities = { ...selectedIdentities, [type]: identity }
     setSelectedIdentities(updatedIdentities)
     setPopoverOpen({ ...popoverOpen, [type]: false })
@@ -42,23 +38,23 @@ const ExploreSearchClaimInput = () => {
   }
 
   const updateQueryParams = (identities: {
-    subject: GetAtomQuery['atom'] | null
-    predicate: GetAtomQuery['atom'] | null
-    object: GetAtomQuery['atom'] | null
+    subject: Atom | null
+    predicate: Atom | null
+    object: Atom | null
   }) => {
     const params = new URLSearchParams(window.location.search)
     if (identities.subject) {
-      params.set(ClaimElement.Subject, identities.subject.id)
+      params.set(ClaimElement.Subject, identities.subject.id.toString())
     } else {
       params.delete(ClaimElement.Subject)
     }
     if (identities.predicate) {
-      params.set(ClaimElement.Predicate, identities.predicate.id)
+      params.set(ClaimElement.Predicate, identities.predicate.id.toString())
     } else {
       params.delete(ClaimElement.Predicate)
     }
     if (identities.object) {
-      params.set(ClaimElement.Object, identities.object.id)
+      params.set(ClaimElement.Object, identities.object.id.toString())
     } else {
       params.delete(ClaimElement.Object)
     }

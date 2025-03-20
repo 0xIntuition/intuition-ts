@@ -5,8 +5,7 @@ import {
   Identity,
   IdentityStakeCard,
   PieChartVariant,
-  PositionCard,
-  PositionCardLastUpdated, // TODO: Add last updated when we have it available
+  PositionCard, // TODO: Add last updated when we have it available
   PositionCardOwnership,
   PositionCardStaked,
   ProfileCard,
@@ -16,7 +15,6 @@ import {
   TagsContent,
   TagWithValue,
 } from '@0xintuition/1ui'
-import { IdentityPresenter } from '@0xintuition/api'
 import {
   fetcher,
   GetAtomDocument,
@@ -29,7 +27,7 @@ import {
   useGetTagsQuery,
 } from '@0xintuition/graphql'
 
-import { DetailInfoCard } from '@components/detail-info-card'
+import { DetailInfoCardNew } from '@components/detail-info-card'
 import { ErrorPage } from '@components/error-page'
 import ImageModal from '@components/profile/image-modal'
 import SaveListModal from '@components/save-list/save-list-modal'
@@ -162,9 +160,7 @@ export default function IdentityDetails() {
   const [saveListModalActive, setSaveListModalActive] =
     useAtom(saveListModalAtom)
   const [imageModalActive, setImageModalActive] = useAtom(imageModalAtom)
-  const [selectedTag, setSelectedTag] = useState<
-    IdentityPresenter | null | undefined
-  >(null)
+  const [selectedTag, setSelectedTag] = useState<Atom | null | undefined>(null)
   const [shareModalActive, setShareModalActive] = useAtom(shareModalAtom)
 
   useEffect(() => {
@@ -264,13 +260,11 @@ export default function IdentityDetails() {
                     label={tag.object?.label ?? ''}
                     value={tag.vault?.allPositions?.aggregate?.count ?? 0}
                     onStake={() => {
-                      setSelectedTag(
-                        tag?.object as unknown as IdentityPresenter,
-                      ) // TODO: (ENG-4782) temporary type fix until we lock in final types
+                      setSelectedTag(tag?.object as unknown as Atom) // TODO: (ENG-4782) temporary type fix until we lock in final types
                       setSaveListModalActive({
                         isOpen: true,
                         id: tag.id,
-                        tag: tag.object as unknown as IdentityPresenter, // TODO: (ENG-4782) temporary type fix until we lock in final types
+                        tag: tag.object as unknown as Atom, // TODO: (ENG-4782) temporary type fix until we lock in final types
                       })
                     }}
                   />
@@ -345,7 +339,7 @@ export default function IdentityDetails() {
           }
         />
       </>
-      <DetailInfoCard
+      <DetailInfoCardNew
         variant={Identity.user}
         username={atomResult?.atom?.creator?.label ?? '?'}
         avatarImgSrc={atomResult?.atom?.creator?.image ?? ''}
@@ -412,9 +406,9 @@ export default function IdentityDetails() {
             tagAtom={
               identityToAtom(
                 saveListModalActive.tag ?? selectedTag,
-              ) as unknown as GetAtomQuery['atom']
+              ) as unknown as Atom
             }
-            atom={atomResult?.atom}
+            atom={atomResult?.atom as Atom}
             userWallet={userWallet}
             open={saveListModalActive.isOpen}
             onClose={() =>

@@ -1,6 +1,6 @@
 import { VaultDetailsType } from 'app/types'
-import { AtomType } from 'app/types/atom'
-import { TripleType } from 'app/types/triple'
+import { Atom } from 'app/types/atom'
+import { Triple } from 'app/types/triple'
 import type { WritableAtom } from 'jotai'
 import { atom, createStore } from 'jotai'
 
@@ -44,8 +44,8 @@ export const stakeModalAtom = atom<{
   direction?: 'for' | 'against'
   modalType?: 'identity' | 'claim'
   mode?: 'deposit' | 'redeem'
-  claim?: TripleType
-  identity?: AtomType
+  claim?: Triple
+  identity?: Atom
   vaultId: string
   vaultDetails?: VaultDetailsType
 }>({
@@ -79,9 +79,9 @@ export const addIdentitiesListModalAtom = atom<{
 export const saveListModalAtom = atom<{
   isOpen: boolean
   id?: string | null
-  tag?: AtomType | null
-  identity?: AtomType | null
-  invalidIdentity?: AtomType | null
+  tag?: Atom | null
+  identity?: Atom | null
+  invalidIdentity?: Atom | null
 }>({
   isOpen: false,
   id: null,
@@ -98,9 +98,9 @@ export const imageModalAtom = atom<{
 
 export const createClaimModalAtom = atom<{
   isOpen: boolean
-  subject?: AtomType | null
-  predicate?: AtomType | null
-  object?: AtomType | null
+  subject?: Atom | null
+  predicate?: Atom | null
+  object?: Atom | null
 }>({
   isOpen: false,
   subject: null,

@@ -35,6 +35,7 @@ import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { getUserWallet } from '@server/auth'
 import { QueryClient } from '@tanstack/react-query'
 import { NO_WALLET_ERROR } from 'app/consts'
+import { Triple } from 'app/types'
 import { useAtom } from 'jotai'
 
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -316,7 +317,7 @@ export default function ProfileDataAbout() {
               </ErrorStateCard>
             ) : (
               <ClaimsAboutIdentity
-                claims={triplesResult?.triples ?? []}
+                claims={triplesResult?.triples as Triple[]}
                 pagination={triplesResult?.total?.aggregate?.count ?? {}}
                 paramPrefix="claims"
                 enableSearch={false} // TODO: (ENG-4481) Re-enable search and sort

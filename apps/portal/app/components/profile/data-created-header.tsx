@@ -7,7 +7,9 @@ import {
   TextVariant,
   TextWeight,
 } from '@0xintuition/1ui'
-import { IdentityPresenter, UserTotalsPresenter } from '@0xintuition/api'
+import { GetAccountQuery } from '@0xintuition/graphql'
+
+import { Atom } from 'app/types'
 
 export const DataCreatedHeaderVariants = {
   activeIdentities: 'activeIdentities',
@@ -101,8 +103,8 @@ export const DataCreatedHeaderNew: React.FC<DataCreatedHeaderPropsNew> = ({
 // Legacy implementation -- delete once fully migrated both Data Created routes
 interface DataCreatedHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
   variant: DataCreatedHeaderVariantType
-  userIdentity: IdentityPresenter
-  userTotals: UserTotalsPresenter
+  userIdentity: Atom
+  userTotals: GetAccountQuery['account']
   totalStake: number
   totalResults: number
 }
@@ -139,10 +141,10 @@ export const DataCreatedHeader: React.FC<DataCreatedHeaderProps> = ({
               : 'created by'}
           </Text>
           <IdentityTag
-            imgSrc={userIdentity?.user?.image ?? userIdentity?.image}
-            variant={userIdentity?.user ? 'user' : 'non-user'}
+            imgSrc={userIdentity?.image}
+            variant={userIdentity?.type === 'Account' ? 'user' : 'non-user'}
           >
-            {userIdentity?.user?.display_name ?? userIdentity?.display_name}
+            {userIdentity?.label}
           </IdentityTag>
         </div>
         <div className="flex justify-between items-start max-sm:gap-5 max-sm:justify-center">

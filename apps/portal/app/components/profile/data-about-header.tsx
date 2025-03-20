@@ -8,7 +8,8 @@ import {
   TextWeight,
   Trunctacular,
 } from '@0xintuition/1ui'
-import { IdentityPresenter } from '@0xintuition/api'
+
+import { Atom } from 'app/types'
 
 export const DataAboutHeaderVariants = {
   positions: 'positions',
@@ -19,7 +20,7 @@ export type DataAboutHeaderVariantType =
   (typeof DataAboutHeaderVariants)[keyof typeof DataAboutHeaderVariants]
 
 interface DataAboutHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
-  userIdentity?: IdentityPresenter
+  userIdentity?: Atom
   variant: DataAboutHeaderVariantType
   atomImage?: string
   atomLabel?: string

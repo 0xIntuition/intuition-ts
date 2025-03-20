@@ -1,8 +1,7 @@
 import React from 'react'
 
-import { SortDirection } from '@0xintuition/api'
-
 import { SortOption, SortSelect } from '@components/sort-select'
+import { SortDirection } from '@lib/utils/params'
 
 interface SortProps<T> {
   options: SortOption<T>[]

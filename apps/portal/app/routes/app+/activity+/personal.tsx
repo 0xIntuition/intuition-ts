@@ -2,17 +2,16 @@ import { Suspense } from 'react'
 
 import { ErrorStateCard, IconName } from '@0xintuition/1ui'
 import {
-  Events,
   fetcher,
-  GetEventsDocument,
-  GetEventsQuery,
-  GetEventsQueryVariables,
-  useGetEventsQuery,
+  GetSignalsDocument,
+  GetSignalsQuery,
+  GetSignalsQueryVariables,
+  useGetSignalsQuery,
 } from '@0xintuition/graphql'
 
 import { ErrorPage } from '@components/error-page'
 import ExploreHeader from '@components/explore/ExploreHeader'
-import { ActivityListNew } from '@components/list/activity'
+import { ActivityFeed } from '@components/list/activity'
 import { RevalidateButton } from '@components/revalidate-button'
 import { ActivitySkeleton } from '@components/skeleton'
 import logger from '@lib/utils/logger'
@@ -41,78 +40,76 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const queryClient = new QueryClient()
   logger('Addresses being passed to query:', queryAddresses)
 
-  const personalActivityFeedWhere = {
-    _and: [
-      {
-        type: {
-          // _neq: 'FeesTransfered',
-          _in: ['AtomCreated', 'TripleCreated'], // TODO: (ENG-4882) Include 'Deposited' and 'Redeemed' once we work out some of th questions with it
-        },
-      },
-    ],
-    _or: [
-      {
-        atom: {
-          creator: {
-            id: {
-              _eq: queryAddress,
-            },
-          },
-        },
-      },
-      {
-        triple: {
-          creator: {
-            id: {
-              _eq: queryAddress,
-            },
-          },
-        },
-      },
-      {
-        deposit: {
-          sender: {
-            id: {
-              _eq: queryAddress,
-            },
-          },
-        },
-      },
-      {
-        redemption: {
-          sender: {
-            id: {
-              _eq: queryAddress,
-            },
-          },
-        },
-      },
-    ],
-  }
+  // const personalActivityFeedWhere = {
+  //   _and: [
+  //     {
+  //       type: {
+  //         // _neq: 'FeesTransfered',
+  //         _in: ['AtomCreated', 'TripleCreated'], // TODO: (ENG-4882) Include 'Deposited' and 'Redeemed' once we work out some of th questions with it
+  //       },
+  //     },
+  //   ],
+  //   _or: [
+  //     {
+  //       atom: {
+  //         creator: {
+  //           id: {
+  //             _eq: queryAddress,
+  //           },
+  //         },
+  //       },
+  //     },
+  //     {
+  //       triple: {
+  //         creator: {
+  //           id: {
+  //             _eq: queryAddress,
+  //           },
+  //         },
+  //       },
+  //     },
+  //     {
+  //       deposit: {
+  //         sender: {
+  //           id: {
+  //             _eq: queryAddress,
+  //           },
+  //         },
+  //       },
+  //     },
+  //     {
+  //       redemption: {
+  //         sender: {
+  //           id: {
+  //             _eq: queryAddress,
+  //           },
+  //         },
+  //       },
+  //     },
+  //   ],
+  // }
 
   await queryClient.prefetchQuery({
     queryKey: [
-      'get-events-personal',
+      'get-signals-personal',
       {
         limit,
         offset,
-        where: personalActivityFeedWhere,
         addresses: queryAddresses,
       },
     ],
     queryFn: () =>
-      fetcher<GetEventsQuery, GetEventsQueryVariables>(GetEventsDocument, {
+      fetcher<GetSignalsQuery, GetSignalsQueryVariables>(GetSignalsDocument, {
         limit,
         offset,
         addresses: queryAddresses,
         orderBy: [{ block_timestamp: 'desc' }],
-        where: personalActivityFeedWhere,
       }),
   })
 
   return json({
     dehydratedState: dehydrate(queryClient),
-    initialParams: { limit, offset, personalActivityFeedWhere, queryAddresses },
+    initialParams: { limit, offset, queryAddresses },
   })
 }
 
@@ -128,37 +125,35 @@ export default function PersonalActivityFeed() {
   )
 
   const {
-    data: eventsData,
+    data: signalsData,
     isLoading,
     isError,
     error,
-  } = useGetEventsQuery(
+  } = useGetSignalsQuery(
     {
       limit,
       offset,
       addresses: initialParams.queryAddresses,
       orderBy: [{ block_timestamp: 'desc' }],
-      where: initialParams.personalActivityFeedWhere,
     },
     {
       queryKey: [
-        'get-events-personal',
+        'get-signals-personal',
         {
           limit,
           offset,
-          where: initialParams.personalActivityFeedWhere,
           addresses: initialParams.queryAddresses,
         },
       ],
     },
   )
 
-  logger('Full events response:', eventsData)
+  logger('Full signals response:', signalsData)
   logger('Addresses being passed to query:', initialParams.queryAddresses)
 
-  const totalCount = eventsData?.total?.aggregate?.count ?? 0
+  const totalCount = signalsData?.total?.aggregate?.count ?? 0
   logger('totalCount', totalCount)
-  const hasMore = eventsData?.events?.length === limit
+  const hasMore = signalsData?.signals?.length === limit
 
   const handlePageChange = (newOffset: number) => {
     const params = new URLSearchParams(searchParams)
@@ -186,16 +181,17 @@ export default function PersonalActivityFeed() {
           >
             <RevalidateButton />
           </ErrorStateCard>
-        ) : eventsData?.events ? (
+        ) : signalsData?.signals ? (
           <>
-            <ActivityListNew
-              activities={eventsData.events as Events[]}
-              pagination={{
-                currentPage: offset / limit + 1,
-                limit,
-                totalEntries: totalCount,
-                totalPages: Math.ceil(totalCount / limit),
-              }}
+            <ActivityFeed
+              activities={signalsData}
+              // TODO: Add pagination
+              // pagination={{
+              //   currentPage: offset / limit + 1,
+              //   limit,
+              //   totalEntries: totalCount,
+              //   totalPages: Math.ceil(totalCount / limit),
+              // }}
             />
             <div className="flex gap-2 justify-center mt-4">
               <button

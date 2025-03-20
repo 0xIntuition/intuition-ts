@@ -17,7 +17,8 @@ export function useSocialLinking(verifiedPlatforms: PrivyPlatform[]) {
   } = usePrivy()
   const { revalidate } = useRevalidator()
   const { linkTwitter, linkGithub, linkFarcaster } = useLinkAccount({
-    onSuccess: (user, linkMethod, linkedAccount) => {
+    onSuccess: (params) => {
+      const { user, linkMethod, linkedAccount } = params
       logger('revalidate', revalidate)
       logger('Link successful:', user, linkMethod, linkedAccount)
       toast.success('Account link successful.')

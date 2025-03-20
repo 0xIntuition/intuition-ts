@@ -10,7 +10,6 @@ import {
 } from '@0xintuition/1ui'
 import {
   fetcher,
-  GetAtomsQuery,
   GetAtomsWithPositionsDocument,
   GetAtomsWithPositionsQuery,
   GetAtomsWithPositionsQueryVariables,
@@ -43,17 +42,27 @@ import {
   TabsSkeleton,
 } from '@components/skeleton'
 import logger from '@lib/utils/logger'
-import { formatBalance, invariant } from '@lib/utils/misc'
+import { calculateTotalPages, formatBalance, invariant } from '@lib/utils/misc'
+import { getStandardPageParams } from '@lib/utils/params'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
-import { useLoaderData, useSearchParams } from '@remix-run/react'
+import { useLoaderData, useSearchParams, useSubmit } from '@remix-run/react'
 import { getUser, getUserWallet } from '@server/auth'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
 import { NO_WALLET_ERROR } from 'app/consts'
+import { Atom } from 'app/types/atom'
+import { PaginationType } from 'app/types/pagination'
+import { Triple } from 'app/types/triple'
 
-type Atom = NonNullable<GetAtomsQuery['atoms']>[number]
-type Triple = NonNullable<
-  NonNullable<GetTriplesWithPositionsQuery['triples']>[number]
->
+// Helper function to map GraphQL response to Triple type
+const mapToTriples = (
+  triples: GetTriplesWithPositionsQuery['triples'],
+): Triple[] => {
+  if (!triples) {
+    return []
+  }
+
+  return triples.map((triple) => triple as unknown as Triple)
+}
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await getUser(request)
@@ -65,8 +74,23 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const queryAddress = userWallet.toLowerCase()
 
   const url = new URL(request.url)
-  // const searchParams = new URLSearchParams(url.search)
+  const searchParams = new URLSearchParams(url.search)
   const queryClient = new QueryClient()
+
+  // Get standard pagination params for identities tab
+  const { page: identityPage, limit: identityLimit } = getStandardPageParams({
+    searchParams,
+    paramPrefix: 'identity',
+  })
+  const identitySortBy = searchParams.get('identitySortBy') || 'block_timestamp'
+
+  // Get standard pagination params for claims tab
+  const { page: claimsPage, limit: claimsLimit } = getStandardPageParams({
+    searchParams,
+    paramPrefix: 'createdClaims',
+  })
+  const claimsSortBy =
+    searchParams.get('createdClaimsSortBy') || 'block_timestamp'
 
   // TODO: once we fully fix sort/pagination, we'll want to update these to use triples instead of claims, and orderBy instead of sortBy in the actual query params
 
@@ -109,19 +133,13 @@ export async function loader({ request }: LoaderFunctionArgs) {
     },
   }
 
-  const atomsLimit = parseInt(url.searchParams.get('claimsLimit') || '10')
-  const atomsOffset = parseInt(url.searchParams.get('claimsOffset') || '0')
-  const atomsOrderBy = url.searchParams.get('claimsSortBy')
-  // const atomsOrderBy = [
-  //   {
-  //     vault: {
-  //       totalShares: 'desc',
-  //     },
-  //   },
-  // ] // we may want to use this as the fallback. will work on when we handle the sorts
-  const triplesLimit = parseInt(url.searchParams.get('claimsLimit') || '10')
-  const triplesOffset = parseInt(url.searchParams.get('claimsOffset') || '0')
-  const triplesOrderBy = url.searchParams.get('claimsSortBy')
+  const atomsLimit = identityLimit
+  const atomsOffset = (identityPage - 1) * identityLimit
+  const atomsOrderBy = identitySortBy
+
+  const triplesLimit = claimsLimit
+  const triplesOffset = (claimsPage - 1) * claimsLimit
+  const triplesOrderBy = claimsSortBy
 
   const atomPositionsLimit = parseInt(
     url.searchParams.get('claimsLimit') || '10',
@@ -168,6 +186,21 @@ export async function loader({ request }: LoaderFunctionArgs) {
       )(),
   })
 
+  const atomsData = await queryClient.fetchQuery({
+    queryKey: ['get-atoms-count', { where: atomsWhere }],
+    queryFn: () =>
+      fetcher<GetAtomsWithPositionsQuery, GetAtomsWithPositionsQueryVariables>(
+        GetAtomsWithPositionsDocument,
+        {
+          where: atomsWhere,
+          address: queryAddress,
+        },
+      )(),
+  })
+
+  const atomsCount = atomsData?.total?.aggregate?.count ?? 0
+  const atomsTotalPages = calculateTotalPages(atomsCount, identityLimit)
+
   await queryClient.prefetchQuery({
     queryKey: [
       'get-triples-with-positions',
@@ -191,6 +224,21 @@ export async function loader({ request }: LoaderFunctionArgs) {
         address: queryAddress,
       })(),
   })
+
+  const triplesData = await queryClient.fetchQuery({
+    queryKey: ['get-triples-count', { where: triplesWhere }],
+    queryFn: () =>
+      fetcher<
+        GetTriplesWithPositionsQuery,
+        GetTriplesWithPositionsQueryVariables
+      >(GetTriplesWithPositionsDocument, {
+        where: triplesWhere,
+        address: queryAddress,
+      })(),
+  })
+
+  const triplesCount = triplesData?.total?.aggregate?.count ?? 0
+  const triplesTotalPages = calculateTotalPages(triplesCount, claimsLimit)
 
   await queryClient.prefetchQuery({
     queryKey: ['get-atom-positions', { where: atomPositionsWhere }],
@@ -222,6 +270,18 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   return json({
     queryAddress,
+    identitiesPagination: {
+      currentPage: identityPage,
+      limit: identityLimit,
+      totalEntries: atomsCount,
+      totalPages: atomsTotalPages,
+    } as PaginationType,
+    claimsPagination: {
+      currentPage: claimsPage,
+      limit: claimsLimit,
+      totalEntries: triplesCount,
+      totalPages: triplesTotalPages,
+    } as PaginationType,
     dehydratedState: dehydrate(queryClient),
     initialParams: {
       atomsLimit,
@@ -277,7 +337,28 @@ const TabContent = ({
 }
 
 export default function ProfileDataCreated() {
-  const { queryAddress, initialParams } = useLoaderData<typeof loader>()
+  const {
+    queryAddress,
+    initialParams,
+    identitiesPagination,
+    claimsPagination,
+  } = useLoaderData<typeof loader>()
+  const submit = useSubmit()
+  const [searchParams] = useSearchParams()
+  const positionDirection = searchParams.get('positionDirection')
+
+  // Add pagination handlers
+  const handlePageChange = (page: number) => {
+    const formData = new FormData()
+    formData.append('page', page.toString())
+    submit(formData, { method: 'get', replace: true })
+  }
+
+  const handleLimitChange = (limit: number) => {
+    const formData = new FormData()
+    formData.append('limit', limit.toString())
+    submit(formData, { method: 'get', replace: true })
+  }
 
   const { data: accountResult } = useGetAccountQuery(
     {
@@ -422,9 +503,6 @@ export default function ProfileDataCreated() {
   )
 
   logger('Triple Positions Result (Client):', triplePositionsResult)
-
-  const [searchParams] = useSearchParams()
-  const positionDirection = searchParams.get('positionDirection')
 
   return (
     <div className="flex-col justify-start items-start flex w-full gap-12">
@@ -641,13 +719,14 @@ export default function ProfileDataCreated() {
               >
                 {atomsCreatedResult && (
                   <IdentitiesList
+                    variant="explore"
                     identities={atomsCreatedResult.atoms as Atom[]}
-                    pagination={
-                      atomsCreatedResult?.total?.aggregate?.count ?? 0
-                    }
-                    paramPrefix="createdIdentities"
-                    enableSearch //
-                    enableSort
+                    pagination={identitiesPagination}
+                    enableSearch={false}
+                    enableSort={true}
+                    paramPrefix="identity"
+                    onPageChange={handlePageChange}
+                    onLimitChange={handleLimitChange}
                   />
                 )}
               </TabContent>
@@ -689,12 +768,10 @@ export default function ProfileDataCreated() {
               >
                 {triplesCreatedResult && (
                   <ClaimsList
-                    claims={triplesCreatedResult.triples as Triple[]}
-                    pagination={
-                      triplesCreatedResult?.total?.aggregate?.count ?? 0
-                    }
+                    claims={mapToTriples(triplesCreatedResult.triples)}
+                    pagination={claimsPagination}
                     paramPrefix="createdClaims"
-                    enableSearch //
+                    enableSearch
                     enableSort
                   />
                 )}

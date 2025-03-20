@@ -1,12 +1,3 @@
-/*
- * This route implements pagination and sorting for the List details page
- * The implementation is aligned with how the claims.tsx handles pagination and sorting
- * Key points:
- * - Uses block_timestamp as the default sort field (matches claims implementation)
- * - Uses mapSortToOrderBy function to translate sort parameters to GraphQL queries
- * - Sort options in TagsList match those used in ClaimsListNew for consistency
- * - Same pagination and sorting UI components are used
- */
 import { Suspense, useEffect, useState } from 'react'
 
 import {

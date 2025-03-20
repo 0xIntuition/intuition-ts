@@ -7,10 +7,10 @@ import {
   PopoverTrigger,
   TagsListInput,
 } from '@0xintuition/1ui'
-import { GetAtomQuery } from '@0xintuition/graphql'
 
 import { AtomSearchComboboxExtended } from '@components/atom-search-combobox-extended'
 import { globalCreateIdentityModalAtom } from '@lib/state/store'
+import { Atom } from 'app/types'
 import { useAtom } from 'jotai'
 
 import { isClickOutsideOfTagsInteractionZone } from './ExploreAddTags.utils'
@@ -55,10 +55,10 @@ const ExploreAddTags = ({ inputId }: { inputId: string }) => {
     inputElementRef.current?.dispatchEvent(event)
   }, [selectedTags])
 
-  const handleTagSelection = (atom: GetAtomQuery['atom']) => {
+  const handleTagSelection = (atom: Atom) => {
     const newTag = {
       name: atom?.label ?? '',
-      id: atom?.id ?? '',
+      id: atom?.id.toString() ?? '',
     }
     if (!selectedTags.some((tag) => tag.name === newTag.name)) {
       setSelectedTags((prev) => [...prev, newTag])

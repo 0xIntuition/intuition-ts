@@ -51,8 +51,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
   // const searchParams = new URLSearchParams(url.search)
 
   const listSearchParams = new URLSearchParams()
-  listSearchParams.set('sortsBy', ClaimSortColumn.ASSETS_SUM)
-  listSearchParams.set('direction', SortDirection.DESC)
+  listSearchParams.set('sortsBy', 'vault.total_shares')
+  listSearchParams.set('direction', 'desc')
   listSearchParams.set('limit', '6')
   logger('wallet', userWallet.toLowerCase())
 

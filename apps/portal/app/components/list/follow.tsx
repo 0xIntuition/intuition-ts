@@ -1,5 +1,4 @@
 import { ClaimPosition, IconName, Identity } from '@0xintuition/1ui'
-import { PositionSortColumn, SortColumn } from '@0xintuition/api'
 
 import { ClaimPositionRow } from '@components/claim/claim-position-row'
 import { ListHeader } from '@components/list/list-header'
@@ -11,6 +10,23 @@ import { PaginationType } from 'app/types/pagination'
 
 import { List } from './list'
 
+/**
+ * Component for displaying a list of following/followers with support for pagination and sorting
+ */
+interface FollowListProps {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  positions?: any[] // TODO: (ENG-4782) Fix once we have the correct types
+  currentSharePrice?: string
+  pagination?: PaginationType | { aggregate?: { count: number } } | number
+  paramPrefix?: string
+  enableHeader?: boolean
+  enableSearch?: boolean
+  enableSort?: boolean
+  readOnly?: boolean
+  onPageChange?: (page: number) => void
+  onLimitChange?: (limit: number) => void
+}
+
 export function FollowList({
   positions,
   currentSharePrice,
@@ -20,35 +36,52 @@ export function FollowList({
   enableSearch = true,
   enableSort = true,
   readOnly = false,
-}: {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  positions?: any[] // TODO: (ENG-4782) Fix once we have the correct types
-  currentSharePrice?: string
-  pagination?: PaginationType
-  paramPrefix?: string
-  enableHeader?: boolean
-  enableSearch?: boolean
-  enableSort?: boolean
-  readOnly?: boolean
-}) {
-  const followingOptions: SortOption<SortColumn>[] = [
-    { value: 'Position Amount', sortBy: 'UserAssets' },
-    { value: 'Total ETH', sortBy: 'AssetsSum' },
-    { value: 'Updated At', sortBy: 'UpdatedAt' },
-    { value: 'Created At', sortBy: 'CreatedAt' },
+  onPageChange,
+  onLimitChange,
+}: FollowListProps) {
+  // Using GraphQL field names directly for sorting
+  const followingOptions: SortOption<string>[] = [
+    { value: 'Position Amount', sortBy: 'shares' },
+    { value: 'Total ETH', sortBy: 'vault.total_shares' },
+    { value: 'Updated At', sortBy: 'block_timestamp' },
+    { value: 'Created At', sortBy: 'block_timestamp' },
   ]
 
-  const followersOptions: SortOption<PositionSortColumn>[] = [
-    { value: 'Position Amount', sortBy: 'Assets' },
-    { value: 'Updated At', sortBy: 'UpdatedAt' },
-    { value: 'Created At', sortBy: 'CreatedAt' },
+  const followersOptions: SortOption<string>[] = [
+    { value: 'Position Amount', sortBy: 'shares' },
+    { value: 'Updated At', sortBy: 'block_timestamp' },
+    { value: 'Created At', sortBy: 'block_timestamp' },
   ]
+
+  // Convert pagination to the format expected by the List component
+  const formattedPagination: PaginationType = (() => {
+    if (typeof pagination === 'number') {
+      return {
+        currentPage: 1,
+        limit: 10,
+        totalEntries: pagination,
+        totalPages: Math.ceil(pagination / 10),
+      }
+    }
+
+    if (pagination && 'aggregate' in pagination) {
+      const count = pagination.aggregate?.count ?? 0
+      return {
+        currentPage: 1,
+        limit: 10,
+        totalEntries: count,
+        totalPages: Math.ceil(count / 10),
+      }
+    }
+
+    return pagination as PaginationType
+  })()
 
   logger('positions', positions)
 
   return (
-    <List<SortColumn | PositionSortColumn>
-      pagination={pagination}
+    <List<string>
+      pagination={formattedPagination}
       paginationLabel="users"
       options={
         paramPrefix === 'following' ? followingOptions : followersOptions
@@ -56,6 +89,8 @@ export function FollowList({
       paramPrefix={paramPrefix}
       enableSearch={enableSearch}
       enableSort={enableSort}
+      onPageChange={onPageChange}
+      onLimitChange={onLimitChange}
     >
       {enableHeader && (
         <ListHeader

@@ -1,5 +1,4 @@
-import { IdentityPresenter } from '@0xintuition/api'
-
+import { Atom } from 'app/types'
 import { TagType } from 'app/types/tags'
 
 export const isClickOutsideOfTagsInteractionZone = (
@@ -11,6 +10,6 @@ export const isClickOutsideOfTagsInteractionZone = (
   !popoverContentRef.current?.contains(target as Node)
 
 export const isTagAlreadySelected = (
-  selection: IdentityPresenter,
+  selection: Atom,
   selectedTags: TagType[],
 ) => selectedTags.filter((tag) => tag.id === selection.id).length > 0

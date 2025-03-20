@@ -1,5 +1,4 @@
 import { IconName, Identity } from '@0xintuition/1ui'
-import { IdentityPresenter, SortColumn } from '@0xintuition/api'
 
 import { IdentityPositionRow } from '@components/identity/identity-position-row'
 import { ListHeader } from '@components/list/list-header'
@@ -10,10 +9,25 @@ import {
   getAtomLabel,
   getAtomLink,
 } from '@lib/utils/misc'
+import { Atom } from 'app/types'
 import { PaginationType } from 'app/types/pagination'
 
 import { SortOption } from '../sort-select'
 import { List } from './list'
+
+/**
+ * Component for displaying a list of users with support for pagination and sorting
+ */
+interface UsersListProps {
+  identities: Atom[]
+  pagination?: PaginationType | { aggregate?: { count: number } } | number
+  paramPrefix?: string
+  enableHeader?: boolean
+  enableSearch?: boolean
+  enableSort?: boolean
+  onPageChange?: (page: number) => void
+  onLimitChange?: (limit: number) => void
+}
 
 export function UsersList({
   identities,
@@ -22,29 +36,51 @@ export function UsersList({
   enableHeader = true,
   enableSearch = true,
   enableSort = true,
-}: {
-  identities: IdentityPresenter[]
-  pagination?: PaginationType
-  paramPrefix?: string
-  enableHeader?: boolean
-  enableSearch?: boolean
-  enableSort?: boolean
-}) {
-  const options: SortOption<SortColumn>[] = [
-    { value: 'Total ETH', sortBy: 'AssetsSum' },
-    { value: 'Total Positions', sortBy: 'NumPositions' },
-    { value: 'Updated At', sortBy: 'UpdatedAt' },
-    { value: 'Created At', sortBy: 'CreatedAt' },
+  onPageChange,
+  onLimitChange,
+}: UsersListProps) {
+  // Using GraphQL field names directly for sorting
+  const options: SortOption<string>[] = [
+    { value: 'Total ETH', sortBy: 'vault.total_shares' },
+    { value: 'Total Positions', sortBy: 'vault.position_count' },
+    { value: 'Updated At', sortBy: 'block_timestamp' },
+    { value: 'Created At', sortBy: 'block_timestamp' },
   ]
 
+  // Convert pagination to the format expected by the List component
+  const formattedPagination: PaginationType = (() => {
+    if (typeof pagination === 'number') {
+      return {
+        currentPage: 1,
+        limit: 10,
+        totalEntries: pagination,
+        totalPages: Math.ceil(pagination / 10),
+      }
+    }
+
+    if (pagination && 'aggregate' in pagination) {
+      const count = pagination.aggregate?.count ?? 0
+      return {
+        currentPage: 1,
+        limit: 10,
+        totalEntries: count,
+        totalPages: Math.ceil(count / 10),
+      }
+    }
+
+    return pagination as PaginationType
+  })()
+
   return (
-    <List<SortColumn>
-      pagination={pagination}
+    <List<string>
+      pagination={formattedPagination}
       paginationLabel="identities"
       options={options}
       paramPrefix={paramPrefix}
       enableSearch={enableSearch}
       enableSort={enableSort}
+      onPageChange={onPageChange}
+      onLimitChange={onLimitChange}
     >
       {enableHeader && (
         <ListHeader
@@ -68,8 +104,8 @@ export function UsersList({
               avatarSrc={getAtomImage(identity)}
               name={getAtomLabel(identity)}
               description={getAtomDescription(identity)}
-              id={identity.user?.wallet ?? identity.identity_id}
-              amount={identity.user?.total_points ?? 0}
+              id={String(identity.id)}
+              amount={0} // Replace with the appropriate field from the new API
               feesAccrued={0}
               link={getAtomLink(identity)}
               ipfsLink={getAtomIpfsLink(identity)}
