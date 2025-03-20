@@ -40,7 +40,6 @@ import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { getUserWallet } from '@server/auth'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
 import { CURRENT_ENV, NO_WALLET_ERROR, PATHS } from 'app/consts'
-import { Triple } from 'app/types/triple'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const userWallet = await getUserWallet(request)
@@ -440,7 +439,13 @@ export default function UserProfileOverview() {
           Top Lists
         </Text>
         <ListClaimsList
-          listClaims={(savedListsResults?.triples ?? []) as Triple[]}
+          listClaims={(savedListsResults?.triples ?? []).map((triple) => ({
+            __typename: 'predicate_objects',
+            id: triple.id,
+            claim_count: triple.vault?.position_count ?? 0,
+            triple_count: triple.vault?.position_count ?? 0,
+            object: triple.object,
+          }))}
           enableSort={false}
           enableSearch={false}
         />

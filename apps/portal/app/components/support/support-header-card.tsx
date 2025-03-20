@@ -7,8 +7,6 @@ import {
   TextVariant,
 } from '@0xintuition/1ui'
 
-import { STANDARD_QUEST_SET } from 'app/consts'
-
 interface SupportHeaderCardProps {
   title: string
   subtitle?: string
@@ -17,6 +15,7 @@ interface SupportHeaderCardProps {
   link: string
 }
 
+// TODO: Unsure if it's intentional to have the quest header here -- I removed the quest header const, so I commented this out. It should likely be a different image now?
 export function SupportHeaderCard({
   title,
   subtitle,
@@ -26,11 +25,11 @@ export function SupportHeaderCard({
 }: SupportHeaderCardProps) {
   return (
     <div className="flex flex-col md:flex-row justify-between rounded-xl theme-border bg-gradient-to-l from-accent/30 md:mb-6">
-      <img
+      {/* <img
         src={`${STANDARD_QUEST_SET.imgSrc}-header`}
         alt={title}
         className="object-cover h-full w-2/5 rounded-t-lg theme-border max-sm:w-full max-sm:rounded-t-lg max-sm:h-44 md:hidden block"
-      />
+      />  */}
       <div className="flex flex-col gap-6 p-6">
         <div className="flex justify-between items-start">
           <div className="flex-col gap-1">
@@ -59,11 +58,11 @@ export function SupportHeaderCard({
           </a>
         </div>
       </div>
-      <img
+      {/* <img
         src={`${STANDARD_QUEST_SET.imgSrc}-header`}
         alt={title}
         className="object-cover h-full w-2/5 rounded-r-lg theme-border max-sm:w-full max-sm:rounded-r-lg max-sm:h-44 hidden md:block"
-      />
+      /> */}
     </div>
   )
 }
