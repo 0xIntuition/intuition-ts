@@ -7,11 +7,13 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  TextVariant,
+  Trunctacular,
 } from '@0xintuition/1ui'
 import { useGetAccountQuery } from '@0xintuition/graphql'
 
 import { usePrivy, User } from '@privy-io/react-auth'
-import { Loader2 } from 'lucide-react'
+import { Loader2, MoreVertical } from 'lucide-react'
 
 export function AccountButton({ privyUser }: { privyUser: User }) {
   const { ready: isReady, authenticated: isAuthenticated, logout } = usePrivy()
@@ -35,13 +37,20 @@ export function AccountButton({ privyUser }: { privyUser: User }) {
           <Button
             variant={ButtonVariant.ghost}
             size={ButtonSize.lg}
-            className="w-full gap-2 py-5 border border-primary/10 justify-start"
+            className="w-full gap-3 theme-border justify-start bg-white/5"
           >
             <Avatar
-              className="h-5 w-5 border border-primary/10"
+              className="h-6 w-6 theme-border"
               name={walletAddress}
               src={avatarImage}
             />
+            <div className="flex flex-1 items-center justify-between">
+              <Trunctacular
+                variant={TextVariant.body}
+                value={accountResult?.account?.label || walletAddress}
+              />
+              <MoreVertical className="h-5 w-5 text-primary/50" />
+            </div>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent
@@ -60,9 +69,9 @@ export function AccountButton({ privyUser }: { privyUser: User }) {
       <Button
         variant={ButtonVariant.ghost}
         size={ButtonSize.lg}
-        className="w-full gap-2 py-5 border border-primary/10 justify-start"
+        className="w-full gap-3 theme-border justify-start bg-white/5"
       >
-        <Loader2 className="h-5 w-5 animate-spin" />
+        <Loader2 className="h-6 w-6 animate-spin" />
       </Button>
     )
   }

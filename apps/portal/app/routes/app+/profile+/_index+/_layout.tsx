@@ -36,7 +36,6 @@ import {
   useGetTagsQuery,
 } from '@0xintuition/graphql'
 
-import PrivyRevalidate from '@client/privy-revalidate'
 import EditSocialLinksModal from '@components/edit-social-links-modal'
 import { ErrorPage } from '@components/error-page'
 import NavigationButton from '@components/navigation-link'
@@ -568,7 +567,6 @@ export default function Profile() {
       {!isPending && (
         <>
           <EditSocialLinksModal
-            privyUser={JSON.parse(JSON.stringify(privyUser))}
             open={editSocialLinksModalActive}
             onClose={() => setEditSocialLinksModalActive(false)}
           />
@@ -633,8 +631,6 @@ export default function Profile() {
           })
         }
       />
-
-      <PrivyRevalidate />
     </TwoPanelLayout>
   )
 }

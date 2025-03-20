@@ -9,6 +9,7 @@ import {
 } from '@0xintuition/1ui'
 import { useGetAtomByDataQuery } from '@0xintuition/graphql'
 
+import { EthInput } from '@components/atom-forms/form-fields/eth-input'
 import SubmitButton from '@components/submit-button'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ipfsUrl } from '@lib/utils/app'
@@ -22,6 +23,7 @@ interface DepositFormProps {
   onSubmit: (data: DepositFormData) => Promise<void>
   defaultValues?: Partial<DepositFormData>
   minDeposit: string
+  walletBalance: string
   isSubmitting?: boolean
   atomData: Atom
   ipfsUri: string
@@ -35,6 +37,7 @@ export function DepositForm({
   onSubmit,
   defaultValues,
   minDeposit,
+  walletBalance,
   isSubmitting,
   atomData,
   ipfsUri,
@@ -54,11 +57,12 @@ export function DepositForm({
     )
 
   const atomExists = existingAtomData?.atoms?.[0]?.data === ipfsUri
+  const existingAtomId = existingAtomData?.atoms?.[0]?.id
 
   const form = useForm<DepositFormData>({
     resolver: zodResolver(createDepositSchema(minDeposit)),
     defaultValues: {
-      amount: minDeposit,
+      amount: '',
       ...defaultValues,
     },
   })
@@ -67,10 +71,10 @@ export function DepositForm({
     <FormProvider {...form}>
       <form
         id="deposit-form"
-        className="flex flex-col min-h-[300px]"
+        className="flex flex-col h-full"
         onSubmit={(e) => e.preventDefault()}
       >
-        <div className="flex flex-col flex-1 min-h-0 space-y-6">
+        <div className="flex flex-col flex-1 min-h-0">
           <div className="flex flex-col gap-1 flex-shrink-0">
             <h3 className="text-xl font-semibold">Ready to Create Your Atom</h3>
             <p className="flex flex-row gap-1 text-sm text-muted-foreground items-center">
@@ -144,9 +148,43 @@ export function DepositForm({
                           This atom already exists on the network
                         </p>
                       </div>
+                      <Link to={`/app/atoms/${existingAtomId}`}>
+                        <Button
+                          variant={ButtonVariant.successOutline}
+                          size={ButtonSize.default}
+                        >
+                          View Atom
+                          <Icon
+                            name={IconName.squareArrowTopRight}
+                            className="ml-1 w-4 h-4"
+                          />
+                        </Button>
+                      </Link>
                     </div>
                   </div>
                 )}
+              </div>
+              <div
+                className={cn(
+                  'rounded-lg border border-border/20 p-4 space-y-4',
+                  atomExists ? 'opacity-50' : 'opacity-100',
+                )}
+              >
+                <div className="flex flex-col gap-1">
+                  <h4 className="font-medium">Set Initial Deposit</h4>
+                  <p className="text-sm text-muted-foreground">
+                    Your initial deposit helps establish your atom&apos;s
+                    presence and enables interactions
+                  </p>
+                </div>
+
+                <EthInput
+                  name="amount"
+                  label="Deposit Amount"
+                  placeholder="0"
+                  walletBalance={walletBalance}
+                  disabled={!!isLoadingConfig || atomExists}
+                />
               </div>
             </div>
           </div>
@@ -162,7 +200,7 @@ export function DepositForm({
               </div>
             )}
 
-            <div className="flex justify-between items-center w-full">
+            <div className="flex justify-between items-center w-full pt-5 border-t mt-auto border-primary/5">
               <Button
                 type="button"
                 variant={

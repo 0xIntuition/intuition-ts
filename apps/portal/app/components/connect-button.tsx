@@ -1,10 +1,12 @@
 import {
-  Avatar,
   Button,
   ButtonSize,
   ButtonVariant,
   cn,
+  Icon,
   IconName,
+  Text,
+  TextWeight,
 } from '@0xintuition/1ui'
 
 import { useAuth } from '@lib/providers/auth-provider'
@@ -28,17 +30,16 @@ export function ConnectButton() {
       disabled={isLoading}
       className="w-full gap-3 theme-border justify-start"
     >
-      <Avatar
-        name="Connect Wallet"
-        icon={isLoading ? IconName.inProgress : IconName.wallet}
-        className={cn('h-6 w-6 border border-border/10', {
+      <Icon
+        name={isLoading ? IconName.inProgress : IconName.wallet}
+        className={cn('h-6 w-6 text-muted-foreground', {
           'animate-spin': isLoading,
         })}
       />
       <div className="flex flex-1 items-center justify-between">
-        <span className="text-sm font-medium">
+        <Text weight={TextWeight.medium} className="text-muted-foreground">
           {isLoading ? 'Connecting...' : 'Connect Wallet'}
-        </span>
+        </Text>
       </div>
     </Button>
   )

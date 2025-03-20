@@ -11,17 +11,15 @@ import {
   Text,
 } from '@0xintuition/1ui'
 
-import { PrivyVerifiedLinks } from '@client/privy-verified-links'
-import { ExtendedPrivyUser } from 'app/types/user'
+import { PrivyVerifiedLinks } from '@components/auth/privy-verified-links'
+import { verifiedPlatforms } from 'app/consts'
 
 export interface EditSocialLinksModalProps {
-  privyUser: ExtendedPrivyUser
   open?: boolean
   onClose: () => void
 }
 
 export default function EditSocialLinksModal({
-  privyUser,
   open,
   onClose,
 }: EditSocialLinksModalProps) {
@@ -55,7 +53,7 @@ export default function EditSocialLinksModal({
           </Text>
           {/* </AccordionTrigger>
               <AccordionContent className="border-0"> */}
-          <PrivyVerifiedLinks privyUser={privyUser} />
+          <PrivyVerifiedLinks verifiedPlatforms={verifiedPlatforms} />
           {/* </AccordionContent>
             </AccordionItem>
           </Accordion> */}
