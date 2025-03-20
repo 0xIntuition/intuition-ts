@@ -13,11 +13,11 @@ import {
 import {
   formatBalance,
   formatDisplayBalance,
-  getAtomDescriptionGQL,
-  getAtomImageGQL,
-  getAtomIpfsLinkGQL,
-  getAtomLabelGQL,
-  getAtomLinkGQL,
+  getAtomDescription,
+  getAtomImage,
+  getAtomIpfsLink,
+  getAtomLabel,
+  getAtomLink,
 } from '@lib/utils/misc'
 import { IPFS_GATEWAY_URL, PATHS } from 'app/consts'
 import { Atom } from 'app/types/atom'
@@ -113,12 +113,12 @@ export default function SaveReview({
                   atom?.type === 'Account' || atom?.type === 'Default'
                     ? Identity.user
                     : Identity.nonUser,
-                label: getAtomLabelGQL(atom),
-                imgSrc: getAtomImageGQL(atom),
+                label: getAtomLabel(atom),
+                imgSrc: getAtomImage(atom),
                 id: atom?.id,
-                description: getAtomDescriptionGQL(atom),
-                ipfsLink: getAtomIpfsLinkGQL(atom),
-                link: getAtomLinkGQL(atom),
+                description: getAtomDescription(atom),
+                ipfsLink: getAtomIpfsLink(atom),
+                link: getAtomLink(atom),
               }}
               predicate={{
                 variant: Identity.nonUser,

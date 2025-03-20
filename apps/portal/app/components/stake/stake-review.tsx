@@ -20,11 +20,11 @@ import {
 import { InfoTooltip } from '@components/info-tooltip'
 import { PATHS } from '@consts/paths'
 import {
-  getAtomDescriptionGQL,
-  getAtomImageGQL,
-  getAtomIpfsLinkGQL,
-  getAtomLabelGQL,
-  getAtomLinkGQL,
+  getAtomDescription,
+  getAtomImage,
+  getAtomIpfsLink,
+  getAtomLabel,
+  getAtomLink,
 } from '@lib/utils/misc'
 import { Link } from '@remix-run/react'
 import { VaultDetailsType } from 'app/types'
@@ -38,8 +38,8 @@ interface StakeReviewProps {
   state: TransactionStateType
   isError?: boolean
   modalType: 'identity' | 'claim' | null | undefined
-  identity?: Atom
-  claim?: Triple
+  identity?: Atom | null
+  claim?: Triple | null
   vaultDetails?: VaultDetailsType
 }
 
@@ -205,38 +205,36 @@ export default function StakeReview({
                               claim?.subject?.type === 'Account'
                                 ? Identity.user
                                 : Identity.nonUser,
-                            label: getAtomLabelGQL(claim?.subject),
-                            imgSrc: getAtomImageGQL(claim?.subject),
+                            label: getAtomLabel(claim?.subject),
+                            imgSrc: getAtomImage(claim?.subject),
                             id: claim?.subject?.vault_id,
-                            description: getAtomDescriptionGQL(claim?.subject),
-                            ipfsLink: getAtomIpfsLinkGQL(claim?.subject),
-                            link: getAtomLinkGQL(claim?.subject),
+                            description: getAtomDescription(claim?.subject),
+                            ipfsLink: getAtomIpfsLink(claim?.subject),
+                            link: getAtomLink(claim?.subject),
                           }}
                           predicate={{
                             variant:
                               claim?.predicate?.type === 'Account'
                                 ? Identity.user
                                 : Identity.nonUser,
-                            label: getAtomLabelGQL(claim?.predicate),
-                            imgSrc: getAtomImageGQL(claim?.predicate),
+                            label: getAtomLabel(claim?.predicate),
+                            imgSrc: getAtomImage(claim?.predicate),
                             id: claim?.predicate?.vault_id,
-                            description: getAtomDescriptionGQL(
-                              claim?.predicate,
-                            ),
-                            ipfsLink: getAtomIpfsLinkGQL(claim?.predicate),
-                            link: getAtomLinkGQL(claim?.predicate),
+                            description: getAtomDescription(claim?.predicate),
+                            ipfsLink: getAtomIpfsLink(claim?.predicate),
+                            link: getAtomLink(claim?.predicate),
                           }}
                           object={{
                             variant:
                               claim?.object?.type === 'Account'
                                 ? Identity.user
                                 : Identity.nonUser,
-                            label: getAtomLabelGQL(claim?.object),
-                            imgSrc: getAtomImageGQL(claim?.object),
+                            label: getAtomLabel(claim?.object),
+                            imgSrc: getAtomImage(claim?.object),
                             id: claim?.object?.vault_id,
-                            description: getAtomDescriptionGQL(claim?.object),
-                            ipfsLink: getAtomIpfsLinkGQL(claim?.object),
-                            link: getAtomLinkGQL(claim?.object),
+                            description: getAtomDescription(claim?.object),
+                            ipfsLink: getAtomIpfsLink(claim?.object),
+                            link: getAtomLink(claim?.object),
                           }}
                           orientation="vertical"
                         />
@@ -306,10 +304,10 @@ export default function StakeReview({
                               ? Identity.user
                               : Identity.nonUser
                           }
-                          imgSrc={getAtomImageGQL(claim?.subject)}
+                          imgSrc={getAtomImage(claim?.subject)}
                           id={claim?.subject?.vault_id.toString()}
                         >
-                          {getAtomLabelGQL(claim?.subject)}
+                          {getAtomLabel(claim?.subject)}
                         </IdentityTag>
                       </TableCell>
                       <TableCell className="text-right">
@@ -331,10 +329,10 @@ export default function StakeReview({
                               ? Identity.user
                               : Identity.nonUser
                           }
-                          imgSrc={getAtomImageGQL(claim?.predicate)}
+                          imgSrc={getAtomImage(claim?.predicate)}
                           id={claim?.predicate?.vault_id.toString()}
                         >
-                          {getAtomLabelGQL(claim?.predicate)}
+                          {getAtomLabel(claim?.predicate)}
                         </IdentityTag>
                       </TableCell>
                       <TableCell className="text-right">
@@ -356,10 +354,10 @@ export default function StakeReview({
                               ? Identity.user
                               : Identity.nonUser
                           }
-                          imgSrc={getAtomImageGQL(claim?.object)}
+                          imgSrc={getAtomImage(claim?.object)}
                           id={claim?.object?.vault_id.toString()}
                         >
-                          {getAtomLabelGQL(claim?.object)}
+                          {getAtomLabel(claim?.object)}
                         </IdentityTag>
                       </TableCell>
                       <TableCell className="text-right">

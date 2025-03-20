@@ -1,7 +1,6 @@
 import { Suspense } from 'react'
 
 import { Button, ErrorStateCard, Icon, IconName, Text } from '@0xintuition/1ui'
-import { IdentityPresenter, UserTotalsPresenter } from '@0xintuition/api'
 import {
   fetcher,
   GetAccountDocument,
@@ -50,21 +49,16 @@ import { getSpecialPredicate } from '@lib/utils/app'
 import logger from '@lib/utils/logger'
 import { formatBalance, invariant } from '@lib/utils/misc'
 import { LoaderFunctionArgs } from '@remix-run/node'
-import {
-  Await,
-  useLoaderData,
-  useParams,
-  useRouteLoaderData,
-} from '@remix-run/react'
+import { Await, useLoaderData, useParams } from '@remix-run/react'
 import { getUserWallet } from '@server/auth'
 import { QueryClient } from '@tanstack/react-query'
 import {
   CURRENT_ENV,
   NO_PARAM_ID_ERROR,
-  NO_USER_IDENTITY_ERROR,
   NO_WALLET_ERROR,
   PATHS,
 } from 'app/consts'
+import { Triple } from 'app/types/triple'
 import { useSetAtom } from 'jotai'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -346,13 +340,6 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
 export default function ProfileOverview() {
   const { queryAddress, initialParams } = useLoaderData<typeof loader>()
-  const { userIdentity } =
-    useRouteLoaderData<{
-      userIdentity: IdentityPresenter
-      userTotals: UserTotalsPresenter
-      isPending: boolean
-    }>('routes/app+/profile+/$wallet') ?? {}
-  invariant(userIdentity, NO_USER_IDENTITY_ERROR)
 
   const params = useParams()
   const { wallet } = params
@@ -584,7 +571,7 @@ export default function ProfileOverview() {
             </ErrorStateCard>
           ) : (
             <ClaimsAboutIdentity
-              claims={triplesResult?.triples ?? []}
+              claims={triplesResult?.triples as Triple[]}
               pagination={triplesResult?.total?.aggregate?.count ?? {}}
               paramPrefix="claims"
               enableSearch={false} // TODO: (ENG-4481) Re-enable search and sort
@@ -607,7 +594,15 @@ export default function ProfileOverview() {
             {(resolvedSavedListsResults) => {
               return (
                 <ListClaimsList
-                  listClaims={resolvedSavedListsResults?.triples ?? []}
+                  listClaims={(resolvedSavedListsResults?.triples ?? []).map(
+                    (triple) => ({
+                      __typename: 'predicate_objects',
+                      id: triple.id,
+                      claim_count: triple.vault?.position_count ?? 0,
+                      triple_count: triple.vault?.position_count ?? 0,
+                      object: triple.object,
+                    }),
+                  )}
                   enableSort={false}
                   enableSearch={false}
                   sourceUserAddress={wallet}

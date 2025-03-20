@@ -1,6 +1,5 @@
 export * from './claimr'
 export * from './claim'
-export * from './identity'
 export * from './navigation'
 export * from './pagination'
 export * from './privy'

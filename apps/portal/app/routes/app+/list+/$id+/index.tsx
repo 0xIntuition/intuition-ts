@@ -42,11 +42,11 @@ import { addIdentitiesListModalAtom, saveListModalAtom } from '@lib/state/store'
 import logger from '@lib/utils/logger'
 import {
   calculateTotalPages,
-  getAtomDescriptionGQL,
-  getAtomImageGQL,
-  getAtomIpfsLinkGQL,
-  getAtomLabelGQL,
-  getAtomLinkGQL,
+  getAtomDescription,
+  getAtomImage,
+  getAtomIpfsLink,
+  getAtomLabel,
+  getAtomLink,
   invariant,
 } from '@lib/utils/misc'
 import { getStandardPageParams } from '@lib/utils/params'
@@ -516,47 +516,39 @@ export default function ListOverview() {
               }}
               predicate={{
                 variant: 'non-user',
-                label: getAtomLabelGQL(
-                  predicateResult?.atom as unknown as Atom,
-                ),
-                imgSrc: getAtomImageGQL(
-                  predicateResult?.atom as unknown as Atom,
-                ),
+                label: getAtomLabel(predicateResult?.atom as unknown as Atom),
+                imgSrc: getAtomImage(predicateResult?.atom as unknown as Atom),
                 id:
                   predicateResult?.atom?.type === 'Account' ||
                   predicateResult?.atom?.type === 'Default'
                     ? predicateResult?.atom?.wallet_id
                     : predicateResult?.atom?.id,
-                description: getAtomDescriptionGQL(
+                description: getAtomDescription(
                   predicateResult?.atom as unknown as Atom,
                 ),
                 ipfsLink:
-                  getAtomIpfsLinkGQL(
-                    predicateResult?.atom as unknown as Atom,
-                  ) || '',
-                link:
-                  getAtomLinkGQL(predicateResult?.atom as unknown as Atom) ||
+                  getAtomIpfsLink(predicateResult?.atom as unknown as Atom) ||
                   '',
+                link:
+                  getAtomLink(predicateResult?.atom as unknown as Atom) || '',
                 linkComponent: RemixLink,
               }}
               object={{
                 variant:
                   objectResult.atom?.type === 'Account' ? 'user' : 'non-user',
-                label: getAtomLabelGQL(objectResult.atom as unknown as Atom),
-                imgSrc: getAtomImageGQL(objectResult.atom as unknown as Atom),
+                label: getAtomLabel(objectResult.atom as unknown as Atom),
+                imgSrc: getAtomImage(objectResult.atom as unknown as Atom),
                 id:
                   objectResult.atom?.type === 'Account' ||
                   objectResult.atom?.type === 'Default'
                     ? objectResult.atom?.wallet_id
                     : objectResult.atom?.id,
-                description: getAtomDescriptionGQL(
+                description: getAtomDescription(
                   objectResult.atom as unknown as Atom,
                 ),
                 ipfsLink:
-                  getAtomIpfsLinkGQL(objectResult.atom as unknown as Atom) ||
-                  '',
-                link:
-                  getAtomLinkGQL(objectResult.atom as unknown as Atom) || '',
+                  getAtomIpfsLink(objectResult.atom as unknown as Atom) || '',
+                link: getAtomLink(objectResult.atom as unknown as Atom) || '',
                 linkComponent: RemixLink,
               }}
             />

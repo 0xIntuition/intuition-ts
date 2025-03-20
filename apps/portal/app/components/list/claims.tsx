@@ -9,7 +9,7 @@ import {
 import { ListHeader } from '@components/list/list-header'
 import RemixLink from '@components/remix-link'
 import { stakeModalAtom } from '@lib/state/store'
-import { formatBalance, getAtomLinkGQL, getClaimUrl } from '@lib/utils/misc'
+import { formatBalance, getAtomLink, getClaimUrl } from '@lib/utils/misc'
 import { Link } from '@remix-run/react'
 import { PaginationType } from 'app/types'
 import { Triple } from 'app/types/triple'
@@ -171,7 +171,7 @@ export function ClaimsListNew({
                   id: triple.subject?.id,
                   description: '',
                   ipfsLink: '',
-                  link: getAtomLinkGQL(triple.subject, readOnly),
+                  link: getAtomLink(triple.subject, readOnly),
                   linkComponent: RemixLink,
                 }}
                 predicate={{
@@ -181,7 +181,7 @@ export function ClaimsListNew({
                   id: triple.predicate?.id,
                   description: '',
                   ipfsLink: '',
-                  link: getAtomLinkGQL(triple.predicate, readOnly),
+                  link: getAtomLink(triple.predicate, readOnly),
                   linkComponent: RemixLink,
                 }}
                 object={{
@@ -191,7 +191,7 @@ export function ClaimsListNew({
                   id: triple.object?.id,
                   description: '',
                   ipfsLink: '',
-                  link: getAtomLinkGQL(triple.object, readOnly),
+                  link: getAtomLink(triple.object, readOnly),
                   linkComponent: RemixLink,
                 }}
                 isClickable={true}

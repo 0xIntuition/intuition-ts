@@ -1,7 +1,6 @@
 import React from 'react'
 
 import { Icon, IconName, Text, Theme } from '@0xintuition/1ui'
-import { IdentityPresenter } from '@0xintuition/api'
 
 import { SubmitFunction } from '@remix-run/react'
 import { BLOCK_EXPLORER_URL, IPFS_GATEWAY_URL, PATHS } from 'app/consts'
@@ -335,131 +334,8 @@ export function loadMore({
   }
 }
 
-// atom helpers
-export const getAtomImage = (atom: IdentityPresenter | null | undefined) => {
-  if (!atom) {
-    return ''
-  }
-  return atom?.user?.image ?? atom?.image ?? ''
-}
-
-export const getAtomLabel = (atom: IdentityPresenter | null | undefined) => {
-  if (!atom) {
-    return '?'
-  }
-  return (
-    atom.user?.display_name ??
-    atom.user?.ens_name ??
-    (atom.display_name !== '' ? atom.display_name : undefined) ??
-    atom.identity_id ??
-    ''
-  )
-}
-
-export const getAtomDescription = (
-  atom: IdentityPresenter | null | undefined,
-) => {
-  return atom?.user?.description ?? atom?.description ?? ''
-}
-
-export const getAtomIpfsLinkNew = (atom: Atom) => {
-  if (!atom) {
-    return ''
-  }
-  if (atom.type === 'Person') {
-    return `${BLOCK_EXPLORER_URL}/address/${atom.data}`
-  }
-  if (atom.data?.startsWith('https')) {
-    return atom.data
-  }
-  if (atom.data?.startsWith('caip10')) {
-    const parts = atom.data.split(':')
-    const chainId = Number(parts[2])
-    const address = parts[3]
-    const chain = extractChain({
-      chains: Object.values(chains),
-      // @ts-ignore Ignoring type since viem doesn't provide proper typings for chain IDs
-      id: chainId,
-    })
-    return chain?.blockExplorers?.default
-      ? `${chain.blockExplorers.default.url}/address/${address}`
-      : ''
-  }
-  return `${IPFS_GATEWAY_URL}/${atom.data?.replace('ipfs://', '')}`
-}
-
-// LEGACY IMPLEMENTATION -- CAN REMOVE ONCE ALL ATOMS ARE CONVERTED TO NEW IMPLEMENTATION
-export const getAtomIpfsLink = (atom: IdentityPresenter | null | undefined) => {
-  if (!atom) {
-    return ''
-  }
-  if (atom.is_user === true) {
-    return `${BLOCK_EXPLORER_URL}/address/${atom.identity_id}`
-  }
-  if (atom.identity_id?.startsWith('https')) {
-    return atom.identity_id
-  }
-  if (atom.identity_id?.startsWith('caip10')) {
-    const parts = atom.identity_id.split(':')
-    const chainId = Number(parts[2])
-    const address = parts[3]
-    const chain = extractChain({
-      chains: Object.values(chains),
-      // @ts-ignore Ignoring type since viem doesn't provide proper typings for chain IDs
-      id: chainId,
-    })
-    return chain?.blockExplorers?.default
-      ? `${chain.blockExplorers.default.url}/address/${address}`
-      : ''
-  }
-  return `${IPFS_GATEWAY_URL}/${atom.identity_id?.replace('ipfs://', '')}`
-  return ''
-}
-
-export const getAtomLinkNew = (atom: Atom, readOnly: boolean = false) => {
-  if (!atom) {
-    return ''
-  }
-  if (atom.type === 'Person') {
-    return readOnly
-      ? `${PATHS.READONLY_PROFILE}/${atom.creator?.id}`
-      : `${PATHS.PROFILE}/${atom.creator?.id}`
-  }
-  return readOnly
-    ? `${PATHS.READONLY_IDENTITY}/${atom.id}`
-    : `${PATHS.IDENTITY}/${atom.id}`
-}
-
-// LEGACY IMPLEMENTATION -- CAN REMOVE ONCE ALL ATOMS ARE CONVERTED TO NEW IMPLEMENTATION
-export const getAtomLink = (
-  atom: IdentityPresenter | null | undefined,
-  readOnly: boolean = false,
-) => {
-  if (!atom) {
-    return ''
-  }
-  if (atom.is_user === true) {
-    return readOnly
-      ? `${PATHS.READONLY_PROFILE}/${atom.identity_id}`
-      : `${PATHS.PROFILE}/${atom.identity_id}`
-  }
-  return readOnly
-    ? `${PATHS.READONLY_IDENTITY}/${atom.vault_id}`
-    : `${PATHS.IDENTITY}/${atom.vault_id}`
-}
-
-export const getAtomId = (atom: IdentityPresenter) => {
-  if (!atom) {
-    return ''
-  }
-  if (atom.is_user === true) {
-    return atom.user?.ens_name ?? atom.user?.wallet
-  }
-  return atom.identity_id
-}
-
 // atom GQL helpers
-export const getAtomImageGQL = (atom: Atom | null | undefined) => {
+export const getAtomImage = (atom: Atom | null | undefined) => {
   if (!atom) {
     return ''
   }
@@ -472,7 +348,7 @@ export const getAtomImageGQL = (atom: Atom | null | undefined) => {
   )
 }
 
-export const getAtomLabelGQL = (atom: Atom | null | undefined) => {
+export const getAtomLabel = (atom: Atom | null | undefined) => {
   if (!atom) {
     return '?'
   }
@@ -487,7 +363,7 @@ export const getAtomLabelGQL = (atom: Atom | null | undefined) => {
   )
 }
 
-export const getAtomDescriptionGQL = (atom: Atom | null | undefined) => {
+export const getAtomDescription = (atom: Atom | null | undefined) => {
   return (
     atom?.value?.person?.description ??
     atom?.value?.thing?.description ??
@@ -496,7 +372,7 @@ export const getAtomDescriptionGQL = (atom: Atom | null | undefined) => {
   )
 }
 
-export const getAtomIpfsLinkGQL = (atom: Atom | null | undefined) => {
+export const getAtomIpfsLink = (atom: Atom | null | undefined) => {
   if (!atom) {
     return ''
   }
@@ -523,7 +399,7 @@ export const getAtomIpfsLinkGQL = (atom: Atom | null | undefined) => {
   return ''
 }
 
-export const getAtomLinkGQL = (
+export const getAtomLink = (
   atom: Atom | null | undefined,
   readOnly: boolean = false,
 ) => {
@@ -540,7 +416,7 @@ export const getAtomLinkGQL = (
     : `${PATHS.IDENTITY}/${atom.vault_id}`
 }
 
-export const getAtomIdGQL = (atom: Atom | null | undefined) => {
+export const getAtomId = (atom: Atom | null | undefined) => {
   if (!atom) {
     return ''
   }
@@ -581,40 +457,3 @@ export const getProfileUrl = (
 
 export const sleep = (ms: number) =>
   new Promise((resolve) => setTimeout(resolve, ms))
-
-// #TODO: 4782 Remove this once we have a proper GQL implementation
-export const identityToAtom = (identity: IdentityPresenter) => ({
-  __typename: 'atoms',
-  id: identity.id,
-  data: '',
-  image: identity.image,
-  label: identity.display_name,
-  emoji: null,
-  type: identity.entity_type ?? 'default',
-  wallet_id: identity.creator_address,
-  block_number: '',
-  block_timestamp: identity.created_at,
-  transaction_hash: '',
-  creator_id: identity.creator_id ?? '',
-  vault_id: identity.vault_id,
-  creator: identity.creator
-    ? {
-        __typename: 'accounts',
-        id: identity.creator.id,
-        label: identity.creator.display_name,
-        image: identity.creator.image,
-        atom_id: identity.vault_id,
-        type: 'Account',
-      }
-    : null,
-  value: {
-    __typename: 'atomValues',
-    person: {
-      __typename: 'persons',
-      name: identity.display_name,
-      image: identity.image,
-      description: identity.description,
-      url: identity.url,
-    },
-  },
-})

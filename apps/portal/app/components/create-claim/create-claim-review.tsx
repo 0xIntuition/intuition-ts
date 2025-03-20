@@ -13,11 +13,11 @@ import {
 import { InfoTooltip } from '@components/info-tooltip'
 import { StandardFees } from '@components/stake/stake-fee-breakdown'
 import {
-  getAtomDescriptionGQL,
-  getAtomImageGQL,
-  getAtomIpfsLinkGQL,
-  getAtomLabelGQL,
-  getAtomLinkGQL,
+  getAtomDescription,
+  getAtomImage,
+  getAtomIpfsLink,
+  getAtomLabel,
+  getAtomLink,
 } from '@lib/utils/misc'
 import { CreateClaimFeesType } from '@routes/resources+/create-claim'
 import { Atom } from 'app/types/atom'
@@ -207,12 +207,12 @@ const CreateClaimReview: React.FC<CreateClaimReviewProps> = ({
                 selectedIdentities.subject?.type === 'Account'
                   ? Identity.user
                   : Identity.nonUser,
-              label: getAtomLabelGQL(selectedIdentities.subject),
-              imgSrc: getAtomImageGQL(selectedIdentities.subject),
+              label: getAtomLabel(selectedIdentities.subject),
+              imgSrc: getAtomImage(selectedIdentities.subject),
               id: selectedIdentities.subject?.vault_id,
-              description: getAtomDescriptionGQL(selectedIdentities.subject),
-              ipfsLink: getAtomIpfsLinkGQL(selectedIdentities.subject),
-              link: getAtomLinkGQL(selectedIdentities.subject),
+              description: getAtomDescription(selectedIdentities.subject),
+              ipfsLink: getAtomIpfsLink(selectedIdentities.subject),
+              link: getAtomLink(selectedIdentities.subject),
               shouldHover: false,
             }}
             predicate={{
@@ -220,12 +220,12 @@ const CreateClaimReview: React.FC<CreateClaimReviewProps> = ({
                 selectedIdentities.predicate?.type === 'Account'
                   ? Identity.user
                   : Identity.nonUser,
-              label: getAtomLabelGQL(selectedIdentities.predicate),
-              imgSrc: getAtomImageGQL(selectedIdentities.predicate),
+              label: getAtomLabel(selectedIdentities.predicate),
+              imgSrc: getAtomImage(selectedIdentities.predicate),
               id: selectedIdentities.predicate?.vault_id,
-              description: getAtomDescriptionGQL(selectedIdentities.predicate),
-              ipfsLink: getAtomIpfsLinkGQL(selectedIdentities.predicate),
-              link: getAtomLinkGQL(selectedIdentities.predicate),
+              description: getAtomDescription(selectedIdentities.predicate),
+              ipfsLink: getAtomIpfsLink(selectedIdentities.predicate),
+              link: getAtomLink(selectedIdentities.predicate),
               shouldHover: false,
             }}
             object={{
@@ -233,12 +233,12 @@ const CreateClaimReview: React.FC<CreateClaimReviewProps> = ({
                 selectedIdentities.object?.type === 'Account'
                   ? Identity.user
                   : Identity.nonUser,
-              label: getAtomLabelGQL(selectedIdentities.object),
-              imgSrc: getAtomImageGQL(selectedIdentities.object),
+              label: getAtomLabel(selectedIdentities.object),
+              imgSrc: getAtomImage(selectedIdentities.object),
               id: selectedIdentities.object?.vault_id,
-              description: getAtomDescriptionGQL(selectedIdentities.object),
-              ipfsLink: getAtomIpfsLinkGQL(selectedIdentities.object),
-              link: getAtomLinkGQL(selectedIdentities.object),
+              description: getAtomDescription(selectedIdentities.object),
+              ipfsLink: getAtomIpfsLink(selectedIdentities.object),
+              link: getAtomLink(selectedIdentities.object),
               shouldHover: false,
             }}
             maxIdentityLength={16}

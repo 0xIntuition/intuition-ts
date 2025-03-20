@@ -14,11 +14,11 @@ import StakingRadioGroup from '@components/staking-radio-group'
 import { TransactionState } from '@components/transaction-state'
 import {
   formatBalance,
-  getAtomDescriptionGQL,
-  getAtomImageGQL,
-  getAtomIpfsLinkGQL,
-  getAtomLabelGQL,
-  getAtomLinkGQL,
+  getAtomDescription,
+  getAtomImage,
+  getAtomIpfsLink,
+  getAtomLabel,
+  getAtomLink,
 } from '@lib/utils/misc'
 import { IPFS_GATEWAY_URL, PATHS } from 'app/consts'
 import { Atom } from 'app/types/atom'
@@ -97,12 +97,12 @@ export default function SaveForm({
                     atom?.type === 'Account' || atom?.type === 'Default'
                       ? Identity.user
                       : Identity.nonUser,
-                  label: getAtomLabelGQL(atom),
-                  imgSrc: getAtomImageGQL(atom),
+                  label: getAtomLabel(atom),
+                  imgSrc: getAtomImage(atom),
                   id: atom?.id,
-                  description: getAtomDescriptionGQL(atom),
-                  ipfsLink: getAtomIpfsLinkGQL(atom),
-                  link: getAtomLinkGQL(atom),
+                  description: getAtomDescription(atom),
+                  ipfsLink: getAtomIpfsLink(atom),
+                  link: getAtomLink(atom),
                 }}
                 predicate={{
                   variant: Identity.nonUser,
@@ -115,12 +115,12 @@ export default function SaveForm({
                 }}
                 object={{
                   variant: Identity.nonUser,
-                  label: getAtomLabelGQL(tagAtom),
-                  imgSrc: getAtomImageGQL(tagAtom),
+                  label: getAtomLabel(tagAtom),
+                  imgSrc: getAtomImage(tagAtom),
                   id: tagAtom?.id,
-                  description: getAtomDescriptionGQL(tagAtom),
-                  ipfsLink: getAtomIpfsLinkGQL(tagAtom),
-                  link: getAtomLinkGQL(tagAtom),
+                  description: getAtomDescription(tagAtom),
+                  ipfsLink: getAtomIpfsLink(tagAtom),
+                  link: getAtomLink(tagAtom),
                 }}
                 maxIdentityLength={12}
               />

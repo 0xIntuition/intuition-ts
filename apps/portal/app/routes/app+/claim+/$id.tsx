@@ -36,11 +36,11 @@ import logger from '@lib/utils/logger'
 import {
   calculatePercentageOfTvl,
   formatBalance,
-  getAtomDescriptionGQL,
-  getAtomImageGQL,
-  getAtomIpfsLinkGQL,
-  getAtomLabelGQL,
-  getAtomLinkGQL,
+  getAtomDescription,
+  getAtomImage,
+  getAtomIpfsLink,
+  getAtomLabel,
+  getAtomLink,
 } from '@lib/utils/misc'
 import { LoaderFunctionArgs } from '@remix-run/node'
 import { Outlet } from '@remix-run/react'
@@ -205,14 +205,14 @@ export default function ClaimDetails() {
               tripleData?.triple?.subject?.type === 'Person'
                 ? Identity.user
                 : Identity.nonUser,
-            label: getAtomLabelGQL(tripleData?.triple?.subject as Atom),
-            imgSrc: getAtomImageGQL(tripleData?.triple?.subject as Atom),
+            label: getAtomLabel(tripleData?.triple?.subject as Atom),
+            imgSrc: getAtomImage(tripleData?.triple?.subject as Atom),
             id: tripleData?.triple?.subject?.id,
-            description: getAtomDescriptionGQL(
+            description: getAtomDescription(
               tripleData?.triple?.subject as Atom,
             ),
-            ipfsLink: getAtomIpfsLinkGQL(tripleData?.triple?.subject as Atom),
-            link: getAtomLinkGQL(tripleData?.triple?.subject as Atom),
+            ipfsLink: getAtomIpfsLink(tripleData?.triple?.subject as Atom),
+            link: getAtomLink(tripleData?.triple?.subject as Atom),
             linkComponent: RemixLink,
           }}
           predicate={{
@@ -220,14 +220,14 @@ export default function ClaimDetails() {
               tripleData?.triple?.predicate?.type === 'Person'
                 ? Identity.user
                 : Identity.nonUser,
-            label: getAtomLabelGQL(tripleData?.triple?.predicate as Atom),
-            imgSrc: getAtomImageGQL(tripleData?.triple?.predicate as Atom),
+            label: getAtomLabel(tripleData?.triple?.predicate as Atom),
+            imgSrc: getAtomImage(tripleData?.triple?.predicate as Atom),
             id: tripleData?.triple?.predicate?.id,
-            description: getAtomDescriptionGQL(
+            description: getAtomDescription(
               tripleData?.triple?.predicate as Atom,
             ),
-            ipfsLink: getAtomIpfsLinkGQL(tripleData?.triple?.predicate as Atom),
-            link: getAtomLinkGQL(tripleData?.triple?.predicate as Atom),
+            ipfsLink: getAtomIpfsLink(tripleData?.triple?.predicate as Atom),
+            link: getAtomLink(tripleData?.triple?.predicate as Atom),
             linkComponent: RemixLink,
           }}
           object={{
@@ -235,14 +235,12 @@ export default function ClaimDetails() {
               tripleData?.triple?.object?.type === 'Person'
                 ? Identity.user
                 : Identity.nonUser,
-            label: getAtomLabelGQL(tripleData?.triple?.object as Atom),
-            imgSrc: getAtomImageGQL(tripleData?.triple?.object as Atom),
+            label: getAtomLabel(tripleData?.triple?.object as Atom),
+            imgSrc: getAtomImage(tripleData?.triple?.object as Atom),
             id: tripleData?.triple?.object?.id,
-            description: getAtomDescriptionGQL(
-              tripleData?.triple?.object as Atom,
-            ),
-            ipfsLink: getAtomIpfsLinkGQL(tripleData?.triple?.object as Atom),
-            link: getAtomLinkGQL(tripleData?.triple?.object as Atom),
+            description: getAtomDescription(tripleData?.triple?.object as Atom),
+            ipfsLink: getAtomIpfsLink(tripleData?.triple?.object as Atom),
+            link: getAtomLink(tripleData?.triple?.object as Atom),
             linkComponent: RemixLink,
           }}
         />
@@ -254,7 +252,7 @@ export default function ClaimDetails() {
               ...prevState,
               mode: 'redeem',
               modalType: 'claim',
-              triple: tripleData?.triple,
+              claim: tripleData?.triple as Triple,
               vaultId:
                 direction === 'for'
                   ? tripleData?.triple?.vault_id
@@ -320,34 +318,48 @@ export default function ClaimDetails() {
         totalTVL={
           vaultDetails?.assets_sum
             ? +formatBalance(BigInt(vaultDetails.assets_sum), 18)
-            : +formatBalance(
-                (BigInt(tripleData?.triple?.vault?.total_shares) *
-                  BigInt(tripleData?.triple?.vault?.current_share_price)) /
-                  BigInt(10 ** 18),
-                18,
-              )
+            : tripleData?.triple?.vault?.total_shares &&
+                tripleData?.triple?.vault?.current_share_price
+              ? +formatBalance(
+                  (BigInt(tripleData.triple.vault.total_shares || '0') *
+                    BigInt(
+                      tripleData.triple.vault.current_share_price || '0',
+                    )) /
+                    BigInt(10 ** 18),
+                  18,
+                )
+              : 0
         }
         tvlAgainst={
           vaultDetails?.against_assets_sum
             ? +formatBalance(BigInt(vaultDetails.against_assets_sum), 18)
-            : +formatBalance(
-                (BigInt(tripleData?.triple?.counter_vault?.total_shares) *
-                  BigInt(
-                    tripleData?.triple?.counter_vault?.current_share_price,
-                  )) /
-                  BigInt(10 ** 18),
-                18,
-              )
+            : tripleData?.triple?.counter_vault?.total_shares &&
+                tripleData?.triple?.counter_vault?.current_share_price
+              ? +formatBalance(
+                  (BigInt(tripleData.triple.counter_vault.total_shares || '0') *
+                    BigInt(
+                      tripleData.triple.counter_vault.current_share_price ||
+                        '0',
+                    )) /
+                    BigInt(10 ** 18),
+                  18,
+                )
+              : 0
         }
         tvlFor={
           vaultDetails?.assets_sum
             ? +formatBalance(BigInt(vaultDetails?.assets_sum), 18)
-            : +formatBalance(
-                (BigInt(tripleData?.triple?.vault?.total_shares) *
-                  BigInt(tripleData?.triple?.vault?.current_share_price)) /
-                  BigInt(10 ** 18),
-                18,
-              )
+            : tripleData?.triple?.vault?.total_shares &&
+                tripleData?.triple?.vault?.current_share_price
+              ? +formatBalance(
+                  (BigInt(tripleData.triple.vault.total_shares || '0') *
+                    BigInt(
+                      tripleData.triple.vault.current_share_price || '0',
+                    )) /
+                    BigInt(10 ** 18),
+                  18,
+                )
+              : 0
         }
         // tvlAgainst={
         //   +formatBalance(

@@ -18,7 +18,6 @@ import {
   TagsContent,
   TagWithValue,
 } from '@0xintuition/1ui'
-import { IdentityPresenter } from '@0xintuition/api'
 import {
   fetcher,
   GetAccountDocument,
@@ -84,6 +83,7 @@ import {
 } from 'app/consts'
 import TwoPanelLayout from 'app/layouts/two-panel-layout'
 import { Atom } from 'app/types/atom'
+import { Triple } from 'app/types/triple'
 import { useAtom } from 'jotai'
 import { formatUnits } from 'viem'
 
@@ -435,11 +435,11 @@ export default function Profile() {
                       label={tag.object?.label ?? ''}
                       value={tag.vault?.allPositions?.aggregate?.count ?? 0}
                       onStake={() => {
-                        setSelectedTag(tag?.object)
+                        setSelectedTag(tag?.object as Atom)
                         setSaveListModalActive({
                           isOpen: true,
                           id: tag.id,
-                          tag: tag.object,
+                          tag: tag.object as Atom,
                         })
                       }}
                     />
@@ -471,7 +471,7 @@ export default function Profile() {
                   ...prevState,
                   mode: 'redeem',
                   modalType: 'identity',
-                  identity: accountResult?.account?.atom as AtomType,
+                  identity: accountResult?.account?.atom as Atom,
                   isOpen: true,
                 }))
               }
@@ -506,7 +506,7 @@ export default function Profile() {
                 ...prevState,
                 mode: 'deposit',
                 modalType: 'identity',
-                identity: accountResult?.account?.atom as AtomType,
+                identity: accountResult?.account?.atom as Atom,
                 isOpen: true,
               }))
             }
@@ -557,7 +557,7 @@ export default function Profile() {
             userWallet={userWallet}
             contract={MULTIVAULT_CONTRACT_ADDRESS}
             open={stakeModalActive.isOpen}
-            identity={accountResult?.account?.atom as AtomType}
+            identity={accountResult?.account?.atom as Atom}
             vaultId={stakeModalActive.vaultId}
             vaultDetailsProp={vaultDetails}
             onClose={() => {
@@ -582,44 +582,8 @@ export default function Profile() {
             }}
           />
           <TagsModal
-            identity={
-              accountResult?.account
-                ? ({
-                    id: accountResult?.account?.id ?? '',
-                    label: accountResult?.account?.label ?? '',
-                    image: accountResult?.account?.image ?? '',
-                    vault_id: accountResult?.account?.atom_id,
-                    assets_sum: '0',
-                    user_assets: '0',
-                    contract: MULTIVAULT_CONTRACT_ADDRESS,
-                    asset_delta: '0',
-                    conviction_price: '0',
-                    conviction_price_delta: '0',
-                    conviction_sum: '0',
-                    num_positions: 0,
-                    price: '0',
-                    price_delta: '0',
-                    status: 'active',
-                    total_conviction: '0',
-                    type: 'user',
-                    updated_at: new Date().toISOString(),
-                    created_at: new Date().toISOString(),
-                    creator_address: '',
-                    display_name: accountResult?.account?.label ?? '',
-                    follow_vault_id: '',
-                    user: null,
-                    creator: null,
-                    identity_hash: '',
-                    identity_id: '',
-                    is_contract: false,
-                    is_user: true,
-                    pending: false,
-                    pending_type: null,
-                    pending_vault_id: null,
-                  } as unknown as IdentityPresenter)
-                : undefined
-            } // TODO: (ENG-4782) temporary type fix until we lock in final types
-            tagClaims={accountTagsResult?.triples ?? []} // TODO: (ENG-4782) temporary type fix until we lock in final types
+            identity={accountResult?.account?.atom as Atom}
+            tagClaims={accountTagsResult?.triples as Triple[]}
             userWallet={userWallet}
             open={tagsModalActive.isOpen}
             mode={tagsModalActive.mode}
@@ -635,7 +599,7 @@ export default function Profile() {
             <SaveListModal
               contract={MULTIVAULT_CONTRACT_ADDRESS}
               tagAtom={saveListModalActive.tag ?? selectedTag}
-              atom={accountResult?.account?.atom as AtomType}
+              atom={accountResult?.account?.atom as Atom}
               userWallet={userWallet}
               open={saveListModalActive.isOpen}
               onClose={() =>

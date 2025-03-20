@@ -18,8 +18,8 @@ import { AtomSearchComboboxItem } from '@components/atom-search-combobox'
 import logger from '@lib/utils/logger'
 import {
   formatBalance,
-  getAtomDescriptionGQL,
-  getAtomIpfsLinkGQL,
+  getAtomDescription,
+  getAtomIpfsLink,
   truncateString,
 } from '@lib/utils/misc'
 import { Triple } from 'app/types/triple'
@@ -87,8 +87,8 @@ const TagSearchCombobox = ({
                             18,
                           )}
                           id={tagClaim.object?.vault_id?.toString()}
-                          bio={getAtomDescriptionGQL(tagClaim?.object)}
-                          ipfsLink={getAtomIpfsLinkGQL(tagClaim?.object)}
+                          bio={getAtomDescription(tagClaim?.object)}
+                          ipfsLink={getAtomIpfsLink(tagClaim?.object)}
                         />
                       </div>
                     </HoverCardContent>

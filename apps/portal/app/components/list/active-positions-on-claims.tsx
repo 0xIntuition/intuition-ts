@@ -7,11 +7,11 @@ import RemixLink from '@components/remix-link'
 import { BLOCK_EXPLORER_URL } from '@consts/general'
 import {
   formatBalance,
-  getAtomDescriptionGQL,
-  getAtomImageGQL,
-  getAtomIpfsLinkGQL,
-  getAtomLabelGQL,
-  getAtomLinkGQL,
+  getAtomDescription,
+  getAtomImage,
+  getAtomIpfsLink,
+  getAtomLabel,
+  getAtomLink,
   getProfileUrl,
 } from '@lib/utils/misc'
 import { Atom } from 'app/types/atom'
@@ -161,20 +161,18 @@ export function ActivePositionsOnClaimsNew({
                     position?.vault?.triple?.subject?.type === 'Person'
                       ? Identity.user
                       : Identity.nonUser,
-                  label: getAtomLabelGQL(
-                    position?.vault?.triple?.subject as Atom,
-                  ),
-                  imgSrc: getAtomImageGQL(
+                  label: getAtomLabel(position?.vault?.triple?.subject as Atom),
+                  imgSrc: getAtomImage(
                     position?.vault?.triple?.subject as Atom,
                   ),
                   id: position?.vault?.triple?.subject?.id,
-                  description: getAtomDescriptionGQL(
+                  description: getAtomDescription(
                     position?.vault?.triple?.subject as Atom,
                   ),
-                  ipfsLink: getAtomIpfsLinkGQL(
+                  ipfsLink: getAtomIpfsLink(
                     position?.vault?.triple?.subject as Atom,
                   ),
-                  link: getAtomLinkGQL(
+                  link: getAtomLink(
                     position?.vault?.triple?.subject as Atom,
                     readOnly,
                   ),
@@ -185,20 +183,20 @@ export function ActivePositionsOnClaimsNew({
                     position?.vault?.triple?.predicate?.type === 'Person'
                       ? Identity.user
                       : Identity.nonUser,
-                  label: getAtomLabelGQL(
+                  label: getAtomLabel(
                     position?.vault?.triple?.predicate as Atom,
                   ),
-                  imgSrc: getAtomImageGQL(
+                  imgSrc: getAtomImage(
                     position?.vault?.triple?.predicate as Atom,
                   ),
                   id: position?.vault?.triple?.predicate?.id,
-                  description: getAtomDescriptionGQL(
+                  description: getAtomDescription(
                     position?.vault?.triple?.predicate as Atom,
                   ),
-                  ipfsLink: getAtomIpfsLinkGQL(
+                  ipfsLink: getAtomIpfsLink(
                     position?.vault?.triple?.predicate as Atom,
                   ),
-                  link: getAtomLinkGQL(
+                  link: getAtomLink(
                     position?.vault?.triple?.predicate as Atom,
                     readOnly,
                   ),
@@ -209,20 +207,16 @@ export function ActivePositionsOnClaimsNew({
                     position?.vault?.triple?.object?.type === 'Person'
                       ? Identity.user
                       : Identity.nonUser,
-                  label: getAtomLabelGQL(
-                    position?.vault?.triple?.object as Atom,
-                  ),
-                  imgSrc: getAtomImageGQL(
-                    position?.vault?.triple?.object as Atom,
-                  ),
+                  label: getAtomLabel(position?.vault?.triple?.object as Atom),
+                  imgSrc: getAtomImage(position?.vault?.triple?.object as Atom),
                   id: position?.vault?.triple?.object?.id,
-                  description: getAtomDescriptionGQL(
+                  description: getAtomDescription(
                     position?.vault?.triple?.object as Atom,
                   ),
-                  ipfsLink: getAtomIpfsLinkGQL(
+                  ipfsLink: getAtomIpfsLink(
                     position?.vault?.triple?.object as Atom,
                   ),
-                  link: getAtomLinkGQL(
+                  link: getAtomLink(
                     position?.vault?.triple?.object as Atom,
                     readOnly,
                   ),

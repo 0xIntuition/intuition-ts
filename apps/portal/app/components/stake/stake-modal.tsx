@@ -56,14 +56,14 @@ interface StakeModalProps {
   userWallet: string
   contract: string
   open: boolean
-  identity?: Atom
-  claim?: Triple
+  identity?: Atom | null
+  claim?: Triple | null
   vaultId: string | number
   vaultDetailsProp?: VaultDetailsType
   onClose?: () => void
   onSuccess?: (args: {
-    identity?: Atom
-    claim?: Triple
+    identity?: Atom | null
+    claim?: Triple | null
     vaultDetails?: VaultDetailsType
     direction?: 'for' | 'against'
   }) => void

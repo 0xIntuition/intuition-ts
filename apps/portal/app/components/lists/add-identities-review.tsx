@@ -22,10 +22,10 @@ import { useBatchCreateTriple } from '@lib/hooks/useBatchCreateTriple'
 import { useLoaderFetcher } from '@lib/hooks/useLoaderFetcher'
 import logger from '@lib/utils/logger'
 import {
-  getAtomDescriptionGQL,
-  getAtomImageGQL,
-  getAtomIpfsLinkGQL,
-  getAtomLabelGQL,
+  getAtomDescription,
+  getAtomImage,
+  getAtomIpfsLink,
+  getAtomLabel,
 } from '@lib/utils/misc'
 import { CreateLoaderData } from '@routes/resources+/create'
 import {
@@ -195,11 +195,11 @@ export default function AddIdentitiesReview({
                             ? Identity.user
                             : Identity.nonUser
                         }
-                        avatarSrc={getAtomImageGQL(identity)}
-                        name={getAtomLabelGQL(identity)}
+                        avatarSrc={getAtomImage(identity)}
+                        name={getAtomLabel(identity)}
                         id={identity.id?.toString()}
-                        bio={getAtomDescriptionGQL(identity)}
-                        ipfsLink={getAtomIpfsLinkGQL(identity)}
+                        bio={getAtomDescription(identity)}
+                        ipfsLink={getAtomIpfsLink(identity)}
                       />
                     </div>
                   </HoverCardContent>

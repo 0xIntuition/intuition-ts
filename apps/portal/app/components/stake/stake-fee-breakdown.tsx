@@ -1,9 +1,10 @@
 import { IconName, Separator, Text } from '@0xintuition/1ui'
-import { ClaimPresenter, IdentityPresenter } from '@0xintuition/api'
 
 import { InfoTooltip } from '@components/info-tooltip'
 import { Link } from '@remix-run/react'
 import { PATHS } from 'app/consts'
+import { Atom } from 'app/types/atom'
+import { Triple } from 'app/types/triple'
 
 export interface Fees {
   totalFees: number
@@ -48,8 +49,8 @@ export const FeeBreakdownTooltip = ({
 }: {
   fees: Fees
   mode: string
-  claim?: ClaimPresenter
-  identity?: IdentityPresenter
+  claim?: Triple
+  identity?: Atom
 }) => (
   <InfoTooltip
     title="Fees"

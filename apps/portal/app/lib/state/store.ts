@@ -44,8 +44,8 @@ export const stakeModalAtom = atom<{
   direction?: 'for' | 'against'
   modalType?: 'identity' | 'claim'
   mode?: 'deposit' | 'redeem'
-  claim?: Triple
-  identity?: Atom
+  claim?: Triple | null
+  identity?: Atom | null
   vaultId: string
   vaultDetails?: VaultDetailsType
 }>({

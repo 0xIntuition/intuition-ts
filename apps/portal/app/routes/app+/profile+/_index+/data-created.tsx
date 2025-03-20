@@ -712,6 +712,7 @@ export default function ProfileDataCreated() {
                 totalResults={atomsCreatedResult?.total?.aggregate?.count}
                 atomImage={accountResult?.account?.image ?? ''}
                 atomLabel={accountResult?.account?.label ?? ''}
+                // TODO: get TVL on created atoms
                 // totalStake={
                 //   +formatBalance(resolvedIdentitiesSummary?.assets ?? '0', 18)
                 // }  // Can't get TVL on created atoms at the moment
@@ -719,12 +720,11 @@ export default function ProfileDataCreated() {
               >
                 {atomsCreatedResult && (
                   <IdentitiesList
-                    variant="explore"
                     identities={atomsCreatedResult.atoms as Atom[]}
                     pagination={identitiesPagination}
                     enableSearch={false}
                     enableSort={true}
-                    paramPrefix="identity"
+                    paramPrefix="createdIdentities"
                     onPageChange={handlePageChange}
                     onLimitChange={handleLimitChange}
                   />

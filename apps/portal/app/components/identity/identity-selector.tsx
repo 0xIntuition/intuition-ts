@@ -16,10 +16,10 @@ import {
 import { AtomSearchComboboxExtended } from '@components/atom-search-combobox-extended'
 import { InfoTooltip } from '@components/info-tooltip'
 import {
-  getAtomDescriptionGQL,
-  getAtomImageGQL,
-  getAtomIpfsLinkGQL,
-  getAtomLabelGQL,
+  getAtomDescription,
+  getAtomImage,
+  getAtomIpfsLink,
+  getAtomLabel,
 } from '@lib/utils/misc'
 import { ClaimElementType } from 'app/types'
 import { Atom } from 'app/types/atom'
@@ -73,7 +73,7 @@ export const IdentitySelector = ({
                     ? Identity.user
                     : Identity.nonUser
                 }
-                imgSrc={getAtomImageGQL(selectedIdentity)}
+                imgSrc={getAtomImage(selectedIdentity)}
                 className="w-full"
               >
                 <Trunctacular
@@ -93,12 +93,12 @@ export const IdentitySelector = ({
                         ? Identity.user
                         : Identity.nonUser
                     }
-                    avatarSrc={getAtomImageGQL(selectedIdentity)}
-                    name={getAtomLabelGQL(selectedIdentity)}
+                    avatarSrc={getAtomImage(selectedIdentity)}
+                    name={getAtomLabel(selectedIdentity)}
                     id={selectedIdentity.id.toString()}
                     stats={undefined}
-                    bio={getAtomDescriptionGQL(selectedIdentity)}
-                    ipfsLink={getAtomIpfsLinkGQL(selectedIdentity)}
+                    bio={getAtomDescription(selectedIdentity)}
+                    ipfsLink={getAtomIpfsLink(selectedIdentity)}
                   />
                 </div>
               </HoverCardContent>

@@ -3,11 +3,7 @@ import { IconName, Identity, IdentityRow } from '@0xintuition/1ui'
 import { ListHeader } from '@components/list/list-header'
 import { stakeModalAtom } from '@lib/state/store'
 import logger from '@lib/utils/logger'
-import {
-  formatBalance,
-  getAtomIpfsLinkGQL,
-  getAtomLinkGQL,
-} from '@lib/utils/misc'
+import { formatBalance, getAtomIpfsLink, getAtomLink } from '@lib/utils/misc'
 import { AtomArray } from 'app/types/atom'
 import { PaginationType } from 'app/types/pagination'
 import { useSetAtom } from 'jotai'
@@ -90,8 +86,8 @@ export function IdentitiesListNew({
               )}
               currency={'ETH'}
               numPositions={identity?.vault?.position_count ?? 0}
-              link={getAtomLinkGQL(identity, readOnly)}
-              ipfsLink={getAtomIpfsLinkGQL(identity)}
+              link={getAtomLink(identity, readOnly)}
+              ipfsLink={getAtomIpfsLink(identity)}
               // tags={
               //   identity.tags?.map((tag) => ({
               //     label: tag.display_name,

@@ -12,11 +12,11 @@ import { ListHeader } from '@components/list/list-header'
 import { saveListModalAtom, stakeModalAtom } from '@lib/state/store'
 import {
   formatBalance,
-  getAtomDescriptionGQL,
-  getAtomImageGQL,
-  getAtomIpfsLinkGQL,
-  getAtomLabelGQL,
-  getAtomLinkGQL,
+  getAtomDescription,
+  getAtomImage,
+  getAtomIpfsLink,
+  getAtomLabel,
+  getAtomLink,
   getClaimUrl,
 } from '@lib/utils/misc'
 import { Atom } from 'app/types/atom'
@@ -193,9 +193,9 @@ export function TagsList({
                       ? Identity.user
                       : Identity.nonUser
                   }
-                  avatarSrc={getAtomImageGQL(triple.subject as unknown as Atom)}
-                  name={getAtomLabelGQL(triple.subject as unknown as Atom)}
-                  description={getAtomDescriptionGQL(
+                  avatarSrc={getAtomImage(triple.subject as unknown as Atom)}
+                  name={getAtomLabel(triple.subject as unknown as Atom)}
+                  description={getAtomDescription(
                     triple.subject as unknown as Atom,
                   )}
                   id={
@@ -226,8 +226,8 @@ export function TagsList({
                   numPositions={
                     triple?.vault?.positions_aggregate?.aggregate?.count || 0
                   }
-                  link={getAtomLinkGQL(identity as unknown as Atom, readOnly)}
-                  ipfsLink={getAtomIpfsLinkGQL(identity as unknown as Atom)}
+                  link={getAtomLink(identity as unknown as Atom, readOnly)}
+                  ipfsLink={getAtomIpfsLink(identity as unknown as Atom)}
                   onStakeClick={() =>
                     setStakeModalActive((prevState) => ({
                       ...prevState,
@@ -235,16 +235,7 @@ export function TagsList({
                       modalType: 'claim',
                       direction: 'for',
                       isOpen: true,
-                      claim: triple,
-                      predicate: triple.predicate,
-                      subject: triple.subject,
-                      updated_at: new Date().toISOString(),
-                      user_assets: '0',
-                      user_assets_against: '0',
-                      user_assets_for: '0',
-                      user_conviction: '0',
-                      user_conviction_against: '0',
-                      user_conviction_for: '0',
+                      triple,
                       vaultId: triple?.vault_id.toString() ?? '0',
                     }))
                   }
@@ -259,8 +250,8 @@ export function TagsList({
                       setSaveListModalActive({
                         isOpen: true,
                         id: triple.vault_id.toString(),
-                        identity: triple.subject,
-                        tag: triple.object,
+                        identity: triple.subject as Atom,
+                        tag: triple.object as Atom,
                       })
                     }}
                   >

@@ -49,7 +49,6 @@ import logger from '@lib/utils/logger'
 import {
   calculatePercentageOfTvl,
   formatBalance,
-  identityToAtom,
   invariant,
 } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
@@ -403,11 +402,7 @@ export default function IdentityDetails() {
         {selectedTag && (
           <SaveListModal
             contract={MULTIVAULT_CONTRACT_ADDRESS}
-            tagAtom={
-              identityToAtom(
-                saveListModalActive.tag ?? selectedTag,
-              ) as unknown as Atom
-            }
+            tagAtom={saveListModalActive.tag ?? selectedTag}
             atom={atomResult?.atom as Atom}
             userWallet={userWallet}
             open={saveListModalActive.isOpen}

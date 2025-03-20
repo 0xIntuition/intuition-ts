@@ -23,11 +23,11 @@ import RemixLink from '@components/remix-link'
 import { PaginatedListSkeleton, TabsSkeleton } from '@components/skeleton'
 import logger from '@lib/utils/logger'
 import {
-  getAtomDescriptionGQL,
-  getAtomImageGQL,
-  getAtomIpfsLinkGQL,
-  getAtomLabelGQL,
-  getAtomLinkGQL,
+  getAtomDescription,
+  getAtomImage,
+  getAtomIpfsLink,
+  getAtomLabel,
+  getAtomLink,
   invariant,
 } from '@lib/utils/misc'
 import { LoaderFunctionArgs } from '@remix-run/node'
@@ -134,14 +134,14 @@ export default function ClaimOverview() {
               tripleData?.triple?.subject?.type === 'Person'
                 ? Identity.user
                 : Identity.nonUser,
-            label: getAtomLabelGQL(tripleData?.triple?.subject as Atom),
-            imgSrc: getAtomImageGQL(tripleData?.triple?.subject as Atom),
+            label: getAtomLabel(tripleData?.triple?.subject as Atom),
+            imgSrc: getAtomImage(tripleData?.triple?.subject as Atom),
             id: tripleData?.triple?.subject?.id,
-            description: getAtomDescriptionGQL(
+            description: getAtomDescription(
               tripleData?.triple?.subject as Atom,
             ),
-            ipfsLink: getAtomIpfsLinkGQL(tripleData?.triple?.subject as Atom),
-            link: getAtomLinkGQL(tripleData?.triple?.subject as Atom),
+            ipfsLink: getAtomIpfsLink(tripleData?.triple?.subject as Atom),
+            link: getAtomLink(tripleData?.triple?.subject as Atom),
             linkComponent: RemixLink,
           }}
           predicate={{
@@ -149,14 +149,14 @@ export default function ClaimOverview() {
               tripleData?.triple?.predicate?.type === 'Person'
                 ? Identity.user
                 : Identity.nonUser,
-            label: getAtomLabelGQL(tripleData?.triple?.predicate as Atom),
-            imgSrc: getAtomImageGQL(tripleData?.triple?.predicate as Atom),
+            label: getAtomLabel(tripleData?.triple?.predicate as Atom),
+            imgSrc: getAtomImage(tripleData?.triple?.predicate as Atom),
             id: tripleData?.triple?.predicate?.id,
-            description: getAtomDescriptionGQL(
+            description: getAtomDescription(
               tripleData?.triple?.predicate as Atom,
             ),
-            ipfsLink: getAtomIpfsLinkGQL(tripleData?.triple?.predicate as Atom),
-            link: getAtomLinkGQL(tripleData?.triple?.predicate as Atom),
+            ipfsLink: getAtomIpfsLink(tripleData?.triple?.predicate as Atom),
+            link: getAtomLink(tripleData?.triple?.predicate as Atom),
             linkComponent: RemixLink,
           }}
           object={{
@@ -164,14 +164,12 @@ export default function ClaimOverview() {
               tripleData?.triple?.object?.type === 'Person'
                 ? Identity.user
                 : Identity.nonUser,
-            label: getAtomLabelGQL(tripleData?.triple?.object as Atom),
-            imgSrc: getAtomImageGQL(tripleData?.triple?.object as Atom),
+            label: getAtomLabel(tripleData?.triple?.object as Atom),
+            imgSrc: getAtomImage(tripleData?.triple?.object as Atom),
             id: tripleData?.triple?.object?.id,
-            description: getAtomDescriptionGQL(
-              tripleData?.triple?.object as Atom,
-            ),
-            ipfsLink: getAtomIpfsLinkGQL(tripleData?.triple?.object as Atom),
-            link: getAtomLinkGQL(tripleData?.triple?.object as Atom),
+            description: getAtomDescription(tripleData?.triple?.object as Atom),
+            ipfsLink: getAtomIpfsLink(tripleData?.triple?.object as Atom),
+            link: getAtomLink(tripleData?.triple?.object as Atom),
             linkComponent: RemixLink,
           }}
         />
@@ -244,10 +242,11 @@ export default function ClaimOverview() {
             pagination={{
               aggregate: {
                 count:
-                  (tripleData?.triple?.vault?.allPositions?.aggregate?.count ??
-                    0) +
-                  (tripleData?.triple?.counter_vault?.allPositions?.aggregate
-                    ?.count ?? 0),
+                  positionDirection === 'for'
+                    ? tripleData?.triple?.vault?.allPositions?.aggregate
+                        ?.count ?? 0
+                    : tripleData?.triple?.counter_vault?.allPositions?.aggregate
+                        ?.count ?? 0,
               },
             }}
             positionDirection={positionDirection ?? undefined}
