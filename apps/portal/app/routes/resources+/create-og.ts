@@ -10,7 +10,7 @@ import {
 
 import { formatBalance } from '@lib/utils/misc'
 import type { LoaderFunctionArgs } from '@remix-run/node'
-import { TripleType } from 'app/types/triple'
+import { Triple } from 'app/types/triple'
 
 import { createOGImage } from '../../.server/og'
 
@@ -40,7 +40,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       throw new Response('Claim not found', { status: 404 })
     }
 
-    const triple = tripleResult?.triple as TripleType
+    const triple = tripleResult?.triple as Triple
 
     title = triple?.object?.label
     holders = triple?.object?.vault?.allPositions?.aggregate?.count
@@ -63,7 +63,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
         throw new Response('Claim not found', { status: 404 })
       }
 
-      const triple = tripleResult?.triple as TripleType
+      const triple = tripleResult?.triple as Triple
 
       const stringifiedClaim = `${triple.subject?.label} - ${triple.predicate?.label} - ${triple.object?.label}`
       title = stringifiedClaim ?? 'Intuition Explorer'

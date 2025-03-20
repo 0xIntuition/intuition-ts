@@ -10,10 +10,10 @@ import { invariant, sleep } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { getUserWallet } from '@server/auth'
 import { NO_WALLET_ERROR } from 'app/consts'
-import { TripleType } from 'app/types/triple'
+import { Triple } from 'app/types/triple'
 
 export interface GetClaimLoaderData {
-  claim: TripleType
+  claim: Triple
   error?: string
 }
 

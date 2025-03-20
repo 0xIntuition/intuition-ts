@@ -1,4 +1,3 @@
-import { json } from '@remix-run/node'
 import {
   getFees,
   getGeneralConfig,
@@ -40,7 +39,7 @@ export async function loader() {
     getFees(),
   ])
 
-  return json({
+  return {
     vaultId: vid.toString(),
     fees: {
       tripleCost: tripleCost.toString(),
@@ -51,5 +50,5 @@ export async function loader() {
       protocolFee: protocolFee.toString(),
       feeDenominator: feeDenominator.toString(),
     } as CreateClaimFeesType,
-  } as CreateClaimLoaderData)
+  } as CreateClaimLoaderData
 }
