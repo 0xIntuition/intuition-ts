@@ -2,20 +2,29 @@ import { z } from 'zod'
 
 import { Atom } from './types'
 
-export type FormConfig = {
-  schema: z.ZodType<Atom>
-  component: React.ComponentType<{
-    onSubmit: (data: Atom) => Promise<void>
-    defaultValues?: Partial<Atom>
-  }>
+export interface AtomFormProps<T extends z.ZodSchema> {
+  onSubmit: (data: z.infer<T>) => Promise<void>
+  defaultValues?: Partial<z.infer<T>>
 }
 
-const formRegistry = new Map<Atom['type'], FormConfig>()
-
-export function registerAtomForm(type: Atom['type'], config: FormConfig) {
-  formRegistry.set(type, config)
+export interface AtomFormConfig<T extends z.ZodSchema> {
+  schema: T
+  component: React.ComponentType<AtomFormProps<T>>
 }
 
-export function getAtomForm(type: Atom['type']): FormConfig | undefined {
-  return formRegistry.get(type)
+export type AtomFormRegistry = {
+  [K in Atom['type']]: AtomFormConfig<z.ZodSchema>
+}
+
+const registry: AtomFormRegistry = {} as AtomFormRegistry
+
+export function registerAtomForm<T extends Atom['type']>(
+  type: T,
+  config: AtomFormConfig<z.ZodTypeAny>,
+) {
+  registry[type] = config
+}
+
+export function getAtomForm(type: Atom['type']) {
+  return registry[type]
 }

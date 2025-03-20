@@ -1,18 +1,20 @@
 import { multivaultAbi } from '@lib/abis/multivault'
-import { useCreateAtom } from '@lib/hooks/useCreateAtom'
+import { useCreateTriple } from '@lib/hooks/useCreateTriple'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Abi, parseUnits } from 'viem'
 
-interface CreateAtomMutationParams {
+interface CreateTripleMutationParams {
   val: string
   contract: string
   userWallet: string
-  uri: string
+  subjectId: string
+  predicateId: string
+  objectId: string
 }
 
-export function useCreateAtomMutation(contract: string) {
+export function useCreateTripleMutation(contract: string) {
   const queryClient = useQueryClient()
-  const createAtom = useCreateAtom()
+  const createTriple = useCreateTriple()
 
   const {
     writeContractAsync,
@@ -21,29 +23,30 @@ export function useCreateAtomMutation(contract: string) {
     awaitingOnChainConfirmation,
     isError,
     reset,
-  } = createAtom
+  } = createTriple
 
   return {
     ...useMutation({
-      mutationFn: async (params: CreateAtomMutationParams) => {
-        const { val, uri } = params
+      mutationFn: async (params: CreateTripleMutationParams) => {
+        const { val, subjectId, predicateId, objectId } = params
+
         const parsedValue = parseUnits(val === '' ? '0' : val, 18)
 
         try {
           return writeContractAsync({
             address: contract as `0x${string}`,
             abi: multivaultAbi as Abi,
-            functionName: 'createAtom',
-            args: [uri],
+            functionName: 'createTriple',
+            args: [subjectId, predicateId, objectId],
             value: parsedValue,
           })
         } catch (error) {
-          console.error('Failed to create atom:', error)
+          console.error('Failed to create triple:', error)
           throw error
         }
       },
       onSuccess: async () => {
-        await queryClient.invalidateQueries({ queryKey: ['get-atoms'] })
+        await queryClient.invalidateQueries({ queryKey: ['get-triples'] })
       },
       onError: (error) => {
         console.error('Create mutation error:', error)

@@ -60,6 +60,6 @@ export default defineConfig({
     },
   },
   ssr: {
-    noExternal: ['@privy-io/react-auth', '@privy-io/wagmi'],
+    noExternal: ['@privy-io/react-auth', '@privy-io/wagmi', 'react-dropzone'],
   },
 })

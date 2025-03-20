@@ -18,7 +18,6 @@ import { AtomSearchComboboxExtended } from '@components/atom-search-combobox-ext
 import { InfoTooltip } from '@components/info-tooltip'
 import SaveListModal from '@components/save-list/save-list-modal'
 import { useCheckClaim } from '@lib/hooks/useCheckClaim'
-import useFilteredIdentitySearch from '@lib/hooks/useFilteredIdentitySearch'
 import useInvalidItems from '@lib/hooks/useInvalidItems'
 import {
   globalCreateIdentityModalAtom,
@@ -64,10 +63,6 @@ export function AddIdentities({
   const [saveListModalActive, setSaveListModalActive] =
     useAtom(saveListModalAtom)
 
-  const { setSearchQuery } = useFilteredIdentitySearch({
-    selectedItems: selectedIdentities as Atom[],
-  })
-
   const [isPopoverOpen, setIsPopoverOpen] = useState(false)
 
   const [selectedInvalidIdentity, setSelectedInvalidIdentity] =
@@ -98,7 +93,6 @@ export function AddIdentities({
 
   const handleIdentitySelect = (atom: Atom) => {
     onAddIdentity(atom)
-    setSearchQuery('')
     refetchClaimCheck()
     setIsPopoverOpen(false)
   }

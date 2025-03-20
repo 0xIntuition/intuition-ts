@@ -191,11 +191,10 @@ export default function StakeModal({
     try {
       const txHash = await stake({
         val,
-        wallet: userWallet,
-        vaultId,
-        claim,
-        identity,
-        conviction_price: conviction_price?.toString() ?? '0',
+        userWallet,
+        vaultId: vaultId.toString(),
+        triple: claim,
+        atom: identity,
         mode,
         contract,
       })

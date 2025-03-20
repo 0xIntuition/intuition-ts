@@ -7,7 +7,6 @@ import { InfoTooltip } from '@components/info-tooltip'
 import { AddListExistingCta } from '@components/lists/add-list-existing-cta'
 import SaveListModal from '@components/save-list/save-list-modal'
 import { useCheckClaim } from '@lib/hooks/useCheckClaim'
-import useFilteredIdentitySearch from '@lib/hooks/useFilteredIdentitySearch'
 import useInvalidItems from '@lib/hooks/useInvalidItems'
 import {
   globalCreateIdentityModalAtom,
@@ -66,10 +65,6 @@ export function AddTags({
 
   const [isPopoverOpen, setIsPopoverOpen] = useState(false)
 
-  const { setSearchQuery } = useFilteredIdentitySearch({
-    selectedItems: selectedTags,
-  })
-
   const { data: claimCheckData = { result: '0' }, refetch: refetchClaimCheck } =
     useCheckClaim(
       {
@@ -92,7 +87,6 @@ export function AddTags({
 
   const handleIdentitySelect = (atom: Atom) => {
     onAddTag(atom)
-    setSearchQuery('')
     refetchClaimCheck()
     setIsPopoverOpen(false)
   }

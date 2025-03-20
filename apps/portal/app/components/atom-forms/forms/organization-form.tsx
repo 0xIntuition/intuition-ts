@@ -1,21 +1,21 @@
-import { Button } from '@0xintuition/1ui'
-
+import { FormImageUpload } from '@components/atom-forms/form-fields/image-upload'
+import { FormInput } from '@components/atom-forms/form-fields/input'
+import { FormTextarea } from '@components/atom-forms/form-fields/textarea'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FormProvider, useForm } from 'react-hook-form'
 
-import { FormField } from '../form-fields'
-import { organizationAtomSchema, type Atom } from '../types'
+import { OrganizationAtom, organizationAtomSchema } from '../types'
 
 interface OrganizationFormProps {
-  onSubmit: (data: Atom) => void
-  defaultValues?: Partial<Atom>
+  onSubmit: (data: OrganizationAtom) => Promise<void>
+  defaultValues?: Partial<OrganizationAtom>
 }
 
 export function OrganizationForm({
   onSubmit,
   defaultValues,
 }: OrganizationFormProps) {
-  const form = useForm<Atom>({
+  const form = useForm<OrganizationAtom>({
     resolver: zodResolver(organizationAtomSchema),
     defaultValues: {
       type: 'Organization',
@@ -25,31 +25,24 @@ export function OrganizationForm({
 
   return (
     <FormProvider {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        <FormField
-          name="name"
-          label="Organization Name"
-          placeholder="Enter organization name"
-        />
-        <FormField
+      <form
+        id="organization-form"
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="space-y-2.5"
+      >
+        <FormInput name="name" label="Name" placeholder="Enter name" />
+        <FormImageUpload name="image" label="Image" control={form.control} />
+        <FormTextarea
           name="description"
           label="Description"
-          placeholder="Enter organization description"
-          multiline
+          placeholder="Enter description"
         />
-        <FormField
-          name="image"
-          label="Logo URL"
-          placeholder="Enter organization logo URL"
-        />
-        <FormField
+        <FormInput
           name="url"
-          label="Website URL"
-          placeholder="Enter organization website URL"
+          type="url"
+          label="URL"
+          placeholder="Enter website URL"
         />
-        <Button type="submit" className="w-full">
-          Create Organization
-        </Button>
       </form>
     </FormProvider>
   )

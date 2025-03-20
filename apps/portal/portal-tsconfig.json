@@ -285,7 +285,6 @@
         "./app/lib/hooks/useDebounce.tsx",
         "./app/lib/hooks/useDepositAtom.tsx",
         "./app/lib/hooks/useDepositTriple.tsx",
-        "./app/lib/hooks/useFilteredIdentitySearch.tsx",
         "./app/lib/hooks/useGetVaultDetails.tsx",
         "./app/lib/hooks/useGetWalletBalance.tsx",
         "./app/lib/hooks/useGoBack.tsx",

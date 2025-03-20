@@ -1,16 +1,18 @@
-import { FormField } from '@components/atom-forms/form-fields'
+import { FormImageUpload } from '@components/atom-forms/form-fields/image-upload'
+import { FormInput } from '@components/atom-forms/form-fields/input'
+import { FormTextarea } from '@components/atom-forms/form-fields/textarea'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FormProvider, useForm } from 'react-hook-form'
 
-import { Atom, thingAtomSchema } from '../types'
+import { ThingAtom, thingAtomSchema } from '../types'
 
 interface ThingFormProps {
-  onSubmit: (data: Atom) => Promise<void>
-  defaultValues?: Partial<Atom>
+  onSubmit: (data: ThingAtom) => Promise<void>
+  defaultValues?: Partial<ThingAtom>
 }
 
 export function ThingForm({ onSubmit, defaultValues }: ThingFormProps) {
-  const form = useForm<Atom>({
+  const form = useForm<ThingAtom>({
     resolver: zodResolver(thingAtomSchema),
     defaultValues: {
       type: 'Thing',
@@ -23,24 +25,20 @@ export function ThingForm({ onSubmit, defaultValues }: ThingFormProps) {
       <form
         id="thing-form"
         onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-4"
+        className="space-y-2.5"
       >
-        <FormField name="name" label="Name" placeholder="Enter a name" />
-        <FormField
+        <FormInput name="name" label="Name" placeholder="Enter name" />
+        <FormImageUpload name="image" label="Image" control={form.control} />
+        <FormTextarea
           name="description"
           label="Description"
-          placeholder="Enter a description"
-          multiline
+          placeholder="Enter description"
         />
-        <FormField
-          name="image"
-          label="Image URL"
-          placeholder="Enter an image URL"
-        />
-        <FormField
+        <FormInput
           name="url"
-          label="Website URL"
-          placeholder="Enter a website URL"
+          type="url"
+          label="URL"
+          placeholder="Enter website URL"
         />
       </form>
     </FormProvider>

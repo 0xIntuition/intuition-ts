@@ -1,18 +1,18 @@
-import { Button } from '@0xintuition/1ui'
-
+import { FormImageUpload } from '@components/atom-forms/form-fields/image-upload'
+import { FormInput } from '@components/atom-forms/form-fields/input'
+import { FormTextarea } from '@components/atom-forms/form-fields/textarea'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { FormProvider, useForm } from 'react-hook-form'
 
-import { FormField } from '../form-fields'
-import { personAtomSchema, type Atom } from '../types'
+import { PersonAtom, personAtomSchema } from '../types'
 
 interface PersonFormProps {
-  onSubmit: (data: Atom) => void
-  defaultValues?: Partial<Atom>
+  onSubmit: (data: PersonAtom) => Promise<void>
+  defaultValues?: Partial<PersonAtom>
 }
 
 export function PersonForm({ onSubmit, defaultValues }: PersonFormProps) {
-  const form = useForm<Atom>({
+  const form = useForm<PersonAtom>({
     resolver: zodResolver(personAtomSchema),
     defaultValues: {
       type: 'Person',
@@ -22,27 +22,24 @@ export function PersonForm({ onSubmit, defaultValues }: PersonFormProps) {
 
   return (
     <FormProvider {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        <FormField name="name" label="Name" placeholder="Enter your name" />
-        <FormField
+      <form
+        id="person-form"
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="space-y-2.5"
+      >
+        <FormInput name="name" label="Name" placeholder="Enter name" />
+        <FormImageUpload name="image" label="Image" control={form.control} />
+        <FormTextarea
           name="description"
           label="Description"
-          placeholder="Enter a description"
-          multiline
+          placeholder="Enter description"
         />
-        <FormField
-          name="image"
-          label="Image URL"
-          placeholder="Enter an image URL"
-        />
-        <FormField
+        <FormInput
           name="url"
-          label="Website URL"
-          placeholder="Enter your website URL"
+          type="url"
+          label="URL"
+          placeholder="Enter website URL"
         />
-        <Button type="submit" className="w-full">
-          Create Person
-        </Button>
       </form>
     </FormProvider>
   )
