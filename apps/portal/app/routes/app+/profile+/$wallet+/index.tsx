@@ -37,7 +37,7 @@ import {
 import { ErrorPage } from '@components/error-page'
 import { ClaimsListNew as ClaimsAboutIdentity } from '@components/list/claims'
 import { FollowList } from '@components/list/follow'
-import { ListClaimsList } from '@components/list/list-claims'
+import { ListClaimsListNew as ListClaimsList } from '@components/list/list-claims'
 import { ListClaimsSkeletonLayout } from '@components/lists/list-skeletons'
 import { ConnectionsHeaderVariants } from '@components/profile/connections-header'
 import DataAboutHeader from '@components/profile/data-about-header'
