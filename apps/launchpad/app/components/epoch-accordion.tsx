@@ -18,6 +18,8 @@ import type { Question } from '@lib/services/questions'
 import { Link } from '@remix-run/react'
 import { MessageCircleQuestion } from 'lucide-react'
 
+import { QuestionCardWrapper as EcosystemQuestionCardWrapper } from './ecosystem-question-card/question-card-wrapper'
+import { QuestionRowWrapper as EcosystemQuestionRowWrapper } from './ecosystem-question-card/question-row-wrapper'
 import { QuestionCardWrapper } from './question-card-wrapper'
 import { QuestionRowWrapper } from './question-row-wrapper'
 
@@ -30,6 +32,7 @@ interface EpochAccordionProps {
     start_date: string
     end_date: string
     is_active: boolean
+    type?: string
     progress?: {
       completed_count: number
       total_points: number
@@ -105,7 +108,6 @@ export function EpochAccordion({
                   isActive={epoch.is_active}
                 />
               </div>
-
               {/* Progress Section */}
               {epoch.progress && (
                 <div className="w-full">
@@ -152,28 +154,54 @@ export function EpochAccordion({
               {epoch.questions.map((question) => (
                 <Suspense key={question.id} fallback={<div>Loading...</div>}>
                   <div className="md:hidden">
-                    <QuestionCardWrapper
-                      question={question}
-                      onStart={() =>
-                        onStartQuestion(
-                          question,
-                          question.predicate_id,
-                          question.object_id,
-                        )
-                      }
-                    />
+                    {epoch.type === 'ecosystem' ? (
+                      <EcosystemQuestionCardWrapper
+                        question={question}
+                        onStart={() =>
+                          onStartQuestion(
+                            question,
+                            question.predicate_id,
+                            question.object_id,
+                          )
+                        }
+                      />
+                    ) : (
+                      <QuestionCardWrapper
+                        question={question}
+                        onStart={() =>
+                          onStartQuestion(
+                            question,
+                            question.predicate_id,
+                            question.object_id,
+                          )
+                        }
+                      />
+                    )}
                   </div>
                   <div className="hidden md:block">
-                    <QuestionRowWrapper
-                      question={question}
-                      onStart={() =>
-                        onStartQuestion(
-                          question,
-                          question.predicate_id,
-                          question.object_id,
-                        )
-                      }
-                    />
+                    {epoch.type === 'ecosystem' ? (
+                      <EcosystemQuestionRowWrapper
+                        question={question}
+                        onStart={() =>
+                          onStartQuestion(
+                            question,
+                            question.predicate_id,
+                            question.object_id,
+                          )
+                        }
+                      />
+                    ) : (
+                      <QuestionRowWrapper
+                        question={question}
+                        onStart={() =>
+                          onStartQuestion(
+                            question,
+                            question.predicate_id,
+                            question.object_id,
+                          )
+                        }
+                      />
+                    )}
                   </div>
                 </Suspense>
               ))}

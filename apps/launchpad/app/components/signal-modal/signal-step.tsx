@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 
 import { Button, Text, TextVariant, toast } from '@0xintuition/1ui'
 
+import { FeesText } from '@components/fees-text'
 import SignalToast from '@components/survey-modal/signal-toast'
 import { MIN_DEPOSIT, MULTIVAULT_CONTRACT_ADDRESS } from '@consts/general'
 import { multivaultAbi } from '@lib/abis/multivault'
@@ -767,17 +768,7 @@ export function SignalStep({
                 disabled={!mode || isLoading}
                 loadingText={'Processing...'}
               />
-              <Text variant="caption" className="text-end text-primary/70">
-                Standard fees apply.{' '}
-                <Link
-                  to="https://tech.docs.intuition.systems/fees"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-primary font-semibold hover:text-accent"
-                >
-                  Learn more
-                </Link>
-              </Text>
+              <FeesText />
             </div>
           </div>
         </div>

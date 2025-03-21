@@ -31,6 +31,7 @@ export interface EpochQuestion {
   predicate_id: number
   object_id: number
   created_at: string
+  tag_object_id?: number | null
 }
 
 export interface GetEpochQuestionsResponse {
@@ -102,6 +103,7 @@ const GetEpochQuestionQuery = gql`
       link
       predicate_id
       object_id
+      tag_object_id
     }
   }
 `

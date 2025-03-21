@@ -29,6 +29,7 @@ configureClient({
 })
 
 export async function loader() {
+  console.log('HASURA_POINTS_ENDPOINT:', process.env.HASURA_POINTS_ENDPOINT)
   return json({
     env: getEnv(),
   })
