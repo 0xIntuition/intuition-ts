@@ -32,11 +32,11 @@ import { ListClaimsListNew as ListClaimsList } from '@components/list/list-claim
 import { OverviewAboutHeaderNew as OverviewAboutHeader } from '@components/profile/overview-about-header'
 import { OverviewCreatedHeader } from '@components/profile/overview-created-header'
 import { OverviewStakingHeader } from '@components/profile/overview-staking-header'
-import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getSpecialPredicate } from '@lib/utils/app'
 import logger from '@lib/utils/logger'
 import { formatBalance, invariant } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
+import { useLoaderData } from '@remix-run/react'
 import { getUserWallet } from '@server/auth'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
 import { CURRENT_ENV, NO_WALLET_ERROR, PATHS } from 'app/consts'
@@ -266,10 +266,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export default function UserProfileOverview() {
-  const { initialParams, queryAddress } = useLiveLoader<typeof loader>([
-    'attest',
-    'create',
-  ])
+  const { initialParams, queryAddress } = useLoaderData<typeof loader>()
 
   const {
     triplesCountWhere,

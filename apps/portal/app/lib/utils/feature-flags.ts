@@ -3,7 +3,10 @@
  */
 
 export const FEATURE_FLAGS = {
-  SOCIAL_LINKING: process.env.ENABLE_SOCIAL_LINKING === 'true',
+  SOCIAL_LINKING:
+    typeof window !== 'undefined'
+      ? window.ENV?.ENABLE_SOCIAL_LINKING === 'true'
+      : import.meta.env.VITE_ENABLE_SOCIAL_LINKING === 'true',
 } as const
 
 export type FeatureFlag = keyof typeof FEATURE_FLAGS

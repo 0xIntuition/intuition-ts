@@ -49,7 +49,6 @@ import ShareModal from '@components/share-modal'
 import StakeModal from '@components/stake/stake-modal'
 import TagsModal from '@components/tags/tags-modal'
 import { useGetVaultDetails } from '@lib/hooks/useGetVaultDetails'
-import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { usePoints } from '@lib/hooks/usePoints'
 import { fetchPoints } from '@lib/services/points'
 import {
@@ -69,7 +68,12 @@ import {
 } from '@lib/utils/misc'
 import { User } from '@privy-io/react-auth'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
-import { Outlet, useMatches, useNavigate } from '@remix-run/react'
+import {
+  Outlet,
+  useLoaderData,
+  useMatches,
+  useNavigate,
+} from '@remix-run/react'
 import { getUser } from '@server/auth'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
 import {
@@ -232,10 +236,7 @@ export interface ProfileLoaderData {
 }
 
 export default function Profile() {
-  const { initialParams, userWallet } = useLiveLoader<ProfileLoaderData>([
-    'attest',
-    'create',
-  ])
+  const { initialParams, userWallet } = useLoaderData<ProfileLoaderData>()
 
   // TODO: Remove this once the `status is added to atoms -- that will be what we check if something is pending. For now setting this to false and removing the legacy isPending check
   const isPending = false

@@ -4,6 +4,7 @@ export const featureFlagsSchema = z.object({
   FF_GENERIC_BANNER_ENABLED: z.string().optional(),
   FF_INCIDENT_BANNER_ENABLED: z.string().optional(),
   FF_FULL_LOCKDOWN_ENABLED: z.string().optional(),
+  ENABLE_SOCIAL_LINKING: z.string().optional(),
 })
 
 const schema = z.object({
@@ -73,6 +74,7 @@ export function getEnv() {
     FF_GENERIC_BANNER_ENABLED: process.env.FF_GENERIC_BANNER_ENABLED,
     FF_INCIDENT_BANNER_ENABLED: process.env.FF_INCIDENT_BANNER_ENABLED,
     FF_FULL_LOCKDOWN_ENABLED: process.env.FF_FULL_LOCKDOWN_ENABLED,
+    ENABLE_SOCIAL_LINKING: process.env.ENABLE_SOCIAL_LINKING,
   }
 }
 
@@ -81,6 +83,7 @@ export function getFeatureFlags(): z.infer<typeof featureFlagsSchema> {
     FF_GENERIC_BANNER_ENABLED: process.env.FF_GENERIC_BANNER_ENABLED,
     FF_INCIDENT_BANNER_ENABLED: process.env.FF_INCIDENT_BANNER_ENABLED,
     FF_FULL_LOCKDOWN_ENABLED: process.env.FF_FULL_LOCKDOWN_ENABLED,
+    ENABLE_SOCIAL_LINKING: process.env.ENABLE_SOCIAL_LINKING,
   }
 }
 

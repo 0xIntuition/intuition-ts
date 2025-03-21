@@ -18,9 +18,9 @@ export function IdentitiesListNew({
   enableHeader = true,
   enableSearch = true,
   enableSort = true,
-  readOnly = false,
   onPageChange,
   onLimitChange,
+  isConnected = false,
 }: {
   variant?: 'explore' | 'positions'
   identities: AtomArray
@@ -29,9 +29,9 @@ export function IdentitiesListNew({
   enableHeader?: boolean
   enableSearch?: boolean
   enableSort?: boolean
-  readOnly?: boolean
   onPageChange?: (page: number) => void
   onLimitChange?: (limit: number) => void
+  isConnected?: boolean
 }) {
   // Using GraphQL field names directly for sorting
   const options: SortOption<string>[] = [
@@ -86,7 +86,7 @@ export function IdentitiesListNew({
               )}
               currency={'ETH'}
               numPositions={identity?.vault?.position_count ?? 0}
-              link={getAtomLink(identity, readOnly)}
+              link={getAtomLink(identity)}
               ipfsLink={getAtomIpfsLink(identity)}
               // tags={
               //   identity.tags?.map((tag) => ({
@@ -110,6 +110,7 @@ export function IdentitiesListNew({
               }
               isFirst={!enableHeader && index === 0}
               isLast={index === identities.length - 1}
+              isConnected={isConnected}
               className="border-none rounded-none"
             />
           </div>

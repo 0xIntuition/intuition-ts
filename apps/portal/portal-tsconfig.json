@@ -69,7 +69,6 @@
     "./app/lib/abis/relics.ts",
     "./app/lib/graphql/client.ts",
     "./app/lib/graphql/types.ts",
-    "./app/lib/hooks/useLiveLoader.ts",
     "./app/lib/hooks/usePrivySocialLinking.ts",
     "./app/lib/hooks/useTransactionReducer.ts",
     "./app/lib/schemas/create-claim-schema.ts",

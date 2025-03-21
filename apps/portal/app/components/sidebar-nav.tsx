@@ -71,11 +71,6 @@ const sidebarNavRoutes: SidebarNavRoute[] = [
     label: 'Activity',
     iconName: 'lightning-bolt',
   },
-  {
-    route: PATHS.QUEST,
-    label: 'Quest',
-    iconName: 'crystal-ball',
-  },
 ]
 
 const comingSoonRoutes: SidebarNavRoute[] = [
@@ -304,19 +299,24 @@ export default function SidebarNav({
               <div className="flex flex-col gap-4">
                 {renderAuthButton()}
                 <div className="flex flex-col gap-1">
-                  {sidebarNavRoutes.map((sidebarNavItem, index) => (
-                    <NavLink
-                      key={`nav-item-${index}`}
-                      to={sidebarNavItem.route}
-                      prefetch="intent"
-                    >
-                      <SidebarNavItem
-                        iconName={sidebarNavItem.iconName}
-                        label={sidebarNavItem.label}
-                        aria-selected={isRouteActive(sidebarNavItem.route)}
-                      />
-                    </NavLink>
-                  ))}
+                  {sidebarNavRoutes
+                    .filter(
+                      (route) =>
+                        route.route !== PATHS.PROFILE || privyUser?.wallet,
+                    )
+                    .map((sidebarNavItem, index) => (
+                      <NavLink
+                        key={`nav-item-${index}`}
+                        to={sidebarNavItem.route}
+                        prefetch="intent"
+                      >
+                        <SidebarNavItem
+                          iconName={sidebarNavItem.iconName}
+                          label={sidebarNavItem.label}
+                          aria-selected={isRouteActive(sidebarNavItem.route)}
+                        />
+                      </NavLink>
+                    ))}
                   {comingSoonRoutes.map((sidebarNavItem, index) => (
                     <SidebarNavItem
                       key={`nav-item-${index}`}

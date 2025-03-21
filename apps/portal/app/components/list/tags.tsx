@@ -2,7 +2,7 @@ import {
   Button,
   ButtonSize,
   ButtonVariant,
-  Icon,
+  cn,
   IconName,
   Identity,
   IdentityRow,
@@ -19,79 +19,14 @@ import {
   getAtomLink,
   getClaimUrl,
 } from '@lib/utils/misc'
+import { Triple } from 'app/types'
 import { Atom } from 'app/types/atom'
 import { PaginationType } from 'app/types/pagination'
 import { useSetAtom } from 'jotai'
+import { Bookmark } from 'lucide-react'
 
 import { SortOption } from '../sort-select'
 import { List } from './list'
-
-/*
- * TagsList component for displaying tags with pagination and sorting
- * The implementation is aligned with how the ClaimsListNew component handles pagination and sorting
- * Key points:
- * - Uses block_timestamp as the default sort field (matches claims implementation)
- * - Uses mapSortToOrderBy function to translate sort parameters to GraphQL queries
- * - Sort options match field formats used in ClaimsListNew for consistency
- * - Uses the common List component for pagination UI
- */
-
-// Define a more flexible interface for the triples we receive from GraphQL
-interface TripleData {
-  id: string | number
-  vault_id: string | number
-  counter_vault_id: string | number
-  subject: {
-    id?: string | number
-    wallet_id?: string
-    label?: string | null
-    type?: string
-    image?: string | null
-    description?: string | null
-    tags?: {
-      nodes?: Array<{
-        object?: {
-          label?: string
-          taggedIdentities?: { aggregate?: { count?: number } }
-        }
-      }>
-    }
-    vault?: Record<string, unknown>
-  }
-  predicate: {
-    id?: string | number
-    label?: string | null
-    description?: string | null
-    type?: string
-  }
-  object: {
-    id?: string | number
-    label?: string | null
-    description?: string | null
-    type?: string
-  }
-  vault?: {
-    positions_aggregate?: {
-      aggregate?: {
-        count?: number
-        sum?: {
-          shares?: string | number
-        }
-      }
-    }
-    current_share_price?: string | number
-    positions?: Array<{
-      id?: string | number
-      account: { id: string; label?: string | null }
-      shares: string | number
-    }>
-  }
-  __typename?: string
-  block_timestamp?: string | number
-  block_number?: string | number
-  created_at?: string
-  updated_at?: string
-}
 
 // Function to map sort parameters from URL to GraphQL order_by object
 export function mapSortToOrderBy(sortBy: string, direction: string) {
@@ -129,7 +64,7 @@ export function TagsList({
   onPageChange,
   onLimitChange,
 }: {
-  triples: TripleData[]
+  triples: Triple[]
   pagination?: PaginationType
   paramPrefix?: string
   enableHeader?: boolean
@@ -239,8 +174,7 @@ export function TagsList({
                       vaultId: triple?.vault_id.toString() ?? '0',
                     }))
                   }
-                  readOnly
-                  className={`w-full hover:bg-transparent ${readOnly ? '' : 'pr-0'}`}
+                  className={`w-full border-0 bg-transparent ${readOnly ? '' : 'pr-0'}`}
                 />
                 {readOnly === false && (
                   <Button
@@ -255,7 +189,14 @@ export function TagsList({
                       })
                     }}
                   >
-                    <Icon name={IconName.bookmark} className="h-6 w-6" />
+                    <Bookmark
+                      className={cn(
+                        `h-6 w-6`,
+                        triple?.vault?.positions?.[0]?.shares &&
+                          +triple?.vault?.positions?.[0]?.shares > 0 &&
+                          `fill-primary`,
+                      )}
+                    />
                   </Button>
                 )}
               </div>
