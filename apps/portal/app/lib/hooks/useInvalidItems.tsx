@@ -29,28 +29,33 @@ function useInvalidItems<T>({
     console.log('Processing invalid item', { result, itemId, selectedItems })
 
     const update = (prev: T[]) => {
+      // If result is 0, remove the item from invalid items if it exists
       if (result === '0') {
-        return prev.filter((item) => item[idKey] !== itemId)
+        return prev.filter((item) => String(item[idKey]) !== String(itemId))
       }
 
-      if (!itemId) {
+      // If we have a non-zero result, it means there's an existing claim
+      // Find the item in selectedItems that matches the itemId
+      const itemToAdd = selectedItems.find(
+        (item) => String(item[idKey]) === String(itemId),
+      )
+
+      // If we already have this item in invalid items, don't add it again
+      if (
+        !itemToAdd ||
+        prev.some((item) => String(item[idKey]) === String(itemId))
+      ) {
         return prev
       }
 
-      const itemToAdd = selectedItems.find((item) => item[idKey] === itemId)
-      console.log('Found item to add', { itemToAdd, itemId })
-
-      if (!itemToAdd || prev.some((item) => item[idKey] === itemId)) {
-        return prev
+      // Add the claim ID to the item and add it to invalid items
+      const itemWithClaimId = {
+        ...itemToAdd,
+        tagClaimId: result,
       }
 
       if (onRemoveItem) {
         onRemoveItem(itemId)
-      }
-
-      const itemWithClaimId = {
-        ...itemToAdd,
-        tagClaimId: result,
       }
 
       return [...prev, itemWithClaimId]

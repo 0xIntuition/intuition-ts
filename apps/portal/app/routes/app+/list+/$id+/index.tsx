@@ -469,6 +469,8 @@ export default function ListOverview() {
     submit(formData, { method: 'get', replace: true })
   }
 
+  console.log('listDetailsData?.globalTriples', listDetailsData?.globalTriples)
+
   return (
     <div className="flex-col justify-start items-start flex w-full gap-6">
       <div className="flex flex-row w-full justify-around md:justify-end gap-4">
