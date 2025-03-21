@@ -159,7 +159,6 @@ export function EcosystemModal({
   const { isTransitioning, handleTransition, resetTransition } = transition
   const navigate = useNavigate()
   const location = useLocation()
-  console.log(tagObjectId)
 
   const { data: searchData, isLoading: isLoadingAtoms } = useAtomsWithTagsQuery(
     {
