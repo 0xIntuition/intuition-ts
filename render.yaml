@@ -97,6 +97,7 @@ services:
         sync: false
       - key: VITE_DEPLOY_ENV
         sync: false
-      - key: HOST
-        fromSecret: RENDER_HOSTNAME
-        default: 0.0.0.0
+      - key: HTTPS
+        value: "true"
+      - key: NODE_ENV
+        value: production
