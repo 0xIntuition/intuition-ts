@@ -17,9 +17,8 @@ import { calculateTotalPages, invariant } from '@lib/utils/misc'
 import { getStandardPageParams } from '@lib/utils/params'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { Await, useLoaderData, useSearchParams } from '@remix-run/react'
-import { getUserWallet } from '@server/auth'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
-import { CURRENT_ENV, NO_PARAM_ID_ERROR, NO_WALLET_ERROR } from 'app/consts'
+import { CURRENT_ENV, NO_PARAM_ID_ERROR } from 'app/consts'
 import { PaginationType } from 'app/types/pagination'
 
 // Default pagination values
@@ -67,9 +66,6 @@ const sortLists = (
 }
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
-  const userWallet = await getUserWallet(request)
-  invariant(userWallet, NO_WALLET_ERROR)
-
   const wallet = params.wallet?.toLowerCase()
   invariant(wallet, NO_PARAM_ID_ERROR)
 
@@ -87,10 +83,8 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   })
 
   const savedListsWhere = {
-    account: {
-      id: {
-        _eq: queryAddress,
-      },
+    account_id: {
+      _eq: queryAddress,
     },
     vault: {
       atom_id: {

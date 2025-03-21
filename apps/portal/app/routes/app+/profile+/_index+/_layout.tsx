@@ -488,6 +488,7 @@ export default function Profile() {
                   mode: 'redeem',
                   modalType: 'identity',
                   identity: accountResult?.account?.atom as Atom,
+                  vaultId: accountResult?.account?.atom?.vault_id,
                   isOpen: true,
                 }))
               }
@@ -528,6 +529,7 @@ export default function Profile() {
                 mode: 'deposit',
                 modalType: 'identity',
                 identity: accountResult?.account?.atom as Atom,
+                vaultId: accountResult?.account?.atom?.vault_id,
                 isOpen: true,
               }))
             }

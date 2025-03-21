@@ -35,7 +35,7 @@ import {
 
 import { ErrorPage } from '@components/error-page'
 import { ClaimsListNew as ClaimsAboutIdentity } from '@components/list/claims'
-import { FollowList } from '@components/list/follow'
+import { FollowerList } from '@components/list/follow'
 import { ListClaimsListNew as ListClaimsList } from '@components/list/list-claims'
 import { ListClaimsSkeletonLayout } from '@components/lists/list-skeletons'
 import { ConnectionsHeaderVariants } from '@components/profile/connections-header'
@@ -52,18 +52,12 @@ import { LoaderFunctionArgs } from '@remix-run/node'
 import { Await, useLoaderData, useParams } from '@remix-run/react'
 import { getUserWallet } from '@server/auth'
 import { QueryClient } from '@tanstack/react-query'
-import {
-  CURRENT_ENV,
-  NO_PARAM_ID_ERROR,
-  NO_WALLET_ERROR,
-  PATHS,
-} from 'app/consts'
+import { CURRENT_ENV, NO_PARAM_ID_ERROR, PATHS } from 'app/consts'
 import { Triple } from 'app/types/triple'
 import { useSetAtom } from 'jotai'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const userWallet = await getUserWallet(request)
-  invariant(userWallet, NO_WALLET_ERROR)
 
   const wallet = params.wallet
   invariant(wallet, NO_PARAM_ID_ERROR)
@@ -321,6 +315,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   })
 
   return {
+    userWallet,
     queryAddress,
     initialParams: {
       atomId: accountResult.account?.atom_id,
@@ -339,7 +334,8 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 }
 
 export default function ProfileOverview() {
-  const { queryAddress, initialParams } = useLoaderData<typeof loader>()
+  const { userWallet, queryAddress, initialParams } =
+    useLoaderData<typeof loader>()
 
   const params = useParams()
   const { wallet } = params
@@ -576,6 +572,7 @@ export default function ProfileOverview() {
               paramPrefix="claims"
               enableSearch={false} // TODO: (ENG-4481) Re-enable search and sort
               enableSort={false} // TODO: (ENG-4481) Re-enable search and sort
+              isConnected={!!userWallet}
             />
           )}
         </Suspense>
@@ -634,7 +631,7 @@ function TopFollowers({
       >
         Top Followers
       </Text>
-      <FollowList
+      <FollowerList
         positions={followerData?.triples[0]?.vault?.positions ?? []}
         currentSharePrice={
           followerData?.triples[0]?.vault?.current_share_price ?? 0

@@ -6,6 +6,7 @@ import { SortOption } from '@components/sort-select'
 import logger from '@lib/utils/logger'
 import { formatBalance, getProfileUrl } from '@lib/utils/misc'
 import { BLOCK_EXPLORER_URL } from 'app/consts'
+import { Triple } from 'app/types'
 import { PaginationType } from 'app/types/pagination'
 
 import { List } from './list'
@@ -13,9 +14,8 @@ import { List } from './list'
 /**
  * Component for displaying a list of following/followers with support for pagination and sorting
  */
-interface FollowerListProps {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  positions?: any[] // TODO: (ENG-4782) Fix once we have the correct types
+interface FollowListProps {
+  triples?: Triple[]
   currentSharePrice?: string
   pagination?: PaginationType | { aggregate?: { count: number } } | number
   paramPrefix?: string
@@ -26,9 +26,8 @@ interface FollowerListProps {
   onLimitChange?: (limit: number) => void
 }
 
-export function FollowerList({
-  positions,
-  currentSharePrice,
+export function FollowingList({
+  triples,
   pagination,
   paramPrefix,
   enableHeader = true,
@@ -36,13 +35,14 @@ export function FollowerList({
   enableSort = true,
   onPageChange,
   onLimitChange,
-}: FollowerListProps) {
+}: FollowListProps) {
   // Using GraphQL field names directly for sorting
   const options: SortOption<string>[] = [
     { value: 'Position Amount', sortBy: 'shares' },
     { value: 'ID', sortBy: 'id' },
-    { value: 'Account', sortBy: 'account_id' },
-    { value: 'Vault ID', sortBy: 'vault_id' },
+    { value: 'Subject ID', sortBy: 'subject_id' },
+    { value: 'Predicate ID', sortBy: 'predicate_id' },
+    { value: 'Object ID', sortBy: 'object_id' },
   ]
 
   // Convert pagination to the format expected by the List component
@@ -69,7 +69,7 @@ export function FollowerList({
     return pagination as PaginationType
   })()
 
-  logger('positions', positions)
+  logger('triples', triples)
 
   return (
     <List<string>
@@ -90,46 +90,30 @@ export function FollowerList({
           ]}
         />
       )}
-      {positions?.map((position) => (
+      {triples?.map((triple) => (
         <div
-          key={position.id ?? position.accountId}
+          key={triple.id}
           className="grow shrink basis-0 self-stretch bg-black first:rounded-t-xl last:rounded-b-xl theme-border flex-col justify-start items-start gap-5 inline-flex"
         >
           <ClaimPositionRow
             variant={Identity.user}
             position={ClaimPosition.claimFor}
-            avatarSrc={position.account?.image ?? position.object?.image ?? ''}
-            name={
-              position.account?.label ??
-              position.account?.ens_name ??
-              position.account?.id ??
-              position.object?.label ??
-              ''
-            }
-            description={
-              position.account?.description ??
-              position.object?.description ??
-              ''
-            }
-            id={position.account?.id ?? position.object?.data ?? ''}
+            avatarSrc={triple.object?.image ?? ''}
+            name={triple.object?.label ?? ''}
+            description={''}
+            id={triple.id.toString() ?? ''}
             amount={
               +formatBalance(
-                (BigInt(position.shares) * BigInt(currentSharePrice ?? 0)) /
+                (BigInt(triple.vault?.positions?.[0]?.shares ?? 0) *
+                  BigInt(triple.vault?.current_share_price ?? 0)) /
                   BigInt(10 ** 18),
                 18,
               )
             }
-            feesAccrued={
-              position.user_asset_delta
-                ? +formatBalance(
-                    +position.shares - +position.user_asset_delta,
-                    18,
-                  )
-                : 0
-            }
-            updatedAt={position.updated_at}
-            ipfsLink={`${BLOCK_EXPLORER_URL}/address/${position.account?.id ?? position.object?.wallet}`}
-            link={getProfileUrl(position.account?.id ?? position.object?.data)}
+            feesAccrued={0} // TODO: Figure out fee accrual and position deltas with backend
+            updatedAt={triple.block_timestamp?.toString() ?? ''}
+            ipfsLink={`${BLOCK_EXPLORER_URL}/address/${triple.object?.wallet_id}`}
+            link={getProfileUrl(triple.object?.wallet_id)}
           />
         </div>
       ))}

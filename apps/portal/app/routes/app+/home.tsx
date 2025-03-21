@@ -30,6 +30,7 @@ import { getActivity } from '@lib/services/activity'
 import { getFeaturedLists } from '@lib/services/lists'
 import { getSystemStats } from '@lib/services/stats'
 import { getFeaturedListObjectIds } from '@lib/utils/app'
+import { usePrivy } from '@privy-io/react-auth'
 import { defer, LoaderFunctionArgs } from '@remix-run/node'
 import { Await, useLoaderData, useSearchParams } from '@remix-run/react'
 import { getUser } from '@server/auth'
@@ -149,6 +150,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 export default function HomePage() {
   const { featuredListsParams, activityParams, initialParams } =
     useLoaderData<typeof loader>()
+  const { user: privyUser } = usePrivy()
   const wallet = initialParams.wallet
   const [searchParams, setSearchParams] = useSearchParams()
 
@@ -347,6 +349,7 @@ export default function HomePage() {
                 onLimitChange={(limit: number) =>
                   handleClaimPaginationChange(claimPage, limit)
                 }
+                isConnected={!!privyUser}
               />
             ) : (
               <EmptyStateCard message="No claims found." />
@@ -385,6 +388,7 @@ export default function HomePage() {
                 onLimitChange={(limit: number) =>
                   handleUserPaginationChange(userPage, limit)
                 }
+                isConnected={!!privyUser}
               />
             ) : (
               <EmptyStateCard message="No users found." />

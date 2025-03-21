@@ -86,12 +86,12 @@ export function ActivePositionsOnClaimsNew({
     return pagination as PaginationType
   })()
 
-  // Using GraphQL field names directly for sorting
+  // Using GraphQL field names directly for sorting, only including fields that exist in positions_order_by
   const options: SortOption<string>[] = [
     { value: 'Position Amount', sortBy: 'shares' },
-    { value: 'Total ETH', sortBy: 'vault.total_shares' },
-    { value: 'Updated At', sortBy: 'block_timestamp' },
-    { value: 'Created At', sortBy: 'block_timestamp' },
+    { value: 'ID', sortBy: 'id' },
+    { value: 'Account', sortBy: 'account_id' },
+    { value: 'Vault ID', sortBy: 'vault_id' },
   ]
 
   return (
@@ -99,6 +99,7 @@ export function ActivePositionsOnClaimsNew({
       pagination={formattedPagination}
       paginationLabel="positions"
       options={options}
+      paramPrefix="triplePositions"
       enableSearch={enableSearch}
       enableSort={enableSort}
       onPageChange={onPageChange}

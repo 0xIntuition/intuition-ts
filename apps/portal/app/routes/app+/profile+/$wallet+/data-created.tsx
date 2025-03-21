@@ -46,12 +46,13 @@ import { calculateTotalPages, formatBalance, invariant } from '@lib/utils/misc'
 import { getStandardPageParams } from '@lib/utils/params'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData, useSearchParams, useSubmit } from '@remix-run/react'
-import { getUser, getUserWallet } from '@server/auth'
+import { getUserWallet } from '@server/auth'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
-import { NO_WALLET_ERROR } from 'app/consts'
+import { NO_PARAM_ID_ERROR } from 'app/consts'
 import { Atom } from 'app/types/atom'
 import { PaginationType } from 'app/types/pagination'
 import { Triple } from 'app/types/triple'
+import { zeroAddress } from 'viem'
 
 // Helper function to map GraphQL response to Triple type
 const mapToTriples = (
@@ -64,14 +65,12 @@ const mapToTriples = (
   return triples.map((triple) => triple as unknown as Triple)
 }
 
-export async function loader({ request }: LoaderFunctionArgs) {
-  const user = await getUser(request)
-  invariant(user, 'User not found')
-  invariant(user.wallet?.address, 'User wallet not found')
-  const wallet = await getUserWallet(request)
-  invariant(wallet, NO_WALLET_ERROR)
-  const userWallet = user.wallet?.address
-  const queryAddress = userWallet.toLowerCase()
+export async function loader({ request, params }: LoaderFunctionArgs) {
+  const userWallet = await getUserWallet(request)
+  const wallet = params.wallet
+  invariant(wallet, NO_PARAM_ID_ERROR)
+
+  const queryAddress = wallet.toLowerCase() ?? zeroAddress
 
   const url = new URL(request.url)
   // const searchParams = new URLSearchParams(url.search)
@@ -124,7 +123,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   // this query is effectively the same as using a Claims query, but this query is more flexible
   const triplePositionsWhere = {
-    accountId: {
+    account_id: {
       _eq: queryAddress,
     },
     vault: {
@@ -269,6 +268,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   })
 
   return json({
+    userWallet,
     queryAddress,
     identitiesPagination: {
       currentPage: identityPage,
@@ -342,6 +342,7 @@ export default function ProfileDataCreated() {
     initialParams,
     identitiesPagination,
     claimsPagination,
+    userWallet,
   } = useLoaderData<typeof loader>()
   const submit = useSubmit()
   const [searchParams] = useSearchParams()
@@ -716,6 +717,7 @@ export default function ProfileDataCreated() {
                     paramPrefix="createdIdentities"
                     onPageChange={handlePageChange}
                     onLimitChange={handleLimitChange}
+                    isConnected={!!userWallet}
                   />
                 )}
               </TabContent>
@@ -763,6 +765,7 @@ export default function ProfileDataCreated() {
                     paramPrefix="createdClaims"
                     enableSearch
                     enableSort
+                    isConnected={!!userWallet}
                   />
                 )}
               </TabContent>

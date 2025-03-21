@@ -18,12 +18,14 @@ import {
   GetFollowingPositionsDocument,
   GetFollowingPositionsQuery,
   GetFollowingPositionsQueryVariables,
+  Order_By,
   useGetFollowerPositionsQuery,
   useGetFollowingPositionsQuery,
 } from '@0xintuition/graphql'
 
 import { ErrorPage } from '@components/error-page'
-import { FollowList } from '@components/list/follow'
+import { FollowerList } from '@components/list/follow'
+import { FollowingList } from '@components/list/following'
 import {
   ConnectionsHeader,
   ConnectionsHeaderVariants,
@@ -35,31 +37,53 @@ import {
 } from '@components/skeleton'
 import { getSpecialPredicate } from '@lib/utils/app'
 import logger from '@lib/utils/logger'
-import { formatBalance, invariant } from '@lib/utils/misc'
+import { calculateTotalPages, formatBalance } from '@lib/utils/misc'
+import { getStandardPageParams } from '@lib/utils/params'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
-import { useLoaderData, useSearchParams } from '@remix-run/react'
+import { useLoaderData, useSearchParams, useSubmit } from '@remix-run/react'
 import { getUserWallet } from '@server/auth'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
-import { CURRENT_ENV, NO_WALLET_ERROR } from 'app/consts'
+import { CURRENT_ENV } from 'app/consts'
+import { Triple } from 'app/types'
+import { zeroAddress } from 'viem'
 
 export async function loader({ params, request }: LoaderFunctionArgs) {
   const userWallet = await getUserWallet(request)
-  invariant(userWallet, NO_WALLET_ERROR)
 
   const wallet = params.wallet
   if (!wallet) {
     throw new Error('Wallet is undefined.')
   }
 
-  const queryAddress = wallet.toLowerCase()
+  const queryAddress = wallet.toLowerCase() ?? zeroAddress
   logger('queryAddress', queryAddress)
 
   const url = new URL(request.url)
   const searchParams = new URLSearchParams(url.search)
 
+  // Get standard pagination params for followers tab
+  const {
+    page: followersPage,
+    limit: followersLimit,
+    sortBy: followersSortBy,
+    direction: followersDirection,
+  } = getStandardPageParams({
+    searchParams,
+    paramPrefix: 'followers',
+  })
+
+  // Get standard pagination params for following tab
+  const {
+    page: followingPage,
+    limit: followingLimit,
+    sortBy: followingSortBy,
+    direction: followingDirection,
+  } = getStandardPageParams({
+    searchParams,
+    paramPrefix: 'following',
+  })
+
   const followersSearch = searchParams.get('followersSearch') || ''
-  const limit = parseInt(searchParams.get('limit') || '10')
-  const offset = parseInt(searchParams.get('offset') || '0')
 
   const queryClient = new QueryClient()
 
@@ -75,6 +99,15 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
       throw new Error('No atom ID found for account')
     }
 
+    // Prepare orderBy objects for both queries
+    const followingOrderBy = followingSortBy
+      ? [{ [followingSortBy]: followingDirection.toLowerCase() as Order_By }]
+      : [{ shares: 'desc' as Order_By }]
+
+    const followersOrderBy = followersSortBy
+      ? [{ [followersSortBy]: followersDirection.toLowerCase() as Order_By }]
+      : [{ shares: 'desc' as Order_By }]
+
     // Prefetch Following Positions
     logger('Prefetching Following Positions...')
     const followingResult = await fetcher<
@@ -85,11 +118,9 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
       predicateId:
         getSpecialPredicate(CURRENT_ENV).amFollowingPredicate.vaultId,
       address: queryAddress,
-      limit,
-      offset,
-      positionsOrderBy: {
-        shares: 'desc',
-      },
+      limit: followingLimit,
+      offset: (followingPage - 1) * followingLimit,
+      positionsOrderBy: followingOrderBy,
     })()
 
     // Prefetch Follower Positions
@@ -102,11 +133,9 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
       predicateId:
         getSpecialPredicate(CURRENT_ENV).amFollowingPredicate.vaultId,
       objectId: accountResult.account.atom_id,
-      positionsLimit: limit,
-      positionsOffset: offset,
-      positionsOrderBy: {
-        shares: 'desc',
-      },
+      positionsLimit: followersLimit,
+      positionsOffset: (followersPage - 1) * followersLimit,
+      positionsOrderBy: followersOrderBy,
       positionsWhere: followersSearch
         ? {
             _or: [
@@ -123,6 +152,22 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
     })()
     logger('Follower Result:', followerResult)
 
+    // Calculate total pages for both
+    const followersCount =
+      followerResult?.triples[0]?.vault?.positions_aggregate?.aggregate
+        ?.count ?? 0
+    const followersTotalPages = calculateTotalPages(
+      followersCount,
+      followersLimit,
+    )
+
+    const followingCount =
+      followingResult?.triples_aggregate?.aggregate?.count ?? 0
+    const followingTotalPages = calculateTotalPages(
+      followingCount,
+      followingLimit,
+    )
+
     await queryClient.prefetchQuery({
       queryKey: [
         'get-following-positions',
@@ -131,11 +176,9 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
           predicateId:
             getSpecialPredicate(CURRENT_ENV).amFollowingPredicate.vaultId,
           address: queryAddress,
-          limit,
-          offset,
-          positionsOrderBy: {
-            shares: 'desc',
-          },
+          limit: followingLimit,
+          offset: (followingPage - 1) * followingLimit,
+          positionsOrderBy: followingOrderBy,
         },
       ],
       queryFn: () => followingResult,
@@ -149,11 +192,9 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
           predicateId:
             getSpecialPredicate(CURRENT_ENV).amFollowingPredicate.vaultId,
           objectId: accountResult.account.atom_id,
-          positionsLimit: limit,
-          positionsOffset: offset,
-          positionsOrderBy: {
-            shares: 'desc',
-          },
+          positionsLimit: followersLimit,
+          positionsOffset: (followersPage - 1) * followersLimit,
+          positionsOrderBy: followersOrderBy,
         },
       ],
       queryFn: () => followerResult,
@@ -164,10 +205,25 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
       initialParams: {
         atomId: accountResult.account.atom_id,
         queryAddress,
-        limit,
-        offset,
-        positionsOrderBy: {
-          shares: 'desc',
+        followersLimit,
+        followersPage,
+        followersSortBy,
+        followersDirection,
+        followingLimit,
+        followingPage,
+        followingSortBy,
+        followingDirection,
+        followersPagination: {
+          currentPage: followersPage,
+          limit: followersLimit,
+          totalEntries: followersCount,
+          totalPages: followersTotalPages,
+        },
+        followingPagination: {
+          currentPage: followingPage,
+          limit: followingLimit,
+          totalEntries: followingCount,
+          totalPages: followingTotalPages,
         },
       },
     })
@@ -176,8 +232,6 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
       message: (error as Error).message,
       stack: (error as Error).stack,
       userWallet,
-      limit,
-      offset,
     })
     throw error
   }
@@ -186,6 +240,7 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
 export default function Connections() {
   const { initialParams } = useLoaderData<typeof loader>()
   const [searchParams] = useSearchParams()
+  const submit = useSubmit()
 
   // Determine default tab based on query parameters
   const defaultTab = searchParams.has('following')
@@ -194,15 +249,30 @@ export default function Connections() {
       ? ConnectionsHeaderVariants.followers
       : ConnectionsHeaderVariants.followers // fallback to followers if no param
 
-  const limit = parseInt(
-    searchParams.get('limit') || String(initialParams.limit),
-  )
-  const offset = parseInt(
-    searchParams.get('offset') || String(initialParams.offset),
-  )
+  // Extract pagination from initial params
+  const { followersPagination, followingPagination } = initialParams
 
   const followersSearch = searchParams.get('followersSearch') || ''
   logger('clientside followersSearch', followersSearch)
+
+  // Prepare orderBy objects for both queries
+  const followingOrderBy = initialParams.followingSortBy
+    ? [
+        {
+          [initialParams.followingSortBy]:
+            initialParams.followingDirection.toLowerCase() as Order_By,
+        },
+      ]
+    : [{ shares: 'desc' as Order_By }]
+
+  const followersOrderBy = initialParams.followersSortBy
+    ? [
+        {
+          [initialParams.followersSortBy]:
+            initialParams.followersDirection.toLowerCase() as Order_By,
+        },
+      ]
+    : [{ shares: 'desc' as Order_By }]
 
   const { data: followingData } = useGetFollowingPositionsQuery(
     {
@@ -210,11 +280,9 @@ export default function Connections() {
       predicateId:
         getSpecialPredicate(CURRENT_ENV).amFollowingPredicate.vaultId,
       address: initialParams.queryAddress,
-      limit,
-      offset,
-      positionsOrderBy: {
-        shares: 'desc',
-      },
+      limit: initialParams.followingLimit,
+      offset: (initialParams.followingPage - 1) * initialParams.followingLimit,
+      positionsOrderBy: followingOrderBy,
     },
     {
       queryKey: [
@@ -224,11 +292,10 @@ export default function Connections() {
           predicateId:
             getSpecialPredicate(CURRENT_ENV).amFollowingPredicate.vaultId,
           address: initialParams.queryAddress,
-          limit,
-          offset,
-          positionsOrderBy: {
-            shares: 'desc',
-          },
+          limit: initialParams.followingLimit,
+          offset:
+            (initialParams.followingPage - 1) * initialParams.followingLimit,
+          positionsOrderBy: followingOrderBy,
         },
       ],
     },
@@ -240,11 +307,10 @@ export default function Connections() {
       predicateId:
         getSpecialPredicate(CURRENT_ENV).amFollowingPredicate.vaultId,
       objectId: initialParams.atomId,
-      positionsLimit: limit,
-      positionsOffset: offset,
-      positionsOrderBy: {
-        shares: 'desc',
-      },
+      positionsLimit: initialParams.followersLimit,
+      positionsOffset:
+        (initialParams.followersPage - 1) * initialParams.followersLimit,
+      positionsOrderBy: followersOrderBy,
       positionsWhere: followersSearch
         ? {
             _or: [{ account: { label: { _ilike: `%${followersSearch}%` } } }],
@@ -259,11 +325,10 @@ export default function Connections() {
           predicateId:
             getSpecialPredicate(CURRENT_ENV).amFollowingPredicate.vaultId,
           objectId: initialParams.atomId,
-          positionsLimit: limit,
-          positionsOffset: offset,
-          positionsOrderBy: {
-            shares: 'desc',
-          },
+          positionsLimit: initialParams.followersLimit,
+          positionsOffset:
+            (initialParams.followersPage - 1) * initialParams.followersLimit,
+          positionsOrderBy: followersOrderBy,
           positionsWhere: followersSearch
             ? {
                 _or: [
@@ -278,6 +343,31 @@ export default function Connections() {
 
   logger('Follower Data:', followerData)
   logger('Following Data:', followingData)
+
+  // Handlers for pagination
+  const handleFollowersPageChange = (page: number) => {
+    const formData = new FormData()
+    formData.append('followersPage', page.toString())
+    submit(formData, { method: 'get', replace: true })
+  }
+
+  const handleFollowersLimitChange = (limit: number) => {
+    const formData = new FormData()
+    formData.append('followersLimit', limit.toString())
+    submit(formData, { method: 'get', replace: true })
+  }
+
+  const handleFollowingPageChange = (page: number) => {
+    const formData = new FormData()
+    formData.append('followingPage', page.toString())
+    submit(formData, { method: 'get', replace: true })
+  }
+
+  const handleFollowingLimitChange = (limit: number) => {
+    const formData = new FormData()
+    formData.append('followingLimit', limit.toString())
+    submit(formData, { method: 'get', replace: true })
+  }
 
   return (
     <div className="flex flex-col w-full gap-4">
@@ -332,22 +422,17 @@ export default function Connections() {
               )}
               triples={followerData?.triples}
             />
-            <FollowList
+            <FollowerList
               positions={followerData?.triples[0]?.vault?.positions}
-              pagination={{
-                currentPage: offset / limit + 1,
-                limit,
-                totalEntries:
-                  followerData?.triples[0]?.vault?.positions_aggregate
-                    ?.aggregate?.count ?? 0,
-                totalPages: Math.ceil(
-                  (followerData?.triples[0]?.vault?.positions_aggregate
-                    ?.aggregate?.count ?? 0) / limit,
-                ),
-              }}
+              currentSharePrice={
+                followerData?.triples[0]?.vault?.current_share_price ?? '0'
+              }
+              pagination={followersPagination}
               paramPrefix={ConnectionsHeaderVariants.followers}
-              enableSort={false}
-              enableSearch={false}
+              enableSort={true}
+              enableSearch={true}
+              onPageChange={handleFollowersPageChange}
+              onLimitChange={handleFollowersLimitChange}
             />
           </TabsContent>
 
@@ -364,21 +449,14 @@ export default function Connections() {
               )}
               triples={followerData?.triples}
             />
-            <FollowList
-              positions={followingData?.triples}
-              pagination={{
-                currentPage: offset / limit + 1,
-                limit,
-                totalEntries:
-                  followingData?.triples_aggregate?.aggregate?.count ?? 0,
-                totalPages: Math.ceil(
-                  (followingData?.triples_aggregate?.aggregate?.count ?? 0) /
-                    limit,
-                ),
-              }}
+            <FollowingList
+              triples={followingData?.triples as Triple[]}
+              pagination={followingPagination}
               paramPrefix={ConnectionsHeaderVariants.following}
-              enableSort={false}
-              enableSearch={false}
+              enableSort={true}
+              enableSearch={true}
+              onPageChange={handleFollowingPageChange}
+              onLimitChange={handleFollowingLimitChange}
             />
           </TabsContent>
         </Tabs>

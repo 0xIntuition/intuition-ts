@@ -66,7 +66,6 @@ import {
   formatBalance,
   invariant,
 } from '@lib/utils/misc'
-import { User } from '@privy-io/react-auth'
 import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
 import {
   Outlet,
@@ -74,13 +73,13 @@ import {
   useMatches,
   useNavigate,
 } from '@remix-run/react'
-import { getUser } from '@server/auth'
+import { getUserWallet } from '@server/auth'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
 import {
   BLOCK_EXPLORER_URL,
   CURRENT_ENV,
   MULTIVAULT_CONTRACT_ADDRESS,
-  NO_WALLET_ERROR,
+  NO_PARAM_ID_ERROR,
   PATHS,
   userIdentityRouteOptions,
   ZERO_ADDRESS,
@@ -89,53 +88,44 @@ import TwoPanelLayout from 'app/layouts/two-panel-layout'
 import { Atom } from 'app/types/atom'
 import { Triple } from 'app/types/triple'
 import { useAtom } from 'jotai'
-import { formatUnits } from 'viem'
+import { formatUnits, zeroAddress } from 'viem'
 
 export async function loader({ params, request }: LoaderFunctionArgs) {
-  const user = await getUser(request)
-  invariant(user, 'User not found')
-  invariant(user.wallet?.address, 'User wallet not found')
-  const userWallet = user.wallet?.address
-  invariant(userWallet, NO_WALLET_ERROR)
+  const userWallet = await getUserWallet(request)
 
   const wallet = params.wallet
+  invariant(wallet, NO_PARAM_ID_ERROR)
 
-  if (!wallet) {
-    throw new Error('Wallet is undefined in params')
-  }
+  const queryAddress = wallet.toLowerCase() ?? zeroAddress
 
-  const queryAddress = wallet.toLowerCase()
-
-  if (wallet.toLowerCase() === userWallet.toLowerCase()) {
+  if (wallet.toLowerCase() === userWallet?.toLowerCase()) {
     throw redirect(PATHS.PROFILE)
   }
 
   const queryClient = new QueryClient()
 
-  if (userWallet) {
-    await Promise.all([
-      queryClient.prefetchQuery({
-        queryKey: ['get-points', { userWallet }],
-        queryFn: async () => {
-          const response = await fetchPoints(userWallet.toLowerCase())
-          return response
-        },
-      }),
-      queryClient.prefetchQuery({
-        queryKey: ['get-protocol-fees', { userWallet }],
-        queryFn: async () => {
-          const response = fetcher<
-            GetFeeTransfersQuery,
-            GetFeeTransfersQueryVariables
-          >(GetFeeTransfersDocument, {
-            address: userWallet,
-            cutoff_timestamp: 1733356800,
-          })
-          return response
-        },
-      }),
-    ])
-  }
+  await Promise.all([
+    queryClient.prefetchQuery({
+      queryKey: ['get-points', { queryAddress }],
+      queryFn: async () => {
+        const response = await fetchPoints(queryAddress.toLowerCase())
+        return response
+      },
+    }),
+    queryClient.prefetchQuery({
+      queryKey: ['get-protocol-fees', { queryAddress }],
+      queryFn: async () => {
+        const response = fetcher<
+          GetFeeTransfersQuery,
+          GetFeeTransfersQueryVariables
+        >(GetFeeTransfersDocument, {
+          address: queryAddress,
+          cutoff_timestamp: 1733356800,
+        })
+        return response
+      },
+    }),
+  ])
 
   let accountResult: GetAccountQuery | null = null
 
@@ -216,7 +206,6 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
   }
 
   return json({
-    privyUser: user,
     userWallet,
     dehydratedState: dehydrate(queryClient),
     initialParams: {
@@ -227,7 +216,6 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
 }
 
 export interface ProfileLoaderData {
-  privyUser: User
   userWallet: string
   initialParams: {
     queryAddress: string
@@ -310,21 +298,20 @@ export default function Profile() {
 
   const user_assets = vaultDetails
     ? vaultDetails.user_assets
-    : +formatUnits(
-        accountResult?.account?.atom?.vault?.current_share_price,
-        18,
-      ) +
-      +formatUnits(
-        accountResult?.account?.atom?.vault?.positions?.[0]?.shares,
-        18,
-      )
+    : accountResult?.account?.atom?.vault?.current_share_price &&
+        accountResult?.account?.atom?.vault?.positions?.[0]?.shares
+      ? (BigInt(accountResult.account.atom.vault.current_share_price) *
+          BigInt(accountResult.account.atom.vault.positions[0].shares)) /
+        BigInt(10 ** 18) // Division to get the correct decimal places
+      : 0n
   const assets_sum = vaultDetails
     ? vaultDetails.assets_sum
-    : +formatUnits(accountResult?.account?.atom?.vault?.total_shares ?? 0, 18) *
-      +formatUnits(
-        accountResult?.account?.atom?.vault?.current_share_price ?? 0,
-        18,
-      )
+    : accountResult?.account?.atom?.vault?.current_share_price &&
+        accountResult?.account?.atom?.vault?.total_shares
+      ? (BigInt(accountResult.account.atom.vault.current_share_price) *
+          BigInt(accountResult.account.atom.vault.total_shares)) /
+        BigInt(10 ** 18) // Division to get the correct decimal places
+      : 0n
 
   const { data: points } = usePoints(userWallet)
   const { data: protocolFees } = useGetFeeTransfersQuery({
@@ -404,7 +391,7 @@ export default function Profile() {
           })
         }}
       >
-        {!isPending && (
+        {!isPending && userWallet && (
           <Button
             variant="secondary"
             className="w-full"
@@ -447,15 +434,17 @@ export default function Profile() {
                   ))}
                 </TagsContent>
               ) : null}
-              <Tag
-                className="w-fit border-dashed"
-                onClick={() => {
-                  setTagsModalActive({ isOpen: true, mode: 'add' })
-                }} // TODO: The View All Tags modal is currently not working -- there are issues that we will fix in another ticket
-              >
-                <Icon name="plus-small" className="w-5 h-5" />
-                Add tags
-              </Tag>
+              {userWallet && (
+                <Tag
+                  className="w-fit border-dashed"
+                  onClick={() => {
+                    setTagsModalActive({ isOpen: true, mode: 'add' })
+                  }} // TODO: The View All Tags modal is currently not working -- there are issues that we will fix in another ticket
+                >
+                  <Icon name="plus-small" className="w-5 h-5" />
+                  Add tags
+                </Tag>
+              )}
             </div>
 
             <TagsButton
@@ -465,7 +454,7 @@ export default function Profile() {
               }}
             />
           </Tags>
-          {vaultDetails !== null && user_assets !== '0' ? (
+          {vaultDetails !== null && user_assets !== '0' && userWallet ? (
             <PositionCard
               onButtonClick={() =>
                 setStakeModalActive((prevState) => ({
@@ -473,6 +462,7 @@ export default function Profile() {
                   mode: 'redeem',
                   modalType: 'identity',
                   identity: accountResult?.account?.atom as Atom,
+                  vaultId: accountResult?.account?.atom?.vault_id,
                   isOpen: true,
                 }))
               }
@@ -502,14 +492,17 @@ export default function Profile() {
             identityImgSrc={accountResult?.account?.image ?? ''}
             // identityDisplayName={getAtomLabel(accountResult?.account)}
             identityDisplayName={accountResult?.account?.label ?? ''}
-            onBuyClick={() =>
-              setStakeModalActive((prevState) => ({
-                ...prevState,
-                mode: 'deposit',
-                modalType: 'identity',
-                identity: accountResult?.account?.atom as Atom,
-                isOpen: true,
-              }))
+            onBuyClick={
+              userWallet
+                ? () =>
+                    setStakeModalActive((prevState) => ({
+                      ...prevState,
+                      mode: 'deposit',
+                      modalType: 'identity',
+                      identity: accountResult?.account?.atom as Atom,
+                      isOpen: true,
+                    }))
+                : undefined
             }
             onViewAllClick={() => navigate(PATHS.PROFILE_DATA_ABOUT)}
           />

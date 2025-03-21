@@ -19,6 +19,7 @@ import {
   GetTriplesWithPositionsDocument,
   GetTriplesWithPositionsQuery,
   GetTriplesWithPositionsQueryVariables,
+  Order_By,
   useGetAccountQuery,
   useGetAtomsWithPositionsQuery,
   useGetPositionsQuery,
@@ -82,17 +83,57 @@ export async function loader({ request }: LoaderFunctionArgs) {
     searchParams,
     paramPrefix: 'identity',
   })
-  const identitySortBy = searchParams.get('identitySortBy') || 'block_timestamp'
+  const identitySortBy = searchParams.get('identitySortBy') || 'id'
 
   // Get standard pagination params for claims tab
   const { page: claimsPage, limit: claimsLimit } = getStandardPageParams({
     searchParams,
     paramPrefix: 'createdClaims',
   })
-  const claimsSortBy =
-    searchParams.get('createdClaimsSortBy') || 'block_timestamp'
+  const claimsSortBy = searchParams.get('createdClaimsSortBy') || 'id'
 
-  // TODO: once we fully fix sort/pagination, we'll want to update these to use triples instead of claims, and orderBy instead of sortBy in the actual query params
+  // Get standard pagination params for atom positions tab
+  const {
+    page: atomPositionsPage,
+    limit: atomPositionsLimit,
+    sortBy: atomPositionsSortBy,
+    direction: atomPositionsDirection,
+  } = getStandardPageParams({
+    searchParams,
+    paramPrefix: 'atomPositions',
+    defaultSortByValue: 'shares',
+  })
+
+  // Get standard pagination params for triple positions tab
+  const {
+    page: triplePositionsPage,
+    limit: triplePositionsLimit,
+    sortBy: triplePositionsSortBy,
+    direction: triplePositionsDirection,
+  } = getStandardPageParams({
+    searchParams,
+    paramPrefix: 'triplePositions',
+    defaultSortByValue: 'shares',
+  })
+
+  // Define proper orderBy objects for positions
+  const atomPositionsOrderBy = atomPositionsSortBy
+    ? [
+        {
+          [atomPositionsSortBy]:
+            atomPositionsDirection.toLowerCase() as Order_By,
+        },
+      ]
+    : [{ shares: 'desc' as Order_By }]
+
+  const triplePositionsOrderBy = triplePositionsSortBy
+    ? [
+        {
+          [triplePositionsSortBy]:
+            triplePositionsDirection.toLowerCase() as Order_By,
+        },
+      ]
+    : [{ shares: 'desc' as Order_By }]
 
   const atomsWhere = {
     creator: {
@@ -111,7 +152,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   }
 
   const atomPositionsWhere = {
-    accountId: {
+    account_id: {
       _eq: queryAddress,
     },
     vault: {
@@ -123,7 +164,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   // this query is effectively the same as using a Claims query, but this query is more flexible
   const triplePositionsWhere = {
-    accountId: {
+    account_id: {
       _eq: queryAddress,
     },
     vault: {
@@ -141,26 +182,132 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const triplesOffset = (claimsPage - 1) * claimsLimit
   const triplesOrderBy = claimsSortBy
 
-  const atomPositionsLimit = parseInt(
-    url.searchParams.get('claimsLimit') || '10',
-  )
-  const atomPositionsOffset = parseInt(
-    url.searchParams.get('claimsOffset') || '0',
-  )
-  const atomPositionsOrderBy = url.searchParams.get('claimsSortBy')
-    ? [{ [url.searchParams.get('claimsSortBy')!]: 'desc' }]
-    : undefined
+  // Update the positions query parameters
+  await queryClient.prefetchQuery({
+    queryKey: [
+      'get-atoms-with-positions',
+      {
+        atomsWhere,
+        atomsLimit,
+        atomsOffset,
+        atomsOrderBy,
+        address: queryAddress,
+      },
+    ],
+    queryFn: () =>
+      fetcher<GetAtomsWithPositionsQuery, GetAtomsWithPositionsQueryVariables>(
+        GetAtomsWithPositionsDocument,
+        {
+          where: atomsWhere,
+          limit: atomsLimit,
+          offset: atomsOffset,
+          orderBy: atomsOrderBy ? [{ [atomsOrderBy]: 'desc' }] : undefined,
+          address: queryAddress,
+        },
+      )(),
+  })
 
-  const triplePositionsLimit = parseInt(
-    url.searchParams.get('claimsLimit') || '10',
-  )
-  const triplePositionsOffset = parseInt(
-    url.searchParams.get('claimsOffset') || '0',
+  // Prefetch atom positions with proper sort field for the positions table
+  await queryClient.prefetchQuery({
+    queryKey: ['get-atom-positions', { where: atomPositionsWhere }],
+    queryFn: () =>
+      fetcher<GetPositionsQuery, GetPositionsQueryVariables>(
+        GetPositionsDocument,
+        {
+          where: atomPositionsWhere,
+          limit: atomPositionsLimit,
+          offset: (atomPositionsPage - 1) * atomPositionsLimit,
+          orderBy: atomPositionsOrderBy,
+        },
+      )(),
+  })
+
+  // Prefetch triple positions with proper sort field for the positions table
+  await queryClient.prefetchQuery({
+    queryKey: ['get-triple-positions', { where: triplePositionsWhere }],
+    queryFn: () =>
+      fetcher<GetPositionsQuery, GetPositionsQueryVariables>(
+        GetPositionsDocument,
+        {
+          where: triplePositionsWhere,
+          limit: triplePositionsLimit,
+          offset: (triplePositionsPage - 1) * triplePositionsLimit,
+          orderBy: triplePositionsOrderBy,
+        },
+      )(),
+  })
+
+  // Calculate total pages for atom positions and triple positions
+  const atomPositionsData = await queryClient.fetchQuery({
+    queryKey: ['get-atom-positions-count', { where: atomPositionsWhere }],
+    queryFn: () =>
+      fetcher<GetPositionsQuery, GetPositionsQueryVariables>(
+        GetPositionsDocument,
+        {
+          where: atomPositionsWhere,
+        },
+      )(),
+  })
+
+  const triplePositionsData = await queryClient.fetchQuery({
+    queryKey: ['get-triple-positions-count', { where: triplePositionsWhere }],
+    queryFn: () =>
+      fetcher<GetPositionsQuery, GetPositionsQueryVariables>(
+        GetPositionsDocument,
+        {
+          where: triplePositionsWhere,
+        },
+      )(),
+  })
+
+  const atomPositionsCount = atomPositionsData?.total?.aggregate?.count ?? 0
+  const atomPositionsTotalPages = calculateTotalPages(
+    atomPositionsCount,
+    atomPositionsLimit,
   )
 
-  const triplePositionsOrderBy = url.searchParams.get('claimsSortBy')
-    ? [{ [url.searchParams.get('claimsSortBy')!]: 'desc' }]
-    : undefined
+  const triplePositionsCount = triplePositionsData?.total?.aggregate?.count ?? 0
+  const triplePositionsTotalPages = calculateTotalPages(
+    triplePositionsCount,
+    triplePositionsLimit,
+  )
+
+  // Add pagination data to initialParams
+  const initialParams = {
+    atomsLimit,
+    atomsOffset,
+    atomsOrderBy,
+    atomsWhere,
+    triplesLimit,
+    triplesOffset,
+    triplesOrderBy,
+    triplesWhere,
+    atomPositionsPage,
+    atomPositionsLimit,
+    atomPositionsSortBy,
+    atomPositionsDirection,
+    atomPositionsOrderBy,
+    atomPositionsWhere,
+    triplePositionsPage,
+    triplePositionsLimit,
+    triplePositionsSortBy,
+    triplePositionsDirection,
+    triplePositionsOrderBy,
+    triplePositionsWhere,
+    queryAddress,
+    atomPositionsPagination: {
+      currentPage: atomPositionsPage,
+      limit: atomPositionsLimit,
+      totalEntries: atomPositionsCount,
+      totalPages: atomPositionsTotalPages,
+    },
+    triplePositionsPagination: {
+      currentPage: triplePositionsPage,
+      limit: triplePositionsLimit,
+      totalEntries: triplePositionsCount,
+      totalPages: triplePositionsTotalPages,
+    },
+  }
 
   await queryClient.prefetchQuery({
     queryKey: [
@@ -240,35 +387,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const triplesCount = triplesData?.total?.aggregate?.count ?? 0
   const triplesTotalPages = calculateTotalPages(triplesCount, claimsLimit)
 
-  await queryClient.prefetchQuery({
-    queryKey: ['get-atom-positions', { where: atomPositionsWhere }],
-    queryFn: () =>
-      fetcher<GetPositionsQuery, GetPositionsQueryVariables>(
-        GetPositionsDocument,
-        {
-          where: atomPositionsWhere,
-          limit: atomPositionsLimit,
-          offset: atomPositionsOffset,
-          orderBy: atomPositionsOrderBy,
-        },
-      )(),
-  })
-
-  await queryClient.prefetchQuery({
-    queryKey: ['get-triple-positions', { where: triplePositionsWhere }],
-    queryFn: () =>
-      fetcher<GetPositionsQuery, GetPositionsQueryVariables>(
-        GetPositionsDocument,
-        {
-          where: triplePositionsWhere,
-          limit: triplePositionsLimit,
-          offset: triplePositionsOffset,
-          orderBy: triplePositionsOrderBy,
-        },
-      )(),
-  })
-
   return json({
+    userWallet,
     queryAddress,
     identitiesPagination: {
       currentPage: identityPage,
@@ -283,25 +403,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
       totalPages: triplesTotalPages,
     } as PaginationType,
     dehydratedState: dehydrate(queryClient),
-    initialParams: {
-      atomsLimit,
-      atomsOffset,
-      atomsOrderBy,
-      atomsWhere,
-      triplesLimit,
-      triplesOffset,
-      triplesOrderBy,
-      triplesWhere,
-      atomPositionsLimit,
-      atomPositionsOffset,
-      atomPositionsOrderBy,
-      atomPositionsWhere,
-      triplePositionsLimit,
-      triplePositionsOffset,
-      triplePositionsOrderBy,
-      triplePositionsWhere,
-      queryAddress,
-    },
+    initialParams,
   })
 }
 
@@ -338,6 +440,7 @@ const TabContent = ({
 
 export default function ProfileDataCreated() {
   const {
+    userWallet,
     queryAddress,
     initialParams,
     identitiesPagination,
@@ -357,6 +460,32 @@ export default function ProfileDataCreated() {
   const handleLimitChange = (limit: number) => {
     const formData = new FormData()
     formData.append('limit', limit.toString())
+    submit(formData, { method: 'get', replace: true })
+  }
+
+  // Handlers for atom positions pagination
+  const handleAtomPositionsPageChange = (page: number) => {
+    const formData = new FormData()
+    formData.append('atomPositionsPage', page.toString())
+    submit(formData, { method: 'get', replace: true })
+  }
+
+  const handleAtomPositionsLimitChange = (limit: number) => {
+    const formData = new FormData()
+    formData.append('atomPositionsLimit', limit.toString())
+    submit(formData, { method: 'get', replace: true })
+  }
+
+  // Handlers for triple positions pagination
+  const handleTriplePositionsPageChange = (page: number) => {
+    const formData = new FormData()
+    formData.append('triplePositionsPage', page.toString())
+    submit(formData, { method: 'get', replace: true })
+  }
+
+  const handleTriplePositionsLimitChange = (limit: number) => {
+    const formData = new FormData()
+    formData.append('triplePositionsLimit', limit.toString())
     submit(formData, { method: 'get', replace: true })
   }
 
@@ -449,18 +578,10 @@ export default function ProfileDataCreated() {
     {
       where: initialParams.atomPositionsWhere,
       limit: initialParams.atomPositionsLimit,
-      offset: initialParams.atomPositionsOffset,
+      offset:
+        (initialParams.atomPositionsPage - 1) *
+        initialParams.atomPositionsLimit,
       orderBy: initialParams.atomPositionsOrderBy,
-      // orderBy: [
-      //   {
-      //     vault: {
-      //       totalShares: 'desc',
-      //     },
-      //   },
-      // ],
-      // orderBy: initialParams.atomsOrderBy
-      //   ? [{ [initialParams.atomsOrderBy]: 'desc' }]
-      //   : undefined,
     },
     {
       queryKey: [
@@ -468,7 +589,9 @@ export default function ProfileDataCreated() {
         {
           where: initialParams.atomPositionsWhere,
           limit: initialParams.atomPositionsLimit,
-          offset: initialParams.atomPositionsOffset,
+          offset:
+            (initialParams.atomPositionsPage - 1) *
+            initialParams.atomPositionsLimit,
           orderBy: initialParams.atomPositionsOrderBy,
         },
       ],
@@ -486,7 +609,9 @@ export default function ProfileDataCreated() {
     {
       where: initialParams.triplePositionsWhere,
       limit: initialParams.triplePositionsLimit,
-      offset: initialParams.triplePositionsOffset,
+      offset:
+        (initialParams.triplePositionsPage - 1) *
+        initialParams.triplePositionsLimit,
       orderBy: initialParams.triplePositionsOrderBy,
     },
     {
@@ -495,7 +620,9 @@ export default function ProfileDataCreated() {
         {
           where: initialParams.triplePositionsWhere,
           limit: initialParams.triplePositionsLimit,
-          offset: initialParams.triplePositionsOffset,
+          offset:
+            (initialParams.triplePositionsPage - 1) *
+            initialParams.triplePositionsLimit,
           orderBy: initialParams.triplePositionsOrderBy,
         },
       ],
@@ -584,9 +711,9 @@ export default function ProfileDataCreated() {
                   {atomPositionsResult && (
                     <ActivePositionsOnIdentities
                       identities={atomPositionsResult.positions}
-                      pagination={
-                        atomPositionsResult.total?.aggregate?.count ?? 0
-                      }
+                      pagination={initialParams.atomPositionsPagination}
+                      onPageChange={handleAtomPositionsPageChange}
+                      onLimitChange={handleAtomPositionsLimitChange}
                     />
                   )}
                 </TabContent>
@@ -632,13 +759,10 @@ export default function ProfileDataCreated() {
                   {triplePositionsResult && (
                     <ActivePositionsOnClaims
                       positions={triplePositionsResult?.positions ?? []}
-                      pagination={{
-                        aggregate: {
-                          count:
-                            triplePositionsResult?.total?.aggregate?.count ?? 0,
-                        },
-                      }}
+                      pagination={initialParams.triplePositionsPagination}
                       positionDirection={positionDirection ?? undefined}
+                      onPageChange={handleTriplePositionsPageChange}
+                      onLimitChange={handleTriplePositionsLimitChange}
                     />
                   )}
                 </TabContent>
@@ -712,10 +836,6 @@ export default function ProfileDataCreated() {
                 totalResults={atomsCreatedResult?.total?.aggregate?.count}
                 atomImage={accountResult?.account?.image ?? ''}
                 atomLabel={accountResult?.account?.label ?? ''}
-                // TODO: get TVL on created atoms
-                // totalStake={
-                //   +formatBalance(resolvedIdentitiesSummary?.assets ?? '0', 18)
-                // }  // Can't get TVL on created atoms at the moment
                 variant={DataCreatedHeaderVariants.createdIdentities}
               >
                 {atomsCreatedResult && (
@@ -727,6 +847,7 @@ export default function ProfileDataCreated() {
                     paramPrefix="createdIdentities"
                     onPageChange={handlePageChange}
                     onLimitChange={handleLimitChange}
+                    isConnected={!!userWallet}
                   />
                 )}
               </TabContent>
@@ -761,9 +882,6 @@ export default function ProfileDataCreated() {
                 totalResults={triplesCreatedResult?.total?.aggregate?.count}
                 atomImage={accountResult?.account?.image ?? ''}
                 atomLabel={accountResult?.account?.label ?? ''}
-                // totalStake={
-                //   +formatBalance(resolvedIdentitiesSummary?.assets ?? '0', 18)
-                // }  // Can't get TVL on created atoms at the moment
                 variant={DataCreatedHeaderVariants.createdClaims}
               >
                 {triplesCreatedResult && (
@@ -773,6 +891,7 @@ export default function ProfileDataCreated() {
                     paramPrefix="createdClaims"
                     enableSearch
                     enableSort
+                    isConnected={!!userWallet}
                   />
                 )}
               </TabContent>

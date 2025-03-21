@@ -11,6 +11,7 @@ import {
   EmptyStateCard,
   Icon,
   IconName,
+  Trunctacular,
 } from '@0xintuition/1ui'
 import { GetAtomQuery, useGetAtomsQuery } from '@0xintuition/graphql'
 
@@ -56,8 +57,8 @@ export const AtomSearchComboboxItem = ({
             <div className="h-8 w-8 flex-shrink-0 rounded-full bg-foreground/10" />
           )}
           <div className="flex items-center gap-1 min-w-0 flex-1">
-            <div className="transition-colors text-md font-medium group-hover:text-foreground truncate">
-              {name}
+            <div className="transition-colors text-md font-medium group-hover:text-foreground">
+              <Trunctacular value={name} />
             </div>
             {id !== undefined && (
               <div className="flex-shrink-0 flex items-center gap-1 bg-foreground/10 rounded-md py-0.5 px-1.5">

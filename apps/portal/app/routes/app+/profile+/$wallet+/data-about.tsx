@@ -295,7 +295,7 @@ export default function ProfileDataAbout() {
                 atomLabel={atomResult?.atom?.label ?? ''}
                 atomVariant="user" // TODO: Determine based on atom type
                 totalClaims={triplesResult?.total?.aggregate?.count ?? 0}
-                totalStake={0} // TODO: need to find way to get the shares -- may need to update the schema
+                totalStake={0} // TODO: need to find way to get the shares -- may need to update the schema -- could do an additional simplified aggregate positions query?
                 // totalStake={
                 //   +formatBalance(
                 //     triplesResult?.total?.aggregate?.sums?.shares ?? 0,
@@ -325,6 +325,7 @@ export default function ProfileDataAbout() {
                 paramPrefix="claims"
                 enableSearch={false} // TODO: (ENG-4481) Re-enable search and sort
                 enableSort={false} // TODO: (ENG-4481) Re-enable search and sort
+                isConnected={!!userWallet}
               />
             )}
           </Suspense>

@@ -39,9 +39,10 @@ export function PositionsOnClaimNew({
 }: PositionsOnClaimNewProps) {
   // Using GraphQL field names directly for sorting
   const options: SortOption<string>[] = [
-    { value: 'Amount', sortBy: 'shares' },
-    { value: 'Updated At', sortBy: 'block_timestamp' },
-    { value: 'Created At', sortBy: 'block_timestamp' },
+    { value: 'Position Amount', sortBy: 'shares' },
+    { value: 'ID', sortBy: 'id' },
+    { value: 'Account', sortBy: 'account_id' },
+    { value: 'Vault ID', sortBy: 'vault_id' },
   ]
 
   logger('positions in PositionsOnClaim', {

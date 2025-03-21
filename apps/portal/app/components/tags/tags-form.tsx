@@ -143,7 +143,7 @@ export function TagsForm({
                     value="view"
                     label="Existing Tags"
                   />
-                  {!readOnly && (
+                  {!readOnly && userWallet && (
                     <TabsTrigger
                       variant="alternate"
                       value="add"
@@ -152,7 +152,7 @@ export function TagsForm({
                   )}
                 </TabsList>
                 <div className="flex-grow overflow-y-auto overflow-x-visible">
-                  {!readOnly && (
+                  {!readOnly && userWallet && (
                     <TabsContent value="add" className="h-full">
                       <AddTags
                         selectedTags={selectedTags}

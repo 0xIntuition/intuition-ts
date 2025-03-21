@@ -32,12 +32,12 @@ export function ActivePositionsOnIdentitiesNew({
   onPageChange,
   onLimitChange,
 }: ActivePositionsOnIdentitiesNewProps) {
-  // Using GraphQL field names directly for sorting
+  // Using GraphQL field names directly for sorting, only including fields that exist in positions_order_by
   const options: SortOption<string>[] = [
     { value: 'Position Amount', sortBy: 'shares' },
-    { value: 'Total ETH', sortBy: 'vault.total_shares' },
-    { value: 'Updated At', sortBy: 'block_timestamp' },
-    { value: 'Created At', sortBy: 'block_timestamp' },
+    { value: 'ID', sortBy: 'id' },
+    { value: 'Account', sortBy: 'account_id' },
+    { value: 'Vault ID', sortBy: 'vault_id' },
   ]
 
   // Convert pagination to the format expected by the List component
@@ -69,6 +69,7 @@ export function ActivePositionsOnIdentitiesNew({
       pagination={formattedPagination}
       paginationLabel="positions"
       options={options}
+      paramPrefix="atomPositions"
       enableSearch={enableSearch}
       enableSort={enableSort}
       onPageChange={onPageChange}

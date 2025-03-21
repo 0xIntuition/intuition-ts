@@ -1,5 +1,5 @@
 import { URL } from 'url'
-import { Suspense, useEffect, useState } from 'react'
+import { Suspense, useCallback, useEffect, useMemo, useState } from 'react'
 
 import {
   Claim,
@@ -32,16 +32,13 @@ import {
 } from '@lib/utils/misc'
 import { LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData, useNavigation, useSearchParams } from '@remix-run/react'
-import { getUserWallet } from '@server/auth'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
-import { NO_PARAM_ID_ERROR, NO_WALLET_ERROR } from 'app/consts'
+import { NO_PARAM_ID_ERROR } from 'app/consts'
 import { Atom } from 'app/types'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const id = params.id
   invariant(id, NO_PARAM_ID_ERROR)
-  const wallet = await getUserWallet(request)
-  invariant(wallet, NO_WALLET_ERROR)
 
   if (!id) {
     throw new Error('Claim ID not found in the URL.')
@@ -49,6 +46,9 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
   const url = new URL(request.url)
   const searchParams = new URLSearchParams(url.search)
+  const positionDirection = searchParams.get('positionDirection')
+  const page = parseInt(searchParams.get('page') || '1', 10)
+  const limit = parseInt(searchParams.get('limit') || '10', 10)
 
   const queryClient = new QueryClient()
 
@@ -57,7 +57,9 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
       'get-triple',
       {
         id: params.id,
-        positionDirection: searchParams.get('positionDirection'),
+        positionDirection,
+        page,
+        limit,
       },
     ],
     queryFn: () =>
@@ -70,6 +72,8 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     dehydratedState: dehydrate(queryClient),
     initialParams: {
       id,
+      page,
+      limit,
     },
   }
 }
@@ -80,6 +84,14 @@ export default function ClaimOverview() {
   const [searchParams, setSearchParams] = useSearchParams()
   const [isNavigating, setIsNavigating] = useState(false)
   const positionDirection = searchParams.get('positionDirection')
+  const page = parseInt(
+    searchParams.get('page') || initialParams.page.toString(),
+    10,
+  )
+  const limit = parseInt(
+    searchParams.get('limit') || initialParams.limit.toString(),
+    10,
+  )
 
   const { state } = useNavigation()
 
@@ -116,12 +128,78 @@ export default function ClaimOverview() {
         {
           id: initialParams.id,
           positionDirection,
+          page,
+          limit,
         },
       ],
     },
   )
 
   logger('tripleData', tripleData)
+
+  // TODO: Request backend to return all positions on the claim in a single object. This currently does client-side pagination for the "all" tab
+  // Handle client-side pagination for the "all" tab
+  const combinedPositions = useMemo(() => {
+    if (!tripleData) {
+      return { positions: [], totalCount: 0 }
+    }
+
+    // Get all for and against positions
+    const forPositions = (tripleData.triple?.vault?.positions || []).map(
+      (p) => ({ ...p, direction: 'for' as const }),
+    )
+    const againstPositions = (
+      tripleData.triple?.counter_vault?.positions || []
+    ).map((p) => ({ ...p, direction: 'against' as const }))
+
+    const allPositions = [...forPositions, ...againstPositions]
+
+    // Get total counts
+    const forCount =
+      tripleData.triple?.vault?.allPositions?.aggregate?.count || 0
+    const againstCount =
+      tripleData.triple?.counter_vault?.allPositions?.aggregate?.count || 0
+    const totalCount = forCount + againstCount
+
+    // If in "all" mode, we need to handle pagination ourselves
+    if (positionDirection === null) {
+      // Calculate the slice for the current page
+      const start = (page - 1) * limit
+      const end = start + limit
+
+      // Sort all positions - you may want to customize this sorting
+      // For now, we'll just order them with "for" positions first, then "against"
+      const paginatedPositions = allPositions.slice(start, end)
+
+      return { positions: paginatedPositions, totalCount }
+    }
+
+    // For "for" or "against" tabs, we return all the positions we have
+    return { positions: allPositions, totalCount }
+  }, [tripleData, positionDirection, page, limit])
+
+  // Handle pagination page change
+  const handlePageChange = useCallback(
+    (newPage: number) => {
+      const newParams = new URLSearchParams(searchParams)
+      newParams.set('page', newPage.toString())
+      setSearchParams(newParams, { replace: true, preventScrollReset: true })
+      setIsNavigating(true)
+    },
+    [searchParams, setSearchParams],
+  )
+
+  // Handle limit change
+  const handleLimitChange = useCallback(
+    (newLimit: number) => {
+      const newParams = new URLSearchParams(searchParams)
+      newParams.set('limit', newLimit.toString())
+      newParams.set('page', '1') // Reset to page 1 when changing limit
+      setSearchParams(newParams, { replace: true, preventScrollReset: true })
+      setIsNavigating(true)
+    },
+    [searchParams, setSearchParams],
+  )
 
   return (
     <div className="flex-col justify-start items-start flex w-full gap-6">
@@ -235,21 +313,29 @@ export default function ClaimOverview() {
           <PaginatedListSkeleton />
         ) : (
           <PositionsOnClaimNew
-            vaultPositions={tripleData?.triple?.vault?.positions ?? []}
+            vaultPositions={
+              positionDirection === null
+                ? combinedPositions.positions.filter(
+                    (p) => p.direction === 'for',
+                  )
+                : tripleData?.triple?.vault?.positions ?? []
+            }
             counterVaultPositions={
-              tripleData?.triple?.counter_vault?.positions ?? []
+              positionDirection === null
+                ? combinedPositions.positions.filter(
+                    (p) => p.direction === 'against',
+                  )
+                : tripleData?.triple?.counter_vault?.positions ?? []
             }
             pagination={{
-              aggregate: {
-                count:
-                  positionDirection === 'for'
-                    ? tripleData?.triple?.vault?.allPositions?.aggregate
-                        ?.count ?? 0
-                    : tripleData?.triple?.counter_vault?.allPositions?.aggregate
-                        ?.count ?? 0,
-              },
+              currentPage: page,
+              limit,
+              totalEntries: combinedPositions.totalCount,
+              totalPages: Math.ceil(combinedPositions.totalCount / limit),
             }}
             positionDirection={positionDirection ?? undefined}
+            onPageChange={handlePageChange}
+            onLimitChange={handleLimitChange}
           />
         )}
       </Suspense>

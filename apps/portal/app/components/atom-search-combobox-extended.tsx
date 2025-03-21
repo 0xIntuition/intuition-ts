@@ -17,6 +17,7 @@ import {
   IconName,
   Tag,
   TagSize,
+  Trunctacular,
 } from '@0xintuition/1ui'
 import { useGetAtomsQuery } from '@0xintuition/graphql'
 
@@ -50,7 +51,11 @@ const AtomDetails = React.memo(({ atom }: AtomDetailsProps) => {
         />
       )}
       <div className="flex flex-col items-center gap-1">
-        <h3 className="text-lg font-medium text-center">{atom.label}</h3>
+        <Trunctacular
+          className="text-lg font-medium text-center"
+          value={(atom.type === 'Account' ? atom.wallet_id : atom.label) ?? ''}
+          maxStringLength={24}
+        />
         <Tag size={TagSize.sm}>{atom.type}</Tag>
         <p className="text-base text-foreground/70 font-medium">
           ID: {atom.vault_id}
@@ -168,7 +173,13 @@ const AtomSearchComboboxItem = React.memo(
               <div className="h-8 w-8 flex-shrink-0 rounded-full bg-gradient-to-b from-primary/10 to-primary/5" />
             )}
             <div className="flex items-center gap-1 min-w-0 flex-1">
-              <div className="text-md font-medium truncate">{atom?.label}</div>
+              <Trunctacular
+                value={
+                  (atom?.type === 'Account' ? atom?.wallet_id : atom?.label) ??
+                  ''
+                }
+                className="text-md font-medium"
+              />
               <div className="flex-shrink-0 flex items-center gap-1 bg-foreground/10 rounded-md py-0.5 px-1.5">
                 <span className="text-sm text-foreground/70 font-medium">
                   #{atom?.vault_id}
@@ -282,6 +293,8 @@ export function AtomSearchComboboxExtended({
     lastHoveredAtom ||
     selectedAtom ||
     searchResults[0]) as NonNullable<Atom>
+
+  console.log('displayedAtom', displayedAtom)
 
   const handleMouseEnter = (atom: NonNullable<Atom>) => {
     setHoveredAtom(atom)

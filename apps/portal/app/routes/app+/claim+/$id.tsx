@@ -394,8 +394,8 @@ export default function ClaimDetails() {
             ...prevState,
             mode: 'deposit',
             modalType: 'claim',
-            triple: tripleData?.triple,
-            vaultId: tripleData?.triple?.counter_vault_id,
+            claim: tripleData?.triple as Triple,
+            vaultId: tripleData?.triple?.counter_vault_id.toString(),
             direction: 'against',
             isOpen: true,
           }))
@@ -405,8 +405,8 @@ export default function ClaimDetails() {
             ...prevState,
             mode: 'deposit',
             modalType: 'claim',
-            triple: tripleData?.triple,
-            vaultId: tripleData?.triple?.vault_id,
+            claim: tripleData?.triple as Triple,
+            vaultId: tripleData?.triple?.vault_id.toString(),
             direction: 'for',
             isOpen: true,
           }))

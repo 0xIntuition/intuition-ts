@@ -377,7 +377,7 @@ export const getAtomIpfsLink = (atom: Atom | null | undefined) => {
     return ''
   }
   if (atom.type === 'Account' || atom.type === 'Default') {
-    return `${BLOCK_EXPLORER_URL}/address/${atom.wallet_id}`
+    return `${BLOCK_EXPLORER_URL}/address/${atom.data}`
   }
   if (atom.data?.startsWith('https')) {
     return atom.data
@@ -408,8 +408,8 @@ export const getAtomLink = (
   }
   if (atom.type === 'Account' || atom.type === 'Default') {
     return readOnly
-      ? `${PATHS.READONLY_PROFILE}/${atom.id}`
-      : `${PATHS.PROFILE}/${atom.id}`
+      ? `${PATHS.READONLY_PROFILE}/${atom.data}`
+      : `${PATHS.PROFILE}/${atom.data}`
   }
   return readOnly
     ? `${PATHS.READONLY_IDENTITY}/${atom.id}`

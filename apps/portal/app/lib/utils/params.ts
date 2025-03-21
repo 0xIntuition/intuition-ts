@@ -34,7 +34,7 @@ export const getStandardPageParams = ({
   paramPrefix,
   defaultPageValue = 1,
   defaultLimitValue = 10,
-  defaultSortByValue = 'block_timestamp',
+  defaultSortByValue = 'id',
   defaultDirectionValue = 'desc',
 }: {
   searchParams: URLSearchParams

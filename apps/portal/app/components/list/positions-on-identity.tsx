@@ -34,9 +34,10 @@ export function PositionsOnIdentityNew({
 }: PositionsOnIdentityNewProps) {
   // Using GraphQL field names directly for sorting
   const options: SortOption<string>[] = [
-    { value: 'Total ETH', sortBy: 'shares' },
-    { value: 'Updated At', sortBy: 'block_timestamp' },
-    { value: 'Created At', sortBy: 'block_timestamp' },
+    { value: 'Position Amount', sortBy: 'shares' },
+    { value: 'ID', sortBy: 'id' },
+    { value: 'Account', sortBy: 'account_id' },
+    { value: 'Vault ID', sortBy: 'vault_id' },
   ]
 
   // Convert pagination to the format expected by the List component

@@ -29,19 +29,18 @@ import { RevalidateButton } from '@components/revalidate-button'
 import { DataHeaderSkeleton, PaginatedListSkeleton } from '@components/skeleton'
 import { detailCreateClaimModalAtom } from '@lib/state/store'
 import logger from '@lib/utils/logger'
-import { formatBalance, invariant } from '@lib/utils/misc'
+import { formatBalance } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 import { getUserWallet } from '@server/auth'
 import { QueryClient } from '@tanstack/react-query'
-import { NO_WALLET_ERROR } from 'app/consts'
 import { Triple } from 'app/types'
 import { useAtom } from 'jotai'
+import { zeroAddress } from 'viem'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const userWallet = await getUserWallet(request)
-  invariant(userWallet, NO_WALLET_ERROR)
-  const queryAddress = userWallet.toLowerCase()
+  const queryAddress = userWallet?.toLowerCase() ?? zeroAddress
 
   const url = new URL(request.url)
   // const searchParams = new URLSearchParams(url.search)
@@ -291,7 +290,7 @@ export default function ProfileDataAbout() {
                 atomLabel={atomResult?.atom?.label ?? ''}
                 atomVariant="user" // TODO: Determine based on atom type
                 totalClaims={triplesResult?.total?.aggregate?.count ?? 0}
-                totalStake={0} // TODO: need to find way to get the shares -- may need to update the schema
+                totalStake={0} // TODO: need to find way to get the shares -- may need to update the schema -- could do an additional simplified aggregate positions query?
                 // totalStake={
                 //   +formatBalance(
                 //     triplesResult?.total?.aggregate?.sums?.shares ?? 0,
@@ -321,6 +320,7 @@ export default function ProfileDataAbout() {
                 paramPrefix="claims"
                 enableSearch={false} // TODO: (ENG-4481) Re-enable search and sort
                 enableSort={false} // TODO: (ENG-4481) Re-enable search and sort
+                isConnected={!!userWallet}
               />
             )}
           </Suspense>
