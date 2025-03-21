@@ -50,7 +50,7 @@ export interface EcosystemModalProps {
   predicateId: number
   objectId: number
   question: Question
-  tagObjectId: number
+  tagObjectId: number | null
 }
 
 export interface SignalStepProps {

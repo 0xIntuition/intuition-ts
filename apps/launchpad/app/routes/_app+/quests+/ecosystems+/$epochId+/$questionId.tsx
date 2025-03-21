@@ -14,12 +14,12 @@ import { useGetAtomQuery } from '@0xintuition/graphql'
 
 import { AtomDetailsModal } from '@components/atom-details-modal'
 import { AuthCover } from '@components/auth-cover'
+import { EcosystemModal } from '@components/ecosystem-modal/survey-modal'
 import LoadingLogo from '@components/loading-logo'
 import { LoadingState } from '@components/loading-state'
 import { Navigation } from '@components/lore/chapter-navigation'
 import { PageHeader } from '@components/page-header'
 import ShareModal from '@components/share-modal'
-import { OnboardingModal } from '@components/survey-modal/survey-modal'
 import { atomColumns, tripleColumns } from '@components/ui/table/columns'
 import { DataTable } from '@components/ui/table/data-table'
 import {
@@ -70,8 +70,6 @@ import {
   SortingState,
   useReactTable,
 } from '@tanstack/react-table'
-import { TripleType } from 'app/types'
-import { ListDetailsType } from 'app/types/list-details'
 import { useAtom } from 'jotai'
 import { CheckCircle } from 'lucide-react'
 import { formatUnits } from 'viem'
@@ -768,7 +766,7 @@ export default function MiniGameOne() {
         title={shareModalActive.title}
         listData={listData as unknown as ListDetailsType}
       /> */}
-      <OnboardingModal
+      <EcosystemModal
         isOpen={onboardingModal.isOpen}
         onClose={handleCloseOnboarding}
         question={
@@ -776,6 +774,7 @@ export default function MiniGameOne() {
         }
         predicateId={predicateId}
         objectId={objectId}
+        tagObjectId={questionData?.tag_object_id ?? null}
       />
       <AtomDetailsModal
         isOpen={atomDetailsModal.isOpen}
