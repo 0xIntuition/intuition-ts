@@ -15,7 +15,7 @@ interface AtomDetailsModalProps {
     list: string
     users: number
     forTvl: number
-    againstTvl: number
+    againstTvl?: number
     position?: number
   }
 }

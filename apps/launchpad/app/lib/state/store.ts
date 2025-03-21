@@ -74,7 +74,7 @@ export const atomDetailsModalAtom = atom<{
     list: string
     users: number
     forTvl: number
-    againstTvl: number
+    againstTvl?: number
     position?: number
   }
 }>({

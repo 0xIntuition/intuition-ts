@@ -24,7 +24,7 @@ import { Navigation } from '@components/lore/chapter-navigation'
 import { PageHeader } from '@components/page-header'
 import ShareModal from '@components/share-modal'
 import { OnboardingModal } from '@components/survey-modal/survey-modal'
-import { columns } from '@components/ui/table/columns'
+import { tripleColumns } from '@components/ui/table/columns'
 import { DataTable } from '@components/ui/table/data-table'
 import {
   MIN_DEPOSIT,
@@ -550,7 +550,7 @@ export default function MiniGameOne() {
 
   const table = useReactTable<TableRowData>({
     data: tableData,
-    columns: columns as ColumnDef<TableRowData>[],
+    columns: tripleColumns as ColumnDef<TableRowData>[],
     columnResizeMode: 'onChange',
     enableColumnPinning: !isMobile,
     enableColumnResizing: !isMobile,
@@ -791,7 +791,7 @@ export default function MiniGameOne() {
 
       <div className="mt-6 !mb-24">
         <DataTable
-          columns={columns as ColumnDef<TableRowData>[]}
+          columns={tripleColumns as ColumnDef<TableRowData>[]}
           data={tableData}
           onRowClick={handleRowClick}
           table={table}

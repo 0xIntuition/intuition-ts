@@ -9,12 +9,8 @@ import {
   IconName,
   Text,
 } from '@0xintuition/1ui'
-import type { GetListDetailsSimplifiedQuery } from '@0xintuition/graphql'
-import {
-  Triples_Order_By,
-  useGetAtomQuery,
-  useGetListDetailsSimplifiedQuery,
-} from '@0xintuition/graphql'
+import type { Atoms_Order_By } from '@0xintuition/graphql'
+import { useGetAtomQuery } from '@0xintuition/graphql'
 
 import { AtomDetailsModal } from '@components/atom-details-modal'
 import { AuthCover } from '@components/auth-cover'
@@ -24,13 +20,14 @@ import { Navigation } from '@components/lore/chapter-navigation'
 import { PageHeader } from '@components/page-header'
 import ShareModal from '@components/share-modal'
 import { OnboardingModal } from '@components/survey-modal/survey-modal'
-import { columns } from '@components/ui/table/columns'
+import { atomColumns, tripleColumns } from '@components/ui/table/columns'
 import { DataTable } from '@components/ui/table/data-table'
 import {
   MIN_DEPOSIT,
   MULTIVAULT_CONTRACT_ADDRESS,
   ZERO_ADDRESS,
 } from '@consts/general'
+import { AtomsWithTagsQuery, useAtomsWithTagsQuery } from '@lib/graphql'
 import { Question } from '@lib/graphql/types'
 import { MULTIVAULT_CONFIG_QUERY_KEY } from '@lib/hooks/useGetMultiVaultConfig'
 import { useGoBack } from '@lib/hooks/useGoBack'
@@ -78,6 +75,8 @@ import { ListDetailsType } from 'app/types/list-details'
 import { useAtom } from 'jotai'
 import { CheckCircle } from 'lucide-react'
 import { formatUnits } from 'viem'
+
+const VERIFICATION_ADDRESS = '0x6877daca5e6934982a5c511d85bf12a71a25ac1d'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const queryClient = new QueryClient()
@@ -194,8 +193,6 @@ export function ErrorBoundary() {
     </Banner>
   )
 }
-
-type Triple = GetListDetailsSimplifiedQuery['globalTriples'][0]
 
 export default function MiniGameOne() {
   const location = useLocation()
@@ -342,7 +339,7 @@ export default function MiniGameOne() {
     const sortField = sorting[0]?.id
     const sortDirection = sorting[0]?.desc ? 'desc' : 'asc'
 
-    let orderBy: Triples_Order_By = {
+    let orderBy: Atoms_Order_By = {
       vault: {
         total_shares: 'desc',
       },
@@ -357,18 +354,9 @@ export default function MiniGameOne() {
           },
         }
         break
-      case 'downvotes':
-        orderBy = {
-          counter_vault: {
-            total_shares: sortDirection,
-          },
-        }
-        break
       case 'name':
         orderBy = {
-          subject: {
-            label: sortDirection,
-          },
+          label: sortDirection,
         }
         break
       case 'users':
@@ -387,50 +375,55 @@ export default function MiniGameOne() {
         break
     }
 
+    console.log('questionData', questionData)
     const variables = {
-      globalWhere: {
-        predicate_id: {
-          _eq: predicateId,
-        },
-        object_id: {
-          _eq: objectId,
-        },
+      where: {
+        _and: [
+          {
+            as_subject_triples: {
+              predicate_id: { _eq: predicateId },
+              object_id: { _eq: objectId },
+            },
+          },
+          questionData?.tag_object_id
+            ? {
+                as_subject_triples: {
+                  object: {
+                    vault_id: { _in: [questionData.tag_object_id] },
+                  },
+                },
+              }
+            : {},
+        ],
       },
-      address: userWallet ?? ZERO_ADDRESS,
-      limit: pageSize,
-      offset: pageIndex * pageSize,
+      tagPredicateIds: [predicateId], // dev - has tag predicate ID
+      userPositionAddress: userWallet ?? ZERO_ADDRESS,
+      verifiedPositionAddress: VERIFICATION_ADDRESS,
       orderBy,
-    } as const
+    }
 
     return variables
   }, [predicateId, objectId, userWallet, pageSize, pageIndex, sorting])
 
-  const { data: listData, isLoading: isLoadingListData } =
-    useGetListDetailsSimplifiedQuery(
-      {
-        ...queryVariables,
-      },
-      {
-        queryKey: ['get-list-details', predicateId, objectId, queryVariables],
-      },
-    )
-  const totalCount = listData?.globalTriplesAggregate?.aggregate?.count ?? 0
+  const { data: atomsData, isLoading: isLoadingAtoms } = useAtomsWithTagsQuery(
+    {
+      ...queryVariables,
+    },
+    { enabled: !!queryVariables },
+  )
+  const totalCount = atomsData?.atoms.length ?? 0
 
   type TableRowData = {
     id: string
-    triple: TripleType
+    atom: AtomsWithTagsQuery['atoms'][number]
     image: string
     name: string
     list: string
     vaultId: string
-    counterVaultId: string
     users: number
     upvotes: number
-    downvotes: number
     forTvl: number
-    againstTvl: number
     userPosition?: number
-    positionDirection?: 'for' | 'against'
     currentSharePrice?: number
     stakingDisabled?: boolean
     multiVaultConfig: typeof multiVaultConfig
@@ -438,39 +431,21 @@ export default function MiniGameOne() {
 
   const tableData = React.useMemo(() => {
     const data =
-      (listData?.globalTriples?.map((triple: Triple) => ({
-        id: String(triple.vault_id),
-        triple: triple as TripleType,
-        image: triple.subject.image || '',
-        name: triple.subject.label || 'Untitled Entry',
-        list: triple.object.label || 'Untitled List',
-        vaultId: triple.vault_id,
-        counterVaultId: triple.counter_vault_id,
-        users: Number(triple.vault?.positions_aggregate?.aggregate?.count ?? 0),
+      (atomsData?.atoms?.map((atom: AtomsWithTagsQuery['atoms'][number]) => ({
+        id: String(atom.vault_id),
+        atom: atom as AtomsWithTagsQuery['atoms'][number],
+        image: atom.image || '',
+        name: atom.label || 'Untitled Entry',
+        list: atom.label || 'Untitled List',
+        vaultId: atom.vault_id,
+        users: Number(atom.vault?.positions_aggregate?.aggregate?.count ?? 0),
         upvotes: (() => {
           const amount =
             (+formatUnits(
-              triple.vault?.positions_aggregate?.aggregate?.sum?.shares ?? 0,
+              atom.vault?.positions_aggregate?.aggregate?.sum?.shares ?? 0,
               18,
             ) *
-              +formatUnits(triple.vault?.current_share_price ?? 0, 18)) /
-            (+(multiVaultConfig?.formatted_min_deposit || MIN_DEPOSIT) *
-              (1 -
-                +(multiVaultConfig?.entry_fee ?? 0) /
-                  +(multiVaultConfig?.fee_denominator ?? 1)))
-          return amount < 0.1 ? 0 : Math.ceil(amount)
-        })(),
-        downvotes: (() => {
-          const amount =
-            (+formatUnits(
-              triple.counter_vault?.positions_aggregate?.aggregate?.sum
-                ?.shares ?? 0,
-              18,
-            ) *
-              +formatUnits(
-                triple.counter_vault?.current_share_price ?? 0,
-                18,
-              )) /
+              +formatUnits(atom.vault?.current_share_price ?? 0, 18)) /
             (+(multiVaultConfig?.formatted_min_deposit || MIN_DEPOSIT) *
               (1 -
                 +(multiVaultConfig?.entry_fee ?? 0) /
@@ -478,38 +453,21 @@ export default function MiniGameOne() {
           return amount < 0.1 ? 0 : Math.ceil(amount)
         })(),
         forTvl:
-          +formatUnits(
-            triple.vault?.positions_aggregate?.aggregate?.sum?.shares ?? 0,
-            18,
-          ) * +formatUnits(triple.vault?.current_share_price ?? 0, 18),
-        againstTvl:
-          +formatUnits(
-            triple.counter_vault?.positions_aggregate?.aggregate?.sum?.shares ??
-              0,
-            18,
-          ) * +formatUnits(triple.counter_vault?.current_share_price ?? 0, 18),
-        userPosition: triple.counter_vault?.positions?.[0]
-          ? +formatUnits(
-              triple.counter_vault?.positions?.[0]?.shares ?? 0,
-              18,
-            ) * +formatUnits(triple.counter_vault?.current_share_price ?? 0, 18)
-          : +formatUnits(triple.vault?.positions?.[0]?.shares ?? 0, 18) *
-            +formatUnits(triple.vault?.current_share_price ?? 0, 18),
-        positionDirection: triple.counter_vault?.positions?.[0]
-          ? 'against'
-          : triple.vault?.positions?.[0]
-            ? 'for'
+          +formatUnits(atom.vault?.total_shares ?? 0, 18) *
+          +formatUnits(atom.vault?.current_share_price ?? 0, 18),
+        userPosition:
+          atom.vault?.userPosition?.[0]?.shares > 0
+            ? +formatUnits(atom.vault?.userPosition?.[0].shares ?? 0, 18) *
+              +formatUnits(atom.vault?.current_share_price ?? 0, 18)
             : undefined,
         currentSharePrice:
-          triple.vault?.positions?.[0]?.shares > 0
-            ? +formatUnits(triple.vault?.current_share_price, 18)
-            : triple.counter_vault?.positions?.[0]?.shares > 0
-              ? +formatUnits(triple.counter_vault?.current_share_price, 18)
-              : undefined,
+          atom.vault?.userPosition?.[0]?.shares > 0
+            ? +formatUnits(atom.vault?.current_share_price, 18)
+            : undefined,
         multiVaultConfig,
       })) as TableRowData[]) ?? []
     return data
-  }, [listData, multiVaultConfig])
+  }, [atomsData, multiVaultConfig])
 
   const isMobile = useMediaQuery('(max-width: 768px)')
   const isTablet = useMediaQuery('(max-width: 1024px)')
@@ -550,7 +508,7 @@ export default function MiniGameOne() {
 
   const table = useReactTable<TableRowData>({
     data: tableData,
-    columns: columns as ColumnDef<TableRowData>[],
+    columns: atomColumns as ColumnDef<TableRowData>[],
     columnResizeMode: 'onChange',
     enableColumnPinning: !isMobile,
     enableColumnResizing: !isMobile,
@@ -648,13 +606,13 @@ export default function MiniGameOne() {
     if (rowData) {
       setAtomDetailsModal({
         isOpen: true,
-        atomId: Number(rowData.triple.vault_id),
+        atomId: Number(rowData.atom.vault_id),
         data: rowData,
       })
     }
   }
 
-  if (isLoadingListData) {
+  if (isLoadingAtoms) {
     return <LoadingState />
   }
 
@@ -671,7 +629,7 @@ export default function MiniGameOne() {
             <Icon name="chevron-left" className="h-4 w-4" />
           </Button>
           <PageHeader
-            title={`Epoch ${epoch?.order ?? ''} | Question ${questionData?.order}`}
+            title={`${epoch?.name ?? ''} | Question ${questionData?.order}`}
             className="text-xl sm:text-2xl"
           />
         </div>
@@ -696,7 +654,7 @@ export default function MiniGameOne() {
           <Card
             className="border-none w-full md:min-w-[480px] min-h-80 relative overflow-hidden"
             style={{
-              backgroundImage: `linear-gradient(to bottom right, rgba(6, 5, 4, 0.9), rgba(16, 16, 16, 0.9)), url(${listData?.globalTriples?.[0]?.object?.image || ''})`,
+              backgroundImage: `linear-gradient(to bottom right, rgba(6, 5, 4, 0.9), rgba(16, 16, 16, 0.9)), url(${atomsData?.atoms?.[0]?.image || ''})`,
               backgroundSize: 'cover',
               backgroundPosition: 'center',
             }}
@@ -727,14 +685,14 @@ export default function MiniGameOne() {
                             onClick={() => {
                               const rowData = tableData.find(
                                 (row) =>
-                                  row.triple.subject.vault_id ===
+                                  row.atom.vault_id ===
                                   String(atomData.atom?.vault_id),
                               )
 
                               if (rowData) {
                                 setAtomDetailsModal({
                                   isOpen: true,
-                                  atomId: Number(rowData.triple.vault_id),
+                                  atomId: Number(rowData.atom.vault_id),
                                   data: rowData,
                                 })
                               }
@@ -791,7 +749,7 @@ export default function MiniGameOne() {
 
       <div className="mt-6 !mb-24">
         <DataTable
-          columns={columns as ColumnDef<TableRowData>[]}
+          columns={tripleColumns as ColumnDef<TableRowData>[]}
           data={tableData}
           onRowClick={handleRowClick}
           table={table}
@@ -799,7 +757,7 @@ export default function MiniGameOne() {
         />
       </div>
 
-      <ShareModal
+      {/* <ShareModal
         open={shareModalActive.isOpen}
         onClose={() =>
           setShareModalActive({
@@ -809,7 +767,7 @@ export default function MiniGameOne() {
         }
         title={shareModalActive.title}
         listData={listData as unknown as ListDetailsType}
-      />
+      /> */}
       <OnboardingModal
         isOpen={onboardingModal.isOpen}
         onClose={handleCloseOnboarding}
