@@ -26,13 +26,6 @@ export default function Quests() {
             iqPoints={quest.index === 1 ? 100000 : undefined}
           />
         ))}
-        <QuestRow
-          title="Map the Ecosystems"
-          description="REPLACE ME"
-          link="/quests/ecosystems"
-          enabled={true}
-          index={3}
-        />
       </div>
     </>
   )

@@ -18,7 +18,11 @@ import logger from '@lib/utils/logger'
 import { usePrivy } from '@privy-io/react-auth'
 import { Link, useLocation } from '@remix-run/react'
 import { useQueryClient } from '@tanstack/react-query'
-import { TransactionActionType, TransactionStateType } from 'app/types'
+import {
+  AtomType,
+  TransactionActionType,
+  TransactionStateType,
+} from 'app/types'
 import { ArrowBigDown, ArrowBigUp, Book } from 'lucide-react'
 import { Address, decodeEventLog } from 'viem'
 import { usePublicClient } from 'wagmi'
@@ -158,22 +162,19 @@ export function SignalStep({
         })
       }
     } else {
-      if (!privyUser?.wallet?.address || !selectedTopic?.triple) {
+      if (!privyUser?.wallet?.address || !selectedTopic?.atom) {
         return
       }
 
       try {
         // For existing triples, determine which vault to use based on vote direction
-        const vaultId =
-          voteDirection === 'upvote'
-            ? selectedTopic?.triple?.vault_id.toString() ?? ''
-            : selectedTopic?.triple?.counter_vault_id?.toString() ?? ''
+        const vaultId = selectedTopic?.atom?.vault_id.toString() ?? ''
 
         const txHash = await stake({
           val,
           userWallet: privyUser?.wallet?.address,
           vaultId,
-          triple: selectedTopic?.triple,
+          atom: selectedTopic?.atom as AtomType,
           mode: 'deposit',
           contract,
         })
@@ -194,14 +195,11 @@ export function SignalStep({
             queryKey: [
               'get-vault-details',
               contract,
-              selectedTopic?.triple?.vault_id,
-              selectedTopic?.triple?.counter_vault_id,
+              selectedTopic?.atom?.vault_id,
             ],
           })
 
-          onStakingSuccess(
-            selectedTopic?.triple?.subject?.vault_id?.toString() ?? '',
-          )
+          onStakingSuccess(selectedTopic?.atom?.vault_id?.toString() ?? '')
         }
       } catch (error) {
         dispatch({
@@ -368,9 +366,8 @@ export function SignalStep({
       <div className="flex flex-col gap-4 p-8">
         <div className="flex flex-col gap-2 mb-8">
           <Text variant="headline" className="font-semibold">
-            Signal{' '}
-            {newAtomMetadata?.name ?? selectedTopic?.triple?.subject.label} as
-            the best {selectedTopic?.triple?.object.label}
+            Signal {newAtomMetadata?.name ?? selectedTopic?.atom?.label} as the
+            best {selectedTopic?.atom?.label}
           </Text>
           <Text variant={TextVariant.footnote} className="text-primary/70">
             <span className="inline-flex items-center gap-1">
@@ -411,28 +408,22 @@ export function SignalStep({
               <input
                 type="text"
                 inputMode="numeric"
-                pattern="-?[0-9]*"
+                pattern="[1-9][0-9]*"
                 value={inputValue}
                 onChange={(e) => {
                   const newValue = e.target.value
 
-                  // Allow empty input, minus sign, or valid number pattern
-                  if (
-                    newValue === '' ||
-                    newValue === '-' ||
-                    /^-?\d+$/.test(newValue)
-                  ) {
+                  // Only allow empty input or valid number pattern starting with 1-9
+                  if (newValue === '' || /^[1-9]\d*$/.test(newValue)) {
                     // Update the raw input value
                     setInputValue(newValue)
 
                     // Handle special cases
                     if (newValue === '') {
                       setTicks(1) // Default to 1 for empty input
-                    } else if (newValue === '-') {
-                      // Just keep the minus sign, don't convert to number yet
                     } else {
                       const parsedValue = parseInt(newValue, 10)
-                      if (!isNaN(parsedValue) && parsedValue !== 0) {
+                      if (!isNaN(parsedValue)) {
                         setTicks(parsedValue)
                       }
                     }
@@ -441,11 +432,7 @@ export function SignalStep({
                 }}
                 onBlur={() => {
                   // Ensure value is valid when focus is lost
-                  if (
-                    inputValue === '' ||
-                    inputValue === '-' ||
-                    parseInt(inputValue, 10) === 0
-                  ) {
+                  if (inputValue === '' || parseInt(inputValue, 10) < 1) {
                     setInputValue('1')
                     setTicks(1)
                   }
@@ -454,7 +441,7 @@ export function SignalStep({
                 className={`w-12 h-8 text-center ${
                   parseInt(inputValue, 10) > 0
                     ? 'text-success'
-                    : inputValue === '' || inputValue === '0'
+                    : inputValue === ''
                       ? 'text-primary/70'
                       : 'text-destructive'
                 } bg-transparent border border-[#1A1A1A] rounded focus:outline-none focus:border-accent font-semibold`}
@@ -480,7 +467,7 @@ export function SignalStep({
                     setTicks(newValue)
                     setInputValue(newValue.toString())
                   }}
-                  disabled={isLoading}
+                  disabled={isLoading || ticks <= 1}
                   className="h-6 p-0 disabled:opacity-30"
                 >
                   <ArrowBigDown className="text-destructive fill-destructive h-5 w-5" />

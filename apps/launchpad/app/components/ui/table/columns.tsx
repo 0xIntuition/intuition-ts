@@ -129,7 +129,7 @@ function SignalCell({
   )
 }
 
-export const columns: ColumnDef<TableItem>[] = [
+export const tripleColumns: ColumnDef<TableItem>[] = [
   {
     id: 'position',
     header: '',
@@ -286,30 +286,126 @@ export const columns: ColumnDef<TableItem>[] = [
     },
     size: 96,
   },
-  // {
-  //   accessorKey: 'userPosition',
-  //   header: ({ column }) => (
-  //     <div className="flex justify-end pr-6">
-  //       <DataTableColumnHeader column={column} title="Position" />
-  //     </div>
-  //   ),
-  //   cell: ({ row }) => {
-  //     const position = row.getValue('userPosition')
-  //     const positionDirection = row.original.positionDirection
-  //     return (
-  //       <div
-  //         className={cn(
-  //           'pr-10 flex justify-end items-center gap-0.5',
-  //           positionDirection === ClaimPosition.claimFor && 'text-success',
-  //           positionDirection === ClaimPosition.claimAgainst &&
-  //             'text-destructive',
-  //         )}
-  //       >
-  //         {position ? (Number(position) / +MIN_DEPOSIT).toFixed(0) : '0'}
-  //         <Icon name="eth" className="w-4 h-4" />
-  //       </div>
-  //     )
-  //   },
-  //   size: 120,
-  // },
+]
+
+export const atomColumns: ColumnDef<TableItem>[] = [
+  {
+    id: 'position',
+    header: '',
+    cell: ({ table, row }) => {
+      return (
+        <div className="w-12 pl-6 text-muted-foreground">
+          {table.getSortedRowModel().rows.findIndex((r) => r.id === row.id) + 1}
+        </div>
+      )
+    },
+    size: 48,
+    enableSorting: false,
+  },
+  {
+    accessorKey: 'name',
+    header: () => (
+      <div className="flex items-center gap-3">
+        <span>Entries</span>
+      </div>
+    ),
+    cell: ({ row }) => {
+      const image = row.original.image
+      return (
+        <div className="flex items-center gap-3">
+          {image && image !== 'null' ? (
+            <img
+              src={image}
+              alt={row.getValue('name')}
+              className="w-8 h-8 rounded-full object-cover"
+            />
+          ) : (
+            <Icon
+              name={IconName.fingerprint}
+              className="w-8 h-8 text-primary/40"
+            />
+          )}
+          <span className="font-medium truncate">{row.getValue('name')}</span>
+        </div>
+      )
+    },
+    size: 600,
+  },
+  {
+    accessorKey: 'upvotes',
+    header: ({ column }) => (
+      <div className="flex justify-center">
+        <DataTableColumnHeader
+          column={column}
+          title={<span className="hidden sm:inline">Upvotes</span>}
+          className="p-0"
+        >
+          <div className="flex justify-center items-center gap-1 min-w-[60px]">
+            <span className="hidden sm:inline">Upvotes</span>
+            <ArrowBigUp className="sm:hidden w-4 h-4 fill-success text-success" />
+          </div>
+        </DataTableColumnHeader>
+      </div>
+    ),
+    cell: ({ row }) => {
+      const upvotes = row.original.upvotes
+      const roundedUpVotes = Math.ceil(upvotes)
+
+      return (
+        <div className="flex justify-center items-center gap-1 min-w-[60px]">
+          <ArrowBigUp className="w-4 h-4 flex-shrink-0 fill-success text-success" />
+          {roundedUpVotes}
+        </div>
+      )
+    },
+    size: 80,
+    sortDescFirst: true,
+  },
+  {
+    accessorKey: 'tvl',
+    header: ({ column }) => (
+      <div className="flex justify-center items-center">
+        <DataTableColumnHeader column={column} title="TVL" />
+      </div>
+    ),
+    cell: ({ row }) => {
+      const forTvl = row.original.forTvl
+      const tvl = Number(forTvl)
+
+      return (
+        <div className="pr-10 flex items-center gap-0.5">
+          {tvl ? Number(tvl).toFixed(4) : '0'}
+          <Icon name="eth" className="w-3 h-3" />
+        </div>
+      )
+    },
+    size: 72,
+  },
+  {
+    id: 'userPosition',
+    accessorFn: (row) => row.userPosition ?? 0,
+    header: ({ column }) => (
+      <div className="flex justify-center items-center">
+        <DataTableColumnHeader column={column} title="My Vote" />
+      </div>
+    ),
+    cell: ({ row }) => {
+      const position = row.original.userPosition ?? 0
+      const positionDirection = row.original.positionDirection
+      return (
+        <div data-prevent-row-click="true">
+          <SignalCell
+            vaultId={row.original.vaultId}
+            triple={row.original.triple}
+            atom={row.original.atom}
+            userPosition={position as number}
+            positionDirection={positionDirection}
+            stakingDisabled={row.original.stakingDisabled}
+            multiVaultConfig={row.original.multiVaultConfig}
+          />
+        </div>
+      )
+    },
+    size: 96,
+  },
 ]
