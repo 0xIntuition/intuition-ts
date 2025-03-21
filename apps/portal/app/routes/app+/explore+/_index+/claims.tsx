@@ -17,6 +17,7 @@ import { ExploreSearch } from '@components/explore/ExploreSearch'
 import { ClaimsListNew } from '@components/list/claims'
 import { calculateTotalPages } from '@lib/utils/misc'
 import { getStandardPageParams } from '@lib/utils/params'
+import { usePrivy } from '@privy-io/react-auth'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData, useSubmit } from '@remix-run/react'
 import { getUserWallet } from '@server/auth'
@@ -116,7 +117,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   // Prefetch atoms data (replacing IdentitiesService.searchIdentity)
   await queryClient.prefetchQuery({
     queryKey: [
-      'GetAtoms',
+      'get-atoms',
       {
         limit: 20,
         offset: 0,
@@ -167,6 +168,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 export default function ExploreClaims() {
   const { claimsPagination, initialParams } = useLoaderData<typeof loader>()
+  const { user: privyUser } = usePrivy()
   const submit = useSubmit()
 
   const {
@@ -246,6 +248,7 @@ export default function ExploreClaims() {
         paramPrefix="claim"
         onPageChange={handlePageChange}
         onLimitChange={handleLimitChange}
+        isConnected={!!privyUser}
       />
     </>
   )

@@ -45,34 +45,27 @@ import {
 } from '@lib/state/store'
 import { getSpecialPredicate } from '@lib/utils/app'
 import logger from '@lib/utils/logger'
-import {
-  calculatePercentageOfTvl,
-  formatBalance,
-  invariant,
-} from '@lib/utils/misc'
+import { calculatePercentageOfTvl, formatBalance } from '@lib/utils/misc'
+import { usePrivy } from '@privy-io/react-auth'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { Outlet, useLoaderData, useNavigate } from '@remix-run/react'
-import { getUser, getUserWallet } from '@server/auth'
+import { getUserWallet } from '@server/auth'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
 import {
   BLOCK_EXPLORER_URL,
   CURRENT_ENV,
   MULTIVAULT_CONTRACT_ADDRESS,
-  NO_WALLET_ERROR,
   PATHS,
 } from 'app/consts'
 import TwoPanelLayout from 'app/layouts/two-panel-layout'
 import { Atom } from 'app/types/atom'
 import { Triple } from 'app/types/triple'
 import { useAtom } from 'jotai'
+import { zeroAddress } from 'viem'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
-  const user = await getUser(request)
-  invariant(user, 'User not found')
-  invariant(user.wallet?.address, 'User wallet not found')
-
   const userWallet = await getUserWallet(request)
-  invariant(userWallet, NO_WALLET_ERROR)
+  const queryAddress = userWallet?.toLowerCase() ?? zeroAddress
 
   if (!params.id) {
     return
@@ -131,23 +124,24 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
   logger('[$ID] -- END')
   return json({
-    userWallet,
     dehydratedState: dehydrate(queryClient),
     initialParams: {
       atomId: params.id,
+      queryAddress,
     },
   })
 }
 
 export interface IdentityLoaderData {
-  userWallet: string
   initialParams: {
+    queryAddress: string
     atomId: string
   }
 }
 
 export default function IdentityDetails() {
-  const { userWallet, initialParams } = useLoaderData<IdentityLoaderData>()
+  const { initialParams } = useLoaderData<IdentityLoaderData>()
+  const { user: privyUser } = usePrivy()
   const navigate = useNavigate()
 
   const [stakeModalActive, setStakeModalActive] = useAtom(stakeModalAtom)
@@ -266,15 +260,17 @@ export default function IdentityDetails() {
                 ))}
               </TagsContent>
             ) : null}
-            <Tag
-              className="w-fit border-dashed"
-              onClick={() => {
-                setTagsModalActive({ isOpen: true, mode: 'add' })
-              }}
-            >
-              <Icon name="plus-small" className="w-5 h-5" />
-              Add tags
-            </Tag>
+            {privyUser?.wallet?.address && (
+              <Tag
+                className="w-fit border-dashed"
+                onClick={() => {
+                  setTagsModalActive({ isOpen: true, mode: 'add' })
+                }}
+              >
+                <Icon name="plus-small" className="w-5 h-5" />
+                Add tags
+              </Tag>
+            )}
           </div>
 
           <TagsButton
@@ -283,7 +279,9 @@ export default function IdentityDetails() {
             }}
           />
         </Tags>
-        {vaultDetails !== null && user_assets !== '0' ? (
+        {vaultDetails !== null &&
+        user_assets !== '0' &&
+        privyUser?.wallet?.address ? (
           <PositionCard
             onButtonClick={() =>
               setStakeModalActive((prevState) => ({
@@ -320,14 +318,17 @@ export default function IdentityDetails() {
           variant={Identity.nonUser} // TODO: Use the atom type to determine this once we have these
           identityImgSrc={atomResult?.atom?.value?.thing?.image ?? ''}
           identityDisplayName={atomResult?.atom?.value?.thing?.name ?? ''}
-          onBuyClick={() =>
-            setStakeModalActive((prevState) => ({
-              ...prevState,
-              mode: 'deposit',
-              modalType: 'identity',
-              identity: atomResult?.atom as Atom,
-              isOpen: true,
-            }))
+          onBuyClick={
+            privyUser?.wallet?.address
+              ? () =>
+                  setStakeModalActive((prevState) => ({
+                    ...prevState,
+                    mode: 'deposit',
+                    modalType: 'identity',
+                    identity: atomResult?.atom as Atom,
+                    isOpen: true,
+                  }))
+              : undefined
           }
           onViewAllClick={() =>
             navigate(`${PATHS.IDENTITY}/${atomResult?.atom?.id}#positions`)
@@ -365,52 +366,54 @@ export default function IdentityDetails() {
 
   return (
     <TwoPanelLayout leftPanel={leftPanel} rightPanel={rightPanel}>
-      <>
-        <StakeModal
-          userWallet={userWallet}
-          contract={MULTIVAULT_CONTRACT_ADDRESS}
-          open={stakeModalActive.isOpen}
-          identity={atomResult?.atom as Atom}
-          vaultId={stakeModalActive.vaultId}
-          vaultDetailsProp={vaultDetails}
-          onClose={() => {
-            setStakeModalActive((prevState) => ({
-              ...prevState,
-              isOpen: false,
-              mode: undefined,
-            }))
-          }}
-        />
-        <TagsModal
-          identity={atomResult?.atom as Atom}
-          tagClaims={atomTagsResult?.triples as Triple[]}
-          userWallet={userWallet}
-          open={tagsModalActive.isOpen}
-          mode={tagsModalActive.mode}
-          onClose={() => {
-            setTagsModalActive({
-              ...tagsModalActive,
-              isOpen: false,
-            })
-            setSelectedTag(undefined)
-          }}
-        />
-        {selectedTag && (
-          <SaveListModal
+      {privyUser?.wallet?.address && (
+        <>
+          <StakeModal
+            userWallet={privyUser?.wallet?.address}
             contract={MULTIVAULT_CONTRACT_ADDRESS}
-            tagAtom={saveListModalActive.tag ?? selectedTag}
-            atom={atomResult?.atom as Atom}
-            userWallet={userWallet}
-            open={saveListModalActive.isOpen}
-            onClose={() =>
-              setSaveListModalActive({
-                ...saveListModalActive,
+            open={stakeModalActive.isOpen}
+            identity={atomResult?.atom as Atom}
+            vaultId={stakeModalActive.vaultId}
+            vaultDetailsProp={vaultDetails}
+            onClose={() => {
+              setStakeModalActive((prevState) => ({
+                ...prevState,
+                isOpen: false,
+                mode: undefined,
+              }))
+            }}
+          />
+          <TagsModal
+            identity={atomResult?.atom as Atom}
+            tagClaims={atomTagsResult?.triples as Triple[]}
+            userWallet={privyUser?.wallet?.address}
+            open={tagsModalActive.isOpen}
+            mode={tagsModalActive.mode}
+            onClose={() => {
+              setTagsModalActive({
+                ...tagsModalActive,
                 isOpen: false,
               })
-            }
+              setSelectedTag(undefined)
+            }}
           />
-        )}
-      </>
+          {selectedTag && (
+            <SaveListModal
+              contract={MULTIVAULT_CONTRACT_ADDRESS}
+              tagAtom={saveListModalActive.tag ?? selectedTag}
+              atom={atomResult?.atom as Atom}
+              userWallet={privyUser?.wallet?.address}
+              open={saveListModalActive.isOpen}
+              onClose={() =>
+                setSaveListModalActive({
+                  ...saveListModalActive,
+                  isOpen: false,
+                })
+              }
+            />
+          )}
+        </>
+      )}
       <ImageModal
         displayName={atomResult?.atom?.value?.thing?.name ?? ''}
         imageSrc={atomResult?.atom?.value?.thing?.image ?? ''}

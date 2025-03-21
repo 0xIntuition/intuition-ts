@@ -84,4 +84,9 @@ export default defineConfig({
       },
     },
   },
+  define: {
+    'import.meta.env.VITE_ENABLE_SOCIAL_LINKING': JSON.stringify(
+      process.env.ENABLE_SOCIAL_LINKING,
+    ),
+  },
 })

@@ -40,7 +40,7 @@ export function ActivityFeed({ activities }: { activities: GetSignalsQuery }) {
   }
 
   return (
-    <div className="space-y-4 bg-white/5 backdrop-blur-md backdrop-saturate-150 border border-border/10 p-4 rounded-lg">
+    <div className="space-y-4 bg-white/5 backdrop-blur-md backdrop-saturate-150 border border-border/10 p-4 rounded-lg w-full">
       {activities.signals.map((activity) => (
         <ActivityItemNew
           key={activity.id}

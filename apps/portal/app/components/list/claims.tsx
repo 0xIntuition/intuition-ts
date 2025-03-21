@@ -26,9 +26,9 @@ interface ClaimsListNewProps {
   enableHeader?: boolean
   enableSearch?: boolean
   enableSort?: boolean
-  readOnly?: boolean
   onPageChange?: (page: number) => void
   onLimitChange?: (limit: number) => void
+  isConnected?: boolean
 }
 
 export function ClaimsListNew({
@@ -38,9 +38,9 @@ export function ClaimsListNew({
   enableHeader = true,
   enableSearch = true,
   enableSort = true,
-  readOnly = false,
   onPageChange,
   onLimitChange,
+  isConnected = false,
 }: ClaimsListNewProps) {
   const setStakeModalActive = useSetAtom(stakeModalAtom)
 
@@ -157,6 +157,7 @@ export function ClaimsListNew({
             isFirst={!enableHeader && index === 0}
             isLast={index === claims.length - 1}
             className="border-none rounded-none"
+            isConnected={isConnected}
           >
             <Link
               to={getClaimUrl(triple?.id?.toString() ?? '')}
@@ -171,7 +172,7 @@ export function ClaimsListNew({
                   id: triple.subject?.id,
                   description: '',
                   ipfsLink: '',
-                  link: getAtomLink(triple.subject, readOnly),
+                  link: getAtomLink(triple.subject),
                   linkComponent: RemixLink,
                 }}
                 predicate={{
@@ -181,7 +182,7 @@ export function ClaimsListNew({
                   id: triple.predicate?.id,
                   description: '',
                   ipfsLink: '',
-                  link: getAtomLink(triple.predicate, readOnly),
+                  link: getAtomLink(triple.predicate),
                   linkComponent: RemixLink,
                 }}
                 object={{
@@ -191,7 +192,7 @@ export function ClaimsListNew({
                   id: triple.object?.id,
                   description: '',
                   ipfsLink: '',
-                  link: getAtomLink(triple.object, readOnly),
+                  link: getAtomLink(triple.object),
                   linkComponent: RemixLink,
                 }}
                 isClickable={true}

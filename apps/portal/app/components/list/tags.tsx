@@ -174,7 +174,6 @@ export function TagsList({
                       vaultId: triple?.vault_id.toString() ?? '0',
                     }))
                   }
-                  readOnly
                   className={`w-full border-0 bg-transparent ${readOnly ? '' : 'pr-0'}`}
                 />
                 {readOnly === false && (

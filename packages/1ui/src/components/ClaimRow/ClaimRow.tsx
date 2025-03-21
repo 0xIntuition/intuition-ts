@@ -20,6 +20,7 @@ export interface ClaimRowProps extends React.HTMLAttributes<HTMLDivElement> {
   onStakeAgainstClick?: () => void
   isFirst?: boolean
   isLast?: boolean
+  isConnected?: boolean
 }
 
 const ClaimRow = ({
@@ -37,6 +38,7 @@ const ClaimRow = ({
   onStakeAgainstClick,
   isFirst = true,
   isLast = true,
+  isConnected = true,
 }: ClaimRowProps) => {
   return (
     <div
@@ -75,7 +77,9 @@ const ClaimRow = ({
               numPositions={numPositionsFor}
               direction={ClaimPosition.claimFor}
               positionDirection={positionDirection}
-              disabled={positionDirection === ClaimPosition.claimAgainst}
+              disabled={
+                positionDirection === ClaimPosition.claimAgainst || !isConnected
+              }
               onClick={onStakeForClick}
             />
           )}
@@ -85,7 +89,9 @@ const ClaimRow = ({
               numPositions={numPositionsAgainst}
               direction={ClaimPosition.claimAgainst}
               positionDirection={positionDirection}
-              disabled={positionDirection === ClaimPosition.claimFor}
+              disabled={
+                positionDirection === ClaimPosition.claimFor || !isConnected
+              }
               onClick={onStakeAgainstClick}
             />
           )}

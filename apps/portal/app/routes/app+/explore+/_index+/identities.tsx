@@ -1,25 +1,30 @@
 import { IconName } from '@0xintuition/1ui'
 import {
   fetcher,
-  GetAtomsDocument,
-  GetAtomsQuery,
-  GetAtomsQueryVariables,
-  useGetAtomsQuery,
+  GetAtomsCountDocument,
+  GetAtomsCountQuery,
+  GetAtomsCountQueryVariables,
+  GetAtomsWithPositionsDocument,
+  GetAtomsWithPositionsQuery,
+  GetAtomsWithPositionsQueryVariables,
+  useGetAtomsWithPositionsQuery,
 } from '@0xintuition/graphql'
 
 import { ErrorPage } from '@components/error-page'
 import ExploreHeader from '@components/explore/ExploreHeader'
 import { ExploreSearch } from '@components/explore/ExploreSearch'
 import { IdentitiesListNew } from '@components/list/identities'
-import { calculateTotalPages, invariant } from '@lib/utils/misc'
+import { calculateTotalPages } from '@lib/utils/misc'
 import { getStandardPageParams } from '@lib/utils/params'
+import { usePrivy } from '@privy-io/react-auth'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData, useSubmit } from '@remix-run/react'
 import { getUserWallet } from '@server/auth'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
-import { HEADER_BANNER_IDENTITIES, NO_WALLET_ERROR } from 'app/consts'
+import { HEADER_BANNER_IDENTITIES } from 'app/consts'
 import { PaginationType } from 'app/types'
 import { AtomArray } from 'app/types/atom'
+import { zeroAddress } from 'viem'
 
 // Function to map sort parameters from URL to GraphQL order_by object
 function mapSortToOrderBy(sortBy: string, direction: string) {
@@ -47,77 +52,76 @@ function mapSortToOrderBy(sortBy: string, direction: string) {
 }
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  const wallet = await getUserWallet(request)
-  invariant(wallet, NO_WALLET_ERROR)
-
+  const userWallet = await getUserWallet(request)
+  const queryAddress = userWallet?.toLowerCase() ?? zeroAddress
   const url = new URL(request.url)
   const searchParams = new URLSearchParams(url.search)
-  const { page, limit, direction } = getStandardPageParams({
+
+  const {
+    page,
+    limit,
+    direction = 'desc',
+  } = getStandardPageParams({
     searchParams,
   })
-  // Get identitySortBy instead of just sortBy to handle paramPrefix
   const sortBy = searchParams.get('identitySortBy') || 'block_timestamp'
-  const displayName = searchParams.get('identity') || null
-  const hasTag = searchParams.get('tagIds') || null
-  const isUser = searchParams.get('isUser')
+  const displayName = searchParams.get('identity') || ''
+  // TODO: Figure out how to filter by tags
+  const tags = searchParams.get('tagIds') || ''
+  const isUser = searchParams.get('isUser') || ''
 
-  console.log('Loader params:', { sortBy, direction, page, limit })
-
-  // Create order by object based on the sort parameter
   const orderBy = mapSortToOrderBy(sortBy, direction)
-
-  // Create a new QueryClient instance
   const queryClient = new QueryClient()
 
-  // Prefetch atoms data (replacing IdentitiesService.searchIdentity)
+  const where = {
+    ...(displayName ? { label: { _ilike: `%${displayName}%` } } : {}),
+    ...(isUser === 'true'
+      ? { type: { _eq: 'Account' } }
+      : isUser === 'false'
+        ? { type: { _neq: 'Account' } }
+        : {}),
+  }
+
+  // Get the count for pagination
+  const countData = await queryClient.fetchQuery({
+    queryKey: ['get-atoms-count', { where }],
+    queryFn: () =>
+      fetcher<GetAtomsCountQuery, GetAtomsCountQueryVariables>(
+        GetAtomsCountDocument,
+        {
+          where,
+        },
+      )(),
+  })
+
+  // Prefetch the atoms query for client-side hydration
+  const queryKey = [
+    'get-atoms-with-positions',
+    {
+      limit,
+      offset: (page - 1) * limit,
+      orderBy: [orderBy],
+      where,
+      address: queryAddress,
+    },
+  ]
+
   await queryClient.prefetchQuery({
-    queryKey: [
-      'GetAtoms',
-      {
-        limit,
-        offset: (page - 1) * limit,
-        orderBy: [orderBy],
-        displayName,
-        hasTag,
-        isUser,
-        sortBy,
-        direction,
-      },
-    ],
+    queryKey,
     queryFn: () =>
-      fetcher<GetAtomsQuery, GetAtomsQueryVariables>(GetAtomsDocument, {
-        limit,
-        offset: (page - 1) * limit,
-        orderBy: [orderBy],
-        where: {
-          label: displayName ? { _ilike: `%${displayName}%` } : undefined,
-          // Add tag filtering if needed
-          type: isUser === 'true' ? { _eq: 'person' } : undefined,
+      fetcher<GetAtomsWithPositionsQuery, GetAtomsWithPositionsQueryVariables>(
+        GetAtomsWithPositionsDocument,
+        {
+          limit,
+          offset: (page - 1) * limit,
+          orderBy: [orderBy],
+          where,
+          address: queryAddress,
         },
-      })(),
+      )(),
   })
 
-  // Get the total count
-  const atomsData = await queryClient.fetchQuery({
-    queryKey: [
-      'get-atoms-count',
-      {
-        displayName,
-        hasTag,
-        isUser,
-      },
-    ],
-    queryFn: () =>
-      fetcher<GetAtomsQuery, GetAtomsQueryVariables>(GetAtomsDocument, {
-        where: {
-          label: displayName ? { _ilike: `%${displayName}%` } : undefined,
-          // Add tag filtering if needed
-          type: isUser === 'true' ? { _eq: 'person' } : undefined,
-        },
-      })(),
-  })
-
-  const totalCount = atomsData?.total?.aggregate?.count ?? 0
+  const totalCount = countData?.atoms_aggregate?.aggregate?.count ?? 0
   const totalPages = calculateTotalPages(totalCount, limit)
 
   return json({
@@ -128,50 +132,55 @@ export async function loader({ request }: LoaderFunctionArgs) {
       totalPages,
     } as PaginationType,
     initialParams: {
+      userWallet,
+      queryAddress,
       displayName,
-      hasTag,
+      tags,
       isUser,
       direction,
       sortBy,
     },
-    // Add dehydrated state for client-side hydration
     dehydratedState: dehydrate(queryClient),
   })
 }
 
 export default function ExploreIdentities() {
   const { pagination, initialParams } = useLoaderData<typeof loader>()
+  const { user: privyUser } = usePrivy()
   const submit = useSubmit()
 
-  const { displayName, hasTag, isUser, direction, sortBy } = initialParams
+  const { displayName, isUser, direction, sortBy, queryAddress } = initialParams
+  const orderBy = mapSortToOrderBy(
+    sortBy || 'block_timestamp',
+    direction || 'desc',
+  )
 
-  console.log('Component params:', { sortBy, direction })
+  const where = {
+    ...(displayName ? { label: { _ilike: `%${displayName}%` } } : {}),
+    ...(isUser === 'true'
+      ? { type: { _eq: 'Account' } }
+      : isUser === 'false'
+        ? { type: { _neq: 'Account' } }
+        : {}),
+  }
 
-  // Create order by object based on the sort parameter
-  const orderBy = mapSortToOrderBy(sortBy || 'block_timestamp', direction)
-
-  const { data: atomsData } = useGetAtomsQuery(
+  const { data: atomsData } = useGetAtomsWithPositionsQuery(
     {
       limit: pagination.limit,
       offset: (pagination.currentPage - 1) * pagination.limit,
       orderBy: [orderBy],
-      where: {
-        label: displayName ? { _ilike: `%${displayName}%` } : undefined,
-        // Add tag filtering if needed
-        type: isUser === 'true' ? { _eq: 'person' } : undefined,
-      },
+      where,
+      address: queryAddress,
     },
     {
       queryKey: [
-        'GetAtoms',
+        'get-atoms-with-positions',
         {
           limit: pagination.limit,
           offset: (pagination.currentPage - 1) * pagination.limit,
-          displayName,
-          hasTag,
-          isUser,
-          sortBy,
-          direction,
+          orderBy: [orderBy],
+          where,
+          address: queryAddress,
         },
       ],
     },
@@ -190,9 +199,6 @@ export default function ExploreIdentities() {
     submit(formData, { method: 'get', replace: true })
   }
 
-  // Since the Atom type is derived from the GraphQL schema,
-  // we can treat the atoms as our expected type
-  // TypeScript may show errors, but the structure is compatible at runtime
   const identities = (atomsData?.atoms || []) as unknown as AtomArray
 
   return (
@@ -213,6 +219,7 @@ export default function ExploreIdentities() {
         paramPrefix="identity"
         onPageChange={handlePageChange}
         onLimitChange={handleLimitChange}
+        isConnected={!!privyUser}
       />
     </>
   )

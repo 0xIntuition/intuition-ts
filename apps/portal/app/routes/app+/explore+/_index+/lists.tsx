@@ -14,13 +14,12 @@ import ExploreHeader from '@components/explore/ExploreHeader'
 import { ExploreSearch } from '@components/explore/ExploreSearch'
 import { ListClaimsListNew as ListClaimsList } from '@components/list/list-claims'
 import { getSpecialPredicate } from '@lib/utils/app'
-import { calculateTotalPages, invariant } from '@lib/utils/misc'
+import { calculateTotalPages } from '@lib/utils/misc'
 import { getStandardPageParams } from '@lib/utils/params'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
-import { getUserWallet } from '@server/auth'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
-import { CURRENT_ENV, HEADER_BANNER_LISTS, NO_WALLET_ERROR } from 'app/consts'
+import { CURRENT_ENV, HEADER_BANNER_LISTS } from 'app/consts'
 import { PaginationType } from 'app/types/pagination'
 
 // Default pagination values
@@ -68,9 +67,6 @@ const sortLists = (
 }
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  const wallet = await getUserWallet(request)
-  invariant(wallet, NO_WALLET_ERROR)
-
   const queryClient = new QueryClient()
 
   const url = new URL(request.url)
