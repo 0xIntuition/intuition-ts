@@ -15,21 +15,20 @@ import { ActivityFeed } from '@components/list/activity'
 import { RevalidateButton } from '@components/revalidate-button'
 import { ActivitySkeleton } from '@components/skeleton'
 import logger from '@lib/utils/logger'
-import { invariant } from '@lib/utils/misc'
 import { json, type LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData, useSearchParams } from '@remix-run/react'
 import { getUserWallet } from '@server/auth'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
-import { HEADER_BANNER_ACTIVITY, NO_WALLET_ERROR } from 'app/consts'
+import { HEADER_BANNER_ACTIVITY } from 'app/consts'
+import { zeroAddress } from 'viem'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const wallet = await getUserWallet(request)
-  invariant(wallet, NO_WALLET_ERROR)
 
   const url = new URL(request.url)
   const limit = parseInt(url.searchParams.get('limit') || '10')
   const offset = parseInt(url.searchParams.get('offset') || '0')
-  const queryAddresses = [wallet.toLowerCase()]
+  const queryAddresses = [wallet?.toLowerCase() ?? zeroAddress]
 
   const queryClient = new QueryClient()
 

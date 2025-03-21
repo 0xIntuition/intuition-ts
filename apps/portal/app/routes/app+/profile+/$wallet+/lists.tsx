@@ -12,12 +12,11 @@ import {
 import { ErrorPage } from '@components/error-page'
 import { ListClaimsListNew as ListClaimsList } from '@components/list/list-claims'
 import { ListClaimsSkeletonLayout } from '@components/lists/list-skeletons'
-import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { getSpecialPredicate } from '@lib/utils/app'
 import { calculateTotalPages, invariant } from '@lib/utils/misc'
 import { getStandardPageParams } from '@lib/utils/params'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
-import { Await, useSearchParams } from '@remix-run/react'
+import { Await, useLoaderData, useSearchParams } from '@remix-run/react'
 import { getUserWallet } from '@server/auth'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
 import { CURRENT_ENV, NO_PARAM_ID_ERROR, NO_WALLET_ERROR } from 'app/consts'
@@ -157,7 +156,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 }
 
 export default function ProfileLists() {
-  const { initialParams } = useLiveLoader<typeof loader>(['create', 'attest'])
+  const { initialParams } = useLoaderData<typeof loader>()
   const [searchParams] = useSearchParams()
   const [visibleLimit, setVisibleLimit] = useState(DEFAULT_PAGE_SIZE)
   const [isLoading, setIsLoading] = useState(false)

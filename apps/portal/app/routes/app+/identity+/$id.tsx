@@ -36,7 +36,6 @@ import ShareModal from '@components/share-modal'
 import StakeModal from '@components/stake/stake-modal'
 import TagsModal from '@components/tags/tags-modal'
 import { useGetVaultDetails } from '@lib/hooks/useGetVaultDetails'
-import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import {
   imageModalAtom,
   saveListModalAtom,
@@ -52,7 +51,7 @@ import {
   invariant,
 } from '@lib/utils/misc'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
-import { Outlet, useNavigate } from '@remix-run/react'
+import { Outlet, useLoaderData, useNavigate } from '@remix-run/react'
 import { getUser, getUserWallet } from '@server/auth'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
 import {
@@ -148,10 +147,7 @@ export interface IdentityLoaderData {
 }
 
 export default function IdentityDetails() {
-  const { userWallet, initialParams } = useLiveLoader<IdentityLoaderData>([
-    'attest',
-    'create',
-  ])
+  const { userWallet, initialParams } = useLoaderData<IdentityLoaderData>()
   const navigate = useNavigate()
 
   const [stakeModalActive, setStakeModalActive] = useAtom(stakeModalAtom)
