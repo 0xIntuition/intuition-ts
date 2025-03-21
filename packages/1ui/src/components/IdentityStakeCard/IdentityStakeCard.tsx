@@ -13,7 +13,7 @@ export interface IdentityStakeCardProps
   variant?: IdentityType
   identityImgSrc: string
   identityDisplayName: string
-  onBuyClick: () => void
+  onBuyClick?: () => void
   onViewAllClick?: () => void
 }
 
@@ -60,9 +60,15 @@ const IdentityStakeCard = ({
         </div>
       </div>
       <div className="flex flex-col gap-2 w-full">
-        <Button className="w-full mt-4" variant="primary" onClick={onBuyClick}>
-          Deposit
-        </Button>
+        {onBuyClick && (
+          <Button
+            className="w-full mt-4"
+            variant="primary"
+            onClick={onBuyClick}
+          >
+            Deposit
+          </Button>
+        )}
         {onViewAllClick && (
           <Button className="w-full" variant="text" onClick={onViewAllClick}>
             View all positions

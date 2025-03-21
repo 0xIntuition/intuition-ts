@@ -24,11 +24,11 @@ import { PositionsOnIdentityNew } from '@components/list/positions-on-identity'
 import DataAboutHeader from '@components/profile/data-about-header'
 import { RevalidateButton } from '@components/revalidate-button'
 import { DataHeaderSkeleton, PaginatedListSkeleton } from '@components/skeleton'
-import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { detailCreateClaimModalAtom } from '@lib/state/store'
 import logger from '@lib/utils/logger'
 import { formatBalance, invariant } from '@lib/utils/misc'
 import { LoaderFunctionArgs } from '@remix-run/node'
+import { useLoaderData } from '@remix-run/react'
 import { getUserWallet } from '@server/auth'
 import { QueryClient } from '@tanstack/react-query'
 import { NO_PARAM_ID_ERROR, NO_WALLET_ERROR } from 'app/consts'
@@ -151,9 +151,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 }
 
 export default function ProfileDataAbout() {
-  const { wallet, initialParams, queryAddress } = useLiveLoader<typeof loader>([
-    'attest',
-  ])
+  const { wallet, initialParams, queryAddress } = useLoaderData<typeof loader>()
 
   const [createClaimModalActive, setCreateClaimModalActive] = useAtom(
     detailCreateClaimModalAtom,

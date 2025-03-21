@@ -29,7 +29,6 @@ import ShareModal from '@components/share-modal'
 import StakeModal from '@components/stake/stake-modal'
 import { useGetVaultDetails } from '@lib/hooks/useGetVaultDetails'
 import { useGoBack } from '@lib/hooks/useGoBack'
-import { useLiveLoader } from '@lib/hooks/useLiveLoader'
 import { shareModalAtom, stakeModalAtom } from '@lib/state/store'
 import { getSpecialPredicate } from '@lib/utils/app'
 import logger from '@lib/utils/logger'
@@ -43,7 +42,7 @@ import {
   getAtomLink,
 } from '@lib/utils/misc'
 import { LoaderFunctionArgs } from '@remix-run/node'
-import { Outlet } from '@remix-run/react'
+import { Outlet, useLoaderData } from '@remix-run/react'
 import { getUserWallet } from '@server/auth'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
 import {
@@ -98,7 +97,7 @@ export interface ClaimDetailsLoaderData {
 }
 
 export default function ClaimDetails() {
-  const { wallet, initialParams } = useLiveLoader<{
+  const { wallet, initialParams } = useLoaderData<{
     wallet: string
     vaultDetails: VaultDetailsType
     initialParams: {
@@ -106,7 +105,7 @@ export default function ClaimDetails() {
       predicateId: string
       objectId: string
     }
-  }>(['create', 'attest'])
+  }>()
   const [stakeModalActive, setStakeModalActive] = useAtom(stakeModalAtom)
   const [shareModalActive, setShareModalActive] = useAtom(shareModalAtom)
 

@@ -8,6 +8,7 @@ export interface OptionType {
   path?: string
   basePath?: string
   label: string
+  hidden?: boolean
 }
 
 interface SegmentedNavProps {
@@ -30,21 +31,23 @@ export const SegmentedNav = ({ options }: SegmentedNavProps) => {
 
   return (
     <SegmentedControl className="w-fit">
-      {options.map((option, index) => (
-        <NavLink
-          key={index}
-          to={getPath(option)}
-          prefetch="intent"
-          end={option.value === 'overview'}
-          tabIndex={-1} // disable double focus as the child has a tab index value
-        >
-          {({ isActive }) => (
-            <SegmentedControlItem isActive={isActive}>
-              {option.label}
-            </SegmentedControlItem>
-          )}
-        </NavLink>
-      ))}
+      {options
+        .filter((option) => !option.hidden)
+        .map((option, index) => (
+          <NavLink
+            key={index}
+            to={getPath(option)}
+            prefetch="intent"
+            end={option.value === 'overview'}
+            tabIndex={-1} // disable double focus as the child has a tab index value
+          >
+            {({ isActive }) => (
+              <SegmentedControlItem isActive={isActive}>
+                {option.label}
+              </SegmentedControlItem>
+            )}
+          </NavLink>
+        ))}
     </SegmentedControl>
   )
 }

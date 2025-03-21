@@ -408,12 +408,12 @@ export const getAtomLink = (
   }
   if (atom.type === 'Account' || atom.type === 'Default') {
     return readOnly
-      ? `${PATHS.READONLY_PROFILE}/${atom.wallet_id}`
-      : `${PATHS.PROFILE}/${atom.wallet_id}`
+      ? `${PATHS.READONLY_PROFILE}/${atom.id}`
+      : `${PATHS.PROFILE}/${atom.id}`
   }
   return readOnly
-    ? `${PATHS.READONLY_IDENTITY}/${atom.vault_id}`
-    : `${PATHS.IDENTITY}/${atom.vault_id}`
+    ? `${PATHS.READONLY_IDENTITY}/${atom.id}`
+    : `${PATHS.IDENTITY}/${atom.id}`
 }
 
 export const getAtomId = (atom: Atom | null | undefined) => {

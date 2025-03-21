@@ -121,7 +121,7 @@ export function AddIdentities({
     selectedItems: memoizedSelectedIdentities,
     setInvalidItems: setInvalidIdentities,
     onRemoveItem: onRemoveIdentity,
-    idKey: 'vaultId' as keyof Atom,
+    idKey: 'id' as keyof Atom,
     dataIdKey: 'subjectId',
   })
 

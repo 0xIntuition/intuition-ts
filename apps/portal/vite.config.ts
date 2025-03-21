@@ -1,6 +1,5 @@
 import { vitePlugin as remix } from '@remix-run/dev'
 import { installGlobals } from '@remix-run/node'
-import { sentryVitePlugin } from '@sentry/vite-plugin'
 import autoprefixer from 'autoprefixer'
 import { flatRoutes } from 'remix-flat-routes'
 import tailwindcss from 'tailwindcss'
@@ -8,11 +7,15 @@ import { defineConfig } from 'vite'
 import envOnly from 'vite-env-only'
 import tsconfigPaths from 'vite-tsconfig-paths'
 
-// TODO: Update this once we figure our the TS issue that vite is throwing
-
-import { themePreset } from '../../packages/1ui/src/styles/index'
+import { themePreset } from '../../packages/1ui/src/styles'
 
 installGlobals()
+
+declare module '@remix-run/node' {
+  interface Future {
+    v3_singleFetch: true
+  }
+}
 
 export default defineConfig({
   css: {
@@ -23,6 +26,13 @@ export default defineConfig({
   plugins: [
     envOnly(),
     remix({
+      future: {
+        v3_fetcherPersist: true,
+        v3_relativeSplatPath: true,
+        v3_throwAbortReason: true,
+        v3_singleFetch: true,
+        v3_lazyRouteDiscovery: true,
+      },
       ignoredRouteFiles: ['**/.*'],
       routes: async (defineRoutes) => {
         return flatRoutes('routes', defineRoutes, {
@@ -36,15 +46,6 @@ export default defineConfig({
       },
     }),
     tsconfigPaths(),
-    process.env.SENTRY_AUTH_TOKEN
-      ? sentryVitePlugin({
-          disable: process.env.NODE_ENV !== 'production',
-          authToken: process.env.SENTRY_AUTH_TOKEN,
-          org: process.env.SENTRY_ORG,
-          project: process.env.SENTRY_PROJECT,
-          release: { inject: false },
-        })
-      : null,
   ],
   server: {
     port: 8080,
@@ -60,6 +61,32 @@ export default defineConfig({
     },
   },
   ssr: {
-    noExternal: ['@privy-io/react-auth', '@privy-io/wagmi', 'react-dropzone'],
+    noExternal: [
+      '@privy-io/react-auth',
+      '@privy-io/wagmi',
+      'react-dropzone',
+      'buffer',
+    ],
+    optimizeDeps: {
+      include: ['stream-browserify', 'buffer'],
+    },
+  },
+  resolve: {
+    alias: {
+      stream: 'stream-browserify',
+      buffer: 'buffer',
+    },
+  },
+  optimizeDeps: {
+    esbuildOptions: {
+      define: {
+        global: 'globalThis',
+      },
+    },
+  },
+  define: {
+    'import.meta.env.VITE_ENABLE_SOCIAL_LINKING': JSON.stringify(
+      process.env.ENABLE_SOCIAL_LINKING,
+    ),
   },
 })
