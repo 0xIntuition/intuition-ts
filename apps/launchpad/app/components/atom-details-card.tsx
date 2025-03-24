@@ -30,6 +30,9 @@ export function AtomDetailsCard({
   className,
   ...props
 }: AtomDetailsCardProps) {
+  console.log('tvl', tvl)
+  console.log('forTvl', props.forTvl)
+  console.log('againstTvl', props.againstTvl)
   return (
     <div
       className={cn('rounded-lg w-full md:min-w-[480px]', className)}
@@ -116,7 +119,7 @@ export function AtomDetailsCard({
                 weight="normal"
                 className="text-foreground/90"
               >
-                {tvl.toFixed(4)} ETH TVL
+                {tvl.toFixed(6)} ETH TVL
               </Text>
             </div>
           </div>

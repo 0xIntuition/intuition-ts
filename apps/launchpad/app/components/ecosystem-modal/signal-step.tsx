@@ -91,8 +91,6 @@ export function SignalStep({
     }
   }, [multiVaultConfig])
 
-  // Compute vote direction based on ticks value
-  const voteDirection = ticks >= 0 ? 'upvote' : 'downvote'
   const absTickValue = Math.abs(ticks)
 
   // Memoize the val calculation to prevent unnecessary recalculations
