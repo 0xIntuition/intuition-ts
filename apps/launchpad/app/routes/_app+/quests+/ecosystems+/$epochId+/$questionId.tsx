@@ -395,7 +395,7 @@ export default function MiniGameOne() {
         ],
       },
       tagPredicateIds: [predicateId], // dev - has tag predicate ID
-      userPositionAddress: userWallet ?? ZERO_ADDRESS,
+      userPositionAddress: userWallet ?? '',
       verifiedPositionAddress: VERIFICATION_ADDRESS,
       orderBy,
     }

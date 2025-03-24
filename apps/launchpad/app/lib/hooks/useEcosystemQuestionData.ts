@@ -11,7 +11,7 @@ interface UseQuestionDataProps {
 
 export function useEcosystemQuestionData({ questionId }: UseQuestionDataProps) {
   const { user: privyUser } = usePrivy()
-  const userWallet = privyUser?.wallet?.address?.toLowerCase()
+  const userWallet = privyUser?.wallet?.address?.toLowerCase() ?? ""
 
   const { data: currentEpoch, isLoading: isLoadingEpoch } = useQuery({
     queryKey: ['current-epoch'],
@@ -71,7 +71,6 @@ export function useEcosystemQuestionData({ questionId }: UseQuestionDataProps) {
   const predicateId = questionData?.predicate_id
   const objectId = questionData?.object_id
   const tagObjectId = questionData?.tag_object_id
-  console.log(tagObjectId, 'tagObjectId')
   const { data: atomsData, isLoading: isLoadingAtoms } = useAtomsWithTagsQuery(
     {
       where: {
@@ -84,12 +83,12 @@ export function useEcosystemQuestionData({ questionId }: UseQuestionDataProps) {
           },
           tagObjectId
             ? {
-                as_subject_triples: {
-                  object: {
-                    vault_id: { _in: [tagObjectId] },
-                  },
+              as_subject_triples: {
+                object: {
+                  vault_id: { _in: [tagObjectId] },
                 },
-              }
+              },
+            }
             : {},
         ],
       },
@@ -99,12 +98,13 @@ export function useEcosystemQuestionData({ questionId }: UseQuestionDataProps) {
       verifiedPositionAddress: VERIFICATION_ADDRESS,
     },
     {
-      enabled: !!questionData && !!predicateId && !!objectId && !!tagObjectId,
+      enabled: !!questionData && !!predicateId && !!objectId,
       queryKey: [
         'AtomsWithTags',
-        userWallet,
+        // userWallet,
         VERIFICATION_ADDRESS,
         predicateId,
+        objectId,
         tagObjectId,
       ],
     },

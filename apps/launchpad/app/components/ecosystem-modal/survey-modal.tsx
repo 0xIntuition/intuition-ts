@@ -143,7 +143,7 @@ export function EcosystemModal({
 }: EcosystemModalProps) {
   const queryClient = useQueryClient()
   const { user: privyUser } = usePrivy()
-  const userWallet = privyUser?.wallet?.address
+  const userWallet = privyUser?.wallet?.address?.toLowerCase() ?? ''
 
   const [state, setState] = useState<OnboardingState>(INITIAL_STATE)
   const [topics, setTopics] = useState<Topic[]>([])
@@ -207,7 +207,6 @@ export function EcosystemModal({
       refetchInterval: 1000, // Poll every second
     },
   )
-  console.log(searchData)
 
   useEffect(() => {
     if (isOpen) {
