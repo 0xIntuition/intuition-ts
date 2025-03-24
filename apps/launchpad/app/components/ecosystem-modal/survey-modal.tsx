@@ -566,7 +566,7 @@ export function EcosystemModal({
         resetTransition()
 
         if (isFlowComplete && question?.id && question?.epoch_id) {
-          const targetPath = `/quests/questions/${question.epoch_id}/${question.id}`
+          const targetPath = `/quests/ecosystems/${question.epoch_id}/${question.id}`
           if (location.pathname !== targetPath) {
             navigate(targetPath)
           }

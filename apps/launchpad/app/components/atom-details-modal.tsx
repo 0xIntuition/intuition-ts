@@ -18,6 +18,7 @@ interface AtomDetailsModalProps {
     againstTvl?: number
     position?: number
   }
+  listClaim?: boolean
 }
 
 export function AtomDetailsModal({
@@ -25,6 +26,7 @@ export function AtomDetailsModal({
   onClose,
   atomId,
   data,
+  listClaim = true,
 }: AtomDetailsModalProps) {
   const cardData = {
     name: data?.name ?? `Atom ${atomId}`,
@@ -40,7 +42,7 @@ export function AtomDetailsModal({
       <Icon name="fingerprint" className="h-10 w-10" />
     ),
     atomId,
-    listClaim: true, // TODO: Add handling for regular atoms (not in a list)
+    listClaim, // TODO: Add handling for regular atoms (not in a list)
     userCount: data?.users ?? 0,
     forTvl: data?.forTvl ?? 0,
     againstTvl: data?.againstTvl ?? 0,

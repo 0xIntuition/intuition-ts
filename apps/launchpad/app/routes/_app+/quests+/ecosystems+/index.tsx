@@ -260,6 +260,7 @@ export default function Ecosystems() {
         }
         atomId={atomDetailsModal.atomId || 0}
         data={atomDetailsModal.data}
+        listClaim={false}
       />
     </>
   )

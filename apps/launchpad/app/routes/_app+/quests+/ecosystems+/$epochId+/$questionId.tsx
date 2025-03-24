@@ -15,6 +15,7 @@ import { useGetAtomQuery } from '@0xintuition/graphql'
 import { AtomDetailsModal } from '@components/atom-details-modal'
 import { AuthCover } from '@components/auth-cover'
 import { EcosystemModal } from '@components/ecosystem-modal/survey-modal'
+import EcosystemShareModal from '@components/ecosystem-share-modal'
 import LoadingLogo from '@components/loading-logo'
 import { LoadingState } from '@components/loading-state'
 import { Navigation } from '@components/lore/chapter-navigation'
@@ -407,7 +408,10 @@ export default function MiniGameOne() {
     {
       ...queryVariables,
     },
-    { enabled: !!queryVariables },
+    {
+      enabled: !!queryVariables,
+      queryKey: ['atoms-with-tags', queryVariables, predicateId, objectId],
+    },
   )
   const totalCount = atomsData?.atoms.length ?? 0
 
@@ -577,6 +581,9 @@ export default function MiniGameOne() {
   const handleCloseOnboarding = () => {
     // Only invalidate queries if we have all required values and the modal was actually open
     if (userWallet && questionId && currentEpoch && onboardingModal.isOpen) {
+      queryClient.invalidateQueries({
+        queryKey: ['atoms-with-tags', queryVariables, predicateId, objectId],
+      })
       // Invalidate queries first
       queryClient.invalidateQueries({
         queryKey: ['question-completion', userWallet.toLowerCase(), questionId],
@@ -754,8 +761,7 @@ export default function MiniGameOne() {
           onPaginationChange={updatePaginationParams}
         />
       </div>
-
-      {/* <ShareModal
+      <EcosystemShareModal
         open={shareModalActive.isOpen}
         onClose={() =>
           setShareModalActive({
@@ -764,8 +770,8 @@ export default function MiniGameOne() {
           })
         }
         title={shareModalActive.title}
-        listData={listData as unknown as ListDetailsType}
-      /> */}
+        atomsData={atomsData?.atoms as unknown as AtomsWithTagsQuery['atoms']}
+      />
       <EcosystemModal
         isOpen={onboardingModal.isOpen}
         onClose={handleCloseOnboarding}
@@ -778,6 +784,7 @@ export default function MiniGameOne() {
       />
       <AtomDetailsModal
         isOpen={atomDetailsModal.isOpen}
+        listClaim={false}
         onClose={() =>
           setAtomDetailsModal({ isOpen: false, atomId: 0, data: undefined })
         }

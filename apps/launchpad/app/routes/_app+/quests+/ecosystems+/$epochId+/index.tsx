@@ -341,6 +341,7 @@ export default function EpochQuestions() {
         }
         atomId={atomDetailsModal.atomId || 0}
         data={atomDetailsModal.data}
+        listClaim={false}
       />
     </>
   )
