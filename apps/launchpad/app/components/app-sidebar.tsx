@@ -125,7 +125,7 @@ export function AppSidebar({
     },
     {
       icon: <Icon name="lightning-bolt" className="w-5 h-5" />,
-      label: 'Claimr',
+      label: 'IQ Blitz',
       href: '/claimr',
       isAccent: location.pathname === '/claimr',
     },

@@ -1,5 +1,6 @@
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
+import { LoadingState } from '@components/loading-state'
 import type { Abi, Address } from 'viem'
 import { useAccount } from 'wagmi'
 
@@ -38,6 +39,7 @@ export default function ClaimrRoute() {
   const containerRef = useRef<HTMLDivElement>(null)
   const { address } = useAccount()
   const initialized = useRef(false)
+  const [isLoading, setIsLoading] = useState(true)
 
   const handleScriptCreation = useCallback(() => {
     // Prevent multiple initializations
@@ -66,6 +68,12 @@ export default function ClaimrRoute() {
     script.setAttribute('data-autoresize', 'true')
     script.setAttribute('data-container', CONTAINER_ID)
     script.setAttribute('data-platform', 'web3')
+
+    // Event listener to detect when the widget is loaded
+    script.onload = () => {
+      // Give a small delay for the widget to initialize
+      setTimeout(() => setIsLoading(false), 500)
+    }
 
     // Wait for DOM to be ready
     if (document.readyState === 'loading') {
@@ -100,6 +108,7 @@ export default function ClaimrRoute() {
       return
     }
 
+    setIsLoading(true)
     // Small delay to ensure container is mounted
     const timeoutId = setTimeout(handleScriptCreation, 100)
 
@@ -113,13 +122,19 @@ export default function ClaimrRoute() {
       if (containerRef.current) {
         containerRef.current.innerHTML = ''
       }
+      setIsLoading(false)
     }
   }, [handleScriptCreation])
 
   return (
     <div className="flex w-full flex-col items-center justify-start">
       <div className="w-full max-w-4xl">
-        <div ref={containerRef} id={CONTAINER_ID} />
+        {isLoading && <LoadingState />}
+        <div
+          ref={containerRef}
+          id={CONTAINER_ID}
+          className={isLoading ? 'hidden' : 'block'}
+        />
       </div>
     </div>
   )
