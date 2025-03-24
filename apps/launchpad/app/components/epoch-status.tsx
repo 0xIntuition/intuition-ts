@@ -88,7 +88,7 @@ export function EpochStatus({
             weight={TextWeight.semibold}
             className="font-mono text-warning"
           >
-            Epoch Completed
+            Bonus Round Completed
           </Text>
         </div>
       )}
@@ -105,7 +105,6 @@ export function EpochStatus({
           </Text>
         </div>
       )}
-
       {status === 'active' && timeRemaining && (
         <div className="flex items-center gap-2">
           <Clock className="w-4 h-4 text-success" />
@@ -114,7 +113,7 @@ export function EpochStatus({
             weight={TextWeight.semibold}
             className="font-mono text-success"
           >
-            Ends in {timeRemaining.days > 0 && `${timeRemaining.days}d `}
+            Bonus Ends in {timeRemaining.days > 0 && `${timeRemaining.days}d `}
             {timeRemaining.hours.toString().padStart(2, '0')}:
             {timeRemaining.minutes.toString().padStart(2, '0')}:
             {timeRemaining.seconds.toString().padStart(2, '0')}

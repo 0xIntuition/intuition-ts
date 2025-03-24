@@ -31,7 +31,7 @@ interface Epoch {
   is_active: boolean
   created_at: string
   updated_at: string
-  total_points_available: number
+  total_points: number
 }
 
 interface Progress {

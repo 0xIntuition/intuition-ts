@@ -42,6 +42,11 @@ export function QuestionRowWrapper({ onStart, question }: QuestionRowProps) {
     question.id,
   )
 
+  let pointsAwarded = 0
+  if (completion) {
+    pointsAwarded = completion.points_awarded
+  }
+
   // Get the user's selected atom if they've completed the question
   const { data: atomData } = useGetAtomQuery(
     { id: completion?.subject_id ?? 0 },
@@ -83,7 +88,7 @@ export function QuestionRowWrapper({ onStart, question }: QuestionRowProps) {
       title={questionData.title}
       description={`${questionData.atoms.toLocaleString()} atoms`}
       image={questionData.listData?.globalTriples?.[0]?.object?.image ?? ''}
-      points={completion ? questionData.pointAwardAmount : 0}
+      points={completion ? pointsAwarded : 0}
       pointAwardAmount={questionData.pointAwardAmount}
       isActive={questionData.enabled}
       onStart={onStart}
