@@ -1,19 +1,35 @@
 import { API_URL_DEV } from '@consts/general'
 import { GraphQLClient } from 'graphql-request'
 
-// Safely access environment variables
+// Debug environment variables
+const debugEnv = {
+  process: typeof process !== 'undefined',
+  processEnv: process?.env,
+  importMetaEnv: import.meta?.env,
+  hasuraPointsEndpoint: process?.env?.HASURA_POINTS_ENDPOINT,
+  viteHasuraPointsEndpoint: import.meta?.env?.VITE_HASURA_POINTS_ENDPOINT,
+}
+
+console.log('Environment Debug:', debugEnv)
+
+// Safely access environment variables with fallback
 const HASURA_POINTS_ENDPOINT =
   typeof process !== 'undefined'
     ? process.env.HASURA_POINTS_ENDPOINT
     : import.meta.env?.VITE_HASURA_POINTS_ENDPOINT
 
 if (!HASURA_POINTS_ENDPOINT) {
-  console.error('Environment variables:', {
-    processEnv: process.env?.HASURA_POINTS_ENDPOINT,
-    importMetaEnv: import.meta.env?.VITE_HASURA_POINTS_ENDPOINT,
+  console.error('Environment variables not found:', {
+    processEnv: process?.env?.HASURA_POINTS_ENDPOINT,
+    importMetaEnv: import.meta?.env?.VITE_HASURA_POINTS_ENDPOINT,
+    allEnv: import.meta?.env,
   })
   throw new Error(
-    'Points API endpoint not defined. Please ensure HASURA_POINTS_ENDPOINT or VITE_HASURA_POINTS_ENDPOINT is set in your environment variables.',
+    `Points API endpoint not defined. Environment check failed:
+    - Process exists: ${typeof process !== 'undefined'}
+    - Process.env available: ${!!process?.env}
+    - import.meta.env available: ${!!import.meta?.env}
+    Please ensure either HASURA_POINTS_ENDPOINT or VITE_HASURA_POINTS_ENDPOINT is set in your environment variables.`
   )
 }
 
