@@ -1,6 +1,4 @@
-import { useGetListDetailsQuery } from '@0xintuition/graphql'
 import { useAtomsWithTagsQuery } from '@lib/graphql'
-
 import logger from '@lib/utils/logger'
 import { usePrivy } from '@privy-io/react-auth'
 import { useQuery } from '@tanstack/react-query'
@@ -86,12 +84,12 @@ export function useEcosystemQuestionData({ questionId }: UseQuestionDataProps) {
           },
           tagObjectId
             ? {
-              as_subject_triples: {
-                object: {
-                  vault_id: { _in: [tagObjectId] },
+                as_subject_triples: {
+                  object: {
+                    vault_id: { _in: [tagObjectId] },
+                  },
                 },
-              },
-            }
+              }
             : {},
         ],
       },

@@ -8,8 +8,8 @@ export const QUESTS = [
     index: 1,
   },
   {
-    title: "Map the Ecosystems",
-    description: "Map the ecosystems of the Intuition Graph.",
+    title: 'Map the Ecosystems',
+    description: 'Map the ecosystems of the Intuition Graph.',
     link: '/quests/ecosystems',
     enabled: true,
     index: 2,

@@ -1,19 +1,17 @@
-import { API_URL_DEV } from '@consts/general';
+import { API_URL_DEV } from '@consts/general'
 import { GraphQLClient } from 'graphql-request'
 
 // Safely access environment variables
-const HASURA_POINTS_ENDPOINT = typeof process !== 'undefined'
-  ? process.env.HASURA_POINTS_ENDPOINT
-  : import.meta.env?.VITE_HASURA_POINTS_ENDPOINT
+const HASURA_POINTS_ENDPOINT =
+  typeof process !== 'undefined'
+    ? process.env.HASURA_POINTS_ENDPOINT
+    : import.meta.env?.VITE_HASURA_POINTS_ENDPOINT
 
 if (!HASURA_POINTS_ENDPOINT) {
   throw new Error('Points API endpoint not defined')
 }
 
-export const pointsClient = new GraphQLClient(
-  HASURA_POINTS_ENDPOINT,
-)
-
+export const pointsClient = new GraphQLClient(HASURA_POINTS_ENDPOINT)
 
 export interface ClientConfig {
   headers: HeadersInit

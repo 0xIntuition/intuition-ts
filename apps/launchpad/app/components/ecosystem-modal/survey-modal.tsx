@@ -617,30 +617,6 @@ export function EcosystemModal({
     updateStepStatus(STEPS.SIGNAL, 'current')
   }
 
-  const handleCreateClick = useCallback(() => {
-    setSteps((prev) => {
-      const createStep = STEPS_CONFIG.find((step) => step.id === STEPS.CREATE)
-      if (!prev.some((step) => step.id === STEPS.CREATE) && createStep) {
-        const topicsIndex = prev.findIndex((step) => step.id === STEPS.TOPICS)
-        return [
-          ...prev.slice(0, topicsIndex + 1),
-          createStep,
-          ...prev.slice(topicsIndex + 1),
-        ]
-      }
-      return prev
-    })
-
-    handleTransition((prev) => ({
-      ...prev,
-      currentStep: STEPS.CREATE,
-      showCreateStep: true,
-    }))
-
-    updateStepStatus(STEPS.TOPICS, 'completed')
-    updateStepStatus(STEPS.CREATE, 'current')
-  }, [handleTransition])
-
   return (
     <ClientOnly>
       {() => {
@@ -679,7 +655,6 @@ export function EcosystemModal({
                       topics={topics}
                       isLoadingList={isLoadingAtoms}
                       onToggleTopic={handleTopicSelect}
-                      onCreateClick={handleCreateClick}
                       question={question}
                       searchTerm={searchTerm}
                       setSearchTerm={setSearchTerm}

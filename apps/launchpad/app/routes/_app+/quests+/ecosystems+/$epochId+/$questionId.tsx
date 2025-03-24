@@ -20,7 +20,6 @@ import LoadingLogo from '@components/loading-logo'
 import { LoadingState } from '@components/loading-state'
 import { Navigation } from '@components/lore/chapter-navigation'
 import { PageHeader } from '@components/page-header'
-import ShareModal from '@components/share-modal'
 import { atomColumns, tripleColumns } from '@components/ui/table/columns'
 import { DataTable } from '@components/ui/table/data-table'
 import {

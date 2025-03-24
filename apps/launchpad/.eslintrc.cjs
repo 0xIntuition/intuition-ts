@@ -4,6 +4,7 @@ module.exports = {
     node: true,
     jest: true,
   },
+  ignorePatterns: ['app/lib/graphql/generated/**/*'],
   overrides: [
     {
       files: ['*.ts', '*.tsx', '*.js', '*.jsx'],

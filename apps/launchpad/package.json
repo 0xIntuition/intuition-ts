@@ -68,6 +68,17 @@
     "zod": "^3.23.4"
   },
   "devDependencies": {
+    "@0no-co/graphqlsp": "^1.12.16",
+    "@graphql-codegen/cli": "^5.0.5",
+    "@graphql-codegen/client-preset": "^4.6.4",
+    "@graphql-codegen/introspection": "^4.0.3",
+    "@graphql-codegen/plugin-helpers": "^5.1.0",
+    "@graphql-codegen/schema-ast": "^4.1.0",
+    "@graphql-codegen/typescript": "^4.1.5",
+    "@graphql-codegen/typescript-operations": "^4.5.1",
+    "@graphql-codegen/typescript-react-query": "^6.1.0",
+    "@graphql-typed-document-node/core": "^3.2.0",
+    "@parcel/watcher": "^2.5.1",
     "@remix-run/dev": "^2.15.1",
     "@types/react": "^18.2.20",
     "@types/react-dom": "^18.2.7",
@@ -81,6 +92,7 @@
     "eslint-plugin-jsx-a11y": "^6.7.1",
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-hooks": "^4.6.0",
+    "graphql": "^16.9.0",
     "postcss": "^8.4.38",
     "remix-flat-routes": "^0.6.4",
     "stream-browserify": "^3.0.0",
@@ -89,18 +101,7 @@
     "vite": "^5.1.0",
     "vite-env-only": "^2.3.0",
     "vite-plugin-node-polyfills": "^0.21.0",
-    "vite-tsconfig-paths": "^4.2.1",
-    "@0no-co/graphqlsp": "^1.12.16",
-    "@graphql-codegen/cli": "^5.0.5",
-    "@graphql-codegen/client-preset": "^4.6.4",
-    "@graphql-codegen/introspection": "^4.0.3",
-    "@graphql-codegen/plugin-helpers": "^5.1.0",
-    "@graphql-codegen/schema-ast": "^4.1.0",
-    "@graphql-codegen/typescript": "^4.1.5",
-    "@graphql-codegen/typescript-operations": "^4.5.1",
-    "@graphql-codegen/typescript-react-query": "^6.1.0",
-    "@graphql-typed-document-node/core": "^3.2.0",
-    "@parcel/watcher": "^2.5.1"
+    "vite-tsconfig-paths": "^4.2.1"
   },
   "engines": {
     "node": ">=18.0.0"

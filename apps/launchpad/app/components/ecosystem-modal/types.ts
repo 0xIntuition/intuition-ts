@@ -1,8 +1,7 @@
+import { AtomsWithTagsQuery } from '@lib/graphql'
 import { Question } from '@lib/graphql/types'
-import { AtomType, TripleType } from 'app/types'
 
 import { TransactionStateType } from '../../types/transaction'
-import { AtomsWithTagsQuery } from '@lib/graphql'
 
 export type StepId = 'topics' | 'create' | 'signal' | 'reward'
 

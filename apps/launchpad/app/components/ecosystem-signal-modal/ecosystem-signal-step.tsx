@@ -23,7 +23,7 @@ import {
   TripleType,
   VaultDetailsType,
 } from 'app/types'
-import { ArrowBigDown, ArrowBigUp, Book, List } from 'lucide-react'
+import { ArrowBigDown, ArrowBigUp, Book } from 'lucide-react'
 import { Address, decodeEventLog, formatUnits } from 'viem'
 import { usePublicClient } from 'wagmi'
 

@@ -1,7 +1,7 @@
 import { pointsClient } from '@lib/graphql/client'
 import logger from '@lib/utils/logger'
-import { gql } from 'graphql-request'
 import type { LoaderFunctionArgs } from '@remix-run/node'
+import { gql } from 'graphql-request'
 
 interface Epoch {
   id: number
@@ -23,12 +23,7 @@ interface GetEpochsResponse {
 
 const GetEpochsWithTypeQuery = gql`
   query GetEpochsWithType($type: String!) {
-    epochs(
-      order_by: { start_date: desc }
-      where: {
-        type: { _eq: $type }
-      }
-    ) {
+    epochs(order_by: { start_date: desc }, where: { type: { _eq: $type } }) {
       id
       name
       description
@@ -77,12 +72,12 @@ export async function loader({ request }: LoaderFunctionArgs) {
       // Use the query with type filter
       data = await pointsClient.request<GetEpochsResponse, { type: string }>(
         GetEpochsWithTypeQuery,
-        { type }
+        { type },
       )
     } else {
       // Use the query without type filter (NULL type epochs)
       data = await pointsClient.request<GetEpochsResponse>(
-        GetEpochsWithoutTypeQuery
+        GetEpochsWithoutTypeQuery,
       )
     }
 

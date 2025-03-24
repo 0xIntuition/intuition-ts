@@ -1,14 +1,12 @@
 import {
   Avatar,
   Badge,
-  Button,
   Input,
   ScrollArea,
   Text,
   TextVariant,
   Trunctacular,
 } from '@0xintuition/1ui'
-import { GetAtomsQuery } from '@0xintuition/graphql'
 
 import LoadingLogo from '@components/loading-logo'
 import { Question } from '@lib/graphql/types'
@@ -20,7 +18,6 @@ interface TopicsStepProps {
   topics: Topic[]
   isLoadingList: boolean
   onToggleTopic: (id: string) => void
-  onCreateClick: () => void
   question: Question
   searchTerm: string
   setSearchTerm: (term: string) => void
@@ -31,7 +28,6 @@ export function TopicsStep({
   topics,
   isLoadingList,
   onToggleTopic,
-  onCreateClick,
   question,
   searchTerm,
   setSearchTerm,
