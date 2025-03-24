@@ -1,22 +1,8 @@
 import { API_URL_DEV } from '@consts/general'
 import { GraphQLClient } from 'graphql-request'
 
-// Debug environment variables
-const debugEnv = {
-  process: typeof process !== 'undefined',
-  processEnv: process?.env,
-  importMetaEnv: import.meta?.env,
-  hasuraPointsEndpoint: process?.env?.HASURA_POINTS_ENDPOINT,
-  viteHasuraPointsEndpoint: import.meta?.env?.VITE_HASURA_POINTS_ENDPOINT,
-}
-
-console.log('Environment Debug:', debugEnv)
-
 // Safely access environment variables with fallback
-const HASURA_POINTS_ENDPOINT =
-  typeof process !== 'undefined'
-    ? process.env.HASURA_POINTS_ENDPOINT
-    : import.meta.env?.VITE_HASURA_POINTS_ENDPOINT
+const HASURA_POINTS_ENDPOINT = import.meta.env?.VITE_HASURA_POINTS_ENDPOINT || process.env?.HASURA_POINTS_ENDPOINT
 
 if (!HASURA_POINTS_ENDPOINT) {
   console.error('Environment variables not found:', {
