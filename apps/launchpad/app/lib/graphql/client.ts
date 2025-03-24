@@ -8,7 +8,13 @@ const HASURA_POINTS_ENDPOINT =
     : import.meta.env?.VITE_HASURA_POINTS_ENDPOINT
 
 if (!HASURA_POINTS_ENDPOINT) {
-  throw new Error('Points API endpoint not defined')
+  console.error('Environment variables:', {
+    processEnv: process.env?.HASURA_POINTS_ENDPOINT,
+    importMetaEnv: import.meta.env?.VITE_HASURA_POINTS_ENDPOINT,
+  })
+  throw new Error(
+    'Points API endpoint not defined. Please ensure HASURA_POINTS_ENDPOINT or VITE_HASURA_POINTS_ENDPOINT is set in your environment variables.',
+  )
 }
 
 export const pointsClient = new GraphQLClient(HASURA_POINTS_ENDPOINT)
