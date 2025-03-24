@@ -26,7 +26,7 @@ interface EpochAccordionProps {
     id: number
     name: string
     questions: Question[]
-    total_points_available: number
+    total_points: number
     start_date: string
     end_date: string
     is_active: boolean
@@ -131,14 +131,14 @@ export function EpochAccordion({
                       >
                         {epoch.progress.total_points}
                       </Text>{' '}
-                      / {epoch.total_points_available} IQ Earned
+                      / {epoch.total_points} IQ Earned
                     </Text>
                   </div>
                   <div className="h-1 bg-background rounded-full overflow-hidden">
                     <div
                       className="h-full bg-success transition-all duration-300"
                       style={{
-                        width: `${(epoch.progress.completed_count / epoch.questions.length) * 100}%`,
+                        width: `${Math.min(100, (epoch.progress.total_points / (epoch.questions.length * 2500)) * 100)}%`,
                       }}
                     />
                   </div>

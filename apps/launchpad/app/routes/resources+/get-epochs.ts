@@ -12,6 +12,7 @@ interface Epoch {
   created_at: string
   updated_at: string
   total_points_available: number
+  total_points: number
 }
 
 interface GetEpochsResponse {
@@ -30,6 +31,7 @@ const GetEpochsQuery = gql`
       created_at
       updated_at
       total_points_available
+      total_points
     }
   }
 `
