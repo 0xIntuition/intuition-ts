@@ -1,5 +1,3 @@
-import { useEffect } from 'react'
-
 import {
   Dialog,
   DialogContent,
@@ -28,7 +26,6 @@ export interface ShareModalProps {
 }
 
 function ShareModalContent({
-  open,
   title,
   listData,
   tvl,
@@ -37,28 +34,43 @@ function ShareModalContent({
 }: ShareModalProps) {
   const { copy, copied } = useCopy()
 
-  useEffect(() => {
-    if (open && typeof window !== 'undefined') {
-      copy(window.location.href)
-    }
-  }, [open])
-
   const handleManualCopy = () => {
     copy(window.location.href)
     toast.success('Link copied to clipboard!')
   }
 
+  const getOGImageUrl = (listData: ListDetailsType) => {
+    const params = new URLSearchParams()
+    params.set('id', listData.globalTriples?.[0]?.object?.id?.toString() ?? '')
+    params.set('type', 'list')
+    params.set(
+      'data',
+      JSON.stringify({
+        title: listData.globalTriples?.[0]?.object?.label,
+        holders:
+          listData.globalTriples?.[0]?.vault?.positions_aggregate?.aggregate
+            ?.count,
+        tvl: listData.globalTriples?.[0]?.vault?.positions_aggregate?.aggregate
+          ?.sum?.shares,
+        itemCount: listData.globalTriplesAggregate?.aggregate?.count,
+      }),
+    )
+    return `${window.location.origin}/resources/create-og?${params.toString()}`
+  }
+
   const handleTwitterShare = () => {
     const text = `${title}`
     const url = encodeURIComponent(window.location.href)
-    const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${url}`
+    const ogImageUrl = encodeURIComponent(getOGImageUrl(listData))
+    const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${url}&card_image=${ogImageUrl}`
     window.open(twitterUrl, '_blank')
   }
 
   const handleFarcasterShare = () => {
     const text = `${title}`
     const url = encodeURIComponent(window.location.href)
-    const farcasterUrl = `https://warpcast.com/~/compose?text=${encodeURIComponent(text)}&embeds[]=${url}`
+    const ogImageUrl = encodeURIComponent(getOGImageUrl(listData))
+    const farcasterUrl = `https://warpcast.com/~/compose?text=${encodeURIComponent(text)}&embeds[]=${url}&image=${ogImageUrl}`
     window.open(farcasterUrl, '_blank')
   }
 

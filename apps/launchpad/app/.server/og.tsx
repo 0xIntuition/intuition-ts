@@ -17,6 +17,7 @@ export async function createOGImage(
   holdersAgainst?: number | string,
   tvlFor?: number | string,
   tvlAgainst?: number | string,
+  itemCount?: string,
 ) {
   const fontData = await fontGeistMedium(requestUrl)
 
@@ -260,8 +261,11 @@ export async function createOGImage(
                 marginTop: '24px',
               }}
             >
+              <span style={{ opacity: 0.7 }}>
+                {itemCount !== undefined ? itemCount : '0'} entries
+              </span>
               <span style={{ fontWeight: 'bold' }}>
-                {holders !== undefined ? holders : '0'} entries
+                {holders !== undefined ? holders : '0'} signals
               </span>
             </div>
           )}
