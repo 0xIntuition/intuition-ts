@@ -8962,6 +8962,7 @@ export type Vaults_Variance_Fields = {
 export type AtomsWithTagsQueryVariables = Exact<{
   where?: InputMaybe<Atoms_Bool_Exp>
   limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
   orderBy?: InputMaybe<Array<Atoms_Order_By> | Atoms_Order_By>
   address?: InputMaybe<Scalars['String']['input']>
   tagPredicateIds?: InputMaybe<
@@ -18738,13 +18739,13 @@ export const VaultFieldsForTripleFragmentDoc = `
 }
     `
 export const AtomsWithTagsDocument = `
-    query AtomsWithTags($where: atoms_bool_exp, $limit: Int, $orderBy: [atoms_order_by!], $address: String, $tagPredicateIds: [numeric!], $userPositionAddress: String, $verifiedPositionAddress: String) {
+    query AtomsWithTags($where: atoms_bool_exp, $limit: Int, $offset: Int, $orderBy: [atoms_order_by!], $address: String, $tagPredicateIds: [numeric!], $userPositionAddress: String, $verifiedPositionAddress: String) {
   total: atoms_aggregate(where: $where) {
     aggregate {
       count
     }
   }
-  atoms(where: $where, order_by: $orderBy, limit: $limit) {
+  atoms(where: $where, order_by: $orderBy, limit: $limit, offset: $offset) {
     id
     vault_id
     label
@@ -30249,6 +30250,14 @@ export const AtomsWithTags = {
           kind: 'VariableDefinition',
           variable: {
             kind: 'Variable',
+            name: { kind: 'Name', value: 'offset' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
             name: { kind: 'Name', value: 'orderBy' },
           },
           type: {
@@ -30363,6 +30372,14 @@ export const AtomsWithTags = {
                 value: {
                   kind: 'Variable',
                   name: { kind: 'Name', value: 'limit' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'offset' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'offset' },
                 },
               },
             ],

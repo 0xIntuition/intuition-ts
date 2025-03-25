@@ -398,7 +398,8 @@ export default function MiniGameOne() {
       userPositionAddress: userWallet ?? '',
       verifiedPositionAddress: VERIFICATION_ADDRESS,
       orderBy,
-      limit: 1000,
+      limit: pageSize,
+      offset: pageIndex * pageSize,
     }
 
     return variables
@@ -413,7 +414,9 @@ export default function MiniGameOne() {
       queryKey: ['atoms-with-tags', queryVariables, predicateId, objectId],
     },
   )
-  const totalCount = atomsData?.atoms.length ?? 0
+
+  // Get total count from the query response
+  const totalCount = atomsData?.total?.aggregate?.count ?? 0
 
   type TableRowData = {
     id: string

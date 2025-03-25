@@ -33,9 +33,14 @@ export const tripleColumns: ColumnDef<TableItem>[] = [
     id: 'position',
     header: '',
     cell: ({ table, row }) => {
+      const pageIndex = table.getState().pagination.pageIndex
+      const pageSize = table.getState().pagination.pageSize
+      const rowIndex = table
+        .getSortedRowModel()
+        .rows.findIndex((r) => r.id === row.id)
       return (
         <div className="w-12 pl-6 text-muted-foreground">
-          {table.getSortedRowModel().rows.findIndex((r) => r.id === row.id) + 1}
+          {pageIndex * pageSize + rowIndex + 1}
         </div>
       )
     },
@@ -192,9 +197,14 @@ export const atomColumns: ColumnDef<TableItem>[] = [
     id: 'position',
     header: '',
     cell: ({ table, row }) => {
+      const pageIndex = table.getState().pagination.pageIndex
+      const pageSize = table.getState().pagination.pageSize
+      const rowIndex = table
+        .getSortedRowModel()
+        .rows.findIndex((r) => r.id === row.id)
       return (
         <div className="w-12 pl-6 text-muted-foreground">
-          {table.getSortedRowModel().rows.findIndex((r) => r.id === row.id) + 1}
+          {pageIndex * pageSize + rowIndex + 1}
         </div>
       )
     },

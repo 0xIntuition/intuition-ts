@@ -1,6 +1,7 @@
 query AtomsWithTags(
   $where: atoms_bool_exp
   $limit: Int
+  $offset: Int
   $orderBy: [atoms_order_by!]
   $address: String
   $tagPredicateIds: [numeric!]
@@ -12,7 +13,7 @@ query AtomsWithTags(
       count
     }
   }
-  atoms(where: $where, order_by: $orderBy, limit: $limit) {
+  atoms(where: $where, order_by: $orderBy, limit: $limit, offset: $offset) {
     id
     vault_id
     label
