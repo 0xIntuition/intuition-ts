@@ -126,27 +126,26 @@ export function RewardStep({
     })
 
   useEffect(() => {
-    // Handle existing completion state
-    if (existingCompletion) {
-      logger('Found existing completion:', existingCompletion)
-      setHasAwardedPoints(true)
-      setIsAwarding(false)
-      setAwardingFailed(false)
-      onExistingCompletionChange?.(true)
-      return
-    }
+    // Add logging for component mount and key props
+    logger('RewardStep mounted with props:', {
+      isOpen,
+      userWallet,
+      questionId,
+      epochId,
+      hasAwardedPoints,
+      isAwarding,
+      awardingFailed,
+      retryCount,
+      // Don't reference existingCompletion here since it's not defined yet
+    })
+  }, [])
 
-    // Only attempt to award points if we've confirmed there's no existing completion
-    if (existingCompletion === null && !isCheckingCompletion) {
-      logger('No existing completion found, proceeding with award')
-      onExistingCompletionChange?.(false)
-
-      // Reset states when modal opens/closes
-      if (!isOpen) {
-        setRewardReady(false)
-        setHasRewardAnimated(false)
-        setHasAwardedPoints(false)
-        setConfettiTriggered(false)
+  useEffect(() => {
+    try {
+      // Handle existing completion state
+      if (existingCompletion) {
+        logger('Found existing completion:', existingCompletion)
+        setHasAwardedPoints(true)
         setIsAwarding(false)
         setAwardingFailed(false)
         if (onExistingCompletionChange) {
