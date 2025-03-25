@@ -82,8 +82,7 @@ function ShareModalContent({
   const handleTwitterShare = () => {
     const text = `${title}`
     const url = encodeURIComponent(window.location.href)
-    const ogImageUrl = encodeURIComponent(getOGImageUrl(listData))
-    const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${url}&card_image=${ogImageUrl}`
+    const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${url}`
     window.open(twitterUrl, '_blank')
   }
 
