@@ -2,14 +2,38 @@ import { Resvg } from '@resvg/resvg-js'
 import type { SatoriOptions } from 'satori'
 import satori from 'satori'
 
-const fontGeistMedium = (baseUrl: string) =>
-  fetch(new URL(`${baseUrl}/fonts/Geist-Medium.otf`)).then((res) =>
-    res.arrayBuffer(),
-  )
+const fontGeistMedium = async (baseUrl: string) => {
+  try {
+    // Try to load font from the same origin as the request
+    const fontUrl = `${baseUrl}/fonts/Geist-Medium.otf`
+    const res = await fetch(fontUrl, {
+      headers: {
+        'ngrok-skip-browser-warning': '1',
+      },
+    })
+    if (!res.ok) {
+      throw new Error(`Failed to load font from ${fontUrl}`)
+    }
+    return res.arrayBuffer()
+  } catch (error) {
+    console.error('Error loading font:', error)
+    // Fallback to absolute URL if relative fails
+    const fallbackUrl = 'https://intuition.systems/fonts/Geist-Medium.otf'
+    const res = await fetch(fallbackUrl, {
+      headers: {
+        'ngrok-skip-browser-warning': '1',
+      },
+    })
+    if (!res.ok) {
+      throw new Error(`Failed to load font from fallback ${fallbackUrl}`)
+    }
+    return res.arrayBuffer()
+  }
+}
 
 export async function createOGImage(
   title: string,
-  type: 'list' | 'identity' | 'claim',
+  type: 'list' | 'identity' | 'claim' | 'question' | 'epoch' | 'epochs',
   requestUrl: string,
   holders?: string,
   tvl?: string,
@@ -266,6 +290,40 @@ export async function createOGImage(
               </span>
               <span style={{ fontWeight: 'bold' }}>
                 {holders !== undefined ? holders : '0'} signals
+              </span>
+            </div>
+          )}
+          {type === 'epoch' && (
+            <div
+              style={{
+                display: 'flex',
+                gap: '20px',
+                fontSize: '24px',
+                marginTop: '24px',
+              }}
+            >
+              <span style={{ opacity: 0.7 }}>
+                {itemCount !== undefined ? itemCount : '0'} total points
+              </span>
+              <span style={{ fontWeight: 'bold' }}>
+                {holders !== undefined ? holders : '0'} questions
+              </span>
+            </div>
+          )}
+          {type === 'epochs' && (
+            <div
+              style={{
+                display: 'flex',
+                gap: '20px',
+                fontSize: '24px',
+                marginTop: '24px',
+              }}
+            >
+              <span style={{ opacity: 0.7 }}>
+                {itemCount !== undefined ? itemCount : '0'} total points
+              </span>
+              <span style={{ fontWeight: 'bold' }}>
+                {holders !== undefined ? holders : '0'} epochs
               </span>
             </div>
           )}

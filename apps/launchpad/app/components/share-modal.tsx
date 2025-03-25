@@ -34,6 +34,46 @@ function ShareModalContent({
 }: ShareModalProps) {
   const { copy, copied } = useCopy()
 
+  const getOGImageUrl = (listData: ListDetailsType) => {
+    // Get the host and protocol from the current URL
+    const host = window.location.host
+    const protocol = window.location.protocol
+    const baseUrl = host.includes('ngrok')
+      ? `${protocol}//${host}`
+      : window.location.origin
+
+    const params = new URLSearchParams()
+    params.set('id', listData.globalTriples?.[0]?.object?.id?.toString() ?? '')
+    params.set('type', 'list')
+    params.set(
+      'data',
+      JSON.stringify({
+        title: listData.globalTriples?.[0]?.object?.label,
+        holders:
+          listData.globalTriples?.[0]?.vault?.positions_aggregate?.aggregate
+            ?.count,
+        tvl: listData.globalTriples?.[0]?.vault?.positions_aggregate?.aggregate
+          ?.sum?.shares,
+        itemCount: listData.globalTriplesAggregate?.aggregate?.count,
+        type: 'list',
+      }),
+    )
+    const url = `${baseUrl}/resources/create-og?${params.toString()}`
+    console.log('Generated OG Image URL:', url)
+    console.log('URL Parameters:', {
+      id: listData.globalTriples?.[0]?.object?.id,
+      title: listData.globalTriples?.[0]?.object?.label,
+      holders:
+        listData.globalTriples?.[0]?.vault?.positions_aggregate?.aggregate
+          ?.count,
+      tvl: listData.globalTriples?.[0]?.vault?.positions_aggregate?.aggregate
+        ?.sum?.shares,
+      itemCount: listData.globalTriplesAggregate?.aggregate?.count,
+      type: 'list',
+    })
+    return url
+  }
+
   const handleManualCopy = () => {
     copy(window.location.href)
     toast.success('Link copied to clipboard!')
@@ -97,6 +137,17 @@ function ShareModalContent({
             </div>
           </div>
         )}
+
+        <div className="px-8 mb-4">
+          <Text className="text-neutral-400 mb-2">Preview</Text>
+          <div className="w-full aspect-[1.91/1] rounded-xl overflow-hidden bg-neutral-900 relative">
+            <img
+              src={getOGImageUrl(listData)}
+              alt="Share preview"
+              className="w-full h-full object-cover"
+            />
+          </div>
+        </div>
 
         <div className="h-[200px] overflow-y-auto px-8">
           <div className="grid grid-cols-4 gap-4">

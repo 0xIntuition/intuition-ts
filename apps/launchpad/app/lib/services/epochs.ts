@@ -13,6 +13,7 @@ export interface Epoch {
   created_at: string
   updated_at: string
   order: number
+  total_points: number
 }
 
 export interface GetCurrentEpochResponse {
@@ -66,6 +67,7 @@ const GetCurrentEpochQuery = gql`
       is_active
       created_at
       updated_at
+      total_points
     }
   }
 `
@@ -137,6 +139,7 @@ const GetEpochByIdQuery = gql`
       is_active
       created_at
       updated_at
+      total_points
     }
   }
 `
