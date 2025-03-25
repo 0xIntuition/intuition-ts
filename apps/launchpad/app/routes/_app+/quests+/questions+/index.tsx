@@ -12,6 +12,7 @@ import { useGoBack } from '@lib/hooks/useGoBack'
 import type { Question } from '@lib/services/questions'
 import { atomDetailsModalAtom, onboardingModalAtom } from '@lib/state/store'
 import type { LoaderFunctionArgs, MetaFunction } from '@remix-run/node'
+import { json } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 import { getUser } from '@server/auth'
 import {
@@ -64,16 +65,56 @@ export async function loader({ request }: LoaderFunctionArgs) {
   }
   await queryClient.setQueryData(['get-epochs'], epochsData.epochs)
 
-  const { origin } = new URL(request.url)
-  const ogImageUrl = `${origin}/resources/create-og?type=questions`
+  // Ensure we use the full ngrok URL if present and normalize the URL
+  const host = request.headers.get('host') || ''
+  const protocol = request.headers.get('x-forwarded-proto') || 'http'
+  const baseUrl = host.includes('ngrok')
+    ? `${protocol}://${host}`
+    : new URL(request.url).origin
+
+  // Normalize the path to always include trailing slash
+  const url = new URL(request.url)
+  const normalizedPath = url.pathname.endsWith('/')
+    ? url.pathname
+    : `${url.pathname}/`
+
+  // Normalize base URL to not have trailing slash
+  const normalizedBaseUrl = baseUrl.endsWith('/')
+    ? baseUrl.slice(0, -1)
+    : baseUrl
+
+  const canonicalUrl = `${normalizedBaseUrl}${normalizedPath}${url.search}`
+
+  // Construct OG image URL using URLSearchParams
+  const ogImageParams = new URLSearchParams()
+  ogImageParams.set('type', 'epochs')
+  ogImageParams.set(
+    'data',
+    JSON.stringify({
+      title: 'Bootstrap your Intuition',
+      description:
+        'Answer questions and earn IQ points across different epochs',
+      type: 'epochs',
+      holders: epochsData.epochs.length,
+      itemCount: epochsData.epochs.reduce(
+        (acc: number, epoch: Epoch) => acc + (epoch.total_points || 0),
+        0,
+      ),
+      totalEpochs: epochsData.epochs.length,
+    }),
+  )
+
+  // For OG image URL, use the non-trailing-slash version of the path
+  const ogImageUrl = `${normalizedBaseUrl}/resources/create-og?${ogImageParams.toString()}`
 
   markTiming('Total loader execution', loaderStart)
 
-  return {
+  return json({
     dehydratedState: dehydrate(queryClient),
     userWallet,
     ogImageUrl,
-  }
+    canonicalUrl,
+  })
 }
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
@@ -81,7 +122,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
     return []
   }
 
-  const { ogImageUrl } = data
+  const { ogImageUrl, canonicalUrl } = data
 
   return [
     {
@@ -91,23 +132,59 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
       name: 'description',
       content: 'Answer questions and earn IQ points across different epochs.',
     },
+    // Canonical URL
+    {
+      tagName: 'link',
+      rel: 'canonical',
+      href: canonicalUrl,
+    },
+    // Open Graph tags
+    {
+      property: 'og:url',
+      content: canonicalUrl,
+    },
     {
       property: 'og:title',
       content: 'Questions | Intuition Launchpad',
     },
     {
+      property: 'og:description',
+      content: 'Answer questions and earn IQ points across different epochs.',
+    },
+    {
       property: 'og:image',
       content: ogImageUrl,
     },
+    {
+      property: 'og:image:width',
+      content: '1200',
+    },
+    {
+      property: 'og:image:height',
+      content: '630',
+    },
+    {
+      property: 'og:type',
+      content: 'website',
+    },
     { property: 'og:site_name', content: 'Intuition Launchpad' },
     { property: 'og:locale', content: 'en_US' },
+    // Twitter specific tags
+    {
+      name: 'twitter:card',
+      content: 'summary_large_image',
+    },
+    {
+      name: 'twitter:domain',
+      content: 'intuition.systems',
+    },
     {
       name: 'twitter:image',
       content: ogImageUrl,
     },
     {
-      name: 'twitter:card',
-      content: 'summary_large_image',
+      name: 'twitter:image:alt',
+      content: 'Questions page for Intuition Launchpad',
     },
     {
       name: 'twitter:title',
@@ -118,6 +195,11 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
       content: 'Answer questions and earn IQ points across different epochs.',
     },
     { name: 'twitter:site', content: '@0xIntuition' },
+    { name: 'twitter:creator', content: '@0xIntuition' },
+    // Security headers
+    { 'ngrok-skip-browser-warning': '1' },
+    { 'x-frame-options': 'SAMEORIGIN' },
+    { 'x-content-type-options': 'nosniff' },
   ]
 }
 

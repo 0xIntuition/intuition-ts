@@ -11,10 +11,16 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     const { origin, searchParams } = new URL(request.url)
 
     const id = searchParams.get('id')
-    const type = searchParams.get('type') as 'list' | 'identity' | 'claim'
+    const type = searchParams.get('type') as
+      | 'list'
+      | 'identity'
+      | 'claim'
+      | 'question'
+      | 'epoch'
+      | 'epochs'
     const data = searchParams.get('data')
 
-    if (!id || !type || !data) {
+    if (!type || !data) {
       throw new Response('Missing required parameters', { status: 400 })
     }
 
@@ -29,19 +35,19 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       tvlAgainst,
       itemCount
 
-    if (type === 'list') {
-      try {
-        const parsedData = JSON.parse(data)
-        title = parsedData.title
-        holders = parsedData.holders
-        tvl = +formatBalance(BigInt(parsedData.tvl ?? 0), 18)
-        itemCount = parsedData?.itemCount
+    try {
+      const parsedData = JSON.parse(data)
+      title = parsedData.title
+      holders = parsedData.holders
+      tvl = parsedData.tvl
+        ? +formatBalance(BigInt(parsedData.tvl), 18)
+        : undefined
+      itemCount = parsedData?.itemCount
 
-        console.log('Processed data:', { title, holders, tvl, itemCount })
-      } catch (e) {
-        console.error('Error parsing list data:', e)
-        throw new Response('Invalid list data', { status: 400 })
-      }
+      console.log('Processed data:', { title, holders, tvl, itemCount })
+    } catch (e) {
+      console.error('Error parsing data:', e)
+      throw new Response('Invalid data', { status: 400 })
     }
 
     console.log('Generating OG image with:', { title, type, holders, tvl })
@@ -62,6 +68,8 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       status: 200,
       headers: {
         'Content-Type': 'image/png',
+        'Cache-Control': 'public, max-age=31536000',
+        'ngrok-skip-browser-warning': '1',
       },
     })
   } catch (error) {

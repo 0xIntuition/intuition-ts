@@ -48,6 +48,7 @@ import {
 } from '@lib/state/store'
 import { usePrivy } from '@privy-io/react-auth'
 import type { LoaderFunctionArgs, MetaFunction } from '@remix-run/node'
+import { json } from '@remix-run/node'
 import {
   useLoaderData,
   useLocation,
@@ -119,20 +120,48 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     throw new Error('Failed to fetch question data')
   }
 
-  const { origin } = new URL(request.url)
-  const ogImageUrl = `${origin}/resources/create-og?id=${questionData.object_id}&type=list`
+  // Ensure we use the full ngrok URL if present and normalize the URL
+  const host = request.headers.get('host') || ''
+  const protocol = request.headers.get('x-forwarded-proto') || 'http'
+  const baseUrl = host.includes('ngrok')
+    ? `${protocol}://${host}`
+    : new URL(request.url).origin
 
-  return {
+  // Normalize the path to always include trailing slash
+  const url = new URL(request.url)
+  const normalizedPath = url.pathname.endsWith('/')
+    ? url.pathname
+    : `${url.pathname}/`
+  const canonicalUrl = `${baseUrl}${normalizedPath}${url.search}`
+
+  // Construct OG image URL using URLSearchParams
+  const ogImageParams = new URLSearchParams()
+  ogImageParams.set('type', 'question')
+  ogImageParams.set(
+    'data',
+    JSON.stringify({
+      title: questionData.title,
+      description: questionData.description,
+      points: questionData.point_award_amount,
+      epoch: epoch?.order,
+      question: questionData?.order,
+      type: 'question',
+    }),
+  )
+  const ogImageUrl = `${baseUrl}/resources/create-og?${ogImageParams.toString()}`
+
+  return json({
     dehydratedState: dehydrate(queryClient),
     userWallet,
     ogImageUrl,
+    canonicalUrl,
     questionTitle: questionData?.title,
     questionData,
     prevQuestion,
     nextQuestion,
     epoch,
     multiVaultConfig,
-  }
+  })
 }
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
@@ -140,7 +169,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
     return []
   }
 
-  const { ogImageUrl, questionTitle } = data
+  const { ogImageUrl, canonicalUrl, questionTitle } = data
   const title = questionTitle ?? 'Error | Intuition Launchpad'
 
   return [
@@ -151,23 +180,59 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
       name: 'description',
       content: `Intuition is an ecosystem of technologies composing a universal and permissionless knowledge graph, capable of handling both objective facts and subjective opinions - delivering superior data for intelligences across the spectrum, from human to artificial.`,
     },
+    // Canonical URL
     {
-      property: 'og-title',
-      name: title,
+      tagName: 'link',
+      rel: 'canonical',
+      href: canonicalUrl,
+    },
+    // Open Graph tags
+    {
+      property: 'og:url',
+      content: canonicalUrl,
+    },
+    {
+      property: 'og:title',
+      content: title,
+    },
+    {
+      property: 'og:description',
+      content: 'Bringing trust to trustless systems.',
     },
     {
       property: 'og:image',
       content: ogImageUrl,
     },
+    {
+      property: 'og:image:width',
+      content: '1200',
+    },
+    {
+      property: 'og:image:height',
+      content: '630',
+    },
+    {
+      property: 'og:type',
+      content: 'website',
+    },
     { property: 'og:site_name', content: 'Intuition Launchpad' },
     { property: 'og:locale', content: 'en_US' },
+    // Twitter specific tags
+    {
+      name: 'twitter:card',
+      content: 'summary_large_image',
+    },
+    {
+      name: 'twitter:domain',
+      content: 'intuition.systems',
+    },
     {
       name: 'twitter:image',
       content: ogImageUrl,
     },
     {
-      name: 'twitter:card',
-      content: 'summary_large_image',
+      name: 'twitter:image:alt',
+      content: `Question page for ${title}`,
     },
     {
       name: 'twitter:title',
@@ -178,6 +243,11 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
       content: 'Bringing trust to trustless systems.',
     },
     { name: 'twitter:site', content: '@0xIntuition' },
+    { name: 'twitter:creator', content: '@0xIntuition' },
+    // Security headers
+    { 'ngrok-skip-browser-warning': '1' },
+    { 'x-frame-options': 'SAMEORIGIN' },
+    { 'x-content-type-options': 'nosniff' },
   ]
 }
 

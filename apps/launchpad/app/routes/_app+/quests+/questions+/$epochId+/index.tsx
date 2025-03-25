@@ -75,14 +75,51 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
       )
     }
 
-    const { origin } = new URL(request.url)
-    const ogImageUrl = `${origin}/resources/create-og?type=questions&epochId=${epochId}`
+    // Ensure we use the full ngrok URL if present and normalize the URL
+    const host = request.headers.get('host') || ''
+    const protocol = request.headers.get('x-forwarded-proto') || 'http'
+    const baseUrl = host.includes('ngrok')
+      ? `${protocol}://${host}`
+      : new URL(request.url).origin
+
+    // Normalize the path to always include trailing slash
+    const url = new URL(request.url)
+    const normalizedPath = url.pathname.endsWith('/')
+      ? url.pathname
+      : `${url.pathname}/`
+
+    // Normalize base URL to not have trailing slash
+    const normalizedBaseUrl = baseUrl.endsWith('/')
+      ? baseUrl.slice(0, -1)
+      : baseUrl
+
+    const canonicalUrl = `${normalizedBaseUrl}${normalizedPath}${url.search}`
+
+    // Construct OG image URL using URLSearchParams
+    const ogImageParams = new URLSearchParams()
+    ogImageParams.set('type', 'epoch')
+    ogImageParams.set(
+      'data',
+      JSON.stringify({
+        title: `${epochData.epoch.name} Questions`,
+        description: `Answer questions and earn IQ points in ${epochData.epoch.name}`,
+        type: 'epoch',
+        holders: questionsData.epoch_questions.length,
+        itemCount: epochData.epoch.total_points,
+        epoch: epochData.epoch.order,
+      }),
+    )
+    // Ensure OG image URL uses normalized base URL and has no trailing slash before the query params
+    const ogImagePath = '/resources/create-og'
+    const ogImageUrl = `${normalizedBaseUrl}${ogImagePath}?${ogImageParams.toString()}`
 
     return json({
       dehydratedState: dehydrate(queryClient),
       userWallet,
       ogImageUrl,
+      canonicalUrl,
       epochId,
+      epochName: epochData.epoch.name,
     })
   } catch (error) {
     logger('Error in epoch questions loader:', error)
@@ -95,43 +132,84 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
     return []
   }
 
-  const { ogImageUrl } = data
+  const { ogImageUrl, canonicalUrl, epochName } = data
 
   return [
     {
-      title: `Epoch Questions | Intuition Launchpad`,
+      title: `${epochName} Questions | Intuition Launchpad`,
     },
     {
       name: 'description',
-      content: 'Answer questions and earn IQ points in this epoch.',
+      content: `Answer questions and earn IQ points in ${epochName}.`,
+    },
+    // Canonical URL
+    {
+      tagName: 'link',
+      rel: 'canonical',
+      href: canonicalUrl,
+    },
+    // Open Graph tags
+    {
+      property: 'og:url',
+      content: canonicalUrl,
     },
     {
       property: 'og:title',
-      content: 'Epoch Questions | Intuition Launchpad',
+      content: `${epochName} Questions | Intuition Launchpad`,
+    },
+    {
+      property: 'og:description',
+      content: `Answer questions and earn IQ points in ${epochName}.`,
     },
     {
       property: 'og:image',
       content: ogImageUrl,
     },
+    {
+      property: 'og:image:width',
+      content: '1200',
+    },
+    {
+      property: 'og:image:height',
+      content: '630',
+    },
+    {
+      property: 'og:type',
+      content: 'website',
+    },
     { property: 'og:site_name', content: 'Intuition Launchpad' },
     { property: 'og:locale', content: 'en_US' },
-    {
-      name: 'twitter:image',
-      content: ogImageUrl,
-    },
+    // Twitter specific tags
     {
       name: 'twitter:card',
       content: 'summary_large_image',
     },
     {
+      name: 'twitter:domain',
+      content: 'intuition.systems',
+    },
+    {
+      name: 'twitter:image',
+      content: ogImageUrl,
+    },
+    {
+      name: 'twitter:image:alt',
+      content: `${epochName} Questions page for Intuition Launchpad`,
+    },
+    {
       name: 'twitter:title',
-      content: 'Epoch Questions | Intuition Launchpad',
+      content: `${epochName} Questions | Intuition Launchpad`,
     },
     {
       name: 'twitter:description',
-      content: 'Answer questions and earn IQ points in this epoch.',
+      content: `Answer questions and earn IQ points in ${epochName}.`,
     },
     { name: 'twitter:site', content: '@0xIntuition' },
+    { name: 'twitter:creator', content: '@0xIntuition' },
+    // Security headers
+    { 'ngrok-skip-browser-warning': '1' },
+    { 'x-frame-options': 'SAMEORIGIN' },
+    { 'x-content-type-options': 'nosniff' },
   ]
 }
 
