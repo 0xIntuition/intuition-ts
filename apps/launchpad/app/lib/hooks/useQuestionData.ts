@@ -47,7 +47,7 @@ export function useQuestionData({ questionId }: UseQuestionDataProps) {
         throw error
       }
     },
-    enabled: !!currentEpoch,
+    enabled: true,
   })
 
   const { data: completionData, isLoading: isLoadingCompletion } = useQuery({
