@@ -81,8 +81,10 @@ export default function SignalCell({
         <SignalButton
           variant={positionDirection}
           numPositions={Math.abs(initialTicks)}
-          direction={positionDirection}
-          positionDirection={positionDirection}
+          direction={!triple && initialTicks > 0 ? 'for' : positionDirection}
+          positionDirection={
+            !triple && initialTicks > 0 ? 'for' : positionDirection
+          }
           disabled={!userWallet || stakingDisabled}
           onClick={() => handleSignal('deposit')}
         />
@@ -107,15 +109,6 @@ export default function SignalCell({
           isSimplifiedRedeem={signalMode === 'redeem'}
         />
       )}
-      {/* <SignalModal
-        isOpen={isSignalModalOpen}
-        onClose={handleClose}
-        vaultId={vaultId}
-        atom={atom}
-        triple={triple}
-        initialTicks={initialTicks}
-        isSimplifiedRedeem={signalMode === 'redeem'}
-      /> */}
     </>
   )
 }
