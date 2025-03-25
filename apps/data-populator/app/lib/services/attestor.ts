@@ -5,7 +5,7 @@ import {
   attestorContractsMap,
   multivaultContractsMap,
 } from '@lib/utils/chains'
-import { encodePacked, Hex, keccak256, toBytes, toHex } from 'viem'
+import { encodePacked, Hex, keccak256, stringToBytes, toHex } from 'viem'
 import { base, baseSepolia } from 'viem/chains'
 
 import { callAndConfirm, EVMCallRequest, evmRead } from './evm'
@@ -131,7 +131,7 @@ function createTripleRequest(
 
 function hashURI(uri: string): string {
   try {
-    return keccak256(toBytes(uri))
+    return keccak256(stringToBytes(uri))
   } catch (error) {
     console.error('Error hashing URI:', error)
   }
