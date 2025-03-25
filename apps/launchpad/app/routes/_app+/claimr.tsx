@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { LoadingState } from '@components/loading-state'
+import { usePrivy } from '@privy-io/react-auth'
 import { nanoid } from 'nanoid'
 import type { Abi, Address } from 'viem'
-import { useAccount, useSignMessage } from 'wagmi'
+import { useSignMessage } from 'wagmi'
 
 const SCRIPT_ID = 'claimr-script'
 const CONTAINER_ID = 'CLAIMR_CONTAINER'
@@ -63,8 +64,8 @@ function getStoredSignature(
 
 export default function ClaimrRoute() {
   const containerRef = useRef<HTMLDivElement>(null)
-  const { address } = useAccount()
   const { signMessageAsync } = useSignMessage()
+  const { authenticated, user } = usePrivy()
   const initialized = useRef(false)
   const [isLoading, setIsLoading] = useState(true)
   const [signError, setSignError] = useState<Error | null>(null)
@@ -117,16 +118,24 @@ export default function ClaimrRoute() {
 
   // Handle wallet connection and signing
   useEffect(() => {
-    if (!address || !window.claimr) {
+    if (!authenticated || !user?.wallet?.address || !window.claimr) {
       return
     }
 
     const connectWallet = async () => {
       try {
+        // Double check these still exist since this is async
+        if (!user?.wallet?.address || !window.claimr) {
+          return
+        }
+
+        const address = user.wallet.address
         const storedData = getStoredSignature(address)
+
         if (!storedData && window.claimr) {
           const message = getSignMessage('https://launchpad.intuition.systems')
           const signature = await signMessageAsync({ message })
+
           // Save both signature and message
           try {
             const signatures = JSON.parse(
@@ -137,10 +146,10 @@ export default function ClaimrRoute() {
           } catch (err) {
             console.error('Failed to save signature:', err)
           }
+
           window.claimr.connect_wallet(address, signature, message)
           window.claimr.set_user_token(`${address}:web3`)
         } else if (storedData && window.claimr) {
-          // Use the stored message that was originally signed
           window.claimr.connect_wallet(
             address,
             storedData.signature,
@@ -163,7 +172,7 @@ export default function ClaimrRoute() {
         window.claimr.logout()
       }
     }
-  }, [address, signMessageAsync])
+  }, [authenticated, user?.wallet?.address, signMessageAsync])
 
   // Initialize script once
   useEffect(() => {
@@ -209,12 +218,22 @@ export default function ClaimrRoute() {
   return (
     <div className="flex w-full flex-col items-center justify-start">
       <div className="w-full max-w-4xl">
-        {isLoading && <LoadingState />}
-        <div
-          ref={containerRef}
-          id={CONTAINER_ID}
-          className={isLoading ? 'hidden' : 'block'}
-        />
+        {!authenticated || !user?.wallet?.address ? (
+          <div className="flex w-full flex-col items-center justify-center p-8">
+            <div className="text-lg font-medium">
+              Connect your wallet to continue
+            </div>
+          </div>
+        ) : (
+          <>
+            {isLoading && <LoadingState />}
+            <div
+              ref={containerRef}
+              id={CONTAINER_ID}
+              className={isLoading ? 'hidden' : 'block'}
+            />
+          </>
+        )}
       </div>
     </div>
   )

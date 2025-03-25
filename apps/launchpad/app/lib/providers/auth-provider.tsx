@@ -40,15 +40,6 @@ function getSignMessage(domain: string) {
 
 const SIGNATURE_KEY = 'launchpad_signatures'
 
-function hasSignedMessage(address: string): boolean {
-  try {
-    const signatures = JSON.parse(localStorage.getItem(SIGNATURE_KEY) || '{}')
-    return !!signatures[address.toLowerCase()]?.signature
-  } catch {
-    return false
-  }
-}
-
 function saveSignature(address: string, signature: string, message: string) {
   try {
     const signatures = JSON.parse(localStorage.getItem(SIGNATURE_KEY) || '{}')
@@ -56,6 +47,17 @@ function saveSignature(address: string, signature: string, message: string) {
     localStorage.setItem(SIGNATURE_KEY, JSON.stringify(signatures))
   } catch (err) {
     console.error('Failed to save signature:', err)
+  }
+}
+
+// Clear Claimr signature
+function clearStoredSignature(address: string) {
+  try {
+    const signatures = JSON.parse(localStorage.getItem(SIGNATURE_KEY) || '{}')
+    delete signatures[address.toLowerCase()]
+    localStorage.setItem(SIGNATURE_KEY, JSON.stringify(signatures))
+  } catch (err) {
+    console.error('Failed to clear signature:', err)
   }
 }
 
@@ -104,6 +106,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     // Handle disconnects
     if (!authenticated && privyReady) {
+      // Clear Claimr signature if there was a wallet connected
+      if (user?.wallet?.address) {
+        clearStoredSignature(user.wallet.address)
+      }
       queryClient.clear()
       setIsLoading(false)
     }
@@ -136,7 +142,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         // Get the provider for the connected wallet
         const provider = await connectedWallet.getEthereumProvider()
 
-        // Request signature using the provider
+        // Always request a new Claimr signature when connecting
         const message = getSignMessage('https://launchpad.intuition.systems')
         const signature = await provider.request({
           method: 'personal_sign',
@@ -166,6 +172,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const { logout } = useLogout({
     onSuccess: () => {
+      // Clear Claimr signature if there was a wallet connected
+      if (user?.wallet?.address) {
+        clearStoredSignature(user.wallet.address)
+      }
       setIsLoading(false)
       toast.warning('Wallet Disconnected')
       revalidator.revalidate()
