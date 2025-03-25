@@ -8961,6 +8961,7 @@ export type Vaults_Variance_Fields = {
 
 export type AtomsWithTagsQueryVariables = Exact<{
   where?: InputMaybe<Atoms_Bool_Exp>
+  limit?: InputMaybe<Scalars['Int']['input']>
   orderBy?: InputMaybe<Array<Atoms_Order_By> | Atoms_Order_By>
   address?: InputMaybe<Scalars['String']['input']>
   tagPredicateIds?: InputMaybe<
@@ -8972,6 +8973,10 @@ export type AtomsWithTagsQueryVariables = Exact<{
 
 export type AtomsWithTagsQuery = {
   __typename?: 'query_root'
+  total: {
+    __typename?: 'atoms_aggregate'
+    aggregate?: { __typename?: 'atoms_aggregate_fields'; count: number } | null
+  }
   atoms: Array<{
     __typename?: 'atoms'
     id: any
@@ -18733,8 +18738,13 @@ export const VaultFieldsForTripleFragmentDoc = `
 }
     `
 export const AtomsWithTagsDocument = `
-    query AtomsWithTags($where: atoms_bool_exp, $orderBy: [atoms_order_by!], $address: String, $tagPredicateIds: [numeric!], $userPositionAddress: String, $verifiedPositionAddress: String) {
-  atoms(where: $where, order_by: $orderBy) {
+    query AtomsWithTags($where: atoms_bool_exp, $limit: Int, $orderBy: [atoms_order_by!], $address: String, $tagPredicateIds: [numeric!], $userPositionAddress: String, $verifiedPositionAddress: String) {
+  total: atoms_aggregate(where: $where) {
+    aggregate {
+      count
+    }
+  }
+  atoms(where: $where, order_by: $orderBy, limit: $limit) {
     id
     vault_id
     label
@@ -30231,6 +30241,14 @@ export const AtomsWithTags = {
           kind: 'VariableDefinition',
           variable: {
             kind: 'Variable',
+            name: { kind: 'Name', value: 'limit' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
             name: { kind: 'Name', value: 'orderBy' },
           },
           type: {
@@ -30291,6 +30309,36 @@ export const AtomsWithTags = {
         selections: [
           {
             kind: 'Field',
+            alias: { kind: 'Name', value: 'total' },
+            name: { kind: 'Name', value: 'atoms_aggregate' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'where' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'aggregate' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'count' } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
             name: { kind: 'Name', value: 'atoms' },
             arguments: [
               {
@@ -30307,6 +30355,14 @@ export const AtomsWithTags = {
                 value: {
                   kind: 'Variable',
                   name: { kind: 'Name', value: 'orderBy' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'limit' },
                 },
               },
             ],

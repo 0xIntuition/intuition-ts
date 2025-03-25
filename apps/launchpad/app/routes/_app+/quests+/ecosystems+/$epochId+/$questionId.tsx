@@ -398,6 +398,7 @@ export default function MiniGameOne() {
       userPositionAddress: userWallet ?? '',
       verifiedPositionAddress: VERIFICATION_ADDRESS,
       orderBy,
+      limit: 1000,
     }
 
     return variables

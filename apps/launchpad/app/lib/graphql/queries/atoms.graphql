@@ -1,12 +1,18 @@
 query AtomsWithTags(
   $where: atoms_bool_exp
+  $limit: Int
   $orderBy: [atoms_order_by!]
   $address: String
   $tagPredicateIds: [numeric!]
   $userPositionAddress: String
   $verifiedPositionAddress: String
 ) {
-  atoms(where: $where, order_by: $orderBy) {
+  total: atoms_aggregate(where: $where) {
+    aggregate {
+      count
+    }
+  }
+  atoms(where: $where, order_by: $orderBy, limit: $limit) {
     id
     vault_id
     label

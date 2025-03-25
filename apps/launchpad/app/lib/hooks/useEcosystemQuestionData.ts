@@ -73,6 +73,7 @@ export function useEcosystemQuestionData({ questionId }: UseQuestionDataProps) {
   const tagObjectId = questionData?.tag_object_id
   const { data: atomsData, isLoading: isLoadingAtoms } = useAtomsWithTagsQuery(
     {
+      limit: 1000,
       where: {
         _and: [
           {
@@ -116,6 +117,7 @@ export function useEcosystemQuestionData({ questionId }: UseQuestionDataProps) {
         sum + Number(atom.vault?.positions_aggregate?.aggregate?.count ?? 0),
       0,
     ) ?? 0
+  console.log('useEcosystemQuestionData - count', atomsData?.atoms?.length)
 
   return {
     title: questionData?.title ?? 'Question',
@@ -129,7 +131,7 @@ export function useEcosystemQuestionData({ questionId }: UseQuestionDataProps) {
     epochId: questionData?.epoch_id,
     currentEpoch,
     atomsData,
-    atoms: atomsData?.atoms?.length ?? 0,
+    atoms: atomsData?.total.aggregate?.count ?? 0,
     totalUsers,
     predicateId: questionData?.predicate_id,
     objectId: questionData?.object_id,

@@ -189,6 +189,7 @@ export function EcosystemModal({
             : {},
         ],
       },
+      limit: 500,
       tagPredicateIds: [predicateId], // dev - has tag predicate ID
       orderBy: { vault: { total_shares: 'desc' } },
       userPositionAddress: userWallet,
