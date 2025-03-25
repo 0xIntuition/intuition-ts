@@ -79,10 +79,30 @@ function ShareModalContent({
     toast.success('Link copied to clipboard!')
   }
 
+  const getOGImageUrl = (listData: ListDetailsType) => {
+    const params = new URLSearchParams()
+    params.set('id', listData.globalTriples?.[0]?.object?.id?.toString() ?? '')
+    params.set('type', 'list')
+    params.set(
+      'data',
+      JSON.stringify({
+        title: listData.globalTriples?.[0]?.object?.label,
+        holders:
+          listData.globalTriples?.[0]?.vault?.positions_aggregate?.aggregate
+            ?.count,
+        tvl: listData.globalTriples?.[0]?.vault?.positions_aggregate?.aggregate
+          ?.sum?.shares,
+        itemCount: listData.globalTriplesAggregate?.aggregate?.count,
+      }),
+    )
+    return `${window.location.origin}/resources/create-og?${params.toString()}`
+  }
+
   const handleTwitterShare = () => {
     const text = `${title}`
     const url = encodeURIComponent(window.location.href)
-    const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${url}`
+    const ogImageUrl = encodeURIComponent(getOGImageUrl(listData))
+    const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${url}&card_image=${ogImageUrl}`
     window.open(twitterUrl, '_blank')
   }
 
