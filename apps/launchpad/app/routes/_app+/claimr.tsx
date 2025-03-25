@@ -1,11 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { LoadingState } from '@components/loading-state'
+import { nanoid } from 'nanoid'
 import type { Abi, Address } from 'viem'
-import { useAccount } from 'wagmi'
+import { useAccount, useSignMessage } from 'wagmi'
 
 const SCRIPT_ID = 'claimr-script'
 const CONTAINER_ID = 'CLAIMR_CONTAINER'
+const SIGNATURE_KEY = 'launchpad_signatures'
 
 interface ClaimrRequest {
   type: string
@@ -35,11 +37,37 @@ declare global {
   }
 }
 
+function getSignMessage(domain: string) {
+  const params = new URLSearchParams(window.location.search)
+  let fullMessage = `claimr ⚡ Intuition Launchpad\n\n`
+  fullMessage += `URI:\n${domain}\n\n`
+  if (params.get('ref_id')) {
+    fullMessage += `Referral ID:\n${params.get('ref_id')}\n\n`
+  }
+  fullMessage += `Nonce:\n${nanoid(16)}\n\n`
+  fullMessage += `Issued At:\n${new Date().toISOString()}`
+  return fullMessage
+}
+
+function getStoredSignature(
+  address: string,
+): { signature: string; message: string } | null {
+  try {
+    const signatures = JSON.parse(localStorage.getItem(SIGNATURE_KEY) || '{}')
+    const data = signatures[address.toLowerCase()]
+    return data ? { signature: data.signature, message: data.message } : null
+  } catch {
+    return null
+  }
+}
+
 export default function ClaimrRoute() {
   const containerRef = useRef<HTMLDivElement>(null)
   const { address } = useAccount()
+  const { signMessageAsync } = useSignMessage()
   const initialized = useRef(false)
   const [isLoading, setIsLoading] = useState(true)
+  const [signError, setSignError] = useState<Error | null>(null)
 
   const handleScriptCreation = useCallback(() => {
     // Prevent multiple initializations
@@ -87,20 +115,55 @@ export default function ClaimrRoute() {
     }
   }, [])
 
-  // Handle wallet connection changes
+  // Handle wallet connection and signing
   useEffect(() => {
     if (!address || !window.claimr) {
       return
     }
 
-    window.claimr.set_user_token(`${address}:web3`)
+    const connectWallet = async () => {
+      try {
+        const storedData = getStoredSignature(address)
+        if (!storedData && window.claimr) {
+          const message = getSignMessage('https://launchpad.intuition.systems')
+          const signature = await signMessageAsync({ message })
+          // Save both signature and message
+          try {
+            const signatures = JSON.parse(
+              localStorage.getItem(SIGNATURE_KEY) || '{}',
+            )
+            signatures[address.toLowerCase()] = { signature, message }
+            localStorage.setItem(SIGNATURE_KEY, JSON.stringify(signatures))
+          } catch (err) {
+            console.error('Failed to save signature:', err)
+          }
+          window.claimr.connect_wallet(address, signature, message)
+          window.claimr.set_user_token(`${address}:web3`)
+        } else if (storedData && window.claimr) {
+          // Use the stored message that was originally signed
+          window.claimr.connect_wallet(
+            address,
+            storedData.signature,
+            storedData.message,
+          )
+          window.claimr.set_user_token(`${address}:web3`)
+        }
+      } catch (err) {
+        console.error('Failed to sign message:', err)
+        setSignError(
+          err instanceof Error ? err : new Error('Failed to sign message'),
+        )
+      }
+    }
+
+    connectWallet()
 
     return () => {
       if (window.claimr) {
         window.claimr.logout()
       }
     }
-  }, [address])
+  }, [address, signMessageAsync])
 
   // Initialize script once
   useEffect(() => {
@@ -125,6 +188,23 @@ export default function ClaimrRoute() {
       setIsLoading(false)
     }
   }, [handleScriptCreation])
+
+  // Handle sign error display
+  if (signError) {
+    return (
+      <div className="flex w-full flex-col items-center justify-start">
+        <div className="w-full max-w-4xl rounded-lg border border-red-500 bg-red-100 p-4 text-red-700">
+          <p>Failed to sign message: {signError.message}</p>
+          <button
+            onClick={() => setSignError(null)}
+            className="mt-2 rounded bg-red-500 px-4 py-2 text-white hover:bg-red-600"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="flex w-full flex-col items-center justify-start">
