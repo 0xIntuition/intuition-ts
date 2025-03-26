@@ -22,8 +22,8 @@ import { Product } from '@components/svg/product'
 import {
   CAP_TABLE,
   CONTACT_US,
-  DEMO_VIDEOS,
   DOCS,
+  ECOSYSTEM,
   EXECUTIVE_SUMMARY,
   FINANCIAL_MODEL,
   GROWTH_STRATEGY,
@@ -268,8 +268,8 @@ export default function Desktop() {
                   <SunburstCard label="Podcasts" size="sm" />
                 </a>
 
-                <a href={DEMO_VIDEOS} target="_blank" rel="noreferrer">
-                  <SunburstCard label="Demo Video" size="sm" />
+                <a href={ECOSYSTEM} target="_blank" rel="noreferrer">
+                  <SunburstCard label="Ecosystem" size="sm" />
                 </a>
               </div>
             </div>

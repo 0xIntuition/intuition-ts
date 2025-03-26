@@ -17,8 +17,8 @@ import { ScrollIcon } from '@components/svg/scroll-icon'
 import {
   CAP_TABLE,
   CONTACT_US,
-  DEMO_VIDEOS,
   DOCS,
+  ECOSYSTEM,
   EXECUTIVE_SUMMARY,
   FINANCIAL_MODEL,
   GROWTH_STRATEGY,
@@ -120,8 +120,8 @@ export default function Mobile() {
               </a>
             </div>
             <div className="flex justify-center">
-              <a href={DEMO_VIDEOS} target="_blank" rel="noreferrer">
-                <SunburstCard label="Demo Video" size="x-sm" disableScale />
+              <a href={ECOSYSTEM} target="_blank" rel="noreferrer">
+                <SunburstCard label="Ecosystem" size="x-sm" disableScale />
               </a>
             </div>
           </div>
