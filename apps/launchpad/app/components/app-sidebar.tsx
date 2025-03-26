@@ -24,6 +24,7 @@ import {
 import { AccountButton } from '@components/account-button'
 import LoadingButton from '@components/loading-button'
 import LoadingLogo from '@components/loading-logo'
+import { ShimmerButton } from '@components/ui/shimmer-button'
 import { usePrivy } from '@privy-io/react-auth'
 import { Link, useLocation } from '@remix-run/react'
 import { BookOpenText, BrainCircuit } from 'lucide-react'
@@ -142,6 +143,18 @@ export function AppSidebar({
       iconName: 'file-text',
       label: 'Learn More',
       href: 'https://docs.intuition.systems',
+      isExternal: true,
+    },
+    {
+      iconName: 'file-text',
+      label: 'Terms of Service',
+      href: 'https://launchpad.intuition.systems/terms',
+      isExternal: true,
+    },
+    {
+      iconName: 'file-text',
+      label: 'Privacy Policy',
+      href: 'https://launchpad.intuition.systems/privacy',
       isExternal: true,
     },
     {
@@ -339,6 +352,13 @@ export function AppSidebar({
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
+              <SidebarMenuItem key={'base-week'} className="mt-5">
+                <Link to="/quests/ecosystems">
+                  <ShimmerButton className="w-full font-mono text-base">
+                    Base Epoch
+                  </ShimmerButton>
+                </Link>
+              </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

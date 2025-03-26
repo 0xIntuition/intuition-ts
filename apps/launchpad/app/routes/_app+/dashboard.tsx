@@ -9,6 +9,7 @@ import {
 import { AggregateIQ } from '@components/aggregate-iq'
 import { AuthCover } from '@components/auth-cover'
 import ChapterProgress from '@components/chapter-progress'
+import { DashboardBanner } from '@components/dashboard-banner'
 import { EarnSection } from '@components/earn-section'
 import { ErrorPage } from '@components/error-page'
 import { LoadingState } from '@components/loading-state'
@@ -129,6 +130,9 @@ export default function Dashboard() {
 
   return (
     <div className="flex flex-col gap-4">
+      <div className="pb-5">
+        <DashboardBanner />
+      </div>
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}

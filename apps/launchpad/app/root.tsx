@@ -11,6 +11,7 @@ import {
 import { Providers } from './lib/providers'
 
 import './styles/globals.css'
+import './styles/shimmer-animations.css'
 
 import { Toaster } from '@0xintuition/1ui'
 import { configureClient } from '@0xintuition/graphql'
