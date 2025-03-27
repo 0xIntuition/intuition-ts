@@ -14,7 +14,6 @@ import {
 } from '@0xintuition/1ui'
 import { useGetAtomsQuery, useGetListDetailsQuery } from '@0xintuition/graphql'
 
-import logger from '@lib/utils/logger'
 import { usePrivy } from '@privy-io/react-auth'
 import { useLocation, useNavigate } from '@remix-run/react'
 import { useQueryClient } from '@tanstack/react-query'
@@ -22,30 +21,31 @@ import { TripleType } from 'app/types'
 import { ClientOnly } from 'remix-utils/client-only'
 
 import { TransactionStateType } from '../../types/transaction'
-import { CreateStep } from './create-step'
-import { RewardStep } from './reward-step'
-import { SignalStep } from './signal-step'
-import { TopicsStep } from './topics-step'
+import { CreateStep } from '../survey-modal/create-step'
+import { SignalStep } from '../survey-modal/signal-step'
+import { SuccessStep } from '../survey-modal/success-step'
+import { TopicsStep } from '../survey-modal/topics-step'
 import {
   NewAtomMetadata,
-  OnboardingModalProps,
-  OnboardingState,
+  QuestModalProps,
+  QuestState,
   Step,
   StepId,
   STEPS,
+  StepStatus,
   Topic,
 } from './types'
 
-const STORAGE_KEY = 'onboarding-progress'
+const STORAGE_KEY = 'quest-progress'
 
 const STEPS_CONFIG: Step[] = [
   { id: STEPS.TOPICS, label: 'Select', status: 'current' },
   { id: STEPS.CREATE, label: 'Create', status: 'upcoming' },
   { id: STEPS.SIGNAL, label: 'Signal', status: 'upcoming' },
-  { id: STEPS.REWARD, label: 'Reward', status: 'upcoming' },
+  { id: STEPS.SUCCESS, label: 'Success', status: 'upcoming' },
 ]
 
-const INITIAL_STATE: OnboardingState = {
+const INITIAL_STATE: QuestState = {
   currentStep: STEPS.TOPICS,
   ticks: 1,
   showCreateStep: false,
@@ -53,9 +53,7 @@ const INITIAL_STATE: OnboardingState = {
 
 interface StepTransition {
   isTransitioning: boolean
-  handleTransition: (
-    updateFn: (prev: OnboardingState) => OnboardingState,
-  ) => void
+  handleTransition: (updateFn: (prev: QuestState) => QuestState) => void
   resetTransition: () => void
 }
 
@@ -63,17 +61,15 @@ interface StepTransition {
  * Custom hook to manage step transitions with proper cleanup
  */
 const useStepTransition = (
-  setState: React.Dispatch<React.SetStateAction<OnboardingState>>,
+  setState: React.Dispatch<React.SetStateAction<QuestState>>,
 ): StepTransition => {
   const [isTransitioning, setIsTransitioning] = useState(false)
   const timeoutRef = useRef<number>()
   const rafRef = useRef<number>()
-  const updateFnRef = useRef<
-    ((prev: OnboardingState) => OnboardingState) | null
-  >(null)
+  const updateFnRef = useRef<((prev: QuestState) => QuestState) | null>(null)
 
   const handleTransition = useCallback(
-    (updateFn: (prev: OnboardingState) => OnboardingState) => {
+    (updateFn: (prev: QuestState) => QuestState) => {
       // Store the update function for later
       updateFnRef.current = updateFn
       setIsTransitioning(true)
@@ -133,26 +129,24 @@ const useStepTransition = (
   return { isTransitioning, handleTransition, resetTransition }
 }
 
-export function OnboardingModal({
+export function AddEntryModal({
   isOpen,
   onClose,
   predicateId,
   objectId,
   question,
-}: OnboardingModalProps) {
+}: QuestModalProps) {
   const queryClient = useQueryClient()
   const { user: privyUser } = usePrivy()
   const userWallet = privyUser?.wallet?.address
 
-  const [state, setState] = useState<OnboardingState>(INITIAL_STATE)
+  const [state, setState] = useState<QuestState>(INITIAL_STATE)
   const [topics, setTopics] = useState<Topic[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const [steps, setSteps] = useState<Step[]>(STEPS_CONFIG)
   const [txState, setTxState] = useState<TransactionStateType>()
-  const [subjectId, setSubjectId] = useState<string>()
-  const [hasAwardedPoints, setHasAwardedPoints] = useState(false)
-  const [hasExistingCompletion, setHasExistingCompletion] = useState(false)
+  const [, setSubjectId] = useState<string>()
 
   const transition = useStepTransition(setState)
   const { isTransitioning, handleTransition, resetTransition } = transition
@@ -163,11 +157,6 @@ export function OnboardingModal({
     {
       tagPredicateId: predicateId,
       globalWhere: {
-        subject: {
-          label: {
-            _ilike: searchTerm ? `%${searchTerm}%` : undefined,
-          },
-        },
         predicate_id: {
           _eq: predicateId,
         },
@@ -302,141 +291,82 @@ export function OnboardingModal({
           name: selectedAtom.label ?? '',
           image: selectedAtom.image ?? undefined,
           selected: true,
-          triple: undefined,
+          // We don't have a triple yet, it will be created when signaling
         }
 
-        setTopics((prev) => [
-          ...prev.map((t) => ({ ...t, selected: false })),
-          newTopic,
-        ])
-
-        // Set up metadata for triple creation since this is a new atom
-        const metadata: NewAtomMetadata = {
-          name: selectedAtom.label ?? '',
-          image: selectedAtom.image ?? undefined,
-          vaultId: selectedAtom.vault_id,
-        }
-
+        setTopics((prev) => [...prev, newTopic])
         handleTransition((prev) => ({
           ...prev,
           selectedTopic: newTopic,
-          newAtomMetadata: metadata,
           currentStep: STEPS.SIGNAL,
         }))
-
         updateStepStatus(STEPS.TOPICS, 'completed')
         updateStepStatus(STEPS.SIGNAL, 'current')
       }
     }
   }
 
-  const handleNext = useCallback(() => {
-    if (state.currentStep === STEPS.TOPICS) {
-      const selectedTopic = topics.find((topic) => topic.selected)
-      if (selectedTopic) {
-        handleTransition((prev) => ({
-          ...prev,
-          selectedTopic,
-          currentStep: STEPS.SIGNAL,
-        }))
-        updateStepStatus(STEPS.TOPICS, 'completed')
-        updateStepStatus(STEPS.SIGNAL, 'current')
-      }
-    } else if (state.currentStep === STEPS.CREATE) {
+  const updateStepStatus = (stepId: StepId, status: StepStatus) => {
+    setSteps((prev) =>
+      prev.map((step) => (step.id === stepId ? { ...step, status } : step)),
+    )
+  }
+
+  const handleStepClick = (stepId: StepId) => {
+    // Only allow clicking on completed steps
+    const stepIndex = steps.findIndex((s) => s.id === stepId)
+    const currentStepIndex = steps.findIndex((s) => s.id === state.currentStep)
+
+    if (
+      stepIndex < currentStepIndex &&
+      steps[stepIndex].status === 'completed'
+    ) {
       handleTransition((prev) => ({
         ...prev,
-        currentStep: STEPS.SIGNAL,
+        currentStep: stepId,
       }))
-      updateStepStatus(STEPS.CREATE, 'completed')
-      updateStepStatus(STEPS.SIGNAL, 'current')
-    }
-  }, [state.currentStep, topics, handleTransition])
 
-  const handleBack = useCallback(() => {
-    if (state.currentStep === STEPS.SIGNAL) {
-      const previousStep = state.showCreateStep ? STEPS.CREATE : STEPS.TOPICS
-      handleTransition((prev) => ({
-        ...prev,
-        currentStep: previousStep,
-      }))
-      updateStepStatus(previousStep, 'current')
-      updateStepStatus(STEPS.SIGNAL, 'upcoming')
-
-      if (previousStep === STEPS.TOPICS) {
-        setSearchTerm('')
-        queryClient.refetchQueries({
-          queryKey: [
-            'get-list-details',
-            {
-              predicateId,
-              objectId,
-              searchTerm: '',
-            },
-          ],
-        })
-      }
-    } else if (state.currentStep === STEPS.CREATE) {
-      handleTransition((prev) => ({
-        ...prev,
-        currentStep: STEPS.TOPICS,
-      }))
-      updateStepStatus(STEPS.TOPICS, 'current')
-      updateStepStatus(STEPS.CREATE, 'upcoming')
-
-      setSearchTerm('')
-      queryClient.refetchQueries({
-        queryKey: [
-          'get-list-details',
-          {
-            predicateId,
-            objectId,
-            searchTerm: '',
-          },
-        ],
-      })
-    }
-  }, [
-    state.currentStep,
-    state.showCreateStep,
-    handleTransition,
-    queryClient,
-    predicateId,
-    objectId,
-  ])
-
-  const updateStepStatus = useCallback(
-    (stepId: StepId, status: Step['status']) => {
+      // Update step statuses
       setSteps((prev) =>
-        prev.map((step) => (step.id === stepId ? { ...step, status } : step)),
+        prev.map((step, idx) => {
+          if (idx < stepIndex) {
+            return { ...step, status: 'completed' }
+          } else if (idx === stepIndex) {
+            return { ...step, status: 'current' }
+          }
+          return { ...step, status: 'upcoming' }
+        }),
       )
-    },
-    [],
-  )
+    }
+  }
 
-  const handleStepClick = useCallback(
-    (stepId: StepId) => {
-      const clickedStep = steps.find((s) => s.id === stepId)
-      if (clickedStep?.status === 'completed') {
-        handleTransition((prev) => ({
-          ...prev,
-          currentStep: stepId,
-        }))
+  const handleNext = () => {
+    const currentIndex = steps.findIndex((s) => s.id === state.currentStep)
+    if (currentIndex < steps.length - 1) {
+      const nextStep = steps[currentIndex + 1]
+      handleTransition((prev) => ({
+        ...prev,
+        currentStep: nextStep.id,
+      }))
 
-        setSteps((prev) =>
-          prev.map((step) => {
-            if (step.id === stepId) {
-              return { ...step, status: 'current' }
-            }
-            if (step.id === state.currentStep) {
-              return { ...step, status: 'upcoming' }
-            }
-            return step
-          }),
-        )
-      }
-    },
-    [steps, state.currentStep, handleTransition],
-  )
+      updateStepStatus(state.currentStep, 'completed')
+      updateStepStatus(nextStep.id, 'current')
+    }
+  }
+
+  const handleBack = () => {
+    const currentIndex = steps.findIndex((s) => s.id === state.currentStep)
+    if (currentIndex > 0) {
+      const prevStep = steps[currentIndex - 1]
+      handleTransition((prev) => ({
+        ...prev,
+        currentStep: prevStep.id,
+      }))
+
+      updateStepStatus(state.currentStep, 'upcoming')
+      updateStepStatus(prevStep.id, 'current')
+    }
+  }
 
   const onStakingSuccess = useCallback(
     (subject_id: string) => {
@@ -444,17 +374,13 @@ export function OnboardingModal({
         return
       }
 
-      // Reset points awarded state first
-      setHasAwardedPoints(false)
-      setHasExistingCompletion(false)
-
       startTransition(() => {
         setSteps((prev) => {
           const newSteps = prev.map((step) => {
             if (step.id === STEPS.SIGNAL) {
               return { ...step, status: 'completed' as const }
             }
-            if (step.id === STEPS.REWARD) {
+            if (step.id === STEPS.SUCCESS) {
               return { ...step, status: 'current' as const }
             }
             return step
@@ -464,7 +390,7 @@ export function OnboardingModal({
 
         handleTransition((prev) => ({
           ...prev,
-          currentStep: STEPS.REWARD,
+          currentStep: STEPS.SUCCESS,
         }))
 
         setSubjectId(subject_id)
@@ -473,92 +399,14 @@ export function OnboardingModal({
     [handleTransition, userWallet],
   )
 
-  const awardPoints = async (accountId: string): Promise<boolean> => {
-    try {
-      logger('Starting points award process:', {
-        accountId,
-        questionId: question.id,
-        epochId: question?.epoch_id,
-        pointAwardAmount: question.point_award_amount,
-        subjectId,
-      })
-
-      setIsLoading(true)
-
-      const formData = new FormData()
-      formData.append('accountId', accountId)
-      formData.append('questionId', question.id?.toString() ?? '')
-      formData.append('epochId', question?.epoch_id?.toString() ?? '')
-      formData.append(
-        'pointAwardAmount',
-        question.point_award_amount?.toString() ?? '',
-      )
-      formData.append('subjectId', subjectId ?? '')
-
-      const response = await fetch('/actions/reward-question-points', {
-        method: 'POST',
-        body: formData,
-      })
-
-      const data = await response.json()
-      logger('Award points response:', data)
-
-      if (!response.ok) {
-        const errorData = data
-        logger('Award points request failed:', {
-          status: response.status,
-          errorData,
-        })
-        const error =
-          errorData?.error ||
-          errorData?.details ||
-          `Failed to award points: ${response.status}`
-        throw new Error(error)
-      }
-
-      if (!data.success) {
-        throw new Error(data.error || 'Failed to award points')
-      }
-
-      logger('Successfully awarded points')
-
-      // Invalidate relevant queries
-      logger('Invalidating queries...')
-      await Promise.all([
-        queryClient.invalidateQueries({
-          queryKey: [
-            'question-completion',
-            accountId.toLowerCase(),
-            question.id,
-          ],
-        }),
-        queryClient.invalidateQueries({
-          queryKey: [
-            'epoch-progress',
-            accountId.toLowerCase(),
-            question?.epoch_id,
-          ],
-        }),
-      ])
-
-      return true
-    } catch (error) {
-      logger('Error in awardPoints:', error)
-      return false
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
   const handleClose = useCallback(() => {
     const isFlowComplete =
-      state.currentStep === STEPS.REWARD &&
+      state.currentStep === STEPS.SUCCESS &&
       txState?.status === 'complete' &&
-      !isLoading && // Only consider complete if not still loading
-      (hasAwardedPoints || hasExistingCompletion) // Allow closing for both new and existing completions
+      !isLoading
 
-    // Only close if we're not in the reward step or points have been awarded/existed
-    if (state.currentStep !== STEPS.REWARD || (isFlowComplete && userWallet)) {
+    // Only close if we're not in the success step or the flow is complete
+    if (state.currentStep !== STEPS.SUCCESS || (isFlowComplete && userWallet)) {
       onClose()
 
       // Reduced from 300ms to 150ms to match transition duration
@@ -580,8 +428,6 @@ export function OnboardingModal({
     txState?.status,
     isLoading,
     userWallet,
-    hasAwardedPoints,
-    hasExistingCompletion,
     onClose,
     resetTransition,
     question?.id,
@@ -654,14 +500,20 @@ export function OnboardingModal({
             <DialogContent
               className="p-0 bg-gradient-to-br from-[#060504] to-[#101010] md:max-w-[720px] w-full border-none flex flex-col"
               onPointerDownOutside={(e) => {
-                // Prevent closing if points haven't been awarded yet
-                if (state.currentStep === STEPS.REWARD && !hasAwardedPoints) {
+                // Prevent closing if transaction is in progress
+                if (
+                  state.currentStep === STEPS.SUCCESS &&
+                  txState?.status !== 'complete'
+                ) {
                   e.preventDefault()
                 }
               }}
               onEscapeKeyDown={(e) => {
-                // Prevent closing if points haven't been awarded yet
-                if (state.currentStep === STEPS.REWARD && !hasAwardedPoints) {
+                // Prevent closing if transaction is in progress
+                if (
+                  state.currentStep === STEPS.SUCCESS &&
+                  txState?.status !== 'complete'
+                ) {
                   e.preventDefault()
                 }
               }}
@@ -702,7 +554,9 @@ export function OnboardingModal({
                         newAtomMetadata={state.newAtomMetadata}
                         predicateId={predicateId}
                         objectId={objectId}
-                        objectLabel={question?.object_label ?? ''}
+                        objectLabel={
+                          listData?.globalTriples?.[0]?.object.label ?? ''
+                        }
                         setTxState={setTxState}
                         onStakingSuccess={onStakingSuccess}
                         isLoading={isLoading}
@@ -711,19 +565,12 @@ export function OnboardingModal({
                       />
                     )}
 
-                  {state.currentStep === STEPS.REWARD &&
+                  {state.currentStep === STEPS.SUCCESS &&
                     state.selectedTopic && (
-                      <RewardStep
-                        isOpen={state.currentStep === STEPS.REWARD}
-                        selectedTopic={state.selectedTopic}
+                      <SuccessStep
+                        isOpen={state.currentStep === STEPS.SUCCESS}
                         newAtomMetadata={state.newAtomMetadata}
                         txHash={txState?.txHash}
-                        userWallet={userWallet}
-                        pointAwardAmount={question?.point_award_amount}
-                        awardPoints={awardPoints}
-                        questionId={question?.id}
-                        epochId={question?.epoch_id}
-                        onExistingCompletionChange={setHasExistingCompletion}
                       />
                     )}
                 </div>
@@ -735,10 +582,10 @@ export function OnboardingModal({
                     onStepClick={handleStepClick}
                     showNavigation
                     onNext={
-                      state.currentStep !== STEPS.REWARD
+                      state.currentStep !== STEPS.SUCCESS
                         ? handleNext
-                        : state.currentStep === STEPS.REWARD &&
-                            (hasAwardedPoints || hasExistingCompletion)
+                        : state.currentStep === STEPS.SUCCESS &&
+                            txState?.status === 'complete'
                           ? handleClose
                           : undefined
                     }
@@ -753,17 +600,17 @@ export function OnboardingModal({
                         ? !topics.some((t) => t.selected)
                         : state.currentStep === STEPS.SIGNAL
                           ? txState?.status !== 'complete'
-                          : state.currentStep === STEPS.REWARD
-                            ? !hasAwardedPoints && !hasExistingCompletion
+                          : state.currentStep === STEPS.SUCCESS
+                            ? txState?.status !== 'complete'
                             : state.currentStep === STEPS.CREATE
                     }
                     disableBack={
                       isLoading ||
                       (txState?.status && txState?.status !== 'idle') ||
-                      (state.currentStep === STEPS.REWARD && !hasAwardedPoints)
+                      state.currentStep === STEPS.SUCCESS
                     }
                     customNextButton={
-                      state.currentStep === STEPS.REWARD
+                      state.currentStep === STEPS.SUCCESS
                         ? { content: 'Finish' }
                         : undefined
                     }

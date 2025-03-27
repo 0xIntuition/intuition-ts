@@ -36,6 +36,7 @@ export function SignalStep({
   newAtomMetadata,
   predicateId,
   objectId,
+  objectLabel,
   setTxState,
   onStakingSuccess,
   isLoading,
@@ -369,7 +370,7 @@ export function SignalStep({
           <Text variant="headline" className="font-semibold">
             Signal{' '}
             {newAtomMetadata?.name ?? selectedTopic?.triple?.subject.label} as
-            the best {selectedTopic?.triple?.object.label}
+            the best {selectedTopic?.triple?.object.label ?? objectLabel}
           </Text>
           <Text variant={TextVariant.footnote} className="text-primary/70">
             <span className="inline-flex items-center gap-1">
