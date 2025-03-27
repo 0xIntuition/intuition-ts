@@ -136,7 +136,6 @@ export function AddEntryModal({
   objectId,
   question,
 }: QuestModalProps) {
-  console.log('question', question)
   const queryClient = useQueryClient()
   const { user: privyUser } = usePrivy()
   const userWallet = privyUser?.wallet?.address
