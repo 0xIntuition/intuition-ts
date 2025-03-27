@@ -95,12 +95,15 @@ export function EpochAccordion({
                   >
                     {epoch.name}
                   </Text>
-                  <Link
-                    to={`/quests/questions/${epoch.id}`}
-                    className="text-xs sm:text-sm text-primary/70 hover:text-primary"
-                  >
-                    View All
-                  </Link>
+                  {/* TODO: Hidden because base week route structure was different and users were getting redirected to questions (triple) flow */}
+                  {epoch.type !== 'ecosystem' && (
+                    <Link
+                      to={`/quests/questions/${epoch.id}`}
+                      className="text-xs sm:text-sm text-primary/70 hover:text-primary"
+                    >
+                      View All
+                    </Link>
+                  )}
                 </div>
                 <EpochStatus
                   startDate={epoch.start_date}
