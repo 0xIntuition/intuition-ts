@@ -10,7 +10,7 @@ import {
 
 import SubmitButton from '@components/submit-button'
 import { truncateString } from '@lib/utils/misc'
-import { useNavigate } from '@remix-run/react'
+import { Link } from '@remix-run/react'
 import { CheckCircle } from 'lucide-react'
 
 interface QuestionCardProps {
@@ -47,8 +47,6 @@ export function QuestionCard({
   completedAtom,
   onCompletedAtomClick,
 }: QuestionCardProps) {
-  const navigate = useNavigate()
-
   return (
     <Card
       className={`relative h-[400px] rounded-lg border-none w-full md:min-w-[480px] overflow-hidden ${className}`}
@@ -81,15 +79,18 @@ export function QuestionCard({
               actionText="Answer"
             />
           )}
-          <Button
-            onClick={() => navigate(resultsLink || '')}
-            variant="secondary"
-            size="lg"
-            className="min-w-[200px] rounded-full !bg-background"
-            disabled={isLoading}
-          >
-            See Results
-          </Button>
+          {resultsLink && (
+            <Link to={resultsLink}>
+              <Button
+                variant="secondary"
+                size="lg"
+                className="min-w-[200px] rounded-full !bg-background"
+                disabled={isLoading}
+              >
+                See Results
+              </Button>
+            </Link>
+          )}
         </div>
 
         <div

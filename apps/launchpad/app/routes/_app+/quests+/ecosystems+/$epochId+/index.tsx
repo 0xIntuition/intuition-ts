@@ -1,92 +1,80 @@
 import { Suspense } from 'react'
 
-import {
-  Button,
-  cn,
-  Icon,
-  Text,
-  TextVariant,
-  TextWeight,
-} from '@0xintuition/1ui'
+import { Button, Icon } from '@0xintuition/1ui'
 
 import { AtomDetailsModal } from '@components/atom-details-modal'
 import { EcosystemModal } from '@components/ecosystem-modal/survey-modal'
-import { EpochStatus } from '@components/epoch-status'
+import { EpochAccordion } from '@components/epoch-accordion'
 import { ErrorPage } from '@components/error-page'
 import { LoadingState } from '@components/loading-state'
 import { PageHeader } from '@components/page-header'
-import { QuestionCardWrapper } from '@components/question-card-wrapper'
 import { useGoBack } from '@lib/hooks/useGoBack'
 import type { Question } from '@lib/services/questions'
 import { atomDetailsModalAtom, onboardingModalAtom } from '@lib/state/store'
-import logger from '@lib/utils/logger'
 import type { LoaderFunctionArgs, MetaFunction } from '@remix-run/node'
-import { json } from '@remix-run/node'
-import { useLoaderData } from '@remix-run/react'
+import { useLoaderData, useParams } from '@remix-run/react'
 import { getUser } from '@server/auth'
-import { dehydrate, QueryClient, useQuery } from '@tanstack/react-query'
+import {
+  dehydrate,
+  QueryClient,
+  useQueries,
+  useQuery,
+} from '@tanstack/react-query'
 import { useAtom } from 'jotai'
-import { MessageCircleQuestion } from 'lucide-react'
+
+interface Epoch {
+  id: number
+  name: string
+  description: string
+  start_date: string
+  end_date: string
+  is_active: boolean
+  created_at: string
+  updated_at: string
+  total_points_available: number
+}
+
+interface Progress {
+  completed_count: number
+  total_points: number
+}
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
-  try {
-    const queryClient = new QueryClient()
-    const { epochId } = params
+  const timings: Record<string, number> = {}
+  const markTiming = (label: string, startTime: number) => {
+    timings[label] = Date.now() - startTime
+  }
 
-    // Start parallel fetches for critical data
-    const [user, epochResponse, questionsResponse] = await Promise.all([
-      getUser(request),
-      fetch(
-        `${new URL(request.url).origin}/resources/get-epoch?epochId=${epochId}`,
-      ),
-      fetch(
-        `${new URL(request.url).origin}/resources/get-questions?epochId=${epochId}`,
-      ),
-    ])
+  const loaderStart = Date.now()
+  const queryClient = new QueryClient()
 
-    const userWallet = user?.wallet?.address?.toLowerCase()
+  // Start parallel fetches for critical data
+  const criticalStart = Date.now()
+  const [user, epochsResponse] = await Promise.all([
+    getUser(request),
+    fetch(`${new URL(request.url).origin}/resources/get-epochs?type=ecosystem`),
+  ])
+  markTiming('Critical data parallel fetch', criticalStart)
 
-    // Process epoch data
-    const epochData = await epochResponse.json()
-    if (!epochData.epoch) {
-      throw new Error('No epoch data received')
-    }
-    await queryClient.setQueryData(['get-epoch', epochId], epochData.epoch)
+  const userWallet = user?.wallet?.address?.toLowerCase()
+  const epochId = Number(params.epochId)
 
-    // Process questions data
-    const questionsData = await questionsResponse.json()
-    if (!questionsData.epoch_questions) {
-      throw new Error('No questions data received')
-    }
-    await queryClient.setQueryData(
-      ['get-questions', epochId],
-      questionsData.epoch_questions,
-    )
+  const epochsData = await epochsResponse.json()
+  if (!epochsData.epochs) {
+    throw new Error('No epochs data received')
+  }
+  await queryClient.setQueryData(['get-ecosystem-epochs'], epochsData.epochs)
 
-    // Prefetch progress in parallel if we have a user
-    if (userWallet && epochId) {
-      const progressResponse = await fetch(
-        `${new URL(request.url).origin}/resources/get-epoch-progress?accountId=${userWallet}&epochId=${epochId}`,
-      )
-      const progressData = await progressResponse.json()
-      await queryClient.setQueryData(
-        ['epoch-progress', userWallet.toLowerCase(), epochId],
-        progressData.progress,
-      )
-    }
+  const { origin } = new URL(request.url)
+  const ogImageUrl = `${origin}/resources/create-og?type=ecosystems`
 
-    const { origin } = new URL(request.url)
-    const ogImageUrl = `${origin}/resources/create-og?type=questions&epochId=${epochId}`
+  markTiming('Total loader execution', loaderStart)
 
-    return json({
-      dehydratedState: dehydrate(queryClient),
-      userWallet,
-      ogImageUrl,
-      epochId,
-    })
-  } catch (error) {
-    logger('Error in epoch questions loader:', error)
-    throw error
+  return {
+    dehydratedState: dehydrate(queryClient),
+    userWallet,
+    ogImageUrl,
+    epochId,
   }
 }
 
@@ -99,15 +87,15 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 
   return [
     {
-      title: `Epoch Questions | Intuition Launchpad`,
+      title: 'Ecosystems | Intuition Launchpad',
     },
     {
       name: 'description',
-      content: 'Answer questions and earn IQ points in this epoch.',
+      content: 'Answer questions and earn IQ points across different epochs.',
     },
     {
       property: 'og:title',
-      content: 'Epoch Questions | Intuition Launchpad',
+      content: 'Ecosystems | Intuition Launchpad',
     },
     {
       property: 'og:image',
@@ -125,72 +113,94 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
     },
     {
       name: 'twitter:title',
-      content: 'Epoch Questions | Intuition Launchpad',
+      content: 'Ecosystems | Intuition Launchpad',
     },
     {
       name: 'twitter:description',
-      content: 'Answer questions and earn IQ points in this epoch.',
+      content: 'Answer questions and earn IQ points across different epochs.',
     },
     { name: 'twitter:site', content: '@0xIntuition' },
   ]
 }
 
 export function ErrorBoundary() {
-  return <ErrorPage routeName="epoch questions" />
+  return <ErrorPage routeName="questions" />
 }
 
-export default function EpochQuestions() {
-  const { epochId, userWallet } = useLoaderData<typeof loader>()
-  const goBack = useGoBack({ fallbackRoute: `/quests/questions` })
-  const [onboardingModal, setOnboardingModal] = useAtom(onboardingModalAtom)
-  const [atomDetailsModal, setAtomDetailsModal] = useAtom(atomDetailsModalAtom)
+function useEpochsData() {
+  const { userWallet, epochId } = useLoaderData<typeof loader>()
 
-  // Get epoch data (prefetched in loader)
-  const { data: epoch } = useQuery({
-    queryKey: ['get-epoch', epochId],
+  // Get all ecosystem epochs data (prefetched in loader)
+  const { data: epochs = [] } = useQuery<Epoch[]>({
+    queryKey: ['get-ecosystem-epochs'],
     queryFn: async () => {
-      const response = await fetch(`/resources/get-epoch?epochId=${epochId}`)
+      const response = await fetch('/resources/get-epochs?type=ecosystem')
       const data = await response.json()
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to fetch epoch')
+        throw new Error(data.error || 'Failed to fetch ecosystem epochs')
       }
-      return data.epoch
+      return data.epochs
     },
   })
 
-  // Get questions (prefetched in loader)
-  const { data: questions } = useQuery({
-    queryKey: ['get-questions', epochId],
+  // Get questions for each epoch as they're expanded
+  const { data: allQuestions = [] } = useQuery<Question[]>({
+    queryKey: ['get-questions'],
     queryFn: async () => {
-      const response = await fetch(
-        `/resources/get-questions?epochId=${epochId}`,
-      )
+      const response = await fetch('/resources/get-questions')
       const data = await response.json()
       if (!response.ok) {
         throw new Error(data.error || 'Failed to fetch questions')
       }
       return data.epoch_questions
     },
+    // Only fetch questions when we have epochs
+    enabled: epochs.length > 0,
   })
 
-  // Get progress (prefetched in loader if user exists)
-  const { data: epochProgress } = useQuery({
-    queryKey: ['epoch-progress', userWallet?.toLowerCase(), epochId],
-    queryFn: async () => {
-      const response = await fetch(
-        `/resources/get-epoch-progress?accountId=${userWallet}&epochId=${epochId}`,
-      )
-      const data = await response.json()
-      if (!response.ok) {
-        throw new Error(data.error || 'Failed to fetch epoch progress')
-      }
-      return data.progress
-    },
-    enabled: !!userWallet && !!epochId,
+  // Fetch progress for all epochs
+  const progressResults = useQueries({
+    queries: epochs.map((epoch) => ({
+      queryKey: ['epoch-progress', userWallet?.toLowerCase(), epoch.id],
+      queryFn: async () => {
+        const response = await fetch(
+          `/resources/get-epoch-progress?accountId=${userWallet}&epochId=${epoch.id}`,
+        )
+        const data = await response.json()
+        if (!response.ok) {
+          throw new Error(data.error || 'Failed to fetch epoch progress')
+        }
+        return data.progress
+      },
+      enabled: Boolean(userWallet) && Boolean(epoch.id),
+      staleTime: 1000 * 60 * 5, // Cache for 5 minutes
+      retry: 2,
+    })),
   })
 
-  // Show skeleton while critical data loads
-  if (!epoch || !questions) {
+  // Filter epochs to only show the selected one
+  const filteredEpochs = epochs.filter((epoch) => epoch.id === epochId)
+
+  // Combine the data
+  return filteredEpochs.map((epoch, index) => ({
+    ...epoch,
+    questions: allQuestions.filter((q) => q.epoch_id === epoch.id),
+    progress: progressResults[index].data as Progress | undefined,
+  }))
+}
+
+export default function EcosystemEpoch() {
+  const goBack = useGoBack({ fallbackRoute: `/quests/ecosystems` })
+  const [onboardingModal, setOnboardingModal] = useAtom(onboardingModalAtom)
+  const [atomDetailsModal, setAtomDetailsModal] = useAtom(atomDetailsModalAtom)
+
+  const epochsWithQuestions = useEpochsData()
+  const { isLoading: isLoadingEpochs } = useQuery({
+    queryKey: ['get-ecosystem-epochs'],
+  })
+
+  // Show skeleton for initial loading
+  if (isLoadingEpochs || !epochsWithQuestions.length) {
     return <LoadingState />
   }
 
@@ -218,17 +228,9 @@ export default function EpochQuestions() {
     })
   }
 
-  if (!epoch) {
-    return <ErrorPage routeName="epoch questions" />
-  }
-
-  if (!epoch) {
-    return <ErrorPage routeName="epoch questions" />
-  }
-
   return (
     <>
-      <div className="flex items-center gap-4 mb-6">
+      <div className="flex items-center gap-4 mb-4 md:mb-6">
         <Button
           variant="ghost"
           size="icon"
@@ -238,99 +240,22 @@ export default function EpochQuestions() {
           <Icon name="chevron-left" className="h-4 w-4" />
         </Button>
         <PageHeader
-          title={`${epoch.name} Questions`}
-          subtitle="Answer questions to earn IQ"
+          title={`${epochsWithQuestions[0].name} Ecosystem`}
+          subtitle="Seed the Intuition Graph with your unique thoughts, knowledge, and insights"
         />
       </div>
-      <div
-        className={cn(
-          'relative overflow-hidden rounded-lg transition-all duration-200',
-          'bg-white/5 backdrop-blur-md backdrop-saturate-150 group border border-border/10',
-          !epoch.is_active && 'opacity-90',
-        )}
-      >
-        <div className="hover:no-underline w-full px-6 py-4">
-          <div className="flex flex-col w-full gap-4">
-            {/* Header Section */}
-            <div className="flex justify-between items-start w-full">
-              <div className="flex items-center gap-3">
-                <Text
-                  weight={TextWeight.semibold}
-                  className="text-left text-2xl md:text-3xl"
-                >
-                  {epoch.name}
-                </Text>
-              </div>
-              <EpochStatus
-                startDate={epoch.start_date}
-                endDate={epoch.end_date}
-                isActive={epoch.is_active}
-              />
-            </div>
-
-            {/* Progress Section */}
-            {epochProgress && (
-              <div className="w-full">
-                <div className="flex flex-col sm:flex-row sm:justify-between text-sm mb-2 gap-1 sm:gap-0">
-                  <Text
-                    variant={TextVariant.footnote}
-                    weight={TextWeight.medium}
-                    className="flex items-center gap-1 sm:gap-2 text-primary/70 text-sm sm:text-base"
-                  >
-                    <MessageCircleQuestion className="w-3 h-3 sm:w-4 sm:h-4" />
-                    {epochProgress.completed_count} of {questions.length}{' '}
-                    Questions Completed
-                  </Text>
-                  <Text
-                    variant={TextVariant.footnote}
-                    weight={TextWeight.medium}
-                    className="text-primary/70 flex flex-row gap-1 items-center text-sm sm:text-base"
-                  >
-                    <Text
-                      variant={TextVariant.body}
-                      weight={TextWeight.semibold}
-                      className="text-success"
-                    >
-                      {epochProgress.total_points}
-                    </Text>{' '}
-                    / {epoch.total_points_available} IQ Earned
-                  </Text>
-                </div>
-                <div className="h-1 bg-background rounded-full overflow-hidden">
-                  <div
-                    className="h-full bg-success transition-all duration-300"
-                    style={{
-                      width: `${(epochProgress.completed_count / questions.length) * 100}%`,
-                    }}
-                  />
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-      <div className="grid gap-6 md:grid-cols-2">
-        {questions?.map((question: Question) => (
-          <Suspense key={question.id} fallback={<LoadingState />}>
-            <QuestionCardWrapper
-              question={question}
-              onStart={() =>
-                handleStartOnboarding(
-                  question,
-                  question.predicate_id,
-                  question.object_id,
-                )
-              }
-            />
-          </Suspense>
-        ))}
-      </div>
+      <Suspense fallback={<LoadingState />}>
+        <EpochAccordion
+          epochs={epochsWithQuestions}
+          onStartQuestion={handleStartOnboarding}
+        />
+      </Suspense>
       <EcosystemModal
         isOpen={onboardingModal.isOpen}
         onClose={handleCloseOnboarding}
-        question={onboardingModal.question!}
         predicateId={onboardingModal.predicateId || 0}
         objectId={onboardingModal.objectId || 0}
+        question={onboardingModal.question!}
         tagObjectId={onboardingModal.tagObjectId || 0}
       />
       <AtomDetailsModal

@@ -22,11 +22,7 @@ import { Navigation } from '@components/lore/chapter-navigation'
 import { PageHeader } from '@components/page-header'
 import { atomColumns, tripleColumns } from '@components/ui/table/columns'
 import { DataTable } from '@components/ui/table/data-table'
-import {
-  MIN_DEPOSIT,
-  MULTIVAULT_CONTRACT_ADDRESS,
-  ZERO_ADDRESS,
-} from '@consts/general'
+import { MIN_DEPOSIT, MULTIVAULT_CONTRACT_ADDRESS } from '@consts/general'
 import { AtomsWithTagsQuery, useAtomsWithTagsQuery } from '@lib/graphql'
 import { Question } from '@lib/graphql/types'
 import { MULTIVAULT_CONFIG_QUERY_KEY } from '@lib/hooks/useGetMultiVaultConfig'

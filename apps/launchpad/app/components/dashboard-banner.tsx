@@ -44,7 +44,7 @@ export function DashboardBanner() {
             <div className="flex gap-2 max-md:flex-wrap">
               <Button
                 size="sm"
-                className="text-sm px-2.5 py-1.5 rounded-md font-mono"
+                className="text-sm px-2.5 py-1.5 rounded-md"
                 onClick={() => navigate('/quests/ecosystems')}
               >
                 Start Mapping
