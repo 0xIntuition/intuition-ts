@@ -3,13 +3,13 @@ import { TripleType } from 'app/types'
 
 import { TransactionStateType } from '../../types/transaction'
 
-export type StepId = 'topics' | 'create' | 'signal' | 'reward'
+export type StepId = 'topics' | 'create' | 'signal' | 'success'
 
 export const STEPS = {
   TOPICS: 'topics' as const,
   CREATE: 'create' as const,
   SIGNAL: 'signal' as const,
-  REWARD: 'reward' as const,
+  SUCCESS: 'success' as const,
 } as const
 
 export type StepStatus = 'upcoming' | 'current' | 'completed'
@@ -35,7 +35,7 @@ export interface NewAtomMetadata {
   vaultId: string
 }
 
-export interface OnboardingState {
+export interface QuestState {
   currentStep: StepId
   ticks: number
   showCreateStep: boolean
@@ -43,12 +43,13 @@ export interface OnboardingState {
   newAtomMetadata?: NewAtomMetadata
 }
 
-export interface OnboardingModalProps {
+export interface QuestModalProps {
   isOpen: boolean
   onClose: () => void
   predicateId: number
   objectId: number
   question: Question
+  isCompleted?: boolean
 }
 
 export interface SignalStepProps {
@@ -56,10 +57,16 @@ export interface SignalStepProps {
   newAtomMetadata?: NewAtomMetadata
   predicateId: number
   objectId: number
-  objectLabel: string
   setTxState: (state: TransactionStateType) => void
   onStakingSuccess: (subject_id: string) => void
   isLoading: boolean
   setIsLoading: (loading: boolean) => void
+  isOpen?: boolean
+}
+
+export interface SuccessStepProps {
   isOpen: boolean
+  selectedTopic: Topic
+  newAtomMetadata?: NewAtomMetadata
+  txHash?: string
 }

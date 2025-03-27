@@ -48,29 +48,18 @@ function ShareModalContent({
     params.set(
       'data',
       JSON.stringify({
-        title: listData.globalTriples?.[0]?.object?.label,
+        title: listData.globalTriples?.[0]?.object?.label ?? '',
         holders:
           listData.globalTriples?.[0]?.vault?.positions_aggregate?.aggregate
-            ?.count,
-        tvl: listData.globalTriples?.[0]?.vault?.positions_aggregate?.aggregate
-          ?.sum?.shares,
-        itemCount: listData.globalTriplesAggregate?.aggregate?.count,
+            ?.count ?? '',
+        tvl:
+          listData.globalTriples?.[0]?.vault?.positions_aggregate?.aggregate
+            ?.sum?.shares ?? '',
+        itemCount: listData.globalTriplesAggregate?.aggregate?.count ?? '',
         type: 'list',
       }),
     )
     const url = `${baseUrl}/resources/create-og?${params.toString()}`
-    console.log('Generated OG Image URL:', url)
-    console.log('URL Parameters:', {
-      id: listData.globalTriples?.[0]?.object?.id,
-      title: listData.globalTriples?.[0]?.object?.label,
-      holders:
-        listData.globalTriples?.[0]?.vault?.positions_aggregate?.aggregate
-          ?.count,
-      tvl: listData.globalTriples?.[0]?.vault?.positions_aggregate?.aggregate
-        ?.sum?.shares,
-      itemCount: listData.globalTriplesAggregate?.aggregate?.count,
-      type: 'list',
-    })
     return url
   }
 
@@ -118,18 +107,20 @@ function ShareModalContent({
           </div>
         )}
 
-        <div className="px-8 mb-4">
-          <Text className="text-neutral-400 mb-2">Preview</Text>
-          <div className="w-full aspect-[1.91/1] rounded-xl overflow-hidden bg-neutral-900 relative">
-            <img
-              src={getOGImageUrl(listData)}
-              alt="Share preview"
-              className="w-full h-full object-cover"
-            />
+        {listData && (
+          <div className="px-8 mb-4">
+            <Text className="text-neutral-400 mb-2">Preview</Text>
+            <div className="w-full aspect-[1.91/1] rounded-xl overflow-hidden bg-neutral-900 relative">
+              <img
+                src={getOGImageUrl(listData)}
+                alt="Share preview"
+                className="w-full h-full object-cover"
+              />
+            </div>
           </div>
-        </div>
+        )}
 
-        <div className="h-[200px] overflow-y-auto px-8">
+        {/* <div className="h-[200px] overflow-y-auto px-8">
           <div className="grid grid-cols-4 gap-4">
             {listData?.globalTriples?.map((triple) => (
               <div
@@ -153,7 +144,7 @@ function ShareModalContent({
               </div>
             ))}
           </div>
-        </div>
+        </div> */}
 
         <div className="flex justify-end pr-8">
           <Text className="text-neutral-500 text-sm">Powered by Intuition</Text>
