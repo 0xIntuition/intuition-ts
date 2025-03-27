@@ -812,7 +812,7 @@ export default function MiniGameOne() {
             : undefined
         }
         type="question"
-        baseUrl={`/quests/questions/${epochId}`}
+        baseUrl={`/quests/ecosystems/${epochId}`}
       />
     </>
   )
