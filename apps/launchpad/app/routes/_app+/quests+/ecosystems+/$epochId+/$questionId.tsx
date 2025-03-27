@@ -408,6 +408,7 @@ export default function MiniGameOne() {
     {
       enabled: !!queryVariables,
       queryKey: ['atoms-with-tags', queryVariables, predicateId, objectId],
+      refetchInterval: 3000,
     },
   )
 
@@ -582,6 +583,7 @@ export default function MiniGameOne() {
     if (userWallet && questionId && currentEpoch && onboardingModal.isOpen) {
       queryClient.invalidateQueries({
         queryKey: ['atoms-with-tags', queryVariables, predicateId, objectId],
+        exact: false,
       })
       // Invalidate queries first
       queryClient.invalidateQueries({

@@ -485,9 +485,33 @@ export function SignalStep({
           txReceipt: receipt,
         })
 
-        // Invalidate relevant queries
-        await queryClient.invalidateQueries()
+        // Invalidate specific queries that need to be refreshed
+        await Promise.all([
+          // Invalidate vault details
+          queryClient.invalidateQueries({
+            queryKey: ['get-vault-details', contract, vaultId, counterVaultId],
+          }),
+          // Invalidate positions
+          queryClient.invalidateQueries({
+            queryKey: ['get-positions'],
+          }),
+          // Invalidate atoms/triples depending on type
+          queryClient.invalidateQueries({
+            queryKey: atom ? ['get-atoms'] : ['get-triples'],
+          }),
+          // Invalidate events
+          queryClient.invalidateQueries({
+            queryKey: ['get-events'],
+          }),
+          // Invalidate atoms-with-tags query with a pattern match
+          queryClient.invalidateQueries({
+            queryKey: ['AtomsWithTags'],
+            exact: false, // This will match any query key that starts with 'AtomsWithTags'
+          }),
+        ])
         revalidator.revalidate()
+        console.log('[SignalStep] All queries invalidated successfully')
+        console.log('[SignalStep] Revalidator called')
 
         // Store the final state and show success after a delay
         setFinalMode(mode)
