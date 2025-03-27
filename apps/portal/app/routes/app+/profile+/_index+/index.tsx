@@ -66,10 +66,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
     throw new Error('No account data found for address')
   }
 
-  if (!accountResult.account?.atom_id) {
-    throw new Error('No atom ID found for account')
-  }
-
   await queryClient.prefetchQuery({
     queryKey: ['get-account', { address: queryAddress }],
     queryFn: () => accountResult,
@@ -95,6 +91,32 @@ export async function loader({ request }: LoaderFunctionArgs) {
     ],
   }
 
+  const positionsCountWhere = {
+    vault_id: {
+      _eq: accountResult.account?.atom_id,
+    },
+  }
+
+  if (accountResult.account?.atom_id) {
+    await queryClient.prefetchQuery({
+      queryKey: ['get-triples-count', { where: triplesCountWhere }],
+      queryFn: () =>
+        fetcher<GetTriplesCountQuery, GetTriplesCountQueryVariables>(
+          GetTriplesCountDocument,
+          { where: triplesCountWhere },
+        )(),
+    })
+
+    await queryClient.prefetchQuery({
+      queryKey: ['get-positions-count', { where: positionsCountWhere }],
+      queryFn: () =>
+        fetcher<GetPositionsCountQuery, GetPositionsCountQueryVariables>(
+          GetPositionsCountDocument,
+          { where: positionsCountWhere },
+        )(),
+    })
+  }
+
   const savedListsWhere = {
     account: {
       id: {
@@ -113,12 +135,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
         },
       },
     ],
-  }
-
-  const positionsCountWhere = {
-    vault_id: {
-      _eq: accountResult.account?.atom_id,
-    },
   }
 
   const createdTriplesWhere = {
@@ -172,15 +188,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
   }
 
   await queryClient.prefetchQuery({
-    queryKey: ['get-triples-count', { where: triplesCountWhere }],
-    queryFn: () =>
-      fetcher<GetTriplesCountQuery, GetTriplesCountQueryVariables>(
-        GetTriplesCountDocument,
-        { where: triplesCountWhere },
-      )(),
-  })
-
-  await queryClient.prefetchQuery({
     queryKey: ['get-saved-lists', { savedListsWhere }],
     queryFn: () =>
       fetcher<
@@ -193,15 +200,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
         orderBy: [{ block_number: 'desc' }],
         address: queryAddress,
       }),
-  })
-
-  await queryClient.prefetchQuery({
-    queryKey: ['get-positions-count', { where: positionsCountWhere }],
-    queryFn: () =>
-      fetcher<GetPositionsCountQuery, GetPositionsCountQueryVariables>(
-        GetPositionsCountDocument,
-        { where: positionsCountWhere },
-      )(),
   })
 
   await queryClient.prefetchQuery({
@@ -346,42 +344,44 @@ export default function UserProfileOverview() {
 
   return (
     <div className="flex flex-col gap-12">
-      <div className="flex flex-col gap-4">
-        <Text
-          variant="headline"
-          weight="medium"
-          className="text-secondary-foreground"
-        >
-          About
-        </Text>
-        <div className="flex flex-col items-center gap-6 md:flex-row">
-          <OverviewAboutHeader
-            variant="claims"
-            atomImage={accountResult?.account?.image ?? ''}
-            atomLabel={accountResult?.account?.label ?? ''}
-            totalClaims={
-              triplesCountResult?.triples_aggregate?.total?.count ?? 0
-            }
-            totalStake={0} // TODO: need to find way to get the shares -- may need to update the schema
-            link={`${PATHS.PROFILE}/data-about`}
-          />
-          <OverviewAboutHeader
-            variant="positions"
-            atomImage={accountResult?.account?.image ?? ''}
-            atomLabel={accountResult?.account?.label ?? ''}
-            totalPositions={
-              positionsCountResult?.positions_aggregate?.total?.count ?? 0
-            }
-            totalStake={
-              +formatBalance(
-                positionsCountResult?.positions_aggregate?.total?.sum?.shares ??
-                  0,
-              )
-            } // TODO: need to find way to get the shares -- may need to update the schema
-            link={`${PATHS.PROFILE}/data-about`}
-          />
+      {accountResult?.account?.atom_id && (
+        <div className="flex flex-col gap-4">
+          <Text
+            variant="headline"
+            weight="medium"
+            className="text-secondary-foreground"
+          >
+            About
+          </Text>
+          <div className="flex flex-col items-center gap-6 md:flex-row">
+            <OverviewAboutHeader
+              variant="claims"
+              atomImage={accountResult?.account?.image ?? ''}
+              atomLabel={accountResult?.account?.label ?? ''}
+              totalClaims={
+                triplesCountResult?.triples_aggregate?.total?.count ?? 0
+              }
+              totalStake={0} // TODO: need to find way to get the shares -- may need to update the schema
+              link={`${PATHS.PROFILE}/data-about`}
+            />
+            <OverviewAboutHeader
+              variant="positions"
+              atomImage={accountResult?.account?.image ?? ''}
+              atomLabel={accountResult?.account?.label ?? ''}
+              totalPositions={
+                positionsCountResult?.positions_aggregate?.total?.count ?? 0
+              }
+              totalStake={
+                +formatBalance(
+                  positionsCountResult?.positions_aggregate?.total?.sum
+                    ?.shares ?? 0,
+                )
+              } // TODO: need to find way to get the shares -- may need to update the schema
+              link={`${PATHS.PROFILE}/data-about`}
+            />
+          </div>
         </div>
-      </div>
+      )}
 
       <div className="flex flex-col gap-4">
         <Text

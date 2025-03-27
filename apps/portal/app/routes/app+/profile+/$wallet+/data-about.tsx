@@ -62,10 +62,6 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     throw new Error('No account data found for address')
   }
 
-  if (!accountResult.account?.atom_id) {
-    throw new Error('No atom ID found for account')
-  }
-
   await queryClient.prefetchQuery({
     queryKey: ['get-account', { address: queryAddress }],
     queryFn: () => accountResult,
@@ -77,24 +73,21 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const triplesOffset = parseInt(url.searchParams.get('claimsOffset') || '0')
   const triplesOrderBy = url.searchParams.get('claimsSortBy')
 
-  const atomId = accountResult.account.atom_id
-  logger('atomId', atomId)
-
   const triplesWhere = {
     _or: [
       {
         subject_id: {
-          _eq: atomId,
+          _eq: accountResult.account?.atom_id,
         },
       },
       {
         predicate_id: {
-          _eq: atomId,
+          _eq: accountResult.account?.atom_id,
         },
       },
       {
         object_id: {
-          _eq: atomId,
+          _eq: accountResult.account?.atom_id,
         },
       },
     ],
@@ -110,16 +103,18 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const positionsOrderBy = url.searchParams.get('positionsSortBy')
 
   const positionsWhere = {
-    vault_id: { _eq: atomId },
+    vault_id: { _eq: accountResult.account?.atom_id },
   }
 
-  await queryClient.prefetchQuery({
-    queryKey: ['get-atom', { id: atomId }],
-    queryFn: () =>
-      fetcher<GetAtomQuery, GetAtomQueryVariables>(GetAtomDocument, {
-        id: atomId,
-      })(),
-  })
+  if (accountResult.account?.atom_id) {
+    await queryClient.prefetchQuery({
+      queryKey: ['get-atom', { id: accountResult.account?.atom_id }],
+      queryFn: () =>
+        fetcher<GetAtomQuery, GetAtomQueryVariables>(GetAtomDocument, {
+          id: accountResult.account?.atom_id,
+        })(),
+    })
+  }
 
   await queryClient.prefetchQuery({
     queryKey: [
@@ -157,6 +152,11 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
         },
       )(),
   })
+
+  const atomId =
+    accountResult.account?.atom_id || accountResult.account?.atom_id !== null
+      ? accountResult.account?.atom_id
+      : undefined
 
   return json({
     userWallet,

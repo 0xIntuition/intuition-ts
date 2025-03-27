@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
 
 import {
-  Banner,
+  Button,
   Icon,
+  IconName,
   Identity,
   IdentityStakeCard,
   PieChartVariant,
@@ -38,11 +39,12 @@ import {
 
 import EditSocialLinksModal from '@components/edit-social-links-modal'
 import { ErrorPage } from '@components/error-page'
-import NavigationButton from '@components/navigation-link'
 import { ProfileSocialAccounts } from '@components/profile-social-accounts'
 import ImageModal from '@components/profile/image-modal'
 import SaveListModal from '@components/save-list/save-list-modal'
 import { SegmentedNav } from '@components/segmented-nav'
+import ShareCta from '@components/share-cta'
+import ShareModal from '@components/share-modal'
 import StakeModal from '@components/stake/stake-modal'
 import TagsModal from '@components/tags/tags-modal'
 import { useGetVaultDetails } from '@lib/hooks/useGetVaultDetails'
@@ -53,6 +55,7 @@ import {
   editSocialLinksModalAtom,
   imageModalAtom,
   saveListModalAtom,
+  shareModalAtom,
   stakeModalAtom,
   tagsModalAtom,
 } from '@lib/state/store'
@@ -64,7 +67,7 @@ import {
   invariant,
 } from '@lib/utils/misc'
 import { User } from '@privy-io/react-auth'
-import { json, LoaderFunctionArgs } from '@remix-run/node'
+import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
 import {
   Outlet,
   useLoaderData,
@@ -91,6 +94,9 @@ import { formatUnits, parseUnits } from 'viem'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await getUser(request)
+  if (!user?.wallet?.address) {
+    return redirect(PATHS.HOME)
+  }
   invariant(user, 'User not found')
   invariant(user.wallet?.address, 'User wallet not found')
   const userWallet = user.wallet?.address
@@ -139,10 +145,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
       throw new Error('No account data found for address')
     }
 
-    if (!accountResult.account?.atom_id) {
-      throw new Error('No atom ID found for account')
-    }
-
     console.log('queryAddress', queryAddress)
     console.log('accountResult', accountResult)
 
@@ -151,49 +153,51 @@ export async function loader({ request }: LoaderFunctionArgs) {
       queryFn: () => accountResult,
     })
 
-    const accountTagsResult = await fetcher<
-      GetTagsQuery,
-      GetTagsQueryVariables
-    >(GetTagsDocument, {
-      subjectId: accountResult.account.atom_id,
-      predicateId: getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId,
-    })()
+    if (accountResult.account?.atom_id) {
+      const accountTagsResult = await fetcher<
+        GetTagsQuery,
+        GetTagsQueryVariables
+      >(GetTagsDocument, {
+        subjectId: accountResult.account.atom_id,
+        predicateId: getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId,
+      })()
 
-    await queryClient.prefetchQuery({
-      queryKey: [
-        'get-tags',
-        {
-          subjectId: accountResult.account.atom_id,
-          predicateId: getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId,
-        },
-      ],
-      queryFn: () => accountTagsResult,
-    })
+      await queryClient.prefetchQuery({
+        queryKey: [
+          'get-tags',
+          {
+            subjectId: accountResult.account.atom_id,
+            predicateId: getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId,
+          },
+        ],
+        queryFn: () => accountTagsResult,
+      })
 
-    const accountConnectionsCountResult = await fetcher<
-      GetConnectionsCountQuery,
-      GetConnectionsCountQueryVariables
-    >(GetConnectionsCountDocument, {
-      subjectId: getSpecialPredicate(CURRENT_ENV).iPredicate.vaultId,
-      predicateId:
-        getSpecialPredicate(CURRENT_ENV).amFollowingPredicate.vaultId,
-      objectId: accountResult.account.atom_id,
-      address: queryAddress,
-    })()
+      const accountConnectionsCountResult = await fetcher<
+        GetConnectionsCountQuery,
+        GetConnectionsCountQueryVariables
+      >(GetConnectionsCountDocument, {
+        subjectId: getSpecialPredicate(CURRENT_ENV).iPredicate.vaultId,
+        predicateId:
+          getSpecialPredicate(CURRENT_ENV).amFollowingPredicate.vaultId,
+        objectId: accountResult.account.atom_id,
+        address: queryAddress,
+      })()
 
-    await queryClient.prefetchQuery({
-      queryKey: [
-        'get-connections-count',
-        {
-          address: queryAddress,
-          subjectId: getSpecialPredicate(CURRENT_ENV).iPredicate.vaultId,
-          predicateId:
-            getSpecialPredicate(CURRENT_ENV).amFollowingPredicate.vaultId,
-          objectId: accountResult.account.atom_id,
-        },
-      ],
-      queryFn: () => accountConnectionsCountResult,
-    })
+      await queryClient.prefetchQuery({
+        queryKey: [
+          'get-connections-count',
+          {
+            address: queryAddress,
+            subjectId: getSpecialPredicate(CURRENT_ENV).iPredicate.vaultId,
+            predicateId:
+              getSpecialPredicate(CURRENT_ENV).amFollowingPredicate.vaultId,
+            objectId: accountResult.account.atom_id,
+          },
+        ],
+        queryFn: () => accountConnectionsCountResult,
+      })
+    }
   } catch (error) {
     logger('Query Error:', {
       message: (error as Error).message,
@@ -223,12 +227,41 @@ export interface ProfileLoaderData {
   }
 }
 
+const getFilteredRouteOptions = (hasAtom: boolean) => {
+  if (!hasAtom) {
+    // Only show Overview and Lists when there's no atom
+    return userIdentityRouteOptions.filter(
+      (option) =>
+        option.value === 'overview' ||
+        option.value === 'data-created' ||
+        option.value === 'lists',
+    )
+  }
+  return userIdentityRouteOptions
+}
+
 export default function Profile() {
   const { privyUser, userWallet, initialParams } =
     useLoaderData<ProfileLoaderData>()
 
-  // TODO: Remove this once the `status is added to atoms -- that will be what we check if something is pending. For now setting this to false and removing the legacy isPending check
-  const isPending = false
+  const navigate = useNavigate()
+
+  // Store wallet address when component mounts and wallet is connected
+  useEffect(() => {
+    if (privyUser.wallet?.address) {
+      localStorage.setItem('lastProfileWallet', privyUser.wallet.address)
+    }
+  }, [privyUser.wallet?.address])
+
+  // Handle disconnection
+  useEffect(() => {
+    if (!privyUser.wallet?.address) {
+      const lastWallet = localStorage.getItem('lastProfileWallet')
+      if (lastWallet && location.pathname.indexOf(lastWallet) === -1) {
+        navigate(`${location.pathname}/${lastWallet}`)
+      }
+    }
+  }, [privyUser.wallet?.address])
 
   const { data: accountResult } = useGetAccountProfileQuery(
     {
@@ -295,13 +328,6 @@ export default function Profile() {
     },
   )
 
-  console.log('vaultDetails', vaultDetails)
-  // logger('Account Result:', accountResult)
-  // logger('Account Tags Result:', accountTagsResult)
-  // logger('Account Connections Count Result:', accountConnectionsCountResult)
-  // logger('tags', accountTagsResult && accountTagsResult?.triples)
-  // logger('Vault Details:', vaultDetails)
-
   const user_assets = vaultDetails
     ? vaultDetails.user_assets
     : accountResult?.account?.atom?.vault?.current_share_price &&
@@ -355,6 +381,7 @@ export default function Profile() {
   const [saveListModalActive, setSaveListModalActive] =
     useAtom(saveListModalAtom)
   const [imageModalActive, setImageModalActive] = useAtom(imageModalAtom)
+  const [shareModalActive, setShareModalActive] = useAtom(shareModalAtom)
 
   const [selectedTag, setSelectedTag] = useState<Atom | null | undefined>(null)
 
@@ -365,7 +392,6 @@ export default function Profile() {
   }, [saveListModalActive])
 
   const revalidator = useRevalidator()
-  const navigate = useNavigate()
 
   useEffect(() => {
     setEditProfileModalActive(false)
@@ -412,14 +438,13 @@ export default function Profile() {
         avatarSrc={accountResult?.account?.image ?? ''}
         name={accountResult?.account?.label ?? ''}
         id={accountResult?.account?.id ?? ''}
-        vaultId={accountResult?.account?.atom_id ?? 0}
+        vaultId={accountResult?.account?.atom_id}
         stats={{
           numberOfFollowers:
             accountConnectionsCountResult?.followers_count?.[0]?.vault
-              ?.positions_aggregate?.aggregate?.count ?? 0,
+              ?.positions_aggregate?.aggregate?.count,
           numberOfFollowing:
-            accountConnectionsCountResult?.following_count?.aggregate?.count ??
-            0,
+            accountConnectionsCountResult?.following_count?.aggregate?.count,
           points: totalPoints,
         }}
         bio={accountResult?.account?.atom?.value?.person?.description ?? ''}
@@ -438,7 +463,7 @@ export default function Profile() {
           setEditSocialLinksModalActive(true)
         }
       />
-      {!isPending && (
+      {accountResult?.account?.atom_id ? (
         <>
           <Tags>
             <div className="flex flex-row gap-2 md:flex-col">
@@ -536,29 +561,35 @@ export default function Profile() {
             onViewAllClick={() => navigate(PATHS.PROFILE_DATA_ABOUT)}
           />
         </>
+      ) : (
+        <div className="flex flex-col items-center gap-5 border border-solid border-white/10 px-5 py-6 text-center w-full rounded-lg bg-black/60">
+          <p className="font-medium text-sm text-secondary-foreground">
+            No atom associated with this account.
+          </p>
+          <Button variant="secondary">
+            <Icon name={IconName.personCircle} className="h-4 w-4" /> Create
+            atom
+          </Button>
+        </div>
       )}
+
+      <ShareCta
+        onShareClick={() =>
+          setShareModalActive({
+            isOpen: true,
+            currentPath: location.pathname,
+          })
+        }
+      />
     </div>
   )
 
-  const rightPanel = isPending ? (
-    <Banner
-      variant="warning"
-      title="Please Refresh the Page"
-      message="It looks like the on-chain transaction was successful, but we're still waiting for the information to update. Please refresh the page to ensure everything is up to date."
-    >
-      <NavigationButton
-        reloadDocument
-        variant="secondary"
-        to=""
-        className="max-lg:w-full"
-      >
-        Refresh
-      </NavigationButton>
-    </Banner>
-  ) : (
+  const rightPanel = (
     <>
       <div className="flex flex-row justify-end mb-6 max-lg:justify-center">
-        <SegmentedNav options={userIdentityRouteOptions} />
+        <SegmentedNav
+          options={getFilteredRouteOptions(!!accountResult?.account?.atom_id)}
+        />
       </div>
       <Outlet />
     </>
@@ -566,57 +597,55 @@ export default function Profile() {
 
   return (
     <TwoPanelLayout leftPanel={leftPanel} rightPanel={rightPanel}>
-      {!isPending && (
-        <>
-          <EditSocialLinksModal
-            open={editSocialLinksModalActive}
-            onClose={() => setEditSocialLinksModalActive(false)}
-          />
-          <StakeModal
-            userWallet={userWallet}
+      <>
+        <EditSocialLinksModal
+          open={editSocialLinksModalActive}
+          onClose={() => setEditSocialLinksModalActive(false)}
+        />
+        <StakeModal
+          userWallet={userWallet}
+          contract={MULTIVAULT_CONTRACT_ADDRESS}
+          open={stakeModalActive.isOpen}
+          identity={accountResult?.account?.atom as Atom}
+          vaultId={stakeModalActive.vaultId}
+          vaultDetailsProp={vaultDetails}
+          onClose={() => {
+            setStakeModalActive((prevState) => ({
+              ...prevState,
+              isOpen: false,
+            }))
+          }}
+        />
+        <TagsModal
+          identity={accountResult?.account?.atom as Atom}
+          tagClaims={accountTagsResult?.triples as Triple[]}
+          userWallet={userWallet}
+          open={tagsModalActive.isOpen}
+          mode={tagsModalActive.mode}
+          onClose={() => {
+            setTagsModalActive({
+              ...tagsModalActive,
+              isOpen: false,
+            })
+            setSelectedTag(undefined)
+          }}
+        />
+        {selectedTag && (
+          <SaveListModal
             contract={MULTIVAULT_CONTRACT_ADDRESS}
-            open={stakeModalActive.isOpen}
-            identity={accountResult?.account?.atom as Atom}
-            vaultId={stakeModalActive.vaultId}
-            vaultDetailsProp={vaultDetails}
-            onClose={() => {
-              setStakeModalActive((prevState) => ({
-                ...prevState,
-                isOpen: false,
-              }))
-            }}
-          />
-          <TagsModal
-            identity={accountResult?.account?.atom as Atom}
-            tagClaims={accountTagsResult?.triples as Triple[]}
+            tagAtom={saveListModalActive.tag ?? selectedTag}
+            atom={accountResult?.account?.atom as Atom}
             userWallet={userWallet}
-            open={tagsModalActive.isOpen}
-            mode={tagsModalActive.mode}
-            onClose={() => {
-              setTagsModalActive({
-                ...tagsModalActive,
+            open={saveListModalActive.isOpen}
+            onClose={() =>
+              setSaveListModalActive({
+                ...saveListModalActive,
                 isOpen: false,
               })
-              setSelectedTag(undefined)
-            }}
+            }
           />
-          {selectedTag && (
-            <SaveListModal
-              contract={MULTIVAULT_CONTRACT_ADDRESS}
-              tagAtom={saveListModalActive.tag ?? selectedTag}
-              atom={accountResult?.account?.atom as Atom}
-              userWallet={userWallet}
-              open={saveListModalActive.isOpen}
-              onClose={() =>
-                setSaveListModalActive({
-                  ...saveListModalActive,
-                  isOpen: false,
-                })
-              }
-            />
-          )}
-        </>
-      )}
+        )}
+      </>
       <ImageModal
         displayName={accountResult?.account?.label ?? ''}
         imageSrc={accountResult?.account?.image ?? ''}
@@ -629,6 +658,16 @@ export default function Profile() {
         onClose={() =>
           setImageModalActive({
             ...imageModalActive,
+            isOpen: false,
+          })
+        }
+      />
+      <ShareModal
+        currentPath={`${location.pathname}/${userWallet}`}
+        open={shareModalActive.isOpen}
+        onClose={() =>
+          setShareModalActive({
+            ...shareModalActive,
             isOpen: false,
           })
         }

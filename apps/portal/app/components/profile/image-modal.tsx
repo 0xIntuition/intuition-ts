@@ -31,7 +31,7 @@ export default function ImageModal({
         onClose?.()
       }}
     >
-      <DialogContent className="bg-neutral-950 rounded-xl shadow border-theme h-[550px] flex flex-col">
+      <DialogContent className="bg-neutral-950 rounded-xl shadow border-theme flex flex-col">
         <DialogHeader>
           <DialogTitle>
             <IdentityTag

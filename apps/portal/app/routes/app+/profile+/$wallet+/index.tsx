@@ -75,16 +75,11 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     throw new Error('No account data found for address')
   }
 
-  if (!accountResult.account?.atom_id) {
-    throw new Error('No atom ID found for account')
-  }
-
   await queryClient.prefetchQuery({
     queryKey: ['get-account', { address: wallet }],
     queryFn: () => accountResult,
   })
 
-  // TODO: once we fully fix sort/pagination, we'll want to update these to use triples instead of claims, and orderBy instead of sortBy in the actual query params
   const triplesWhere = {
     _or: [
       {
@@ -204,7 +199,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const followersWhere = {
     subjectId: getSpecialPredicate(CURRENT_ENV).iPredicate.vaultId,
     predicateId: getSpecialPredicate(CURRENT_ENV).amFollowingPredicate.vaultId,
-    objectId: accountResult.account.atom_id,
+    objectId: accountResult.account?.atom_id,
     positionsLimit: 10,
     positionsOffset: 0,
     positionsOrderBy: {
@@ -240,24 +235,6 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
         orderBy: [{ block_number: 'desc' }],
         address: queryAddress,
       }),
-  })
-
-  await queryClient.prefetchQuery({
-    queryKey: ['get-triples-count', { where: triplesCountWhere }],
-    queryFn: () =>
-      fetcher<GetTriplesCountQuery, GetTriplesCountQueryVariables>(
-        GetTriplesCountDocument,
-        { where: triplesCountWhere },
-      )(),
-  })
-
-  await queryClient.prefetchQuery({
-    queryKey: ['get-positions-count', { where: positionsCountWhere }],
-    queryFn: () =>
-      fetcher<GetPositionsCountQuery, GetPositionsCountQueryVariables>(
-        GetPositionsCountDocument,
-        { where: positionsCountWhere },
-      )(),
   })
 
   await queryClient.prefetchQuery({
@@ -305,14 +282,34 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
       >(GetPositionsCountByTypeDocument, { where: allPositionsWhere })(),
   })
 
-  await queryClient.prefetchQuery({
-    queryKey: ['get-follower-positions', {}],
-    queryFn: () =>
-      fetcher<GetFollowerPositionsQuery, GetFollowerPositionsQueryVariables>(
-        GetFollowerPositionsDocument,
-        followersWhere,
-      )(),
-  })
+  if (accountResult.account?.atom_id) {
+    await queryClient.prefetchQuery({
+      queryKey: ['get-triples-count', { where: triplesCountWhere }],
+      queryFn: () =>
+        fetcher<GetTriplesCountQuery, GetTriplesCountQueryVariables>(
+          GetTriplesCountDocument,
+          { where: triplesCountWhere },
+        )(),
+    })
+
+    await queryClient.prefetchQuery({
+      queryKey: ['get-positions-count', { where: positionsCountWhere }],
+      queryFn: () =>
+        fetcher<GetPositionsCountQuery, GetPositionsCountQueryVariables>(
+          GetPositionsCountDocument,
+          { where: positionsCountWhere },
+        )(),
+    })
+
+    await queryClient.prefetchQuery({
+      queryKey: ['get-follower-positions', {}],
+      queryFn: () =>
+        fetcher<GetFollowerPositionsQuery, GetFollowerPositionsQueryVariables>(
+          GetFollowerPositionsDocument,
+          followersWhere,
+        )(),
+    })
+  }
 
   return {
     userWallet,
@@ -328,7 +325,6 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
       triplePositionsWhere,
       savedListsWhere,
       allPositionsWhere,
-      followersWhere,
     },
   }
 }
@@ -469,8 +465,6 @@ export default function ProfileOverview() {
     },
   )
 
-  logger('Follower Data (Client):', followerData)
-
   return (
     <div className="flex flex-col gap-12">
       <div className="flex flex-col gap-4">
@@ -517,67 +511,71 @@ export default function ProfileOverview() {
         </div>
       </div>
 
-      <div className="flex flex-col w-full gap-6">
-        <div className="flex max-lg:flex-col justify-between items-center max-lg:w-full">
-          <div className="self-stretch justify-between items-center inline-flex">
-            <Text
-              variant="headline"
-              weight="medium"
-              className="text-secondary-foreground w-full"
+      {accountResult?.account?.atom_id && (
+        <div className="flex flex-col w-full gap-6">
+          <div className="flex max-lg:flex-col justify-between items-center max-lg:w-full">
+            <div className="self-stretch justify-between items-center inline-flex">
+              <Text
+                variant="headline"
+                weight="medium"
+                className="text-secondary-foreground w-full"
+              >
+                Top Claims about this Identity
+              </Text>
+            </div>
+            <Button
+              variant="primary"
+              className="max-lg:w-full max-lg:mt-2"
+              onClick={() => setCreateClaimModalActive(true)}
             >
-              Top Claims about this Identity
-            </Text>
+              <Icon name={IconName.claim} className="h-4 w-4" /> Make a Claim
+            </Button>
           </div>
-          <Button
-            variant="primary"
-            className="max-lg:w-full max-lg:mt-2"
-            onClick={() => setCreateClaimModalActive(true)}
-          >
-            <Icon name={IconName.claim} className="h-4 w-4" /> Make a Claim
-          </Button>
-        </div>
-        <Suspense fallback={<DataHeaderSkeleton />}>
-          <DataAboutHeader
-            variant="claims"
-            atomImage={accountResult?.account?.image ?? ''}
-            atomLabel={accountResult?.account?.label ?? ''}
-            atomVariant="user" // TODO: Determine based on atom type
-            totalClaims={triplesResult?.total?.aggregate?.count ?? 0}
-            totalStake={0} // TODO: need to find way to get the shares -- may need to update the schema
-            // totalStake={
-            //   +formatBalance(
-            //     triplesResult?.total?.aggregate?.sums?.shares ?? 0,
-            //     18,
-            //   )
-            // }
-          />
-        </Suspense>
-        <Suspense fallback={<PaginatedListSkeleton />}>
-          {isLoadingTriples ? (
-            <PaginatedListSkeleton />
-          ) : isErrorTriples ? (
-            <ErrorStateCard
-              title="Failed to load claims"
-              message={
-                (errorTriples as Error)?.message ??
-                'An unexpected error occurred'
-              }
-            >
-              <RevalidateButton />
-            </ErrorStateCard>
-          ) : (
-            <ClaimsAboutIdentity
-              claims={triplesResult?.triples as Triple[]}
-              pagination={triplesResult?.total?.aggregate?.count ?? {}}
-              paramPrefix="claims"
-              enableSearch={false} // TODO: (ENG-4481) Re-enable search and sort
-              enableSort={false} // TODO: (ENG-4481) Re-enable search and sort
-              isConnected={!!userWallet}
+          <Suspense fallback={<DataHeaderSkeleton />}>
+            <DataAboutHeader
+              variant="claims"
+              atomImage={accountResult?.account?.image ?? ''}
+              atomLabel={accountResult?.account?.label ?? ''}
+              atomVariant="user" // TODO: Determine based on atom type
+              totalClaims={triplesResult?.total?.aggregate?.count ?? 0}
+              totalStake={0} // TODO: need to find way to get the shares -- may need to update the schema
+              // totalStake={
+              //   +formatBalance(
+              //     triplesResult?.total?.aggregate?.sums?.shares ?? 0,
+              //     18,
+              //   )
+              // }
             />
-          )}
-        </Suspense>
-      </div>
-      {followerData && <TopFollowers followerData={followerData} />}
+          </Suspense>
+          <Suspense fallback={<PaginatedListSkeleton />}>
+            {isLoadingTriples ? (
+              <PaginatedListSkeleton />
+            ) : isErrorTriples ? (
+              <ErrorStateCard
+                title="Failed to load claims"
+                message={
+                  (errorTriples as Error)?.message ??
+                  'An unexpected error occurred'
+                }
+              >
+                <RevalidateButton />
+              </ErrorStateCard>
+            ) : (
+              <ClaimsAboutIdentity
+                claims={triplesResult?.triples as Triple[]}
+                pagination={triplesResult?.total?.aggregate?.count ?? {}}
+                paramPrefix="claims"
+                enableSearch={false} // TODO: (ENG-4481) Re-enable search and sort
+                enableSort={false} // TODO: (ENG-4481) Re-enable search and sort
+                isConnected={!!userWallet}
+              />
+            )}
+          </Suspense>
+        </div>
+      )}
+      {accountResult?.account?.atom_id && followerData && (
+        <TopFollowers followerData={followerData} />
+      )}
       <div className="flex flex-col gap-4">
         <Text
           variant="headline"

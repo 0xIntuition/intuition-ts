@@ -82,7 +82,6 @@ import {
   NO_PARAM_ID_ERROR,
   PATHS,
   userIdentityRouteOptions,
-  ZERO_ADDRESS,
 } from 'app/consts'
 import TwoPanelLayout from 'app/layouts/two-panel-layout'
 import { Atom } from 'app/types/atom'
@@ -97,6 +96,8 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
   invariant(wallet, NO_PARAM_ID_ERROR)
 
   const queryAddress = wallet.toLowerCase() ?? zeroAddress
+
+  console.log('queryAddress', queryAddress)
 
   if (wallet.toLowerCase() === userWallet?.toLowerCase()) {
     throw redirect(PATHS.PROFILE)
@@ -140,62 +141,60 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
       throw new Error('No account data found for address')
     }
 
-    if (!accountResult.account?.atom_id) {
-      throw new Error('No atom ID found for account')
-    }
-
     await queryClient.prefetchQuery({
       queryKey: ['get-account', { address: queryAddress }],
       queryFn: () => accountResult,
     })
 
-    const accountTagsResult = await fetcher<
-      GetTagsQuery,
-      GetTagsQueryVariables
-    >(GetTagsDocument, {
-      subjectId: accountResult.account.atom_id,
-      predicateId: getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId,
-    })()
+    if (accountResult.account?.atom_id) {
+      const accountTagsResult = await fetcher<
+        GetTagsQuery,
+        GetTagsQueryVariables
+      >(GetTagsDocument, {
+        subjectId: accountResult.account.atom_id,
+        predicateId: getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId,
+      })()
 
-    logger('Account Tags Result:', accountTagsResult)
+      logger('Account Tags Result:', accountTagsResult)
 
-    await queryClient.prefetchQuery({
-      queryKey: [
-        'get-tags',
-        {
-          subjectId: accountResult.account.atom_id,
-          predicateId: getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId,
-        },
-      ],
-      queryFn: () => accountTagsResult,
-    })
+      await queryClient.prefetchQuery({
+        queryKey: [
+          'get-tags',
+          {
+            subjectId: accountResult.account.atom_id,
+            predicateId: getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId,
+          },
+        ],
+        queryFn: () => accountTagsResult,
+      })
 
-    const accountConnectionsCountResult = await fetcher<
-      GetConnectionsCountQuery,
-      GetConnectionsCountQueryVariables
-    >(GetConnectionsCountDocument, {
-      subjectId: getSpecialPredicate(CURRENT_ENV).iPredicate.vaultId,
-      predicateId:
-        getSpecialPredicate(CURRENT_ENV).amFollowingPredicate.vaultId,
-      objectId: accountResult.account.atom_id,
-      address: queryAddress,
-    })()
+      const accountConnectionsCountResult = await fetcher<
+        GetConnectionsCountQuery,
+        GetConnectionsCountQueryVariables
+      >(GetConnectionsCountDocument, {
+        subjectId: getSpecialPredicate(CURRENT_ENV).iPredicate.vaultId,
+        predicateId:
+          getSpecialPredicate(CURRENT_ENV).amFollowingPredicate.vaultId,
+        objectId: accountResult.account.atom_id,
+        address: queryAddress,
+      })()
 
-    logger('Account Connections Count Result:', accountConnectionsCountResult)
+      logger('Account Connections Count Result:', accountConnectionsCountResult)
 
-    await queryClient.prefetchQuery({
-      queryKey: [
-        'get-connections-count',
-        {
-          address: queryAddress,
-          subjectId: getSpecialPredicate(CURRENT_ENV).iPredicate.vaultId,
-          predicateId:
-            getSpecialPredicate(CURRENT_ENV).amFollowingPredicate.vaultId,
-          objectId: accountResult.account.atom_id,
-        },
-      ],
-      queryFn: () => accountConnectionsCountResult,
-    })
+      await queryClient.prefetchQuery({
+        queryKey: [
+          'get-connections-count',
+          {
+            address: queryAddress,
+            subjectId: getSpecialPredicate(CURRENT_ENV).iPredicate.vaultId,
+            predicateId:
+              getSpecialPredicate(CURRENT_ENV).amFollowingPredicate.vaultId,
+            objectId: accountResult.account.atom_id,
+          },
+        ],
+        queryFn: () => accountConnectionsCountResult,
+      })
+    }
   } catch (error) {
     logger('Query Error:', {
       message: (error as Error).message,
@@ -221,6 +220,19 @@ export interface ProfileLoaderData {
     queryAddress: string
     subjectId: string
   }
+}
+
+const getFilteredRouteOptions = (hasAtom: boolean) => {
+  if (!hasAtom) {
+    // Only show Overview and Lists when there's no atom
+    return userIdentityRouteOptions.filter(
+      (option) =>
+        option.value === 'overview' ||
+        option.value === 'data-created' ||
+        option.value === 'lists',
+    )
+  }
+  return userIdentityRouteOptions
 }
 
 export default function Profile() {
@@ -290,12 +302,6 @@ export default function Profile() {
     },
   )
 
-  logger('Account Result:', accountResult)
-  logger('Account Tags Result:', accountTagsResult)
-  logger('Account Connections Count Result:', accountConnectionsCountResult)
-  logger('tags', accountTagsResult && accountTagsResult?.triples)
-  logger('Vault Details:', vaultDetails)
-
   const user_assets = vaultDetails
     ? vaultDetails.user_assets
     : accountResult?.account?.atom?.vault?.current_share_price &&
@@ -313,9 +319,9 @@ export default function Profile() {
         BigInt(10 ** 18) // Division to get the correct decimal places
       : 0n
 
-  const { data: points } = usePoints(userWallet)
+  const { data: points } = usePoints(initialParams.queryAddress)
   const { data: protocolFees } = useGetFeeTransfersQuery({
-    address: userWallet ?? ZERO_ADDRESS,
+    address: initialParams.queryAddress,
     cutoff_timestamp: 1733356800,
   })
 
@@ -371,14 +377,13 @@ export default function Profile() {
         avatarSrc={accountResult?.account?.image ?? ''}
         name={accountResult?.account?.label ?? ''}
         id={accountResult?.account?.id ?? ''}
-        vaultId={accountResult?.account?.atom_id ?? 0}
+        vaultId={accountResult?.account?.atom_id}
         stats={{
           numberOfFollowers:
             accountConnectionsCountResult?.followers_count?.[0]?.vault
-              ?.positions_aggregate?.aggregate?.count ?? 0,
+              ?.positions_aggregate?.aggregate?.count,
           numberOfFollowing:
-            accountConnectionsCountResult?.following_count?.aggregate?.count ??
-            0,
+            accountConnectionsCountResult?.following_count?.aggregate?.count,
           points: totalPoints,
         }}
         bio={accountResult?.account?.atom?.value?.person?.description ?? ''}
@@ -391,7 +396,7 @@ export default function Profile() {
           })
         }}
       >
-        {!isPending && userWallet && (
+        {accountResult?.account?.atom_id && userWallet && (
           <Button
             variant="secondary"
             className="w-full"
@@ -409,7 +414,7 @@ export default function Profile() {
           </Button>
         )}
       </ProfileCard>
-      {!isPending && (
+      {accountResult?.account?.atom_id ? (
         <>
           <Tags>
             <div className="flex flex-row gap-2 md:flex-col">
@@ -507,7 +512,18 @@ export default function Profile() {
             onViewAllClick={() => navigate(PATHS.PROFILE_DATA_ABOUT)}
           />
         </>
+      ) : (
+        <div className="flex flex-col items-center gap-5 border border-solid border-white/10 px-5 py-6 text-center w-full rounded-lg bg-black/60">
+          <p className="font-medium text-sm text-secondary-foreground">
+            No atom associated with this account.
+          </p>
+          <Button variant="secondary">
+            <Icon name={IconName.personCircle} className="h-4 w-4" /> Create
+            atom
+          </Button>
+        </div>
       )}
+
       <ShareCta
         onShareClick={() =>
           setShareModalActive({
@@ -537,7 +553,9 @@ export default function Profile() {
   ) : (
     <>
       <div className="flex flex-row justify-end mb-6 max-lg:justify-center">
-        <SegmentedNav options={userIdentityRouteOptions} />
+        <SegmentedNav
+          options={getFilteredRouteOptions(!!accountResult?.account?.atom_id)}
+        />
       </div>
       <Outlet />
     </>
