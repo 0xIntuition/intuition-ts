@@ -140,6 +140,7 @@ export function OnboardingModal({
   objectId,
   question,
 }: OnboardingModalProps) {
+  console.log('question', question)
   const queryClient = useQueryClient()
   const { user: privyUser } = usePrivy()
   const userWallet = privyUser?.wallet?.address
@@ -702,6 +703,7 @@ export function OnboardingModal({
                         newAtomMetadata={state.newAtomMetadata}
                         predicateId={predicateId}
                         objectId={objectId}
+                        objectLabel={question?.object_label ?? ''}
                         setTxState={setTxState}
                         onStakingSuccess={onStakingSuccess}
                         isLoading={isLoading}

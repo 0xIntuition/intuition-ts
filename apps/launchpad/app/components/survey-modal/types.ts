@@ -56,6 +56,7 @@ export interface SignalStepProps {
   newAtomMetadata?: NewAtomMetadata
   predicateId: number
   objectId: number
+  objectLabel: string
   setTxState: (state: TransactionStateType) => void
   onStakingSuccess: (subject_id: string) => void
   isLoading: boolean

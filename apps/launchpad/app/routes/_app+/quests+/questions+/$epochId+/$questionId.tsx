@@ -287,7 +287,7 @@ export default function MiniGameOne() {
   const [searchParams, setSearchParams] = useSearchParams()
   const queryClient = useQueryClient()
 
-  const { authenticated, login } = usePrivy()
+  const { authenticated } = usePrivy()
 
   const {
     title,
@@ -762,6 +762,7 @@ export default function MiniGameOne() {
       title: title || '',
       predicate_id: predicateId,
       object_id: objectId,
+      object_label: listData?.globalTriples?.[0]?.object.label ?? '',
       point_award_amount: pointAwardAmount,
       enabled: enabled || false,
       epoch_id: currentEpoch,
@@ -938,26 +939,18 @@ export default function MiniGameOne() {
                       </span>
                     </div>
                   </div>
-                ) : authenticated ? (
-                  <Button
-                    variant="primary"
-                    size="lg"
-                    onClick={handleStartOnboarding}
-                    disabled={!enabled}
-                  >
-                    {completion
-                      ? 'Do Quest Again'
-                      : `Earn ${pointAwardAmount} IQ Points`}
-                  </Button>
                 ) : (
-                  <Button
-                    variant="primary"
-                    size="lg"
-                    onClick={() => login()}
-                    disabled={!enabled}
-                  >
-                    Connect Wallet
-                  </Button>
+                  authenticated &&
+                  enabled && (
+                    <Button
+                      variant="primary"
+                      size="lg"
+                      onClick={handleStartOnboarding}
+                      disabled={!enabled}
+                    >
+                      Earn {pointAwardAmount} IQ Points
+                    </Button>
+                  )
                 )}
               </AuthCover>
             </div>

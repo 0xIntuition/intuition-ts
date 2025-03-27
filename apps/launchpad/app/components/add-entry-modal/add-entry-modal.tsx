@@ -136,6 +136,7 @@ export function AddEntryModal({
   objectId,
   question,
 }: QuestModalProps) {
+  console.log('question', question)
   const queryClient = useQueryClient()
   const { user: privyUser } = usePrivy()
   const userWallet = privyUser?.wallet?.address
@@ -157,11 +158,6 @@ export function AddEntryModal({
     {
       tagPredicateId: predicateId,
       globalWhere: {
-        subject: {
-          label: {
-            _ilike: searchTerm ? `%${searchTerm}%` : undefined,
-          },
-        },
         predicate_id: {
           _eq: predicateId,
         },
@@ -559,6 +555,9 @@ export function AddEntryModal({
                         newAtomMetadata={state.newAtomMetadata}
                         predicateId={predicateId}
                         objectId={objectId}
+                        objectLabel={
+                          listData?.globalTriples?.[0]?.object.label ?? ''
+                        }
                         setTxState={setTxState}
                         onStakingSuccess={onStakingSuccess}
                         isLoading={isLoading}

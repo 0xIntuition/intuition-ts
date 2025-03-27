@@ -10,6 +10,7 @@ export interface Question {
   link: string
   predicate_id: number
   object_id: number
+  object_label?: string
 }
 
 export interface GetQuestionsResponse {
