@@ -130,7 +130,7 @@ export default function Ecosystems() {
         </Button>
         <PageHeader
           title="Ecosystems"
-          subtitle="Explore different ecosystems and contribute to the Intuition Graph"
+          subtitle="Create, curate, and discover crowdsourced maps of crypto's various ecosystems."
         />
       </div>
 

@@ -241,7 +241,7 @@ export default function EcosystemEpoch() {
         </Button>
         <PageHeader
           title={`${epochsWithQuestions[0].name} Ecosystem`}
-          subtitle="Seed the Intuition Graph with your unique thoughts, knowledge, and insights"
+          subtitle="Seed the Intuition Graph with your unique perspective."
         />
       </div>
       <Suspense fallback={<LoadingState />}>
