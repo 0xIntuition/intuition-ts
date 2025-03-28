@@ -9,12 +9,8 @@ import {
   GetPositionsDocument,
   GetPositionsQuery,
   GetPositionsQueryVariables,
-  GetTriplesWithPositionsDocument,
-  GetTriplesWithPositionsQuery,
-  GetTriplesWithPositionsQueryVariables,
   useGetAtomQuery,
   useGetPositionsQuery,
-  useGetTriplesWithPositionsQuery,
 } from '@0xintuition/graphql'
 
 import CreateClaimModal from '@components/create-claim/create-claim-modal'
@@ -24,21 +20,27 @@ import { PositionsOnIdentityNew } from '@components/list/positions-on-identity'
 import DataAboutHeader from '@components/profile/data-about-header'
 import { RevalidateButton } from '@components/revalidate-button'
 import { DataHeaderSkeleton, PaginatedListSkeleton } from '@components/skeleton'
+import {
+  GetTriplesAboutIdentityDocument,
+  GetTriplesAboutIdentityQuery,
+  GetTriplesAboutIdentityQueryVariables,
+  useGetTriplesAboutIdentityQuery,
+} from '@lib/queries/triples-about-atom'
 import { detailCreateClaimModalAtom } from '@lib/state/store'
-import logger from '@lib/utils/logger'
 import { formatBalance, invariant } from '@lib/utils/misc'
+import { usePrivy } from '@privy-io/react-auth'
 import { LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 import { getUserWallet } from '@server/auth'
 import { QueryClient } from '@tanstack/react-query'
-import { NO_PARAM_ID_ERROR, NO_WALLET_ERROR } from 'app/consts'
+import { NO_PARAM_ID_ERROR } from 'app/consts'
 import { Triple } from 'app/types/triple'
 import { useAtom } from 'jotai'
+import { zeroAddress } from 'viem'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const wallet = await getUserWallet(request)
-  invariant(wallet, NO_WALLET_ERROR)
-  const queryAddress = wallet.toLowerCase()
+  const queryAddress = wallet?.toLowerCase() ?? zeroAddress
 
   const id = params.id
 
@@ -97,20 +99,26 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
   await queryClient.prefetchQuery({
     queryKey: [
-      'get-triples-with-positions',
-      { triplesWhere, triplesLimit, triplesOffset, triplesOrderBy },
+      'get-triples-about-identity',
+      JSON.stringify({
+        where: triplesWhere,
+        limit: triplesLimit,
+        offset: triplesOffset,
+        orderBy: triplesOrderBy,
+        address: queryAddress,
+      }),
     ],
     queryFn: () =>
       fetcher<
-        GetTriplesWithPositionsQuery,
-        GetTriplesWithPositionsQueryVariables
-      >(GetTriplesWithPositionsDocument, {
+        GetTriplesAboutIdentityQuery,
+        GetTriplesAboutIdentityQueryVariables
+      >(GetTriplesAboutIdentityDocument, {
         where: triplesWhere,
         limit: triplesLimit,
         offset: triplesOffset,
         orderBy: triplesOrderBy ? [{ [triplesOrderBy]: 'desc' }] : undefined,
         address: queryAddress,
-      }),
+      })(),
   })
 
   await queryClient.prefetchQuery({
@@ -152,6 +160,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
 export default function ProfileDataAbout() {
   const { wallet, initialParams, queryAddress } = useLoaderData<typeof loader>()
+  const { user: privyUser } = usePrivy()
 
   const [createClaimModalActive, setCreateClaimModalActive] = useAtom(
     detailCreateClaimModalAtom,
@@ -166,14 +175,12 @@ export default function ProfileDataAbout() {
     },
   )
 
-  logger('Atom Result (Client):', atomResult)
-
   const {
     data: triplesResult,
     isLoading: isLoadingTriples,
     isError: isErrorTriples,
     error: errorTripples,
-  } = useGetTriplesWithPositionsQuery(
+  } = useGetTriplesAboutIdentityQuery(
     {
       where: initialParams.triplesWhere,
       limit: initialParams.triplesLimit,
@@ -185,19 +192,16 @@ export default function ProfileDataAbout() {
     },
     {
       queryKey: [
-        'get-triples-with-positions',
-        {
+        JSON.stringify({
           where: initialParams.triplesWhere,
           limit: initialParams.triplesLimit,
           offset: initialParams.triplesOffset,
           orderBy: initialParams.triplesOrderBy,
           address: queryAddress,
-        },
+        }),
       ],
     },
   )
-
-  logger('Triples Result (Client):', triplesResult)
 
   const {
     data: positionsResult,
@@ -226,7 +230,7 @@ export default function ProfileDataAbout() {
     },
   )
 
-  logger('Positions Result (Client):', positionsResult)
+  console.log('triplesResult', triplesResult)
 
   return (
     <>
@@ -246,6 +250,7 @@ export default function ProfileDataAbout() {
               variant="primary"
               className="max-lg:w-full max-lg:mt-2"
               onClick={() => setCreateClaimModalActive(true)}
+              disabled={!privyUser}
             >
               <Icon name={IconName.claim} className="h-4 w-4" /> Make a Claim
             </Button>

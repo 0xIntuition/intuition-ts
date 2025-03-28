@@ -169,9 +169,13 @@ export function ClaimsListNew({
                   variant: Identity.nonUser,
                   label: triple.subject?.label ?? '',
                   imgSrc: triple.subject?.image ?? '',
-                  id: triple.subject?.id,
-                  description: '',
-                  ipfsLink: '',
+                  id: triple.subject?.data,
+                  description:
+                    triple.subject?.value?.thing?.description ??
+                    triple.subject?.value?.organization?.description ??
+                    triple.subject?.value?.person?.description ??
+                    '',
+                  ipfsLink: triple.subject?.data ?? '',
                   link: getAtomLink(triple.subject),
                   linkComponent: RemixLink,
                 }}
@@ -179,9 +183,13 @@ export function ClaimsListNew({
                   variant: Identity.nonUser,
                   label: triple.predicate?.label ?? '',
                   imgSrc: triple.predicate?.image ?? '',
-                  id: triple.predicate?.id,
-                  description: '',
-                  ipfsLink: '',
+                  id: triple.predicate?.data,
+                  description:
+                    triple.predicate?.value?.thing?.description ??
+                    triple.predicate?.value?.organization?.description ??
+                    triple.predicate?.value?.person?.description ??
+                    '',
+                  ipfsLink: triple.predicate?.data ?? '',
                   link: getAtomLink(triple.predicate),
                   linkComponent: RemixLink,
                 }}
@@ -189,9 +197,13 @@ export function ClaimsListNew({
                   variant: Identity.nonUser,
                   label: triple.object?.label ?? '',
                   imgSrc: triple.object?.image ?? '',
-                  id: triple.object?.id,
-                  description: '',
-                  ipfsLink: '',
+                  id: triple.object?.data,
+                  description:
+                    triple.object?.value?.thing?.description ??
+                    triple.object?.value?.organization?.description ??
+                    triple.object?.value?.person?.description ??
+                    '',
+                  ipfsLink: triple.object?.data ?? '',
                   link: getAtomLink(triple.object),
                   linkComponent: RemixLink,
                 }}
