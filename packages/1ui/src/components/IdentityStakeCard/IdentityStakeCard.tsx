@@ -15,6 +15,7 @@ export interface IdentityStakeCardProps
   identityDisplayName: string
   onBuyClick?: () => void
   onViewAllClick?: () => void
+  isConnected?: boolean
 }
 
 const IdentityStakeCard = ({
@@ -26,6 +27,7 @@ const IdentityStakeCard = ({
   identityDisplayName,
   onBuyClick,
   onViewAllClick,
+  isConnected = false,
   className,
   ...props
 }: IdentityStakeCardProps) => {
@@ -65,6 +67,7 @@ const IdentityStakeCard = ({
             className="w-full mt-4"
             variant="primary"
             onClick={onBuyClick}
+            disabled={!isConnected}
           >
             Deposit
           </Button>

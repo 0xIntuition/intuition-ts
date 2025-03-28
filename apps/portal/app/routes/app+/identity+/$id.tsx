@@ -224,13 +224,23 @@ export default function IdentityDetails() {
     <div className="flex-col justify-start items-start inline-flex gap-6 max-lg:w-full">
       <ProfileCard
         variant={Identity.nonUser}
-        avatarSrc={atomResult?.atom?.value?.thing?.image ?? ''}
-        name={atomResult?.atom?.value?.thing?.name ?? ''}
-        id={atomResult?.atom?.id ?? ''}
+        avatarSrc={atomResult?.atom?.image ?? ''}
+        name={atomResult?.atom?.label ?? ''}
+        id={atomResult?.atom?.data ?? ''}
         vaultId={atomResult?.atom?.id ?? 0}
-        bio={atomResult?.atom?.value?.thing?.description ?? ''}
+        bio={
+          atomResult?.atom?.value?.thing?.description ??
+          atomResult?.atom?.value?.organization?.description ??
+          atomResult?.atom?.value?.person?.description ??
+          ''
+        }
         ipfsLink={atomResult?.atom?.data ?? ''}
-        externalLink={atomResult?.atom?.value?.thing?.url ?? ''}
+        externalLink={
+          atomResult?.atom?.value?.thing?.url ??
+          atomResult?.atom?.value?.organization?.url ??
+          atomResult?.atom?.value?.person?.url ??
+          ''
+        }
         onAvatarClick={() => {
           setImageModalActive({
             isOpen: true,
@@ -316,23 +326,21 @@ export default function IdentityDetails() {
           tvl={+formatBalance(assets_sum, 18)}
           holders={atomResult?.atom?.vault?.position_count ?? 0}
           variant={Identity.nonUser} // TODO: Use the atom type to determine this once we have these
-          identityImgSrc={atomResult?.atom?.value?.thing?.image ?? ''}
-          identityDisplayName={atomResult?.atom?.value?.thing?.name ?? ''}
-          onBuyClick={
-            privyUser?.wallet?.address
-              ? () =>
-                  setStakeModalActive((prevState) => ({
-                    ...prevState,
-                    mode: 'deposit',
-                    modalType: 'identity',
-                    identity: atomResult?.atom as Atom,
-                    isOpen: true,
-                  }))
-              : undefined
+          identityImgSrc={atomResult?.atom?.image ?? ''}
+          identityDisplayName={atomResult?.atom?.label ?? ''}
+          onBuyClick={() =>
+            setStakeModalActive((prevState) => ({
+              ...prevState,
+              mode: 'deposit',
+              modalType: 'identity',
+              identity: atomResult?.atom as Atom,
+              isOpen: true,
+            }))
           }
           onViewAllClick={() =>
             navigate(`${PATHS.IDENTITY}/${atomResult?.atom?.id}#positions`)
           }
+          isConnected={!!privyUser}
         />
       </>
       <DetailInfoCardNew
@@ -415,8 +423,8 @@ export default function IdentityDetails() {
         </>
       )}
       <ImageModal
-        displayName={atomResult?.atom?.value?.thing?.name ?? ''}
-        imageSrc={atomResult?.atom?.value?.thing?.image ?? ''}
+        displayName={atomResult?.atom?.label ?? ''}
+        imageSrc={atomResult?.atom?.image ?? ''}
         isUser={
           atomResult?.atom?.type === 'Account' ||
           atomResult?.atom?.type === 'Person' ||
