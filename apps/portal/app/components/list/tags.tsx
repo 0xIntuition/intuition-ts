@@ -60,9 +60,9 @@ export function TagsList({
   enableHeader = true,
   enableSearch = true,
   enableSort = true,
-  readOnly = false,
   onPageChange,
   onLimitChange,
+  isConnected = false,
 }: {
   triples: Triple[]
   pagination?: PaginationType
@@ -70,9 +70,9 @@ export function TagsList({
   enableHeader?: boolean
   enableSearch?: boolean
   enableSort?: boolean
-  readOnly?: boolean
   onPageChange?: (page: number) => void
   onLimitChange?: (limit: number) => void
+  isConnected?: boolean
 }) {
   // Using GraphQL field names directly for sorting
   const options: SortOption<string>[] = [
@@ -140,10 +140,7 @@ export function TagsList({
                         ? triple.subject.id
                         : triple.subject?.id?.toString() ?? ''
                   }
-                  claimLink={getClaimUrl(
-                    triple.vault_id.toString() ?? '',
-                    readOnly,
-                  )}
+                  claimLink={getClaimUrl(triple.vault_id.toString() ?? '')}
                   // tags={
                   //   triple.subject?.tags?.nodes?.map((tag) => ({
                   //     label: tag.object?.label ?? '',
@@ -161,7 +158,7 @@ export function TagsList({
                   numPositions={
                     triple?.vault?.positions_aggregate?.aggregate?.count || 0
                   }
-                  link={getAtomLink(identity as unknown as Atom, readOnly)}
+                  link={getAtomLink(identity as unknown as Atom)}
                   ipfsLink={getAtomIpfsLink(identity as unknown as Atom)}
                   onStakeClick={() =>
                     setStakeModalActive((prevState) => ({
@@ -174,9 +171,10 @@ export function TagsList({
                       vaultId: triple?.vault_id.toString() ?? '0',
                     }))
                   }
-                  className={`w-full border-0 bg-transparent ${readOnly ? '' : 'pr-0'}`}
+                  className={`w-full border-0 bg-transparent ${'pr-0'}`}
+                  isConnected={isConnected}
                 />
-                {readOnly === false && (
+                {isConnected && (
                   <Button
                     variant={ButtonVariant.text}
                     size={ButtonSize.icon}

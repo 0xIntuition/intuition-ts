@@ -50,6 +50,7 @@ import {
   invariant,
 } from '@lib/utils/misc'
 import { getStandardPageParams } from '@lib/utils/params'
+import { usePrivy } from '@privy-io/react-auth'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import {
   useLoaderData,
@@ -178,14 +179,12 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
       throw new Error('No account data found for address')
     }
 
-    if (!accountResult.account?.atom_id) {
-      throw new Error('No atom ID found for account')
+    if (accountResult.account?.atom_id) {
+      await queryClient.prefetchQuery({
+        queryKey: ['get-account', { address: queryAddress }],
+        queryFn: () => accountResult,
+      })
     }
-
-    await queryClient.prefetchQuery({
-      queryKey: ['get-account', { address: queryAddress }],
-      queryFn: () => accountResult,
-    })
   } catch (error) {
     logger('Query Error:', {
       message: (error as Error).message,
@@ -326,7 +325,7 @@ export default function ListOverview() {
     userPagination,
   } = useLoaderData<typeof loader>()
   const submit = useSubmit()
-
+  const { user: privyUser } = usePrivy()
   const { data: accountResult } = useGetAccountQuery(
     {
       address: queryAddress,
@@ -482,6 +481,7 @@ export default function ListOverview() {
               id: objectResult.atom?.vault_id ?? null,
             })
           }}
+          disabled={!privyUser}
         >
           <Icon name="plus-small" />
           Add to list
@@ -491,7 +491,7 @@ export default function ListOverview() {
           content="To add a List to &lsquo;your lists&rsquo;, you&lsquo;ll need to use the List! Save the List to your profile by staking on an entry in the List, or tagging something new with the List&lsquo;s Identity. For example - tagging [MetaMask] with [Wallet] will add the [Wallet] List to your Profile, for easy discoverability later!"
           icon={IconName.bookmark}
           trigger={
-            <Button variant={ButtonVariant.primary}>
+            <Button variant={ButtonVariant.primary} disabled={!privyUser}>
               <Icon name={IconName.bookmark} />
               Save list
             </Button>
@@ -581,27 +581,29 @@ export default function ListOverview() {
               )}
             </Suspense>
             <Suspense fallback={<Skeleton className="w-44 h-10 rounded" />}>
-              {isLoadingTriples ? (
-                <Skeleton className="w-44 h-10 rounded" />
-              ) : (
-                <TabsTrigger
-                  value="you"
-                  label={
-                    <ListTabIdentityDisplay
-                      imgSrc={accountResult?.account?.image}
-                    >
-                      You
-                    </ListTabIdentityDisplay>
-                  }
-                  totalCount={
-                    listDetailsData?.userTriplesAggregate.aggregate?.count ?? 0
-                  }
-                  onClick={(e) => {
-                    e.preventDefault()
-                    handleTabChange('you')
-                  }}
-                />
-              )}
+              {accountResult?.account?.atom_id &&
+                (isLoadingTriples ? (
+                  <Skeleton className="w-44 h-10 rounded" />
+                ) : (
+                  <TabsTrigger
+                    value="you"
+                    label={
+                      <ListTabIdentityDisplay
+                        imgSrc={accountResult?.account?.image}
+                      >
+                        You
+                      </ListTabIdentityDisplay>
+                    }
+                    totalCount={
+                      listDetailsData?.userTriplesAggregate.aggregate?.count ??
+                      0
+                    }
+                    onClick={(e) => {
+                      e.preventDefault()
+                      handleTabChange('you')
+                    }}
+                  />
+                ))}
             </Suspense>
             {userWalletAddress && (
               <Suspense fallback={<Skeleton className="w-44 h-10 rounded" />}>
@@ -659,6 +661,7 @@ export default function ListOverview() {
                     enableSort={true}
                     onPageChange={handlePageChange}
                     onLimitChange={handleLimitChange}
+                    isConnected={!!privyUser}
                   />
                 )
               ) : null}
