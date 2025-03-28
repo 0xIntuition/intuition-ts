@@ -114,7 +114,11 @@ export function TopicsStep({
                         </div>
                         <div className="text-left">
                           <Trunctacular
-                            value={topic.name}
+                            value={
+                              topic.atom?.value?.account?.label
+                                ? topic.atom?.value?.account?.label
+                                : topic.name
+                            }
                             maxStringLength={24}
                             className="text-white text-base leading-5"
                           />

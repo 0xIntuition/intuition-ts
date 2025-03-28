@@ -175,6 +175,11 @@ export function EcosystemModal({
                 _or: [
                   { label: { _ilike: `%${searchTerm}%` } },
                   { value: { thing: { name: { _ilike: `%${searchTerm}%` } } } },
+                  {
+                    value: {
+                      account: { label: { _ilike: `%${searchTerm}%` } },
+                    },
+                  },
                 ],
               }
             : {},

@@ -8997,6 +8997,7 @@ export type AtomsWithTagsQuery = {
         description?: string | null
         url?: string | null
       } | null
+      account?: { __typename?: 'accounts'; label: string } | null
     } | null
     vault?: {
       __typename?: 'vaults'
@@ -18762,6 +18763,9 @@ export const AtomsWithTagsDocument = `
         name
         description
         url
+      }
+      account {
+        label
       }
     }
     vault {
@@ -30430,6 +30434,19 @@ export const AtomsWithTags = {
                             {
                               kind: 'Field',
                               name: { kind: 'Name', value: 'url' },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'account' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'label' },
                             },
                           ],
                         },

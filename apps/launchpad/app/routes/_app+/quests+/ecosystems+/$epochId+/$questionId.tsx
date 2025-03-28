@@ -437,7 +437,7 @@ export default function MiniGameOne() {
         id: String(atom.vault_id),
         atom: atom as AtomsWithTagsQuery['atoms'][number],
         image: atom.image || '',
-        name: atom.label || 'Untitled Entry',
+        name: atom.value?.account?.label || atom.label || 'Untitled Entry',
         list: atom.label || 'Untitled List',
         vaultId: atom.vault_id,
         users: Number(atom.vault?.positions_aggregate?.aggregate?.count ?? 0),
