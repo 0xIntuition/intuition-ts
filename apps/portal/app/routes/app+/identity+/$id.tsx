@@ -129,6 +129,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
       atomId: params.id,
       queryAddress,
     },
+    userWallet,
   })
 }
 
@@ -137,10 +138,11 @@ export interface IdentityLoaderData {
     queryAddress: string
     atomId: string
   }
+  userWallet: string
 }
 
 export default function IdentityDetails() {
-  const { initialParams } = useLoaderData<IdentityLoaderData>()
+  const { initialParams, userWallet } = useLoaderData<IdentityLoaderData>()
   const { user: privyUser } = usePrivy()
   const navigate = useNavigate()
 
@@ -374,10 +376,10 @@ export default function IdentityDetails() {
 
   return (
     <TwoPanelLayout leftPanel={leftPanel} rightPanel={rightPanel}>
-      {privyUser?.wallet?.address && (
+      {userWallet && (
         <>
           <StakeModal
-            userWallet={privyUser?.wallet?.address}
+            userWallet={userWallet}
             contract={MULTIVAULT_CONTRACT_ADDRESS}
             open={stakeModalActive.isOpen}
             identity={atomResult?.atom as Atom}
@@ -391,26 +393,12 @@ export default function IdentityDetails() {
               }))
             }}
           />
-          <TagsModal
-            identity={atomResult?.atom as Atom}
-            tagClaims={atomTagsResult?.triples as Triple[]}
-            userWallet={privyUser?.wallet?.address}
-            open={tagsModalActive.isOpen}
-            mode={tagsModalActive.mode}
-            onClose={() => {
-              setTagsModalActive({
-                ...tagsModalActive,
-                isOpen: false,
-              })
-              setSelectedTag(undefined)
-            }}
-          />
           {selectedTag && (
             <SaveListModal
               contract={MULTIVAULT_CONTRACT_ADDRESS}
               tagAtom={saveListModalActive.tag ?? selectedTag}
               atom={atomResult?.atom as Atom}
-              userWallet={privyUser?.wallet?.address}
+              userWallet={userWallet}
               open={saveListModalActive.isOpen}
               onClose={() =>
                 setSaveListModalActive({
@@ -422,6 +410,20 @@ export default function IdentityDetails() {
           )}
         </>
       )}
+      <TagsModal
+        identity={atomResult?.atom as Atom}
+        tagClaims={atomTagsResult?.triples as Triple[]}
+        userWallet={userWallet}
+        open={tagsModalActive.isOpen}
+        mode={tagsModalActive.mode}
+        onClose={() => {
+          setTagsModalActive({
+            ...tagsModalActive,
+            isOpen: false,
+          })
+          setSelectedTag(undefined)
+        }}
+      />
       <ImageModal
         displayName={atomResult?.atom?.label ?? ''}
         imageSrc={atomResult?.atom?.image ?? ''}
