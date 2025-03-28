@@ -93,7 +93,10 @@ export function QuestionRowWrapper({ onStart, question }: QuestionRowProps) {
         atomData?.atom
           ? {
               id: atomData.atom.id,
-              label: atomData.atom.label || '',
+              label:
+                atomData.atom.value?.account?.label ||
+                atomData.atom.label ||
+                '',
               image: atomData.atom.image || undefined,
               vault_id: String(atomData.atom.vault_id),
             }

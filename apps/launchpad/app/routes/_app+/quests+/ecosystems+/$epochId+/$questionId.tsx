@@ -715,7 +715,9 @@ export default function MiniGameOne() {
                             </div>
                             <div className="text-left w-full">
                               <div className="text-white text-base leading-5">
-                                {atomData?.atom?.label ?? ''}
+                                {atomData.atom?.value?.account?.label ??
+                                  atomData?.atom?.label ??
+                                  ''}
                               </div>
                             </div>
                             <div className="flex justify-end px-6">

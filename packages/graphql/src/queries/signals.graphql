@@ -170,6 +170,10 @@ fragment AtomValue on atoms {
       description
       url
     }
+    account {
+      label
+      image
+    }
   }
 }
 
