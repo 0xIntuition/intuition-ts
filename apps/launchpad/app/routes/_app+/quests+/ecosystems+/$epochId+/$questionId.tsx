@@ -1,0 +1,821 @@
+import React from 'react'
+
+import {
+  Avatar,
+  Banner,
+  Button,
+  Card,
+  Icon,
+  IconName,
+  Text,
+} from '@0xintuition/1ui'
+import type { Atoms_Order_By } from '@0xintuition/graphql'
+import { useGetAtomQuery } from '@0xintuition/graphql'
+
+import { AtomDetailsModal } from '@components/atom-details-modal'
+import { AuthCover } from '@components/auth-cover'
+import { EcosystemModal } from '@components/ecosystem-modal/survey-modal'
+import EcosystemShareModal from '@components/ecosystem-share-modal'
+import LoadingLogo from '@components/loading-logo'
+import { LoadingState } from '@components/loading-state'
+import { Navigation } from '@components/lore/chapter-navigation'
+import { PageHeader } from '@components/page-header'
+import { atomColumns, tripleColumns } from '@components/ui/table/columns'
+import { DataTable } from '@components/ui/table/data-table'
+import { MIN_DEPOSIT, MULTIVAULT_CONTRACT_ADDRESS } from '@consts/general'
+import { AtomsWithTagsQuery, useAtomsWithTagsQuery } from '@lib/graphql'
+import { Question } from '@lib/graphql/types'
+import { MULTIVAULT_CONFIG_QUERY_KEY } from '@lib/hooks/useGetMultiVaultConfig'
+import { useGoBack } from '@lib/hooks/useGoBack'
+import { useMediaQuery } from '@lib/hooks/useMediaQuery'
+import type { EpochQuestion } from '@lib/services/epochs'
+import {
+  fetchEpochById,
+  fetchEpochQuestion,
+  fetchEpochQuestions,
+} from '@lib/services/epochs'
+import {
+  atomDetailsModalAtom,
+  onboardingModalAtom,
+  shareModalAtom,
+} from '@lib/state/store'
+import { usePrivy } from '@privy-io/react-auth'
+import type { LoaderFunctionArgs, MetaFunction } from '@remix-run/node'
+import {
+  useLoaderData,
+  useLocation,
+  useParams,
+  useSearchParams,
+} from '@remix-run/react'
+import { getUser } from '@server/auth'
+import { getMultiVaultConfig } from '@server/multivault'
+import {
+  dehydrate,
+  QueryClient,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query'
+import {
+  ColumnDef,
+  getCoreRowModel,
+  getFacetedRowModel,
+  getFacetedUniqueValues,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  SortingState,
+  useReactTable,
+} from '@tanstack/react-table'
+import { useAtom } from 'jotai'
+import { CheckCircle } from 'lucide-react'
+import { formatUnits } from 'viem'
+
+const VERIFICATION_ADDRESS = '0x6877daca5e6934982a5c511d85bf12a71a25ac1d'
+
+export async function loader({ request, params }: LoaderFunctionArgs) {
+  const queryClient = new QueryClient()
+
+  // Start parallel fetches for independent data
+  const [user, questionData, allQuestions, epoch, multiVaultConfig] =
+    await Promise.all([
+      getUser(request),
+      fetchEpochQuestion(Number(params.questionId)),
+      fetchEpochQuestions(Number(params.epochId)),
+      fetchEpochById(Number(params.epochId)),
+      getMultiVaultConfig(MULTIVAULT_CONTRACT_ADDRESS),
+    ])
+
+  const userWallet = user?.wallet?.address?.toLowerCase()
+
+  // Cache the results
+  await Promise.all([
+    queryClient.setQueryData(['get-questions', params.epochId], allQuestions),
+    queryClient.setQueryData(
+      [MULTIVAULT_CONFIG_QUERY_KEY, MULTIVAULT_CONTRACT_ADDRESS],
+      multiVaultConfig,
+    ),
+  ])
+
+  // Get adjacent questions
+  const currentIndex = allQuestions.findIndex(
+    (q: EpochQuestion) => q.id === Number(params.questionId),
+  )
+  const prevQuestion =
+    currentIndex > 0 ? allQuestions[currentIndex - 1] : undefined
+  const nextQuestion =
+    currentIndex < allQuestions.length - 1
+      ? allQuestions[currentIndex + 1]
+      : undefined
+
+  // Add null check for questionData
+  if (!questionData) {
+    throw new Error('Failed to fetch question data')
+  }
+
+  const { origin } = new URL(request.url)
+  const ogImageUrl = `${origin}/resources/create-og?id=${questionData.object_id}&type=list`
+
+  return {
+    dehydratedState: dehydrate(queryClient),
+    userWallet,
+    ogImageUrl,
+    questionTitle: questionData?.title,
+    questionData,
+    prevQuestion,
+    nextQuestion,
+    epoch,
+    multiVaultConfig,
+  }
+}
+
+export const meta: MetaFunction<typeof loader> = ({ data }) => {
+  if (!data) {
+    return []
+  }
+
+  const { ogImageUrl, questionTitle } = data
+  const title = questionTitle ?? 'Error | Intuition Launchpad'
+
+  return [
+    {
+      title: `${title} | Intuition Launchpad`,
+    },
+    {
+      name: 'description',
+      content: `Intuition is an ecosystem of technologies composing a universal and permissionless knowledge graph, capable of handling both objective facts and subjective opinions - delivering superior data for intelligences across the spectrum, from human to artificial.`,
+    },
+    {
+      property: 'og-title',
+      name: title,
+    },
+    {
+      property: 'og:image',
+      content: ogImageUrl,
+    },
+    { property: 'og:site_name', content: 'Intuition Launchpad' },
+    { property: 'og:locale', content: 'en_US' },
+    {
+      name: 'twitter:image',
+      content: ogImageUrl,
+    },
+    {
+      name: 'twitter:card',
+      content: 'summary_large_image',
+    },
+    {
+      name: 'twitter:title',
+      content: `Intuition Launchpad | ${title}`,
+    },
+    {
+      name: 'twitter:description',
+      content: 'Bringing trust to trustless systems.',
+    },
+    { name: 'twitter:site', content: '@0xIntuition' },
+  ]
+}
+
+export function ErrorBoundary() {
+  return (
+    <Banner
+      variant="error"
+      title="Error Loading Question"
+      message="There was an error loading the question data. Please try again."
+    >
+      <Button variant="secondary" onClick={() => window.location.reload()}>
+        Refresh
+      </Button>
+    </Banner>
+  )
+}
+
+export default function MiniGameOne() {
+  const location = useLocation()
+  const { epochId, questionId } = useParams()
+  const goBack = useGoBack({ fallbackRoute: `/quests/questions/${epochId}` })
+  const {
+    userWallet,
+    questionData,
+    prevQuestion,
+    nextQuestion,
+    epoch,
+    multiVaultConfig,
+  } = useLoaderData<typeof loader>()
+  const [shareModalActive, setShareModalActive] = useAtom(shareModalAtom)
+  const [onboardingModal, setOnboardingModal] = useAtom(onboardingModalAtom)
+  const [atomDetailsModal, setAtomDetailsModal] = useAtom(atomDetailsModalAtom)
+  const [searchParams, setSearchParams] = useSearchParams()
+  const queryClient = useQueryClient()
+
+  const { authenticated } = usePrivy()
+
+  const {
+    title,
+    description,
+    enabled,
+    point_award_amount: pointAwardAmount,
+    epoch_id: currentEpoch,
+    predicate_id: predicateId,
+    object_id: objectId,
+  } = questionData
+
+  // Fetch completion data using resource route
+  const { data: completion, isLoading: isLoadingCompletion } = useQuery({
+    queryKey: ['question-completion', userWallet?.toLowerCase(), questionId],
+    queryFn: async () => {
+      const response = await fetch(
+        `/resources/get-question-completion?accountId=${userWallet}&questionId=${questionId}`,
+      )
+      const data = await response.json()
+      return data.completion
+    },
+    enabled: !!userWallet && !!questionId,
+  })
+
+  // Get the user's selected atom if they've completed the question
+  const { data: atomData, isLoading: isLoadingAtom } = useGetAtomQuery(
+    { id: completion?.subject_id ?? 0 },
+    { enabled: !!completion?.subject_id },
+  )
+
+  // Add defensive check for location
+  const hasUserParam = location?.search
+    ? location.search.includes('user=')
+    : false
+  const fullPath = hasUserParam
+    ? `${location?.pathname}${location?.search}`
+    : `${location?.pathname}${location?.search}${location?.search ? '&' : '?'}`
+
+  const [sorting, setSorting] = React.useState<SortingState>(() => {
+    const sortParam = searchParams.get('sort')
+    const orderParam = searchParams.get('order')
+    return sortParam
+      ? [
+          {
+            id: sortParam,
+            desc: orderParam === 'desc',
+          },
+        ]
+      : [
+          {
+            id: 'upvotes',
+            desc: true,
+          },
+        ]
+  })
+
+  // Update URL when sorting changes
+  const updateSortingParams = React.useCallback(
+    (newSorting: SortingState) => {
+      // Preserve all existing params
+      const existingParams = Object.fromEntries(searchParams.entries())
+      const updatedParams: Record<string, string> = {
+        ...existingParams,
+        page: '1', // Reset to first page
+      }
+
+      if (newSorting.length > 0) {
+        updatedParams.sort = newSorting[0].id
+        updatedParams.order = newSorting[0].desc ? 'desc' : 'asc'
+      } else {
+        delete updatedParams.sort
+        delete updatedParams.order
+      }
+
+      setSearchParams(updatedParams)
+    },
+    [searchParams, setSearchParams],
+  )
+
+  // Effect to sync sorting state with URL params
+  React.useEffect(() => {
+    const sortParam = searchParams.get('sort')
+    const orderParam = searchParams.get('order')
+    if (sortParam) {
+      setSorting([
+        {
+          id: sortParam,
+          desc: orderParam === 'desc',
+        },
+      ])
+    }
+  }, [searchParams])
+
+  // Get pagination values from URL or use defaults
+  const [pageSize, setPageSize] = React.useState(() => {
+    const limit = searchParams.get('limit')
+    return limit ? parseInt(limit, 10) : 20
+  })
+
+  const [pageIndex, setPageIndex] = React.useState(() => {
+    const page = searchParams.get('page')
+    // Convert 1-based page number from URL to 0-based index
+    return page ? Math.max(0, parseInt(page, 10) - 1) : 0
+  })
+
+  // Update URL when pagination changes
+  const updatePaginationParams = React.useCallback(
+    (newPage: number, newSize: number) => {
+      // Update URL params
+      const newParams = new URLSearchParams(searchParams)
+      newParams.set('page', (newPage + 1).toString()) // Convert to 1-based for URL
+      newParams.set('limit', newSize.toString())
+      setSearchParams(newParams, { replace: true })
+
+      // Update local state
+      setPageIndex(newPage)
+      setPageSize(newSize)
+    },
+    [searchParams, setSearchParams],
+  )
+
+  const queryVariables = React.useMemo(() => {
+    // Convert table sorting to GraphQL ordering
+    const sortField = sorting[0]?.id
+    const sortDirection = sorting[0]?.desc ? 'desc' : 'asc'
+
+    let orderBy: Atoms_Order_By = {
+      vault: {
+        total_shares: 'desc',
+      },
+    }
+
+    // Map sorting fields to their corresponding GraphQL paths
+    switch (sortField) {
+      case 'upvotes':
+        orderBy = {
+          vault: {
+            total_shares: sortDirection,
+          },
+        }
+        break
+      case 'name':
+        orderBy = {
+          label: sortDirection,
+        }
+        break
+      case 'users':
+        orderBy = {
+          vault: {
+            position_count: sortDirection,
+          },
+        }
+        break
+      case 'tvl':
+        orderBy = {
+          vault: {
+            total_shares: sortDirection,
+          },
+        }
+        break
+    }
+
+    console.log('questionData', questionData)
+    const variables = {
+      where: {
+        _and: [
+          {
+            as_subject_triples: {
+              predicate_id: { _eq: predicateId },
+              object_id: { _eq: objectId },
+            },
+          },
+          questionData?.tag_object_id
+            ? {
+                as_subject_triples: {
+                  object: {
+                    vault_id: { _in: [questionData.tag_object_id] },
+                  },
+                },
+              }
+            : {},
+        ],
+      },
+      tagPredicateIds: [predicateId], // dev - has tag predicate ID
+      userPositionAddress: userWallet ?? '',
+      verifiedPositionAddress: VERIFICATION_ADDRESS,
+      orderBy,
+      limit: pageSize,
+      offset: pageIndex * pageSize,
+    }
+
+    return variables
+  }, [predicateId, objectId, userWallet, pageSize, pageIndex, sorting])
+
+  const { data: atomsData, isLoading: isLoadingAtoms } = useAtomsWithTagsQuery(
+    {
+      ...queryVariables,
+    },
+    {
+      enabled: !!queryVariables,
+      queryKey: ['atoms-with-tags', queryVariables, predicateId, objectId],
+      refetchInterval: 3000,
+    },
+  )
+
+  // Get total count from the query response
+  const totalCount = atomsData?.total?.aggregate?.count ?? 0
+
+  type TableRowData = {
+    id: string
+    atom: AtomsWithTagsQuery['atoms'][number]
+    image: string
+    name: string
+    list: string
+    vaultId: string
+    users: number
+    upvotes: number
+    forTvl: number
+    userPosition?: number
+    currentSharePrice?: number
+    stakingDisabled?: boolean
+    multiVaultConfig: typeof multiVaultConfig
+  }
+
+  const tableData = React.useMemo(() => {
+    const data =
+      (atomsData?.atoms?.map((atom: AtomsWithTagsQuery['atoms'][number]) => ({
+        id: String(atom.vault_id),
+        atom: atom as AtomsWithTagsQuery['atoms'][number],
+        image: atom.image || '',
+        name: atom.value?.account?.label || atom.label || 'Untitled Entry',
+        list: atom.label || 'Untitled List',
+        vaultId: atom.vault_id,
+        users: Number(atom.vault?.positions_aggregate?.aggregate?.count ?? 0),
+        upvotes: (() => {
+          const amount =
+            (+formatUnits(
+              atom.vault?.positions_aggregate?.aggregate?.sum?.shares ?? 0,
+              18,
+            ) *
+              +formatUnits(atom.vault?.current_share_price ?? 0, 18)) /
+            (+(multiVaultConfig?.formatted_min_deposit || MIN_DEPOSIT) *
+              (1 -
+                +(multiVaultConfig?.entry_fee ?? 0) /
+                  +(multiVaultConfig?.fee_denominator ?? 1)))
+          return amount < 0.1 ? 0 : Math.ceil(amount)
+        })(),
+        forTvl:
+          +formatUnits(atom.vault?.total_shares ?? 0, 18) *
+          +formatUnits(atom.vault?.current_share_price ?? 0, 18),
+        userPosition:
+          atom.vault?.userPosition?.[0]?.shares > 0
+            ? +formatUnits(atom.vault?.userPosition?.[0].shares ?? 0, 18) *
+              +formatUnits(atom.vault?.current_share_price ?? 0, 18)
+            : undefined,
+        currentSharePrice:
+          atom.vault?.userPosition?.[0]?.shares > 0
+            ? +formatUnits(atom.vault?.current_share_price, 18)
+            : undefined,
+        multiVaultConfig,
+      })) as TableRowData[]) ?? []
+    return data
+  }, [atomsData, multiVaultConfig])
+
+  const isMobile = useMediaQuery('(max-width: 768px)')
+  const isTablet = useMediaQuery('(max-width: 1024px)')
+
+  const columnVisibility = React.useMemo(() => {
+    if (isMobile) {
+      return {
+        position: false,
+        name: true,
+        upvotes: true,
+        downvotes: true,
+        userPosition: true,
+        users: true,
+        tvl: false,
+      }
+    }
+    if (isTablet) {
+      return {
+        position: true,
+        name: true,
+        upvotes: true,
+        downvotes: true,
+        userPosition: true,
+        users: true,
+        tvl: false,
+      }
+    }
+    return {
+      position: true,
+      name: true,
+      upvotes: true,
+      downvotes: true,
+      users: true,
+      tvl: true,
+      userPosition: true,
+    }
+  }, [isMobile, isTablet])
+
+  const table = useReactTable<TableRowData>({
+    data: tableData,
+    columns: atomColumns as ColumnDef<TableRowData>[],
+    columnResizeMode: 'onChange',
+    enableColumnPinning: !isMobile,
+    enableColumnResizing: !isMobile,
+    enableHiding: true,
+    onSortingChange: (updater) => {
+      const newSorting =
+        typeof updater === 'function' ? updater(sorting) : updater
+      setSorting(newSorting)
+      updateSortingParams(newSorting)
+    },
+    state: {
+      sorting,
+      pagination: {
+        pageIndex,
+        pageSize,
+      },
+      columnVisibility,
+    },
+    onPaginationChange: (updater) => {
+      if (typeof updater === 'function') {
+        const newState = updater({
+          pageIndex,
+          pageSize,
+        })
+        // Only update UI state after data is fetched
+        updatePaginationParams(newState.pageIndex, newState.pageSize)
+      }
+    },
+    pageCount: Math.ceil(totalCount / pageSize),
+    manualPagination: true,
+    manualSorting: true,
+    getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFacetedRowModel: getFacetedRowModel(),
+    getFacetedUniqueValues: getFacetedUniqueValues(),
+    initialState: {
+      columnPinning: {
+        left: ['position'],
+        right: ['userPosition'],
+      },
+    },
+  })
+
+  const handleStartOnboarding = () => {
+    // Ensure we have the complete question object with required fields
+    const questionObj: Question = {
+      id: parseInt(questionId || '0', 10),
+      title: title || '',
+      predicate_id: predicateId,
+      object_id: objectId,
+      point_award_amount: pointAwardAmount,
+      enabled: enabled || false,
+      epoch_id: currentEpoch,
+      description: description || '', // These fields are optional in the Question type
+      link: '', // Empty string instead of null
+    }
+
+    setOnboardingModal({
+      isOpen: true,
+      question: questionObj,
+      predicateId,
+      objectId,
+    })
+  }
+
+  const handleCloseOnboarding = () => {
+    // Only invalidate queries if we have all required values and the modal was actually open
+    if (userWallet && questionId && currentEpoch && onboardingModal.isOpen) {
+      queryClient.invalidateQueries({
+        queryKey: ['atoms-with-tags', queryVariables, predicateId, objectId],
+        exact: false,
+      })
+      // Invalidate queries first
+      queryClient.invalidateQueries({
+        queryKey: ['question-completion', userWallet.toLowerCase(), questionId],
+      })
+      queryClient.invalidateQueries({
+        queryKey: ['epoch-progress', userWallet.toLowerCase(), currentEpoch],
+      })
+      queryClient.invalidateQueries({
+        queryKey: ['get-questions', currentEpoch],
+      })
+    }
+
+    // Then close the modal
+    setOnboardingModal({
+      isOpen: false,
+      question: null,
+      predicateId: null,
+      objectId: null,
+    })
+  }
+
+  const handleRowClick = (id: number) => {
+    const rowData = tableData.find((row) => row.id === String(id))
+
+    if (rowData) {
+      setAtomDetailsModal({
+        isOpen: true,
+        atomId: Number(rowData.atom.vault_id),
+        data: rowData,
+      })
+    }
+  }
+
+  if (isLoadingAtoms) {
+    return <LoadingState />
+  }
+
+  return (
+    <>
+      <div className="flex flex-col md:flex-row items-center gap-4 justify-between">
+        <div className="flex flex-row w-full gap-4 items-center">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="border-none bg-background-muted"
+            onClick={goBack}
+          >
+            <Icon name="chevron-left" className="h-4 w-4" />
+          </Button>
+          <PageHeader
+            title={`${epoch?.name ?? ''} | Question ${questionData?.order}`}
+            className="text-xl sm:text-2xl"
+          />
+        </div>
+        <Button
+          variant="secondary"
+          className="border border-border/10 w-full sm:w-auto"
+          onClick={() =>
+            setShareModalActive({
+              isOpen: true,
+              currentPath: fullPath,
+              title,
+            })
+          }
+        >
+          <Icon name="square-arrow-top-right" className="h-4 w-4 mr-2" />
+          Share
+        </Button>
+      </div>
+
+      <div className="bg-gradient-to-b from-[#060504] to-[#101010] rounded-xl">
+        <div className="relative">
+          <Card
+            className="border-none w-full md:min-w-[480px] min-h-80 relative overflow-hidden"
+            style={{
+              backgroundImage: `linear-gradient(to bottom right, rgba(6, 5, 4, 0.9), rgba(16, 16, 16, 0.9)), url(${atomsData?.atoms?.[0]?.image || ''})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+            }}
+          >
+            <div className="absolute inset-0 flex flex-col justify-center items-center">
+              <div className="space-y-2 items-center pb-8">
+                <Text className="text-foreground text-center text-2xl md:text-3xl px-4">
+                  {title}
+                </Text>
+              </div>
+              <AuthCover
+                buttonContainerClassName="h-full flex items-center justify-center w-full"
+                actionText="Answer"
+              >
+                {isLoadingCompletion ? (
+                  <LoadingLogo size={40} />
+                ) : completion ? (
+                  <div className="flex flex-col items-center gap-2">
+                    {isLoadingAtom ? (
+                      <LoadingLogo size={40} />
+                    ) : (
+                      atomData && (
+                        <>
+                          <Text variant="body" className="text-primary/70">
+                            You selected
+                          </Text>
+                          <button
+                            onClick={() => {
+                              const rowData = tableData.find(
+                                (row) =>
+                                  row.atom.vault_id ===
+                                  String(atomData.atom?.vault_id),
+                              )
+
+                              if (rowData) {
+                                setAtomDetailsModal({
+                                  isOpen: true,
+                                  atomId: Number(rowData.atom.vault_id),
+                                  data: rowData,
+                                })
+                              }
+                            }}
+                            className={`flex items-center gap-4 rounded-lg transition-colors w-full md:w-[280px] h-[72px] bg-background/50 backdrop-blur-md backdrop-saturate-150 border border-border/10`}
+                          >
+                            <div className="w-14 h-14 rounded bg-[#1A1A1A] flex-shrink-0 ml-1">
+                              <Avatar
+                                src={atomData?.atom?.image ?? ''}
+                                name={atomData?.atom?.label ?? ''}
+                                icon={IconName.fingerprint}
+                                className="w-full h-full object-cover rounded-lg"
+                              />
+                            </div>
+                            <div className="text-left w-full">
+                              <div className="text-white text-base leading-5">
+                                {atomData.atom?.value?.account?.label ??
+                                  atomData?.atom?.label ??
+                                  ''}
+                              </div>
+                            </div>
+                            <div className="flex justify-end px-6">
+                              <CheckCircle className="text-success h-6 w-6" />
+                            </div>
+                          </button>
+                        </>
+                      )
+                    )}
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-xl font-bold bg-gradient-to-r from-[#34C578] to-[#00FF94] bg-clip-text text-transparent">
+                        {pointAwardAmount}
+                      </span>
+                      <span className="text-md font-semibold text-muted-foreground">
+                        IQ Earned
+                      </span>
+                    </div>
+                  </div>
+                ) : (
+                  authenticated &&
+                  enabled && (
+                    <Button
+                      variant="primary"
+                      size="lg"
+                      onClick={handleStartOnboarding}
+                      disabled={!enabled}
+                    >
+                      Earn {pointAwardAmount} IQ Points
+                    </Button>
+                  )
+                )}
+              </AuthCover>
+            </div>
+          </Card>
+        </div>
+      </div>
+
+      <div className="mt-6 !mb-24">
+        <DataTable
+          columns={tripleColumns as ColumnDef<TableRowData>[]}
+          data={tableData}
+          onRowClick={handleRowClick}
+          table={table}
+          onPaginationChange={updatePaginationParams}
+        />
+      </div>
+      <EcosystemShareModal
+        open={shareModalActive.isOpen}
+        onClose={() =>
+          setShareModalActive({
+            ...shareModalActive,
+            isOpen: false,
+          })
+        }
+        title={shareModalActive.title}
+        atomsData={atomsData?.atoms as unknown as AtomsWithTagsQuery['atoms']}
+      />
+      <EcosystemModal
+        isOpen={onboardingModal.isOpen}
+        onClose={handleCloseOnboarding}
+        question={
+          onboardingModal.question ?? (questionData as unknown as Question)
+        }
+        predicateId={predicateId}
+        objectId={objectId}
+        tagObjectId={questionData?.tag_object_id ?? null}
+      />
+      <AtomDetailsModal
+        isOpen={atomDetailsModal.isOpen}
+        listClaim={false}
+        onClose={() =>
+          setAtomDetailsModal({ isOpen: false, atomId: 0, data: undefined })
+        }
+        atomId={atomDetailsModal.atomId}
+        data={atomDetailsModal.data}
+      />
+      <Navigation
+        prevItem={
+          prevQuestion
+            ? {
+                id: String(prevQuestion.id),
+                title: prevQuestion.title,
+                order: prevQuestion.order,
+              }
+            : undefined
+        }
+        nextItem={
+          nextQuestion
+            ? {
+                id: String(nextQuestion.id),
+                title: nextQuestion.title,
+                order: nextQuestion.order,
+              }
+            : undefined
+        }
+        type="question"
+        baseUrl={`/quests/ecosystems/${epochId}`}
+      />
+    </>
+  )
+}

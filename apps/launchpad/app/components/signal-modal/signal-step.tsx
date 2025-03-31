@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 
 import { Button, Text, TextVariant, toast } from '@0xintuition/1ui'
 
+import { FeesText } from '@components/fees-text'
 import SignalToast from '@components/survey-modal/signal-toast'
 import { MIN_DEPOSIT, MULTIVAULT_CONTRACT_ADDRESS } from '@consts/general'
 import { multivaultAbi } from '@lib/abis/multivault'
@@ -484,9 +485,33 @@ export function SignalStep({
           txReceipt: receipt,
         })
 
-        // Invalidate relevant queries
-        await queryClient.invalidateQueries()
+        // Invalidate specific queries that need to be refreshed
+        await Promise.all([
+          // Invalidate vault details
+          queryClient.invalidateQueries({
+            queryKey: ['get-vault-details', contract, vaultId, counterVaultId],
+          }),
+          // Invalidate positions
+          queryClient.invalidateQueries({
+            queryKey: ['get-positions'],
+          }),
+          // Invalidate atoms/triples depending on type
+          queryClient.invalidateQueries({
+            queryKey: atom ? ['get-atoms'] : ['get-triples'],
+          }),
+          // Invalidate events
+          queryClient.invalidateQueries({
+            queryKey: ['get-events'],
+          }),
+          // Invalidate atoms-with-tags query with a pattern match
+          queryClient.invalidateQueries({
+            queryKey: ['AtomsWithTags'],
+            exact: false, // This will match any query key that starts with 'AtomsWithTags'
+          }),
+        ])
         revalidator.revalidate()
+        console.log('[SignalStep] All queries invalidated successfully')
+        console.log('[SignalStep] Revalidator called')
 
         // Store the final state and show success after a delay
         setFinalMode(mode)
@@ -767,17 +792,7 @@ export function SignalStep({
                 disabled={!mode || isLoading}
                 loadingText={'Processing...'}
               />
-              <Text variant="caption" className="text-end text-primary/70">
-                Standard fees apply.{' '}
-                <Link
-                  to="https://tech.docs.intuition.systems/fees"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-primary font-semibold hover:text-accent"
-                >
-                  Learn more
-                </Link>
-              </Text>
+              <FeesText />
             </div>
           </div>
         </div>

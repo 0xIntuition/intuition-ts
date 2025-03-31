@@ -1,0 +1,117 @@
+query AtomsWithTags(
+  $where: atoms_bool_exp
+  $limit: Int
+  $offset: Int
+  $orderBy: [atoms_order_by!]
+  $address: String
+  $tagPredicateIds: [numeric!]
+  $userPositionAddress: String
+  $verifiedPositionAddress: String
+) {
+  total: atoms_aggregate(where: $where) {
+    aggregate {
+      count
+    }
+  }
+  atoms(where: $where, order_by: $orderBy, limit: $limit, offset: $offset) {
+    id
+    vault_id
+    label
+    wallet_id
+    image
+    type
+    block_timestamp
+    data
+    creator {
+      id
+    }
+    value {
+      thing {
+        name
+        description
+        url
+      }
+      account {
+        label
+      }
+    }
+    vault {
+      positions_aggregate {
+        aggregate {
+          count
+          sum {
+            shares
+          }
+        }
+        nodes {
+          account {
+            id
+          }
+          shares
+        }
+      }
+      current_share_price
+      total_shares
+      position_count
+      # User positions based on provided address
+      userPosition: positions(
+        limit: 1
+        where: { account_id: { _eq: $userPositionAddress } }
+      ) {
+        shares
+        account_id
+      }
+    }
+    # Tags with flexible predicate filtering
+    tags: as_subject_triples_aggregate(
+      where: { predicate_id: { _in: $tagPredicateIds } }
+    ) {
+      nodes {
+        object {
+          label
+          vault_id
+        }
+        # Include predicate_id for reference
+        predicate_id
+      }
+      aggregate {
+        count
+      }
+    }
+    # Verification check for specific triple with predicate_id '3' and object_id '16763'
+    verificationTriple: as_subject_triples_aggregate(
+      where: { predicate_id: { _eq: "3" }, object_id: { _eq: "16763" } }
+    ) {
+      nodes {
+        id
+        predicate_id
+        object_id
+        # Query positions on this triple's vault
+        vault {
+          id
+          # Positions on the triple vault where the account matches verifiedPositionAddress
+          verifiedPosition: positions(
+            limit: 1
+            where: { account_id: { _eq: $verifiedPositionAddress } }
+          ) {
+            id
+            shares
+            account_id
+          }
+        }
+        counter_vault {
+          id
+          # Positions on the triple counter vault where the account matches verifiedPositionAddress
+          verifiedPosition: positions(
+            limit: 1
+            where: { account_id: { _eq: $verifiedPositionAddress } }
+          ) {
+            id
+            shares
+            account_id
+          }
+        }
+      }
+    }
+  }
+}

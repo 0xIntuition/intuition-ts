@@ -11,6 +11,7 @@ interface Epoch {
   is_active: boolean
   created_at: string
   updated_at: string
+  type: string | null
 }
 
 interface GetCurrentEpochResponse {
@@ -28,6 +29,7 @@ const GetCurrentEpochQuery = gql`
       is_active
       created_at
       updated_at
+      type
     }
   }
 `
