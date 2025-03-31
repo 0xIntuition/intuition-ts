@@ -11,7 +11,7 @@ interface UseQuestionDataProps {
 
 export function useEcosystemQuestionData({ questionId }: UseQuestionDataProps) {
   const { user: privyUser } = usePrivy()
-  const userWallet = privyUser?.wallet?.address?.toLowerCase() ?? ""
+  const userWallet = privyUser?.wallet?.address?.toLowerCase() ?? ''
 
   const { data: currentEpoch, isLoading: isLoadingEpoch } = useQuery({
     queryKey: ['current-epoch'],
@@ -84,12 +84,12 @@ export function useEcosystemQuestionData({ questionId }: UseQuestionDataProps) {
           },
           tagObjectId
             ? {
-              as_subject_triples: {
-                object: {
-                  vault_id: { _in: [tagObjectId] },
+                as_subject_triples: {
+                  object: {
+                    vault_id: { _in: [tagObjectId] },
+                  },
                 },
-              },
-            }
+              }
             : {},
         ],
       },

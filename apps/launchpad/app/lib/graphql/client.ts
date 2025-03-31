@@ -2,7 +2,9 @@ import { API_URL_DEV } from '@consts/general'
 import { GraphQLClient } from 'graphql-request'
 
 // Safely access environment variables with fallback
-const HASURA_POINTS_ENDPOINT = import.meta.env?.VITE_HASURA_POINTS_ENDPOINT || process.env?.HASURA_POINTS_ENDPOINT
+const HASURA_POINTS_ENDPOINT =
+  import.meta.env?.VITE_HASURA_POINTS_ENDPOINT ||
+  process.env?.HASURA_POINTS_ENDPOINT
 
 if (!HASURA_POINTS_ENDPOINT) {
   console.error('Environment variables not found:', {
@@ -15,7 +17,7 @@ if (!HASURA_POINTS_ENDPOINT) {
     - Process exists: ${typeof process !== 'undefined'}
     - Process.env available: ${!!process?.env}
     - import.meta.env available: ${!!import.meta?.env}
-    Please ensure either HASURA_POINTS_ENDPOINT or VITE_HASURA_POINTS_ENDPOINT is set in your environment variables.`
+    Please ensure either HASURA_POINTS_ENDPOINT or VITE_HASURA_POINTS_ENDPOINT is set in your environment variables.`,
   )
 }
 

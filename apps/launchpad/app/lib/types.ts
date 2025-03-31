@@ -8,4 +8,4 @@ export interface Epoch {
   created_at: string
   updated_at: string
   total_points_available: number
-} 
+}

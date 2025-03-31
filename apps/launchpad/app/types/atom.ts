@@ -182,9 +182,9 @@ export type AtomArrayType = Array<AtomType>
 export function isAtomType(obj: unknown): obj is AtomType {
   return Boolean(
     obj &&
-    typeof obj === 'object' &&
-    obj !== null &&
-    'id' in obj &&
-    'vault_id' in obj,
+      typeof obj === 'object' &&
+      obj !== null &&
+      'id' in obj &&
+      'vault_id' in obj,
   )
 }

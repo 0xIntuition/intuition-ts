@@ -10,7 +10,9 @@ export function DashboardBanner() {
   const [isVisible] = useState(true)
   const navigate = useNavigate()
 
-  if (!isVisible) return null
+  if (!isVisible) {
+    return null
+  }
 
   return (
     <Banner variant="base" className="dark text-foreground" rounded="default">

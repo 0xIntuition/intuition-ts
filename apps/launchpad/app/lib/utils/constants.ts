@@ -9,7 +9,8 @@ export const QUESTS = [
   },
   {
     title: 'Map the Ecosystems of Crypto',
-    description: 'Help users find the most relevant people and projects within each ecosystem.',
+    description:
+      'Help users find the most relevant people and projects within each ecosystem.',
     link: '/quests/ecosystems',
     enabled: true,
     index: 2,

@@ -12,7 +12,7 @@ import { useGoBack } from '@lib/hooks/useGoBack'
 import type { Question } from '@lib/services/questions'
 import { atomDetailsModalAtom, onboardingModalAtom } from '@lib/state/store'
 import type { LoaderFunctionArgs, MetaFunction } from '@remix-run/node'
-import { useLoaderData, useParams } from '@remix-run/react'
+import { useLoaderData } from '@remix-run/react'
 import { getUser } from '@server/auth'
 import {
   dehydrate,
@@ -32,6 +32,7 @@ interface Epoch {
   created_at: string
   updated_at: string
   total_points_available: number
+  total_points: number
 }
 
 interface Progress {

@@ -1,5 +1,4 @@
 import {
-  Badge,
   Button,
   ButtonSize,
   ButtonVariant,
@@ -10,14 +9,12 @@ import {
 } from '@0xintuition/1ui'
 
 import EcosystemCard from '@components/ecosystem-card'
-import { EpochStatus } from '@components/epoch-status'
 import { ErrorPage } from '@components/error-page'
 import { LoadingState } from '@components/loading-state'
 import { PageHeader } from '@components/page-header'
 import { useGoBack } from '@lib/hooks/useGoBack'
 import type { Epoch } from '@lib/types'
 import type { LoaderFunctionArgs, MetaFunction } from '@remix-run/node'
-import { useLoaderData } from '@remix-run/react'
 import { getUser } from '@server/auth'
 import { dehydrate, QueryClient, useQuery } from '@tanstack/react-query'
 
