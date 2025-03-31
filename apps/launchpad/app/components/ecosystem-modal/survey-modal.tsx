@@ -248,7 +248,7 @@ export function EcosystemModal({
 
     const newTopics = searchData.atoms.map((atom) => ({
       id: atom.vault_id,
-      name: atom.label ?? '',
+      name: atom?.value?.account?.label ?? atom.label ?? '',
       image: atom.image ?? undefined,
       atom: atom as unknown as AtomsWithTagsQuery['atoms'][number],
       selected: false,
@@ -302,7 +302,7 @@ export function EcosystemModal({
         // Create a new topic
         const newTopic: Topic = {
           id: selectedAtom.vault_id,
-          name: selectedAtom.label ?? '',
+          name: selectedAtom?.value?.account?.label ?? selectedAtom.label ?? '',
           image: selectedAtom.image ?? undefined,
           selected: true,
           atom: selectedAtom as unknown as AtomsWithTagsQuery['atoms'][number],
@@ -315,7 +315,7 @@ export function EcosystemModal({
 
         // Set up metadata for triple creation since this is a new atom
         const metadata: NewAtomMetadata = {
-          name: selectedAtom.label ?? '',
+          name: selectedAtom?.value?.account?.label ?? selectedAtom.label ?? '',
           image: selectedAtom.image ?? undefined,
           vaultId: selectedAtom.vault_id,
         }

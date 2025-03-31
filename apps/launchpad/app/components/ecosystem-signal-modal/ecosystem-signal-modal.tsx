@@ -122,9 +122,15 @@ export function EcosystemSignalModal({
                 className="flex-1"
               >
                 {isSimplifiedRedeem ? (
-                  <>Redeem your signal for {atom?.label ?? ''}</>
+                  <>
+                    Redeem your signal for{' '}
+                    {atom?.value?.account?.label ?? atom?.label}
+                  </>
                 ) : (
-                  <>Cast your signal on {atom?.label}</>
+                  <>
+                    Cast your signal on{' '}
+                    {atom?.value?.account?.label ?? atom?.label}
+                  </>
                 )}
               </Text>
               <Badge className="flex items-center gap-1 px-2 mr-2">

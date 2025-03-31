@@ -19,6 +19,10 @@ export type AtomValueType = {
     description?: string
     url?: string
   }
+  account?: {
+    label?: string | null
+    image?: string | null
+  }
 }
 
 export type AtomType = {
@@ -178,9 +182,9 @@ export type AtomArrayType = Array<AtomType>
 export function isAtomType(obj: unknown): obj is AtomType {
   return Boolean(
     obj &&
-      typeof obj === 'object' &&
-      obj !== null &&
-      'id' in obj &&
-      'vault_id' in obj,
+    typeof obj === 'object' &&
+    obj !== null &&
+    'id' in obj &&
+    'vault_id' in obj,
   )
 }

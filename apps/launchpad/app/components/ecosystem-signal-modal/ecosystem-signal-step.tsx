@@ -585,7 +585,9 @@ export function EcosystemSignalStep({
                   )}
                 </div>
                 <div className="flex flex-col gap-0.5 w-full">
-                  <Text variant={TextVariant.headline}>{atom?.label}</Text>
+                  <Text variant={TextVariant.headline}>
+                    {atom?.value?.account?.label ?? atom?.label}
+                  </Text>
                 </div>
               </div>
 

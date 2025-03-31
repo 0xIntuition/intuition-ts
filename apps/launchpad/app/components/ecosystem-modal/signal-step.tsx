@@ -364,8 +364,8 @@ export function SignalStep({
       <div className="flex flex-col gap-4 p-8">
         <div className="flex flex-col gap-2 mb-8">
           <Text variant="headline" className="font-semibold">
-            Signal {newAtomMetadata?.name ?? selectedTopic?.atom?.label} as the
-            best {selectedTopic?.atom?.label}
+            Cast your signal on{' '}
+            {newAtomMetadata?.name ?? selectedTopic?.atom?.label}
           </Text>
           <Text variant={TextVariant.footnote} className="text-primary/70">
             <span className="inline-flex items-center gap-1">
