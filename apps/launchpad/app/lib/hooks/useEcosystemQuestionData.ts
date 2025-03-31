@@ -117,7 +117,6 @@ export function useEcosystemQuestionData({ questionId }: UseQuestionDataProps) {
         sum + Number(atom.vault?.positions_aggregate?.aggregate?.count ?? 0),
       0,
     ) ?? 0
-  console.log('useEcosystemQuestionData - count', atomsData?.atoms?.length)
 
   return {
     title: questionData?.title ?? 'Question',
