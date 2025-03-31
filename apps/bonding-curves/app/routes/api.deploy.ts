@@ -74,6 +74,13 @@ export const action: ActionFunction = async ({ request }) => {
       throw new Error('No contract address in receipt')
     }
 
+    // Wait for contract code to be available
+    let code = await publicClient.getCode({ address: receipt.contractAddress })
+    while (!code || code === '0x') {
+      await new Promise(resolve => setTimeout(resolve, 100))
+      code = await publicClient.getCode({ address: receipt.contractAddress })
+    }
+
     return json({ address: receipt.contractAddress })
 
   } catch (error) {

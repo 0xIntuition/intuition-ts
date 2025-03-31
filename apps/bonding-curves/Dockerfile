@@ -18,7 +18,7 @@ COPY apps/bonding-curves/lib/ /app/lib/
 COPY apps/bonding-curves/foundry.toml /app/foundry.toml
 COPY apps/bonding-curves/remappings.txt /app/remappings.txt
 RUN mkdir -p /app/contracts
-COPY apps/bonding-curves/contracts/BaseCurve.sol /app/contracts/
+COPY apps/bonding-curves/contracts/*.sol /app/contracts/
 
 # Stage 2: Build and run the application
 FROM node:20

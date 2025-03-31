@@ -30,8 +30,16 @@ export const action: ActionFunction = async ({ request }) => {
       .replace(/import\s*{[^}]*}\s*from\s*["'][^"']*\/test\/[^"']*["'];?\s*/g, '')
       .replace(/using\s+StringUtils\s+for\s+(?:u?int256);?\s*/g, '')
       .replace(
-        /import\s*{BaseCurve}\s*from\s*([^"']\S+);/g,
+        /import\s*{[^}]*BaseCurve[^}]*}\s*from\s*["'][^"']*["'];/g,
         'import {BaseCurve} from "./BaseCurve.sol";'
+      )
+      .replace(
+        /import\s*{[^}]*IBaseCurve[^}]*}\s*from\s*["'][^"']*["'];/g,
+        'import {IBaseCurve} from "./IBaseCurve.sol";'
+      )
+      .replace(
+        /import\s*{[^}]*Errors[^}]*}\s*from\s*["'][^"']*["'];/g,
+        'import {Errors} from "./Errors.sol";'
       )
 
     let compileResult: { stdout: string; stderr: string }
