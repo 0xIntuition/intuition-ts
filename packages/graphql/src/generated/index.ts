@@ -9146,6 +9146,11 @@ export type AtomValueFragment = {
       description?: string | null
       url?: string | null
     } | null
+    account?: {
+      __typename?: 'accounts'
+      label: string
+      image?: string | null
+    } | null
   } | null
 }
 
@@ -9186,6 +9191,11 @@ export type AtomMetadataFragment = {
       image?: string | null
       description?: string | null
       url?: string | null
+    } | null
+    account?: {
+      __typename?: 'accounts'
+      label: string
+      image?: string | null
     } | null
   } | null
 }
@@ -9445,6 +9455,11 @@ export type EventDetailsFragment = {
         description?: string | null
         url?: string | null
       } | null
+      account?: {
+        __typename?: 'accounts'
+        label: string
+        image?: string | null
+      } | null
     } | null
   } | null
   triple?: {
@@ -9560,6 +9575,11 @@ export type EventDetailsFragment = {
           description?: string | null
           url?: string | null
         } | null
+        account?: {
+          __typename?: 'accounts'
+          label: string
+          image?: string | null
+        } | null
       } | null
     }
     predicate: {
@@ -9601,6 +9621,11 @@ export type EventDetailsFragment = {
           description?: string | null
           url?: string | null
         } | null
+        account?: {
+          __typename?: 'accounts'
+          label: string
+          image?: string | null
+        } | null
       } | null
     }
     object: {
@@ -9641,6 +9666,11 @@ export type EventDetailsFragment = {
           image?: string | null
           description?: string | null
           url?: string | null
+        } | null
+        account?: {
+          __typename?: 'accounts'
+          label: string
+          image?: string | null
         } | null
       } | null
     }
@@ -9789,6 +9819,11 @@ export type PositionDetailsFragment = {
             description?: string | null
             url?: string | null
           } | null
+          account?: {
+            __typename?: 'accounts'
+            label: string
+            image?: string | null
+          } | null
         } | null
       }
       predicate: {
@@ -9830,6 +9865,11 @@ export type PositionDetailsFragment = {
             description?: string | null
             url?: string | null
           } | null
+          account?: {
+            __typename?: 'accounts'
+            label: string
+            image?: string | null
+          } | null
         } | null
       }
       object: {
@@ -9870,6 +9910,11 @@ export type PositionDetailsFragment = {
             image?: string | null
             description?: string | null
             url?: string | null
+          } | null
+          account?: {
+            __typename?: 'accounts'
+            label: string
+            image?: string | null
           } | null
         } | null
       }
@@ -9965,6 +10010,11 @@ export type TripleMetadataFragment = {
         description?: string | null
         url?: string | null
       } | null
+      account?: {
+        __typename?: 'accounts'
+        label: string
+        image?: string | null
+      } | null
     } | null
   }
   predicate: {
@@ -10006,6 +10056,11 @@ export type TripleMetadataFragment = {
         description?: string | null
         url?: string | null
       } | null
+      account?: {
+        __typename?: 'accounts'
+        label: string
+        image?: string | null
+      } | null
     } | null
   }
   object: {
@@ -10046,6 +10101,11 @@ export type TripleMetadataFragment = {
         image?: string | null
         description?: string | null
         url?: string | null
+      } | null
+      account?: {
+        __typename?: 'accounts'
+        label: string
+        image?: string | null
       } | null
     } | null
   }
@@ -10211,6 +10271,11 @@ export type TripleVaultDetailsFragment = {
                 description?: string | null
                 url?: string | null
               } | null
+              account?: {
+                __typename?: 'accounts'
+                label: string
+                image?: string | null
+              } | null
             } | null
           }
           predicate: {
@@ -10252,6 +10317,11 @@ export type TripleVaultDetailsFragment = {
                 description?: string | null
                 url?: string | null
               } | null
+              account?: {
+                __typename?: 'accounts'
+                label: string
+                image?: string | null
+              } | null
             } | null
           }
           object: {
@@ -10292,6 +10362,11 @@ export type TripleVaultDetailsFragment = {
                 image?: string | null
                 description?: string | null
                 url?: string | null
+              } | null
+              account?: {
+                __typename?: 'accounts'
+                label: string
+                image?: string | null
               } | null
             } | null
           }
@@ -10393,6 +10468,11 @@ export type TripleVaultDetailsFragment = {
                 description?: string | null
                 url?: string | null
               } | null
+              account?: {
+                __typename?: 'accounts'
+                label: string
+                image?: string | null
+              } | null
             } | null
           }
           predicate: {
@@ -10434,6 +10514,11 @@ export type TripleVaultDetailsFragment = {
                 description?: string | null
                 url?: string | null
               } | null
+              account?: {
+                __typename?: 'accounts'
+                label: string
+                image?: string | null
+              } | null
             } | null
           }
           object: {
@@ -10474,6 +10559,11 @@ export type TripleVaultDetailsFragment = {
                 image?: string | null
                 description?: string | null
                 url?: string | null
+              } | null
+              account?: {
+                __typename?: 'accounts'
+                label: string
+                image?: string | null
               } | null
             } | null
           }
@@ -10912,6 +11002,11 @@ export type GetAccountQuery = {
           description?: string | null
           url?: string | null
         } | null
+        account?: {
+          __typename?: 'accounts'
+          label: string
+          image?: string | null
+        } | null
       } | null
     } | null
     claims: Array<{
@@ -11204,6 +11299,11 @@ export type GetAccountMetadataQuery = {
           description?: string | null
           url?: string | null
         } | null
+        account?: {
+          __typename?: 'accounts'
+          label: string
+          image?: string | null
+        } | null
       } | null
     } | null
   } | null
@@ -11404,6 +11504,11 @@ export type GetAtomsQuery = {
         description?: string | null
         url?: string | null
       } | null
+      account?: {
+        __typename?: 'accounts'
+        label: string
+        image?: string | null
+      } | null
     } | null
   }>
 }
@@ -11488,6 +11593,11 @@ export type GetAtomsWithPositionsQuery = {
         image?: string | null
         description?: string | null
         url?: string | null
+      } | null
+      account?: {
+        __typename?: 'accounts'
+        label: string
+        image?: string | null
       } | null
     } | null
   }>
@@ -11576,6 +11686,11 @@ export type GetAtomsWithAggregatesQuery = {
           image?: string | null
           description?: string | null
           url?: string | null
+        } | null
+        account?: {
+          __typename?: 'accounts'
+          label: string
+          image?: string | null
         } | null
       } | null
     }>
@@ -11782,6 +11897,11 @@ export type GetAtomQuery = {
         description?: string | null
         url?: string | null
       } | null
+      account?: {
+        __typename?: 'accounts'
+        label: string
+        image?: string | null
+      } | null
     } | null
   } | null
 }
@@ -11974,6 +12094,11 @@ export type GetAtomByDataQuery = {
         description?: string | null
         url?: string | null
       } | null
+      account?: {
+        __typename?: 'accounts'
+        label: string
+        image?: string | null
+      } | null
     } | null
   }>
 }
@@ -12086,6 +12211,11 @@ export type GetEventsQuery = {
           description?: string | null
           url?: string | null
         } | null
+        account?: {
+          __typename?: 'accounts'
+          label: string
+          image?: string | null
+        } | null
       } | null
     } | null
     triple?: {
@@ -12138,6 +12268,11 @@ export type GetEventsQuery = {
             description?: string | null
             url?: string | null
           } | null
+          account?: {
+            __typename?: 'accounts'
+            label: string
+            image?: string | null
+          } | null
         } | null
       }
       predicate: {
@@ -12179,6 +12314,11 @@ export type GetEventsQuery = {
             description?: string | null
             url?: string | null
           } | null
+          account?: {
+            __typename?: 'accounts'
+            label: string
+            image?: string | null
+          } | null
         } | null
       }
       object: {
@@ -12219,6 +12359,11 @@ export type GetEventsQuery = {
             image?: string | null
             description?: string | null
             url?: string | null
+          } | null
+          account?: {
+            __typename?: 'accounts'
+            label: string
+            image?: string | null
           } | null
         } | null
       }
@@ -12378,6 +12523,11 @@ export type GetEventsWithAggregatesQuery = {
             description?: string | null
             url?: string | null
           } | null
+          account?: {
+            __typename?: 'accounts'
+            label: string
+            image?: string | null
+          } | null
         } | null
       } | null
       triple?: {
@@ -12493,6 +12643,11 @@ export type GetEventsWithAggregatesQuery = {
               description?: string | null
               url?: string | null
             } | null
+            account?: {
+              __typename?: 'accounts'
+              label: string
+              image?: string | null
+            } | null
           } | null
         }
         predicate: {
@@ -12534,6 +12689,11 @@ export type GetEventsWithAggregatesQuery = {
               description?: string | null
               url?: string | null
             } | null
+            account?: {
+              __typename?: 'accounts'
+              label: string
+              image?: string | null
+            } | null
           } | null
         }
         object: {
@@ -12574,6 +12734,11 @@ export type GetEventsWithAggregatesQuery = {
               image?: string | null
               description?: string | null
               url?: string | null
+            } | null
+            account?: {
+              __typename?: 'accounts'
+              label: string
+              image?: string | null
             } | null
           } | null
         }
@@ -12722,6 +12887,11 @@ export type GetFollowingPositionsQuery = {
           description?: string | null
           url?: string | null
         } | null
+        account?: {
+          __typename?: 'accounts'
+          label: string
+          image?: string | null
+        } | null
       } | null
     }
     predicate: {
@@ -12762,6 +12932,11 @@ export type GetFollowingPositionsQuery = {
           description?: string | null
           url?: string | null
         } | null
+        account?: {
+          __typename?: 'accounts'
+          label: string
+          image?: string | null
+        } | null
       } | null
     }
     object: {
@@ -12801,6 +12976,11 @@ export type GetFollowingPositionsQuery = {
           image?: string | null
           description?: string | null
           url?: string | null
+        } | null
+        account?: {
+          __typename?: 'accounts'
+          label: string
+          image?: string | null
         } | null
       } | null
     }
@@ -12882,6 +13062,11 @@ export type GetFollowerPositionsQuery = {
           description?: string | null
           url?: string | null
         } | null
+        account?: {
+          __typename?: 'accounts'
+          label: string
+          image?: string | null
+        } | null
       } | null
     }
     predicate: {
@@ -12922,6 +13107,11 @@ export type GetFollowerPositionsQuery = {
           description?: string | null
           url?: string | null
         } | null
+        account?: {
+          __typename?: 'accounts'
+          label: string
+          image?: string | null
+        } | null
       } | null
     }
     object: {
@@ -12961,6 +13151,11 @@ export type GetFollowerPositionsQuery = {
           image?: string | null
           description?: string | null
           url?: string | null
+        } | null
+        account?: {
+          __typename?: 'accounts'
+          label: string
+          image?: string | null
         } | null
       } | null
     }
@@ -13255,6 +13450,11 @@ export type GetListItemsQuery = {
                     description?: string | null
                     url?: string | null
                   } | null
+                  account?: {
+                    __typename?: 'accounts'
+                    label: string
+                    image?: string | null
+                  } | null
                 } | null
               }
               predicate: {
@@ -13296,6 +13496,11 @@ export type GetListItemsQuery = {
                     description?: string | null
                     url?: string | null
                   } | null
+                  account?: {
+                    __typename?: 'accounts'
+                    label: string
+                    image?: string | null
+                  } | null
                 } | null
               }
               object: {
@@ -13336,6 +13541,11 @@ export type GetListItemsQuery = {
                     image?: string | null
                     description?: string | null
                     url?: string | null
+                  } | null
+                  account?: {
+                    __typename?: 'accounts'
+                    label: string
+                    image?: string | null
                   } | null
                 } | null
               }
@@ -13437,6 +13647,11 @@ export type GetListItemsQuery = {
                     description?: string | null
                     url?: string | null
                   } | null
+                  account?: {
+                    __typename?: 'accounts'
+                    label: string
+                    image?: string | null
+                  } | null
                 } | null
               }
               predicate: {
@@ -13478,6 +13693,11 @@ export type GetListItemsQuery = {
                     description?: string | null
                     url?: string | null
                   } | null
+                  account?: {
+                    __typename?: 'accounts'
+                    label: string
+                    image?: string | null
+                  } | null
                 } | null
               }
               object: {
@@ -13518,6 +13738,11 @@ export type GetListItemsQuery = {
                     image?: string | null
                     description?: string | null
                     url?: string | null
+                  } | null
+                  account?: {
+                    __typename?: 'accounts'
+                    label: string
+                    image?: string | null
                   } | null
                 } | null
               }
@@ -14566,6 +14791,11 @@ export type GetPositionsQuery = {
               description?: string | null
               url?: string | null
             } | null
+            account?: {
+              __typename?: 'accounts'
+              label: string
+              image?: string | null
+            } | null
           } | null
         }
         predicate: {
@@ -14607,6 +14837,11 @@ export type GetPositionsQuery = {
               description?: string | null
               url?: string | null
             } | null
+            account?: {
+              __typename?: 'accounts'
+              label: string
+              image?: string | null
+            } | null
           } | null
         }
         object: {
@@ -14647,6 +14882,11 @@ export type GetPositionsQuery = {
               image?: string | null
               description?: string | null
               url?: string | null
+            } | null
+            account?: {
+              __typename?: 'accounts'
+              label: string
+              image?: string | null
             } | null
           } | null
         }
@@ -14775,6 +15015,11 @@ export type GetTriplePositionsByAddressQuery = {
               description?: string | null
               url?: string | null
             } | null
+            account?: {
+              __typename?: 'accounts'
+              label: string
+              image?: string | null
+            } | null
           } | null
         }
         predicate: {
@@ -14816,6 +15061,11 @@ export type GetTriplePositionsByAddressQuery = {
               description?: string | null
               url?: string | null
             } | null
+            account?: {
+              __typename?: 'accounts'
+              label: string
+              image?: string | null
+            } | null
           } | null
         }
         object: {
@@ -14856,6 +15106,11 @@ export type GetTriplePositionsByAddressQuery = {
               image?: string | null
               description?: string | null
               url?: string | null
+            } | null
+            account?: {
+              __typename?: 'accounts'
+              label: string
+              image?: string | null
             } | null
           } | null
         }
@@ -14983,6 +15238,11 @@ export type GetPositionsWithAggregatesQuery = {
                 description?: string | null
                 url?: string | null
               } | null
+              account?: {
+                __typename?: 'accounts'
+                label: string
+                image?: string | null
+              } | null
             } | null
           }
           predicate: {
@@ -15024,6 +15284,11 @@ export type GetPositionsWithAggregatesQuery = {
                 description?: string | null
                 url?: string | null
               } | null
+              account?: {
+                __typename?: 'accounts'
+                label: string
+                image?: string | null
+              } | null
             } | null
           }
           object: {
@@ -15064,6 +15329,11 @@ export type GetPositionsWithAggregatesQuery = {
                 image?: string | null
                 description?: string | null
                 url?: string | null
+              } | null
+              account?: {
+                __typename?: 'accounts'
+                label: string
+                image?: string | null
               } | null
             } | null
           }
@@ -15187,6 +15457,11 @@ export type GetPositionQuery = {
               description?: string | null
               url?: string | null
             } | null
+            account?: {
+              __typename?: 'accounts'
+              label: string
+              image?: string | null
+            } | null
           } | null
         }
         predicate: {
@@ -15228,6 +15503,11 @@ export type GetPositionQuery = {
               description?: string | null
               url?: string | null
             } | null
+            account?: {
+              __typename?: 'accounts'
+              label: string
+              image?: string | null
+            } | null
           } | null
         }
         object: {
@@ -15268,6 +15548,11 @@ export type GetPositionQuery = {
               image?: string | null
               description?: string | null
               url?: string | null
+            } | null
+            account?: {
+              __typename?: 'accounts'
+              label: string
+              image?: string | null
             } | null
           } | null
         }
@@ -15379,6 +15664,11 @@ export type GetSignalsQuery = {
           description?: string | null
           url?: string | null
         } | null
+        account?: {
+          __typename?: 'accounts'
+          label: string
+          image?: string | null
+        } | null
       } | null
     } | null
     triple?: {
@@ -15431,6 +15721,11 @@ export type GetSignalsQuery = {
             description?: string | null
             url?: string | null
           } | null
+          account?: {
+            __typename?: 'accounts'
+            label: string
+            image?: string | null
+          } | null
         } | null
       }
       predicate: {
@@ -15472,6 +15767,11 @@ export type GetSignalsQuery = {
             description?: string | null
             url?: string | null
           } | null
+          account?: {
+            __typename?: 'accounts'
+            label: string
+            image?: string | null
+          } | null
         } | null
       }
       object: {
@@ -15512,6 +15812,11 @@ export type GetSignalsQuery = {
             image?: string | null
             description?: string | null
             url?: string | null
+          } | null
+          account?: {
+            __typename?: 'accounts'
+            label: string
+            image?: string | null
           } | null
         } | null
       }
@@ -15673,6 +15978,11 @@ export type GetTagsQuery = {
           description?: string | null
           url?: string | null
         } | null
+        account?: {
+          __typename?: 'accounts'
+          label: string
+          image?: string | null
+        } | null
       } | null
     }
     predicate: {
@@ -15714,6 +16024,11 @@ export type GetTagsQuery = {
           description?: string | null
           url?: string | null
         } | null
+        account?: {
+          __typename?: 'accounts'
+          label: string
+          image?: string | null
+        } | null
       } | null
     }
     object: {
@@ -15754,6 +16069,11 @@ export type GetTagsQuery = {
           image?: string | null
           description?: string | null
           url?: string | null
+        } | null
+        account?: {
+          __typename?: 'accounts'
+          label: string
+          image?: string | null
         } | null
       } | null
     }
@@ -15865,6 +16185,11 @@ export type GetTagsCustomQuery = {
           description?: string | null
           url?: string | null
         } | null
+        account?: {
+          __typename?: 'accounts'
+          label: string
+          image?: string | null
+        } | null
       } | null
     }
     predicate: {
@@ -15906,6 +16231,11 @@ export type GetTagsCustomQuery = {
           description?: string | null
           url?: string | null
         } | null
+        account?: {
+          __typename?: 'accounts'
+          label: string
+          image?: string | null
+        } | null
       } | null
     }
     object: {
@@ -15946,6 +16276,11 @@ export type GetTagsCustomQuery = {
           image?: string | null
           description?: string | null
           url?: string | null
+        } | null
+        account?: {
+          __typename?: 'accounts'
+          label: string
+          image?: string | null
         } | null
       } | null
     }
@@ -16081,6 +16416,11 @@ export type GetTriplesQuery = {
           description?: string | null
           url?: string | null
         } | null
+        account?: {
+          __typename?: 'accounts'
+          label: string
+          image?: string | null
+        } | null
       } | null
     }
     predicate: {
@@ -16122,6 +16462,11 @@ export type GetTriplesQuery = {
           description?: string | null
           url?: string | null
         } | null
+        account?: {
+          __typename?: 'accounts'
+          label: string
+          image?: string | null
+        } | null
       } | null
     }
     object: {
@@ -16162,6 +16507,11 @@ export type GetTriplesQuery = {
           image?: string | null
           description?: string | null
           url?: string | null
+        } | null
+        account?: {
+          __typename?: 'accounts'
+          label: string
+          image?: string | null
         } | null
       } | null
     }
@@ -16274,6 +16624,11 @@ export type GetTriplesQuery = {
                   description?: string | null
                   url?: string | null
                 } | null
+                account?: {
+                  __typename?: 'accounts'
+                  label: string
+                  image?: string | null
+                } | null
               } | null
             }
             predicate: {
@@ -16315,6 +16670,11 @@ export type GetTriplesQuery = {
                   description?: string | null
                   url?: string | null
                 } | null
+                account?: {
+                  __typename?: 'accounts'
+                  label: string
+                  image?: string | null
+                } | null
               } | null
             }
             object: {
@@ -16355,6 +16715,11 @@ export type GetTriplesQuery = {
                   image?: string | null
                   description?: string | null
                   url?: string | null
+                } | null
+                account?: {
+                  __typename?: 'accounts'
+                  label: string
+                  image?: string | null
                 } | null
               } | null
             }
@@ -16471,6 +16836,11 @@ export type GetTriplesQuery = {
                   description?: string | null
                   url?: string | null
                 } | null
+                account?: {
+                  __typename?: 'accounts'
+                  label: string
+                  image?: string | null
+                } | null
               } | null
             }
             predicate: {
@@ -16512,6 +16882,11 @@ export type GetTriplesQuery = {
                   description?: string | null
                   url?: string | null
                 } | null
+                account?: {
+                  __typename?: 'accounts'
+                  label: string
+                  image?: string | null
+                } | null
               } | null
             }
             object: {
@@ -16552,6 +16927,11 @@ export type GetTriplesQuery = {
                   image?: string | null
                   description?: string | null
                   url?: string | null
+                } | null
+                account?: {
+                  __typename?: 'accounts'
+                  label: string
+                  image?: string | null
                 } | null
               } | null
             }
@@ -16636,6 +17016,11 @@ export type GetTriplesWithAggregatesQuery = {
             description?: string | null
             url?: string | null
           } | null
+          account?: {
+            __typename?: 'accounts'
+            label: string
+            image?: string | null
+          } | null
         } | null
       }
       predicate: {
@@ -16677,6 +17062,11 @@ export type GetTriplesWithAggregatesQuery = {
             description?: string | null
             url?: string | null
           } | null
+          account?: {
+            __typename?: 'accounts'
+            label: string
+            image?: string | null
+          } | null
         } | null
       }
       object: {
@@ -16717,6 +17107,11 @@ export type GetTriplesWithAggregatesQuery = {
             image?: string | null
             description?: string | null
             url?: string | null
+          } | null
+          account?: {
+            __typename?: 'accounts'
+            label: string
+            image?: string | null
           } | null
         } | null
       }
@@ -16829,6 +17224,11 @@ export type GetTriplesWithAggregatesQuery = {
                     description?: string | null
                     url?: string | null
                   } | null
+                  account?: {
+                    __typename?: 'accounts'
+                    label: string
+                    image?: string | null
+                  } | null
                 } | null
               }
               predicate: {
@@ -16870,6 +17270,11 @@ export type GetTriplesWithAggregatesQuery = {
                     description?: string | null
                     url?: string | null
                   } | null
+                  account?: {
+                    __typename?: 'accounts'
+                    label: string
+                    image?: string | null
+                  } | null
                 } | null
               }
               object: {
@@ -16910,6 +17315,11 @@ export type GetTriplesWithAggregatesQuery = {
                     image?: string | null
                     description?: string | null
                     url?: string | null
+                  } | null
+                  account?: {
+                    __typename?: 'accounts'
+                    label: string
+                    image?: string | null
                   } | null
                 } | null
               }
@@ -17026,6 +17436,11 @@ export type GetTriplesWithAggregatesQuery = {
                     description?: string | null
                     url?: string | null
                   } | null
+                  account?: {
+                    __typename?: 'accounts'
+                    label: string
+                    image?: string | null
+                  } | null
                 } | null
               }
               predicate: {
@@ -17067,6 +17482,11 @@ export type GetTriplesWithAggregatesQuery = {
                     description?: string | null
                     url?: string | null
                   } | null
+                  account?: {
+                    __typename?: 'accounts'
+                    label: string
+                    image?: string | null
+                  } | null
                 } | null
               }
               object: {
@@ -17107,6 +17527,11 @@ export type GetTriplesWithAggregatesQuery = {
                     image?: string | null
                     description?: string | null
                     url?: string | null
+                  } | null
+                  account?: {
+                    __typename?: 'accounts'
+                    label: string
+                    image?: string | null
                   } | null
                 } | null
               }
@@ -17195,6 +17620,11 @@ export type GetTripleQuery = {
           description?: string | null
           url?: string | null
         } | null
+        account?: {
+          __typename?: 'accounts'
+          label: string
+          image?: string | null
+        } | null
       } | null
     }
     predicate: {
@@ -17236,6 +17666,11 @@ export type GetTripleQuery = {
           description?: string | null
           url?: string | null
         } | null
+        account?: {
+          __typename?: 'accounts'
+          label: string
+          image?: string | null
+        } | null
       } | null
     }
     object: {
@@ -17276,6 +17711,11 @@ export type GetTripleQuery = {
           image?: string | null
           description?: string | null
           url?: string | null
+        } | null
+        account?: {
+          __typename?: 'accounts'
+          label: string
+          image?: string | null
         } | null
       } | null
     }
@@ -17388,6 +17828,11 @@ export type GetTripleQuery = {
                   description?: string | null
                   url?: string | null
                 } | null
+                account?: {
+                  __typename?: 'accounts'
+                  label: string
+                  image?: string | null
+                } | null
               } | null
             }
             predicate: {
@@ -17429,6 +17874,11 @@ export type GetTripleQuery = {
                   description?: string | null
                   url?: string | null
                 } | null
+                account?: {
+                  __typename?: 'accounts'
+                  label: string
+                  image?: string | null
+                } | null
               } | null
             }
             object: {
@@ -17469,6 +17919,11 @@ export type GetTripleQuery = {
                   image?: string | null
                   description?: string | null
                   url?: string | null
+                } | null
+                account?: {
+                  __typename?: 'accounts'
+                  label: string
+                  image?: string | null
                 } | null
               } | null
             }
@@ -17585,6 +18040,11 @@ export type GetTripleQuery = {
                   description?: string | null
                   url?: string | null
                 } | null
+                account?: {
+                  __typename?: 'accounts'
+                  label: string
+                  image?: string | null
+                } | null
               } | null
             }
             predicate: {
@@ -17626,6 +18086,11 @@ export type GetTripleQuery = {
                   description?: string | null
                   url?: string | null
                 } | null
+                account?: {
+                  __typename?: 'accounts'
+                  label: string
+                  image?: string | null
+                } | null
               } | null
             }
             object: {
@@ -17666,6 +18131,11 @@ export type GetTripleQuery = {
                   image?: string | null
                   description?: string | null
                   url?: string | null
+                } | null
+                account?: {
+                  __typename?: 'accounts'
+                  label: string
+                  image?: string | null
                 } | null
               } | null
             }
@@ -18217,6 +18687,10 @@ export const AtomValueFragmentDoc = `
       image
       description
       url
+    }
+    account {
+      label
+      image
     }
   }
 }
@@ -26417,6 +26891,17 @@ export const AtomValue = {
                     ],
                   },
                 },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -26525,6 +27010,17 @@ export const AtomMetadata = {
                         name: { kind: 'Name', value: 'description' },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                     ],
                   },
                 },
@@ -26917,6 +27413,17 @@ export const TripleMetadata = {
                     ],
                   },
                 },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -27306,6 +27813,17 @@ export const EventDetails = {
                         name: { kind: 'Name', value: 'description' },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                     ],
                   },
                 },
@@ -28391,6 +28909,17 @@ export const PositionDetails = {
                     ],
                   },
                 },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -28540,6 +29069,17 @@ export const TripleVaultDetails = {
                         name: { kind: 'Name', value: 'description' },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                     ],
                   },
                 },
@@ -31811,6 +32351,17 @@ export const GetAccount = {
                     ],
                   },
                 },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -33527,6 +34078,17 @@ export const GetAccountMetadata = {
                     ],
                   },
                 },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -33811,6 +34373,17 @@ export const GetAtoms = {
                         name: { kind: 'Name', value: 'description' },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                     ],
                   },
                 },
@@ -34556,6 +35129,17 @@ export const GetAtomsWithPositions = {
                     ],
                   },
                 },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -34842,6 +35426,17 @@ export const GetAtomsWithAggregates = {
                         name: { kind: 'Name', value: 'description' },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                     ],
                   },
                 },
@@ -35218,6 +35813,17 @@ export const GetAtom = {
                         name: { kind: 'Name', value: 'description' },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                     ],
                   },
                 },
@@ -35766,6 +36372,17 @@ export const GetAtomByData = {
                         name: { kind: 'Name', value: 'description' },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                     ],
                   },
                 },
@@ -37252,6 +37869,17 @@ export const GetEvents = {
                     ],
                   },
                 },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -37551,6 +38179,17 @@ export const GetEventsWithAggregates = {
                         name: { kind: 'Name', value: 'description' },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                     ],
                   },
                 },
@@ -39078,6 +39717,17 @@ export const GetFollowingPositions = {
                     ],
                   },
                 },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -39551,6 +40201,17 @@ export const GetFollowerPositions = {
                         name: { kind: 'Name', value: 'description' },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                     ],
                   },
                 },
@@ -41110,6 +41771,17 @@ export const GetListItems = {
                         name: { kind: 'Name', value: 'description' },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                     ],
                   },
                 },
@@ -45883,6 +46555,17 @@ export const GetPositions = {
                     ],
                   },
                 },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -46679,6 +47362,17 @@ export const GetTriplePositionsByAddress = {
                     ],
                   },
                 },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -47221,6 +47915,17 @@ export const GetPositionsWithAggregates = {
                     ],
                   },
                 },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -47758,6 +48463,17 @@ export const GetPosition = {
                         name: { kind: 'Name', value: 'description' },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                     ],
                   },
                 },
@@ -49190,6 +49906,17 @@ export const GetSignals = {
                     ],
                   },
                 },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -49487,6 +50214,17 @@ export const GetTags = {
                         name: { kind: 'Name', value: 'description' },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                     ],
                   },
                 },
@@ -49912,6 +50650,17 @@ export const GetTagsCustom = {
                         name: { kind: 'Name', value: 'description' },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                     ],
                   },
                 },
@@ -50445,6 +51194,17 @@ export const GetTriples = {
                         name: { kind: 'Name', value: 'description' },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                     ],
                   },
                 },
@@ -51373,6 +52133,17 @@ export const GetTriplesWithAggregates = {
                     ],
                   },
                 },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -52280,6 +53051,17 @@ export const GetTriple = {
                         name: { kind: 'Name', value: 'description' },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                     ],
                   },
                 },

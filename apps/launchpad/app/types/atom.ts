@@ -19,6 +19,10 @@ export type AtomValueType = {
     description?: string
     url?: string
   }
+  account?: {
+    label?: string | null
+    image?: string | null
+  }
 }
 
 export type AtomType = {

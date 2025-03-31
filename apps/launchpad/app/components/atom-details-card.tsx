@@ -116,7 +116,7 @@ export function AtomDetailsCard({
                 weight="normal"
                 className="text-foreground/90"
               >
-                {tvl.toFixed(4)} ETH TVL
+                {tvl.toFixed(6)} ETH TVL
               </Text>
             </div>
           </div>

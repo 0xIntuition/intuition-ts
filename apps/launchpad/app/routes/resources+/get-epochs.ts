@@ -1,5 +1,6 @@
 import { pointsClient } from '@lib/graphql/client'
 import logger from '@lib/utils/logger'
+import type { LoaderFunctionArgs } from '@remix-run/node'
 import { gql } from 'graphql-request'
 
 interface Epoch {
@@ -13,15 +14,16 @@ interface Epoch {
   updated_at: string
   total_points_available: number
   total_points: number
+  type?: string
 }
 
 interface GetEpochsResponse {
   epochs: Epoch[]
 }
 
-const GetEpochsQuery = gql`
-  query GetEpochs {
-    epochs(order_by: { start_date: desc }) {
+const GetEpochsWithTypeQuery = gql`
+  query GetEpochsWithType($type: String!) {
+    epochs(order_by: { start_date: desc }, where: { type: { _eq: $type } }) {
       id
       name
       description
@@ -32,15 +34,54 @@ const GetEpochsQuery = gql`
       updated_at
       total_points_available
       total_points
+      type
     }
   }
 `
 
-export async function loader() {
+const GetEpochsWithoutTypeQuery = gql`
+  query GetEpochsWithoutType {
+    epochs(
+      order_by: { start_date: desc }
+      where: { type: { _is_null: true } }
+    ) {
+      id
+      name
+      description
+      start_date
+      end_date
+      is_active
+      created_at
+      updated_at
+      total_points
+      total_points_available
+      type
+    }
+  }
+`
+
+export async function loader({ request }: LoaderFunctionArgs) {
   try {
     logger('Fetching epochs')
 
-    const data = await pointsClient.request<GetEpochsResponse>(GetEpochsQuery)
+    // Get type from URL search params
+    const url = new URL(request.url)
+    const type = url.searchParams.get('type')
+
+    let data: GetEpochsResponse
+    if (type) {
+      // Use the query with type filter
+      data = await pointsClient.request<GetEpochsResponse, { type: string }>(
+        GetEpochsWithTypeQuery,
+        { type },
+      )
+    } else {
+      // Use the query without type filter (NULL type epochs)
+      data = await pointsClient.request<GetEpochsResponse>(
+        GetEpochsWithoutTypeQuery,
+      )
+    }
+
     logger('Epochs response:', data)
 
     return new Response(JSON.stringify({ epochs: data.epochs }), {

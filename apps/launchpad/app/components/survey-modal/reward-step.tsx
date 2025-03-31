@@ -69,7 +69,7 @@ export function RewardStep({
       isAwarding,
       awardingFailed,
       retryCount,
-      // Don't reference existingCompletion here since it's not defined yet
+      existingCompletion,
     })
   }, [])
 
@@ -110,8 +110,7 @@ export function RewardStep({
 
           const data = await response.json()
           logger('Completion check result:', data)
-          // Add defensive check when accessing data.completion
-          return data && data.completion ? data.completion : null
+          return data.completion
         } catch (error) {
           logger('Error checking completion:', error)
           return null
@@ -125,6 +124,21 @@ export function RewardStep({
       refetchOnMount: true,
       refetchOnWindowFocus: false,
     })
+
+  useEffect(() => {
+    // Add logging for component mount and key props
+    logger('RewardStep mounted with props:', {
+      isOpen,
+      userWallet,
+      questionId,
+      epochId,
+      hasAwardedPoints,
+      isAwarding,
+      awardingFailed,
+      retryCount,
+      // Don't reference existingCompletion here since it's not defined yet
+    })
+  }, [])
 
   useEffect(() => {
     try {

@@ -14,6 +14,7 @@ interface Question {
   predicate_id: number
   object_id: number
   created_at: string
+  tag_object_id: number
 }
 
 interface GetQuestionResponse {
@@ -34,6 +35,7 @@ const GetQuestionQuery = gql`
       predicate_id
       object_id
       created_at
+      tag_object_id
     }
   }
 `
