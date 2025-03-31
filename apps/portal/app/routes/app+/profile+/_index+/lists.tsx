@@ -131,6 +131,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
       })(),
   })
 
+  console.log('listsData', listsData)
+
   const totalCount =
     listsData?.predicate_objects_aggregate?.aggregate?.count ?? 0
   const totalPages = calculateTotalPages(totalCount, limit)

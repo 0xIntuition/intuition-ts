@@ -145,9 +145,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
       throw new Error('No account data found for address')
     }
 
-    console.log('queryAddress', queryAddress)
-    console.log('accountResult', accountResult)
-
     await queryClient.prefetchQuery({
       queryKey: ['get-account', { address: queryAddress }],
       queryFn: () => accountResult,
