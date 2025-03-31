@@ -20,7 +20,7 @@ import { LoadingState } from '@components/loading-state'
 import { VideoBackground } from '@components/video-background'
 import { API_URL_DEV, API_URL_PROD, CURRENT_ENV } from '@consts/general'
 import { json } from '@remix-run/node'
-import { getEnv } from '@server/env'
+import { getEnv, getFeatureFlags } from '@server/env'
 import { ClientOnly } from 'remix-utils/client-only'
 
 // Configure GraphQL client at module initialization using the URLs from the package. For now, we should use the local URL for development
@@ -33,6 +33,7 @@ export async function loader() {
   console.log('HASURA_POINTS_ENDPOINT:', process.env.HASURA_POINTS_ENDPOINT)
   return json({
     env: getEnv(),
+    featureFlags: getFeatureFlags(),
   })
 }
 
@@ -95,14 +96,14 @@ export function Document({
 }
 
 export default function App() {
-  const { env } = useLoaderData<typeof loader>()
+  const { env, featureFlags } = useLoaderData<typeof loader>()
 
   return (
     <Document theme="dark">
       <Toaster position="top-right" />
       <ClientOnly fallback={<LoadingState />}>
         {() => (
-          <Providers env={env}>
+          <Providers env={env} featureFlags={featureFlags}>
             <AppLayout />
           </Providers>
         )}

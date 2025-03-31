@@ -1,4 +1,5 @@
 import { WagmiProvider } from '@privy-io/wagmi'
+import { FeatureFlags } from '@server/env'
 import {
   HydrationBoundary,
   QueryClient,
@@ -7,6 +8,7 @@ import {
 
 import { wagmiConfig } from '../utils/wagmi'
 import { AuthProvider } from './auth-provider'
+import { FeatureFlagsProvider } from './feature-flags-provider'
 import { PrivyConfig } from './privy'
 
 const queryClient = new QueryClient({
@@ -23,16 +25,26 @@ interface ProvidersProps {
     PRIVY_APP_ID: string
   }
   dehydratedState?: unknown
+  featureFlags?: FeatureFlags
 }
 
-export function Providers({ children, env, dehydratedState }: ProvidersProps) {
+export function Providers({
+  children,
+  env,
+  dehydratedState,
+  featureFlags,
+}: ProvidersProps) {
   return (
     <PrivyConfig env={env}>
       <QueryClientProvider client={queryClient}>
         <WagmiProvider config={wagmiConfig}>
           <AuthProvider>
             <HydrationBoundary state={dehydratedState}>
-              {children}
+              {featureFlags && (
+                <FeatureFlagsProvider featureFlags={featureFlags}>
+                  {children}
+                </FeatureFlagsProvider>
+              )}
             </HydrationBoundary>
           </AuthProvider>
         </WagmiProvider>

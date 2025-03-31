@@ -29,6 +29,7 @@ import { usePrivy } from '@privy-io/react-auth'
 import { Link, useLocation } from '@remix-run/react'
 import { BookOpenText, BrainCircuit } from 'lucide-react'
 
+import { useFeatureFlags } from '../lib/providers/feature-flags-provider'
 import { ConnectButton } from './connect-button'
 
 export const SidebarVariant = {
@@ -70,6 +71,7 @@ export function AppSidebar({
     authenticated: isAuthenticated,
     user: privyUser,
   } = usePrivy()
+  const { featureFlags } = useFeatureFlags()
 
   // Determine which button to show
   const renderAuthButton = () => {
@@ -337,7 +339,6 @@ export function AppSidebar({
               {mainNavItems.map((item) => (
                 <SidebarMenuItem key={item.label}>
                   <SidebarMenuButton
-                    // size="lg"
                     asChild
                     isActive={activeItem === item.label}
                     className={cn(
@@ -352,13 +353,15 @@ export function AppSidebar({
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
-              <SidebarMenuItem key={'base-week'} className="mt-5">
-                <Link to="/quests/ecosystems">
-                  <ShimmerButton className="w-full font-mono text-base">
-                    Base Epoch
-                  </ShimmerButton>
-                </Link>
-              </SidebarMenuItem>
+              {featureFlags.FF_BASE_EPOCH_ENABLED === 'true' && (
+                <SidebarMenuItem key={'base-week'} className="mt-5">
+                  <Link to="/quests/ecosystems">
+                    <ShimmerButton className="w-full font-mono text-base">
+                      Base Epoch
+                    </ShimmerButton>
+                  </Link>
+                </SidebarMenuItem>
+              )}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

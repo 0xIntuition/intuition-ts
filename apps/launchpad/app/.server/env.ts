@@ -4,6 +4,7 @@ export const featureFlagsSchema = z.object({
   FF_GENERIC_BANNER_ENABLED: z.string().optional(),
   FF_INCIDENT_BANNER_ENABLED: z.string().optional(),
   FF_FULL_LOCKDOWN_ENABLED: z.string().optional(),
+  FF_BASE_EPOCH_ENABLED: z.string().optional(),
 })
 
 const schema = z.object({
@@ -25,7 +26,7 @@ const schema = z.object({
 declare global {
   /* eslint-disable @typescript-eslint/no-namespace */
   namespace NodeJS {
-    interface ProcessEnv extends z.infer<typeof schema> {}
+    interface ProcessEnv extends z.infer<typeof schema> { }
   }
 }
 
@@ -75,6 +76,7 @@ export function getFeatureFlags(): z.infer<typeof featureFlagsSchema> {
     FF_GENERIC_BANNER_ENABLED: process.env.FF_GENERIC_BANNER_ENABLED,
     FF_INCIDENT_BANNER_ENABLED: process.env.FF_INCIDENT_BANNER_ENABLED,
     FF_FULL_LOCKDOWN_ENABLED: process.env.FF_FULL_LOCKDOWN_ENABLED,
+    FF_BASE_EPOCH_ENABLED: process.env.FF_BASE_EPOCH_ENABLED,
   }
 }
 
