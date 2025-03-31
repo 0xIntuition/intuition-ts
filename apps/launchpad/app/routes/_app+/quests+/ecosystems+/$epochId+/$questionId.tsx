@@ -39,6 +39,7 @@ import {
   onboardingModalAtom,
   shareModalAtom,
 } from '@lib/state/store'
+import { WHITELISTED_ADDRESSES } from '@lib/utils/constants'
 import { usePrivy } from '@privy-io/react-auth'
 import type { LoaderFunctionArgs, MetaFunction } from '@remix-run/node'
 import {
@@ -378,6 +379,25 @@ export default function MiniGameOne() {
               predicate_id: { _eq: predicateId },
               object_id: { _eq: objectId },
             },
+          },
+          {
+            _or: [
+              {
+                as_subject_triples: {
+                  predicate_id: { _eq: predicateId },
+                  object_id: { _eq: objectId },
+                  vault: {
+                    positions: {
+                      account: {
+                        id: {
+                          _in: WHITELISTED_ADDRESSES,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            ],
           },
           questionData?.tag_object_id
             ? {
