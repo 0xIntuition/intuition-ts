@@ -53,6 +53,7 @@ const GetEpochsWithoutTypeQuery = gql`
       is_active
       created_at
       updated_at
+      total_points
       total_points_available
       type
     }
