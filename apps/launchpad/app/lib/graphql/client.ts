@@ -1,4 +1,4 @@
-import { API_URL_DEV } from '@consts/general'
+import { API_URL_DEV, API_URL_PROD } from '@consts/general'
 import { GraphQLClient } from 'graphql-request'
 
 // Safely access environment variables with fallback
@@ -28,7 +28,8 @@ export interface ClientConfig {
   apiUrl?: string
 }
 
-const DEFAULT_API_URL = API_URL_DEV
+const DEFAULT_API_URL =
+  import.meta.env.VITE_DEPLOY_ENV === 'production' ? API_URL_PROD : API_URL_DEV
 
 let globalConfig: { apiUrl?: string } = {
   apiUrl: DEFAULT_API_URL,
