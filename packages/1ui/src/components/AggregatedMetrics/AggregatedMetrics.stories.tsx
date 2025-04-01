@@ -1,6 +1,7 @@
+import { useGetStatsQuery } from '@0xintuition/graphql'
+
 import type { Meta, StoryObj } from '@storybook/react'
 
-import { useGetStatsQuery } from '../../../../graphql/dist'
 import { AggregatedMetrics } from './AggregatedMetrics'
 
 const meta: Meta<typeof AggregatedMetrics> = {
