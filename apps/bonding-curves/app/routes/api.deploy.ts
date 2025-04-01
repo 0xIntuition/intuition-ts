@@ -74,11 +74,44 @@ export const action: ActionFunction = async ({ request }) => {
       throw new Error('No contract address in receipt')
     }
 
-    // Wait for contract code to be available
-    let code = await publicClient.getCode({ address: receipt.contractAddress })
-    while (!code || code === '0x') {
-      await new Promise(resolve => setTimeout(resolve, 100))
-      code = await publicClient.getCode({ address: receipt.contractAddress })
+    // Verify transaction status using Viem's receipt
+    if (receipt.status !== 'success') {
+      throw new Error(`Transaction failed with status: ${receipt.status}`)
+    }
+
+    // Wait for contract code to be available using Viem's getCode
+    const code = await publicClient.getCode({
+      address: receipt.contractAddress,
+      blockNumber: receipt.blockNumber
+    })
+
+    if (!code || code === '0x') {
+      console.log("Contract code is ", code)
+      throw new Error('Contract code is empty')
+    }
+
+    // Verify contract is callable by attempting to read a function
+    try {
+      const maxAssets = await publicClient.readContract({
+        address: receipt.contractAddress,
+        abi,
+        functionName: 'maxAssets',
+        args: []
+      })
+      console.log('maxAssets from api deploy:', maxAssets)
+    } catch (error) {
+      throw new Error(`Contract verification failed: ${error instanceof Error ? error.message : 'Unknown error'}`)
+    }
+
+    // TESTING
+    for (let i = 1; i < 10; i++) {
+      const shares = await publicClient.readContract({
+        address: receipt.contractAddress,
+        abi,
+        functionName: 'previewDeposit',
+        args: [BigInt(i) * BigInt("1000000000000000000"), 0n, 0n]
+      })
+      console.log('shares from api deploy:', shares)
     }
 
     return json({ address: receipt.contractAddress })

@@ -1,4 +1,34 @@
-import { formatEther, parseEther, type Address, type PublicClient } from 'viem'
+import { createPublicClient, encodeFunctionData, formatEther, http, parseEther, type Address, type PublicClient } from 'viem'
+import { foundry } from 'viem/chains'
+
+// ABI fragment for the required functions
+const abi = [
+  {
+    name: 'maxAssets',
+    inputs: [],
+    outputs: [{ type: 'uint256' }],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    name: 'maxShares',
+    inputs: [],
+    outputs: [{ type: 'uint256' }],
+    stateMutability: 'view',
+    type: 'function'
+  },
+  {
+    name: 'previewDeposit',
+    inputs: [
+      { name: 'assets', type: 'uint256' },
+      { name: 'totalAssets', type: 'uint256' },
+      { name: 'totalShares', type: 'uint256' }
+    ],
+    outputs: [{ name: 'shares', type: 'uint256' }],
+    stateMutability: 'view',
+    type: 'function'
+  }
+]
 
 export interface Point {
   x: number
@@ -17,6 +47,14 @@ interface CurveConfig {
   slopeThreshold?: number
   numInitialPoints?: number
 }
+
+const publicClient = createPublicClient({
+  chain: foundry,
+  transport: http('http://localhost:8545'),
+  batch: {
+    multicall: true,
+  },
+})
 
 /**
  * Safely convert a contract return value to bigint.
@@ -82,9 +120,7 @@ function linearInterpolation(
  */
 export async function generateCurvePoints(
   address: Address,
-  abi: any[],
   currentMaxValue: number,
-  publicClient: PublicClient,
   config: CurveConfig = {}
 ): Promise<Point[]> {
   interface BigIntPoint {
@@ -103,13 +139,13 @@ export async function generateCurvePoints(
   try {
     // 1. Fetch contract constraints
     const [maxAssets, maxShares] = await Promise.all([
-      publicClient.readContract({
+      await publicClient.readContract({
         address,
         abi,
         functionName: 'maxAssets',
         args: []
       }).then(toBigInt),
-      publicClient.readContract({
+      await publicClient.readContract({
         address,
         abi,
         functionName: 'maxShares',
@@ -124,7 +160,9 @@ export async function generateCurvePoints(
     console.log('Generating curve with:', {
       maxAssets: maxAssets.toString(),
       maxShares: maxShares.toString(),
-      upperBoundWei: upperBoundWei.toString()
+      upperBoundWei: upperBoundWei.toString(),
+      address: address,
+      abi: abi
     })
 
     // 3. Helper for reading shares
@@ -135,6 +173,9 @@ export async function generateCurvePoints(
         functionName: 'previewDeposit',
         args: [assetsWei, 0n, 0n]
       })
+      // const contractCode = await publicClient.getCode({ address })
+      // console.log(`${address} previewDeposit(${assetsWei}, 0n, 0n) = ${res}, abi: ${abi}, contractCode: ${contractCode}`)
+      console.log(`${address} previewDeposit(${assetsWei}, 0n, 0n) = ${res}`)
       return toBigInt(res)
     }
 
@@ -165,7 +206,7 @@ export async function generateCurvePoints(
     // Sort to ensure ascending order
     bigPoints.sort((a, b) => (a.x < b.x ? -1 : a.x > b.x ? 1 : 0))
 
-    // 6. The adaptive “chord-midpoint” approach
+    // 6. The adaptive "chord-midpoint" approach
     async function refineSegment(
       x1: bigint,
       y1: bigint,
@@ -198,7 +239,7 @@ export async function generateCurvePoints(
       // 6.3 Compute difference in absolute terms
       const absDiff = Math.abs(midYNum - yPredMid)
 
-      // 6.4 Determine the “scale” of this segment 
+      // 6.4 Determine the "scale" of this segment 
       // Using |y2 - y1| as scale or max of (y1,y2,midY). 
       const segScale = Math.abs(Number(y2 - y1)) || 1 // avoid 0 scale
 
@@ -217,7 +258,7 @@ export async function generateCurvePoints(
       }
     }
 
-    // 7. Walk through the “uniform” points pairwise, refining
+    // 7. Walk through the "uniform" points pairwise, refining
     let refined: BigIntPoint[] = []
     for (let i = 0; i < bigPoints.length - 1; i++) {
       const p1 = bigPoints[i]

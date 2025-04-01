@@ -148,6 +148,9 @@ export function CurveVisualizer() {
   const publicClient = createPublicClient({
     chain: foundry,
     transport: http('http://localhost:8545'),
+    batch: {
+      multicall: true,
+    },
   })
 
   const handleFileChange = async (
@@ -460,12 +463,7 @@ export function CurveVisualizer() {
 
     const updatedCurves = await Promise.all(
       deployedContracts.map(async (contract) => {
-        const points = await generateCurvePoints(
-          contract.address,
-          contract.abi,
-          maxValue,
-          publicClient,
-        )
+        const points = await generateCurvePoints(contract.address, maxValue)
         return {
           ...contract,
           points: points.map((p) => ({
@@ -498,12 +496,7 @@ export function CurveVisualizer() {
       // Use the latest values from the ref for regeneration
       const points = await Promise.all(
         deployedContracts.map(async (contract) => {
-          const newPoints = await generateCurvePoints(
-            contract.address,
-            contract.abi,
-            newMax,
-            publicClient,
-          )
+          const newPoints = await generateCurvePoints(contract.address, newMax)
           return {
             ...contract,
             points: newPoints.map((p) => ({
@@ -596,19 +589,14 @@ export function CurveVisualizer() {
         }
 
         console.log('Contract deployed at:', data.address)
-        const points = await generateCurvePoints(
-          data.address,
-          fileData.abi,
-          maxValue,
-          publicClient,
-        )
+        const points = await generateCurvePoints(data.address, maxValue)
 
         // Get max values first
         const maxAssets = await publicClient
           .readContract({
             address: data.address as `0x${string}`,
             abi: fileData.abi,
-            functionName: 'MAX_ASSETS',
+            functionName: 'maxAssets',
             args: [] as const,
           })
           .then((result) => BigInt(result as unknown as string))
@@ -617,7 +605,7 @@ export function CurveVisualizer() {
           .readContract({
             address: data.address as `0x${string}`,
             abi: fileData.abi,
-            functionName: 'MAX_SHARES',
+            functionName: 'maxShares',
             args: [] as const,
           })
           .then((result) => BigInt(result as unknown as string))
