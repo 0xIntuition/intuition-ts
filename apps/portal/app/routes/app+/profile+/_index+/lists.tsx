@@ -1,22 +1,22 @@
 import { Suspense, useCallback, useEffect, useRef, useState } from 'react'
 
 import { Text } from '@0xintuition/1ui'
-import {
-  fetcher,
-  GetListsDocument,
-  GetListsQuery,
-  GetListsQueryVariables,
-  useGetListsQuery,
-} from '@0xintuition/graphql'
+import { Atoms_Order_By, fetcher, Order_By } from '@0xintuition/graphql'
 
 import { ErrorPage } from '@components/error-page'
-import { ListClaimsListNew as ListClaimsList } from '@components/list/list-claims'
+import { SavedLists } from '@components/list/saved-lists'
 import { ListClaimsSkeletonLayout } from '@components/lists/list-skeletons'
+import {
+  GetSavedListsDocument,
+  GetSavedListsQuery,
+  GetSavedListsQueryVariables,
+  useGetSavedListsQuery,
+} from '@lib/queries/saved-lists'
 import { getSpecialPredicate } from '@lib/utils/app'
 import { calculateTotalPages, invariant } from '@lib/utils/misc'
 import { getStandardPageParams } from '@lib/utils/params'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
-import { Await, useLoaderData, useSearchParams } from '@remix-run/react'
+import { Await, useLoaderData } from '@remix-run/react'
 import { getUserWallet } from '@server/auth'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
 import { CURRENT_ENV, NO_WALLET_ERROR } from 'app/consts'
@@ -25,46 +25,6 @@ import { PaginationType } from 'app/types/pagination'
 // Default pagination values
 const DEFAULT_PAGE_SIZE = 16
 const DEFAULT_PAGE = 1
-
-// Client-side sorting function
-const sortLists = (
-  lists: GetListsQuery['predicate_objects'],
-  sortBy: string,
-  direction: string,
-) => {
-  if (!lists) {
-    return []
-  }
-
-  // Create a copy to avoid mutating the original data
-  const sortedLists = [...lists]
-
-  // Define sort functions
-  const directionMultiplier = direction.toLowerCase() === 'desc' ? -1 : 1
-
-  // Sort based on the field
-  if (sortBy === 'object.label') {
-    sortedLists.sort((a, b) => {
-      const labelA = a.object?.label?.toLowerCase() || ''
-      const labelB = b.object?.label?.toLowerCase() || ''
-      return directionMultiplier * labelA.localeCompare(labelB)
-    })
-  } else if (sortBy === 'claim_count') {
-    sortedLists.sort((a, b) => {
-      const countA = a.claim_count || 0
-      const countB = b.claim_count || 0
-      return directionMultiplier * (countA - countB)
-    })
-  } else if (sortBy === 'triple_count') {
-    sortedLists.sort((a, b) => {
-      const countA = a.triple_count || 0
-      const countB = b.triple_count || 0
-      return directionMultiplier * (countA - countB)
-    })
-  }
-
-  return sortedLists
-}
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const userWallet = await getUserWallet(request)
@@ -84,66 +44,75 @@ export async function loader({ request }: LoaderFunctionArgs) {
   })
 
   const savedListsWhere = {
-    account: {
-      id: {
-        _eq: queryAddress,
-      },
-    },
-    vault: {
-      atom_id: {
-        _is_null: true,
-      },
-    },
-    _or: [
+    _and: [
       {
-        predicate_id: {
-          _eq: getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId,
+        as_object_triples: {
+          vault: {
+            triple: {
+              vault: {
+                positions: {
+                  account_id: {
+                    _eq: queryAddress,
+                  },
+                },
+              },
+            },
+          },
+          predicate_id: {
+            _eq: getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId,
+          },
         },
       },
     ],
   }
 
-  // Prefetch lists data - we can't specify the orderBy in the API
-  await queryClient.prefetchQuery({
-    queryKey: [
-      'get-lists',
-      {
-        savedListsWhere,
-      },
-    ],
-    queryFn: () =>
-      fetcher<GetListsQuery, GetListsQueryVariables>(GetListsDocument, {
-        where: savedListsWhere,
-      })(),
-  })
+  const triplesWhere = {
+    predicate_id: {
+      _eq: 3,
+    },
+  }
 
-  // Get the total count
+  // Convert sortBy and direction to GraphQL order_by format
+  const orderBy: Atoms_Order_By[] = []
+  if (sortBy === 'label') {
+    orderBy.push({ label: direction.toLowerCase() as Order_By })
+  } else if (sortBy === 'entries_count') {
+    orderBy.push({
+      as_object_triples_aggregate: {
+        count: direction.toLowerCase() as Order_By,
+      },
+    })
+  } else if (sortBy === 'id') {
+    orderBy.push({ id: direction.toLowerCase() as Order_By })
+  }
+
+  // Prefetch the data with pagination
   const listsData = await queryClient.fetchQuery({
-    queryKey: [
-      'get-lists',
-      {
-        savedListsWhere,
-      },
-    ],
+    queryKey: ['get-lists'],
     queryFn: () =>
-      fetcher<GetListsQuery, GetListsQueryVariables>(GetListsDocument, {
-        where: savedListsWhere,
-      })(),
+      fetcher<GetSavedListsQuery, GetSavedListsQueryVariables>(
+        GetSavedListsDocument,
+        {
+          where: savedListsWhere,
+          triplesWhere,
+          limit,
+          offset: (page - 1) * limit,
+          orderBy,
+        },
+      )(),
   })
 
-  console.log('listsData', listsData)
-
-  const totalCount =
-    listsData?.predicate_objects_aggregate?.aggregate?.count ?? 0
+  const totalCount = listsData?.atoms_aggregate?.aggregate?.count ?? 0
   const totalPages = calculateTotalPages(totalCount, limit)
 
   return json({
     dehydratedState: dehydrate(queryClient),
     initialParams: {
       savedListsWhere,
+      triplesWhere,
       queryAddress,
     },
-    sortBy: sortBy || 'object.label',
+    sortBy: sortBy || 'label',
     direction: direction || 'asc',
     pagination: {
       currentPage: page,
@@ -155,41 +124,54 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export default function ProfileLists() {
-  const { initialParams } = useLoaderData<typeof loader>()
-  const [searchParams] = useSearchParams()
+  const {
+    initialParams,
+    pagination,
+    sortBy: initialSortBy,
+    direction: initialDirection,
+  } = useLoaderData<typeof loader>()
   const [visibleLimit, setVisibleLimit] = useState(DEFAULT_PAGE_SIZE)
   const [isLoading, setIsLoading] = useState(false)
+  const [items, setItems] = useState([] as GetSavedListsQuery['atoms'])
+  const [sortBy, setSortBy] = useState(initialSortBy)
+  const [direction, setDirection] = useState(initialDirection)
 
   const observerRef = useRef<IntersectionObserver | null>(null)
   const loadingElementRef = useRef<HTMLDivElement>(null)
 
-  const sortBy = searchParams.get('sortBy') || 'object.label'
-  const direction = searchParams.get('direction') || 'asc'
+  const queryParams = {
+    where: initialParams.savedListsWhere,
+    triplesWhere: initialParams.triplesWhere,
+    limit: visibleLimit,
+    offset: 0,
+    orderBy:
+      sortBy === 'label'
+        ? [{ label: direction.toLowerCase() as Order_By }]
+        : sortBy === 'entries_count'
+          ? [
+              {
+                as_object_triples_aggregate: {
+                  count: direction.toLowerCase() as Order_By,
+                },
+              },
+            ]
+          : sortBy === 'id'
+            ? [{ id: direction.toLowerCase() as Order_By }]
+            : [{ label: 'asc' as Order_By }], // Default sort
+  }
 
-  // Fetch the lists data without specifying order_by
-  const { data: savedListsResults } = useGetListsQuery(
-    {
-      where: initialParams.savedListsWhere,
-    },
-    {
-      queryKey: [
-        'get-lists',
-        {
-          savedListsWhere: initialParams.savedListsWhere,
-        },
-      ],
-    },
-  )
+  const { data: savedListsResults } = useGetSavedListsQuery(queryParams, {
+    queryKey: ['get-lists', JSON.stringify(queryParams)],
+  })
 
-  const sortedLists = sortLists(
-    savedListsResults?.predicate_objects || [],
-    sortBy,
-    direction,
-  )
+  useEffect(() => {
+    if (savedListsResults?.atoms) {
+      setItems(savedListsResults.atoms)
+    }
+  }, [savedListsResults])
 
-  const totalLists = sortedLists.length
+  const totalLists = savedListsResults?.atoms_aggregate?.aggregate?.count ?? 0
   const hasMoreResults = visibleLimit < totalLists
-  const displayedLists = sortedLists.slice(0, visibleLimit)
 
   const loadMoreItems = useCallback(() => {
     if (isLoading || !hasMoreResults) {
@@ -197,10 +179,8 @@ export default function ProfileLists() {
     }
 
     setIsLoading(true)
-    setTimeout(() => {
-      setVisibleLimit((prev) => Math.min(prev + DEFAULT_PAGE_SIZE, totalLists))
-      setIsLoading(false)
-    }, 300)
+    setVisibleLimit((prev) => Math.min(prev + DEFAULT_PAGE_SIZE, totalLists))
+    setIsLoading(false)
   }, [hasMoreResults, isLoading, totalLists])
 
   useEffect(() => {
@@ -235,10 +215,39 @@ export default function ProfileLists() {
   }, [hasMoreResults, isLoading, loadMoreItems])
 
   const sortOptions = [
-    { value: 'Name', sortBy: 'object.label' },
-    { value: 'Claim Count', sortBy: 'claim_count' },
-    { value: 'Triple Count', sortBy: 'triple_count' },
+    { value: 'Name (A-Z)', sortBy: 'label', direction: 'asc' as const },
+    { value: 'Name (Z-A)', sortBy: 'label', direction: 'desc' as const },
+    {
+      value: 'Most Entries',
+      sortBy: 'entries_count',
+      direction: 'desc' as const,
+    },
+    {
+      value: 'Fewest Entries',
+      sortBy: 'entries_count',
+      direction: 'asc' as const,
+    },
+    { value: 'Newest', sortBy: 'id', direction: 'desc' as const },
+    { value: 'Oldest', sortBy: 'id', direction: 'asc' as const },
   ]
+
+  const handleSortChange = useCallback(
+    (newSortBy: string, newDirection: 'asc' | 'desc') => {
+      // Update local state
+      setSortBy(newSortBy)
+      setDirection(newDirection)
+      setVisibleLimit(DEFAULT_PAGE_SIZE) // Reset visible limit when sort changes
+      setItems([]) // Clear items when sort changes
+
+      // Update URL without navigation
+      const currentParams = new URLSearchParams(window.location.search)
+      currentParams.set('listSortBy', newSortBy)
+      currentParams.set('listDirection', newDirection)
+      currentParams.set('listPage', '1')
+      window.history.replaceState(null, '', `?${currentParams.toString()}`)
+    },
+    [],
+  )
 
   return (
     <div className="flex flex-col w-full gap-4">
@@ -253,18 +262,15 @@ export default function ProfileLists() {
       </div>
       <Suspense fallback={<ListClaimsSkeletonLayout totalItems={6} />}>
         <Await resolve={savedListsResults}>
-          <ListClaimsList
-            listClaims={displayedLists}
-            // pagination={{
-            //   ...pagination,
-            //   currentPage,
-            //   totalEntries: totalLists,
-            // }}
+          <SavedLists
+            savedLists={items}
+            pagination={pagination}
             enableSearch={false}
             enableSort={true}
             paramPrefix="list"
             onLoadMore={loadMoreItems}
             sortOptions={sortOptions}
+            onSortChange={handleSortChange}
           />
           {hasMoreResults && (
             <div

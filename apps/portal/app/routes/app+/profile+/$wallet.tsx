@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 
 import {
-  Banner,
   Button,
   Icon,
   IconName,
@@ -40,7 +39,6 @@ import {
 
 import { ErrorPage } from '@components/error-page'
 import FollowModal from '@components/follow/follow-modal'
-import NavigationButton from '@components/navigation-link'
 import ImageModal from '@components/profile/image-modal'
 import SaveListModal from '@components/save-list/save-list-modal'
 import { SegmentedNav } from '@components/segmented-nav'
@@ -97,8 +95,6 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
 
   const queryAddress = wallet.toLowerCase() ?? zeroAddress
 
-  console.log('queryAddress', queryAddress)
-
   if (wallet.toLowerCase() === userWallet?.toLowerCase()) {
     throw redirect(PATHS.PROFILE)
   }
@@ -131,7 +127,6 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
   let accountResult: GetAccountQuery | null = null
 
   try {
-    logger('Fetching Account Data...')
     accountResult = await fetcher<GetAccountQuery, GetAccountQueryVariables>(
       GetAccountDocument,
       { address: queryAddress },
@@ -155,8 +150,6 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
         predicateId: getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId,
       })()
 
-      logger('Account Tags Result:', accountTagsResult)
-
       await queryClient.prefetchQuery({
         queryKey: [
           'get-tags',
@@ -178,8 +171,6 @@ export async function loader({ params, request }: LoaderFunctionArgs) {
         objectId: accountResult.account.atom_id,
         address: queryAddress,
       })()
-
-      logger('Account Connections Count Result:', accountConnectionsCountResult)
 
       await queryClient.prefetchQuery({
         queryKey: [
@@ -238,9 +229,6 @@ const getFilteredRouteOptions = (hasAtom: boolean) => {
 export default function Profile() {
   const { initialParams, userWallet } = useLoaderData<ProfileLoaderData>()
 
-  // TODO: Remove this once the `status is added to atoms -- that will be what we check if something is pending. For now setting this to false and removing the legacy isPending check
-  const isPending = false
-
   const { data: accountResult } = useGetAccountQuery(
     {
       address: initialParams.queryAddress,
@@ -292,7 +280,7 @@ export default function Profile() {
   const { data: vaultDetails } = useGetVaultDetails(
     MULTIVAULT_CONTRACT_ADDRESS,
     accountResult?.account?.atom_id,
-    undefined, // no counterVaultId
+    undefined, // no counterVaultId needed for atoms
     {
       queryKey: [
         'get-vault-details',
@@ -345,7 +333,6 @@ export default function Profile() {
   const matches = useMatches()
   const currentPath = matches[matches.length - 1].pathname
 
-  // List of paths that should not use the ProfileLayout
   const excludedPaths = [PATHS.PROFILE_CREATE]
 
   if (excludedPaths.includes(currentPath)) {
@@ -444,7 +431,7 @@ export default function Profile() {
                   className="w-fit border-dashed"
                   onClick={() => {
                     setTagsModalActive({ isOpen: true, mode: 'add' })
-                  }} // TODO: The View All Tags modal is currently not working -- there are issues that we will fix in another ticket
+                  }}
                 >
                   <Icon name="plus-small" className="w-5 h-5" />
                   Add tags
@@ -453,7 +440,6 @@ export default function Profile() {
             </div>
 
             <TagsButton
-              className="text-warning"
               onClick={() => {
                 setTagsModalActive({ isOpen: true, mode: 'view' })
               }}
@@ -492,10 +478,8 @@ export default function Profile() {
           <IdentityStakeCard
             tvl={+formatBalance(assets_sum)}
             holders={accountResult?.account?.atom?.vault?.position_count ?? 0}
-            variant={Identity.user} // TODO: Use the atom type to determine this once we have these
-            // identityImgSrc={getAtomImage(accountResult?.account)} // TODO: Modify our utils and then re-add this
+            variant={Identity.user}
             identityImgSrc={accountResult?.account?.image ?? ''}
-            // identityDisplayName={getAtomLabel(accountResult?.account)}
             identityDisplayName={accountResult?.account?.label ?? ''}
             onBuyClick={
               userWallet
@@ -535,22 +519,7 @@ export default function Profile() {
     </div>
   )
 
-  const rightPanel = isPending ? (
-    <Banner
-      variant="warning"
-      title="Please Refresh the Page"
-      message="It looks like the on-chain transaction was successful, but we're still waiting for the information to update. Please refresh the page to ensure everything is up to date."
-    >
-      <NavigationButton
-        reloadDocument
-        variant="secondary"
-        to=""
-        className="max-lg:w-full"
-      >
-        Refresh
-      </NavigationButton>
-    </Banner>
-  ) : (
+  const rightPanel = (
     <>
       <div className="flex flex-row justify-end mb-6 max-lg:justify-center">
         <SegmentedNav
@@ -563,67 +532,65 @@ export default function Profile() {
 
   return (
     <TwoPanelLayout leftPanel={leftPanel} rightPanel={rightPanel}>
-      {!isPending && (
-        <>
-          <StakeModal
-            userWallet={userWallet}
+      <>
+        <StakeModal
+          userWallet={userWallet}
+          contract={MULTIVAULT_CONTRACT_ADDRESS}
+          open={stakeModalActive.isOpen}
+          identity={accountResult?.account?.atom as Atom}
+          vaultId={stakeModalActive.vaultId}
+          vaultDetailsProp={vaultDetails}
+          onClose={() => {
+            setStakeModalActive((prevState) => ({
+              ...prevState,
+              isOpen: false,
+            }))
+          }}
+        />
+        <FollowModal
+          userWallet={userWallet}
+          contract={MULTIVAULT_CONTRACT_ADDRESS}
+          open={followModalActive.isOpen}
+          identityLabel={accountResult?.account?.label ?? ''}
+          identityAvatar={accountResult?.account?.image ?? ''}
+          identityVaultId={accountResult?.account?.atom_id}
+          onClose={() => {
+            setFollowModalActive((prevState) => ({
+              ...prevState,
+              isOpen: false,
+            }))
+          }}
+        />
+        <TagsModal
+          identity={accountResult?.account?.atom as Atom}
+          tagClaims={accountTagsResult?.triples as Triple[]}
+          userWallet={userWallet}
+          open={tagsModalActive.isOpen}
+          mode={tagsModalActive.mode}
+          onClose={() => {
+            setTagsModalActive({
+              ...tagsModalActive,
+              isOpen: false,
+            })
+            setSelectedTag(undefined)
+          }}
+        />
+        {selectedTag && (
+          <SaveListModal
             contract={MULTIVAULT_CONTRACT_ADDRESS}
-            open={stakeModalActive.isOpen}
-            identity={accountResult?.account?.atom as Atom}
-            vaultId={stakeModalActive.vaultId}
-            vaultDetailsProp={vaultDetails}
-            onClose={() => {
-              setStakeModalActive((prevState) => ({
-                ...prevState,
-                isOpen: false,
-              }))
-            }}
-          />
-          <FollowModal
+            tagAtom={saveListModalActive.tag ?? selectedTag}
+            atom={accountResult?.account?.atom as Atom}
             userWallet={userWallet}
-            contract={MULTIVAULT_CONTRACT_ADDRESS}
-            open={followModalActive.isOpen}
-            identityLabel={accountResult?.account?.label ?? ''}
-            identityAvatar={accountResult?.account?.image ?? ''}
-            identityVaultId={accountResult?.account?.atom_id}
-            onClose={() => {
-              setFollowModalActive((prevState) => ({
-                ...prevState,
-                isOpen: false,
-              }))
-            }}
-          />
-          <TagsModal
-            identity={accountResult?.account?.atom as Atom}
-            tagClaims={accountTagsResult?.triples as Triple[]}
-            userWallet={userWallet}
-            open={tagsModalActive.isOpen}
-            mode={tagsModalActive.mode}
-            onClose={() => {
-              setTagsModalActive({
-                ...tagsModalActive,
+            open={saveListModalActive.isOpen}
+            onClose={() =>
+              setSaveListModalActive({
+                ...saveListModalActive,
                 isOpen: false,
               })
-              setSelectedTag(undefined)
-            }}
+            }
           />
-          {selectedTag && (
-            <SaveListModal
-              contract={MULTIVAULT_CONTRACT_ADDRESS}
-              tagAtom={saveListModalActive.tag ?? selectedTag}
-              atom={accountResult?.account?.atom as Atom}
-              userWallet={userWallet}
-              open={saveListModalActive.isOpen}
-              onClose={() =>
-                setSaveListModalActive({
-                  ...saveListModalActive,
-                  isOpen: false,
-                })
-              }
-            />
-          )}
-        </>
-      )}
+        )}
+      </>
       <ImageModal
         displayName={accountResult?.account?.label ?? ''}
         imageSrc={accountResult?.account?.image ?? ''}

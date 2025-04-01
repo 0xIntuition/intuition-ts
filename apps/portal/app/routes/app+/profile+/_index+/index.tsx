@@ -16,22 +16,24 @@ import {
   GetTriplesCountDocument,
   GetTriplesCountQuery,
   GetTriplesCountQueryVariables,
-  GetTriplesWithPositionsDocument,
-  GetTriplesWithPositionsQuery,
-  GetTriplesWithPositionsQueryVariables,
   useGetAccountQuery,
   useGetAtomsCountQuery,
   useGetPositionsCountByTypeQuery,
   useGetPositionsCountQuery,
   useGetTriplesCountQuery,
-  useGetTriplesWithPositionsQuery,
 } from '@0xintuition/graphql'
 
 import { ErrorPage } from '@components/error-page'
-import { ListClaimsListNew as ListClaimsList } from '@components/list/list-claims'
+import { SavedLists } from '@components/list/saved-lists'
 import { OverviewAboutHeaderNew as OverviewAboutHeader } from '@components/profile/overview-about-header'
 import { OverviewCreatedHeader } from '@components/profile/overview-created-header'
 import { OverviewStakingHeader } from '@components/profile/overview-staking-header'
+import {
+  GetSavedListsDocument,
+  GetSavedListsQuery,
+  GetSavedListsQueryVariables,
+  useGetSavedListsQuery,
+} from '@lib/queries/saved-lists'
 import { getSpecialPredicate } from '@lib/utils/app'
 import logger from '@lib/utils/logger'
 import { formatBalance, invariant } from '@lib/utils/misc'
@@ -118,23 +120,32 @@ export async function loader({ request }: LoaderFunctionArgs) {
   }
 
   const savedListsWhere = {
-    account: {
-      id: {
-        _eq: queryAddress,
-      },
-    },
-    vault: {
-      atom_id: {
-        _is_null: true,
-      },
-    },
-    _or: [
+    _and: [
       {
-        predicate_id: {
-          _eq: getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId,
+        as_object_triples: {
+          vault: {
+            triple: {
+              vault: {
+                positions: {
+                  account_id: {
+                    _eq: queryAddress,
+                  },
+                },
+              },
+            },
+          },
+          predicate_id: {
+            _eq: getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId,
+          },
         },
       },
     ],
+  }
+
+  const triplesWhere = {
+    predicate_id: {
+      _eq: getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId,
+    },
   }
 
   const createdTriplesWhere = {
@@ -190,16 +201,16 @@ export async function loader({ request }: LoaderFunctionArgs) {
   await queryClient.prefetchQuery({
     queryKey: ['get-saved-lists', { savedListsWhere }],
     queryFn: () =>
-      fetcher<
-        GetTriplesWithPositionsQuery,
-        GetTriplesWithPositionsQueryVariables
-      >(GetTriplesWithPositionsDocument, {
-        where: savedListsWhere,
-        limit: 10,
-        offset: 0,
-        orderBy: [{ block_number: 'desc' }],
-        address: queryAddress,
-      }),
+      fetcher<GetSavedListsQuery, GetSavedListsQueryVariables>(
+        GetSavedListsDocument,
+        {
+          where: savedListsWhere,
+          triplesWhere,
+          limit: 4,
+          offset: 0,
+          orderBy: [{ as_object_triples_aggregate: { count: 'desc' } }],
+        },
+      ),
   })
 
   await queryClient.prefetchQuery({
@@ -259,6 +270,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
       atomPositionsWhere,
       triplePositionsWhere,
       allPositionsWhere,
+      triplesWhere,
     },
   })
 }
@@ -275,6 +287,7 @@ export default function UserProfileOverview() {
     atomPositionsWhere,
     triplePositionsWhere,
     allPositionsWhere,
+    triplesWhere,
   } = initialParams
 
   const { data: accountResult } = useGetAccountQuery(
@@ -320,25 +333,16 @@ export default function UserProfileOverview() {
     where: allPositionsWhere,
   })
 
-  const { data: savedListsResults } = useGetTriplesWithPositionsQuery(
+  const { data: savedListsResults } = useGetSavedListsQuery(
     {
       where: savedListsWhere,
-      limit: 10,
+      triplesWhere,
+      limit: 4,
       offset: 0,
-      orderBy: [{ block_number: 'desc' }],
-      address: queryAddress,
+      orderBy: [{ as_object_triples_aggregate: { count: 'desc' } }],
     },
     {
-      queryKey: [
-        'get-saved-lists',
-        {
-          where: savedListsWhere,
-          limit: 10,
-          offset: 0,
-          orderBy: [{ blockNumber: 'desc' }],
-          address: queryAddress,
-        },
-      ],
+      queryKey: ['get-saved-lists'],
     },
   )
 
@@ -435,14 +439,8 @@ export default function UserProfileOverview() {
         >
           Top Lists
         </Text>
-        <ListClaimsList
-          listClaims={(savedListsResults?.triples ?? []).map((triple) => ({
-            __typename: 'predicate_objects',
-            id: triple.id,
-            claim_count: triple.vault?.position_count ?? 0,
-            triple_count: triple.vault?.position_count ?? 0,
-            object: triple.object,
-          }))}
+        <SavedLists
+          savedLists={savedListsResults?.atoms ?? []}
           enableSort={false}
           enableSearch={false}
         />

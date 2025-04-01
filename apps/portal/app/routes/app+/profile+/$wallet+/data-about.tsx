@@ -34,13 +34,13 @@ import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 import { getUserWallet } from '@server/auth'
 import { QueryClient } from '@tanstack/react-query'
-import { NO_PARAM_ID_ERROR, NO_WALLET_ERROR } from 'app/consts'
+import { NO_PARAM_ID_ERROR } from 'app/consts'
 import { Triple } from 'app/types/triple'
 import { useAtom } from 'jotai'
+import { zeroAddress } from 'viem'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const userWallet = await getUserWallet(request)
-  invariant(userWallet, NO_WALLET_ERROR)
 
   const wallet = params.wallet
   invariant(wallet, NO_PARAM_ID_ERROR)
@@ -130,7 +130,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
         limit: triplesLimit,
         offset: triplesOffset,
         orderBy: triplesOrderBy ? [{ [triplesOrderBy]: 'desc' }] : undefined,
-        address: queryAddress,
+        address: userWallet?.toLowerCase() ?? zeroAddress,
       }),
   })
 
@@ -176,8 +176,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 }
 
 export default function ProfileDataAbout() {
-  const { userWallet, queryAddress, initialParams } =
-    useLoaderData<typeof loader>()
+  const { userWallet, initialParams } = useLoaderData<typeof loader>()
 
   const [createClaimModalActive, setCreateClaimModalActive] = useAtom(
     detailCreateClaimModalAtom,
@@ -208,7 +207,7 @@ export default function ProfileDataAbout() {
       orderBy: initialParams.triplesOrderBy
         ? [{ [initialParams.triplesOrderBy]: 'desc' }]
         : undefined,
-      address: queryAddress,
+      address: userWallet?.toLowerCase() ?? zeroAddress,
     },
     {
       queryKey: [
@@ -218,7 +217,7 @@ export default function ProfileDataAbout() {
           limit: initialParams.triplesLimit,
           offset: initialParams.triplesOffset,
           orderBy: initialParams.triplesOrderBy,
-          address: queryAddress,
+          address: userWallet?.toLowerCase() ?? zeroAddress,
         },
       ],
     },

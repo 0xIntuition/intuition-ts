@@ -4,6 +4,7 @@ import { ListHeader } from '@components/list/list-header'
 import { stakeModalAtom } from '@lib/state/store'
 import logger from '@lib/utils/logger'
 import { formatBalance, getAtomIpfsLink, getAtomLink } from '@lib/utils/misc'
+import { SortDirection } from '@lib/utils/params'
 import { AtomArray } from 'app/types/atom'
 import { PaginationType } from 'app/types/pagination'
 import { useSetAtom } from 'jotai'
@@ -20,6 +21,7 @@ export function IdentitiesListNew({
   enableSort = true,
   onPageChange,
   onLimitChange,
+  onSortChange,
   isConnected = false,
 }: {
   variant?: 'explore' | 'positions'
@@ -31,13 +33,26 @@ export function IdentitiesListNew({
   enableSort?: boolean
   onPageChange?: (page: number) => void
   onLimitChange?: (limit: number) => void
+  onSortChange?: (sortBy: string, direction: SortDirection) => void
   isConnected?: boolean
 }) {
   // Using GraphQL field names directly for sorting
   const options: SortOption<string>[] = [
-    { value: 'Total ETH', sortBy: 'vault.total_shares' },
-    { value: 'Total Positions', sortBy: 'vault.position_count' },
-    { value: 'Created At', sortBy: 'block_timestamp' },
+    {
+      value: 'Total ETH',
+      sortBy: 'vault.total_shares',
+      direction: 'desc' as SortDirection,
+    },
+    {
+      value: 'Total Positions',
+      sortBy: 'vault.position_count',
+      direction: 'desc' as SortDirection,
+    },
+    {
+      value: 'Created At',
+      sortBy: 'block_timestamp',
+      direction: 'desc' as SortDirection,
+    },
   ]
 
   const setStakeModalActive = useSetAtom(stakeModalAtom)
@@ -54,6 +69,7 @@ export function IdentitiesListNew({
       enableSort={enableSort}
       onPageChange={onPageChange}
       onLimitChange={onLimitChange}
+      onSortChange={onSortChange}
     >
       {enableHeader && (
         <ListHeader
@@ -94,10 +110,17 @@ export function IdentitiesListNew({
               //     value: tag.num_tagged_identities,
               //   })) ?? undefined
               // } // TODO: (ENG-4939) -- Update query/component to use new tags
-              userPosition={formatBalance(
-                identity?.vault?.positions?.[0]?.shares ?? '0',
-                18,
-              )}
+              userPosition={
+                identity?.vault?.current_share_price &&
+                identity?.vault?.positions?.[0]?.shares
+                  ? formatBalance(
+                      (BigInt(identity.vault.current_share_price) *
+                        BigInt(identity.vault.positions[0].shares)) /
+                        BigInt(10 ** 18),
+                      18,
+                    )
+                  : '0'
+              }
               onStakeClick={() =>
                 setStakeModalActive((prevState) => ({
                   ...prevState,

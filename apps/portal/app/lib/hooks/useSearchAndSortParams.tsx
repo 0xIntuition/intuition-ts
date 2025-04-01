@@ -17,8 +17,9 @@ export const useSearchAndSortParamsHandler = <T extends SortColumnType>(
   }
 
   const handleSortChange = (newSortBy: T, newDirection: SortDirection) => {
+    const currentParams = Object.fromEntries(searchParams.entries())
     setSearchParams({
-      ...Object.fromEntries(searchParams),
+      ...currentParams,
       [getParamName('sortBy')]: newSortBy,
       [getParamName('direction')]: newDirection,
       [getParamName('page')]: '1',
@@ -27,23 +28,26 @@ export const useSearchAndSortParamsHandler = <T extends SortColumnType>(
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newSearchValue = event.target.value
+    const currentParams = Object.fromEntries(searchParams.entries())
     setSearchParams({
-      ...Object.fromEntries(searchParams),
+      ...currentParams,
       [getParamName('search')]: newSearchValue,
       [getParamName('page')]: '1',
     })
   }
 
   const onPageChange = (newPage: number) => {
+    const currentParams = Object.fromEntries(searchParams.entries())
     setSearchParams({
-      ...Object.fromEntries(searchParams),
+      ...currentParams,
       [getParamName('page')]: newPage.toString(),
     })
   }
 
   const onLimitChange = (newLimit: number) => {
+    const currentParams = Object.fromEntries(searchParams.entries())
     setSearchParams({
-      ...Object.fromEntries(searchParams),
+      ...currentParams,
       [getParamName('limit')]: newLimit.toString(),
     })
   }

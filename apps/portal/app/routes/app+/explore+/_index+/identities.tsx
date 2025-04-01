@@ -189,13 +189,43 @@ export default function ExploreIdentities() {
   // Create handlers for pagination
   const handlePageChange = (page: number) => {
     const formData = new FormData()
+    // Preserve all existing search params
+    const searchParams = new URLSearchParams(window.location.search)
+    for (const [key, value] of searchParams.entries()) {
+      if (key !== 'page') {
+        // Don't copy the old page parameter
+        formData.append(key, value)
+      }
+    }
     formData.append('page', page.toString())
     submit(formData, { method: 'get', replace: true })
   }
 
   const handleLimitChange = (limit: number) => {
     const formData = new FormData()
+    // Preserve all existing search params
+    const searchParams = new URLSearchParams(window.location.search)
+    for (const [key, value] of searchParams.entries()) {
+      if (key !== 'limit') {
+        // Don't copy the old limit parameter
+        formData.append(key, value)
+      }
+    }
     formData.append('limit', limit.toString())
+    submit(formData, { method: 'get', replace: true })
+  }
+
+  const handleSortChange = (sortBy: string, direction: string) => {
+    const formData = new FormData()
+    // Preserve all existing search params
+    const searchParams = new URLSearchParams(window.location.search)
+    for (const [key, value] of searchParams.entries()) {
+      if (key !== 'identitySortBy' && key !== 'direction') {
+        formData.append(key, value)
+      }
+    }
+    formData.append('identitySortBy', sortBy)
+    formData.append('direction', direction)
     submit(formData, { method: 'get', replace: true })
   }
 
@@ -219,6 +249,7 @@ export default function ExploreIdentities() {
         paramPrefix="identity"
         onPageChange={handlePageChange}
         onLimitChange={handleLimitChange}
+        onSortChange={handleSortChange}
         isConnected={!!privyUser}
       />
     </>

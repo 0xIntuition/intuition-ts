@@ -70,15 +70,33 @@ export function ClaimsListNew({
 
   // Using GraphQL field names directly for sorting
   const options: SortOption<string>[] = [
-    { value: 'Total ETH', sortBy: 'vault.total_shares' },
-    { value: 'ETH For', sortBy: 'vault.total_shares' },
-    { value: 'ETH Against', sortBy: 'counter_vault.total_shares' },
-    { value: 'Total Positions', sortBy: 'vault.position_count' },
-    { value: 'Positions For', sortBy: 'vault.position_count' },
-    { value: 'Positions Against', sortBy: 'counter_vault.position_count' },
-    { value: 'Updated At', sortBy: 'block_timestamp' },
-    { value: 'Created At', sortBy: 'block_timestamp' },
+    { value: 'Total ETH', sortBy: 'vault.total_shares', direction: 'desc' },
+    { value: 'ETH For', sortBy: 'vault.total_shares', direction: 'desc' },
+    {
+      value: 'ETH Against',
+      sortBy: 'counter_vault.total_shares',
+      direction: 'desc',
+    },
+    {
+      value: 'Total Positions',
+      sortBy: 'vault.position_count',
+      direction: 'desc',
+    },
+    {
+      value: 'Positions For',
+      sortBy: 'vault.position_count',
+      direction: 'desc',
+    },
+    {
+      value: 'Positions Against',
+      sortBy: 'counter_vault.position_count',
+      direction: 'desc',
+    },
+    { value: 'Updated At', sortBy: 'block_timestamp', direction: 'desc' },
+    { value: 'Created At', sortBy: 'block_timestamp', direction: 'desc' },
   ]
+
+  console.log('claims', claims)
 
   return (
     <List<string>
@@ -117,12 +135,33 @@ export function ClaimsListNew({
                 BigInt(triple.counter_vault?.total_shares ?? '0'),
               18,
             )}
-            userPosition={formatBalance(
-              triple.vault?.positions?.[0]?.shares ??
-                triple.counter_vault?.positions?.[0]?.shares ??
-                '0',
-              18,
-            )}
+            userPosition={(() => {
+              let totalPosition = BigInt(0)
+
+              // Check main vault position
+              if (
+                triple?.vault?.current_share_price &&
+                triple?.vault?.positions?.[0]?.shares
+              ) {
+                totalPosition +=
+                  (BigInt(triple.vault.current_share_price) *
+                    BigInt(triple.vault.positions[0].shares)) /
+                  BigInt(10 ** 18)
+              }
+
+              // Check counter vault position
+              if (
+                triple?.counter_vault?.current_share_price &&
+                triple?.counter_vault?.positions?.[0]?.shares
+              ) {
+                totalPosition +=
+                  (BigInt(triple.counter_vault.current_share_price) *
+                    BigInt(triple.counter_vault.positions[0].shares)) /
+                  BigInt(10 ** 18)
+              }
+
+              return formatBalance(totalPosition, 18)
+            })()}
             positionDirection={
               triple.vault?.positions?.[0]?.shares
                 ? ClaimPosition.claimFor
@@ -151,7 +190,7 @@ export function ClaimsListNew({
                 direction: ClaimPosition.claimAgainst,
                 isOpen: true,
                 claim: triple,
-                vaultId: triple?.id,
+                vaultId: triple?.counter_vault_id,
               }))
             }
             isFirst={!enableHeader && index === 0}

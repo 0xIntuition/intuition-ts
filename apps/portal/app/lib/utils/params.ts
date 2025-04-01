@@ -34,7 +34,7 @@ export const getStandardPageParams = ({
   paramPrefix,
   defaultPageValue = 1,
   defaultLimitValue = 10,
-  defaultSortByValue = 'id',
+  defaultSortByValue = 'entries_count',
   defaultDirectionValue = 'desc',
 }: {
   searchParams: URLSearchParams

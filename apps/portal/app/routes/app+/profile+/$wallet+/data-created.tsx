@@ -169,7 +169,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
         atomsLimit,
         atomsOffset,
         atomsOrderBy,
-        address: queryAddress,
+        address: userWallet?.toLowerCase() ?? zeroAddress,
       },
     ],
     queryFn: () =>
@@ -180,7 +180,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
           limit: atomsLimit,
           offset: atomsOffset,
           orderBy: atomsOrderBy ? [{ [atomsOrderBy]: 'desc' }] : undefined,
-          address: queryAddress,
+          address: userWallet?.toLowerCase() ?? zeroAddress,
         },
       )(),
   })
@@ -192,7 +192,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
         GetAtomsWithPositionsDocument,
         {
           where: atomsWhere,
-          address: queryAddress,
+          address: userWallet?.toLowerCase() ?? zeroAddress,
         },
       )(),
   })
@@ -208,7 +208,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
         triplesLimit,
         triplesOffset,
         triplesOrderBy,
-        address: queryAddress,
+        address: userWallet?.toLowerCase() ?? zeroAddress,
       },
     ],
     queryFn: () =>
@@ -220,7 +220,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
         limit: triplesLimit,
         offset: triplesOffset,
         orderBy: triplesOrderBy ? [{ [triplesOrderBy]: 'desc' }] : undefined,
-        address: queryAddress,
+        address: userWallet?.toLowerCase() ?? zeroAddress,
       })(),
   })
 
@@ -232,7 +232,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
         GetTriplesWithPositionsQueryVariables
       >(GetTriplesWithPositionsDocument, {
         where: triplesWhere,
-        address: queryAddress,
+        address: userWallet?.toLowerCase() ?? zeroAddress,
       })(),
   })
 
@@ -385,7 +385,7 @@ export default function ProfileDataCreated() {
       orderBy: initialParams.atomsOrderBy
         ? [{ [initialParams.atomsOrderBy]: 'desc' }]
         : undefined,
-      address: queryAddress,
+      address: userWallet?.toLowerCase() ?? zeroAddress,
     },
     {
       queryKey: [
@@ -395,7 +395,7 @@ export default function ProfileDataCreated() {
           limit: initialParams.atomsLimit,
           offset: initialParams.atomsOffset,
           orderBy: initialParams.atomsOrderBy,
-          address: initialParams.queryAddress,
+          address: userWallet?.toLowerCase() ?? zeroAddress,
         },
       ],
     },
@@ -422,7 +422,7 @@ export default function ProfileDataCreated() {
               },
             },
           ],
-      address: queryAddress,
+      address: userWallet?.toLowerCase() ?? zeroAddress,
     },
 
     {
@@ -433,7 +433,7 @@ export default function ProfileDataCreated() {
           limit: initialParams.triplesLimit,
           offset: initialParams.triplesOffset,
           orderBy: initialParams.triplesOrderBy,
-          address: queryAddress,
+          address: userWallet?.toLowerCase() ?? zeroAddress,
         },
       ],
     },

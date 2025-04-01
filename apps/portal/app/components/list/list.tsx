@@ -13,6 +13,7 @@ import {
   globalCreateClaimModalAtom,
   globalCreateIdentityModalAtom,
 } from '@lib/state/store'
+import { SortDirection } from '@lib/utils/params'
 import { PaginationType } from 'app/types/pagination'
 import { useSetAtom } from 'jotai'
 
@@ -28,6 +29,7 @@ export function List<T extends SortColumnType>({
   enableSort = true,
   onPageChange,
   onLimitChange,
+  onSortChange,
 }: {
   children: ReactNode
   pagination?: PaginationType
@@ -38,9 +40,10 @@ export function List<T extends SortColumnType>({
   enableSort?: boolean
   onPageChange?: (page: number) => void
   onLimitChange?: (limit: number) => void
+  onSortChange?: (sortBy: T, direction: SortDirection) => void
 }) {
   const {
-    handleSortChange,
+    handleSortChange: defaultHandleSortChange,
     handleSearchChange,
     onPageChange: defaultPageChange,
     onLimitChange: defaultLimitChange,
@@ -65,6 +68,14 @@ export function List<T extends SortColumnType>({
       onLimitChange(newLimit)
     } else {
       defaultLimitChange(newLimit)
+    }
+  }
+
+  const handleSortChange = (sortBy: T, direction: SortDirection) => {
+    if (onSortChange) {
+      onSortChange(sortBy, direction)
+    } else {
+      defaultHandleSortChange(sortBy, direction)
     }
   }
 

@@ -190,7 +190,12 @@ export default function StakeModal({
   const handleAction = async () => {
     try {
       const txHash = await stake({
-        val,
+        val:
+          mode === 'deposit'
+            ? val
+            : (
+                +val / +formatUnits(BigInt(conviction_price ?? '0'), 18)
+              ).toString(),
         userWallet,
         vaultId: vaultId.toString(),
         triple: claim,

@@ -9,6 +9,7 @@ import {
 export interface SortOption<T> {
   value: string
   sortBy: T
+  direction: 'asc' | 'desc'
 }
 
 interface SortSelectProps<T> {
@@ -27,7 +28,7 @@ export function SortSelect<T>({
           (option) => option.value.toLowerCase() === value,
         )
         if (selectedOption) {
-          handleSortChange(selectedOption.sortBy, 'desc')
+          handleSortChange(selectedOption.sortBy, selectedOption.direction)
         }
       }}
     >

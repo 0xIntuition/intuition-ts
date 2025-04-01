@@ -17886,6 +17886,7 @@ export type GetTriplesWithPositionsQuery = {
     }
     vault?: {
       __typename?: 'vaults'
+      current_share_price: any
       total_shares: any
       position_count: number
       positions: Array<{
@@ -17901,6 +17902,7 @@ export type GetTriplesWithPositionsQuery = {
     } | null
     counter_vault?: {
       __typename?: 'vaults'
+      current_share_price: any
       total_shares: any
       position_count: number
       positions: Array<{
@@ -24705,6 +24707,7 @@ export const GetTriplesWithPositionsDocument = `
       image
     }
     vault {
+      current_share_price
       total_shares
       position_count
       positions(where: {account_id: {_eq: $address}}) {
@@ -24717,6 +24720,7 @@ export const GetTriplesWithPositionsDocument = `
       }
     }
     counter_vault {
+      current_share_price
       total_shares
       position_count
       positions(where: {account_id: {_eq: $address}}) {
@@ -54492,6 +54496,10 @@ export const GetTriplesWithPositions = {
                     selections: [
                       {
                         kind: 'Field',
+                        name: { kind: 'Name', value: 'current_share_price' },
+                      },
+                      {
+                        kind: 'Field',
                         name: { kind: 'Name', value: 'total_shares' },
                       },
                       {
@@ -54572,6 +54580,10 @@ export const GetTriplesWithPositions = {
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'current_share_price' },
+                      },
                       {
                         kind: 'Field',
                         name: { kind: 'Name', value: 'total_shares' },

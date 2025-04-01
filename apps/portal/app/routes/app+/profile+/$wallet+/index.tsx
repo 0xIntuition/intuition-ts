@@ -36,31 +36,38 @@ import {
 import { ErrorPage } from '@components/error-page'
 import { ClaimsListNew as ClaimsAboutIdentity } from '@components/list/claims'
 import { FollowerList } from '@components/list/follow'
-import { ListClaimsListNew as ListClaimsList } from '@components/list/list-claims'
-import { ListClaimsSkeletonLayout } from '@components/lists/list-skeletons'
+import { SavedLists } from '@components/list/saved-lists'
 import { ConnectionsHeaderVariants } from '@components/profile/connections-header'
 import DataAboutHeader from '@components/profile/data-about-header'
 import { OverviewCreatedHeader } from '@components/profile/overview-created-header'
 import { OverviewStakingHeader } from '@components/profile/overview-staking-header'
 import { RevalidateButton } from '@components/revalidate-button'
 import { DataHeaderSkeleton, PaginatedListSkeleton } from '@components/skeleton'
+import {
+  GetSavedListsDocument,
+  GetSavedListsQuery,
+  GetSavedListsQueryVariables,
+  useGetSavedListsQuery,
+} from '@lib/queries/saved-lists'
 import { globalCreateClaimModalAtom } from '@lib/state/store'
 import { getSpecialPredicate } from '@lib/utils/app'
-import logger from '@lib/utils/logger'
 import { formatBalance, invariant } from '@lib/utils/misc'
 import { LoaderFunctionArgs } from '@remix-run/node'
-import { Await, useLoaderData, useParams } from '@remix-run/react'
+import { useLoaderData } from '@remix-run/react'
 import { getUserWallet } from '@server/auth'
 import { QueryClient } from '@tanstack/react-query'
 import { CURRENT_ENV, NO_PARAM_ID_ERROR, PATHS } from 'app/consts'
 import { Triple } from 'app/types/triple'
 import { useSetAtom } from 'jotai'
+import { zeroAddress } from 'viem'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const userWallet = await getUserWallet(request)
 
   const wallet = params.wallet
   invariant(wallet, NO_PARAM_ID_ERROR)
+
+  const url = new URL(request.url)
 
   const queryAddress = wallet.toLowerCase()
 
@@ -79,6 +86,11 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     queryKey: ['get-account', { address: wallet }],
     queryFn: () => accountResult,
   })
+
+  const triplesLimit = parseInt(url.searchParams.get('claimsLimit') || '10')
+
+  const triplesOffset = parseInt(url.searchParams.get('claimsOffset') || '0')
+  const triplesOrderBy = url.searchParams.get('claimsSortBy')
 
   const triplesWhere = {
     _or: [
@@ -101,43 +113,32 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   }
 
   const savedListsWhere = {
-    account: {
-      id: {
-        _eq: queryAddress,
-      },
-    },
-    vault: {
-      atom_id: {
-        _is_null: true,
-      },
-    },
-    _or: [
+    _and: [
       {
-        predicate_id: {
-          _eq: getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId,
+        as_object_triples: {
+          vault: {
+            triple: {
+              vault: {
+                positions: {
+                  account_id: {
+                    _eq: queryAddress,
+                  },
+                },
+              },
+            },
+          },
+          predicate_id: {
+            _eq: getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId,
+          },
         },
       },
     ],
   }
 
-  const triplesCountWhere = {
-    _or: [
-      {
-        subject_id: {
-          _eq: accountResult.account?.atom_id,
-        },
-      },
-      {
-        object_id: {
-          _eq: accountResult.account?.atom_id,
-        },
-      },
-      {
-        predicate_id: {
-          _eq: accountResult.account?.atom_id,
-        },
-      },
-    ],
+  const savedListsTriplesWhere = {
+    predicate_id: {
+      _eq: getSpecialPredicate(CURRENT_ENV).tagPredicate.vaultId,
+    },
   }
 
   const positionsCountWhere = {
@@ -208,33 +209,36 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   }
 
   await queryClient.prefetchQuery({
-    queryKey: ['get-triples-with-positions', { triplesWhere }],
+    queryKey: [
+      'get-triples-with-positions',
+      { triplesWhere, triplesLimit, triplesOffset, triplesOrderBy },
+    ],
     queryFn: () =>
       fetcher<
         GetTriplesWithPositionsQuery,
         GetTriplesWithPositionsQueryVariables
       >(GetTriplesWithPositionsDocument, {
         where: triplesWhere,
-        limit: 10,
-        offset: 0,
-        orderBy: [{ block_number: 'desc' }],
-        address: queryAddress,
+        limit: triplesLimit,
+        offset: triplesOffset,
+        orderBy: triplesOrderBy ? [{ [triplesOrderBy]: 'desc' }] : undefined,
+        address: userWallet?.toLowerCase() ?? zeroAddress,
       }),
   })
 
   await queryClient.prefetchQuery({
     queryKey: ['get-saved-lists', { savedListsWhere }],
     queryFn: () =>
-      fetcher<
-        GetTriplesWithPositionsQuery,
-        GetTriplesWithPositionsQueryVariables
-      >(GetTriplesWithPositionsDocument, {
-        where: savedListsWhere,
-        limit: 10,
-        offset: 0,
-        orderBy: [{ block_number: 'desc' }],
-        address: queryAddress,
-      }),
+      fetcher<GetSavedListsQuery, GetSavedListsQueryVariables>(
+        GetSavedListsDocument,
+        {
+          where: savedListsWhere,
+          triplesWhere: savedListsTriplesWhere,
+          limit: 4,
+          offset: 0,
+          orderBy: [{ as_object_triples_aggregate: { count: 'desc' } }],
+        },
+      ),
   })
 
   await queryClient.prefetchQuery({
@@ -284,15 +288,6 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
   if (accountResult.account?.atom_id) {
     await queryClient.prefetchQuery({
-      queryKey: ['get-triples-count', { where: triplesCountWhere }],
-      queryFn: () =>
-        fetcher<GetTriplesCountQuery, GetTriplesCountQueryVariables>(
-          GetTriplesCountDocument,
-          { where: triplesCountWhere },
-        )(),
-    })
-
-    await queryClient.prefetchQuery({
       queryKey: ['get-positions-count', { where: positionsCountWhere }],
       queryFn: () =>
         fetcher<GetPositionsCountQuery, GetPositionsCountQueryVariables>(
@@ -316,14 +311,17 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     queryAddress,
     initialParams: {
       atomId: accountResult.account?.atom_id,
+      triplesLimit,
+      triplesOffset,
+      triplesOrderBy,
       triplesWhere,
-      triplesCountWhere,
       positionsCountWhere,
       createdTriplesWhere,
       createdAtomsWhere,
       atomPositionsWhere,
       triplePositionsWhere,
       savedListsWhere,
+      savedListsTriplesWhere,
       allPositionsWhere,
     },
   }
@@ -333,9 +331,6 @@ export default function ProfileOverview() {
   const { userWallet, queryAddress, initialParams } =
     useLoaderData<typeof loader>()
 
-  const params = useParams()
-  const { wallet } = params
-
   const setCreateClaimModalActive = useSetAtom(globalCreateClaimModalAtom)
 
   const {
@@ -344,6 +339,8 @@ export default function ProfileOverview() {
     atomPositionsWhere,
     triplePositionsWhere,
     allPositionsWhere,
+    savedListsWhere,
+    savedListsTriplesWhere,
   } = initialParams
 
   const { data: accountResult } = useGetAccountQuery(
@@ -387,51 +384,37 @@ export default function ProfileOverview() {
   } = useGetTriplesWithPositionsQuery(
     {
       where: initialParams.triplesWhere,
-      limit: 10,
-      offset: 0,
-      orderBy: [{ block_number: 'desc' }],
-      address: queryAddress,
+      limit: initialParams.triplesLimit,
+      offset: initialParams.triplesOffset,
+      orderBy: initialParams.triplesOrderBy
+        ? [{ [initialParams.triplesOrderBy]: 'desc' }]
+        : undefined,
+      address: userWallet?.toLowerCase() ?? zeroAddress,
     },
     {
       queryKey: [
         'get-triples-with-positions',
         {
           where: initialParams.triplesWhere,
-          limit: 10,
-          offset: 0,
-          orderBy: [{ blockNumber: 'desc' }],
-          address: queryAddress,
+          limit: initialParams.triplesLimit,
+          offset: initialParams.triplesOffset,
+          orderBy: initialParams.triplesOrderBy,
+          address: userWallet?.toLowerCase() ?? zeroAddress,
         },
       ],
     },
   )
 
-  logger('Triples Result (Client):', triplesResult)
-
-  const {
-    data: savedListsResults,
-    // isLoading: isLoadingSavedLists, // add back in once we have loading/error states
-    // isError: isErrorSavedLists,
-    // error: errorSavedLists,
-  } = useGetTriplesWithPositionsQuery(
+  const { data: savedListsResults } = useGetSavedListsQuery(
     {
-      where: initialParams.savedListsWhere,
-      limit: 10,
+      where: savedListsWhere,
+      triplesWhere: savedListsTriplesWhere,
+      limit: 4,
       offset: 0,
-      orderBy: [{ block_number: 'desc' }],
-      address: queryAddress,
+      orderBy: [{ as_object_triples_aggregate: { count: 'desc' } }],
     },
     {
-      queryKey: [
-        'get-saved-lists',
-        {
-          where: initialParams.savedListsWhere,
-          limit: 10,
-          offset: 0,
-          orderBy: [{ blockNumber: 'desc' }],
-          address: queryAddress,
-        },
-      ],
+      queryKey: ['get-saved-lists'],
     },
   )
 
@@ -584,28 +567,11 @@ export default function ProfileOverview() {
         >
           Top Lists
         </Text>
-        <Suspense fallback={<ListClaimsSkeletonLayout totalItems={6} />}>
-          <Await resolve={savedListsResults}>
-            {(resolvedSavedListsResults) => {
-              return (
-                <ListClaimsList
-                  listClaims={(resolvedSavedListsResults?.triples ?? []).map(
-                    (triple) => ({
-                      __typename: 'predicate_objects',
-                      id: triple.id,
-                      claim_count: triple.vault?.position_count ?? 0,
-                      triple_count: triple.vault?.position_count ?? 0,
-                      object: triple.object,
-                    }),
-                  )}
-                  enableSort={false}
-                  enableSearch={false}
-                  sourceUserAddress={wallet}
-                />
-              )
-            }}
-          </Await>
-        </Suspense>
+        <SavedLists
+          savedLists={savedListsResults?.atoms ?? []}
+          enableSort={false}
+          enableSearch={false}
+        />
       </div>
     </div>
   )
