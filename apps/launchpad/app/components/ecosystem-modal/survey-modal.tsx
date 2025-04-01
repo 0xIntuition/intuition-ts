@@ -14,6 +14,7 @@ import {
 } from '@0xintuition/1ui'
 
 import { AtomsWithTagsQuery, useAtomsWithTagsQuery } from '@lib/graphql'
+import { WHITELISTED_ADDRESSES } from '@lib/utils/constants'
 import logger from '@lib/utils/logger'
 import { usePrivy } from '@privy-io/react-auth'
 import { useLocation, useNavigate } from '@remix-run/react'
@@ -169,6 +170,25 @@ export function EcosystemModal({
               predicate_id: { _eq: predicateId },
               object_id: { _eq: objectId },
             },
+          },
+          {
+            _or: [
+              {
+                as_subject_triples: {
+                  predicate_id: { _eq: predicateId },
+                  object_id: { _eq: objectId },
+                  vault: {
+                    positions: {
+                      account: {
+                        id: {
+                          _in: WHITELISTED_ADDRESSES,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            ],
           },
           searchTerm
             ? {

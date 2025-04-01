@@ -23,3 +23,11 @@ export const QUESTS = [
     index: 3,
   },
 ]
+
+export const WHITELISTED_ADDRESSES = [
+  '0xd99811847e634d33f0dace483c52949bec76300f',
+  '0xbb285b543c96c927fc320fb28524899c2c90806c',
+  '0x0b162525c5dc8c18f771e60fd296913030bfe42c',
+  '0xbd2de08af9470c87c4475117fb912b8f1d588d9c',
+  '0xb95ca3d3144e9d1daff0ee3d35a4488a4a5c9fc5',
+]

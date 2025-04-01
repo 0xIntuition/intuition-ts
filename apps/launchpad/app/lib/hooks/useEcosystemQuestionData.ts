@@ -1,4 +1,5 @@
 import { useAtomsWithTagsQuery } from '@lib/graphql'
+import { WHITELISTED_ADDRESSES } from '@lib/utils/constants'
 import logger from '@lib/utils/logger'
 import { usePrivy } from '@privy-io/react-auth'
 import { useQuery } from '@tanstack/react-query'
@@ -81,6 +82,25 @@ export function useEcosystemQuestionData({ questionId }: UseQuestionDataProps) {
               predicate_id: { _eq: predicateId },
               object_id: { _eq: objectId },
             },
+          },
+          {
+            _or: [
+              {
+                as_subject_triples: {
+                  predicate_id: { _eq: predicateId },
+                  object_id: { _eq: objectId },
+                  vault: {
+                    positions: {
+                      account: {
+                        id: {
+                          _in: WHITELISTED_ADDRESSES,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            ],
           },
           tagObjectId
             ? {

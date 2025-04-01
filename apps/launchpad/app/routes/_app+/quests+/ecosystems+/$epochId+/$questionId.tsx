@@ -39,6 +39,7 @@ import {
   onboardingModalAtom,
   shareModalAtom,
 } from '@lib/state/store'
+import { WHITELISTED_ADDRESSES } from '@lib/utils/constants'
 import { usePrivy } from '@privy-io/react-auth'
 import type { LoaderFunctionArgs, MetaFunction } from '@remix-run/node'
 import {
@@ -379,6 +380,25 @@ export default function MiniGameOne() {
               object_id: { _eq: objectId },
             },
           },
+          {
+            _or: [
+              {
+                as_subject_triples: {
+                  predicate_id: { _eq: predicateId },
+                  object_id: { _eq: objectId },
+                  vault: {
+                    positions: {
+                      account: {
+                        id: {
+                          _in: WHITELISTED_ADDRESSES,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            ],
+          },
           questionData?.tag_object_id
             ? {
                 as_subject_triples: {
@@ -399,7 +419,15 @@ export default function MiniGameOne() {
     }
 
     return variables
-  }, [predicateId, objectId, userWallet, pageSize, pageIndex, sorting])
+  }, [
+    predicateId,
+    objectId,
+    userWallet,
+    pageSize,
+    pageIndex,
+    sorting,
+    questionId,
+  ])
 
   const { data: atomsData, isLoading: isLoadingAtoms } = useAtomsWithTagsQuery(
     {
@@ -407,7 +435,13 @@ export default function MiniGameOne() {
     },
     {
       enabled: !!queryVariables,
-      queryKey: ['atoms-with-tags', queryVariables, predicateId, objectId],
+      queryKey: [
+        'atoms-with-tags',
+        queryVariables,
+        predicateId,
+        objectId,
+        questionId,
+      ],
       refetchInterval: 3000,
     },
   )
@@ -469,7 +503,7 @@ export default function MiniGameOne() {
         multiVaultConfig,
       })) as TableRowData[]) ?? []
     return data
-  }, [atomsData, multiVaultConfig])
+  }, [atomsData, multiVaultConfig, questionId])
 
   const isMobile = useMediaQuery('(max-width: 768px)')
   const isTablet = useMediaQuery('(max-width: 1024px)')
@@ -582,7 +616,13 @@ export default function MiniGameOne() {
     // Only invalidate queries if we have all required values and the modal was actually open
     if (userWallet && questionId && currentEpoch && onboardingModal.isOpen) {
       queryClient.invalidateQueries({
-        queryKey: ['atoms-with-tags', queryVariables, predicateId, objectId],
+        queryKey: [
+          'atoms-with-tags',
+          queryVariables,
+          predicateId,
+          objectId,
+          questionId,
+        ],
         exact: false,
       })
       // Invalidate queries first
