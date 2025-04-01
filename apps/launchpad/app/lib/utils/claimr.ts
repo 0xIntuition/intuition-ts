@@ -13,7 +13,9 @@ export function getStoredSignature(
   address: string,
 ): { signature: string; message: string } | null {
   try {
-    const signatures = JSON.parse(localStorage.getItem(CLAIMR_SIGNATURE_KEY) || '{}')
+    const signatures = JSON.parse(
+      localStorage.getItem(CLAIMR_SIGNATURE_KEY) || '{}',
+    )
     const data = signatures[address.toLowerCase()]
     return data ? { signature: data.signature, message: data.message } : null
   } catch {
@@ -33,9 +35,15 @@ export function getSignMessage(domain: string) {
   return fullMessage
 }
 
-export function saveSignature(address: string, signature: string, message: string) {
+export function saveSignature(
+  address: string,
+  signature: string,
+  message: string,
+) {
   try {
-    const signatures = JSON.parse(localStorage.getItem(CLAIMR_SIGNATURE_KEY) || '{}')
+    const signatures = JSON.parse(
+      localStorage.getItem(CLAIMR_SIGNATURE_KEY) || '{}',
+    )
     signatures[address.toLowerCase()] = { signature, message }
     localStorage.setItem(CLAIMR_SIGNATURE_KEY, JSON.stringify(signatures))
     window.claimr?.connect_wallet(address, signature, message)

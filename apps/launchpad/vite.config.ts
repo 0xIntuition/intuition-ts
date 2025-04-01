@@ -59,6 +59,14 @@ export default defineConfig({
         return false
       }
     },
+    rollupOptions: {
+      output: {
+        intro: `
+          const __filename = import.meta.url;
+          const __dirname = new URL('.', import.meta.url).pathname;
+        `,
+      },
+    },
   },
   ssr: {
     noExternal: [
