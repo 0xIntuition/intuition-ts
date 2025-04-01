@@ -817,8 +817,8 @@ importers:
   packages/1ui:
     dependencies:
       '@0xintuition/graphql':
-        specifier: workspace:^
-        version: link:../graphql
+        specifier: ^0.6.0
+        version: 0.6.0(encoding@0.1.13)(react@18.3.1)
       '@hookform/resolvers':
         specifier: ^3.10.0
         version: 3.10.0(react-hook-form@7.55.0(react@18.3.1))
@@ -1135,6 +1135,9 @@ packages:
     peerDependencies:
       graphql: ^15.5.0 || ^16.0.0 || ^17.0.0
       typescript: ^5.0.0
+
+  '@0xintuition/graphql@0.6.0':
+    resolution: {integrity: sha512-2KfAINWWdrfcggVlcM1huZve8iYVgPNuztRgKbWEW0FR88phaaBEDD0UBHkj10OD3iDG1DbIi0G1Hy/Kb9wVyg==}
 
   '@adobe/css-tools@4.4.0':
     resolution: {integrity: sha512-Ff9+ksdQQB3rMncgqDK78uLznstjyfIf2Arnh22pW8kBpLs6rpKDwgnZT46hin5Hl1WzazzK64DOrhSwYpS7bQ==}
@@ -15438,6 +15441,20 @@ snapshots:
       '@gql.tada/internal': 1.0.8(graphql@16.9.0)(typescript@5.4.5)
       graphql: 16.9.0
       typescript: 5.4.5
+
+  '@0xintuition/graphql@0.6.0(encoding@0.1.13)(react@18.3.1)':
+    dependencies:
+      '@graphql-codegen/typescript-document-nodes': 4.0.11(encoding@0.1.13)(graphql@16.9.0)
+      '@tanstack/react-query': 5.45.0(react@18.3.1)
+      graphql: 16.9.0
+      graphql-request: 7.1.0(graphql@16.9.0)
+    transitivePeerDependencies:
+      - '@dprint/formatter'
+      - '@dprint/typescript'
+      - dprint
+      - encoding
+      - react
+      - supports-color
 
   '@adobe/css-tools@4.4.0': {}
 

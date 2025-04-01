@@ -77,24 +77,28 @@ export function PaginationComponent({
               <PaginationFirst
                 onClick={() => handlePageChange(1)}
                 disabled={currentPage === 1}
+                size="icon"
               />
             </PaginationItem>
             <PaginationItem>
               <PaginationPrevious
                 onClick={() => handlePageChange(currentPage - 1)}
                 disabled={currentPage === 1 || currentPage === undefined}
+                size="icon"
               />
             </PaginationItem>
             <PaginationItem>
               <PaginationNext
                 onClick={() => handlePageChange(currentPage + 1)}
                 disabled={currentPage === totalPages}
+                size="icon"
               />
             </PaginationItem>
             <PaginationItem>
               <PaginationLast
                 onClick={() => handlePageChange(totalPages)}
                 disabled={currentPage === totalPages}
+                size="icon"
               />
             </PaginationItem>
           </PaginationContent>
