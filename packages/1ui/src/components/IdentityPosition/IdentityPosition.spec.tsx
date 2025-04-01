@@ -38,13 +38,13 @@ describe('IdentityPosition', () => {
               href="https://sepolia.basescan.org/address/0x1234567890abcdef1234567890abcdef12345678"
             >
               <span
-                class="relative flex shrink-0 overflow-hidden aspect-square bg-background border-border/10 rounded w-16 h-16 mr-4"
+                class="relative flex shrink-0 overflow-hidden aspect-square bg-background theme-border rounded w-16 h-16 mr-4"
               >
                 <span
                   class="flex h-full w-full items-center justify-center bg-inherit"
                 >
                   <svg
-                    class="text-primary/30 w-1/2 h-1/2 max-h-10 max-w-10"
+                    class="text-primary/30 w-[80%] h-[80%]"
                   >
                     <use
                       href="/src/components/Icon/Icon.sprites.svg#fingerprint"
@@ -166,13 +166,13 @@ describe('IdentityPosition', () => {
                 href="https://sepolia.basescan.org/address/0x1234567890abcdef1234567890abcdef12345678"
               >
                 <span
-                  class="relative flex shrink-0 overflow-hidden aspect-square bg-background border-border/10 rounded w-16 h-16 mr-4"
+                  class="relative flex shrink-0 overflow-hidden aspect-square bg-background theme-border rounded w-16 h-16 mr-4"
                 >
                   <span
                     class="flex h-full w-full items-center justify-center bg-inherit"
                   >
                     <svg
-                      class="text-primary/30 w-1/2 h-1/2 max-h-10 max-w-10"
+                      class="text-primary/30 w-[80%] h-[80%]"
                     >
                       <use
                         href="/src/components/Icon/Icon.sprites.svg#fingerprint"

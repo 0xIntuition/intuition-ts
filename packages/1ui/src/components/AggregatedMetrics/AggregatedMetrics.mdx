@@ -1,0 +1,45 @@
+import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
+
+import * as AggregatedMetricsStories from './AggregatedMetrics.stories'
+
+<Meta of={AggregatedMetricsStories} />
+
+<Title />
+
+#### Displays aggregated metrics in a responsive grid layout.
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { AggregatedMetrics } from '@0xintuition/1ui'
+
+<AggregatedMetrics
+  metrics={[
+    { label: 'TVL', value: 133.345, suffix: 'ETH' },
+    { label: 'Atoms', value: 4200 },
+    { label: 'Triples', value: 4200 },
+    { label: 'Signals', value: 4200, hideOnMobile: true },
+    { label: 'Users', value: 4200 },
+  ]}
+/>
+`} />
+
+<Canvas of={AggregatedMetricsStories.Default} sourceState="none" />
+
+## Properties
+
+The component accepts an array of metric objects with the following properties:
+
+- `label`: The display label for the metric
+- `value`: The numeric value (number or string)
+- `suffix`: Optional suffix to append to the value (e.g. 'ETH')
+- `hideOnMobile`: Optional flag to hide the metric on mobile devices
+
+<Controls />
+
+## Variants
+
+### With Live Data
+
+<Canvas of={AggregatedMetricsStories.WithLiveData} sourceState="none" />

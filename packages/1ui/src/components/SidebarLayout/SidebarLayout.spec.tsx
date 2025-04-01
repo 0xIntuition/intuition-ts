@@ -72,7 +72,7 @@ describe('SidebarLayout', () => {
               class="from-primary/10 to-primary/2 bg-gradient-to-b flex flex-col h-full w-full relative top-0"
             >
               <div
-                class="border-border/20 flex w-full items-center border-0 border-b-[1px] p-2"
+                class="flex w-full items-center p-2"
               >
                 <button
                   class="w-full px-4 py-2 flex gap-3 items-center"
@@ -149,13 +149,13 @@ describe('SidebarLayout', () => {
                     class="flex items-center font-medium border disabled:bg-muted aria-disabled:bg-muted disabled:border-muted aria-disabled:border-muted aria-disabled:pointer-events-none bg-transparent text-secondary-foreground/70 border-transparent rounded-lg hover:text-secondary-foreground hover:border-border/20 aria-selected:bg-primary/10 aria-selected:text-secondary-foreground/80 disabled:text-muted-foreground aria-disabled:text-muted-foreground px-5 py-2.5 gap-4 text-lg w-full justify-start"
                   >
                     <span
-                      class="relative flex shrink-0 overflow-hidden aspect-square bg-background border-border/10 rounded-full h-6 w-6"
+                      class="relative flex shrink-0 overflow-hidden aspect-square bg-background theme-border rounded-full h-6 w-6"
                     >
                       <span
                         class="flex h-full w-full items-center justify-center bg-inherit"
                       >
                         <svg
-                          class="text-primary/30 w-1/2 h-1/2 max-h-10 max-w-10"
+                          class="text-primary/30 w-[80%] h-[80%]"
                         >
                           <use
                             href="/src/components/Icon/Icon.sprites.svg#crypto-punk"

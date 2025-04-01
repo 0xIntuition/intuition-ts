@@ -107,7 +107,6 @@ export function TagsList({
                   className={`w-full border-none rounded-none bg-transparent ${readOnly ? '' : 'pr-0'}`}
                   isFirst={!enableHeader && index === 0}
                   isLast={index === claims.length - 1}
-                  hideContextMenu={true}
                 />
                 {readOnly === false && (
                   <Button

@@ -13,13 +13,13 @@ describe('Identity', () => {
           class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center text-secondary/70 hover:text-secondary rounded-full [&>span]:rounded-full [&>span]:overflow-hidden text-base [&>span]:h-6 [&>span]:w-6"
         >
           <span
-            class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background border-border/10 rounded-full"
+            class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background theme-border rounded-full"
           >
             <span
               class="flex h-full w-full items-center justify-center bg-inherit"
             >
               <svg
-                class="text-primary/30 w-1/2 h-1/2 max-h-10 max-w-10"
+                class="text-primary/30 w-[80%] h-[80%]"
               >
                 <use
                   href="/src/components/Icon/Icon.sprites.svg#crypto-punk"
@@ -41,13 +41,13 @@ describe('Identity', () => {
           disabled=""
         >
           <span
-            class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background border-border/10 rounded-full"
+            class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background theme-border rounded-full"
           >
             <span
               class="flex h-full w-full items-center justify-center bg-inherit"
             >
               <svg
-                class="text-primary/30 w-1/2 h-1/2 max-h-10 max-w-10"
+                class="text-primary/30 w-[80%] h-[80%]"
               >
                 <use
                   href="/src/components/Icon/Icon.sprites.svg#crypto-punk"
@@ -75,13 +75,13 @@ describe('Identity', () => {
           class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center text-secondary/70 hover:text-secondary rounded-md text-base [&>span]:h-6 [&>span]:w-6"
         >
           <span
-            class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background border-border/10 rounded"
+            class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background theme-border rounded"
           >
             <span
               class="flex h-full w-full items-center justify-center bg-inherit"
             >
               <svg
-                class="text-primary/30 w-1/2 h-1/2 max-h-10 max-w-10"
+                class="text-primary/30 w-[80%] h-[80%]"
               >
                 <use
                   href="/src/components/Icon/Icon.sprites.svg#fingerprint"
@@ -104,13 +104,13 @@ describe('Identity', () => {
           class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center text-secondary/70 hover:text-secondary rounded-full [&>span]:rounded-full [&>span]:overflow-hidden text-base [&>span]:h-7 [&>span]:w-7"
         >
           <span
-            class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background border-border/10 rounded-full"
+            class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background theme-border rounded-full"
           >
             <span
               class="flex h-full w-full items-center justify-center bg-inherit"
             >
               <svg
-                class="text-primary/30 w-1/2 h-1/2 max-h-10 max-w-10"
+                class="text-primary/30 w-[80%] h-[80%]"
               >
                 <use
                   href="/src/components/Icon/Icon.sprites.svg#crypto-punk"
@@ -133,13 +133,13 @@ describe('Identity', () => {
           class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center text-secondary/70 hover:text-secondary rounded-full [&>span]:rounded-full [&>span]:overflow-hidden text-base [&>span]:h-7 [&>span]:w-7"
         >
           <span
-            class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background border-border/10 rounded-full"
+            class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background theme-border rounded-full"
           >
             <span
               class="flex h-full w-full items-center justify-center bg-inherit"
             >
               <svg
-                class="text-primary/30 w-1/2 h-1/2 max-h-10 max-w-10"
+                class="text-primary/30 w-[80%] h-[80%]"
               >
                 <use
                   href="/src/components/Icon/Icon.sprites.svg#crypto-punk"
@@ -162,13 +162,13 @@ describe('Identity', () => {
           class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center text-secondary/70 hover:text-secondary rounded-full [&>span]:rounded-full [&>span]:overflow-hidden text-lg [&>span]:h-8 [&>span]:w-8"
         >
           <span
-            class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background border-border/10 rounded-full"
+            class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background theme-border rounded-full"
           >
             <span
               class="flex h-full w-full items-center justify-center bg-inherit"
             >
               <svg
-                class="text-primary/30 w-1/2 h-1/2 max-h-10 max-w-10"
+                class="text-primary/30 w-[80%] h-[80%]"
               >
                 <use
                   href="/src/components/Icon/Icon.sprites.svg#crypto-punk"
@@ -191,13 +191,13 @@ describe('Identity', () => {
           class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center text-secondary/70 hover:text-secondary rounded-full [&>span]:rounded-full [&>span]:overflow-hidden text-xl [&>span]:h-11 [&>span]:w-11"
         >
           <span
-            class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background border-border/10 rounded-full"
+            class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background theme-border rounded-full"
           >
             <span
               class="flex h-full w-full items-center justify-center bg-inherit"
             >
               <svg
-                class="text-primary/30 w-1/2 h-1/2 max-h-10 max-w-10"
+                class="text-primary/30 w-[80%] h-[80%]"
               >
                 <use
                   href="/src/components/Icon/Icon.sprites.svg#crypto-punk"
@@ -223,13 +223,13 @@ describe('Identity', () => {
             class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center text-secondary/70 hover:text-secondary rounded-full [&>span]:rounded-full [&>span]:overflow-hidden text-base [&>span]:h-6 [&>span]:w-6"
           >
             <span
-              class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background border-border/10 rounded-full"
+              class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background theme-border rounded-full"
             >
               <span
                 class="flex h-full w-full items-center justify-center bg-inherit"
               >
                 <svg
-                  class="text-primary/30 w-1/2 h-1/2 max-h-10 max-w-10"
+                  class="text-primary/30 w-[80%] h-[80%]"
                 >
                   <use
                     href="/src/components/Icon/Icon.sprites.svg#crypto-punk"

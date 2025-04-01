@@ -1,5 +1,3 @@
-'use client'
-
 import { useState } from 'react'
 
 import {
@@ -20,7 +18,7 @@ interface ClaimItemProps {
   variant?: IdentityType
   label: string
   imgSrc?: string | null
-  id?: string | null
+  id?: string | number | null
   description?: string | null
   ipfsLink?: string
   link?: string
@@ -41,11 +39,13 @@ export interface ClaimProps {
   orientation?: 'horizontal' | 'vertical'
   isClickable?: boolean
   maxIdentityLength?: number
+  shouldHover?: boolean
   linkComponent?: React.ComponentType<{
     href: string
     onClick: (e: React.MouseEvent) => void
     children: React.ReactNode
   }>
+  className?: string
 }
 
 export const Claim = ({
@@ -57,6 +57,8 @@ export const Claim = ({
   size,
   isClickable,
   maxIdentityLength,
+  shouldHover = true,
+  className,
 }: ClaimProps) => {
   const separatorWidth = size !== IdentityTagSize.default ? 'w-4' : 'w-2'
   const items = [subject, predicate, object]
@@ -66,7 +68,7 @@ export const Claim = ({
   const claimContent = (
     <div
       className={cn(
-        'flex items-center w-full max-w-max relative max-sm:m-auto transition-colors duration-200',
+        'flex items-center w-full max-w-max relative max-sm:flex-col max-sm:m-auto transition-colors duration-200',
         orientation === 'vertical' ? 'flex-col items-start' : 'flex-row',
       )}
     >
@@ -83,12 +85,12 @@ export const Claim = ({
               )}
             />
           )}
-          <div className="flex items-center">
+          <div>
             <ClaimItem
               item={item}
               size={size}
               disabled={disabled}
-              shouldHover={true}
+              shouldHover={shouldHover}
               maxIdentityLength={maxIdentityLength}
               isHovered={isFullClaimHovered || hoveredIndex === index}
               onMouseEnter={() => {
@@ -101,32 +103,33 @@ export const Claim = ({
                   setHoveredIndex(null)
                 }
               }}
+              className={className}
             />
-            {isClickable && index === items.length - 1 && (
-              <div
-                className="pl-1"
-                onMouseEnter={(e) => {
-                  e.stopPropagation()
-                  setIsFullClaimHovered(true)
-                  setHoveredIndex(null)
-                }}
-                onMouseLeave={(e) => {
-                  e.stopPropagation()
-                  setIsFullClaimHovered(false)
-                }}
-              >
-                <Icon
-                  name={'arrow-up-right'}
-                  className={cn(
-                    'h-4 w-4 transition-colors duration-200',
-                    isFullClaimHovered ? 'text-primary' : 'text-secondary/50',
-                  )}
-                />
-              </div>
-            )}
           </div>
         </Fragment>
       ))}
+      {isClickable && ( // Replace onClick check with isClickable
+        <div
+          className="pl-1"
+          onMouseEnter={(e) => {
+            e.stopPropagation()
+            setIsFullClaimHovered(true)
+            setHoveredIndex(null)
+          }}
+          onMouseLeave={(e) => {
+            e.stopPropagation()
+            setIsFullClaimHovered(false)
+          }}
+        >
+          <Icon
+            name={'arrow-up-right'}
+            className={cn(
+              'h-4 w-4 transition-colors duration-200',
+              isFullClaimHovered ? 'text-primary' : 'text-secondary/50',
+            )}
+          />
+        </div>
+      )}
     </div>
   )
 
@@ -143,6 +146,7 @@ const ClaimItem = ({
   onMouseEnter,
   onMouseLeave,
   linkComponent: LinkComponent,
+  className,
 }: {
   item: ClaimItemProps
   link?: string
@@ -158,6 +162,7 @@ const ClaimItem = ({
     onClick: (e: React.MouseEvent) => void
     children: React.ReactNode
   }>
+  className?: string
 }) => {
   const effectiveMaxLength = maxIdentityLength ?? 24
 
@@ -172,9 +177,10 @@ const ClaimItem = ({
       className={cn(
         'relative z-10 identity-tag transition-colors duration-200',
         {
-          'border-primary/50 bg-primary/10': isHovered,
-          'theme-border': !isHovered,
+          'border-primary bg-primary/10': isHovered,
+          'border-theme': !isHovered,
         },
+        className,
       )}
       shouldHover={shouldHover}
     >
@@ -240,7 +246,7 @@ const ClaimItem = ({
             variant={item.variant}
             avatarSrc={item.imgSrc ?? ''}
             name={item.label}
-            id={item.id ?? ''}
+            id={item.id?.toString() ?? ''}
             bio={item.description ?? ''}
             ipfsLink={item.ipfsLink}
           />

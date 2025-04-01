@@ -1,0 +1,89 @@
+import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
+
+import * as SidebarStories from './Sidebar.stories'
+
+<Meta of={SidebarStories} />
+
+<Title />
+
+#### A responsive navigation sidebar component with collapsible functionality and mobile support.
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarProvider
+} from '@0xintuition/1ui'
+
+<SidebarProvider>
+  <Sidebar>
+    <SidebarContent>
+      <SidebarHeader>
+        <h2>Navigation</h2>
+      </SidebarHeader>
+      <SidebarGroup>
+        <SidebarGroupLabel>Main Menu</SidebarGroupLabel>
+        <SidebarGroupContent>
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton>
+                <Home />
+                <span>Home</span>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarGroupContent>
+      </SidebarGroup>
+    </SidebarContent>
+  </Sidebar>
+</SidebarProvider>
+`} />
+
+<Canvas of={SidebarStories.Default} sourceState="none" />
+
+## Properties
+
+<Controls />
+
+## Variants
+
+### Collapsible
+
+The Sidebar can be configured to collapse into an icon-only mode, with tooltips for navigation items.
+
+<Source
+  dark
+  language="tsx"
+  code={`
+<SidebarProvider>
+  <Sidebar collapsible="icon">
+    <SidebarContent>
+      <SidebarGroup>
+        <SidebarGroupContent>
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton tooltip="Home">
+                <Home />
+                <span>Home</span>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarGroupContent>
+      </SidebarGroup>
+    </SidebarContent>
+  </Sidebar>
+</SidebarProvider>
+`}
+/>
+
+<Canvas of={SidebarStories.Collapsible} sourceState="none" />

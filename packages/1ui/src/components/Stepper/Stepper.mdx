@@ -1,0 +1,93 @@
+import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
+
+import * as Stories from './Stepper.stories'
+
+<Meta of={Stories} />
+
+<Title />
+
+#### A step-by-step navigation component that guides users through a multi-step process.
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { Stepper } from '@0xintuition/1ui'
+
+<Stepper
+  steps={[
+    { id: 1, label: 'Step 1' },
+    { id: 2, label: 'Step 2' },
+    { id: 3, label: 'Step 3' },
+  ]}
+  currentStep={1}
+  onNext={() => console.log('Next')}
+  onBack={() => console.log('Back')}
+/>
+`} />
+
+<Canvas of={Stories.Default} sourceState="none" />
+
+## Properties
+
+<Controls />
+
+## Variants
+
+### With Disabled Navigation
+
+<Source
+  dark
+  language="tsx"
+  code={`
+<Stepper
+  steps={[
+    { id: 1, label: 'Step 1' },
+    { id: 2, label: 'Step 2' },
+    { id: 3, label: 'Step 3' },
+  ]}
+  currentStep={1}
+  disableNext={true}
+/>
+`}
+/>
+
+<Canvas of={Stories.WithDisabledNext} sourceState="none" />
+
+### In Progress
+
+<Source
+  dark
+  language="tsx"
+  code={`
+<Stepper
+  steps={[
+    { id: 1, label: 'Step 1' },
+    { id: 2, label: 'Step 2' },
+    { id: 3, label: 'Step 3' },
+  ]}
+  currentStep={2}
+/>
+`}
+/>
+
+<Canvas of={Stories.InProgress} sourceState="none" />
+
+### Last Step
+
+<Source
+  dark
+  language="tsx"
+  code={`
+<Stepper
+  steps={[
+    { id: 1, label: 'Step 1' },
+    { id: 2, label: 'Step 2' },
+    { id: 3, label: 'Step 3' },
+  ]}
+  currentStep={3}
+/>
+`}
+/>
+
+<Canvas of={Stories.LastStep} sourceState="none" />

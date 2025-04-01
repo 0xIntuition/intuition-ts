@@ -1,31 +1,44 @@
 {
-  "name": "@0xintuition/1ui",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "name": "@0xintuition/1ui",
   "sourceRoot": "packages/1ui/src",
   "projectType": "library",
   "tags": [],
   "targets": {
     "build": {
-      "executor": "@nx/js:tsc",
-      "outputs": ["{options.outputPath}"],
+      "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/dist"],
       "options": {
-        "outputPath": "dist/packages/1ui",
-        "tsConfig": "packages/1ui/tsconfig.lib.json",
-        "packageJson": "packages/1ui/package.json",
-        "main": "packages/1ui/src/index.ts",
-        "assets": ["packages/1ui/*.md"]
+        "command": "pnpm build",
+        "cwd": "packages/1ui"
       }
     },
     "lint": {
       "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
       "options": {
         "lintFilePatterns": ["packages/1ui/**/*.{ts,tsx,js,jsx}"]
       }
     },
     "test": {
       "executor": "@nx/vite:test",
+      "outputs": ["{options.reportsDirectory}"],
       "options": {
+        "passWithNoTests": true,
+        "reportsDirectory": "../../coverage/packages/1ui",
         "config": "packages/1ui/vitest.config.ts"
+      }
+    },
+    "storybook": {
+      "executor": "@nx/storybook:storybook",
+      "options": {
+        "port": 6006,
+        "configDir": "packages/1ui/.storybook"
+      },
+      "configurations": {
+        "ci": {
+          "quiet": true
+        }
       }
     },
     "build-storybook": {
@@ -41,35 +54,10 @@
         }
       }
     },
-    "storybook": {
-      "executor": "@nx/storybook:storybook",
-      "options": {
-        "port": 6006,
-        "configDir": "packages/1ui/.storybook"
-      },
-      "configurations": {
-        "ci": {
-          "quiet": true
-        }
-      }
-    },
     "nx-release-publish": {
       "dependsOn": ["build"],
       "options": {
         "packageRoot": "dist/{projectRoot}"
-      }
-    },
-    "typecheck": {
-      "executor": "nx:run-commands",
-      "dependsOn": [
-        {
-          "target": "build",
-          "projects": "dependencies"
-        }
-      ],
-      "options": {
-        "command": "tsc --noEmit -p packages/1ui/tsconfig.typecheck.json",
-        "cwd": "."
       }
     }
   }

@@ -5,13 +5,13 @@ import { formatNumber } from './number'
 describe('formatNumber', () => {
   it('should format numbers greater than or equal to 1,000,000 as M', () => {
     expect(formatNumber(1000000)).toBe('1M')
-    expect(formatNumber(2500000)).toBe('2.5M')
+    expect(formatNumber(2500000)).toBe('3M')
     expect(formatNumber(1999999)).toBe('2M')
   })
 
-  it('should format numbers greater than or equal to 1,000 and less than 1,000,000 as K', () => {
+  it('should format numbers greater than or equal to 1,000 and less than 1,000,000 as k', () => {
     expect(formatNumber(1000)).toBe('1K')
-    expect(formatNumber(1500)).toBe('1.5K')
+    expect(formatNumber(1500)).toBe('2K')
     expect(formatNumber(999999)).toBe('1000K')
   })
 

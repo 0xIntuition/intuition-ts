@@ -1,0 +1,43 @@
+import { Canvas, Controls, Meta } from '@storybook/blocks'
+
+import * as PageHeaderStories from './PageHeader.stories'
+
+<Meta of={PageHeaderStories} />
+
+# PageHeader
+
+A header component for pages that displays a title, optional subtitle, and last updated timestamp.
+
+## Usage
+
+```tsx
+import { PageHeader } from '@1ui/components'
+
+export function Page() {
+  return (
+    <PageHeader
+      title="Network"
+      subtitle="View and manage your network connections"
+      lastUpdated="3s"
+    />
+  )
+}
+```
+
+## Examples
+
+### Default
+
+<Canvas of={PageHeaderStories.Default} />
+
+### With Subtitle
+
+<Canvas of={PageHeaderStories.WithSubtitle} />
+
+### Title Only
+
+<Canvas of={PageHeaderStories.TitleOnly} />
+
+## Props
+
+<Controls />

@@ -3,7 +3,13 @@ import * as React from 'react'
 import { cva, type VariantProps } from 'class-variance-authority'
 import { Identity, IdentityType } from 'types'
 
-import { Avatar, HoverCard, HoverCardContent, HoverCardTrigger } from '..'
+import {
+  Avatar,
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+  IconNameType,
+} from '..'
 import { cn } from '../../styles'
 
 export const IdentityTagSize = {
@@ -45,6 +51,7 @@ export const identityTagVariants = cva(
 const IdentityTagButton = ({
   className,
   imgSrc,
+  icon,
   variant,
   size,
   disabled,
@@ -60,7 +67,12 @@ const IdentityTagButton = ({
       disabled={disabled}
       {...props}
     >
-      <Avatar variant={variant} src={imgSrc || ''} name="identity avatar" />
+      <Avatar
+        variant={variant}
+        src={imgSrc || ''}
+        icon={icon || ''}
+        name="identity avatar"
+      />
       {children || '?'}
     </button>
   )
@@ -71,6 +83,7 @@ export interface IdentityTagProps
     VariantProps<typeof identityTagVariants> {
   disabled?: boolean
   imgSrc?: string | null
+  icon?: IconNameType | null
   variant?: IdentityType
   hoverCardContent?: React.ReactNode | null
   shouldHover?: boolean

@@ -2,6 +2,8 @@ import React, { useRef, useState } from 'react'
 
 import {
   Avatar,
+  ClaimPositionRowVariant,
+  ClaimPositionRowVariantType,
   ClaimPositionType,
   ClaimStatus,
   cn,
@@ -21,10 +23,6 @@ import {
   TextWeight,
   Trunctacular,
 } from '@0xintuition/1ui'
-import {
-  ClaimPositionRowVariant,
-  ClaimPositionRowVariantType,
-} from '@0xintuition/1ui/src/components/ClaimPositionRow/ClaimPositionRow.utils'
 
 import { useNavigate } from '@remix-run/react'
 
@@ -75,10 +73,10 @@ const ClaimPositionRow = ({
   amount,
   currency,
   feesAccrued,
-  name,
-  description,
-  id,
-  avatarSrc,
+  name = '',
+  description = '',
+  id = '',
+  avatarSrc = '',
   link,
   ipfsLink,
   updatedAt,
