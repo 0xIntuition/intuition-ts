@@ -1,6 +1,8 @@
-import { render } from '@testing-library/react'
-import { Claim } from 'components/Claim'
+import React from 'react'
 
+import { render } from '@testing-library/react'
+
+import { Claim } from '..'
 import { ClaimRow } from './ClaimRow'
 
 describe('ClaimRow', () => {

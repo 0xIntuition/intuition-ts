@@ -1,8 +1,8 @@
 import React from 'react'
 
 import { render } from '@testing-library/react'
-import { ListCard } from 'components'
 
+import { ListCard } from '..'
 import { ListGrid } from './ListGrid'
 
 describe('ListGrid', () => {

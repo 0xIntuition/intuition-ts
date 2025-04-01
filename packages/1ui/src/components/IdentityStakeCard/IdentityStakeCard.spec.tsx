@@ -1,7 +1,9 @@
-import { render } from '@testing-library/react'
-import { Identity } from 'types'
+import React from 'react'
 
-import { IdentityStakeCard } from './IdentityStakeCard'
+import { render } from '@testing-library/react'
+
+import { IdentityStakeCard } from '..'
+import { Identity } from '../../types'
 
 describe('IdentityStakeCard', () => {
   it('should render appropriate element', () => {

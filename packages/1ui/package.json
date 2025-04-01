@@ -1,7 +1,7 @@
 {
   "name": "@0xintuition/1ui",
-  "version": "0.3.5",
-  "description": "Design system",
+  "version": "0.4.0",
+  "description": "1ui is the Intuitino component library and design system.",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -11,7 +11,12 @@
       "import": "./dist/index.mjs",
       "require": "./dist/index.js"
     },
-    "./styles.css": "./dist/index.css"
+    "./styles.css": "./dist/index.css",
+    "./src/styles/theme-preset": {
+      "types": "./dist/styles/theme-preset.d.ts",
+      "import": "./dist/styles/theme-preset.mjs",
+      "require": "./dist/styles/theme-preset.js"
+    }
   },
   "files": [
     "dist"

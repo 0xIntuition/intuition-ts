@@ -1,7 +1,9 @@
+import React from 'react'
+
 import { fireEvent, render } from '@testing-library/react'
-import { PieChartVariant } from 'components/PieChart'
 import { vi } from 'vitest'
 
+import { PieChartVariant } from '..'
 import {
   PositionCardFeesAccrued,
   PositionCardLastUpdated,

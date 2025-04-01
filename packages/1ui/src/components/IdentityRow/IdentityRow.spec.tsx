@@ -1,6 +1,8 @@
-import { render } from '@testing-library/react'
-import { Identity } from 'types'
+import React from 'react'
 
+import { render } from '@testing-library/react'
+
+import { Identity } from '../../types'
 import { IdentityRow } from './IdentityRow'
 
 describe('IdentityRow', () => {

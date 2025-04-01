@@ -1,8 +1,8 @@
 import React from 'react'
 
 import { render } from '@testing-library/react'
-import { Claim } from 'components'
 
+import { Claim } from '..'
 import { ListHeaderCard } from './ListHeaderCard'
 
 describe('ListHeaderCard', () => {

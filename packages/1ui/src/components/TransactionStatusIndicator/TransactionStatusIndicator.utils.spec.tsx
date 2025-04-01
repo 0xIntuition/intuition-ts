@@ -1,11 +1,10 @@
-import { IconName } from 'components/Icon'
+import { IconName } from '..'
 import {
   Transaction,
   TransactionStatus,
   TransactionStatusType,
   TransactionType,
-} from 'types'
-
+} from '../../types'
 import {
   getErrorLabel,
   getInProgressLabel,

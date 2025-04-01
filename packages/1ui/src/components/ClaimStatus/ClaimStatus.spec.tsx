@@ -1,7 +1,8 @@
-import { render } from '@testing-library/react'
-import { Claim } from 'components/Claim'
+import React from 'react'
 
-import { ClaimStatus } from './ClaimStatus'
+import { render } from '@testing-library/react'
+
+import { Claim, ClaimStatus } from '..'
 
 describe('ClaimStatus', () => {
   it('should render the ClaimStatus component', () => {
