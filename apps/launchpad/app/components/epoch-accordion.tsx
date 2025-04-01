@@ -143,7 +143,7 @@ export function EpochAccordion({
                     <div
                       className="h-full bg-success transition-all duration-300"
                       style={{
-                        width: `${Math.min(100, (epoch.progress.total_points / (epoch.questions.length * 2500)) * 100)}%`,
+                        width: `${Math.min(100, (epoch.progress.total_points / epoch.questions.reduce((sum, q) => sum + q.point_award_amount, 0)) * 100)}%`,
                       }}
                     />
                   </div>
