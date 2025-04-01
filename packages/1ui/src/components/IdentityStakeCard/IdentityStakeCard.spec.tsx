@@ -93,6 +93,7 @@ describe('IdentityStakeCard', () => {
           >
             <button
               class="flex justify-center items-center gap-2 text-sm font-medium border disabled:bg-muted aria-disabled:bg-muted disabled:text-muted-foreground aria-disabled:text-muted-foreground disabled:border-muted aria-disabled:border-muted aria-disabled:pointer-events-none bg-primary text-primary-foreground border-primary hover:bg-primary/80 rounded-full shadow-md-subtle px-3 py-1 max-sm:py-2 max-sm:text-base w-full mt-4"
+              disabled=""
             >
               Deposit
             </button>

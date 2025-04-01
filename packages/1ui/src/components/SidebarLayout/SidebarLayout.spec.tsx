@@ -72,7 +72,7 @@ describe('SidebarLayout', () => {
               class="from-primary/10 to-primary/2 bg-gradient-to-b flex flex-col h-full w-full relative top-0"
             >
               <div
-                class="border-border/20 flex w-full items-center border-0 border-b-[1px] p-2"
+                class="flex w-full items-center p-2"
               >
                 <button
                   class="w-full px-4 py-2 flex gap-3 items-center"
