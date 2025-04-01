@@ -5,19 +5,9 @@ import {
   HoverCardContent,
   HoverCardTrigger,
   ProfileCard,
-  Separator,
   Text,
   TextVariant,
-  Trunctacular,
-  useSidebarLayoutContext,
 } from 'components'
-import { Button, ButtonSize, ButtonVariant } from 'components/Button'
-import {
-  ContextMenu,
-  ContextMenuContent,
-  ContextMenuItem,
-  ContextMenuTrigger,
-} from 'components/ContextMenu'
 import { Icon, IconName } from 'components/Icon'
 import { IdentityTag, IdentityTagSize } from 'components/IdentityTag'
 import { StakeButton } from 'components/StakeButton'
@@ -43,7 +33,7 @@ export interface IdentityRowProps extends React.HTMLAttributes<HTMLDivElement> {
   onStakeClick?: () => void
   isFirst?: boolean
   isLast?: boolean
-  hideContextMenu?: boolean
+  isConnected?: boolean
 }
 
 const IdentityRow = ({
@@ -62,14 +52,12 @@ const IdentityRow = ({
   onStakeClick,
   isFirst = true,
   isLast = true,
-  hideContextMenu = false,
+  isConnected = true,
 }: IdentityRowProps) => {
-  const { isMobileView } = useSidebarLayoutContext()
-
   return (
     <div
       className={cn(
-        `w-full flex flex-col items-center border border-border/10`,
+        `w-full flex flex-col items-center bg-primary/5 border border-border/10 max-sm:flex-col max-sm:gap-3`,
         isFirst && 'rounded-t-xl',
         isLast && 'rounded-b-xl',
         className,
@@ -77,14 +65,14 @@ const IdentityRow = ({
     >
       <div
         className={cn(
-          `w-full flex flex-col md:flex-row justify-between items-center p-4 max-sm:gap-6`,
+          `w-full flex justify-between items-center p-4`,
           isFirst && 'rounded-t-xl',
           userPosition &&
             userPosition !== '0' &&
             'bg-gradient-to-r from-transparent to-primary/10',
         )}
       >
-        <div className="flex w-full items-start md:items-center gap-1">
+        <div className="flex items-center">
           <HoverCard openDelay={150} closeDelay={150}>
             <HoverCardTrigger asChild>
               <a href={link}>
@@ -93,10 +81,7 @@ const IdentityRow = ({
                   imgSrc={avatarSrc}
                   size={IdentityTagSize.md}
                 >
-                  <Trunctacular
-                    value={name}
-                    maxStringLength={isMobileView ? 32 : 42}
-                  />
+                  {name}
                 </IdentityTag>
               </a>
             </HoverCardTrigger>
@@ -117,62 +102,42 @@ const IdentityRow = ({
               </div>
             </HoverCardContent>
           </HoverCard>
-          {!hideContextMenu && (
-            <ContextMenu>
-              <ContextMenuTrigger className="sm:hidden ml-auto">
-                <Button variant={ButtonVariant.text} size={ButtonSize.icon}>
-                  <Icon
-                    name={IconName.context}
-                    className="text-secondary/70 h-4 w-4"
-                  />
-                </Button>
-              </ContextMenuTrigger>
-              <ContextMenuContent>
-                <ContextMenuItem>Profile</ContextMenuItem>
-                <ContextMenuItem>Settings</ContextMenuItem>
-                <ContextMenuItem>Logout</ContextMenuItem>
-              </ContextMenuContent>
-            </ContextMenu>
-          )}
         </div>
-        <Separator className="md:hidden" />
-        <div className="flex items-center gap-3 max-sm:justify-between max-sm:w-full">
+
+        <div className="flex items-center gap-3">
           <StakeTVL totalTVL={+totalTVL} currency={currency} />
-          {!!onStakeClick && (
+          {onStakeClick && (
             <StakeButton
               numPositions={numPositions}
-              userPosition={!!userPosition && userPosition !== '0'}
               onClick={onStakeClick}
-              className="w-full"
+              disabled={!isConnected}
             />
           )}
-          {!hideContextMenu && (
-            <ContextMenu>
-              <ContextMenuTrigger disabled className="max-sm:hidden">
-                <Button
-                  variant={ButtonVariant.text}
-                  size={ButtonSize.icon}
-                  disabled
-                >
-                  <Icon
-                    name={IconName.context}
-                    className="text-secondary/70 h-4 w-4"
-                  />
-                </Button>
-              </ContextMenuTrigger>
-              <ContextMenuContent>
-                <ContextMenuItem>Profile</ContextMenuItem>
-                <ContextMenuItem>Settings</ContextMenuItem>
-                <ContextMenuItem>Logout</ContextMenuItem>
-              </ContextMenuContent>
-            </ContextMenu>
-          )}
+          {/* <ContextMenu>
+            <ContextMenuTrigger disabled>
+              <Button
+                variant={ButtonVariant.text}
+                size={ButtonSize.icon}
+                disabled
+              >
+                <Icon
+                  name={IconName.context}
+                  className="text-secondary/70 h-4 w-4"
+                />
+              </Button>
+            </ContextMenuTrigger>
+            <ContextMenuContent>
+              <ContextMenuItem>Profile</ContextMenuItem>
+              <ContextMenuItem>Settings</ContextMenuItem>
+              <ContextMenuItem>Logout</ContextMenuItem>
+            </ContextMenuContent>
+          </ContextMenu> */}
         </div>
       </div>
       {userPosition && userPosition !== '0' && (
-        <div className="flex flex-row justify-center md:justify-end px-4 py-0.5 w-full items-center gap-1.5 h-14 md:h-9  text-primary/70 font-medium bg-gradient-to-r from-transparent to-primary/10">
+        <div className="flex flex-row justify-end px-4 py-0.5 w-full items-center gap-1.5 h-9">
           <Icon name={IconName.arrowUp} className="h-4 w-4" />
-          <Text variant={TextVariant.caption} className="text-inherit">
+          <Text variant={TextVariant.caption}>
             You have staked {userPosition} {currency}
           </Text>
         </div>

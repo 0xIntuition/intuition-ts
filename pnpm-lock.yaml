@@ -543,7 +543,7 @@ importers:
         version: 3.7.0(@remix-run/react@2.9.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.4.5))(@remix-run/server-runtime@2.9.2(typescript@5.4.5))
       remix-forms:
         specifier: ^2.3.0
-        version: 2.3.0(domain-functions@2.6.0)(react-hook-form@7.51.5(react@18.3.1))(react@18.3.1)(zod@3.23.8)
+        version: 2.3.0(domain-functions@2.6.0)(react-hook-form@7.55.0(react@18.3.1))(react@18.3.1)(zod@3.23.8)
       remix-utils:
         specifier: ^7.6.0
         version: 7.6.0(@remix-run/node@2.9.2(typescript@5.4.5))(@remix-run/react@2.9.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.4.5))(@remix-run/router@1.16.1)(is-ip@3.1.0)(react@18.3.1)(zod@3.23.8)
@@ -819,6 +819,9 @@ importers:
       '@0xintuition/graphql':
         specifier: workspace:^
         version: link:../graphql
+      '@hookform/resolvers':
+        specifier: ^3.10.0
+        version: 3.10.0(react-hook-form@7.55.0(react@18.3.1))
       '@radix-ui/react-accordion':
         specifier: ^1.1.2
         version: 1.1.2(@types/react-dom@18.3.0)(@types/react@18.3.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -852,6 +855,9 @@ importers:
       '@radix-ui/react-popover':
         specifier: ^1.0.7
         version: 1.0.7(@types/react-dom@18.3.0)(@types/react@18.3.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@radix-ui/react-progress':
+        specifier: ^1.1.0
+        version: 1.1.0(@types/react-dom@18.3.0)(@types/react@18.3.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-radio-group':
         specifier: ^1.1.3
         version: 1.1.3(@types/react-dom@18.3.0)(@types/react@18.3.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -888,9 +894,15 @@ importers:
       cmdk:
         specifier: ^1.0.0
         version: 1.0.0(@types/react-dom@18.3.0)(@types/react@18.3.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      lucide-react:
+        specifier: ^0.441.0
+        version: 0.441.0(react@18.3.1)
       react:
         specifier: ^18.2.0
         version: 18.3.1
+      react-hook-form:
+        specifier: ^7.54.2
+        version: 7.55.0(react@18.3.1)
       react-resizable-panels:
         specifier: ^2.0.19
         version: 2.0.19(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -903,6 +915,9 @@ importers:
       tailwindcss-animate:
         specifier: ^1.0.7
         version: 1.0.7(tailwindcss@3.4.4(ts-node@10.9.1(@swc/core@1.3.107(@swc/helpers@0.5.11))(@types/node@20.14.2)(typescript@5.4.5)))
+      zod:
+        specifier: ^3.23.4
+        version: 3.23.8
     devDependencies:
       '@storybook/addon-essentials':
         specifier: ^8.0.9
@@ -3247,6 +3262,11 @@ packages:
 
   '@hookform/resolvers@2.9.11':
     resolution: {integrity: sha512-bA3aZ79UgcHj7tFV7RlgThzwSSHZgvfbt2wprldRkYBcMopdMvHyO17Wwp/twcJasNFischFfS7oz8Katz8DdQ==}
+    peerDependencies:
+      react-hook-form: ^7.0.0
+
+  '@hookform/resolvers@3.10.0':
+    resolution: {integrity: sha512-79Dv+3mDF7i+2ajj7SkypSKHhl1cbln1OGavqrsF7p6mbUv11xpqpacPsGDCTRvCSjEEIez2ef1NveSVL3b0Ag==}
     peerDependencies:
       react-hook-form: ^7.0.0
 
@@ -12930,11 +12950,11 @@ packages:
       react: ^0.14.8 || ^15.0.1 || ^16.0.0 || ^17.0.1 || ^18.0.0
       react-dom: ^0.14.8 || ^15.0.1 || ^16.0.0 || ^17.0.1 || ^18.0.0
 
-  react-hook-form@7.51.5:
-    resolution: {integrity: sha512-J2ILT5gWx1XUIJRETiA7M19iXHlG74+6O3KApzvqB/w8S5NQR7AbU8HVZrMALdmDgWpRPYiZJl0zx8Z4L2mP6Q==}
-    engines: {node: '>=12.22.0'}
+  react-hook-form@7.55.0:
+    resolution: {integrity: sha512-XRnjsH3GVMQz1moZTW53MxfoWN7aDpUg/GpVNc4A3eXRVNdGXfbzJ4vM4aLQ8g6XCUh1nIbx70aaNCl7kxnjog==}
+    engines: {node: '>=18.0.0'}
     peerDependencies:
-      react: ^16.8.0 || ^17 || ^18
+      react: ^16.8.0 || ^17 || ^18 || ^19
 
   react-i18next@13.5.0:
     resolution: {integrity: sha512-CFJ5NDGJ2MUyBohEHxljOq/39NQ972rh1ajnadG9BjTk+UXbHLq4z5DKEbEQBDoIhUmmbuS/fIMJKo6VOax1HA==}
@@ -17974,9 +17994,13 @@ snapshots:
       handlebars: 4.7.8
       typescript: 5.4.5
 
-  '@hookform/resolvers@2.9.11(react-hook-form@7.51.5(react@18.3.1))':
+  '@hookform/resolvers@2.9.11(react-hook-form@7.55.0(react@18.3.1))':
     dependencies:
-      react-hook-form: 7.51.5(react@18.3.1)
+      react-hook-form: 7.55.0(react@18.3.1)
+
+  '@hookform/resolvers@3.10.0(react-hook-form@7.55.0(react@18.3.1))':
+    dependencies:
+      react-hook-form: 7.55.0(react@18.3.1)
 
   '@humanwhocodes/config-array@0.11.14':
     dependencies:
@@ -22502,7 +22526,7 @@ snapshots:
   '@storybook/components@8.1.7(@types/react-dom@18.3.0)(@types/react@18.3.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@radix-ui/react-dialog': 1.0.5(@types/react-dom@18.3.0)(@types/react@18.3.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      '@radix-ui/react-slot': 1.0.2(@types/react@18.3.1)(react@18.3.1)
+      '@radix-ui/react-slot': 1.1.0(@types/react@18.3.1)(react@18.3.1)
       '@storybook/client-logger': 8.1.7
       '@storybook/csf': 0.1.8
       '@storybook/global': 5.0.0
@@ -32324,7 +32348,7 @@ snapshots:
       react-dom: 18.3.1(react@18.3.1)
       react-is: 18.1.0
 
-  react-hook-form@7.51.5(react@18.3.1):
+  react-hook-form@7.55.0(react@18.3.1):
     dependencies:
       react: 18.3.1
 
@@ -32736,12 +32760,12 @@ snapshots:
       fs-extra: 11.2.0
       minimatch: 5.1.6
 
-  remix-forms@2.3.0(domain-functions@2.6.0)(react-hook-form@7.51.5(react@18.3.1))(react@18.3.1)(zod@3.23.8):
+  remix-forms@2.3.0(domain-functions@2.6.0)(react-hook-form@7.55.0(react@18.3.1))(react@18.3.1)(zod@3.23.8):
     dependencies:
-      '@hookform/resolvers': 2.9.11(react-hook-form@7.51.5(react@18.3.1))
+      '@hookform/resolvers': 2.9.11(react-hook-form@7.55.0(react@18.3.1))
       domain-functions: 2.6.0
       react: 18.3.1
-      react-hook-form: 7.51.5(react@18.3.1)
+      react-hook-form: 7.55.0(react@18.3.1)
       zod: 3.23.8
 
   remix-utils@7.6.0(@remix-run/node@2.9.2(typescript@5.4.5))(@remix-run/react@2.9.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.4.5))(@remix-run/router@1.16.1)(is-ip@3.1.0)(react@18.3.1)(zod@3.23.8):

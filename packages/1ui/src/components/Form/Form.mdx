@@ -1,0 +1,83 @@
+import { Canvas, Controls, Meta, Source, Title } from '@storybook/blocks'
+
+import { Button } from '..'
+
+import * as Stories from './Form.stories'
+
+<Meta of={Stories} />
+
+<Title />
+
+#### A form component built on top of react-hook-form with validation and error handling.
+
+<Button
+  variant="accent"
+  onClick={() => window.open('https://react-hook-form.com/docs', '_blank')}
+>
+  {'API Reference'}
+</Button>
+
+<Source
+  dark
+  language="tsx"
+  code={`
+import { Form } from '@0xintuition/1ui'
+import { useForm } from 'react-hook-form'
+
+const form = useForm()
+
+<Form {...form}>
+  <form onSubmit={form.handleSubmit(onSubmit)}>
+    <FormField
+      control={form.control}
+      name="username"
+      rules={{ required: 'Username is required' }}
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>Username</FormLabel>
+          <FormControl>
+            <input {...field} />
+          </FormControl>
+          <FormDescription>Enter your username</FormDescription>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+    <Button type="submit">Submit</Button>
+  </form>
+</Form>
+`} />
+
+<Canvas of={Stories.BasicUsage} sourceState="none" />
+
+## Properties
+
+<Controls />
+
+## Form Components
+
+The Form component consists of several sub-components that work together to create accessible and well-structured forms:
+
+### FormField
+
+Connects form controls to react-hook-form.
+
+### FormItem
+
+Provides context and layout for form fields.
+
+### FormLabel
+
+A label element to describe form fields.
+
+### FormControl
+
+A wrapper for form inputs.
+
+### FormDescription
+
+Descriptive text to provide additional context for form fields.
+
+### FormMessage
+
+Displays validation error messages.

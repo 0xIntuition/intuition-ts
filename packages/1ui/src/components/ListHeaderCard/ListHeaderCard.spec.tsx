@@ -48,23 +48,21 @@ describe('ListHeaderCard', () => {
             class="flex items-center"
           >
             <div
-              class="flex items-center w-full max-w-max relative max-sm:m-auto transition-colors duration-200 flex-row"
+              class="flex items-center w-full max-w-max relative max-sm:flex-col max-sm:m-auto transition-colors duration-200 flex-row"
             >
-              <div
-                class="flex items-center"
-              >
+              <div>
                 <button
-                  class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center text-secondary/70 hover:text-secondary rounded-md text-base [&>span]:h-6 [&>span]:w-6 relative z-10 identity-tag transition-colors duration-200 theme-border"
+                  class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center text-secondary/70 hover:text-secondary rounded-md text-base [&>span]:h-6 [&>span]:w-6 relative z-10 identity-tag transition-colors duration-200 border-theme"
                   data-state="closed"
                 >
                   <span
-                    class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background border-border/10 rounded"
+                    class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background theme-border rounded"
                   >
                     <span
                       class="flex h-full w-full items-center justify-center bg-inherit"
                     >
                       <svg
-                        class="text-primary/30 w-1/2 h-1/2 max-h-10 max-w-10"
+                        class="text-primary/30 w-[80%] h-[80%]"
                       >
                         <use
                           href="/src/components/Icon/Icon.sprites.svg#fingerprint"
@@ -84,21 +82,19 @@ describe('ListHeaderCard', () => {
                 data-orientation="horizontal"
                 role="none"
               />
-              <div
-                class="flex items-center"
-              >
+              <div>
                 <button
-                  class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center text-secondary/70 hover:text-secondary rounded-md text-base [&>span]:h-6 [&>span]:w-6 relative z-10 identity-tag transition-colors duration-200 theme-border"
+                  class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center text-secondary/70 hover:text-secondary rounded-md text-base [&>span]:h-6 [&>span]:w-6 relative z-10 identity-tag transition-colors duration-200 border-theme"
                   data-state="closed"
                 >
                   <span
-                    class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background border-border/10 rounded"
+                    class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background theme-border rounded"
                   >
                     <span
                       class="flex h-full w-full items-center justify-center bg-inherit"
                     >
                       <svg
-                        class="text-primary/30 w-1/2 h-1/2 max-h-10 max-w-10"
+                        class="text-primary/30 w-[80%] h-[80%]"
                       >
                         <use
                           href="/src/components/Icon/Icon.sprites.svg#fingerprint"
@@ -118,21 +114,19 @@ describe('ListHeaderCard', () => {
                 data-orientation="horizontal"
                 role="none"
               />
-              <div
-                class="flex items-center"
-              >
+              <div>
                 <button
-                  class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center text-secondary/70 hover:text-secondary rounded-md text-base [&>span]:h-6 [&>span]:w-6 relative z-10 identity-tag transition-colors duration-200 theme-border"
+                  class="theme-border font-medium py-0.5 pl-0.5 pr-2 hover:bg-primary/10 disabled:pointer-events-none flex gap-2 items-center text-secondary/70 hover:text-secondary rounded-md text-base [&>span]:h-6 [&>span]:w-6 relative z-10 identity-tag transition-colors duration-200 border-theme"
                   data-state="closed"
                 >
                   <span
-                    class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background border-border/10 rounded"
+                    class="relative flex h-10 w-10 shrink-0 overflow-hidden aspect-square bg-background theme-border rounded"
                   >
                     <span
                       class="flex h-full w-full items-center justify-center bg-inherit"
                     >
                       <svg
-                        class="text-primary/30 w-1/2 h-1/2 max-h-10 max-w-10"
+                        class="text-primary/30 w-[80%] h-[80%]"
                       >
                         <use
                           href="/src/components/Icon/Icon.sprites.svg#fingerprint"

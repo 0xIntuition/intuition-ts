@@ -8,10 +8,7 @@ export const SidebarLayoutNavHeader = ({
   const { isMobileView, isCollapsed, setIsCollapsed } =
     useSidebarLayoutContext()
   return (
-    <div
-      className="border-border/20 flex w-full items-center border-0 border-b-[1px] p-2"
-      {...props}
-    >
+    <div className="flex w-full items-center p-2" {...props}>
       {children}
       {isMobileView && (
         <Button

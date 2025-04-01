@@ -27,13 +27,13 @@ describe('StakeholdersList', () => {
             class="flex -space-x-2"
           >
             <span
-              class="relative flex shrink-0 overflow-hidden aspect-square bg-background border-border/10 w-6 h-6 rounded-full"
+              class="relative flex shrink-0 overflow-hidden aspect-square bg-background theme-border w-6 h-6 rounded-full"
             >
               <span
                 class="flex h-full w-full items-center justify-center bg-inherit"
               >
                 <svg
-                  class="text-primary/30 w-1/2 h-1/2 max-h-10 max-w-10"
+                  class="text-primary/30 w-[80%] h-[80%]"
                 >
                   <use
                     href="/src/components/Icon/Icon.sprites.svg#crypto-punk"
@@ -42,13 +42,13 @@ describe('StakeholdersList', () => {
               </span>
             </span>
             <span
-              class="relative flex shrink-0 overflow-hidden aspect-square bg-background border-border/10 w-6 h-6 rounded-full"
+              class="relative flex shrink-0 overflow-hidden aspect-square bg-background theme-border w-6 h-6 rounded-full"
             >
               <span
                 class="flex h-full w-full items-center justify-center bg-inherit"
               >
                 <svg
-                  class="text-primary/30 w-1/2 h-1/2 max-h-10 max-w-10"
+                  class="text-primary/30 w-[80%] h-[80%]"
                 >
                   <use
                     href="/src/components/Icon/Icon.sprites.svg#crypto-punk"

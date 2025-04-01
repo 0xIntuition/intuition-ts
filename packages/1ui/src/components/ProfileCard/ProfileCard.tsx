@@ -91,11 +91,7 @@ const ProfileCard = ({
             />
           )}
           {stats?.points !== undefined && (
-            <ProfileCardStatItem
-              value={stats.points}
-              label="IQ Points"
-              valueClassName="text-success"
-            />
+            <ProfileCardStatItem value={stats.points} label="IQ Points" />
           )}
         </div>
       )}
@@ -107,7 +103,7 @@ const ProfileCard = ({
               weight="medium"
               className="text-primary-300 pt-2.5 whitespace-pre-wrap"
             >
-              <Trunctacular value={bio} maxStringLength={512} />
+              <Trunctacular value={bio} maxStringLength={266} />
             </Text>
           </div>
         )}
