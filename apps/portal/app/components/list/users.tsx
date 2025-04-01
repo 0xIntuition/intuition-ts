@@ -41,10 +41,14 @@ export function UsersList({
 }: UsersListProps) {
   // Using GraphQL field names directly for sorting
   const options: SortOption<string>[] = [
-    { value: 'Total ETH', sortBy: 'vault.total_shares' },
-    { value: 'Total Positions', sortBy: 'vault.position_count' },
-    { value: 'Updated At', sortBy: 'block_timestamp' },
-    { value: 'Created At', sortBy: 'block_timestamp' },
+    { value: 'Total ETH', sortBy: 'vault.total_shares', direction: 'desc' },
+    {
+      value: 'Total Positions',
+      sortBy: 'vault.position_count',
+      direction: 'desc',
+    },
+    { value: 'Updated At', sortBy: 'block_timestamp', direction: 'desc' },
+    { value: 'Created At', sortBy: 'block_timestamp', direction: 'desc' },
   ]
 
   // Convert pagination to the format expected by the List component

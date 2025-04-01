@@ -71,14 +71,25 @@ export function ListClaimsListNew<T extends SortColumnType = string>({
 }) {
   // Using GraphQL field names directly
   const defaultOptions: SortOption<string>[] = [
-    { value: 'Total ETH', sortBy: 'vault.total_shares' },
-    { value: 'ETH For', sortBy: 'vault.total_shares' },
-    { value: 'ETH Against', sortBy: 'counter_vault.total_shares' },
-    { value: 'Total Positions', sortBy: 'vault.position_count' },
-    { value: 'Positions For', sortBy: 'vault.position_count' },
-    { value: 'Positions Against', sortBy: 'counter_vault.position_count' },
-    { value: 'Updated At', sortBy: 'block_timestamp' },
-    { value: 'Created At', sortBy: 'block_timestamp' },
+    { value: 'Total ETH', sortBy: 'vault.total_shares', direction: 'desc' },
+    { value: 'ETH For', sortBy: 'vault.total_shares', direction: 'desc' },
+    {
+      value: 'ETH Against',
+      sortBy: 'counter_vault.total_shares',
+      direction: 'desc',
+    },
+    {
+      value: 'Total Positions',
+      sortBy: 'vault.position_count',
+      direction: 'desc',
+    },
+    {
+      value: 'Positions Against',
+      sortBy: 'counter_vault.position_count',
+      direction: 'desc',
+    },
+    { value: 'Updated At', sortBy: 'block_timestamp', direction: 'desc' },
+    { value: 'Created At', sortBy: 'block_timestamp', direction: 'desc' },
   ]
 
   const options = sortOptions || defaultOptions

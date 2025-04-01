@@ -88,10 +88,10 @@ export function ActivePositionsOnClaimsNew({
 
   // Using GraphQL field names directly for sorting, only including fields that exist in positions_order_by
   const options: SortOption<string>[] = [
-    { value: 'Position Amount', sortBy: 'shares' },
-    { value: 'ID', sortBy: 'id' },
-    { value: 'Account', sortBy: 'account_id' },
-    { value: 'Vault ID', sortBy: 'vault_id' },
+    { value: 'Position Amount', sortBy: 'shares', direction: 'desc' },
+    { value: 'ID', sortBy: 'id', direction: 'desc' },
+    { value: 'Account', sortBy: 'account_id', direction: 'desc' },
+    { value: 'Vault ID', sortBy: 'vault_id', direction: 'desc' },
   ]
 
   return (

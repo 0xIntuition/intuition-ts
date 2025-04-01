@@ -38,11 +38,11 @@ export function FollowingList({
 }: FollowListProps) {
   // Using GraphQL field names directly for sorting
   const options: SortOption<string>[] = [
-    { value: 'Position Amount', sortBy: 'shares' },
-    { value: 'ID', sortBy: 'id' },
-    { value: 'Subject ID', sortBy: 'subject_id' },
-    { value: 'Predicate ID', sortBy: 'predicate_id' },
-    { value: 'Object ID', sortBy: 'object_id' },
+    { value: 'Position Amount', sortBy: 'shares', direction: 'desc' },
+    { value: 'ID', sortBy: 'id', direction: 'desc' },
+    { value: 'Subject ID', sortBy: 'subject_id', direction: 'desc' },
+    { value: 'Predicate ID', sortBy: 'predicate_id', direction: 'desc' },
+    { value: 'Object ID', sortBy: 'object_id', direction: 'desc' },
   ]
 
   // Convert pagination to the format expected by the List component
