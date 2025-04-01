@@ -10,6 +10,7 @@ import {
 
 import LoadingLogo from '@components/loading-logo'
 import { Question } from '@lib/graphql/types'
+import { Link } from '@remix-run/react'
 import { Book, Users } from 'lucide-react'
 
 import { Topic } from './types'
@@ -172,17 +173,21 @@ export function TopicsStep({
         ) : (
           <div className="flex flex-col gap-2 justify-center items-center h-[350px] w-full">
             <Text variant={TextVariant.bodyLarge}>No atoms found.</Text>
-            {/* <div className="flex flex-row gap-2 items-center">
+            <div className="flex flex-col gap-2 items-center text-center">
               <Text
                 variant={TextVariant.body}
                 className="italic text-primary/70"
               >
-                Would you like to create one?
+                Atom creation locked for this quest. <br /> Propose a new entry{' '}
+                <Link
+                  to="https://discord.com/invite/0xintuition"
+                  className="text-accent underline"
+                  target="_blank"
+                >
+                  here
+                </Link>
               </Text>
-              <Button variant="secondary" onClick={onCreateClick}>
-                Create Atom
-              </Button>
-            </div> */}
+            </div>
           </div>
         )}
       </div>
