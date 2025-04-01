@@ -7,6 +7,7 @@
   "scripts": {
     "build": "remix vite:build --emptyOutDir",
     "dev": "docker compose down && docker compose up -d anvil && remix vite:dev",
+    "clean-dev": "killall anvil || true && docker compose down && docker compose up -d anvil && remix vite:dev",
     "start": "remix-serve ./build/server/index.js",
     "lint:fix": "pnpm lint --fix"
   },

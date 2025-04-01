@@ -48,14 +48,6 @@ interface CurveConfig {
   numInitialPoints?: number
 }
 
-const publicClient = createPublicClient({
-  chain: foundry,
-  transport: http('http://localhost:8545'),
-  batch: {
-    multicall: true,
-  },
-})
-
 /**
  * Safely convert a contract return value to bigint.
  */
@@ -136,6 +128,23 @@ export async function generateCurvePoints(
 
   let bigPoints: BigIntPoint[] = []
 
+  const publicClient = createPublicClient({
+    chain: foundry,
+    transport: http('http://localhost:8545', {
+      batch: false,
+      fetchOptions: {
+        cache: 'no-store',
+        headers: {
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache',
+        },
+      },
+    }),
+    batch: {
+      multicall: true,
+    },
+  })
+
   try {
     // 1. Fetch contract constraints
     const [maxAssets, maxShares] = await Promise.all([
@@ -167,15 +176,13 @@ export async function generateCurvePoints(
 
     // 3. Helper for reading shares
     async function getShares(assetsWei: bigint): Promise<bigint> {
+
       const res = await publicClient.readContract({
         address,
         abi,
         functionName: 'previewDeposit',
         args: [assetsWei, 0n, 0n]
       })
-      // const contractCode = await publicClient.getCode({ address })
-      // console.log(`${address} previewDeposit(${assetsWei}, 0n, 0n) = ${res}, abi: ${abi}, contractCode: ${contractCode}`)
-      console.log(`${address} previewDeposit(${assetsWei}, 0n, 0n) = ${res}`)
       return toBigInt(res)
     }
 

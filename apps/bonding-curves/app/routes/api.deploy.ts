@@ -103,17 +103,6 @@ export const action: ActionFunction = async ({ request }) => {
       throw new Error(`Contract verification failed: ${error instanceof Error ? error.message : 'Unknown error'}`)
     }
 
-    // TESTING
-    for (let i = 1; i < 10; i++) {
-      const shares = await publicClient.readContract({
-        address: receipt.contractAddress,
-        abi,
-        functionName: 'previewDeposit',
-        args: [BigInt(i) * BigInt("1000000000000000000"), 0n, 0n]
-      })
-      console.log('shares from api deploy:', shares)
-    }
-
     return json({ address: receipt.contractAddress })
 
   } catch (error) {
