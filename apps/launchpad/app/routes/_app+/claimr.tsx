@@ -7,6 +7,7 @@ interface ClaimrRequest {
   type: string
   payload: unknown
 }
+
 declare global {
   interface Window {
     claimr?: {
