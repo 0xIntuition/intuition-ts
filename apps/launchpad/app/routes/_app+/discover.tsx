@@ -82,6 +82,15 @@ export default function Discover() {
   // Products data (items 1-13)
   const products: Product[] = [
     {
+      id: '0',
+      title: 'Ecosystems',
+      description: 'Decentralized map of blockchain ecosystems',
+      buttonText: 'Explore',
+      onAction: () =>
+        window.open('https://ecosystems.intuition.systems/', '_blank'),
+      imageUrl: '/images/discover/ecosystems.png',
+    },
+    {
       id: '1',
       title: 'The Portal',
       description: 'The first Intuition explorer',
