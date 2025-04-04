@@ -12,6 +12,7 @@ import EcosystemCard from '@components/ecosystem-card'
 import { ErrorPage } from '@components/error-page'
 import { LoadingState } from '@components/loading-state'
 import { PageHeader } from '@components/page-header'
+import { ShimmerButton } from '@components/ui/shimmer-button'
 import { useGoBack } from '@lib/hooks/useGoBack'
 import type { Epoch } from '@lib/types'
 import type { LoaderFunctionArgs, MetaFunction } from '@remix-run/node'
@@ -171,6 +172,31 @@ export default function Ecosystems() {
               </div>
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* Call to Action Section */}
+      <div className="mt-12 p-6 rounded-xl bg-gradient-to-r from-primary/10 to-primary/5 border border-primary/20">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="flex flex-col gap-2 max-w-xl">
+            <Text variant={TextVariant.headline} weight={TextWeight.semibold}>
+              Your Contributions Shape the Ecosystem Map
+            </Text>
+            <Text variant={TextVariant.body} className="text-foreground/70">
+              The ecosystem quests you complete contribute to a decentralized
+              map of crypto&apos;s various ecosystems. View the complete map to
+              see how your contributions connect with others.
+            </Text>
+          </div>
+          <ShimmerButton
+            className="flex items-center gap-2 bg-[rgba(0, 82, 255, 1)]"
+            onClick={() =>
+              window.open('https://ecosystems.intuition.systems', '_blank')
+            }
+          >
+            <Icon name="layout-grid" className="h-4 w-4" />
+            <span>View Ecosystem Map</span>
+          </ShimmerButton>
         </div>
       </div>
     </>

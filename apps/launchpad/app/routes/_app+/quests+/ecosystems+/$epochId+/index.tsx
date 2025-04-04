@@ -8,6 +8,7 @@ import { EpochAccordion } from '@components/epoch-accordion'
 import { ErrorPage } from '@components/error-page'
 import { LoadingState } from '@components/loading-state'
 import { PageHeader } from '@components/page-header'
+import { ShimmerButton } from '@components/ui/shimmer-button'
 import { useGoBack } from '@lib/hooks/useGoBack'
 import type { Question } from '@lib/services/questions'
 import { atomDetailsModalAtom, onboardingModalAtom } from '@lib/state/store'
@@ -231,19 +232,30 @@ export default function EcosystemEpoch() {
 
   return (
     <>
-      <div className="flex items-center gap-4 mb-4 md:mb-6">
-        <Button
-          variant="ghost"
-          size="icon"
-          className="border-none bg-background-muted"
-          onClick={goBack}
+      <div className="flex items-center justify-between mb-4 md:mb-6">
+        <div className="flex items-center gap-4">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="border-none bg-background-muted"
+            onClick={goBack}
+          >
+            <Icon name="chevron-left" className="h-4 w-4" />
+          </Button>
+          <PageHeader
+            title={`${epochsWithQuestions[0].name} Ecosystem`}
+            subtitle="Seed the Intuition Graph with your unique perspective."
+          />
+        </div>
+        <ShimmerButton
+          className="flex items-center gap-2 bg-[rgba(0, 82, 255, 1)]"
+          onClick={() =>
+            window.open('https://ecosystems.intuition.systems', '_blank')
+          }
         >
-          <Icon name="chevron-left" className="h-4 w-4" />
-        </Button>
-        <PageHeader
-          title={`${epochsWithQuestions[0].name} Ecosystem`}
-          subtitle="Seed the Intuition Graph with your unique perspective."
-        />
+          <Icon name="layout-grid" className="h-4 w-4" />
+          <span>View Ecosystem Map</span>
+        </ShimmerButton>
       </div>
       <Suspense fallback={<LoadingState />}>
         <EpochAccordion
