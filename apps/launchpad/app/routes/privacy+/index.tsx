@@ -75,9 +75,9 @@ export default function PrivacyRoute() {
           <span className="c3">Policy</span>
           <span>&rdquo;) for</span>
           <span>
-            &nbsp;the website beta.portal.intuition.systems (the &ldquo;
+            &nbsp;the website launchpad.intuition.systems (the &ldquo;
           </span>
-          <span className="c3">Portal</span>
+          <span className="c3">Launchpad</span>
           <span>,&rdquo; &ldquo;</span>
           <span className="c3">Website</span>
           <span>,&rdquo; &ldquo;</span>
@@ -304,14 +304,14 @@ export default function PrivacyRoute() {
                 &nbsp;data may potentially persist on third party storage.
                 <br />
                 <br />
-                The Portal is a neutral platform that enables the creation,
+                The Launchpad is a neutral platform that enables the creation,
                 sharing and interaction with user-created content. We don&#39;t
                 control nor endorse and are not liable for content created by
                 users or third parties. Users are accountable for their content
                 and must ensure legal and best practice compliance. By using our
                 Service, users indemnify Intuition against any claims, damages,
                 or legal actions arising from their attestations or misuse of
-                the Portal.
+                the Launchpad.
                 <br />
               </span>
             </h1>
