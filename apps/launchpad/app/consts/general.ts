@@ -49,8 +49,8 @@ export const BLOCK_EXPLORER_URL =
 
 export const PORTAL_URL =
   CURRENT_ENV === 'development'
-    ? 'https://dev.portal.intuition.systems/readonly'
-    : 'https://beta.portal.intuition.systems/readonly'
+    ? 'https://dev.portal.intuition.systems/'
+    : 'https://portal.intuition.systems/'
 
 export const IPFS_GATEWAY_URL = 'https://ipfs.io/ipfs'
 

@@ -96,7 +96,7 @@ export default function Discover() {
       description: 'The first Intuition explorer',
       buttonText: 'Explore',
       onAction: () =>
-        window.open('https://beta.portal.intuition.systems/', '_blank'),
+        window.open('https://portal.intuition.systems/', '_blank'),
       imageUrl: '/images/discover/portal.webp',
     },
     {
