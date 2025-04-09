@@ -80,19 +80,6 @@ export function EpochStatus({
 
   return (
     <div className={cn('flex items-center gap-2', className)}>
-      {status === 'completed' && (
-        <div className="flex items-center gap-2">
-          <Clock className="w-4 h-4 text-warning" />
-          <Text
-            variant={TextVariant.footnote}
-            weight={TextWeight.semibold}
-            className="font-mono text-warning"
-          >
-            Bonus Round Completed
-          </Text>
-        </div>
-      )}
-
       {status === 'upcoming' && (
         <div className="flex items-center gap-2">
           <Lock className="w-4 h-4 text-primary/70" />
