@@ -10,8 +10,8 @@ import {
   Text,
   Trunctacular,
 } from '@0xintuition/1ui'
-import { GetSignalsQuery, Signals } from '@0xintuition/graphql'
 
+import { GetActivityQuery, Signals } from '@lib/graphql'
 import { formatBalance } from '@lib/utils/misc'
 import { BLOCK_EXPLORER_URL } from 'app/consts'
 import { formatDistance } from 'date-fns'
@@ -28,7 +28,7 @@ type EventMessagesNew = {
 export function ActivityFeedPortal({
   activities,
 }: {
-  activities: GetSignalsQuery
+  activities: GetActivityQuery['signals']
 }) {
   const eventMessagesNew: EventMessagesNew = {
     AtomCreated: 'created an identity',
@@ -45,7 +45,7 @@ export function ActivityFeedPortal({
 
   return (
     <div className="space-y-4 bg-white/5 backdrop-blur-md backdrop-saturate-150 border border-border/10 p-4 rounded-lg">
-      {activities.signals.map((activity) => (
+      {activities.map((activity) => (
         <ActivityItemNew
           key={activity.id}
           activity={activity as Signals}

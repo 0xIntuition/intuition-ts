@@ -7,13 +7,9 @@ import {
 } from '@0xintuition/1ui'
 import {
   fetcher,
-  GetSignalsDocument,
-  GetSignalsQuery,
-  GetSignalsQueryVariables,
   GetStatsDocument,
   GetStatsQuery,
   GetStatsQueryVariables,
-  useGetSignalsQuery,
   useGetStatsQuery,
 } from '@0xintuition/graphql'
 
@@ -21,6 +17,12 @@ import { ActivityFeedPortal } from '@components/activity-feed-portal'
 import { ErrorPage } from '@components/error-page'
 import { LoadingState } from '@components/loading-state'
 import { PageHeader } from '@components/page-header'
+import {
+  GetActivityDocument,
+  GetActivityQuery,
+  GetActivityQueryVariables,
+  useGetActivityQuery,
+} from '@lib/graphql'
 import { useLineaStats } from '@lib/hooks/useLineaStats'
 import { LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData, useSearchParams } from '@remix-run/react'
@@ -43,12 +45,14 @@ export async function loader({ request }: LoaderFunctionArgs) {
   await queryClient.prefetchQuery({
     queryKey: ['get-signals-global', { activityLimit, activityOffset }],
     queryFn: () =>
-      fetcher<GetSignalsQuery, GetSignalsQueryVariables>(GetSignalsDocument, {
-        limit: activityLimit,
-        offset: activityOffset,
-        addresses: [],
-        orderBy: [{ block_timestamp: 'desc' }],
-      }),
+      fetcher<GetActivityQuery, GetActivityQueryVariables>(
+        GetActivityDocument,
+        {
+          limit: activityLimit,
+          offset: activityOffset,
+          orderBy: [{ block_timestamp: 'desc' }],
+        },
+      ),
   })
 
   return {
@@ -84,31 +88,25 @@ export default function Network() {
 
   const { data: lineaStats, isLoading: isLoadingLineaStats } = useLineaStats()
 
-  const { data: signalsData, isLoading: isLoadingSignals } = useGetSignalsQuery(
-    {
-      limit: activityLimit,
-      offset: activityOffset,
-      addresses: [],
-      orderBy: [{ block_timestamp: 'desc' }],
-    },
-    {
-      queryKey: [
-        'get-signals-global',
-        {
-          limit: activityLimit,
-          offset: activityOffset,
-          where: {
-            type: {
-              _neq: 'FeesTransfered',
-            },
+  const { data: activityData, isLoading: isLoadingActivity } =
+    useGetActivityQuery(
+      {
+        limit: activityLimit,
+        offset: activityOffset,
+        orderBy: [{ block_timestamp: 'desc' }],
+      },
+      {
+        queryKey: [
+          'get-signals-global',
+          {
+            activityLimit,
+            activityOffset,
           },
-        },
-      ],
-    },
-  )
-
+        ],
+      },
+    )
   const isLoading =
-    isLoadingBaseStats || isLoadingLineaStats || isLoadingSignals
+    isLoadingBaseStats || isLoadingLineaStats || isLoadingActivity
 
   if (isLoading) {
     return <LoadingState />
@@ -166,14 +164,7 @@ export default function Network() {
         <Text variant={TextVariant.headline} weight={TextWeight.medium}>
           Activity Feed
         </Text>
-        <ActivityFeedPortal
-          activities={{
-            signals: signalsData?.signals || [],
-            total: {
-              aggregate: { count: signalsData?.total.aggregate?.count || 0 },
-            },
-          }}
-        />
+        <ActivityFeedPortal activities={activityData?.signals || []} />
       </div>
     </>
   )
