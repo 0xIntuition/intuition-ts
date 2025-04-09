@@ -1,0 +1,45 @@
+query GetActivity($limit: Int, $offset: Int, $orderBy: [signals_order_by!]) {
+  signals(limit: $limit, offset: $offset, order_by: $orderBy) {
+    id
+    block_timestamp
+    transaction_hash
+    atom {
+      image
+      label
+      type
+    }
+    triple {
+      subject {
+        image
+        label
+        type
+      }
+      predicate {
+        image
+        label
+        type
+      }
+      object {
+        image
+        label
+        type
+      }
+    }
+    deposit {
+      sender {
+        id
+        label
+        image
+      }
+      sender_assets_after_total_fees
+    }
+    redemption {
+      receiver {
+        id
+        label
+        image
+      }
+      assets_for_receiver
+    }
+  }
+}
