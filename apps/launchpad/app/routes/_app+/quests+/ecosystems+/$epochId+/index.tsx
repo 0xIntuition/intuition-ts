@@ -183,15 +183,27 @@ function useEpochsData() {
   // Filter epochs to only show the selected one
   const filteredEpochs = epochs.filter((epoch) => epoch.id === epochId)
 
+  // Create a map of epoch IDs to their progress data
+  const progressMap = epochs.reduce(
+    (map, epoch, index) => {
+      if (progressResults[index]?.data) {
+        map[epoch.id] = progressResults[index].data as Progress
+      }
+      return map
+    },
+    {} as Record<number, Progress>,
+  )
+
   // Combine the data
-  return filteredEpochs.map((epoch, index) => ({
+  return filteredEpochs.map((epoch) => ({
     ...epoch,
     questions: allQuestions.filter((q) => q.epoch_id === epoch.id),
-    progress: progressResults[index].data as Progress | undefined,
+    progress: progressMap[epoch.id],
   }))
 }
 
 export default function EcosystemEpoch() {
+  const { epochId } = useLoaderData<typeof loader>()
   const goBack = useGoBack({ fallbackRoute: `/quests/ecosystems` })
   const [onboardingModal, setOnboardingModal] = useAtom(onboardingModalAtom)
   const [atomDetailsModal, setAtomDetailsModal] = useAtom(atomDetailsModalAtom)
@@ -205,6 +217,12 @@ export default function EcosystemEpoch() {
   if (isLoadingEpochs || !epochsWithQuestions.length) {
     return <LoadingState />
   }
+
+  // Determine if this is an Arbitrum epoch
+  const isArbitrumEpoch = epochId === 4
+
+  // Set background color based on epoch type
+  const buttonBgColor = isArbitrumEpoch ? '#213147' : 'rgba(0, 82, 255, 1)'
 
   const handleStartOnboarding = (
     question: Question,
@@ -248,7 +266,8 @@ export default function EcosystemEpoch() {
           />
         </div>
         <ShimmerButton
-          className="flex items-center gap-2 bg-[rgba(0, 82, 255, 1)]"
+          className={`flex items-center gap-2`}
+          background={buttonBgColor}
           onClick={() =>
             window.open('https://ecosystems.intuition.systems', '_blank')
           }
