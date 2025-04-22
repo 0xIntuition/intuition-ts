@@ -140,7 +140,7 @@ export default function Ecosystems() {
       </div>
       {/* Call to Action Section */}
       <div className="mt-12 p-6 rounded-xl bg-gradient-to-r from-primary/10 to-primary/5 border border-primary/20 backdrop-blur-md">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+        <div className="flex flex-col lg:flex-row items-center justify-between gap-6">
           <div className="flex flex-col gap-2 max-w-xl">
             <Text variant={TextVariant.headline} weight={TextWeight.semibold}>
               Your Contributions Shape the Ecosystem Map
@@ -157,9 +157,11 @@ export default function Ecosystems() {
             onClick={() =>
               window.open('https://ecosystems.intuition.systems', '_blank')
             }
+            className="whitespace-nowrap flex-shrink-0 w-full lg:w-auto"
           >
-            <Icon name="layout-grid" className="h-4 w-4" />
-            <span>View Ecosystem Map</span>
+            <Icon name="layout-grid" className="h-4 w-4 mr-2" />
+            <span className="hidden sm:inline">View Ecosystem Map</span>
+            <span className="sm:hidden">View Map</span>
           </Button>
         </div>
       </div>
