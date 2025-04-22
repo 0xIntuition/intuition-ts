@@ -43,10 +43,7 @@ const GetEpochsWithTypeQuery = gql`
 
 const GetEpochsWithoutTypeQuery = gql`
   query GetEpochsWithoutType {
-    epochs(
-      order_by: { order: asc }
-      where: { type: { _is_null: true } }
-    ) {
+    epochs(order_by: { order: asc }, where: { type: { _is_null: true } }) {
       id
       name
       description
