@@ -49,6 +49,11 @@ export function QuestionCardWrapper({ onStart, question }: QuestionCardProps) {
     question.id,
   )
 
+  let pointsAwarded = 0
+  if (completion) {
+    pointsAwarded = completion.points_awarded
+  }
+
   // Get the user's selected atom if they've completed the question
   const { data: atomData } = useGetAtomQuery(
     { id: completion?.subject_id ?? 0 },
@@ -90,7 +95,7 @@ export function QuestionCardWrapper({ onStart, question }: QuestionCardProps) {
       title={questionData.title}
       description={`${questionData.atoms.toLocaleString()} atoms • ${questionData.totalUsers.toLocaleString()} users`}
       image={questionData.atomsData?.atoms?.[0]?.image ?? ''}
-      points={completion ? questionData.pointAwardAmount : 0}
+      points={completion ? pointsAwarded : 0}
       pointAwardAmount={questionData.pointAwardAmount}
       onStart={onStart}
       className="w-full"

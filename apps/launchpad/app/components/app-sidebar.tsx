@@ -368,7 +368,7 @@ export function AppSidebar({
                   {renderNavLink(IQBlitzNavItem)}
                 </SidebarMenuButton>
               </SidebarMenuItem>
-              {featureFlags.FF_BASE_EPOCH_ENABLED === 'true' && (
+              {featureFlags.FF_ARBITRUM_EPOCH_ENABLED === 'true' && (
                 <SidebarMenuItem key={'base-week'} className="mt-5">
                   <Link to="/quests/ecosystems">
                     <ShimmerButton

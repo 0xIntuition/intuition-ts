@@ -14,8 +14,10 @@ import { LoadingState } from '@components/loading-state'
 import { PageHeader } from '@components/page-header'
 import { ShimmerButton } from '@components/ui/shimmer-button'
 import { useGoBack } from '@lib/hooks/useGoBack'
+import { useFeatureFlags } from '@lib/providers/feature-flags-provider'
 import type { Epoch } from '@lib/types'
 import type { LoaderFunctionArgs, MetaFunction } from '@remix-run/node'
+import { useLoaderData } from '@remix-run/react'
 import { getUser } from '@server/auth'
 import { dehydrate, QueryClient, useQuery } from '@tanstack/react-query'
 
@@ -99,6 +101,7 @@ export function ErrorBoundary() {
 
 export default function Ecosystems() {
   const goBack = useGoBack({ fallbackRoute: `/quests` })
+  const { featureFlags } = useFeatureFlags()
   const { data: epochs = [], isLoading } = useQuery<Epoch[]>({
     queryKey: ['get-ecosystem-epochs'],
     queryFn: async () => {
@@ -114,6 +117,11 @@ export default function Ecosystems() {
   if (isLoading) {
     return <LoadingState />
   }
+
+  // Filter out epoch with ID 4 if FF_ARBITRUM_EPOCH_ENABLED is set
+  const filteredEpochs = featureFlags.FF_ARBITRUM_EPOCH_ENABLED
+    ? epochs.filter((epoch) => epoch.name !== 'Arbitrum')
+    : epochs
 
   return (
     <>
@@ -158,7 +166,7 @@ export default function Ecosystems() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {epochs.map((epoch) => (
+        {filteredEpochs.map((epoch) => (
           <EcosystemCard key={epoch.id} epoch={epoch} />
         ))}
         <div className="rounded-lg shadow-sm overflow-hidden aspect-square bg-primary/5 backdrop-blur-md backdrop-saturate-150 border border-border/10 p-0 relative group">

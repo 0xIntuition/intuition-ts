@@ -232,6 +232,11 @@ export default function MiniGameOne() {
     enabled: !!userWallet && !!questionId,
   })
 
+  let pointsAwarded = 0
+  if (completion) {
+    pointsAwarded = completion.points_awarded
+  }
+
   // Get the user's selected atom if they've completed the question
   const { data: atomData, isLoading: isLoadingAtom } = useGetAtomQuery(
     { id: completion?.subject_id ?? 0 },
@@ -769,7 +774,7 @@ export default function MiniGameOne() {
                     )}
                     <div className="flex items-baseline gap-2">
                       <span className="text-xl font-bold bg-gradient-to-r from-[#34C578] to-[#00FF94] bg-clip-text text-transparent">
-                        {pointAwardAmount}
+                        {pointsAwarded}
                       </span>
                       <span className="text-md font-semibold text-muted-foreground">
                         IQ Earned
