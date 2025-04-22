@@ -259,11 +259,23 @@ function useEpochsData() {
   })
 
   // Combine the data
-  return epochs.map((epoch, index) => ({
-    ...epoch,
-    questions: allQuestions.filter((q) => q.epoch_id === epoch.id),
-    progress: progressResults[index].data as Progress | undefined,
-  }))
+  return epochs.map((epoch, index) => {
+    const epochQuestions = allQuestions.filter((q) => q.epoch_id === epoch.id)
+    // Calculate total points based on the sum of points for all questions
+    const calculatedTotalPoints = epochQuestions.reduce(
+      (sum, q) => sum + q.point_award_amount,
+      0,
+    )
+
+    return {
+      ...epoch,
+      questions: epochQuestions,
+      // Use the calculated total points if available, otherwise fall back to the epoch's total_points
+      total_points:
+        calculatedTotalPoints > 0 ? calculatedTotalPoints : epoch.total_points,
+      progress: progressResults[index].data as Progress | undefined,
+    }
+  })
 }
 
 export default function Questions() {

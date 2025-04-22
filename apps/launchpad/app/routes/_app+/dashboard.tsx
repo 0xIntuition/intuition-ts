@@ -132,7 +132,7 @@ export default function Dashboard() {
 
   return (
     <div className="flex flex-col gap-4">
-      {featureFlags.FF_BASE_EPOCH_ENABLED === 'true' && (
+      {featureFlags.FF_ARBITRUM_EPOCH_ENABLED === 'true' && (
         <div className="pb-5">
           <DashboardBanner />
         </div>

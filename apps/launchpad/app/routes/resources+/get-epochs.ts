@@ -15,6 +15,7 @@ interface Epoch {
   total_points_available: number
   total_points: number
   type?: string
+  order?: number
 }
 
 interface GetEpochsResponse {
@@ -23,7 +24,7 @@ interface GetEpochsResponse {
 
 const GetEpochsWithTypeQuery = gql`
   query GetEpochsWithType($type: String!) {
-    epochs(order_by: { start_date: desc }, where: { type: { _eq: $type } }) {
+    epochs(order_by: { order: asc }, where: { type: { _eq: $type } }) {
       id
       name
       description
@@ -35,16 +36,14 @@ const GetEpochsWithTypeQuery = gql`
       total_points_available
       total_points
       type
+      order
     }
   }
 `
 
 const GetEpochsWithoutTypeQuery = gql`
   query GetEpochsWithoutType {
-    epochs(
-      order_by: { start_date: desc }
-      where: { type: { _is_null: true } }
-    ) {
+    epochs(order_by: { order: asc }, where: { type: { _is_null: true } }) {
       id
       name
       description
@@ -56,6 +55,7 @@ const GetEpochsWithoutTypeQuery = gql`
       total_points
       total_points_available
       type
+      order
     }
   }
 `
