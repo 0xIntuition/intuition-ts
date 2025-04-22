@@ -117,9 +117,10 @@ export default function Ecosystems() {
   }
 
   // Filter out epoch with ID 4 if FF_ARBITRUM_EPOCH_ENABLED is set
-  const filteredEpochs = featureFlags.FF_ARBITRUM_EPOCH_ENABLED
-    ? epochs.filter((epoch) => epoch.name !== 'Arbitrum')
-    : epochs
+  const filteredEpochs =
+    featureFlags.FF_ARBITRUM_EPOCH_ENABLED === 'true'
+      ? epochs
+      : epochs.filter((epoch) => epoch.name !== 'Arbitrum')
 
   return (
     <>
