@@ -12,8 +12,8 @@ import EcosystemCard from '@components/ecosystem-card'
 import { ErrorPage } from '@components/error-page'
 import { LoadingState } from '@components/loading-state'
 import { PageHeader } from '@components/page-header'
-import { ShimmerButton } from '@components/ui/shimmer-button'
 import { useGoBack } from '@lib/hooks/useGoBack'
+import { useFeatureFlags } from '@lib/providers/feature-flags-provider'
 import type { Epoch } from '@lib/types'
 import type { LoaderFunctionArgs, MetaFunction } from '@remix-run/node'
 import { getUser } from '@server/auth'
@@ -99,6 +99,7 @@ export function ErrorBoundary() {
 
 export default function Ecosystems() {
   const goBack = useGoBack({ fallbackRoute: `/quests` })
+  const { featureFlags } = useFeatureFlags()
   const { data: epochs = [], isLoading } = useQuery<Epoch[]>({
     queryKey: ['get-ecosystem-epochs'],
     queryFn: async () => {
@@ -114,6 +115,12 @@ export default function Ecosystems() {
   if (isLoading) {
     return <LoadingState />
   }
+
+  // Filter out epoch with ID 4 if FF_ARBITRUM_EPOCH_ENABLED is set
+  const filteredEpochs =
+    featureFlags.FF_ARBITRUM_EPOCH_ENABLED === 'true'
+      ? epochs
+      : epochs.filter((epoch) => epoch.name !== 'Arbitrum')
 
   return (
     <>
@@ -131,9 +138,34 @@ export default function Ecosystems() {
           subtitle="Create, curate, and discover crowdsourced maps of crypto's various ecosystems."
         />
       </div>
+      {/* Call to Action Section */}
+      <div className="mt-12 p-6 rounded-xl bg-gradient-to-r from-primary/10 to-primary/5 border border-primary/20 backdrop-blur-md">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="flex flex-col gap-2 max-w-xl">
+            <Text variant={TextVariant.headline} weight={TextWeight.semibold}>
+              Your Contributions Shape the Ecosystem Map
+            </Text>
+            <Text variant={TextVariant.body} className="text-foreground/70">
+              The ecosystem quests you complete contribute to a decentralized
+              map of crypto&apos;s various ecosystems. View the complete map to
+              see how your contributions connect with others.
+            </Text>
+          </div>
+          <Button
+            variant={ButtonVariant.primary}
+            size={ButtonSize.lg}
+            onClick={() =>
+              window.open('https://ecosystems.intuition.systems', '_blank')
+            }
+          >
+            <Icon name="layout-grid" className="h-4 w-4" />
+            <span>View Ecosystem Map</span>
+          </Button>
+        </div>
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {epochs.map((epoch) => (
+        {filteredEpochs.map((epoch) => (
           <EcosystemCard key={epoch.id} epoch={epoch} />
         ))}
         <div className="rounded-lg shadow-sm overflow-hidden aspect-square bg-primary/5 backdrop-blur-md backdrop-saturate-150 border border-border/10 p-0 relative group">
@@ -172,31 +204,6 @@ export default function Ecosystems() {
               </div>
             </div>
           </div>
-        </div>
-      </div>
-
-      {/* Call to Action Section */}
-      <div className="mt-12 p-6 rounded-xl bg-gradient-to-r from-primary/10 to-primary/5 border border-primary/20">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="flex flex-col gap-2 max-w-xl">
-            <Text variant={TextVariant.headline} weight={TextWeight.semibold}>
-              Your Contributions Shape the Ecosystem Map
-            </Text>
-            <Text variant={TextVariant.body} className="text-foreground/70">
-              The ecosystem quests you complete contribute to a decentralized
-              map of crypto&apos;s various ecosystems. View the complete map to
-              see how your contributions connect with others.
-            </Text>
-          </div>
-          <ShimmerButton
-            className="flex items-center gap-2 bg-[rgba(0, 82, 255, 1)]"
-            onClick={() =>
-              window.open('https://ecosystems.intuition.systems', '_blank')
-            }
-          >
-            <Icon name="layout-grid" className="h-4 w-4" />
-            <span>View Ecosystem Map</span>
-          </ShimmerButton>
         </div>
       </div>
     </>

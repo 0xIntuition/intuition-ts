@@ -12,6 +12,7 @@ const bannerVariants = cva('relative w-full', {
       muted: 'dark bg-muted',
       border: 'border-b border-border',
       base: 'bg-[#0052FF] border border-primary/30',
+      arbitrum: 'bg-[#213147] border border-primary/20',
     },
     size: {
       sm: 'px-4 py-2',
