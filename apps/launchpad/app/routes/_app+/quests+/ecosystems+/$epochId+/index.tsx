@@ -67,6 +67,10 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   }
   await queryClient.setQueryData(['get-ecosystem-epochs'], epochsData.epochs)
 
+  const currentEpoch = epochsData.epochs.find(
+    (epoch: Epoch) => epoch.id === epochId,
+  )
+
   const { origin } = new URL(request.url)
   const ogImageUrl = `${origin}/resources/create-og?type=ecosystems`
 
@@ -77,6 +81,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     userWallet,
     ogImageUrl,
     epochId,
+    currentEpoch,
   }
 }
 
@@ -203,7 +208,7 @@ function useEpochsData() {
 }
 
 export default function EcosystemEpoch() {
-  const { epochId } = useLoaderData<typeof loader>()
+  const { currentEpoch } = useLoaderData<typeof loader>()
   const goBack = useGoBack({ fallbackRoute: `/quests/ecosystems` })
   const [onboardingModal, setOnboardingModal] = useAtom(onboardingModalAtom)
   const [atomDetailsModal, setAtomDetailsModal] = useAtom(atomDetailsModalAtom)
@@ -219,7 +224,7 @@ export default function EcosystemEpoch() {
   }
 
   // Determine if this is an Arbitrum epoch
-  const isArbitrumEpoch = epochId === 4
+  const isArbitrumEpoch = currentEpoch.name === 'Arbitrum'
 
   // Set background color based on epoch type
   const buttonBgColor = isArbitrumEpoch ? '#213147' : 'rgba(0, 82, 255, 1)'
