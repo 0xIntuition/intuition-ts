@@ -101,7 +101,6 @@ export default function RewardsRoute() {
   const address = initialParams?.address?.toLowerCase()
 
   const { data: points, isLoading: isLoadingPoints } = usePoints(address)
-  console.log('points', points)
   const { data: protocolFees, isLoading: isLoadingFees } =
     useGetFeeTransfersQuery({
       address: address ?? ZERO_ADDRESS,
