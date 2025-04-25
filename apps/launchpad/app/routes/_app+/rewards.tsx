@@ -210,7 +210,7 @@ export default function RewardsRoute() {
       image: '/images/lore/7-1.webp',
       totalPoints: points?.community ?? 0,
       levels: CATEGORY_MAX_POINTS.COMMUNITY.map((maxPoints, index) => {
-        const categoryPoints = points?.total_community ?? 0
+        const categoryPoints = points?.community ?? 0
         return {
           points: maxPoints,
           percentage: calculateLevelProgressForIndex(
