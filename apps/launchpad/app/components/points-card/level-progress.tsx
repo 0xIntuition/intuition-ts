@@ -24,6 +24,13 @@ const CATEGORY_LEVELS: CategoryLevel[] = [
     name: 'Community',
     maxPoints: [10000, 250000, 400000, 750000, 1450000],
   },
+  {
+    name: 'Launchpad',
+    maxPoints: [
+      15000, 35000, 50000, 80000, 100000, 130000, 160000, 190000, 230000,
+      270000, 320000, 370000, 420000, 460000, 500000,
+    ],
+  },
 ]
 
 interface LevelProgressProps {
@@ -72,7 +79,10 @@ export const LevelProgress: React.FC<LevelProgressProps> = ({
 
       {/* Level Markers */}
       <div className="absolute inset-0 flex justify-between items-center px-0">
-        {[1, 2, 3, 4, 5].map((level) => (
+        {Array.from(
+          { length: categoryData.maxPoints.length },
+          (_, i) => i + 1,
+        ).map((level) => (
           <motion.div
             key={level}
             className={cn('w-2 h-2 rounded-full', {
