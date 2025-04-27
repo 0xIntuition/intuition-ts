@@ -36,13 +36,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
   }
   await queryClient.setQueryData(['get-ecosystem-epochs'], epochsData.epochs)
 
-  const { origin } = new URL(request.url)
-  const ogImageUrl = `${origin}/resources/create-og?type=ecosystems`
-
   return {
     dehydratedState: dehydrate(queryClient),
     userWallet,
-    ogImageUrl,
   }
 }
 
@@ -50,8 +46,6 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
   if (!data) {
     return []
   }
-
-  const { ogImageUrl } = data
 
   return [
     {
@@ -68,13 +62,15 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
     },
     {
       property: 'og:image',
-      content: ogImageUrl,
+      content:
+        'https://res.cloudinary.com/dfpwy9nyv/image/upload/v1743793743/Ecosystem%20Assets/Site%20Metadata/site_metadata_banner.png',
     },
     { property: 'og:site_name', content: 'Intuition Launchpad' },
     { property: 'og:locale', content: 'en_US' },
     {
       name: 'twitter:image',
-      content: ogImageUrl,
+      content:
+        'https://res.cloudinary.com/dfpwy9nyv/image/upload/v1743793743/Ecosystem%20Assets/Site%20Metadata/site_metadata_banner.png',
     },
     {
       name: 'twitter:card',
