@@ -54,7 +54,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
     {
       name: 'description',
       content:
-        'Explore different ecosystems and contribute to the Intuition Graph.',
+        'Explore different ecosystems and earn IQ points by contributing to the Intuition Graph.',
     },
     {
       property: 'og:title',
@@ -83,7 +83,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
     {
       name: 'twitter:description',
       content:
-        'Explore different ecosystems and contribute to the Intuition Graph.',
+        'Explore different ecosystems and earn IQ points by contributing to the Intuition Graph.',
     },
     { name: 'twitter:site', content: '@0xIntuition' },
   ]
