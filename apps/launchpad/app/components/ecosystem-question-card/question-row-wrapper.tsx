@@ -85,7 +85,7 @@ export function QuestionRowWrapper({ onStart, question }: QuestionRowProps) {
   return (
     <QuestionRow
       title={questionData.title}
-      description={`${questionData.atoms.toLocaleString()} atoms`}
+      description={`${questionData.atoms.toLocaleString()} atoms • ${questionData.totalUsers.toLocaleString()} users`}
       image={questionData.atomsData?.atoms?.[0]?.image ?? ''}
       points={completion ? pointsAwarded : 0}
       pointAwardAmount={questionData.pointAwardAmount}
