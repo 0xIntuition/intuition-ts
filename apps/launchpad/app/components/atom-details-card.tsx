@@ -69,7 +69,7 @@ export function AtomDetailsCard({
             </div>
           </div>
           <a
-            href={`${PORTAL_URL}/${listClaim ? 'claim' : 'identity'}/${atomId}`}
+            href={`${PORTAL_URL}/app/${listClaim ? 'claim' : 'identity'}/${atomId}`}
             target="_blank"
             rel="noopener noreferrer"
             className="w-full sm:w-auto"
