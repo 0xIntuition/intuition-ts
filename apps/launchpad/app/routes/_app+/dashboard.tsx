@@ -12,6 +12,7 @@ import ChapterProgress from '@components/chapter-progress'
 import { DashboardBanner } from '@components/dashboard-banner'
 import { EarnSection } from '@components/earn-section'
 import { ErrorPage } from '@components/error-page'
+import { LegionBanner } from '@components/legion/legion-banner'
 import { LoadingState } from '@components/loading-state'
 import { CHAPTERS } from '@consts/chapters'
 import { ZERO_ADDRESS } from '@consts/general'
@@ -132,11 +133,9 @@ export default function Dashboard() {
 
   return (
     <div className="flex flex-col gap-4">
-      {featureFlags.FF_ARBITRUM_EPOCH_ENABLED === 'true' && (
-        <div className="pb-5">
-          <DashboardBanner />
-        </div>
-      )}
+      <div className="pb-5">
+        <LegionBanner ctaHref="#" />
+      </div>
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}

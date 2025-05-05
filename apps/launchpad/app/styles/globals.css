@@ -30,3 +30,8 @@ body {
 * {
   -webkit-tap-highlight-color: transparent;
 }
+
+.legion-banner {
+  @apply rounded-lg bg-black p-6 text-white;
+  border: 2px solid #f03c24;
+}

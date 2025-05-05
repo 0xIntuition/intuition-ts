@@ -11,6 +11,7 @@ export interface ShimmerButtonProps
   background?: string
   className?: string
   children?: React.ReactNode
+  variant?: 'default' | 'legion'
 }
 
 const ShimmerButton = React.forwardRef<HTMLButtonElement, ShimmerButtonProps>(
@@ -23,10 +24,17 @@ const ShimmerButton = React.forwardRef<HTMLButtonElement, ShimmerButtonProps>(
       background = 'rgba(0, 82, 255, 1)',
       className,
       children,
+      variant = 'default',
       ...props
     },
     ref,
   ) => {
+    // Set legion variant styles
+    if (variant === 'legion') {
+      background = '#f03c24'
+      shimmerColor = '#ffffff'
+    }
+
     return (
       <button
         style={
