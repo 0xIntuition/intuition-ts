@@ -71,9 +71,11 @@ export function Document({
   children,
   /* eslint-disable @typescript-eslint/no-unused-vars */
   theme = 'system',
+  env,
 }: {
   children: React.ReactNode
   theme?: string
+  env?: any
 }) {
   return (
     <html lang="en" data-theme="dark">
@@ -88,6 +90,15 @@ export function Document({
       </head>
       <body>
         {children}
+        {/* Expose selected environment variables to the client */}
+        {env && (
+          <script
+            suppressHydrationWarning
+            dangerouslySetInnerHTML={{
+              __html: `window.ENV = ${JSON.stringify(env)}`,
+            }}
+          />
+        )}
         <ScrollRestoration />
         <Scripts />
       </body>
@@ -99,7 +110,7 @@ export default function App() {
   const { env, featureFlags } = useLoaderData<typeof loader>()
 
   return (
-    <Document theme="dark">
+    <Document theme="dark" env={env}>
       <Toaster position="top-right" />
       <ClientOnly fallback={<LoadingState />}>
         {() => (
