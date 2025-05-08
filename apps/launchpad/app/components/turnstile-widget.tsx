@@ -20,8 +20,12 @@ type _Turnstile = {
 }
 
 function ensureTurnstileScript() {
-  if (typeof document === 'undefined') return
-  if (document.getElementById('cf-turnstile-script')) return
+  if (typeof document === 'undefined') {
+    return
+  }
+  if (document.getElementById('cf-turnstile-script')) {
+    return
+  }
   const script = document.createElement('script')
   script.id = 'cf-turnstile-script'
   script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js'
@@ -55,13 +59,17 @@ export function TurnstileWidget({
 
     const interval = setInterval(() => {
       tryRender()
-      if (widgetIdRef.current) clearInterval(interval)
+      if (widgetIdRef.current) {
+        clearInterval(interval)
+      }
     }, 250)
 
     return () => {
       clearInterval(interval)
       const ts = (window as any).turnstile as _Turnstile | undefined
-      if (widgetIdRef.current && ts) ts.remove(widgetIdRef.current)
+      if (widgetIdRef.current && ts) {
+        ts.remove(widgetIdRef.current)
+      }
     }
   }, [siteKey, onSuccess, options])
 

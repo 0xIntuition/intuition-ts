@@ -1,6 +1,6 @@
 export interface TurnstileSiteVerifyResponse {
   success: boolean
-  "error-codes"?: string[]
+  'error-codes'?: string[]
   challenge_ts?: string
   hostname?: string
   action?: string
@@ -19,7 +19,7 @@ export async function verifyTurnstileToken(
   token: string,
   remoteIp?: string,
 ): Promise<boolean> {
-  const secret = process.env['TURNSTILE_SECRET_KEY']
+  const secret = process.env.TURNSTILE_SECRET_KEY
   if (!secret) {
     console.warn(
       'TURNSTILE_SECRET_KEY is not defined. Skipping CAPTCHA verification for development purposes.',
@@ -33,7 +33,9 @@ export async function verifyTurnstileToken(
     secret,
     response: token,
   })
-  if (remoteIp) params.append('remoteip', remoteIp)
+  if (remoteIp) {
+    params.append('remoteip', remoteIp)
+  }
 
   const res = await fetch(
     'https://challenges.cloudflare.com/turnstile/v0/siteverify',
@@ -55,4 +57,4 @@ export async function verifyTurnstileToken(
   }
 
   return data.success
-} 
+}

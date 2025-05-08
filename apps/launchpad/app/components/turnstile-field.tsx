@@ -28,7 +28,9 @@ export function TurnstileField({ siteKey, onVerified }: TurnstileFieldProps) {
   // verify route using a fetcher so the surrounding component can enable its
   // submit button only if verification passes.
   useEffect(() => {
-    if (!token) return
+    if (!token) {
+      return
+    }
 
     const fd = new FormData()
     fd.append('turnstile_token', token)

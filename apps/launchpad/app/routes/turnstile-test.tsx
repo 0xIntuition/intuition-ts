@@ -10,7 +10,7 @@ import { Form, useActionData, useLoaderData } from '@remix-run/react'
 import { verifyTurnstileToken } from '@server/turnstile'
 
 export async function loader({}: LoaderFunctionArgs) {
-  return json({ siteKey: process.env['TURNSTILE_SITE_KEY'] ?? null })
+  return json({ siteKey: process.env.TURNSTILE_SITE_KEY ?? null })
 }
 
 export async function action({ request }: ActionFunctionArgs) {
