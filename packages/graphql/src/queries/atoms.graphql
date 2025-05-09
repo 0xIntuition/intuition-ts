@@ -36,25 +36,27 @@ query GetAtomsWithPositions(
   atoms(limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
     ...AtomMetadata
     ...AtomTxn
-    vault {
-      position_count
-      total_shares
-      current_share_price
-      total: positions_aggregate {
-        aggregate {
-          count
-          sum {
-            shares
+    term {
+      vaults(where: { curve_id: { _eq: "1" } }) {
+        position_count
+        total_shares
+        current_share_price
+        total: positions_aggregate {
+          aggregate {
+            count
+            sum {
+              shares
+            }
           }
         }
-      }
-      positions(where: { account_id: { _eq: $address } }) {
-        id
-        account {
-          label
+        positions(where: { account_id: { _eq: $address } }) {
           id
+          account {
+            label
+            id
+          }
+          shares
         }
-        shares
       }
     }
     creator {
@@ -99,7 +101,7 @@ query GetAtomsCount($where: atoms_bool_exp) {
 }
 
 query GetAtom($id: numeric!) {
-  atom(id: $id) {
+  atom(term_id: $id) {
     ...AtomMetadata
     ...AtomTxn
     ...AtomVaultDetails
@@ -119,5 +121,144 @@ query GetAtomByData($data: String!) {
       ...AccountMetadata
     }
     ...AtomTriple
+  }
+}
+
+# App specific queries
+query GetVerifiedAtomDetails($id: numeric!, $userPositionAddress: String!) {
+  atom(term_id: $id) {
+    term_id
+    label
+    wallet_id
+    image
+    type
+    block_timestamp
+    data
+    creator {
+      id
+    }
+    value {
+      thing {
+        name
+        description
+        url
+      }
+    }
+    term {
+      vaults(where: { curve_id: { _eq: "1" }, term_id: { _eq: $id } }) {
+        current_share_price
+        total_shares
+        position_count
+        userPosition: positions(
+          limit: 1
+          where: { account_id: { _eq: $userPositionAddress } }
+        ) {
+          shares
+          account_id
+        }
+      }
+    }
+    tags: as_subject_triples_aggregate(where: { predicate_id: { _in: [3] } }) {
+      nodes {
+        object {
+          label
+          term {
+            vaults(where: { curve_id: { _eq: "1" }, term_id: { _eq: $id } }) {
+              term_id
+            }
+          }
+        }
+        predicate_id
+      }
+      aggregate {
+        count
+      }
+    }
+    verificationTriple: as_subject_triples_aggregate(
+      where: { predicate_id: { _eq: "4" }, object_id: { _eq: "126451" } }
+    ) {
+      nodes {
+        term_id
+        predicate_id
+        object_id
+        term {
+          vaults(where: { curve_id: { _eq: "1" } }) {
+            term_id
+            positions(
+              where: {
+                account_id: {
+                  _in: [
+                    "0xd99811847e634d33f0dace483c52949bec76300f"
+                    "0xbb285b543c96c927fc320fb28524899c2c90806c"
+                    "0x0b162525c5dc8c18f771e60fd296913030bfe42c"
+                    "0xbd2de08af9470c87c4475117fb912b8f1d588d9c"
+                    "0xb95ca3d3144e9d1daff0ee3d35a4488a4a5c9fc5"
+                  ]
+                }
+              }
+            ) {
+              id
+              shares
+              account_id
+              account {
+                id
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+query GetAtomDetails($id: numeric!, $userPositionAddress: String!) {
+  atom(term_id: $id) {
+    term_id
+    label
+    wallet_id
+    image
+    type
+    block_timestamp
+    data
+    creator {
+      id
+    }
+    value {
+      thing {
+        name
+        description
+        url
+      }
+    }
+    term {
+      vaults(where: { curve_id: { _eq: "1" }, term_id: { _eq: $id } }) {
+        current_share_price
+        total_shares
+        position_count
+        userPosition: positions(
+          limit: 1
+          where: { account_id: { _eq: $userPositionAddress } }
+        ) {
+          shares
+          account_id
+        }
+      }
+    }
+    tags: as_subject_triples_aggregate(where: { predicate_id: { _in: [3] } }) {
+      nodes {
+        object {
+          label
+          term {
+            vaults(where: { curve_id: { _eq: "1" }, term_id: { _eq: $id } }) {
+              term_id
+            }
+          }
+        }
+        predicate_id
+      }
+      aggregate {
+        count
+      }
+    }
   }
 }

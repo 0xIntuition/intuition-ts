@@ -3,26 +3,28 @@ query GetActivity($limit: Int, $offset: Int, $orderBy: [signals_order_by!]) {
     id
     block_timestamp
     transaction_hash
-    atom {
-      image
-      label
-      type
-    }
-    triple {
-      subject {
+    term {
+      atom {
         image
         label
         type
       }
-      predicate {
-        image
-        label
-        type
-      }
-      object {
-        image
-        label
-        type
+      triple {
+        subject {
+          image
+          label
+          type
+        }
+        predicate {
+          image
+          label
+          type
+        }
+        object {
+          image
+          label
+          type
+        }
       }
     }
     deposit {

@@ -7,32 +7,32 @@ fragment AccountMetadata on accounts {
 }
 
 fragment AccountClaimsAggregate on accounts {
-  claims_aggregate(order_by: { shares: desc }) {
+  claims_aggregate(order_by: { position: { shares: desc } }) {
     aggregate {
       count
     }
     nodes {
-      triple {
-        id
+      id
+      position {
+        shares
+        # counter_shares are no longer present -- perhaps positions are counted invididually, with the respective counter term id separately
       }
-      shares
-      counter_shares
     }
   }
 }
 
 fragment AccountClaims on accounts {
   claims(
-    order_by: { shares: desc }
+    order_by: { position: { shares: desc } }
     limit: $claimsLimit
     offset: $claimsOffset
     where: $claimsWhere
   ) {
-    triple {
-      id
+    id
+    position {
+      shares
+      # counter_shares -- this doesn't seem to exist anymore
     }
-    shares
-    counter_shares
   }
 }
 
@@ -45,15 +45,17 @@ fragment AccountPositionsAggregate on accounts {
       id
       shares
       vault {
-        id
+        term_id
         total_shares
         current_share_price
-        atom {
-          id
-          label
-        }
-        triple {
-          id
+        term {
+          atom {
+            term_id
+            label
+          }
+          triple {
+            term_id
+          }
         }
       }
     }
@@ -70,15 +72,17 @@ fragment AccountPositions on accounts {
     id
     shares
     vault {
-      id
+      term_id
       total_shares
       current_share_price
-      atom {
-        id
-        label
-      }
-      triple {
-        id
+      term {
+        atom {
+          term_id
+          label
+        }
+        triple {
+          term_id
+        }
       }
     }
   }
@@ -91,17 +95,19 @@ fragment AccountAtoms on accounts {
     limit: $atomsLimit
     offset: $atomsOffset
   ) {
-    id
+    term_id
     label
     data
-    vault {
-      total_shares
-      positions_aggregate(where: { account_id: { _eq: $address } }) {
-        nodes {
-          account {
-            id
+    term {
+      vaults(where: { curve_id: { _eq: "1" } }) {
+        total_shares
+        positions_aggregate(where: { account_id: { _eq: $address } }) {
+          nodes {
+            account {
+              id
+            }
+            shares
           }
-          shares
         }
       }
     }
@@ -118,21 +124,23 @@ fragment AccountAtomsAggregate on accounts {
     aggregate {
       count
       sum {
-        id
+        term_id
       }
     }
     nodes {
-      id
+      term_id
       label
       data
-      vault {
-        total_shares
-        positions_aggregate(where: { account_id: { _eq: $address } }) {
-          nodes {
-            account {
-              id
+      term {
+        vaults(where: { curve_id: { _eq: "1" } }) {
+          total_shares
+          positions_aggregate(where: { account_id: { _eq: $address } }) {
+            nodes {
+              account {
+                id
+              }
+              shares
             }
-            shares
           }
         }
       }
@@ -151,17 +159,17 @@ fragment AccountTriples on accounts {
       count
     }
     nodes {
-      id
+      term_id
       subject {
-        id
+        term_id
         label
       }
       predicate {
-        id
+        term_id
         label
       }
       object {
-        id
+        term_id
         label
       }
     }
@@ -179,17 +187,17 @@ fragment AccountTriplesAggregate on accounts {
       count
     }
     nodes {
-      id
+      term_id
       subject {
-        id
+        term_id
         label
       }
       predicate {
-        id
+        term_id
         label
       }
       object {
-        id
+        term_id
         label
       }
     }

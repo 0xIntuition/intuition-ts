@@ -7,22 +7,25 @@ query GetClaimsByAddress($address: String) {
       account {
         label
       }
-      triple {
-        subject {
-          label
+      position {
+        term {
+          triple {
+            subject {
+              label
+            }
+            predicate {
+              label
+            }
+            object {
+              label
+            }
+            term_id
+            counter_term_id
+          }
         }
-        predicate {
-          label
-        }
-        object {
-          label
-        }
+        shares
+        # counter_shares <-- no longer available, perhaps position is now unique per term id
       }
-      id
-      vault_id
-      counter_vault_id
-      shares
-      counter_shares
     }
   }
 }

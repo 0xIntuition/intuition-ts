@@ -11,7 +11,7 @@ query GetFollowingPositions(
       _and: [
         { subject_id: { _eq: $subjectId } }
         { predicate_id: { _eq: $predicateId } }
-        { vault: { positions: { account_id: { _eq: $address } } } }
+        { positions: { account_id: { _eq: $address } } }
       ]
     }
   ) {
@@ -26,11 +26,11 @@ query GetFollowingPositions(
       _and: [
         { subject_id: { _eq: $subjectId } }
         { predicate_id: { _eq: $predicateId } }
-        { vault: { positions: { account_id: { _eq: $address } } } }
+        { positions: { account_id: { _eq: $address } } }
       ]
     }
   ) {
-    id
+    term_id
     subject {
       ...AtomMetadata
     }
@@ -40,27 +40,29 @@ query GetFollowingPositions(
     object {
       ...AtomMetadata
     }
-    vault {
-      total_shares
-      current_share_price
-      positions_aggregate {
-        aggregate {
-          count
-          sum {
-            shares
+    term {
+      vaults(where: { curve_id: { _eq: "1" } }) {
+        total_shares
+        current_share_price
+        positions_aggregate {
+          aggregate {
+            count
+            sum {
+              shares
+            }
           }
         }
-      }
-      positions(
-        where: { account_id: { _eq: $address } }
-        order_by: $positionsOrderBy
-      ) {
-        account_id
-        account {
-          id
-          label
+        positions(
+          where: { account_id: { _eq: $address } }
+          order_by: $positionsOrderBy
+        ) {
+          account_id
+          account {
+            id
+            label
+          }
+          shares
         }
-        shares
       }
     }
   }
@@ -84,7 +86,7 @@ query GetFollowerPositions(
       ]
     }
   ) {
-    id
+    term_id
     subject {
       ...AtomMetadata
     }
@@ -94,29 +96,31 @@ query GetFollowerPositions(
     object {
       ...AtomMetadata
     }
-    vault {
-      total_shares
-      current_share_price
-      positions_aggregate {
-        aggregate {
-          count
-          sum {
-            shares
+    term {
+      vaults(where: { curve_id: { _eq: "1" } }) {
+        total_shares
+        current_share_price
+        positions_aggregate {
+          aggregate {
+            count
+            sum {
+              shares
+            }
           }
         }
-      }
-      positions(
-        limit: $positionsLimit
-        offset: $positionsOffset
-        order_by: $positionsOrderBy
-        where: $positionsWhere
-      ) {
-        account {
-          id
-          label
-          image
+        positions(
+          limit: $positionsLimit
+          offset: $positionsOffset
+          order_by: $positionsOrderBy
+          where: $positionsWhere
+        ) {
+          account {
+            id
+            label
+            image
+          }
+          shares
         }
-        shares
       }
     }
   }
@@ -165,7 +169,7 @@ query GetConnections(
       _and: [
         { subject_id: { _eq: $subjectId } }
         { predicate_id: { _eq: $predicateId } }
-        { vault: { positions: { account_id: { _in: $addresses } } } }
+        { positions: { account_id: { _in: $addresses } } }
       ]
     }
   ) {
@@ -178,7 +182,7 @@ query GetConnections(
       _and: [
         { subject_id: { _eq: $subjectId } }
         { predicate_id: { _eq: $predicateId } }
-        { vault: { positions: { account_id: { _in: $addresses } } } }
+        { positions: { account_id: { _in: $addresses } } }
       ]
     }
   ) {
@@ -198,7 +202,7 @@ query GetConnectionsCount(
       _and: [
         { subject_id: { _eq: $subjectId } }
         { predicate_id: { _eq: $predicateId } }
-        { vault: { positions: { account_id: { _eq: $address } } } }
+        { positions: { account_id: { _eq: $address } } }
       ]
     }
   ) {
@@ -217,12 +221,14 @@ query GetConnectionsCount(
       ]
     }
   ) {
-    vault {
-      positions_aggregate {
-        aggregate {
-          count
-          sum {
-            shares
+    term {
+      vaults(where: { curve_id: { _eq: "1" } }) {
+        positions_aggregate {
+          aggregate {
+            count
+            sum {
+              shares
+            }
           }
         }
       }

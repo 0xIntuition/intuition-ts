@@ -16,26 +16,28 @@ query GetAccounts(
     ...AccountClaims
     ...AccountPositions
     atom {
-      vault_id
+      term_id
       wallet_id
-      vault {
-        position_count
-        total_shares
-        positions_aggregate {
-          aggregate {
-            count
-            sum {
-              shares
+      term {
+        vaults(where: { curve_id: { _eq: "1" } }) {
+          position_count
+          total_shares
+          positions_aggregate {
+            aggregate {
+              count
+              sum {
+                shares
+              }
             }
           }
-        }
-        positions {
-          id
-          account {
-            label
+          positions {
             id
+            account {
+              label
+              id
+            }
+            shares
           }
-          shares
         }
       }
     }
@@ -176,14 +178,5 @@ query GetAccountWithAggregates(
     ...AccountPositionsAggregate
     ...AccountAtomsAggregate
     ...AccountTriplesAggregate
-  }
-}
-
-query GetAccountMetadata($address: String!) {
-  account(id: $address) {
-    ...AccountMetadata
-    atom {
-      ...AtomMetadata
-    }
   }
 }

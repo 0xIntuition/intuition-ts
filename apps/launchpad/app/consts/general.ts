@@ -5,8 +5,9 @@ export const CURRENT_ENV: ChainEnv =
   (import.meta.env.VITE_DEPLOY_ENV as ChainEnv) || 'development'
 
 export const API_URL_DEV =
-  'https://prod.base-sepolia.intuition-api.com/v1/graphql'
-export const API_URL_PROD = 'https://prod.base.intuition-api.com/v1/graphql'
+  'https://prod.base-sepolia-v-1-5.intuition.sh/v1/graphql'
+// export const API_URL_PROD = 'https://prod.base.intuition-api.com/v1/graphql'
+export const API_URL_PROD = API_URL_DEV
 
 export const DEFAULT_CHAIN_ID =
   CURRENT_ENV === 'development' ? baseSepolia.id : base.id
@@ -17,7 +18,7 @@ export const DEFAULT_VERIFIER = function (): void {
 
 export const MULTIVAULT_CONTRACT_ADDRESS =
   CURRENT_ENV === 'development'
-    ? '0x1A6950807E33d5bC9975067e6D6b5Ea4cD661665' // dev contract address
+    ? '0x63B90A9c109fF8f137916026876171ffeEdEe714' // dev contract address 1.5
     : '0x430BbF52503Bd4801E51182f4cB9f8F534225DE5' // prod contract address
 
 export const RELIC_CONTRACT_ADDRESS =
@@ -60,7 +61,7 @@ export const GET_MULTIVAULT_CONFIG_RESOURCE_ROUTE =
   '/resources/get-vault-config'
 
 // SPECIAL ATOMS
-
+// Best practice is to retrieve these on startup, as they can vary per environment
 export const TAG_PREDICATE_VAULT_ID_TESTNET = 3 // used in testnet tag claim as predicate
 export const I_PREDICATE_VAULT_ID_TESTNET = 13
 export const AM_FOLLOWING_VAULT_ID_TESTNET = 4
