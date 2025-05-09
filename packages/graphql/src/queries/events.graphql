@@ -23,28 +23,30 @@ query GetEvents(
     redemption_id
     atom {
       ...AtomMetadata
-      vault {
-        total_shares
-        position_count
-        positions(where: { account: { id: { _in: $addresses } } }) {
-          account_id
-          shares
-          account {
-            id
-            label
-            image
+      term {
+        vaults(where: { curve_id: { _eq: "1" } }) {
+          total_shares
+          position_count
+          positions(where: { account: { id: { _in: $addresses } } }) {
+            account_id
+            shares
+            account {
+              id
+              label
+              image
+            }
           }
         }
       }
     }
     triple {
-      id
+      term_id
       creator {
         ...AccountMetadata
       }
       subject {
         data
-        id
+        term_id
         image
         label
         emoji
@@ -56,7 +58,7 @@ query GetEvents(
       }
       predicate {
         data
-        id
+        term_id
         image
         label
         emoji
@@ -68,7 +70,7 @@ query GetEvents(
       }
       object {
         data
-        id
+        term_id
         image
         label
         emoji
@@ -78,29 +80,33 @@ query GetEvents(
           ...AccountMetadata
         }
       }
-      vault {
-        total_shares
-        position_count
-        positions(where: { account: { id: { _in: $addresses } } }) {
-          account_id
-          shares
-          account {
-            id
-            label
-            image
+      term {
+        vaults(where: { curve_id: { _eq: "1" } }) {
+          total_shares
+          position_count
+          positions(where: { account: { id: { _in: $addresses } } }) {
+            account_id
+            shares
+            account {
+              id
+              label
+              image
+            }
           }
         }
       }
-      counter_vault {
-        total_shares
-        position_count
-        positions(where: { account: { id: { _in: $addresses } } }) {
-          account_id
-          shares
-          account {
-            id
-            label
-            image
+      counter_term {
+        vaults(where: { curve_id: { _eq: "1" } }) {
+          total_shares
+          position_count
+          positions(where: { account: { id: { _in: $addresses } } }) {
+            account_id
+            shares
+            account {
+              id
+              label
+              image
+            }
           }
         }
       }
@@ -198,7 +204,7 @@ query GetDebugEvents($addresses: [String!]) {
   debug_events: events {
     id
     atom {
-      vault {
+      term {
         positions(where: { account_id: { _in: $addresses } }) {
           account_id
           shares
