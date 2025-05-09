@@ -221,7 +221,7 @@ export function EcosystemModal({
       verifiedPositionAddress: VERIFICATION_ADDRESS,
     },
     {
-      enabled: true,
+      enabled: isOpen,
       queryKey: [
         'AtomsWithTags',
         userWallet,
@@ -230,7 +230,6 @@ export function EcosystemModal({
         searchTerm,
         tagObjectId,
       ],
-      refetchInterval: 1000, // Poll every second
     },
   )
 
