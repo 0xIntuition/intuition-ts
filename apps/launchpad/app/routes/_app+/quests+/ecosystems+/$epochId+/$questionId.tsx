@@ -447,7 +447,7 @@ export default function MiniGameOne() {
         objectId,
         questionId,
       ],
-      refetchInterval: 3000,
+      refetchOnWindowFocus: true,
     },
   )
 
