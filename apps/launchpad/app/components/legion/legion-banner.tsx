@@ -1,3 +1,4 @@
+import { LEGION_LINK } from '@lib/utils/constants'
 import { Link } from '@remix-run/react'
 
 interface LegionBannerProps {
@@ -11,7 +12,7 @@ export function LegionBanner({
   title = 'Intuition is coming to Legion',
   description = 'Join the community now & get your application submitted before May 22nd!',
   ctaText = 'Apply Now',
-  ctaHref = '#',
+  ctaHref = LEGION_LINK,
 }: LegionBannerProps) {
   return (
     <div
@@ -55,6 +56,7 @@ export function LegionBanner({
         <div className="flex items-center w-full sm:w-auto flex-shrink-0">
           <Link
             to={ctaHref}
+            target="_blank"
             className="w-full sm:w-auto inline-block px-4 sm:px-5 py-2 bg-[#F03C24] text-white text-sm sm:text-base font-medium rounded-lg hover:bg-[#d33520] transition-colors whitespace-nowrap"
             aria-label="Apply for Legion token sale"
           >

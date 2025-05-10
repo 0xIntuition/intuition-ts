@@ -9,7 +9,6 @@ import {
 import { AggregateIQ } from '@components/aggregate-iq'
 import { AuthCover } from '@components/auth-cover'
 import ChapterProgress from '@components/chapter-progress'
-import { DashboardBanner } from '@components/dashboard-banner'
 import { EarnSection } from '@components/earn-section'
 import { ErrorPage } from '@components/error-page'
 import { LegionBanner } from '@components/legion/legion-banner'
@@ -20,6 +19,7 @@ import { usePoints } from '@lib/hooks/usePoints'
 import { useTotalCompletedQuestions } from '@lib/hooks/useTotalCompletedQuestions'
 import { useUserRank } from '@lib/hooks/useUserRank'
 import { useFeatureFlags } from '@lib/providers/feature-flags-provider'
+import { LEGION_LINK } from '@lib/utils/constants'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 import { getUser } from '@server/auth'
@@ -134,7 +134,7 @@ export default function Dashboard() {
   return (
     <div className="flex flex-col gap-4">
       <div className="pb-5">
-        <LegionBanner ctaHref="#" />
+        <LegionBanner ctaHref={LEGION_LINK} />
       </div>
       <motion.div
         initial={{ opacity: 0, y: -20 }}

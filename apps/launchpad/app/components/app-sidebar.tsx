@@ -25,6 +25,7 @@ import { AccountButton } from '@components/account-button'
 import LoadingButton from '@components/loading-button'
 import LoadingLogo from '@components/loading-logo'
 import { ShimmerButton } from '@components/ui/shimmer-button'
+import { LEGION_LINK } from '@lib/utils/constants'
 import { usePrivy } from '@privy-io/react-auth'
 import { Link, useLocation } from '@remix-run/react'
 import { BookOpenText, BrainCircuit } from 'lucide-react'
@@ -369,7 +370,7 @@ export function AppSidebar({
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem key={'legion'} className="mt-5">
-                <a href="#" target="_blank" rel="noopener noreferrer">
+                <a href={LEGION_LINK} target="_blank" rel="noopener noreferrer">
                   <ShimmerButton
                     variant="legion"
                     className="w-full flex items-center justify-center py-3"
