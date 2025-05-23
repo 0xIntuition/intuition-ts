@@ -1,7 +1,7 @@
 import { CodegenConfig } from '@graphql-codegen/cli'
 import type { Types } from '@graphql-codegen/plugin-helpers'
 
-import { API_URL_DEV } from './src/constants'
+import { API_URL_PROD } from './src/constants'
 
 const commonGenerateOptions: Types.ConfiguredOutput = {
   config: {
@@ -37,7 +37,7 @@ const config: CodegenConfig = {
   overwrite: true,
   hooks: { afterAllFileWrite: ['prettier --write'] },
   schema: {
-    [API_URL_DEV]: {
+    [API_URL_PROD]: {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
