@@ -36,8 +36,6 @@ import {
   Topic,
 } from './types'
 
-const STORAGE_KEY = 'onboarding-progress'
-
 const STEPS_CONFIG: Step[] = [
   { id: STEPS.TOPICS, label: 'Select', status: 'current' },
   { id: STEPS.CREATE, label: 'Create', status: 'upcoming' },
@@ -263,10 +261,6 @@ export function OnboardingModal({
       setTopics([])
     }
   }, [listData?.globalTriples])
-
-  useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ state, topics }))
-  }, [state, topics])
 
   const handleTopicSelect = (id: string) => {
     // First check if this atom exists in topics list

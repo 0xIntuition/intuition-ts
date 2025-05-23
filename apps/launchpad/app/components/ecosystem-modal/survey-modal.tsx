@@ -36,7 +36,6 @@ import {
   Topic,
 } from './types'
 
-const STORAGE_KEY = 'onboarding-progress'
 const VERIFICATION_ADDRESS = '0x6877daca5e6934982a5c511d85bf12a71a25ac1d'
 
 const STEPS_CONFIG: Step[] = [
@@ -285,10 +284,6 @@ export function EcosystemModal({
       setTopics([])
     }
   }, [searchData?.atoms])
-
-  useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ state, topics }))
-  }, [state, topics])
 
   const handleTopicSelect = (id: string) => {
     // First check if this atom exists in topics list
