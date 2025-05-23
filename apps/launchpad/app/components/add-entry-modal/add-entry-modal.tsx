@@ -253,10 +253,6 @@ export function AddEntryModal({
     }
   }, [listData?.globalTriples])
 
-  useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ state, topics }))
-  }, [state, topics])
-
   const handleTopicSelect = (id: string) => {
     // First check if this atom exists in topics list
     const existingTopic = topics.find((t) => t.id === id)
