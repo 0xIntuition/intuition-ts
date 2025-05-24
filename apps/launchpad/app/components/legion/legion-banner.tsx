@@ -9,8 +9,8 @@ interface LegionBannerProps {
 }
 
 export function LegionBanner({
-  title = 'Intuition is coming to Legion',
-  description = 'Join the community now & get your application submitted before May 22nd!',
+  title = "Intuition's token sale ($TRUST) is live on Legion.",
+  description = 'Submit your application today to join the community!',
   ctaText = 'Apply Now',
   ctaHref = LEGION_LINK,
 }: LegionBannerProps) {
