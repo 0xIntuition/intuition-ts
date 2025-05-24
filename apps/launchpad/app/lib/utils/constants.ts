@@ -33,4 +33,4 @@ export const WHITELISTED_ADDRESSES = [
   // '0x81766f4ead4d3b35d1a46fbfaaf0c557ff1a860b', // Fvngabill
 ]
 
-export const LEGION_LINK = 'http://legion.cc/access?ref=intuition'
+export const LEGION_LINK = 'https://legion.cc/intuition'
