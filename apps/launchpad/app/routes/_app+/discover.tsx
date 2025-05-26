@@ -1,5 +1,6 @@
 import { Text, TextVariant, TextWeight } from '@0xintuition/1ui'
 
+import DiscoverPortalBanner from '@components/discover-portal-banner'
 import { DiscoverSection, Product } from '@components/discover-section'
 import { PageHeader } from '@components/page-header'
 import { SocialLink, SocialLinks } from '@components/social-links'
@@ -83,7 +84,7 @@ export default function Discover() {
   const products: Product[] = [
     {
       id: '0',
-      title: 'Ecosystems',
+      title: 'Ecosystem Maps',
       description: 'Decentralized map of blockchain ecosystems',
       buttonText: 'Explore',
       onAction: () =>
@@ -237,6 +238,8 @@ export default function Discover() {
         title="Discover"
         subtitle="Our ecosystem is working together to build a more intuitive Web3 experience"
       />
+
+      <DiscoverPortalBanner />
 
       <div className="space-y-12">
         <DiscoverSection products={products} />
