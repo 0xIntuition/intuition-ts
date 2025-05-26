@@ -205,7 +205,7 @@ export default function Dashboard() {
         <div className="absolute inset-0 shadow-inner-pop" />
         <div className="relative flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-4">
-            <div className="p-2 sm:p-3 rounded-xl bg-social/80 shadow-pop-lg">
+            <div className="hidden sm:block p-2 sm:p-3 rounded-xl bg-social/80 shadow-pop-lg">
               <Sparkles className="w-6 h-6 sm:w-8 sm:h-8 text-primary" />
             </div>
             <div className="text-center sm:text-left">
@@ -217,8 +217,8 @@ export default function Dashboard() {
                 View My Intuition on Portal
               </Text>
               <Text variant={TextVariant.body} className="text-primary/50">
-                Explore data and experience personalized AI, informed by your
-                intuition
+                Explore the graph, curate your Intuition, and experience
+                personalized AI.
               </Text>
             </div>
           </div>
