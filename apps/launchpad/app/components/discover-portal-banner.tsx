@@ -70,8 +70,8 @@ export default function DiscoverPortalBanner() {
 
         {/* Main headline */}
         <h1 className="text-3xl font-semibold text-center mb-8 max-w-4xl leading-tight">
-          Explore the data. Experience personalized AI. <br />
-          Powered by your Intuition.
+          Explore the graph, curate your Intuition, and <br /> experience
+          personalized AI.
         </h1>
 
         {/* CTA Button */}
