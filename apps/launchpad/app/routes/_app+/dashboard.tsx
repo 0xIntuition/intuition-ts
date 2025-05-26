@@ -1,4 +1,11 @@
-import { Avatar, Text, TextVariant, TextWeight } from '@0xintuition/1ui'
+import {
+  Avatar,
+  Icon,
+  IconName,
+  Text,
+  TextVariant,
+  TextWeight,
+} from '@0xintuition/1ui'
 import {
   fetcher,
   GetAccountMetadataDocument,
@@ -14,7 +21,7 @@ import { ErrorPage } from '@components/error-page'
 import { LegionBanner } from '@components/legion/legion-banner'
 import { LoadingState } from '@components/loading-state'
 import { CHAPTERS } from '@consts/chapters'
-import { ZERO_ADDRESS } from '@consts/general'
+import { PORTAL_URL, ZERO_ADDRESS } from '@consts/general'
 import { usePoints } from '@lib/hooks/usePoints'
 import { useTotalCompletedQuestions } from '@lib/hooks/useTotalCompletedQuestions'
 import { useUserRank } from '@lib/hooks/useUserRank'
@@ -25,36 +32,8 @@ import { useLoaderData } from '@remix-run/react'
 import { getUser } from '@server/auth'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
 import { motion } from 'framer-motion'
-import { Code, Compass, Scroll } from 'lucide-react'
+import { BrainCircuit, Code, Compass, Scroll, Sparkles } from 'lucide-react'
 import { formatUnits } from 'viem'
-
-const earnCards = [
-  {
-    id: '1',
-    earnIQ: 100000,
-    title: 'Earn IQ with Quests',
-    icon: <Scroll className="w-4 h-4" />,
-    description: 'Complete quests to obtain IQ reward points',
-    buttonText: 'View Quests',
-    link: '/quests',
-  },
-  {
-    id: '2',
-    title: 'Earn IQ in the Ecosystem',
-    icon: <Compass className="w-4 h-4" />,
-    description: 'Explore and use apps from our product hub',
-    buttonText: 'Explore',
-    link: '/discover',
-  },
-  {
-    id: '3',
-    title: 'Start Building on Intuition',
-    icon: <Code className="w-4 h-4" />,
-    description: 'Build your own apps and tools on Intuition',
-    buttonText: 'Start Building',
-    link: 'https://tech.docs.intuition.systems/',
-  },
-]
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const queryClient = new QueryClient()
@@ -131,16 +110,45 @@ export default function Dashboard() {
 
   const stages = CHAPTERS.CHAPTERS
 
+  const earnCards = [
+    {
+      id: '1',
+      earnIQ: 100000,
+      title: 'Earn IQ with Quests',
+      icon: <Scroll className="w-4 h-4" />,
+      description: 'Complete quests to obtain IQ reward points',
+      buttonText: 'View Quests',
+      link: '/quests',
+    },
+    {
+      id: '2',
+      title: 'Earn IQ in the Ecosystem',
+      icon: <Compass className="w-4 h-4" />,
+      description: 'Explore and use apps from our product hub',
+      buttonText: 'Explore',
+      link: '/discover',
+    },
+    {
+      id: '3',
+      title: 'Start Building on Intuition',
+      icon: <Code className="w-4 h-4" />,
+      description: 'Build your own apps and tools on Intuition',
+      buttonText: 'Start Building',
+      link: 'https://tech.docs.intuition.systems/',
+    },
+  ]
+
   return (
     <div className="flex flex-col gap-4">
       <div className="pb-5">
         <LegionBanner ctaHref={LEGION_LINK} />
       </div>
+
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="flex flex-col sm:flex-row items-center sm:items-start gap-4 border-none rounded-lg px-4 sm:px-6 pb-4 sm:pb-6 text-palette-neutral-900 shadow-pop-lg text-center sm:text-left"
+        className="flex flex-col sm:flex-row items-center sm:items-start gap-4 border-none rounded-lg px-4 sm:px-5 pb-4 sm:pb-6 text-palette-neutral-900 shadow-pop-lg text-center sm:text-left"
       >
         <motion.div
           initial={{ scale: 0 }}
@@ -185,6 +193,47 @@ export default function Dashboard() {
           </motion.div>
         </div>
       </motion.div>
+
+      {/* My Intuition Portal CTA */}
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.6 }}
+        whileHover={{ y: -5 }}
+        className="relative overflow-hidden rounded-lg bg-white/5 backdrop-blur-md backdrop-saturate-150 p-4 sm:p-6 border border-border/10"
+      >
+        <div className="absolute inset-0 shadow-inner-pop" />
+        <div className="relative flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <div className="p-2 sm:p-3 rounded-xl bg-social/80 shadow-pop-lg">
+              <Sparkles className="w-6 h-6 sm:w-8 sm:h-8 text-primary" />
+            </div>
+            <div className="text-center sm:text-left">
+              <Text
+                variant={TextVariant.headline}
+                weight={TextWeight.semibold}
+                className="mb-1"
+              >
+                View My Intuition on Portal
+              </Text>
+              <Text variant={TextVariant.body} className="text-primary/50">
+                Explore data and experience personalized AI, informed by your
+                intuition
+              </Text>
+            </div>
+          </div>
+          <a
+            href={`${PORTAL_URL}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 text-base font-medium text-primary-foreground transition-colors hover:bg-primary/90 shadow-pop-lg"
+          >
+            Launch Portal
+            <Icon name={IconName.squareArrowTopRight} className="w-4 h-4" />
+          </a>
+        </div>
+      </motion.div>
+
       <AuthCover
         buttonContainerClassName="h-full flex items-center justify-center"
         blurAmount="blur-none"
