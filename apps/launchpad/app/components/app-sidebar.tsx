@@ -3,6 +3,7 @@ import * as React from 'react'
 import {
   cn,
   Icon,
+  IconName,
   IconNameType,
   Sheet,
   SheetContent,
@@ -25,6 +26,7 @@ import { AccountButton } from '@components/account-button'
 import LoadingButton from '@components/loading-button'
 import LoadingLogo from '@components/loading-logo'
 import { ShimmerButton } from '@components/ui/shimmer-button'
+import { PORTAL_URL } from '@consts/general'
 import { LEGION_LINK } from '@lib/utils/constants'
 import { usePrivy } from '@privy-io/react-auth'
 import { Link, useLocation } from '@remix-run/react'
@@ -105,7 +107,7 @@ export function AppSidebar({
     },
     {
       iconName: 'rocket',
-      label: 'Discover',
+      label: 'Ecosystem',
       href: '/discover',
       isAccent: location.pathname === '/discover',
     },
@@ -369,11 +371,13 @@ export function AppSidebar({
                   {renderNavLink(IQBlitzNavItem)}
                 </SidebarMenuButton>
               </SidebarMenuItem>
+
               <SidebarMenuItem key={'legion'} className="mt-5">
                 <a href={LEGION_LINK} target="_blank" rel="noopener noreferrer">
                   <ShimmerButton
                     variant="legion"
                     className="w-full flex items-center justify-center py-3"
+                    borderRadius="8px"
                   >
                     <svg
                       width="82.5"
@@ -388,6 +392,20 @@ export function AppSidebar({
                       />
                     </svg>
                   </ShimmerButton>
+                </a>
+              </SidebarMenuItem>
+              <SidebarMenuItem key={'portal'} className="mt-5">
+                <a
+                  href={PORTAL_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className=" transition-all duration-100  rounded-md w-full flex items-center justify-center py-1 border-border/30 text-lg background-background border border-border/30 hover:bg-background/50 hover:border-border/50"
+                >
+                  Launch Portal
+                  <Icon
+                    name={IconName.squareArrowTopRight}
+                    className="w-5 h-5 ml-2"
+                  />
                 </a>
               </SidebarMenuItem>
             </SidebarMenu>
