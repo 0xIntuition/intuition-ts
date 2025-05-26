@@ -83,7 +83,7 @@ export default function Discover() {
   const products: Product[] = [
     {
       id: '0',
-      title: 'Ecosystems',
+      title: 'Ecosystem Maps',
       description: 'Decentralized map of blockchain ecosystems',
       buttonText: 'Explore',
       onAction: () =>
