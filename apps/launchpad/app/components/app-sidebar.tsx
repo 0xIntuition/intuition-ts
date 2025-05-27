@@ -357,20 +357,6 @@ export function AppSidebar({
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
-              <SidebarMenuItem key={IQBlitzNavItem.label}>
-                <SidebarMenuButton
-                  asChild
-                  isActive={activeItem === IQBlitzNavItem.label}
-                  className={cn(
-                    'w-full gap-2 py-5',
-                    IQBlitzNavItem.isAccent
-                      ? 'text-primary bg-primary/10 border border-primary/10'
-                      : undefined,
-                  )}
-                >
-                  {renderNavLink(IQBlitzNavItem)}
-                </SidebarMenuButton>
-              </SidebarMenuItem>
 
               <SidebarMenuItem key={'legion'} className="mt-5">
                 <a href={LEGION_LINK} target="_blank" rel="noopener noreferrer">
