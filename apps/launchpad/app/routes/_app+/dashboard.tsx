@@ -18,21 +18,20 @@ import { AuthCover } from '@components/auth-cover'
 import ChapterProgress from '@components/chapter-progress'
 import { EarnSection } from '@components/earn-section'
 import { ErrorPage } from '@components/error-page'
-import { LegionBanner } from '@components/legion/legion-banner'
+// import { LegionBanner } from '@components/legion/legion-banner'
 import { LoadingState } from '@components/loading-state'
 import { CHAPTERS } from '@consts/chapters'
 import { PORTAL_URL, ZERO_ADDRESS } from '@consts/general'
 import { usePoints } from '@lib/hooks/usePoints'
 import { useTotalCompletedQuestions } from '@lib/hooks/useTotalCompletedQuestions'
 import { useUserRank } from '@lib/hooks/useUserRank'
-import { useFeatureFlags } from '@lib/providers/feature-flags-provider'
-import { LEGION_LINK } from '@lib/utils/constants'
+// import { LEGION_LINK } from '@lib/utils/constants'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 import { getUser } from '@server/auth'
 import { dehydrate, QueryClient } from '@tanstack/react-query'
 import { motion } from 'framer-motion'
-import { BrainCircuit, Code, Compass, Scroll, Sparkles } from 'lucide-react'
+import { Code, Compass, Scroll, Sparkles } from 'lucide-react'
 import { formatUnits } from 'viem'
 
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -68,7 +67,6 @@ export function ErrorBoundary() {
 export default function Dashboard() {
   const { initialParams } = useLoaderData<typeof loader>()
   const address = initialParams?.address?.toLowerCase()
-  const { featureFlags } = useFeatureFlags()
 
   const { data: user } = useGetAccountMetadataQuery({
     address: address ?? ZERO_ADDRESS,
@@ -140,9 +138,9 @@ export default function Dashboard() {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="pb-5">
+      {/* <div className="pb-5">
         <LegionBanner ctaHref={LEGION_LINK} />
-      </div>
+      </div> */}
 
       <motion.div
         initial={{ opacity: 0, y: -20 }}

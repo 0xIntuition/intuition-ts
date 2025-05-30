@@ -25,9 +25,9 @@ import {
 import { AccountButton } from '@components/account-button'
 import LoadingButton from '@components/loading-button'
 import LoadingLogo from '@components/loading-logo'
-import { ShimmerButton } from '@components/ui/shimmer-button'
+// import { ShimmerButton } from '@components/ui/shimmer-button'
 import { PORTAL_URL } from '@consts/general'
-import { LEGION_LINK } from '@lib/utils/constants'
+// import { LEGION_LINK } from '@lib/utils/constants'
 import { usePrivy } from '@privy-io/react-auth'
 import { Link, useLocation } from '@remix-run/react'
 import { BookOpenText, BrainCircuit } from 'lucide-react'
@@ -358,7 +358,7 @@ export function AppSidebar({
                 </SidebarMenuItem>
               ))}
 
-              <SidebarMenuItem key={'legion'} className="mt-5">
+              {/* <SidebarMenuItem key={'legion'} className="mt-5">
                 <a href={LEGION_LINK} target="_blank" rel="noopener noreferrer">
                   <ShimmerButton
                     variant="legion"
@@ -379,7 +379,7 @@ export function AppSidebar({
                     </svg>
                   </ShimmerButton>
                 </a>
-              </SidebarMenuItem>
+              </SidebarMenuItem> */}
               <SidebarMenuItem key={'portal'} className="mt-5">
                 <a
                   href={PORTAL_URL}
