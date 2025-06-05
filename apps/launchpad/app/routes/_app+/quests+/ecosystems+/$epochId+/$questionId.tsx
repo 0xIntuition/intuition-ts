@@ -434,6 +434,8 @@ export default function MiniGameOne() {
     questionId,
   ])
 
+  console.log('queryVariables', queryVariables)
+
   const { data: atomsData, isLoading: isLoadingAtoms } = useAtomsWithTagsQuery(
     {
       ...queryVariables,
@@ -453,6 +455,8 @@ export default function MiniGameOne() {
 
   // Get total count from the query response
   const totalCount = atomsData?.total?.aggregate?.count ?? 0
+
+  console.log('atomsData', atomsData)
 
   type TableRowData = {
     id: string
