@@ -49,7 +49,9 @@ export function useEcosystemQuestionData({ questionId }: UseQuestionDataProps) {
         throw error
       }
     },
-    enabled: !!currentEpoch,
+    enabled: !!currentEpoch && !!questionId,
+    staleTime: 0,
+    gcTime: 0,
   })
 
   const { data: completionData, isLoading: isLoadingCompletion } = useQuery({
@@ -72,6 +74,16 @@ export function useEcosystemQuestionData({ questionId }: UseQuestionDataProps) {
   const predicateId = questionData?.predicate_id
   const objectId = questionData?.object_id
   const tagObjectId = questionData?.tag_object_id
+
+  // Only enable atoms query when we have the current question's data AND it matches our questionId
+  const atomsQueryEnabled = !!(
+    questionData &&
+    predicateId &&
+    objectId &&
+    questionId &&
+    questionData.id === questionId
+  )
+
   const { data: atomsData, isLoading: isLoadingAtoms } = useAtomsWithTagsQuery(
     {
       limit: 1000,
@@ -104,12 +116,12 @@ export function useEcosystemQuestionData({ questionId }: UseQuestionDataProps) {
           },
           tagObjectId
             ? {
-                as_subject_triples: {
-                  object: {
-                    vault_id: { _in: [tagObjectId] },
-                  },
+              as_subject_triples: {
+                object: {
+                  vault_id: { _in: [tagObjectId] },
                 },
-              }
+              },
+            }
             : {},
         ],
       },
@@ -119,15 +131,18 @@ export function useEcosystemQuestionData({ questionId }: UseQuestionDataProps) {
       verifiedPositionAddress: VERIFICATION_ADDRESS,
     },
     {
-      enabled: !!questionData && !!predicateId && !!objectId,
+      enabled: atomsQueryEnabled,
       queryKey: [
-        'AtomsWithTags',
-        // userWallet,
-        VERIFICATION_ADDRESS,
+        'AtomsWithTags-ecosystem',
+        questionId,
         predicateId,
         objectId,
         tagObjectId,
+        userWallet,
+        VERIFICATION_ADDRESS,
       ],
+      staleTime: 0,
+      gcTime: 0,
     },
   )
 
