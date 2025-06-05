@@ -15,6 +15,7 @@ import { EpochStatus } from '@components/epoch-status'
 import LoadingLogo from '@components/loading-logo'
 import { useGetCurrentEpoch } from '@lib/hooks/useGetCurrentEpoch'
 import type { Question } from '@lib/services/questions'
+import { Epoch } from '@lib/types'
 import { Link } from '@remix-run/react'
 import { MessageCircleQuestion } from 'lucide-react'
 
@@ -24,20 +25,7 @@ import { QuestionCardWrapper } from './question-card-wrapper'
 import { QuestionRowWrapper } from './question-row-wrapper'
 
 interface EpochAccordionProps {
-  epochs: Array<{
-    id: number
-    name: string
-    questions: Question[]
-    total_points: number
-    start_date: string
-    end_date: string
-    is_active: boolean
-    type?: string
-    progress?: {
-      completed_count: number
-      total_points: number
-    }
-  }>
+  epochs: Epoch[]
   onStartQuestion: (
     question: Question,
     predicateId: number,
@@ -196,6 +184,7 @@ export function EpochAccordion({
                     ) : (
                       <QuestionRowWrapper
                         question={question}
+                        epoch={epoch}
                         onStart={() =>
                           onStartQuestion(
                             question,

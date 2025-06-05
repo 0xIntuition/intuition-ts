@@ -5,6 +5,7 @@ import { Question } from '@lib/graphql/types'
 import { useQuestionCompletion } from '@lib/hooks/useQuestionCompletion'
 import { useQuestionData } from '@lib/hooks/useQuestionData'
 import { atomDetailsModalAtom } from '@lib/state/store'
+import { Epoch } from '@lib/types'
 import { usePrivy } from '@privy-io/react-auth'
 import { useAtom } from 'jotai'
 
@@ -15,6 +16,7 @@ interface QuestionRowProps {
   onStart: () => void
   className?: string
   question: Question
+  epoch?: Epoch
 }
 
 function LoadingRow() {
@@ -28,7 +30,11 @@ function LoadingRow() {
   )
 }
 
-export function QuestionRowWrapper({ onStart, question }: QuestionRowProps) {
+export function QuestionRowWrapper({
+  onStart,
+  question,
+  epoch,
+}: QuestionRowProps) {
   const { ready, user } = usePrivy()
   const [, setAtomDetailsModal] = useAtom(atomDetailsModalAtom)
   const { isLoading: isQuestionDataLoading, ...questionData } = useQuestionData(
@@ -81,7 +87,10 @@ export function QuestionRowWrapper({ onStart, question }: QuestionRowProps) {
     return <LoadingRow />
   }
 
-  const resultsLink = `/quests/questions/${question.epoch_id}/${question.id}`
+  const resultsLink =
+    epoch?.type === 'preferences'
+      ? `/quests/preferences/${question.epoch_id}/${question.id}`
+      : `/quests/questions/${question.epoch_id}/${question.id}`
 
   return (
     <QuestionRow

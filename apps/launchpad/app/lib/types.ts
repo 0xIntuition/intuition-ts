@@ -1,11 +1,16 @@
+import { Question } from '@lib/services/questions'
+
 export interface Epoch {
   id: number
   name: string
-  description: string
+  questions: Question[]
+  total_points: number
   start_date: string
   end_date: string
   is_active: boolean
-  created_at: string
-  updated_at: string
-  total_points_available: number
+  type?: string
+  progress?: {
+    completed_count: number
+    total_points: number
+  }
 }
