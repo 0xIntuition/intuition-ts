@@ -33,6 +33,7 @@ export interface EpochQuestion {
   object_id: number
   created_at: string
   tag_object_id?: number | null
+  preferences_predicate_id?: number | null
 }
 
 export interface GetEpochQuestionsResponse {
@@ -88,6 +89,7 @@ const GetEpochQuestionsQuery = gql`
       order
       link
       predicate_id
+      preferences_predicate_id
     }
   }
 `
@@ -106,6 +108,7 @@ const GetEpochQuestionQuery = gql`
       predicate_id
       object_id
       tag_object_id
+      preferences_predicate_id
     }
   }
 `

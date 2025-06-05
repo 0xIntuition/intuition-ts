@@ -29,6 +29,7 @@ import { OnboardingModal } from '@components/survey-modal/survey-modal'
 import { tripleColumns } from '@components/ui/table/columns'
 import { DataTable } from '@components/ui/table/data-table'
 import {
+  CURRENT_ENV,
   MIN_DEPOSIT,
   MULTIVAULT_CONTRACT_ADDRESS,
   ZERO_ADDRESS,
@@ -48,6 +49,7 @@ import {
   onboardingModalAtom,
   shareModalAtom,
 } from '@lib/state/store'
+import { getSpecialPredicate } from '@lib/utils/app'
 import { usePrivy } from '@privy-io/react-auth'
 import type { LoaderFunctionArgs, MetaFunction } from '@remix-run/node'
 import { json } from '@remix-run/node'
@@ -297,6 +299,7 @@ export default function MiniGameOne() {
     epoch_id: currentEpoch,
     predicate_id: predicateId,
     object_id: objectId,
+    preferences_predicate_id: preferencesPredicateId,
   } = questionData
 
   // Fetch completion data using resource route
@@ -461,7 +464,7 @@ export default function MiniGameOne() {
     setSearchTerm(searchParam || '')
   }, [searchParams])
 
-  const queryVariables = React.useMemo(() => {
+  const listQueryVariables = React.useMemo(() => {
     // Convert table sorting to GraphQL ordering
     const sortField = sorting[0]?.id
     const sortDirection = sorting[0]?.desc ? 'desc' : 'asc'
@@ -550,13 +553,146 @@ export default function MiniGameOne() {
   const { data: listData, isLoading: isLoadingListData } =
     useGetListDetailsSimplifiedQuery(
       {
-        ...queryVariables,
+        ...listQueryVariables,
       },
       {
-        queryKey: ['get-list-details', predicateId, objectId, queryVariables],
+        queryKey: [
+          'get-list-details',
+          predicateId,
+          objectId,
+          listQueryVariables,
+        ],
       },
     )
-  const totalCount = listData?.globalTriplesAggregate?.aggregate?.count ?? 0
+  const listTotalCount = listData?.globalTriplesAggregate?.aggregate?.count ?? 0
+
+  // Extract subject IDs from listData to use as object IDs in preferences query
+  const subjectIds = React.useMemo(() => {
+    if (!listData?.globalTriples) {
+      return []
+    }
+    return listData.globalTriples.map((triple) => triple.subject.id)
+  }, [listData])
+
+  console.log('preferencesPredicateId', preferencesPredicateId)
+  console.log('subjectIds', subjectIds)
+
+  const preferencesQueryVariables = React.useMemo(() => {
+    // Don't create query variables if we don't have subject IDs yet
+    if (subjectIds.length === 0) {
+      return null
+    }
+
+    // Convert table sorting to GraphQL ordering
+    const sortField = sorting[0]?.id
+    const sortDirection = sorting[0]?.desc ? 'desc' : 'asc'
+
+    let orderBy: Triples_Order_By = {
+      vault: {
+        total_shares: 'desc',
+      },
+    }
+
+    // Map sorting fields to their corresponding GraphQL paths
+    switch (sortField) {
+      case 'upvotes':
+        orderBy = {
+          vault: {
+            total_shares: sortDirection,
+          },
+        }
+        break
+      case 'downvotes':
+        orderBy = {
+          counter_vault: {
+            total_shares: sortDirection,
+          },
+        }
+        break
+      case 'name':
+        orderBy = {
+          subject: {
+            label: sortDirection,
+          },
+        }
+        break
+      case 'users':
+        orderBy = {
+          vault: {
+            position_count: sortDirection,
+          },
+        }
+        break
+      case 'tvl':
+        orderBy = {
+          vault: {
+            total_shares: sortDirection,
+          },
+        }
+        break
+    }
+
+    const variables = {
+      globalWhere: {
+        predicate_id: {
+          _eq: preferencesPredicateId,
+        },
+        object_id: {
+          _in: subjectIds,
+        },
+        subject_id: {
+          _eq: getSpecialPredicate(CURRENT_ENV).iPredicate.vaultId.toString(),
+        },
+        // Add search filter for subject label if search term exists
+        ...(searchTerm
+          ? {
+              subject: {
+                label: {
+                  _ilike: `%${searchTerm}%`,
+                },
+              },
+            }
+          : {}),
+      },
+      address: userWallet ?? ZERO_ADDRESS,
+      limit: pageSize,
+      offset: pageIndex * pageSize,
+      orderBy,
+    } as const
+
+    return variables
+  }, [
+    preferencesPredicateId,
+    subjectIds,
+    userWallet,
+    pageSize,
+    pageIndex,
+    sorting,
+    searchTerm,
+  ])
+
+  console.log('preferencesQueryVariables', preferencesQueryVariables)
+
+  const { data: preferencesData } = useGetListDetailsSimplifiedQuery(
+    preferencesQueryVariables || {
+      globalWhere: { predicate_id: { _eq: 0 } },
+      address: ZERO_ADDRESS,
+      limit: 0,
+      offset: 0,
+      orderBy: { vault: { total_shares: 'desc' } },
+    },
+    {
+      queryKey: [
+        'get-preferences',
+        preferencesPredicateId,
+        subjectIds,
+        preferencesQueryVariables,
+      ],
+      enabled: !!preferencesQueryVariables && subjectIds.length > 0,
+    },
+  )
+
+  console.log('preferencesData', preferencesData)
 
   // Track initial loading state and store background image
   React.useEffect(() => {
@@ -597,12 +733,12 @@ export default function MiniGameOne() {
 
   const tableData = React.useMemo(() => {
     const data =
-      (listData?.globalTriples?.map((triple: Triple) => ({
+      (preferencesData?.globalTriples?.map((triple: Triple) => ({
         id: String(triple.vault_id),
         triple: triple as TripleType,
-        image: triple.subject.image || '',
-        name: triple.subject.label || 'Untitled Entry',
-        list: triple.object.label || 'Untitled List',
+        image: triple.object.image || '',
+        name: triple.object.label || 'Untitled Entry',
+        list: triple.predicate.label || 'Untitled List',
         vaultId: triple.vault_id,
         counterVaultId: triple.counter_vault_id,
         users: Number(triple.vault?.positions_aggregate?.aggregate?.count ?? 0),
@@ -738,7 +874,7 @@ export default function MiniGameOne() {
         updatePaginationParams(newState.pageIndex, newState.pageSize)
       }
     },
-    pageCount: Math.ceil(totalCount / pageSize),
+    pageCount: Math.ceil(listTotalCount / pageSize),
     manualPagination: true,
     manualSorting: true,
     getCoreRowModel: getCoreRowModel(),
@@ -987,14 +1123,14 @@ export default function MiniGameOne() {
               </div>
             )}
           </div>
-          <Button
+          {/* <Button
             variant="secondary"
             size="lg"
             onClick={handleStartOnboarding}
             aria-label="Add new entry"
           >
             Add new entry
-          </Button>
+          </Button> */}
         </div>
       </div>
       <div className="mt-6 !mb-24">

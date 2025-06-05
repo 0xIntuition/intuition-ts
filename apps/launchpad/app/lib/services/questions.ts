@@ -9,6 +9,7 @@ export interface Question {
   predicate_id: number
   object_id: number
   tag_object_id: number
+  preferences_predicate_id: number
 }
 
 export interface GetQuestionsResponse {

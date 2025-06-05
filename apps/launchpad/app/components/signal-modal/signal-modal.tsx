@@ -104,6 +104,15 @@ export function SignalModal({
   const userWallet = privyUser?.wallet?.address
   const walletBalance = useGetWalletBalance(userWallet as `0x${string}`, isOpen)
 
+  console.log('triple', triple)
+  console.log('atom', atom)
+
+  const tripleLabel =
+    triple?.subject?.label === 'I'
+      ? triple?.object?.label
+      : triple?.subject?.label
+
+  console.log('tripleLabel', tripleLabel)
   return (
     <ClientOnly>
       {() => (
@@ -126,14 +135,9 @@ export function SignalModal({
                 className="flex-1"
               >
                 {isSimplifiedRedeem ? (
-                  <>
-                    Redeem your signal for{' '}
-                    {atom?.label ?? triple?.subject?.label ?? ''}
-                  </>
+                  <>Redeem your signal for {atom?.label ?? tripleLabel ?? ''}</>
                 ) : (
-                  <>
-                    Cast your signal on {atom?.label ?? triple?.subject.label}
-                  </>
+                  <>Cast your signal on {atom?.label ?? tripleLabel}</>
                 )}
               </Text>
               <Badge className="flex items-center gap-1 px-2 mr-2">
