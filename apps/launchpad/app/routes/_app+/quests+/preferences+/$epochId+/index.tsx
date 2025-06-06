@@ -429,7 +429,7 @@ export default function EpochQuestions() {
         question={onboardingModal.question!}
         predicateId={onboardingModal.predicateId || 0}
         objectId={onboardingModal.objectId || 0}
-        mode="questions"
+        mode="preferences"
       />
       <AtomDetailsModal
         isOpen={atomDetailsModal.isOpen}

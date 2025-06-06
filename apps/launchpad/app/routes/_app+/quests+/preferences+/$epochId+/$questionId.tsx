@@ -7,23 +7,33 @@ import {
   Card,
   Icon,
   IconName,
+  Input,
   Text,
 } from '@0xintuition/1ui'
-import type { Atoms_Order_By } from '@0xintuition/graphql'
-import { useGetAtomQuery } from '@0xintuition/graphql'
+import type { GetListDetailsSimplifiedQuery } from '@0xintuition/graphql'
+import {
+  Triples_Order_By,
+  useGetAtomQuery,
+  useGetListDetailsSimplifiedQuery,
+} from '@0xintuition/graphql'
 
+import { AddEntryModal } from '@components/add-entry-modal'
 import { AtomDetailsModal } from '@components/atom-details-modal'
 import { AuthCover } from '@components/auth-cover'
-import { EcosystemModal } from '@components/ecosystem-modal/survey-modal'
-import EcosystemShareModal from '@components/ecosystem-share-modal'
 import LoadingLogo from '@components/loading-logo'
 import { LoadingState } from '@components/loading-state'
 import { Navigation } from '@components/lore/chapter-navigation'
 import { PageHeader } from '@components/page-header'
-import { atomColumns, tripleColumns } from '@components/ui/table/columns'
+import ShareModal from '@components/share-modal'
+import { OnboardingModal } from '@components/survey-modal/survey-modal'
+import { tripleColumns } from '@components/ui/table/columns'
 import { DataTable } from '@components/ui/table/data-table'
-import { MIN_DEPOSIT, MULTIVAULT_CONTRACT_ADDRESS } from '@consts/general'
-import { AtomsWithTagsQuery, useAtomsWithTagsQuery } from '@lib/graphql'
+import {
+  CURRENT_ENV,
+  MIN_DEPOSIT,
+  MULTIVAULT_CONTRACT_ADDRESS,
+  ZERO_ADDRESS,
+} from '@consts/general'
 import { Question } from '@lib/graphql/types'
 import { MULTIVAULT_CONFIG_QUERY_KEY } from '@lib/hooks/useGetMultiVaultConfig'
 import { useGoBack } from '@lib/hooks/useGoBack'
@@ -39,9 +49,10 @@ import {
   onboardingModalAtom,
   shareModalAtom,
 } from '@lib/state/store'
-import { WHITELISTED_ADDRESSES } from '@lib/utils/constants'
+import { getSpecialPredicate } from '@lib/utils/app'
 import { usePrivy } from '@privy-io/react-auth'
 import type { LoaderFunctionArgs, MetaFunction } from '@remix-run/node'
+import { json } from '@remix-run/node'
 import {
   useLoaderData,
   useLocation,
@@ -67,11 +78,11 @@ import {
   SortingState,
   useReactTable,
 } from '@tanstack/react-table'
+import { TripleType } from 'app/types'
+import { ListDetailsType } from 'app/types/list-details'
 import { useAtom } from 'jotai'
 import { CheckCircle } from 'lucide-react'
 import { formatUnits } from 'viem'
-
-const VERIFICATION_ADDRESS = '0x6877daca5e6934982a5c511d85bf12a71a25ac1d'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const queryClient = new QueryClient()
@@ -113,20 +124,48 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     throw new Error('Failed to fetch question data')
   }
 
-  const { origin } = new URL(request.url)
-  const ogImageUrl = `${origin}/resources/create-og?id=${questionData.object_id}&type=list`
+  // Ensure we use the full ngrok URL if present and normalize the URL
+  const host = request.headers.get('host') || ''
+  const protocol = request.headers.get('x-forwarded-proto') || 'http'
+  const baseUrl = host.includes('ngrok')
+    ? `${protocol}://${host}`
+    : new URL(request.url).origin
 
-  return {
+  // Normalize the path to always include trailing slash
+  const url = new URL(request.url)
+  const normalizedPath = url.pathname.endsWith('/')
+    ? url.pathname
+    : `${url.pathname}/`
+  const canonicalUrl = `${baseUrl}${normalizedPath}${url.search}`
+
+  // Construct OG image URL using URLSearchParams
+  const ogImageParams = new URLSearchParams()
+  ogImageParams.set('type', 'question')
+  ogImageParams.set(
+    'data',
+    JSON.stringify({
+      title: questionData.title,
+      description: questionData.description,
+      points: questionData.point_award_amount,
+      epoch: epoch?.order,
+      question: questionData?.order,
+      type: 'question',
+    }),
+  )
+  const ogImageUrl = `${baseUrl}/resources/create-og?${ogImageParams.toString()}`
+
+  return json({
     dehydratedState: dehydrate(queryClient),
     userWallet,
     ogImageUrl,
+    canonicalUrl,
     questionTitle: questionData?.title,
     questionData,
     prevQuestion,
     nextQuestion,
     epoch,
     multiVaultConfig,
-  }
+  })
 }
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
@@ -134,7 +173,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
     return []
   }
 
-  const { ogImageUrl, questionTitle } = data
+  const { ogImageUrl, canonicalUrl, questionTitle } = data
   const title = questionTitle ?? 'Error | Intuition Launchpad'
 
   return [
@@ -145,23 +184,59 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
       name: 'description',
       content: `Intuition is an ecosystem of technologies composing a universal and permissionless knowledge graph, capable of handling both objective facts and subjective opinions - delivering superior data for intelligences across the spectrum, from human to artificial.`,
     },
+    // Canonical URL
     {
-      property: 'og-title',
-      name: title,
+      tagName: 'link',
+      rel: 'canonical',
+      href: canonicalUrl,
+    },
+    // Open Graph tags
+    {
+      property: 'og:url',
+      content: canonicalUrl,
+    },
+    {
+      property: 'og:title',
+      content: title,
+    },
+    {
+      property: 'og:description',
+      content: 'Bringing trust to trustless systems.',
     },
     {
       property: 'og:image',
       content: ogImageUrl,
     },
+    {
+      property: 'og:image:width',
+      content: '1200',
+    },
+    {
+      property: 'og:image:height',
+      content: '630',
+    },
+    {
+      property: 'og:type',
+      content: 'website',
+    },
     { property: 'og:site_name', content: 'Intuition Launchpad' },
     { property: 'og:locale', content: 'en_US' },
+    // Twitter specific tags
+    {
+      name: 'twitter:card',
+      content: 'summary_large_image',
+    },
+    {
+      name: 'twitter:domain',
+      content: 'intuition.systems',
+    },
     {
       name: 'twitter:image',
       content: ogImageUrl,
     },
     {
-      name: 'twitter:card',
-      content: 'summary_large_image',
+      name: 'twitter:image:alt',
+      content: `Question page for ${title}`,
     },
     {
       name: 'twitter:title',
@@ -172,6 +247,11 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
       content: 'Bringing trust to trustless systems.',
     },
     { name: 'twitter:site', content: '@0xIntuition' },
+    { name: 'twitter:creator', content: '@0xIntuition' },
+    // Security headers
+    { 'ngrok-skip-browser-warning': '1' },
+    { 'x-frame-options': 'SAMEORIGIN' },
+    { 'x-content-type-options': 'nosniff' },
   ]
 }
 
@@ -189,10 +269,12 @@ export function ErrorBoundary() {
   )
 }
 
+type Triple = GetListDetailsSimplifiedQuery['globalTriples'][0]
+
 export default function MiniGameOne() {
   const location = useLocation()
   const { epochId, questionId } = useParams()
-  const goBack = useGoBack({ fallbackRoute: `/quests/questions/${epochId}` })
+  const goBack = useGoBack({ fallbackRoute: `/quests/preferences/${epochId}` })
   const {
     userWallet,
     questionData,
@@ -217,17 +299,22 @@ export default function MiniGameOne() {
     epoch_id: currentEpoch,
     predicate_id: predicateId,
     object_id: objectId,
+    preferences_predicate_id: preferencesPredicateId,
   } = questionData
 
   // Fetch completion data using resource route
   const { data: completion, isLoading: isLoadingCompletion } = useQuery({
     queryKey: ['question-completion', userWallet?.toLowerCase(), questionId],
     queryFn: async () => {
-      const response = await fetch(
-        `/resources/get-question-completion?accountId=${userWallet}&questionId=${questionId}`,
-      )
-      const data = await response.json()
-      return data.completion
+      try {
+        const response = await fetch(
+          `/resources/get-question-completion?accountId=${userWallet}&questionId=${questionId}`,
+        )
+        const data = await response.json()
+        return data.completion
+      } catch (error) {
+        return null
+      }
     },
     enabled: !!userWallet && !!questionId,
   })
@@ -237,10 +324,12 @@ export default function MiniGameOne() {
     pointsAwarded = completion.points_awarded
   }
 
+  console.log('completion', completion)
+
   // Get the user's selected atom if they've completed the question
   const { data: atomData, isLoading: isLoadingAtom } = useGetAtomQuery(
-    { id: completion?.subject_id ?? 0 },
-    { enabled: !!completion?.subject_id },
+    { id: completion?.object_id ?? 0 },
+    { enabled: !!completion?.object_id },
   )
 
   // Add defensive check for location
@@ -318,6 +407,20 @@ export default function MiniGameOne() {
     return page ? Math.max(0, parseInt(page, 10) - 1) : 0
   })
 
+  // Add search state variable
+  const [searchTerm, setSearchTerm] = React.useState(() => {
+    return searchParams.get('search') || ''
+  })
+
+  // Add a ref for the search input to maintain focus
+  const searchInputRef = React.useRef<HTMLInputElement>(null)
+
+  // Track initial loading state
+  const [initialLoadComplete, setInitialLoadComplete] = React.useState(false)
+
+  // Store the background image from the initial load
+  const [backgroundImage, setBackgroundImage] = React.useState('')
+
   // Update URL when pagination changes
   const updatePaginationParams = React.useCallback(
     (newPage: number, newSize: number) => {
@@ -334,12 +437,41 @@ export default function MiniGameOne() {
     [searchParams, setSearchParams],
   )
 
-  const queryVariables = React.useMemo(() => {
+  // Handle search term changes
+  const handleSearchChange = React.useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const newSearchTerm = event.target.value
+      setSearchTerm(newSearchTerm)
+
+      // Update URL params
+      const newParams = new URLSearchParams(searchParams)
+      if (newSearchTerm) {
+        newParams.set('search', newSearchTerm)
+      } else {
+        newParams.delete('search')
+      }
+      // Reset to first page when search changes
+      newParams.set('page', '1')
+      setSearchParams(newParams, { replace: true })
+
+      // Reset page index to 0 when search changes
+      setPageIndex(0)
+    },
+    [searchParams, setSearchParams],
+  )
+
+  // Effect to sync search term with URL params
+  React.useEffect(() => {
+    const searchParam = searchParams.get('search')
+    setSearchTerm(searchParam || '')
+  }, [searchParams])
+
+  const listQueryVariables = React.useMemo(() => {
     // Convert table sorting to GraphQL ordering
     const sortField = sorting[0]?.id
     const sortDirection = sorting[0]?.desc ? 'desc' : 'asc'
 
-    let orderBy: Atoms_Order_By = {
+    let orderBy: Triples_Order_By = {
       vault: {
         total_shares: 'desc',
       },
@@ -354,9 +486,18 @@ export default function MiniGameOne() {
           },
         }
         break
+      case 'downvotes':
+        orderBy = {
+          counter_vault: {
+            total_shares: sortDirection,
+          },
+        }
+        break
       case 'name':
         orderBy = {
-          label: sortDirection,
+          subject: {
+            label: sortDirection,
+          },
         }
         break
       case 'users':
@@ -376,51 +517,29 @@ export default function MiniGameOne() {
     }
 
     const variables = {
-      where: {
-        _and: [
-          {
-            as_subject_triples: {
-              predicate_id: { _eq: predicateId },
-              object_id: { _eq: objectId },
-            },
-          },
-          {
-            _or: [
-              {
-                as_subject_triples: {
-                  predicate_id: { _eq: predicateId },
-                  object_id: { _eq: objectId },
-                  vault: {
-                    positions: {
-                      account: {
-                        id: {
-                          _in: WHITELISTED_ADDRESSES,
-                        },
-                      },
-                    },
-                  },
+      globalWhere: {
+        predicate_id: {
+          _eq: predicateId,
+        },
+        object_id: {
+          _eq: objectId,
+        },
+        // Add search filter for subject label if search term exists
+        ...(searchTerm
+          ? {
+              subject: {
+                label: {
+                  _ilike: `%${searchTerm}%`,
                 },
               },
-            ],
-          },
-          questionData?.tag_object_id
-            ? {
-                as_subject_triples: {
-                  object: {
-                    vault_id: { _in: [questionData.tag_object_id] },
-                  },
-                },
-              }
-            : {},
-        ],
+            }
+          : {}),
       },
-      tagPredicateIds: [predicateId], // dev - has tag predicate ID
-      userPositionAddress: userWallet ?? '',
-      verifiedPositionAddress: VERIFICATION_ADDRESS,
-      orderBy,
+      address: userWallet ?? ZERO_ADDRESS,
       limit: pageSize,
       offset: pageIndex * pageSize,
-    }
+      orderBy,
+    } as const
 
     return variables
   }, [
@@ -430,40 +549,178 @@ export default function MiniGameOne() {
     pageSize,
     pageIndex,
     sorting,
-    questionId,
+    searchTerm,
   ])
 
-  const { data: atomsData, isLoading: isLoadingAtoms } = useAtomsWithTagsQuery(
-    {
-      ...queryVariables,
+  const { data: listData, isLoading: isLoadingListData } =
+    useGetListDetailsSimplifiedQuery(
+      {
+        ...listQueryVariables,
+      },
+      {
+        queryKey: [
+          'get-list-details',
+          predicateId,
+          objectId,
+          listQueryVariables,
+        ],
+      },
+    )
+  const listTotalCount = listData?.globalTriplesAggregate?.aggregate?.count ?? 0
+
+  // Extract subject IDs from listData to use as object IDs in preferences query
+  const subjectIds = React.useMemo(() => {
+    if (!listData?.globalTriples) {
+      return []
+    }
+    return listData.globalTriples.map((triple) => triple.subject.id)
+  }, [listData])
+
+  const preferencesQueryVariables = React.useMemo(() => {
+    // Don't create query variables if we don't have subject IDs yet
+    if (subjectIds.length === 0) {
+      return null
+    }
+
+    // Convert table sorting to GraphQL ordering
+    const sortField = sorting[0]?.id
+    const sortDirection = sorting[0]?.desc ? 'desc' : 'asc'
+
+    let orderBy: Triples_Order_By = {
+      vault: {
+        total_shares: 'desc',
+      },
+    }
+
+    // Map sorting fields to their corresponding GraphQL paths
+    switch (sortField) {
+      case 'upvotes':
+        orderBy = {
+          vault: {
+            total_shares: sortDirection,
+          },
+        }
+        break
+      case 'downvotes':
+        orderBy = {
+          counter_vault: {
+            total_shares: sortDirection,
+          },
+        }
+        break
+      case 'name':
+        orderBy = {
+          subject: {
+            label: sortDirection,
+          },
+        }
+        break
+      case 'users':
+        orderBy = {
+          vault: {
+            position_count: sortDirection,
+          },
+        }
+        break
+      case 'tvl':
+        orderBy = {
+          vault: {
+            total_shares: sortDirection,
+          },
+        }
+        break
+    }
+
+    const variables = {
+      globalWhere: {
+        predicate_id: {
+          _eq: preferencesPredicateId,
+        },
+        object_id: {
+          _in: subjectIds,
+        },
+        subject_id: {
+          _eq: getSpecialPredicate(CURRENT_ENV).iPredicate.vaultId.toString(),
+        },
+        // Add search filter for subject label if search term exists
+        ...(searchTerm
+          ? {
+              subject: {
+                label: {
+                  _ilike: `%${searchTerm}%`,
+                },
+              },
+            }
+          : {}),
+      },
+      address: userWallet ?? ZERO_ADDRESS,
+      limit: pageSize,
+      offset: pageIndex * pageSize,
+      orderBy,
+    } as const
+
+    return variables
+  }, [
+    preferencesPredicateId,
+    subjectIds,
+    userWallet,
+    pageSize,
+    pageIndex,
+    sorting,
+    searchTerm,
+  ])
+
+  const { data: preferencesData } = useGetListDetailsSimplifiedQuery(
+    preferencesQueryVariables || {
+      globalWhere: { predicate_id: { _eq: 0 } },
+      address: ZERO_ADDRESS,
+      limit: 0,
+      offset: 0,
+      orderBy: { vault: { total_shares: 'desc' } },
     },
     {
-      enabled: !!queryVariables,
       queryKey: [
-        'atoms-with-tags',
-        queryVariables,
-        predicateId,
-        objectId,
-        questionId,
+        'get-preferences',
+        preferencesPredicateId,
+        subjectIds,
+        preferencesQueryVariables,
       ],
-      refetchOnWindowFocus: true,
+      enabled: !!preferencesQueryVariables && subjectIds.length > 0,
     },
   )
 
-  // Get total count from the query response
-  const totalCount = atomsData?.total?.aggregate?.count ?? 0
+  // Track initial loading state and store background image
+  React.useEffect(() => {
+    if (!isLoadingListData && listData) {
+      setInitialLoadComplete(true)
+
+      // Store the background image from the initial load if we don't have one yet
+      if (
+        !backgroundImage &&
+        listData.globalTriples &&
+        listData.globalTriples.length > 0 &&
+        listData.globalTriples[0]?.object?.image
+      ) {
+        setBackgroundImage(listData.globalTriples[0].object.image)
+      }
+    }
+  }, [isLoadingListData, listData, backgroundImage])
 
   type TableRowData = {
     id: string
-    atom: AtomsWithTagsQuery['atoms'][number]
+    triple: TripleType
     image: string
     name: string
     list: string
     vaultId: string
+    counterVaultId: string
     users: number
     upvotes: number
+    downvotes: number
     forTvl: number
+    againstTvl: number
     userPosition?: number
+    positionDirection?: 'for' | 'against'
     currentSharePrice?: number
     stakingDisabled?: boolean
     multiVaultConfig: typeof multiVaultConfig
@@ -471,21 +728,39 @@ export default function MiniGameOne() {
 
   const tableData = React.useMemo(() => {
     const data =
-      (atomsData?.atoms?.map((atom: AtomsWithTagsQuery['atoms'][number]) => ({
-        id: String(atom.vault_id),
-        atom: atom as AtomsWithTagsQuery['atoms'][number],
-        image: atom.image || '',
-        name: atom.value?.account?.label || atom.label || 'Untitled Entry',
-        list: atom.label || 'Untitled List',
-        vaultId: atom.vault_id,
-        users: Number(atom.vault?.positions_aggregate?.aggregate?.count ?? 0),
+      (preferencesData?.globalTriples?.map((triple: Triple) => ({
+        id: String(triple.vault_id),
+        triple: triple as TripleType,
+        image: triple.object.image || '',
+        name: triple.object.label || 'Untitled Entry',
+        list: triple.predicate.label || 'Untitled List',
+        vaultId: triple.vault_id,
+        counterVaultId: triple.counter_vault_id,
+        users: Number(triple.vault?.positions_aggregate?.aggregate?.count ?? 0),
         upvotes: (() => {
           const amount =
             (+formatUnits(
-              atom.vault?.positions_aggregate?.aggregate?.sum?.shares ?? 0,
+              triple.vault?.positions_aggregate?.aggregate?.sum?.shares ?? 0,
               18,
             ) *
-              +formatUnits(atom.vault?.current_share_price ?? 0, 18)) /
+              +formatUnits(triple.vault?.current_share_price ?? 0, 18)) /
+            (+(multiVaultConfig?.formatted_min_deposit || MIN_DEPOSIT) *
+              (1 -
+                +(multiVaultConfig?.entry_fee ?? 0) /
+                  +(multiVaultConfig?.fee_denominator ?? 1)))
+          return amount < 0.1 ? 0 : Math.ceil(amount)
+        })(),
+        downvotes: (() => {
+          const amount =
+            (+formatUnits(
+              triple.counter_vault?.positions_aggregate?.aggregate?.sum
+                ?.shares ?? 0,
+              18,
+            ) *
+              +formatUnits(
+                triple.counter_vault?.current_share_price ?? 0,
+                18,
+              )) /
             (+(multiVaultConfig?.formatted_min_deposit || MIN_DEPOSIT) *
               (1 -
                 +(multiVaultConfig?.entry_fee ?? 0) /
@@ -493,21 +768,38 @@ export default function MiniGameOne() {
           return amount < 0.1 ? 0 : Math.ceil(amount)
         })(),
         forTvl:
-          +formatUnits(atom.vault?.total_shares ?? 0, 18) *
-          +formatUnits(atom.vault?.current_share_price ?? 0, 18),
-        userPosition:
-          atom.vault?.userPosition?.[0]?.shares > 0
-            ? +formatUnits(atom.vault?.userPosition?.[0].shares ?? 0, 18) *
-              +formatUnits(atom.vault?.current_share_price ?? 0, 18)
+          +formatUnits(
+            triple.vault?.positions_aggregate?.aggregate?.sum?.shares ?? 0,
+            18,
+          ) * +formatUnits(triple.vault?.current_share_price ?? 0, 18),
+        againstTvl:
+          +formatUnits(
+            triple.counter_vault?.positions_aggregate?.aggregate?.sum?.shares ??
+              0,
+            18,
+          ) * +formatUnits(triple.counter_vault?.current_share_price ?? 0, 18),
+        userPosition: triple.counter_vault?.positions?.[0]
+          ? +formatUnits(
+              triple.counter_vault?.positions?.[0]?.shares ?? 0,
+              18,
+            ) * +formatUnits(triple.counter_vault?.current_share_price ?? 0, 18)
+          : +formatUnits(triple.vault?.positions?.[0]?.shares ?? 0, 18) *
+            +formatUnits(triple.vault?.current_share_price ?? 0, 18),
+        positionDirection: triple.counter_vault?.positions?.[0]
+          ? 'against'
+          : triple.vault?.positions?.[0]
+            ? 'for'
             : undefined,
         currentSharePrice:
-          atom.vault?.userPosition?.[0]?.shares > 0
-            ? +formatUnits(atom.vault?.current_share_price, 18)
-            : undefined,
+          triple.vault?.positions?.[0]?.shares > 0
+            ? +formatUnits(triple.vault?.current_share_price, 18)
+            : triple.counter_vault?.positions?.[0]?.shares > 0
+              ? +formatUnits(triple.counter_vault?.current_share_price, 18)
+              : undefined,
         multiVaultConfig,
       })) as TableRowData[]) ?? []
     return data
-  }, [atomsData, multiVaultConfig, questionId])
+  }, [preferencesData, multiVaultConfig])
 
   const isMobile = useMediaQuery('(max-width: 768px)')
   const isTablet = useMediaQuery('(max-width: 1024px)')
@@ -548,7 +840,7 @@ export default function MiniGameOne() {
 
   const table = useReactTable<TableRowData>({
     data: tableData,
-    columns: atomColumns as ColumnDef<TableRowData>[],
+    columns: tripleColumns as ColumnDef<TableRowData>[],
     columnResizeMode: 'onChange',
     enableColumnPinning: !isMobile,
     enableColumnResizing: !isMobile,
@@ -573,11 +865,11 @@ export default function MiniGameOne() {
           pageIndex,
           pageSize,
         })
-        // Only update UI state after data is fetched
+        // Update pagination params
         updatePaginationParams(newState.pageIndex, newState.pageSize)
       }
     },
-    pageCount: Math.ceil(totalCount / pageSize),
+    pageCount: Math.ceil(listTotalCount / pageSize),
     manualPagination: true,
     manualSorting: true,
     getCoreRowModel: getCoreRowModel(),
@@ -601,6 +893,7 @@ export default function MiniGameOne() {
       title: title || '',
       predicate_id: predicateId,
       object_id: objectId,
+      object_label: listData?.globalTriples?.[0]?.object.label ?? '',
       point_award_amount: pointAwardAmount,
       enabled: enabled || false,
       epoch_id: currentEpoch,
@@ -619,29 +912,27 @@ export default function MiniGameOne() {
   const handleCloseOnboarding = () => {
     // Only invalidate queries if we have all required values and the modal was actually open
     if (userWallet && questionId && currentEpoch && onboardingModal.isOpen) {
-      queryClient.invalidateQueries({
-        queryKey: [
-          'atoms-with-tags',
-          queryVariables,
-          predicateId,
-          objectId,
-          questionId,
-        ],
-        exact: false,
-      })
-      // Invalidate queries first
-      queryClient.invalidateQueries({
-        queryKey: ['question-completion', userWallet.toLowerCase(), questionId],
-      })
-      queryClient.invalidateQueries({
-        queryKey: ['epoch-progress', userWallet.toLowerCase(), currentEpoch],
-      })
-      queryClient.invalidateQueries({
-        queryKey: ['get-questions', currentEpoch],
-      })
+      // For the OnboardingModal (new completions), we need to invalidate queries
+      // For the QuestModal (repeat completions), we don't need to invalidate as much
+      if (!completion) {
+        // Invalidate queries first for new completions
+        queryClient.invalidateQueries({
+          queryKey: [
+            'question-completion',
+            userWallet.toLowerCase(),
+            questionId,
+          ],
+        })
+        queryClient.invalidateQueries({
+          queryKey: ['epoch-progress', userWallet.toLowerCase(), currentEpoch],
+        })
+        queryClient.invalidateQueries({
+          queryKey: ['get-questions', currentEpoch],
+        })
+      }
     }
 
-    // Then close the modal
+    // Close the modal
     setOnboardingModal({
       isOpen: false,
       question: null,
@@ -656,15 +947,18 @@ export default function MiniGameOne() {
     if (rowData) {
       setAtomDetailsModal({
         isOpen: true,
-        atomId: Number(rowData.atom.vault_id),
+        atomId: Number(rowData.triple.vault_id),
         data: rowData,
       })
     }
   }
 
-  if (isLoadingAtoms) {
+  // Only show loading state on initial load
+  if (isLoadingListData && !initialLoadComplete) {
     return <LoadingState />
   }
+
+  console.log('atomData', atomData)
 
   return (
     <>
@@ -679,7 +973,7 @@ export default function MiniGameOne() {
             <Icon name="chevron-left" className="h-4 w-4" />
           </Button>
           <PageHeader
-            title={`${epoch?.name ?? ''} | Question ${questionData?.order}`}
+            title={`Preferences Epoch ${epoch?.order ?? ''} | Question ${questionData?.order}`}
             className="text-xl sm:text-2xl"
           />
         </div>
@@ -704,7 +998,7 @@ export default function MiniGameOne() {
           <Card
             className="border-none w-full md:min-w-[480px] min-h-80 relative overflow-hidden"
             style={{
-              backgroundImage: `linear-gradient(to bottom right, rgba(6, 5, 4, 0.9), rgba(16, 16, 16, 0.9)), url(${atomsData?.atoms?.[0]?.image || ''})`,
+              backgroundImage: `linear-gradient(to bottom right, rgba(6, 5, 4, 0.9), rgba(16, 16, 16, 0.9)), url(${backgroundImage || (listData?.globalTriples && listData.globalTriples.length > 0 ? listData.globalTriples[0]?.object?.image : '')})`,
               backgroundSize: 'cover',
               backgroundPosition: 'center',
             }}
@@ -735,14 +1029,14 @@ export default function MiniGameOne() {
                             onClick={() => {
                               const rowData = tableData.find(
                                 (row) =>
-                                  row.atom.vault_id ===
+                                  row.triple.object.vault_id ===
                                   String(atomData.atom?.vault_id),
                               )
 
                               if (rowData) {
                                 setAtomDetailsModal({
                                   isOpen: true,
-                                  atomId: Number(rowData.atom.vault_id),
+                                  atomId: Number(rowData.triple.vault_id),
                                   data: rowData,
                                 })
                               }
@@ -759,9 +1053,7 @@ export default function MiniGameOne() {
                             </div>
                             <div className="text-left w-full">
                               <div className="text-white text-base leading-5">
-                                {atomData.atom?.value?.account?.label ??
-                                  atomData?.atom?.label ??
-                                  ''}
+                                {atomData?.atom?.label ?? ''}
                               </div>
                             </div>
                             <div className="flex justify-end px-6">
@@ -798,7 +1090,46 @@ export default function MiniGameOne() {
           </Card>
         </div>
       </div>
-
+      {/* Adding placeholder button */}
+      <div>
+        <div className="flex items-center justify-between">
+          <div className="relative w-full max-w-md mr-4">
+            <Input
+              type="text"
+              id="search-entries"
+              placeholder="Search by name..."
+              value={searchTerm}
+              onChange={handleSearchChange}
+              ref={searchInputRef}
+              className="w-full bg-primary/5 backdrop-blur-lg border-border/10 rounded-lg"
+              startAdornment="magnifying-glass"
+            />
+            {searchTerm && (
+              <div className="absolute right-3 top-1/2 transform -translate-y-1/2 z-10 h-[20px]">
+                <button
+                  onClick={() =>
+                    handleSearchChange({
+                      target: { value: '' },
+                    } as React.ChangeEvent<HTMLInputElement>)
+                  }
+                  className="text-muted-foreground hover:text-foreground focus:outline-none"
+                  aria-label="Clear search"
+                >
+                  <Icon name={IconName.crossLarge} className="h-4 w-4" />
+                </button>
+              </div>
+            )}
+          </div>
+          {/* <Button
+            variant="secondary"
+            size="lg"
+            onClick={handleStartOnboarding}
+            aria-label="Add new entry"
+          >
+            Add new entry
+          </Button> */}
+        </div>
+      </div>
       <div className="mt-6 !mb-24">
         <DataTable
           columns={tripleColumns as ColumnDef<TableRowData>[]}
@@ -808,7 +1139,8 @@ export default function MiniGameOne() {
           onPaginationChange={updatePaginationParams}
         />
       </div>
-      <EcosystemShareModal
+
+      <ShareModal
         open={shareModalActive.isOpen}
         onClose={() =>
           setShareModalActive({
@@ -817,21 +1149,33 @@ export default function MiniGameOne() {
           })
         }
         title={shareModalActive.title}
-        atomsData={atomsData?.atoms as unknown as AtomsWithTagsQuery['atoms']}
+        listData={listData as unknown as ListDetailsType}
       />
-      <EcosystemModal
-        isOpen={onboardingModal.isOpen}
-        onClose={handleCloseOnboarding}
-        question={
-          onboardingModal.question ?? (questionData as unknown as Question)
-        }
-        predicateId={predicateId}
-        objectId={objectId}
-        tagObjectId={questionData?.tag_object_id ?? null}
-      />
+      {completion && !isLoadingCompletion ? (
+        <AddEntryModal
+          isOpen={onboardingModal.isOpen}
+          onClose={handleCloseOnboarding}
+          question={
+            onboardingModal.question ?? (questionData as unknown as Question)
+          }
+          predicateId={predicateId}
+          objectId={objectId}
+        />
+      ) : (
+        <OnboardingModal
+          isOpen={onboardingModal.isOpen}
+          onClose={handleCloseOnboarding}
+          question={
+            onboardingModal.question ?? (questionData as unknown as Question)
+          }
+          predicateId={predicateId}
+          objectId={objectId}
+          mode="preferences"
+          preferencesPredicateId={preferencesPredicateId ?? undefined}
+        />
+      )}
       <AtomDetailsModal
         isOpen={atomDetailsModal.isOpen}
-        listClaim={false}
         onClose={() =>
           setAtomDetailsModal({ isOpen: false, atomId: 0, data: undefined })
         }
@@ -858,7 +1202,7 @@ export default function MiniGameOne() {
             : undefined
         }
         type="question"
-        baseUrl={`/quests/ecosystems/${epochId}`}
+        baseUrl={`/quests/preferences/${epochId}`}
       />
     </>
   )

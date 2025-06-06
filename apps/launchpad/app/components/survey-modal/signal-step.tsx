@@ -44,6 +44,7 @@ export function SignalStep({
   isLoading,
   setIsLoading,
   isOpen,
+  mode,
 }: SignalStepProps) {
   const [ticks, setTicks] = useState(1)
   const [inputValue, setInputValue] = useState('1')
@@ -202,9 +203,14 @@ export function SignalStep({
             ],
           })
 
-          onStakingSuccess(
-            selectedTopic?.triple?.subject?.vault_id?.toString() ?? '',
-          )
+          // In preferences mode, we want to pass the object vault_id (the preference target)
+          // In questions mode, we want to pass the subject vault_id (the list item)
+          const subjectIdForCallback =
+            mode === 'preferences'
+              ? selectedTopic?.triple?.object?.vault_id?.toString() ?? ''
+              : selectedTopic?.triple?.subject?.vault_id?.toString() ?? ''
+
+          onStakingSuccess(subjectIdForCallback)
         }
       } catch (error) {
         dispatch({
@@ -372,8 +378,9 @@ export function SignalStep({
         <div className="flex flex-col gap-2 mb-8">
           <Text variant="headline" className="font-semibold">
             Signal{' '}
-            {newAtomMetadata?.name ?? selectedTopic?.triple?.subject.label} as
-            the best {selectedTopic?.triple?.object.label ?? objectLabel}
+            {newAtomMetadata?.name ?? selectedTopic?.triple?.subject.label}{' '}
+            {mode === 'questions' ? 'as the best' : 'as your preference for'}{' '}
+            {objectLabel}
           </Text>
           <Text variant={TextVariant.footnote} className="text-primary/70">
             <span className="inline-flex items-center gap-1">
@@ -411,83 +418,85 @@ export function SignalStep({
 
           <div className="flex flex-col gap-2 w-full pr-6">
             <div className="flex items-center justify-end">
-              <input
-                type="text"
-                inputMode="numeric"
-                pattern="-?[0-9]*"
-                value={inputValue}
-                onChange={(e) => {
-                  const newValue = e.target.value
+              <div className="flex items-center">
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  pattern="-?[0-9]*"
+                  value={inputValue}
+                  onChange={(e) => {
+                    const newValue = e.target.value
 
-                  // Allow empty input, minus sign, or valid number pattern
-                  if (
-                    newValue === '' ||
-                    newValue === '-' ||
-                    /^-?\d+$/.test(newValue)
-                  ) {
-                    // Update the raw input value
-                    setInputValue(newValue)
+                    // Allow empty input, minus sign, or valid number pattern
+                    if (
+                      newValue === '' ||
+                      newValue === '-' ||
+                      /^-?\d+$/.test(newValue)
+                    ) {
+                      // Update the raw input value
+                      setInputValue(newValue)
 
-                    // Handle special cases
-                    if (newValue === '') {
-                      setTicks(1) // Default to 1 for empty input
-                    } else if (newValue === '-') {
-                      // Just keep the minus sign, don't convert to number yet
-                    } else {
-                      const parsedValue = parseInt(newValue, 10)
-                      if (!isNaN(parsedValue) && parsedValue !== 0) {
-                        setTicks(parsedValue)
+                      // Handle special cases
+                      if (newValue === '') {
+                        setTicks(1) // Default to 1 for empty input
+                      } else if (newValue === '-') {
+                        // Just keep the minus sign, don't convert to number yet
+                      } else {
+                        const parsedValue = parseInt(newValue, 10)
+                        if (!isNaN(parsedValue) && parsedValue !== 0) {
+                          setTicks(parsedValue)
+                        }
                       }
                     }
-                  }
-                  // Ignore invalid input
-                }}
-                onBlur={() => {
-                  // Ensure value is valid when focus is lost
-                  if (
-                    inputValue === '' ||
-                    inputValue === '-' ||
-                    parseInt(inputValue, 10) === 0
-                  ) {
-                    setInputValue('1')
-                    setTicks(1)
-                  }
-                }}
-                disabled={isLoading}
-                className={`w-12 h-8 text-center ${
-                  parseInt(inputValue, 10) > 0
-                    ? 'text-success'
-                    : inputValue === '' || inputValue === '0'
-                      ? 'text-primary/70'
-                      : 'text-destructive'
-                } bg-transparent border border-[#1A1A1A] rounded focus:outline-none focus:border-accent font-semibold`}
-                aria-label="Number of votes to allocate"
-              />
-              <div className="flex flex-col">
-                <Button
-                  variant="text"
-                  onClick={() => {
-                    const newValue = ticks + 1
-                    setTicks(newValue)
-                    setInputValue(newValue.toString())
+                    // Ignore invalid input
+                  }}
+                  onBlur={() => {
+                    // Ensure value is valid when focus is lost
+                    if (
+                      inputValue === '' ||
+                      inputValue === '-' ||
+                      parseInt(inputValue, 10) === 0
+                    ) {
+                      setInputValue('1')
+                      setTicks(1)
+                    }
                   }}
                   disabled={isLoading}
-                  className="h-6 p-0 disabled:opacity-30"
-                >
-                  <ArrowBigUp className="text-success fill-success h-5 w-5" />
-                </Button>
-                <Button
-                  variant="text"
-                  onClick={() => {
-                    const newValue = ticks - 1
-                    setTicks(newValue)
-                    setInputValue(newValue.toString())
-                  }}
-                  disabled={isLoading}
-                  className="h-6 p-0 disabled:opacity-30"
-                >
-                  <ArrowBigDown className="text-destructive fill-destructive h-5 w-5" />
-                </Button>
+                  className={`w-12 h-8 text-center ${
+                    parseInt(inputValue, 10) > 0
+                      ? 'text-success'
+                      : inputValue === '' || inputValue === '0'
+                        ? 'text-primary/70'
+                        : 'text-destructive'
+                  } bg-transparent border border-[#1A1A1A] rounded focus:outline-none focus:border-accent font-semibold`}
+                  aria-label="Number of votes to allocate"
+                />
+                <div className="flex flex-col">
+                  <Button
+                    variant="text"
+                    onClick={() => {
+                      const newValue = ticks + 1
+                      setTicks(newValue)
+                      setInputValue(newValue.toString())
+                    }}
+                    disabled={isLoading}
+                    className="h-6 p-0 disabled:opacity-30"
+                  >
+                    <ArrowBigUp className="text-success fill-success h-5 w-5" />
+                  </Button>
+                  <Button
+                    variant="text"
+                    onClick={() => {
+                      const newValue = ticks - 1
+                      setTicks(newValue)
+                      setInputValue(newValue.toString())
+                    }}
+                    disabled={isLoading}
+                    className="h-6 p-0 disabled:opacity-30"
+                  >
+                    <ArrowBigDown className="text-destructive fill-destructive h-5 w-5" />
+                  </Button>
+                </div>
               </div>
             </div>
           </div>

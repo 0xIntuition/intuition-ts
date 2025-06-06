@@ -1037,6 +1037,7 @@ export default function MiniGameOne() {
           }
           predicateId={predicateId}
           objectId={objectId}
+          mode="questions"
         />
       )}
       <AtomDetailsModal

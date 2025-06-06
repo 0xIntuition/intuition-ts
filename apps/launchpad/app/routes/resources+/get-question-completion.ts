@@ -23,6 +23,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
       },
     )
 
+    console.log('data', data)
+
     return new Response(
       JSON.stringify({ completion: data.epoch_completions[0] ?? null }),
       {

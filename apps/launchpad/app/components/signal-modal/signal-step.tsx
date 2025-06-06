@@ -23,7 +23,7 @@ import {
   TripleType,
   VaultDetailsType,
 } from 'app/types'
-import { ArrowBigDown, ArrowBigUp, Book, List } from 'lucide-react'
+import { ArrowBigDown, ArrowBigUp, Book, List, Settings } from 'lucide-react'
 import { Address, decodeEventLog, formatUnits } from 'viem'
 import { usePublicClient } from 'wagmi'
 
@@ -486,32 +486,8 @@ export function SignalStep({
         })
 
         // Invalidate specific queries that need to be refreshed
-        await Promise.all([
-          // Invalidate vault details
-          queryClient.invalidateQueries({
-            queryKey: ['get-vault-details', contract, vaultId, counterVaultId],
-          }),
-          // Invalidate positions
-          queryClient.invalidateQueries({
-            queryKey: ['get-positions'],
-          }),
-          // Invalidate atoms/triples depending on type
-          queryClient.invalidateQueries({
-            queryKey: atom ? ['get-atoms'] : ['get-triples'],
-          }),
-          // Invalidate events
-          queryClient.invalidateQueries({
-            queryKey: ['get-events'],
-          }),
-          // Invalidate atoms-with-tags query with a pattern match
-          queryClient.invalidateQueries({
-            queryKey: ['AtomsWithTags'],
-            exact: false, // This will match any query key that starts with 'AtomsWithTags'
-          }),
-        ])
+        await queryClient.invalidateQueries()
         revalidator.revalidate()
-        console.log('[SignalStep] All queries invalidated successfully')
-        console.log('[SignalStep] Revalidator called')
 
         // Store the final state and show success after a delay
         setFinalMode(mode)
@@ -560,12 +536,15 @@ export function SignalStep({
     handleAction()
   }
 
+  const tripleObject =
+    triple?.subject?.label === 'I' ? triple?.object : triple?.subject
+
   return (
     <>
       {showSuccess ? (
         <SuccessStep
           isOpen={showSuccess}
-          name={atom?.label ?? triple?.subject?.label ?? ''}
+          name={atom?.label ?? tripleObject?.label ?? ''}
           txHash={successTxHash}
           onClose={onClose}
           mode={finalMode}
@@ -605,25 +584,35 @@ export function SignalStep({
             <div className="flex w-full items-center gap-4 rounded-lg border transition-colors h-[72px] border-[#1A1A1A]">
               <div className="flex items-center gap-4 w-full">
                 <div className="w-14 h-14 rounded bg-[#1A1A1A] flex-shrink-0 ml-1">
-                  {(atom?.image || triple?.subject.image) && (
+                  {(atom?.image || tripleObject?.image) && (
                     <img
-                      src={atom?.image ?? triple?.subject.image ?? ''}
-                      alt={atom?.label ?? triple?.subject.label ?? ''}
+                      src={atom?.image ?? tripleObject?.image ?? ''}
+                      alt={atom?.label ?? tripleObject?.label ?? ''}
                       className="w-full h-full object-cover rounded-lg"
                     />
                   )}
                 </div>
                 <div className="flex flex-col gap-0.5 w-full">
                   <Text variant={TextVariant.headline}>
-                    {atom?.label ?? triple?.subject.label}
+                    {atom?.label ?? tripleObject?.label}
                   </Text>
-                  <Text
-                    variant={TextVariant.small}
-                    className="text-primary/70 flex flex-row gap-1 items-center w-full"
-                  >
-                    <List className="h-3 w-3 text-primary/70" /> in list{' '}
-                    {triple?.object.label}
-                  </Text>
+                  {triple?.subject?.label !== 'I' ? (
+                    <Text
+                      variant={TextVariant.small}
+                      className="text-primary/70 flex flex-row gap-1 items-center w-full"
+                    >
+                      <List className="h-3 w-3 text-primary/70" /> in list{' '}
+                      {tripleObject?.label}
+                    </Text>
+                  ) : (
+                    <Text
+                      variant={TextVariant.small}
+                      className="text-primary/70 flex flex-row gap-1 items-center w-full"
+                    >
+                      <Settings className="h-3 w-3 text-primary/70" /> I{' '}
+                      {triple?.predicate?.label}
+                    </Text>
+                  )}
                 </div>
               </div>
 
@@ -743,16 +732,16 @@ export function SignalStep({
               <div className="flex w-full items-center gap-4 rounded-lg border transition-colors h-[72px] border-[#1A1A1A]">
                 <div className="flex items-center gap-4 w-full">
                   <div className="w-14 h-14 rounded bg-[#1A1A1A] flex-shrink-0 ml-1">
-                    {(atom?.image || triple?.subject.image) && (
+                    {(atom?.image || tripleObject?.image) && (
                       <img
-                        src={atom?.image ?? triple?.subject.image ?? ''}
-                        alt={atom?.label ?? triple?.subject.label ?? ''}
+                        src={atom?.image ?? tripleObject?.image ?? ''}
+                        alt={atom?.label ?? tripleObject?.label ?? ''}
                         className="w-full h-full object-cover rounded-lg"
                       />
                     )}
                   </div>
                   <Text variant="title">
-                    {atom?.label ?? triple?.subject.label}
+                    {atom?.label ?? tripleObject?.label}
                   </Text>
                 </div>
               </div>

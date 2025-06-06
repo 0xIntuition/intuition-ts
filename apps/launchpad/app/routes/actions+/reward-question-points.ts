@@ -9,6 +9,7 @@ interface EpochCompletion {
   epoch_id: number
   points_awarded: number
   subject_id: number
+  object_id?: number
 }
 
 interface InsertEpochCompletionResponse {
@@ -71,6 +72,7 @@ export async function action({ request }: ActionFunctionArgs) {
   const epochId = formData.get('epochId')
   const pointAwardAmount = formData.get('pointAwardAmount')
   const subjectId = formData.get('subjectId')
+  const objectId = formData.get('objectId')
 
   Object.assign(logContext, {
     accountId,
@@ -78,6 +80,7 @@ export async function action({ request }: ActionFunctionArgs) {
     epochId,
     pointAwardAmount,
     subjectId,
+    objectId,
   })
 
   try {
@@ -95,18 +98,25 @@ export async function action({ request }: ActionFunctionArgs) {
       'pointAwardAmount must be a string',
     )
     invariant(typeof subjectId === 'string', 'subjectId must be a string')
+    // objectId is optional for backward compatibility
+    invariant(
+      !objectId || typeof objectId === 'string',
+      'objectId must be a string if provided',
+    )
 
     const parsedQuestionId = parseInt(questionId, 10)
     const parsedEpochId = parseInt(epochId, 10)
     const parsedPointAwardAmount = parseInt(pointAwardAmount, 10)
     const parsedSubjectId = parseInt(subjectId, 10)
+    const parsedObjectId = objectId ? parseInt(objectId, 10) : undefined
 
     // Check for NaN values
     if (
       isNaN(parsedQuestionId) ||
       isNaN(parsedEpochId) ||
       isNaN(parsedPointAwardAmount) ||
-      isNaN(parsedSubjectId)
+      isNaN(parsedSubjectId) ||
+      (objectId && isNaN(parsedObjectId!))
     ) {
       logger('Invalid numeric values:', logContext)
       throw new Error('Invalid numeric values provided')
@@ -137,6 +147,7 @@ export async function action({ request }: ActionFunctionArgs) {
       epoch_id: parsedEpochId,
       points_awarded: parsedPointAwardAmount,
       subject_id: parsedSubjectId,
+      ...(parsedObjectId !== undefined && { object_id: parsedObjectId }),
     }
 
     const result = await client.request<InsertEpochCompletionResponse>(
