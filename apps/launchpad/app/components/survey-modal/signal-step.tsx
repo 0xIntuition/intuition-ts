@@ -372,15 +372,22 @@ export function SignalStep({
     return null
   }
 
+  // Extract clear variable names for preferences mode
+  const preferencesTripleObject =
+    mode === 'preferences'
+      ? selectedTopic?.triple?.object.label
+      : newAtomMetadata?.name ?? selectedTopic?.triple?.subject.label
+  const listTripleObject =
+    mode === 'preferences' ? objectLabel : selectedTopic?.triple?.object.label
+
   return (
     <div className="flex flex-col min-h-full">
       <div className="flex flex-col gap-4 p-8">
         <div className="flex flex-col gap-2 mb-8">
           <Text variant="headline" className="font-semibold">
-            Signal{' '}
-            {newAtomMetadata?.name ?? selectedTopic?.triple?.subject.label}{' '}
+            Signal {preferencesTripleObject}{' '}
             {mode === 'questions' ? 'as the best' : 'as your preference for'}{' '}
-            {objectLabel}
+            {listTripleObject}
           </Text>
           <Text variant={TextVariant.footnote} className="text-primary/70">
             <span className="inline-flex items-center gap-1">

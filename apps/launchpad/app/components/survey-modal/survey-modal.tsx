@@ -808,7 +808,11 @@ export function OnboardingModal({
                         newAtomMetadata={state.newAtomMetadata}
                         predicateId={predicateId}
                         objectId={objectId}
-                        objectLabel={question?.object_label ?? ''}
+                        objectLabel={
+                          mode === 'preferences'
+                            ? listData?.globalTriples[0]?.object.label ?? ''
+                            : question?.object_label ?? ''
+                        }
                         setTxState={setTxState}
                         onStakingSuccess={onStakingSuccess}
                         isLoading={isLoading}
