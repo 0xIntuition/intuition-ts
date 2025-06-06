@@ -19,7 +19,7 @@ export const QUESTS = [
     title: 'What are your preferences?',
     description: 'Answer questions about your preferences to earn IQ!',
     link: '/quests/preferences',
-    enabled: false,
+    enabled: true,
     index: 3,
   },
 ]

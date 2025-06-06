@@ -43,12 +43,14 @@ export const onboardingModalAtom = atom<{
   predicateId: number | null
   objectId: number | null
   tagObjectId?: number | null
+  preferencesPredicateId?: number | null
 }>({
   isOpen: false,
   question: null,
   predicateId: null,
   objectId: null,
   tagObjectId: null,
+  preferencesPredicateId: null,
 })
 
 export const shareModalAtom = atom<{

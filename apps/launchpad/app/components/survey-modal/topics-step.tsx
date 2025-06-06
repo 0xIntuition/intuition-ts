@@ -18,6 +18,7 @@ import { Book, Users } from 'lucide-react'
 interface TopicsStepProps {
   topics: Topic[]
   isLoadingList: boolean
+  isLoadingPreferences?: boolean
   onToggleTopic: (id: string) => void
   onCreateClick: () => void
   question: Question
@@ -25,11 +26,13 @@ interface TopicsStepProps {
   setSearchTerm: (term: string) => void
   atomsData?: GetAtomsQuery
   isSearching: boolean
+  mode: 'questions' | 'preferences'
 }
 
 export function TopicsStep({
   topics,
   isLoadingList,
+  isLoadingPreferences = false,
   onToggleTopic,
   onCreateClick,
   question,
@@ -37,6 +40,7 @@ export function TopicsStep({
   setSearchTerm,
   atomsData,
   isSearching,
+  mode,
 }: TopicsStepProps) {
   if (!question) {
     return null
@@ -44,28 +48,42 @@ export function TopicsStep({
 
   const { title, description } = question
 
+  // In preferences mode, we need to wait for both queries to complete
+  const isLoading =
+    isLoadingList ||
+    (mode === 'preferences' && isLoadingPreferences) ||
+    isSearching
+
   // Combine existing topics with search results, ensuring selected state is preserved
   const displayedTopics = searchTerm
-    ? (atomsData?.atoms ?? []).map((atom) => {
-        // Check if this atom already exists in topics
-        const existingTopic = topics.find((t) => t.id === atom.vault_id)
-        if (existingTopic) {
-          // If it exists, use the existing topic data but update selected state
-          return {
-            ...existingTopic,
-            selected: topics.some((t) => t.id === atom.vault_id && t.selected),
+    ? mode === 'preferences'
+      ? // In preferences mode, only filter existing topics
+        topics.filter((topic) =>
+          topic.name.toLowerCase().includes(searchTerm.toLowerCase()),
+        )
+      : // In questions mode, combine existing topics with search results
+        (atomsData?.atoms ?? []).map((atom) => {
+          // Check if this atom already exists in topics
+          const existingTopic = topics.find((t) => t.id === atom.vault_id)
+          if (existingTopic) {
+            // If it exists, use the existing topic data but update selected state
+            return {
+              ...existingTopic,
+              selected: topics.some(
+                (t) => t.id === atom.vault_id && t.selected,
+              ),
+            }
           }
-        }
-        // If it's a new atom, create a new topic without triple
-        return {
-          id: atom.vault_id,
-          name: atom.label ?? '',
-          image: atom.image ?? undefined,
-          selected: topics.some((t) => t.id === atom.vault_id && t.selected),
-          totalSignals: atom.vault?.position_count,
-          triple: undefined,
-        } as Topic
-      })
+          // If it's a new atom, create a new topic without triple
+          return {
+            id: atom.vault_id,
+            name: atom.label ?? '',
+            image: atom.image ?? undefined,
+            selected: topics.some((t) => t.id === atom.vault_id && t.selected),
+            totalSignals: atom.vault?.position_count,
+            triple: undefined,
+          } as Topic
+        })
     : topics
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -100,7 +118,7 @@ export function TopicsStep({
           startAdornment="magnifying-glass"
           value={searchTerm}
         />
-        {isLoadingList || isSearching ? (
+        {isLoading ? (
           <div className="flex flex-col gap-4 justify-center items-center h-[350px]">
             <LoadingLogo size={50} />
             <div className="flex flex-col items-center gap-1">
@@ -183,15 +201,19 @@ export function TopicsStep({
               </div>
             </div>
             <div className="flex flex-col gap-2 items-center justify-center mt-10">
-              <Text
-                variant={TextVariant.body}
-                className="italic text-primary/70"
-              >
-                Don&apos;t see the atom you&apos;re looking for?
-              </Text>
-              <Button variant="secondary" onClick={onCreateClick}>
-                Create Atom
-              </Button>
+              {mode === 'questions' && (
+                <>
+                  <Text
+                    variant={TextVariant.body}
+                    className="italic text-primary/70"
+                  >
+                    Don&apos;t see the atom you&apos;re looking for?
+                  </Text>
+                  <Button variant="secondary" onClick={onCreateClick}>
+                    Create Atom
+                  </Button>
+                </>
+              )}
             </div>
           </ScrollArea>
         ) : (
@@ -202,11 +224,15 @@ export function TopicsStep({
                 variant={TextVariant.body}
                 className="italic text-primary/70"
               >
-                Would you like to create one?
+                {mode === 'preferences'
+                  ? 'Try adjusting your search term.'
+                  : 'Would you like to create one?'}
               </Text>
-              <Button variant="secondary" onClick={onCreateClick}>
-                Create Atom
-              </Button>
+              {mode === 'questions' && (
+                <Button variant="secondary" onClick={onCreateClick}>
+                  Create Atom
+                </Button>
+              )}
             </div>
           </div>
         )}

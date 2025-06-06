@@ -9,6 +9,7 @@ export interface Question {
   predicate_id: number
   object_id: number
   tag_object_id: number
+  preferences_predicate_id: number
 }
 
 export interface GetQuestionsResponse {
@@ -87,6 +88,7 @@ export interface QuestionCompletion {
   completed_at: string
   points_awarded: number
   subject_id: number
+  object_id: number
 }
 
 export interface GetQuestionCompletionResponse {
@@ -105,6 +107,7 @@ export const GetQuestionCompletionDocument = `
       completed_at
       points_awarded
       subject_id
+      object_id
     }
   }
 `

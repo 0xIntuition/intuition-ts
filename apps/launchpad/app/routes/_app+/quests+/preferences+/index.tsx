@@ -53,7 +53,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const criticalStart = Date.now()
   const [user, epochsResponse] = await Promise.all([
     getUser(request),
-    fetch(`${new URL(request.url).origin}/resources/get-epochs`),
+    fetch(
+      `${new URL(request.url).origin}/resources/get-epochs?type=preferences`,
+    ),
   ])
   markTiming('Critical data parallel fetch', criticalStart)
 
@@ -214,7 +216,7 @@ function useEpochsData() {
   const { data: epochs = [] } = useQuery<Epoch[]>({
     queryKey: ['get-epochs'],
     queryFn: async () => {
-      const response = await fetch('/resources/get-epochs')
+      const response = await fetch('/resources/get-epochs?type=preferences')
       const data = await response.json()
       if (!response.ok) {
         throw new Error(data.error || 'Failed to fetch epochs')
@@ -298,7 +300,15 @@ export default function Questions() {
     predicateId: number,
     objectId: number,
   ) => {
-    setOnboardingModal({ isOpen: true, question, predicateId, objectId })
+    setOnboardingModal({
+      isOpen: true,
+      question,
+      predicateId,
+      objectId,
+      preferencesPredicateId: (
+        question as Question & { preferences_predicate_id?: number }
+      ).preferences_predicate_id,
+    })
   }
 
   const handleCloseOnboarding = () => {
@@ -307,6 +317,7 @@ export default function Questions() {
       question: null,
       predicateId: null,
       objectId: null,
+      preferencesPredicateId: null,
     })
   }
 
@@ -322,7 +333,7 @@ export default function Questions() {
           <Icon name="chevron-left" className="h-4 w-4" />
         </Button>
         <PageHeader
-          title="Bootstrap your Intuition"
+          title="Preferences"
           subtitle="Seed the Intuition Graph with your unique thoughts, knowledge, and insights"
         />
       </div>
@@ -338,7 +349,10 @@ export default function Questions() {
         predicateId={onboardingModal.predicateId || 0}
         objectId={onboardingModal.objectId || 0}
         question={onboardingModal.question!}
-        mode="questions"
+        mode="preferences"
+        preferencesPredicateId={
+          onboardingModal.preferencesPredicateId || undefined
+        }
       />
       <AtomDetailsModal
         isOpen={atomDetailsModal.isOpen}
