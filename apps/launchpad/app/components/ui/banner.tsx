@@ -13,6 +13,7 @@ const bannerVariants = cva('relative w-full', {
       border: 'border-b border-border',
       base: 'bg-[#0052FF] border border-primary/30',
       arbitrum: 'bg-[#213147] border border-primary/20',
+      ai: 'bg-gradient-to-br from-[#7C3AED] to-[#4C1D95] border border-purple-500/30',
     },
     size: {
       sm: 'px-4 py-2',

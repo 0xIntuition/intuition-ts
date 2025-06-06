@@ -1,23 +1,23 @@
 export const QUESTS = [
   {
-    title: 'Bootstrap your Intuition',
+    title: 'Bootstrap the Knowledge Graph',
     description:
-      'Seed the Intuition Graph with your unique thoughts, knowledge, and insights.',
+      'Contribute foundational knowledge that helps newcomers and power-users explore web3 with confidence.',
     link: '/quests/questions',
     enabled: true,
     index: 1,
   },
   {
-    title: 'Map the Ecosystems of Crypto',
+    title: 'Map the Crypto Ecosystems',
     description:
-      'Help users find the most relevant people and projects within each ecosystem.',
+      'Map the major protocols, applications, and services on different blockchains, giving builders and users a chain-aware guide for each Web3 ecosystem.',
     link: '/quests/ecosystems',
     enabled: true,
     index: 2,
   },
   {
-    title: 'What are your preferences?',
-    description: 'Answer questions about your preferences to earn IQ!',
+    title: 'Personalize the Graph',
+    description: 'Share your unique perspectives to shape how AI and applications respond to you everywhere.',
     link: '/quests/preferences',
     enabled: true,
     index: 3,
@@ -33,4 +33,3 @@ export const WHITELISTED_ADDRESSES = [
   // '0x81766f4ead4d3b35d1a46fbfaaf0c557ff1a860b', // Fvngabill
 ]
 
-export const LEGION_LINK = 'https://legion.cc/intuition'

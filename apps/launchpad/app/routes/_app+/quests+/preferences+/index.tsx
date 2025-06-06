@@ -333,8 +333,8 @@ export default function Questions() {
           <Icon name="chevron-left" className="h-4 w-4" />
         </Button>
         <PageHeader
-          title="Preferences"
-          subtitle="Seed the Intuition Graph with your unique thoughts, knowledge, and insights"
+          title="Personalize the Graph"
+          subtitle="Share your unique perspectives to shape how AI and applications respond to you everywhere."
         />
       </div>
       <Suspense fallback={<LoadingState />}>

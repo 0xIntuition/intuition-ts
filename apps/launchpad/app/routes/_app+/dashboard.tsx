@@ -16,16 +16,15 @@ import {
 import { AggregateIQ } from '@components/aggregate-iq'
 import { AuthCover } from '@components/auth-cover'
 import ChapterProgress from '@components/chapter-progress'
+import { DashboardBanner } from '@components/dashboard-banner'
 import { EarnSection } from '@components/earn-section'
 import { ErrorPage } from '@components/error-page'
-// import { LegionBanner } from '@components/legion/legion-banner'
 import { LoadingState } from '@components/loading-state'
 import { CHAPTERS } from '@consts/chapters'
 import { PORTAL_URL, ZERO_ADDRESS } from '@consts/general'
 import { usePoints } from '@lib/hooks/usePoints'
 import { useTotalCompletedQuestions } from '@lib/hooks/useTotalCompletedQuestions'
 import { useUserRank } from '@lib/hooks/useUserRank'
-// import { LEGION_LINK } from '@lib/utils/constants'
 import { json, LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 import { getUser } from '@server/auth'
@@ -138,9 +137,9 @@ export default function Dashboard() {
 
   return (
     <div className="flex flex-col gap-4">
-      {/* <div className="pb-5">
-        <LegionBanner ctaHref={LEGION_LINK} />
-      </div> */}
+      <div className="pb-5">
+        <DashboardBanner />
+      </div>
 
       <motion.div
         initial={{ opacity: 0, y: -20 }}
@@ -203,7 +202,7 @@ export default function Dashboard() {
         <div className="absolute inset-0 shadow-inner-pop" />
         <div className="relative flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-4">
-            <div className="hidden sm:block p-2 sm:p-3 rounded-xl bg-social/80 shadow-pop-lg">
+            <div className="hidden sm:block p-2 sm:p-3 rounded-xl bg-[#4C1D95] shadow-pop-lg">
               <Sparkles className="w-6 h-6 sm:w-8 sm:h-8 text-primary" />
             </div>
             <div className="text-center sm:text-left">
@@ -212,7 +211,7 @@ export default function Dashboard() {
                 weight={TextWeight.semibold}
                 className="mb-1"
               >
-                View My Intuition on Portal
+                View Your Intuition on The Portal
               </Text>
               <Text variant={TextVariant.body} className="text-primary/50">
                 Explore the graph, curate your Intuition, and experience
