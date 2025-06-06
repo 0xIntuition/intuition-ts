@@ -338,6 +338,7 @@ export default function Questions() {
         predicateId={onboardingModal.predicateId || 0}
         objectId={onboardingModal.objectId || 0}
         question={onboardingModal.question!}
+        mode="questions"
       />
       <AtomDetailsModal
         isOpen={atomDetailsModal.isOpen}

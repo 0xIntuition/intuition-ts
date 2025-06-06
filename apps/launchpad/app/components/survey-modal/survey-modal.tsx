@@ -2,6 +2,7 @@ import {
   startTransition,
   useCallback,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from 'react'
@@ -14,6 +15,8 @@ import {
 } from '@0xintuition/1ui'
 import { useGetAtomsQuery, useGetListDetailsQuery } from '@0xintuition/graphql'
 
+import { CURRENT_ENV } from '@consts/general'
+import { getSpecialPredicate } from '@lib/utils/app'
 import logger from '@lib/utils/logger'
 import { usePrivy } from '@privy-io/react-auth'
 import { useLocation, useNavigate } from '@remix-run/react'
@@ -137,10 +140,19 @@ export function OnboardingModal({
   predicateId,
   objectId,
   question,
+  mode,
+  preferencesPredicateId,
 }: OnboardingModalProps) {
   const queryClient = useQueryClient()
   const { user: privyUser } = usePrivy()
   const userWallet = privyUser?.wallet?.address
+
+  console.log('OnboardingModal - mode:', mode)
+  console.log('OnboardingModal - question:', question)
+  console.log(
+    'OnboardingModal - preferencesPredicateId:',
+    preferencesPredicateId,
+  )
 
   const [state, setState] = useState<OnboardingState>(INITIAL_STATE)
   const [topics, setTopics] = useState<Topic[]>([])
@@ -156,6 +168,8 @@ export function OnboardingModal({
   const { isTransitioning, handleTransition, resetTransition } = transition
   const navigate = useNavigate()
   const location = useLocation()
+
+  console.log('mode', mode)
 
   const { data: listData, isLoading: isLoadingList } = useGetListDetailsQuery(
     {
@@ -178,6 +192,8 @@ export function OnboardingModal({
           total_shares: 'desc',
         },
       },
+      limit: mode === 'preferences' ? 1000 : 50,
+      offset: 0,
     },
     {
       queryKey: [
@@ -186,10 +202,70 @@ export function OnboardingModal({
           predicateId,
           objectId,
           searchTerm,
+          mode,
         },
       ],
     },
   )
+
+  console.log('listData', listData)
+
+  // Extract subject IDs from listData to use as object IDs in preferences query
+  const subjectIds = useMemo(() => {
+    if (!listData?.globalTriples) {
+      return []
+    }
+    return listData.globalTriples.map((triple) => triple.subject.id)
+  }, [listData])
+
+  console.log('subjectIds for preferences query:', subjectIds)
+
+  // Query for preferences data when in preferences mode
+  const { data: preferencesData, isLoading: isLoadingPreferences } =
+    useGetListDetailsQuery(
+      {
+        tagPredicateId: preferencesPredicateId || 0,
+        globalWhere: {
+          predicate_id: {
+            _eq: preferencesPredicateId || 0,
+          },
+          object_id: {
+            _in: subjectIds,
+          },
+          subject_id: {
+            _eq: getSpecialPredicate(CURRENT_ENV).iPredicate.vaultId,
+          },
+          subject: {
+            label: {
+              _ilike: searchTerm ? `%${searchTerm}%` : undefined,
+            },
+          },
+        },
+        orderBy: {
+          vault: {
+            total_shares: 'desc',
+          },
+        },
+        limit: 1000,
+        offset: 0,
+      },
+      {
+        queryKey: [
+          'get-preferences-data',
+          {
+            preferencesPredicateId,
+            subjectIds,
+            searchTerm,
+          },
+        ],
+        enabled:
+          mode === 'preferences' &&
+          !!preferencesPredicateId &&
+          subjectIds.length > 0,
+      },
+    )
+
+  console.log('preferencesData:', preferencesData)
 
   const { data: atomsData, isLoading: isSearching } = useGetAtomsQuery(
     {
@@ -205,7 +281,7 @@ export function OnboardingModal({
     },
     {
       queryKey: ['atoms', searchTerm],
-      enabled: Boolean(searchTerm),
+      enabled: Boolean(searchTerm) && mode !== 'preferences',
     },
   )
 
@@ -241,17 +317,56 @@ export function OnboardingModal({
       return
     }
 
-    const newTopics = listData.globalTriples.map((triple) => ({
-      id: triple.subject.vault_id,
-      name: triple.subject.label ?? '',
-      image: triple.subject.image ?? undefined,
-      triple: triple as TripleType,
-      selected: false,
-    }))
-    setTopics(newTopics)
+    console.log(
+      'Creating topics, mode:',
+      mode,
+      'preferencesData available:',
+      !!preferencesData?.globalTriples,
+    )
+
+    if (mode === 'preferences' && preferencesData?.globalTriples) {
+      // In preferences mode, create topics that display list items but use preferences triples
+      const newTopics: Topic[] = listData.globalTriples.map((listTriple) => {
+        // Find the corresponding preferences triple for this list item
+        const preferencesTriple = preferencesData.globalTriples.find(
+          (prefTriple) => prefTriple.object.id === listTriple.subject.id,
+        )
+
+        console.log(
+          'List item:',
+          listTriple.subject.label,
+          'Preferences triple found:',
+          !!preferencesTriple,
+        )
+
+        return {
+          id: listTriple.subject.vault_id,
+          name: listTriple.subject.label ?? '',
+          image: listTriple.subject.image ?? undefined,
+          triple: (preferencesTriple || listTriple) as TripleType,
+          selected: false,
+          totalSignals:
+            preferencesTriple?.vault?.positions_aggregate?.aggregate?.count ||
+            listTriple.vault?.positions_aggregate?.aggregate?.count,
+        }
+      })
+      console.log('Created preferences topics:', newTopics.length)
+      setTopics(newTopics)
+    } else {
+      // In questions mode, create topics from list triples normally
+      const newTopics: Topic[] = listData.globalTriples.map((triple) => ({
+        id: triple.subject.vault_id,
+        name: triple.subject.label ?? '',
+        image: triple.subject.image ?? undefined,
+        triple: triple as TripleType,
+        selected: false,
+      }))
+      console.log('Created questions topics:', newTopics.length)
+      setTopics(newTopics)
+    }
 
     setSteps((prev) => {
-      if (newTopics.length > 0) {
+      if (listData.globalTriples.length > 0) {
         return prev.filter((step) => step.id !== STEPS.CREATE)
       }
       return prev
@@ -260,7 +375,7 @@ export function OnboardingModal({
     return () => {
       setTopics([])
     }
-  }, [listData?.globalTriples])
+  }, [listData?.globalTriples, preferencesData?.globalTriples, mode])
 
   const handleTopicSelect = (id: string) => {
     // First check if this atom exists in topics list
@@ -281,6 +396,11 @@ export function OnboardingModal({
       }))
       updateStepStatus(STEPS.TOPICS, 'completed')
       updateStepStatus(STEPS.SIGNAL, 'current')
+      return
+    }
+
+    // In preferences mode, don't allow selection of atoms that aren't in the preferences list
+    if (mode === 'preferences') {
       return
     }
 
@@ -475,6 +595,7 @@ export function OnboardingModal({
         epochId: question?.epoch_id,
         pointAwardAmount: question.point_award_amount,
         subjectId,
+        mode,
       })
 
       setIsLoading(true)
@@ -487,7 +608,20 @@ export function OnboardingModal({
         'pointAwardAmount',
         question.point_award_amount?.toString() ?? '',
       )
-      formData.append('subjectId', subjectId ?? '')
+
+      if (mode === 'preferences') {
+        // In preferences mode:
+        // - subjectId should be the "I" predicate vault_id
+        // - objectId should be the preference target (what the user selected)
+        const iPredicate = getSpecialPredicate(CURRENT_ENV).iPredicate
+        formData.append('subjectId', iPredicate.vaultId.toString())
+        formData.append('objectId', subjectId ?? '')
+      } else {
+        // In questions mode:
+        // - subjectId is the selected list item
+        // - objectId is not needed (backward compatibility)
+        formData.append('subjectId', subjectId ?? '')
+      }
 
       const response = await fetch('/actions/reward-question-points', {
         method: 'POST',
@@ -562,7 +696,8 @@ export function OnboardingModal({
         resetTransition()
 
         if (isFlowComplete && question?.id && question?.epoch_id) {
-          const targetPath = `/quests/questions/${question.epoch_id}/${question.id}`
+          const basePath = mode === 'preferences' ? 'preferences' : 'questions'
+          const targetPath = `/quests/${basePath}/${question.epoch_id}/${question.id}`
           if (location.pathname !== targetPath) {
             navigate(targetPath)
           }
@@ -582,6 +717,7 @@ export function OnboardingModal({
     question?.epoch_id,
     location.pathname,
     navigate,
+    mode,
   ])
 
   const onCreationSuccess = (metadata: NewAtomMetadata) => {
@@ -612,6 +748,11 @@ export function OnboardingModal({
   }
 
   const handleCreateClick = useCallback(() => {
+    // Disable atom creation in preferences mode
+    if (mode === 'preferences') {
+      return
+    }
+
     setSteps((prev) => {
       const createStep = STEPS_CONFIG.find((step) => step.id === STEPS.CREATE)
       if (!prev.some((step) => step.id === STEPS.CREATE) && createStep) {
@@ -633,7 +774,7 @@ export function OnboardingModal({
 
     updateStepStatus(STEPS.TOPICS, 'completed')
     updateStepStatus(STEPS.CREATE, 'current')
-  }, [handleTransition])
+  }, [handleTransition, mode])
 
   return (
     <ClientOnly>
@@ -672,6 +813,7 @@ export function OnboardingModal({
                     <TopicsStep
                       topics={topics}
                       isLoadingList={isLoadingList}
+                      isLoadingPreferences={isLoadingPreferences}
                       onToggleTopic={handleTopicSelect}
                       onCreateClick={handleCreateClick}
                       question={question}
@@ -679,6 +821,7 @@ export function OnboardingModal({
                       setSearchTerm={setSearchTerm}
                       atomsData={atomsData}
                       isSearching={isSearching}
+                      mode={mode}
                     />
                   )}
 
@@ -702,6 +845,8 @@ export function OnboardingModal({
                         isLoading={isLoading}
                         setIsLoading={setIsLoading}
                         isOpen={isOpen}
+                        mode={mode}
+                        preferencesPredicateId={preferencesPredicateId}
                       />
                     )}
 

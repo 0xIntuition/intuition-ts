@@ -457,9 +457,6 @@ export function SignalStep({
       return
     }
 
-    console.log('triple', triple)
-    console.log('activeVaultId', activeVaultId)
-
     try {
       const txHash = await stake({
         val:
@@ -491,8 +488,6 @@ export function SignalStep({
         // Invalidate specific queries that need to be refreshed
         await queryClient.invalidateQueries()
         revalidator.revalidate()
-        console.log('[SignalStep] All queries invalidated successfully')
-        console.log('[SignalStep] Revalidator called')
 
         // Store the final state and show success after a delay
         setFinalMode(mode)

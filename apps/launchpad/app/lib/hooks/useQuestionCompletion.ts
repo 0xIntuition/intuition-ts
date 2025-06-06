@@ -5,6 +5,7 @@ export interface QuestionCompletion {
   completed_at: string
   points_awarded: number
   subject_id: number
+  object_id: number
 }
 
 export function useQuestionCompletion(accountId?: string, questionId?: number) {

@@ -1,9 +1,9 @@
 import { Card } from '@0xintuition/1ui'
 import { useGetAtomQuery } from '@0xintuition/graphql'
 
-import { Question } from '@lib/graphql/types'
 import { useQuestionCompletion } from '@lib/hooks/useQuestionCompletion'
 import { useQuestionData } from '@lib/hooks/useQuestionData'
+import { Question } from '@lib/services/questions'
 import { atomDetailsModalAtom } from '@lib/state/store'
 import { Epoch } from '@lib/types'
 import { usePrivy } from '@privy-io/react-auth'
@@ -43,6 +43,7 @@ export function QuestionRowWrapper({
     },
   )
 
+  console.log('question', question)
   const { data: completion } = useQuestionCompletion(
     user?.wallet?.address,
     question.id,
@@ -55,7 +56,12 @@ export function QuestionRowWrapper({
 
   // Get the user's selected atom if they've completed the question
   const { data: atomData } = useGetAtomQuery(
-    { id: completion?.subject_id ?? 0 },
+    {
+      id:
+        epoch?.type === 'preferences'
+          ? completion?.object_id ?? 0
+          : completion?.subject_id ?? 0,
+    },
     { enabled: !!completion?.subject_id },
   )
 

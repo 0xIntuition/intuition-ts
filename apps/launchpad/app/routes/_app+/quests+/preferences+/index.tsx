@@ -225,8 +225,6 @@ function useEpochsData() {
     },
   })
 
-  console.log('epochs', epochs)
-
   // Get questions for each epoch as they're expanded
   const { data: allQuestions = [] } = useQuery<Question[]>({
     queryKey: ['get-questions'],
@@ -302,7 +300,15 @@ export default function Questions() {
     predicateId: number,
     objectId: number,
   ) => {
-    setOnboardingModal({ isOpen: true, question, predicateId, objectId })
+    setOnboardingModal({
+      isOpen: true,
+      question,
+      predicateId,
+      objectId,
+      preferencesPredicateId: (
+        question as Question & { preferences_predicate_id?: number }
+      ).preferences_predicate_id,
+    })
   }
 
   const handleCloseOnboarding = () => {
@@ -311,6 +317,7 @@ export default function Questions() {
       question: null,
       predicateId: null,
       objectId: null,
+      preferencesPredicateId: null,
     })
   }
 
@@ -342,6 +349,10 @@ export default function Questions() {
         predicateId={onboardingModal.predicateId || 0}
         objectId={onboardingModal.objectId || 0}
         question={onboardingModal.question!}
+        mode="preferences"
+        preferencesPredicateId={
+          onboardingModal.preferencesPredicateId || undefined
+        }
       />
       <AtomDetailsModal
         isOpen={atomDetailsModal.isOpen}

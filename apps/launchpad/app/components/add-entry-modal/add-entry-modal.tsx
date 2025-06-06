@@ -533,6 +533,7 @@ export function AddEntryModal({
                       setSearchTerm={setSearchTerm}
                       atomsData={atomsData}
                       isSearching={isSearching}
+                      mode="questions"
                     />
                   )}
 
@@ -558,6 +559,7 @@ export function AddEntryModal({
                         isLoading={isLoading}
                         setIsLoading={setIsLoading}
                         isOpen={isOpen}
+                        mode="questions"
                       />
                     )}
 

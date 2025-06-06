@@ -324,10 +324,12 @@ export default function MiniGameOne() {
     pointsAwarded = completion.points_awarded
   }
 
+  console.log('completion', completion)
+
   // Get the user's selected atom if they've completed the question
   const { data: atomData, isLoading: isLoadingAtom } = useGetAtomQuery(
-    { id: completion?.subject_id ?? 0 },
-    { enabled: !!completion?.subject_id },
+    { id: completion?.object_id ?? 0 },
+    { enabled: !!completion?.object_id },
   )
 
   // Add defensive check for location
@@ -574,9 +576,6 @@ export default function MiniGameOne() {
     return listData.globalTriples.map((triple) => triple.subject.id)
   }, [listData])
 
-  console.log('preferencesPredicateId', preferencesPredicateId)
-  console.log('subjectIds', subjectIds)
-
   const preferencesQueryVariables = React.useMemo(() => {
     // Don't create query variables if we don't have subject IDs yet
     if (subjectIds.length === 0) {
@@ -671,8 +670,6 @@ export default function MiniGameOne() {
     searchTerm,
   ])
 
-  console.log('preferencesQueryVariables', preferencesQueryVariables)
-
   const { data: preferencesData } = useGetListDetailsSimplifiedQuery(
     preferencesQueryVariables || {
       globalWhere: { predicate_id: { _eq: 0 } },
@@ -691,8 +688,6 @@ export default function MiniGameOne() {
       enabled: !!preferencesQueryVariables && subjectIds.length > 0,
     },
   )
-
-  console.log('preferencesData', preferencesData)
 
   // Track initial loading state and store background image
   React.useEffect(() => {
@@ -804,7 +799,7 @@ export default function MiniGameOne() {
         multiVaultConfig,
       })) as TableRowData[]) ?? []
     return data
-  }, [listData, multiVaultConfig])
+  }, [preferencesData, multiVaultConfig])
 
   const isMobile = useMediaQuery('(max-width: 768px)')
   const isTablet = useMediaQuery('(max-width: 1024px)')
@@ -963,6 +958,8 @@ export default function MiniGameOne() {
     return <LoadingState />
   }
 
+  console.log('atomData', atomData)
+
   return (
     <>
       <div className="flex flex-col md:flex-row items-center gap-4 justify-between">
@@ -976,7 +973,7 @@ export default function MiniGameOne() {
             <Icon name="chevron-left" className="h-4 w-4" />
           </Button>
           <PageHeader
-            title={`Epoch ${epoch?.order ?? ''} | Question ${questionData?.order}`}
+            title={`Preferences Epoch ${epoch?.order ?? ''} | Question ${questionData?.order}`}
             className="text-xl sm:text-2xl"
           />
         </div>
@@ -1032,7 +1029,7 @@ export default function MiniGameOne() {
                             onClick={() => {
                               const rowData = tableData.find(
                                 (row) =>
-                                  row.triple.subject.vault_id ===
+                                  row.triple.object.vault_id ===
                                   String(atomData.atom?.vault_id),
                               )
 
@@ -1173,6 +1170,8 @@ export default function MiniGameOne() {
           }
           predicateId={predicateId}
           objectId={objectId}
+          mode="preferences"
+          preferencesPredicateId={preferencesPredicateId ?? undefined}
         />
       )}
       <AtomDetailsModal
@@ -1203,7 +1202,7 @@ export default function MiniGameOne() {
             : undefined
         }
         type="question"
-        baseUrl={`/quests/questions/${epochId}`}
+        baseUrl={`/quests/preferences/${epochId}`}
       />
     </>
   )

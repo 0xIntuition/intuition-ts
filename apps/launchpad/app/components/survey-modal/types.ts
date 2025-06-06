@@ -49,6 +49,8 @@ export interface OnboardingModalProps {
   predicateId: number
   objectId: number
   question: Question
+  mode: 'questions' | 'preferences'
+  preferencesPredicateId?: number
 }
 
 export interface SignalStepProps {
@@ -62,4 +64,6 @@ export interface SignalStepProps {
   isLoading: boolean
   setIsLoading: (loading: boolean) => void
   isOpen: boolean
+  mode: 'questions' | 'preferences'
+  preferencesPredicateId?: number
 }

@@ -104,15 +104,11 @@ export function SignalModal({
   const userWallet = privyUser?.wallet?.address
   const walletBalance = useGetWalletBalance(userWallet as `0x${string}`, isOpen)
 
-  console.log('triple', triple)
-  console.log('atom', atom)
-
   const tripleLabel =
     triple?.subject?.label === 'I'
       ? triple?.object?.label
       : triple?.subject?.label
 
-  console.log('tripleLabel', tripleLabel)
   return (
     <ClientOnly>
       {() => (
