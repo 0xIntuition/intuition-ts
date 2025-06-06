@@ -9,7 +9,7 @@ import {
 } from '@0xintuition/1ui'
 
 import { EpochStatus } from '@components/epoch-status'
-import { Epoch } from '@lib/services/epochs'
+import type { Epoch } from '@lib/types'
 import { Link } from '@remix-run/react'
 
 interface EcosystemCardProps {

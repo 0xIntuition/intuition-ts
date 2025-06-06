@@ -3,6 +3,7 @@ import { Question } from '@lib/services/questions'
 export interface Epoch {
   id: number
   name: string
+  description: string
   questions: Question[]
   total_points: number
   start_date: string
