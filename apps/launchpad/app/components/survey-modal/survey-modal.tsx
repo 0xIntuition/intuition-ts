@@ -147,13 +147,6 @@ export function OnboardingModal({
   const { user: privyUser } = usePrivy()
   const userWallet = privyUser?.wallet?.address
 
-  console.log('OnboardingModal - mode:', mode)
-  console.log('OnboardingModal - question:', question)
-  console.log(
-    'OnboardingModal - preferencesPredicateId:',
-    preferencesPredicateId,
-  )
-
   const [state, setState] = useState<OnboardingState>(INITIAL_STATE)
   const [topics, setTopics] = useState<Topic[]>([])
   const [isLoading, setIsLoading] = useState(false)
@@ -168,8 +161,6 @@ export function OnboardingModal({
   const { isTransitioning, handleTransition, resetTransition } = transition
   const navigate = useNavigate()
   const location = useLocation()
-
-  console.log('mode', mode)
 
   const { data: listData, isLoading: isLoadingList } = useGetListDetailsQuery(
     {
@@ -208,8 +199,6 @@ export function OnboardingModal({
     },
   )
 
-  console.log('listData', listData)
-
   // Extract subject IDs from listData to use as object IDs in preferences query
   const subjectIds = useMemo(() => {
     if (!listData?.globalTriples) {
@@ -217,8 +206,6 @@ export function OnboardingModal({
     }
     return listData.globalTriples.map((triple) => triple.subject.id)
   }, [listData])
-
-  console.log('subjectIds for preferences query:', subjectIds)
 
   // Query for preferences data when in preferences mode
   const { data: preferencesData, isLoading: isLoadingPreferences } =
@@ -264,8 +251,6 @@ export function OnboardingModal({
           subjectIds.length > 0,
       },
     )
-
-  console.log('preferencesData:', preferencesData)
 
   const { data: atomsData, isLoading: isSearching } = useGetAtomsQuery(
     {
@@ -317,26 +302,12 @@ export function OnboardingModal({
       return
     }
 
-    console.log(
-      'Creating topics, mode:',
-      mode,
-      'preferencesData available:',
-      !!preferencesData?.globalTriples,
-    )
-
     if (mode === 'preferences' && preferencesData?.globalTriples) {
       // In preferences mode, create topics that display list items but use preferences triples
       const newTopics: Topic[] = listData.globalTriples.map((listTriple) => {
         // Find the corresponding preferences triple for this list item
         const preferencesTriple = preferencesData.globalTriples.find(
           (prefTriple) => prefTriple.object.id === listTriple.subject.id,
-        )
-
-        console.log(
-          'List item:',
-          listTriple.subject.label,
-          'Preferences triple found:',
-          !!preferencesTriple,
         )
 
         return {
@@ -350,7 +321,6 @@ export function OnboardingModal({
             listTriple.vault?.positions_aggregate?.aggregate?.count,
         }
       })
-      console.log('Created preferences topics:', newTopics.length)
       setTopics(newTopics)
     } else {
       // In questions mode, create topics from list triples normally
@@ -361,7 +331,6 @@ export function OnboardingModal({
         triple: triple as TripleType,
         selected: false,
       }))
-      console.log('Created questions topics:', newTopics.length)
       setTopics(newTopics)
     }
 

@@ -46,8 +46,6 @@ export function SignalStep({
   isOpen,
   mode,
 }: SignalStepProps) {
-  console.log('selectedTopic', selectedTopic)
-
   const [ticks, setTicks] = useState(1)
   const [inputValue, setInputValue] = useState('1')
   const [lastTxHash, setLastTxHash] = useState<string | undefined>(undefined)

@@ -6,7 +6,6 @@ import { EcosystemSignalModal } from '@components/ecosystem-signal-modal/ecosyst
 import { LoadingState } from '@components/loading-state'
 import { SignalButton } from '@components/signal-modal/signal-button'
 import { SignalModal } from '@components/signal-modal/signal-modal'
-import { MULTIVAULT_CONTRACT_ADDRESS } from '@consts/general'
 import { usePrivy } from '@privy-io/react-auth'
 import { useRevalidator } from '@remix-run/react'
 import { useQueryClient } from '@tanstack/react-query'
@@ -58,36 +57,13 @@ export default function SignalCell({
     setTimeout(() => {
       // Invalidate specific queries that need to be refreshed
       Promise.all([
-        // Invalidate vault details
-        queryClient.invalidateQueries({
-          queryKey: ['get-vault-details', MULTIVAULT_CONTRACT_ADDRESS, vaultId],
-        }),
-        // Invalidate positions
-        queryClient.invalidateQueries({
-          queryKey: ['get-positions'],
-        }),
-        // Invalidate atoms/triples depending on type
-        queryClient.invalidateQueries({
-          queryKey: atom ? ['get-atoms'] : ['get-triples'],
-        }),
-        // Invalidate events
-        queryClient.invalidateQueries({
-          queryKey: ['get-events'],
-        }),
-        // Invalidate atoms-with-tags query with a pattern match
-        queryClient.invalidateQueries({
-          queryKey: ['atoms-with-tags'],
-          exact: false,
-        }),
-      ])
-        .then(() => {
-          console.log('[SignalCell] All queries invalidated successfully')
-          revalidator.revalidate()
-          console.log('[SignalCell] Revalidator called')
-        })
-        .catch((error) => {
-          console.error('[SignalCell] Error during query invalidation:', error)
-        })
+        queryClient.invalidateQueries(),
+        revalidator.revalidate(),
+      ]).catch((error) => {
+        console.error('[SignalCell] Error during query invalidation:', error)
+      })
+      console.log('[SignalCell] All queries invalidated successfully')
+      console.log('[SignalCell] Revalidator called')
     }, 100)
   }
 

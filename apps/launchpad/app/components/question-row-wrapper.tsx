@@ -43,7 +43,6 @@ export function QuestionRowWrapper({
     },
   )
 
-  console.log('question', question)
   const { data: completion } = useQuestionCompletion(
     user?.wallet?.address,
     question.id,
