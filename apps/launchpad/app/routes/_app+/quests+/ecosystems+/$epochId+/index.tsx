@@ -150,19 +150,23 @@ function useEpochsData() {
     },
   })
 
-  // Get questions for each epoch as they're expanded
+  // Get questions for the specific epoch (epoch-specific caching)
   const { data: allQuestions = [] } = useQuery<Question[]>({
-    queryKey: ['get-questions'],
+    queryKey: ['get-questions', epochId],
     queryFn: async () => {
-      const response = await fetch('/resources/get-questions')
+      const response = await fetch(
+        `/resources/get-questions?epochId=${epochId}`,
+      )
       const data = await response.json()
       if (!response.ok) {
         throw new Error(data.error || 'Failed to fetch questions')
       }
       return data.epoch_questions
     },
-    // Only fetch questions when we have epochs
-    enabled: epochs.length > 0,
+    // Only fetch questions when we have epochs and epochId
+    enabled: epochs.length > 0 && !!epochId,
+    staleTime: 0,
+    gcTime: 0,
   })
 
   // Fetch progress for all epochs
