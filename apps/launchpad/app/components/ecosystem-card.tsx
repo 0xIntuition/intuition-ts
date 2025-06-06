@@ -9,16 +9,11 @@ import {
 } from '@0xintuition/1ui'
 
 import { EpochStatus } from '@components/epoch-status'
-import type { Epoch } from '@lib/types'
+import { Epoch } from '@lib/services/epochs'
 import { Link } from '@remix-run/react'
 
-// Extend the Epoch type to include total_points
-interface ExtendedEpoch extends Epoch {
-  total_points?: number
-}
-
 interface EcosystemCardProps {
-  epoch: ExtendedEpoch
+  epoch: Epoch
 }
 
 export default function EcosystemCard({ epoch }: EcosystemCardProps) {
