@@ -115,7 +115,7 @@ export default function SignalCell({
                 side="top"
                 align="center"
                 avoidCollisions={true}
-                className="z-[9999] max-w-xs"
+                className="z-[9999] max-w-[200px] text-center"
               >
                 <p className="text-sm leading-tight">
                   Answer question above to earn IQ points and enable voting
