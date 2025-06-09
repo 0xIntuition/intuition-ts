@@ -43,7 +43,7 @@ export function AuthCover({
             variant="primary"
             size="lg"
             onClick={login}
-            className="pointer-events-auto shadow-2xl min-w-[220px]"
+            className="pointer-events-auto shadow-2xl min-w-[220px] mt-8"
           >
             Connect Wallet {actionText && `to ${actionText}`}
           </Button>
