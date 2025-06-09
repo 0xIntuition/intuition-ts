@@ -1,6 +1,13 @@
 import { useState } from 'react'
 
-import { ClaimPosition, ClaimPositionType } from '@0xintuition/1ui'
+import {
+  ClaimPosition,
+  ClaimPositionType,
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@0xintuition/1ui'
 
 import { EcosystemSignalModal } from '@components/ecosystem-signal-modal/ecosystem-signal-modal'
 import { LoadingState } from '@components/loading-state'
@@ -85,16 +92,49 @@ export default function SignalCell({
   return (
     <>
       <div className="flex items-center justify-end gap-2 pr-6">
-        <SignalButton
-          variant={positionDirection}
-          numPositions={Math.abs(initialTicks)}
-          direction={!triple && initialTicks > 0 ? 'for' : positionDirection}
-          positionDirection={
-            !triple && initialTicks > 0 ? 'for' : positionDirection
-          }
-          disabled={!userWallet || stakingDisabled}
-          onClick={() => handleSignal('deposit')}
-        />
+        {stakingDisabled && userWallet ? (
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div>
+                  <SignalButton
+                    variant={positionDirection}
+                    numPositions={Math.abs(initialTicks)}
+                    direction={
+                      !triple && initialTicks > 0 ? 'for' : positionDirection
+                    }
+                    positionDirection={
+                      !triple && initialTicks > 0 ? 'for' : positionDirection
+                    }
+                    disabled={!userWallet || stakingDisabled}
+                    onClick={() => handleSignal('deposit')}
+                  />
+                </div>
+              </TooltipTrigger>
+              <TooltipContent
+                side="top"
+                align="center"
+                avoidCollisions={true}
+                className="z-[9999] max-w-xs"
+              >
+                <p className="text-sm leading-tight">
+                  Answer question above to earn IQ points and enable voting
+                </p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        ) : (
+          <SignalButton
+            variant={positionDirection}
+            numPositions={Math.abs(initialTicks)}
+            direction={!triple && initialTicks > 0 ? 'for' : positionDirection}
+            positionDirection={
+              !triple && initialTicks > 0 ? 'for' : positionDirection
+            }
+            disabled={!userWallet || stakingDisabled}
+            onClick={() => handleSignal('deposit')}
+          />
+        )}
       </div>
       {!triple ? (
         <EcosystemSignalModal

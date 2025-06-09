@@ -796,10 +796,11 @@ export default function MiniGameOne() {
             : triple.counter_vault?.positions?.[0]?.shares > 0
               ? +formatUnits(triple.counter_vault?.current_share_price, 18)
               : undefined,
+        stakingDisabled: !completion,
         multiVaultConfig,
       })) as TableRowData[]) ?? []
     return data
-  }, [preferencesData, multiVaultConfig])
+  }, [preferencesData, multiVaultConfig, completion])
 
   const isMobile = useMediaQuery('(max-width: 768px)')
   const isTablet = useMediaQuery('(max-width: 1024px)')
@@ -1004,10 +1005,15 @@ export default function MiniGameOne() {
             }}
           >
             <div className="absolute inset-0 flex flex-col justify-center items-center">
-              <div className="space-y-2 items-center pb-8">
+              <div className="space-y-2 items-center pb-4">
                 <Text className="text-foreground text-center text-2xl md:text-3xl px-4">
                   {title}
                 </Text>
+                {!completion && enabled && (
+                  <Text className="text-primary text-center text-xl px-4">
+                    Answer the question to earn {pointAwardAmount} IQ Points
+                  </Text>
+                )}
               </div>
               <AuthCover
                 buttonContainerClassName="h-full flex items-center justify-center w-full"
@@ -1076,12 +1082,12 @@ export default function MiniGameOne() {
                   authenticated &&
                   enabled && (
                     <Button
-                      variant="primary"
+                      variant="accent"
                       size="lg"
                       onClick={handleStartOnboarding}
                       disabled={!enabled}
                     >
-                      Earn {pointAwardAmount} IQ Points
+                      Answer Question
                     </Button>
                   )
                 )}

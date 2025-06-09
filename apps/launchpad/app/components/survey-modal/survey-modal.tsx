@@ -664,13 +664,14 @@ export function OnboardingModal({
         setSteps(STEPS_CONFIG)
         resetTransition()
 
-        if (isFlowComplete && question?.id && question?.epoch_id) {
-          const basePath = mode === 'preferences' ? 'preferences' : 'questions'
-          const targetPath = `/quests/${basePath}/${question.epoch_id}/${question.id}`
-          if (location.pathname !== targetPath) {
-            navigate(targetPath)
-          }
-        }
+        // TODO: Uncomment this if we want to re-enable to redirect after question completion
+        // if (isFlowComplete && question?.id && question?.epoch_id) {
+        //   const basePath = mode === 'preferences' ? 'preferences' : 'questions'
+        //   const targetPath = `/quests/${basePath}/${question.epoch_id}/${question.id}`
+        //   if (location.pathname !== targetPath) {
+        //     navigate(targetPath)
+        //   }
+        // }
       }, 150)
     }
   }, [
