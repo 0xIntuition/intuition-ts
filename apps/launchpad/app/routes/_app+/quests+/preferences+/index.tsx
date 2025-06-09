@@ -93,9 +93,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
   ogImageParams.set(
     'data',
     JSON.stringify({
-      title: 'Bootstrap your Intuition',
+      title: 'Personalize the Graph',
       description:
-        'Answer questions and earn IQ points across different epochs',
+        'Share your unique perspectives to shape how AI and applications respond to you everywhere.',
       type: 'epochs',
       holders: epochsData.epochs.length,
       itemCount: epochsData.epochs.reduce(
