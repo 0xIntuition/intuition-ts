@@ -156,7 +156,7 @@ export const tripleColumns: ColumnDef<TableItem>[] = [
 
       return (
         <div className="flex justify-center items-center gap-0.5">
-          {tvl ? Number(tvl).toFixed(4) : '0'}
+          {tvl ? Number(tvl).toFixed(5) : '0'}
           <Icon name="eth" className="w-3 h-3" />
         </div>
       )

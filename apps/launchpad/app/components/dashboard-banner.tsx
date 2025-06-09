@@ -28,7 +28,7 @@ export function DashboardBanner() {
           <div className="flex grow flex-col justify-between gap-3 md:flex-row md:items-center">
             <div>
               <p className="text-lg font-medium">
-                Start Your Preferences Journey!
+                Start Your Personalization Journey!
               </p>
               <p className="text-base text-primary/80">
                 Answer questions, build your preferences, earn IQ points; the

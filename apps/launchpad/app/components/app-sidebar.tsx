@@ -367,7 +367,7 @@ export function AppSidebar({
                     <div className="flex items-center gap-2">
                       <BrainCircuit className="w-5 h-5" />
                       <span className="text-lg font-medium">
-                        Preferences Epoch
+                        Personalization Epoch
                       </span>
                     </div>
                   </ShimmerButton>

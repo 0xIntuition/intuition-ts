@@ -959,8 +959,6 @@ export default function MiniGameOne() {
     return <LoadingState />
   }
 
-  console.log('atomData', atomData)
-
   return (
     <>
       <div className="flex flex-col md:flex-row items-center gap-4 justify-between">
@@ -974,7 +972,7 @@ export default function MiniGameOne() {
             <Icon name="chevron-left" className="h-4 w-4" />
           </Button>
           <PageHeader
-            title={`Preferences Epoch ${epoch?.order ?? ''} | Question ${questionData?.order}`}
+            title={`Personalization Epoch ${epoch?.order ?? ''} | Question ${questionData?.order}`}
             className="text-xl sm:text-2xl"
           />
         </div>
