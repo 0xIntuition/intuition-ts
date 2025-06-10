@@ -104,7 +104,10 @@ export function QuestionCardWrapper({
     return <LoadingCard />
   }
 
-  const resultsLink = `/quests/questions/${question.epoch_id}/${question.id}`
+  const resultsLink =
+    mode === 'preferences'
+      ? `/quests/preferences/${question.epoch_id}/${question.id}`
+      : `/quests/questions/${question.epoch_id}/${question.id}`
 
   return (
     <QuestionCard
