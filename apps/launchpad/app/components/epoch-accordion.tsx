@@ -84,7 +84,15 @@ export function EpochAccordion({
                     {epoch.name}
                   </Text>
                   {/* TODO: Hidden because base week route structure was different and users were getting redirected to questions (triple) flow */}
-                  {epoch.type !== 'ecosystem' && (
+                  {epoch.type !== 'ecosystem' &&
+                  epoch.type === 'preferences' ? (
+                    <Link
+                      to={`/quests/preferences/${epoch.id}`}
+                      className="text-xs sm:text-sm text-primary/70 hover:text-primary"
+                    >
+                      View All
+                    </Link>
+                  ) : (
                     <Link
                       to={`/quests/questions/${epoch.id}`}
                       className="text-xs sm:text-sm text-primary/70 hover:text-primary"
@@ -156,6 +164,18 @@ export function EpochAccordion({
                           )
                         }
                       />
+                    ) : epoch.type === 'preferences' ? (
+                      <QuestionCardWrapper
+                        question={question}
+                        onStart={() =>
+                          onStartQuestion(
+                            question,
+                            question.predicate_id,
+                            question.object_id,
+                          )
+                        }
+                        mode="preferences"
+                      />
                     ) : (
                       <QuestionCardWrapper
                         question={question}
@@ -173,6 +193,18 @@ export function EpochAccordion({
                     {epoch.type === 'ecosystem' ? (
                       <EcosystemQuestionRowWrapper
                         question={question}
+                        onStart={() =>
+                          onStartQuestion(
+                            question,
+                            question.predicate_id,
+                            question.object_id,
+                          )
+                        }
+                      />
+                    ) : epoch.type === 'preferences' ? (
+                      <QuestionRowWrapper
+                        question={question}
+                        epoch={epoch}
                         onStart={() =>
                           onStartQuestion(
                             question,

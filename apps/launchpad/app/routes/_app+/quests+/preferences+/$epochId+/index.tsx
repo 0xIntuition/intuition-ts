@@ -419,6 +419,7 @@ export default function EpochQuestions() {
                   question.object_id,
                 )
               }
+              mode="preferences"
             />
           </Suspense>
         ))}

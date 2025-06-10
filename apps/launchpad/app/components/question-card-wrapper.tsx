@@ -15,6 +15,7 @@ interface QuestionCardProps {
   onStart: () => void
   className?: string
   question: Question
+  mode?: 'question' | 'preferences'
 }
 
 function LoadingCard() {
@@ -36,7 +37,11 @@ function LoadingCard() {
   )
 }
 
-export function QuestionCardWrapper({ onStart, question }: QuestionCardProps) {
+export function QuestionCardWrapper({
+  onStart,
+  question,
+  mode,
+}: QuestionCardProps) {
   const { ready, user } = usePrivy()
   const [, setAtomDetailsModal] = useAtom(atomDetailsModalAtom)
   const { isLoading: isQuestionDataLoading, ...questionData } = useQuestionData(
@@ -57,8 +62,18 @@ export function QuestionCardWrapper({ onStart, question }: QuestionCardProps) {
 
   // Get the user's selected atom if they've completed the question
   const { data: atomData } = useGetAtomQuery(
-    { id: completion?.subject_id ?? 0 },
-    { enabled: !!completion?.subject_id },
+    {
+      id:
+        mode === 'preferences'
+          ? completion?.object_id
+          : completion?.subject_id ?? 0,
+    },
+    {
+      enabled:
+        mode === 'preferences'
+          ? !!completion?.object_id
+          : !!completion?.subject_id,
+    },
   )
 
   const handleAtomClick = (id: number) => {
