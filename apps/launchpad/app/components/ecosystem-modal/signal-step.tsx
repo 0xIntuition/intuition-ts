@@ -4,7 +4,7 @@ import { Button, Text, TextVariant, toast } from '@0xintuition/1ui'
 
 import { FeesText } from '@components/fees-text'
 import SignalToast from '@components/survey-modal/signal-toast'
-import { TurnstileField } from '@components/turnstile-field'
+// import { TurnstileField } from '@components/turnstile-field'
 import { MIN_DEPOSIT, MULTIVAULT_CONTRACT_ADDRESS } from '@consts/general'
 import { multivaultAbi } from '@lib/abis/multivault'
 import { useCreateTripleMutation } from '@lib/hooks/mutations/useCreateTripleMutation'
@@ -53,7 +53,7 @@ export function SignalStep({
   const [lastTxHash, setLastTxHash] = useState<string | undefined>(undefined)
   const [validationErrors, setValidationErrors] = useState<string[]>([])
   const [showErrors, setShowErrors] = useState(false)
-  const [captchaOk, setCaptchaOk] = useState(false)
+  // const [captchaOk, setCaptchaOk] = useState(false)
 
   const publicClient = usePublicClient()
   const queryClient = useQueryClient()
@@ -495,14 +495,14 @@ export function SignalStep({
 
         <div className="flex flex-row gap-2 justify-end mt-4">
           <div className="flex flex-col gap-2 justify-center">
-            <TurnstileField
+            {/* <TurnstileField
               siteKey={
                 typeof window !== 'undefined'
                   ? window.ENV?.TURNSTILE_SITE_KEY
                   : undefined
               }
               onVerified={(ok) => setCaptchaOk(ok)}
-            />
+            /> */}
             <SubmitButton
               loading={isLoading}
               onClick={handleStakeButtonClick}
@@ -514,8 +514,9 @@ export function SignalStep({
                 !userWallet ||
                 !privyUser ||
                 val === '0' ||
-                val === '' ||
-                !captchaOk
+                val === ''
+                // val === '' ||
+                // !captchaOk
               }
             />
             <FeesText />
