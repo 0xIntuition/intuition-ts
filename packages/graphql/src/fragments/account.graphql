@@ -6,36 +6,6 @@ fragment AccountMetadata on accounts {
   type
 }
 
-fragment AccountClaimsAggregate on accounts {
-  claims_aggregate(order_by: { position: { shares: desc } }) {
-    aggregate {
-      count
-    }
-    nodes {
-      id
-      position {
-        shares
-        # counter_shares are no longer present -- perhaps positions are counted invididually, with the respective counter term id separately
-      }
-    }
-  }
-}
-
-fragment AccountClaims on accounts {
-  claims(
-    order_by: { position: { shares: desc } }
-    limit: $claimsLimit
-    offset: $claimsOffset
-    where: $claimsWhere
-  ) {
-    id
-    position {
-      shares
-      # counter_shares -- this doesn't seem to exist anymore
-    }
-  }
-}
-
 fragment AccountPositionsAggregate on accounts {
   positions_aggregate(order_by: { shares: desc }) {
     aggregate {

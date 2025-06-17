@@ -163,10 +163,6 @@ export type Accounts = {
   atoms_aggregate: Atoms_Aggregate
   cached_image?: Maybe<Cached_Images_Cached_Image>
   /** An array relationship */
-  claims: Array<Claims>
-  /** An aggregate relationship */
-  claims_aggregate: Claims_Aggregate
-  /** An array relationship */
   deposits_received: Array<Deposits>
   /** An aggregate relationship */
   deposits_received_aggregate: Deposits_Aggregate
@@ -220,24 +216,6 @@ export type AccountsAtoms_AggregateArgs = {
   offset?: InputMaybe<Scalars['Int']['input']>
   order_by?: InputMaybe<Array<Atoms_Order_By>>
   where?: InputMaybe<Atoms_Bool_Exp>
-}
-
-/** columns and relationships of "account" */
-export type AccountsClaimsArgs = {
-  distinct_on?: InputMaybe<Array<Claims_Select_Column>>
-  limit?: InputMaybe<Scalars['Int']['input']>
-  offset?: InputMaybe<Scalars['Int']['input']>
-  order_by?: InputMaybe<Array<Claims_Order_By>>
-  where?: InputMaybe<Claims_Bool_Exp>
-}
-
-/** columns and relationships of "account" */
-export type AccountsClaims_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Claims_Select_Column>>
-  limit?: InputMaybe<Scalars['Int']['input']>
-  offset?: InputMaybe<Scalars['Int']['input']>
-  order_by?: InputMaybe<Array<Claims_Order_By>>
-  where?: InputMaybe<Claims_Bool_Exp>
 }
 
 /** columns and relationships of "account" */
@@ -459,8 +437,6 @@ export type Accounts_Bool_Exp = {
   atom_id?: InputMaybe<Numeric_Comparison_Exp>
   atoms?: InputMaybe<Atoms_Bool_Exp>
   atoms_aggregate?: InputMaybe<Atoms_Aggregate_Bool_Exp>
-  claims?: InputMaybe<Claims_Bool_Exp>
-  claims_aggregate?: InputMaybe<Claims_Aggregate_Bool_Exp>
   deposits_received?: InputMaybe<Deposits_Bool_Exp>
   deposits_received_aggregate?: InputMaybe<Deposits_Aggregate_Bool_Exp>
   deposits_sent?: InputMaybe<Deposits_Bool_Exp>
@@ -526,7 +502,6 @@ export type Accounts_Order_By = {
   atom?: InputMaybe<Atoms_Order_By>
   atom_id?: InputMaybe<Order_By>
   atoms_aggregate?: InputMaybe<Atoms_Aggregate_Order_By>
-  claims_aggregate?: InputMaybe<Claims_Aggregate_Order_By>
   deposits_received_aggregate?: InputMaybe<Deposits_Aggregate_Order_By>
   deposits_sent_aggregate?: InputMaybe<Deposits_Aggregate_Order_By>
   fee_transfers_aggregate?: InputMaybe<Fee_Transfers_Aggregate_Order_By>
@@ -613,12 +588,6 @@ export type Accounts_Sum_Fields = {
 /** order by sum() on columns of table "account" */
 export type Accounts_Sum_Order_By = {
   atom_id?: InputMaybe<Order_By>
-}
-
-export type Accounts_That_Claim_About_Account_Args = {
-  address?: InputMaybe<Scalars['String']['input']>
-  predicate?: InputMaybe<Scalars['numeric']['input']>
-  subject?: InputMaybe<Scalars['numeric']['input']>
 }
 
 /** aggregate var_pop on columns */
@@ -981,10 +950,10 @@ export type Atoms = {
   /** An aggregate relationship */
   as_subject_triples_aggregate: Triples_Aggregate
   block_number: Scalars['numeric']['output']
-  block_timestamp: Scalars['bigint']['output']
   cached_image?: Maybe<Cached_Images_Cached_Image>
   /** An object relationship */
   controller?: Maybe<Accounts>
+  created_at: Scalars['timestamptz']['output']
   /** An object relationship */
   creator: Accounts
   creator_id: Scalars['String']['output']
@@ -1005,6 +974,7 @@ export type Atoms = {
   term_id: Scalars['numeric']['output']
   transaction_hash: Scalars['String']['output']
   type: Scalars['atom_type']['output']
+  updated_at: Scalars['timestamptz']['output']
   /** An object relationship */
   value?: Maybe<Atom_Values>
   value_id?: Maybe<Scalars['numeric']['output']>
@@ -1214,7 +1184,6 @@ export type Atoms_Aggregate_Order_By = {
 export type Atoms_Avg_Fields = {
   __typename?: 'atoms_avg_fields'
   block_number?: Maybe<Scalars['Float']['output']>
-  block_timestamp?: Maybe<Scalars['Float']['output']>
   term_id?: Maybe<Scalars['Float']['output']>
   value_id?: Maybe<Scalars['Float']['output']>
 }
@@ -1222,7 +1191,6 @@ export type Atoms_Avg_Fields = {
 /** order by avg() on columns of table "atom" */
 export type Atoms_Avg_Order_By = {
   block_number?: InputMaybe<Order_By>
-  block_timestamp?: InputMaybe<Order_By>
   term_id?: InputMaybe<Order_By>
   value_id?: InputMaybe<Order_By>
 }
@@ -1245,8 +1213,8 @@ export type Atoms_Bool_Exp = {
   as_subject_triples?: InputMaybe<Triples_Bool_Exp>
   as_subject_triples_aggregate?: InputMaybe<Triples_Aggregate_Bool_Exp>
   block_number?: InputMaybe<Numeric_Comparison_Exp>
-  block_timestamp?: InputMaybe<Bigint_Comparison_Exp>
   controller?: InputMaybe<Accounts_Bool_Exp>
+  created_at?: InputMaybe<Timestamptz_Comparison_Exp>
   creator?: InputMaybe<Accounts_Bool_Exp>
   creator_id?: InputMaybe<String_Comparison_Exp>
   data?: InputMaybe<String_Comparison_Exp>
@@ -1261,6 +1229,7 @@ export type Atoms_Bool_Exp = {
   term_id?: InputMaybe<Numeric_Comparison_Exp>
   transaction_hash?: InputMaybe<String_Comparison_Exp>
   type?: InputMaybe<Atom_Type_Comparison_Exp>
+  updated_at?: InputMaybe<Timestamptz_Comparison_Exp>
   value?: InputMaybe<Atom_Values_Bool_Exp>
   value_id?: InputMaybe<Numeric_Comparison_Exp>
   wallet_id?: InputMaybe<String_Comparison_Exp>
@@ -1270,7 +1239,7 @@ export type Atoms_Bool_Exp = {
 export type Atoms_Max_Fields = {
   __typename?: 'atoms_max_fields'
   block_number?: Maybe<Scalars['numeric']['output']>
-  block_timestamp?: Maybe<Scalars['bigint']['output']>
+  created_at?: Maybe<Scalars['timestamptz']['output']>
   creator_id?: Maybe<Scalars['String']['output']>
   data?: Maybe<Scalars['String']['output']>
   emoji?: Maybe<Scalars['String']['output']>
@@ -1279,6 +1248,7 @@ export type Atoms_Max_Fields = {
   term_id?: Maybe<Scalars['numeric']['output']>
   transaction_hash?: Maybe<Scalars['String']['output']>
   type?: Maybe<Scalars['atom_type']['output']>
+  updated_at?: Maybe<Scalars['timestamptz']['output']>
   value_id?: Maybe<Scalars['numeric']['output']>
   wallet_id?: Maybe<Scalars['String']['output']>
 }
@@ -1286,7 +1256,7 @@ export type Atoms_Max_Fields = {
 /** order by max() on columns of table "atom" */
 export type Atoms_Max_Order_By = {
   block_number?: InputMaybe<Order_By>
-  block_timestamp?: InputMaybe<Order_By>
+  created_at?: InputMaybe<Order_By>
   creator_id?: InputMaybe<Order_By>
   data?: InputMaybe<Order_By>
   emoji?: InputMaybe<Order_By>
@@ -1295,6 +1265,7 @@ export type Atoms_Max_Order_By = {
   term_id?: InputMaybe<Order_By>
   transaction_hash?: InputMaybe<Order_By>
   type?: InputMaybe<Order_By>
+  updated_at?: InputMaybe<Order_By>
   value_id?: InputMaybe<Order_By>
   wallet_id?: InputMaybe<Order_By>
 }
@@ -1303,7 +1274,7 @@ export type Atoms_Max_Order_By = {
 export type Atoms_Min_Fields = {
   __typename?: 'atoms_min_fields'
   block_number?: Maybe<Scalars['numeric']['output']>
-  block_timestamp?: Maybe<Scalars['bigint']['output']>
+  created_at?: Maybe<Scalars['timestamptz']['output']>
   creator_id?: Maybe<Scalars['String']['output']>
   data?: Maybe<Scalars['String']['output']>
   emoji?: Maybe<Scalars['String']['output']>
@@ -1312,6 +1283,7 @@ export type Atoms_Min_Fields = {
   term_id?: Maybe<Scalars['numeric']['output']>
   transaction_hash?: Maybe<Scalars['String']['output']>
   type?: Maybe<Scalars['atom_type']['output']>
+  updated_at?: Maybe<Scalars['timestamptz']['output']>
   value_id?: Maybe<Scalars['numeric']['output']>
   wallet_id?: Maybe<Scalars['String']['output']>
 }
@@ -1319,7 +1291,7 @@ export type Atoms_Min_Fields = {
 /** order by min() on columns of table "atom" */
 export type Atoms_Min_Order_By = {
   block_number?: InputMaybe<Order_By>
-  block_timestamp?: InputMaybe<Order_By>
+  created_at?: InputMaybe<Order_By>
   creator_id?: InputMaybe<Order_By>
   data?: InputMaybe<Order_By>
   emoji?: InputMaybe<Order_By>
@@ -1328,6 +1300,7 @@ export type Atoms_Min_Order_By = {
   term_id?: InputMaybe<Order_By>
   transaction_hash?: InputMaybe<Order_By>
   type?: InputMaybe<Order_By>
+  updated_at?: InputMaybe<Order_By>
   value_id?: InputMaybe<Order_By>
   wallet_id?: InputMaybe<Order_By>
 }
@@ -1341,8 +1314,8 @@ export type Atoms_Order_By = {
   as_predicate_triples_aggregate?: InputMaybe<Triples_Aggregate_Order_By>
   as_subject_triples_aggregate?: InputMaybe<Triples_Aggregate_Order_By>
   block_number?: InputMaybe<Order_By>
-  block_timestamp?: InputMaybe<Order_By>
   controller?: InputMaybe<Accounts_Order_By>
+  created_at?: InputMaybe<Order_By>
   creator?: InputMaybe<Accounts_Order_By>
   creator_id?: InputMaybe<Order_By>
   data?: InputMaybe<Order_By>
@@ -1355,6 +1328,7 @@ export type Atoms_Order_By = {
   term_id?: InputMaybe<Order_By>
   transaction_hash?: InputMaybe<Order_By>
   type?: InputMaybe<Order_By>
+  updated_at?: InputMaybe<Order_By>
   value?: InputMaybe<Atom_Values_Order_By>
   value_id?: InputMaybe<Order_By>
   wallet_id?: InputMaybe<Order_By>
@@ -1365,7 +1339,7 @@ export type Atoms_Select_Column =
   /** column name */
   | 'block_number'
   /** column name */
-  | 'block_timestamp'
+  | 'created_at'
   /** column name */
   | 'creator_id'
   /** column name */
@@ -1383,6 +1357,8 @@ export type Atoms_Select_Column =
   /** column name */
   | 'type'
   /** column name */
+  | 'updated_at'
+  /** column name */
   | 'value_id'
   /** column name */
   | 'wallet_id'
@@ -1391,7 +1367,6 @@ export type Atoms_Select_Column =
 export type Atoms_Stddev_Fields = {
   __typename?: 'atoms_stddev_fields'
   block_number?: Maybe<Scalars['Float']['output']>
-  block_timestamp?: Maybe<Scalars['Float']['output']>
   term_id?: Maybe<Scalars['Float']['output']>
   value_id?: Maybe<Scalars['Float']['output']>
 }
@@ -1399,7 +1374,6 @@ export type Atoms_Stddev_Fields = {
 /** order by stddev() on columns of table "atom" */
 export type Atoms_Stddev_Order_By = {
   block_number?: InputMaybe<Order_By>
-  block_timestamp?: InputMaybe<Order_By>
   term_id?: InputMaybe<Order_By>
   value_id?: InputMaybe<Order_By>
 }
@@ -1408,7 +1382,6 @@ export type Atoms_Stddev_Order_By = {
 export type Atoms_Stddev_Pop_Fields = {
   __typename?: 'atoms_stddev_pop_fields'
   block_number?: Maybe<Scalars['Float']['output']>
-  block_timestamp?: Maybe<Scalars['Float']['output']>
   term_id?: Maybe<Scalars['Float']['output']>
   value_id?: Maybe<Scalars['Float']['output']>
 }
@@ -1416,7 +1389,6 @@ export type Atoms_Stddev_Pop_Fields = {
 /** order by stddev_pop() on columns of table "atom" */
 export type Atoms_Stddev_Pop_Order_By = {
   block_number?: InputMaybe<Order_By>
-  block_timestamp?: InputMaybe<Order_By>
   term_id?: InputMaybe<Order_By>
   value_id?: InputMaybe<Order_By>
 }
@@ -1425,7 +1397,6 @@ export type Atoms_Stddev_Pop_Order_By = {
 export type Atoms_Stddev_Samp_Fields = {
   __typename?: 'atoms_stddev_samp_fields'
   block_number?: Maybe<Scalars['Float']['output']>
-  block_timestamp?: Maybe<Scalars['Float']['output']>
   term_id?: Maybe<Scalars['Float']['output']>
   value_id?: Maybe<Scalars['Float']['output']>
 }
@@ -1433,7 +1404,6 @@ export type Atoms_Stddev_Samp_Fields = {
 /** order by stddev_samp() on columns of table "atom" */
 export type Atoms_Stddev_Samp_Order_By = {
   block_number?: InputMaybe<Order_By>
-  block_timestamp?: InputMaybe<Order_By>
   term_id?: InputMaybe<Order_By>
   value_id?: InputMaybe<Order_By>
 }
@@ -1449,7 +1419,7 @@ export type Atoms_Stream_Cursor_Input = {
 /** Initial value of the column from where the streaming should start */
 export type Atoms_Stream_Cursor_Value_Input = {
   block_number?: InputMaybe<Scalars['numeric']['input']>
-  block_timestamp?: InputMaybe<Scalars['bigint']['input']>
+  created_at?: InputMaybe<Scalars['timestamptz']['input']>
   creator_id?: InputMaybe<Scalars['String']['input']>
   data?: InputMaybe<Scalars['String']['input']>
   emoji?: InputMaybe<Scalars['String']['input']>
@@ -1458,6 +1428,7 @@ export type Atoms_Stream_Cursor_Value_Input = {
   term_id?: InputMaybe<Scalars['numeric']['input']>
   transaction_hash?: InputMaybe<Scalars['String']['input']>
   type?: InputMaybe<Scalars['atom_type']['input']>
+  updated_at?: InputMaybe<Scalars['timestamptz']['input']>
   value_id?: InputMaybe<Scalars['numeric']['input']>
   wallet_id?: InputMaybe<Scalars['String']['input']>
 }
@@ -1466,7 +1437,6 @@ export type Atoms_Stream_Cursor_Value_Input = {
 export type Atoms_Sum_Fields = {
   __typename?: 'atoms_sum_fields'
   block_number?: Maybe<Scalars['numeric']['output']>
-  block_timestamp?: Maybe<Scalars['bigint']['output']>
   term_id?: Maybe<Scalars['numeric']['output']>
   value_id?: Maybe<Scalars['numeric']['output']>
 }
@@ -1474,7 +1444,6 @@ export type Atoms_Sum_Fields = {
 /** order by sum() on columns of table "atom" */
 export type Atoms_Sum_Order_By = {
   block_number?: InputMaybe<Order_By>
-  block_timestamp?: InputMaybe<Order_By>
   term_id?: InputMaybe<Order_By>
   value_id?: InputMaybe<Order_By>
 }
@@ -1483,7 +1452,6 @@ export type Atoms_Sum_Order_By = {
 export type Atoms_Var_Pop_Fields = {
   __typename?: 'atoms_var_pop_fields'
   block_number?: Maybe<Scalars['Float']['output']>
-  block_timestamp?: Maybe<Scalars['Float']['output']>
   term_id?: Maybe<Scalars['Float']['output']>
   value_id?: Maybe<Scalars['Float']['output']>
 }
@@ -1491,7 +1459,6 @@ export type Atoms_Var_Pop_Fields = {
 /** order by var_pop() on columns of table "atom" */
 export type Atoms_Var_Pop_Order_By = {
   block_number?: InputMaybe<Order_By>
-  block_timestamp?: InputMaybe<Order_By>
   term_id?: InputMaybe<Order_By>
   value_id?: InputMaybe<Order_By>
 }
@@ -1500,7 +1467,6 @@ export type Atoms_Var_Pop_Order_By = {
 export type Atoms_Var_Samp_Fields = {
   __typename?: 'atoms_var_samp_fields'
   block_number?: Maybe<Scalars['Float']['output']>
-  block_timestamp?: Maybe<Scalars['Float']['output']>
   term_id?: Maybe<Scalars['Float']['output']>
   value_id?: Maybe<Scalars['Float']['output']>
 }
@@ -1508,7 +1474,6 @@ export type Atoms_Var_Samp_Fields = {
 /** order by var_samp() on columns of table "atom" */
 export type Atoms_Var_Samp_Order_By = {
   block_number?: InputMaybe<Order_By>
-  block_timestamp?: InputMaybe<Order_By>
   term_id?: InputMaybe<Order_By>
   value_id?: InputMaybe<Order_By>
 }
@@ -1517,7 +1482,6 @@ export type Atoms_Var_Samp_Order_By = {
 export type Atoms_Variance_Fields = {
   __typename?: 'atoms_variance_fields'
   block_number?: Maybe<Scalars['Float']['output']>
-  block_timestamp?: Maybe<Scalars['Float']['output']>
   term_id?: Maybe<Scalars['Float']['output']>
   value_id?: Maybe<Scalars['Float']['output']>
 }
@@ -1525,7 +1489,6 @@ export type Atoms_Variance_Fields = {
 /** order by variance() on columns of table "atom" */
 export type Atoms_Variance_Order_By = {
   block_number?: InputMaybe<Order_By>
-  block_timestamp?: InputMaybe<Order_By>
   term_id?: InputMaybe<Order_By>
   value_id?: InputMaybe<Order_By>
 }
@@ -2131,136 +2094,6 @@ export type Chainlink_Prices_Stream_Cursor_Value_Input = {
   usd?: InputMaybe<Scalars['float8']['input']>
 }
 
-/** columns and relationships of "claim" */
-export type Claims = {
-  __typename?: 'claims'
-  /** An object relationship */
-  account?: Maybe<Accounts>
-  account_id: Scalars['String']['output']
-  id: Scalars['String']['output']
-  /** An object relationship */
-  position: Positions
-  position_id: Scalars['String']['output']
-}
-
-/** aggregated selection of "claim" */
-export type Claims_Aggregate = {
-  __typename?: 'claims_aggregate'
-  aggregate?: Maybe<Claims_Aggregate_Fields>
-  nodes: Array<Claims>
-}
-
-export type Claims_Aggregate_Bool_Exp = {
-  count?: InputMaybe<Claims_Aggregate_Bool_Exp_Count>
-}
-
-export type Claims_Aggregate_Bool_Exp_Count = {
-  arguments?: InputMaybe<Array<Claims_Select_Column>>
-  distinct?: InputMaybe<Scalars['Boolean']['input']>
-  filter?: InputMaybe<Claims_Bool_Exp>
-  predicate: Int_Comparison_Exp
-}
-
-/** aggregate fields of "claim" */
-export type Claims_Aggregate_Fields = {
-  __typename?: 'claims_aggregate_fields'
-  count: Scalars['Int']['output']
-  max?: Maybe<Claims_Max_Fields>
-  min?: Maybe<Claims_Min_Fields>
-}
-
-/** aggregate fields of "claim" */
-export type Claims_Aggregate_FieldsCountArgs = {
-  columns?: InputMaybe<Array<Claims_Select_Column>>
-  distinct?: InputMaybe<Scalars['Boolean']['input']>
-}
-
-/** order by aggregate values of table "claim" */
-export type Claims_Aggregate_Order_By = {
-  count?: InputMaybe<Order_By>
-  max?: InputMaybe<Claims_Max_Order_By>
-  min?: InputMaybe<Claims_Min_Order_By>
-}
-
-/** Boolean expression to filter rows from the table "claim". All fields are combined with a logical 'AND'. */
-export type Claims_Bool_Exp = {
-  _and?: InputMaybe<Array<Claims_Bool_Exp>>
-  _not?: InputMaybe<Claims_Bool_Exp>
-  _or?: InputMaybe<Array<Claims_Bool_Exp>>
-  account?: InputMaybe<Accounts_Bool_Exp>
-  account_id?: InputMaybe<String_Comparison_Exp>
-  id?: InputMaybe<String_Comparison_Exp>
-  position?: InputMaybe<Positions_Bool_Exp>
-  position_id?: InputMaybe<String_Comparison_Exp>
-}
-
-export type Claims_From_Following_Args = {
-  address?: InputMaybe<Scalars['String']['input']>
-}
-
-/** aggregate max on columns */
-export type Claims_Max_Fields = {
-  __typename?: 'claims_max_fields'
-  account_id?: Maybe<Scalars['String']['output']>
-  id?: Maybe<Scalars['String']['output']>
-  position_id?: Maybe<Scalars['String']['output']>
-}
-
-/** order by max() on columns of table "claim" */
-export type Claims_Max_Order_By = {
-  account_id?: InputMaybe<Order_By>
-  id?: InputMaybe<Order_By>
-  position_id?: InputMaybe<Order_By>
-}
-
-/** aggregate min on columns */
-export type Claims_Min_Fields = {
-  __typename?: 'claims_min_fields'
-  account_id?: Maybe<Scalars['String']['output']>
-  id?: Maybe<Scalars['String']['output']>
-  position_id?: Maybe<Scalars['String']['output']>
-}
-
-/** order by min() on columns of table "claim" */
-export type Claims_Min_Order_By = {
-  account_id?: InputMaybe<Order_By>
-  id?: InputMaybe<Order_By>
-  position_id?: InputMaybe<Order_By>
-}
-
-/** Ordering options when selecting data from "claim". */
-export type Claims_Order_By = {
-  account?: InputMaybe<Accounts_Order_By>
-  account_id?: InputMaybe<Order_By>
-  id?: InputMaybe<Order_By>
-  position?: InputMaybe<Positions_Order_By>
-  position_id?: InputMaybe<Order_By>
-}
-
-/** select columns of table "claim" */
-export type Claims_Select_Column =
-  /** column name */
-  | 'account_id'
-  /** column name */
-  | 'id'
-  /** column name */
-  | 'position_id'
-
-/** Streaming cursor of the table "claims" */
-export type Claims_Stream_Cursor_Input = {
-  /** Stream column input with initial value */
-  initial_value: Claims_Stream_Cursor_Value_Input
-  /** cursor ordering */
-  ordering?: InputMaybe<Cursor_Ordering>
-}
-
-/** Initial value of the column from where the streaming should start */
-export type Claims_Stream_Cursor_Value_Input = {
-  account_id?: InputMaybe<Scalars['String']['input']>
-  id?: InputMaybe<Scalars['String']['input']>
-  position_id?: InputMaybe<Scalars['String']['input']>
-}
-
 /** ordering argument of a cursor */
 export type Cursor_Ordering =
   /** ascending ordering of the cursor */
@@ -2272,7 +2105,7 @@ export type Cursor_Ordering =
 export type Deposits = {
   __typename?: 'deposits'
   block_number: Scalars['numeric']['output']
-  block_timestamp: Scalars['bigint']['output']
+  created_at: Scalars['timestamptz']['output']
   curve_id: Scalars['numeric']['output']
   entry_fee: Scalars['numeric']['output']
   id: Scalars['String']['output']
@@ -2370,7 +2203,6 @@ export type Deposits_Aggregate_Order_By = {
 export type Deposits_Avg_Fields = {
   __typename?: 'deposits_avg_fields'
   block_number?: Maybe<Scalars['Float']['output']>
-  block_timestamp?: Maybe<Scalars['Float']['output']>
   curve_id?: Maybe<Scalars['Float']['output']>
   entry_fee?: Maybe<Scalars['Float']['output']>
   receiver_total_shares_in_vault?: Maybe<Scalars['Float']['output']>
@@ -2382,7 +2214,6 @@ export type Deposits_Avg_Fields = {
 /** order by avg() on columns of table "deposit" */
 export type Deposits_Avg_Order_By = {
   block_number?: InputMaybe<Order_By>
-  block_timestamp?: InputMaybe<Order_By>
   curve_id?: InputMaybe<Order_By>
   entry_fee?: InputMaybe<Order_By>
   receiver_total_shares_in_vault?: InputMaybe<Order_By>
@@ -2397,7 +2228,7 @@ export type Deposits_Bool_Exp = {
   _not?: InputMaybe<Deposits_Bool_Exp>
   _or?: InputMaybe<Array<Deposits_Bool_Exp>>
   block_number?: InputMaybe<Numeric_Comparison_Exp>
-  block_timestamp?: InputMaybe<Bigint_Comparison_Exp>
+  created_at?: InputMaybe<Timestamptz_Comparison_Exp>
   curve_id?: InputMaybe<Numeric_Comparison_Exp>
   entry_fee?: InputMaybe<Numeric_Comparison_Exp>
   id?: InputMaybe<String_Comparison_Exp>
@@ -2420,7 +2251,7 @@ export type Deposits_Bool_Exp = {
 export type Deposits_Max_Fields = {
   __typename?: 'deposits_max_fields'
   block_number?: Maybe<Scalars['numeric']['output']>
-  block_timestamp?: Maybe<Scalars['bigint']['output']>
+  created_at?: Maybe<Scalars['timestamptz']['output']>
   curve_id?: Maybe<Scalars['numeric']['output']>
   entry_fee?: Maybe<Scalars['numeric']['output']>
   id?: Maybe<Scalars['String']['output']>
@@ -2436,7 +2267,7 @@ export type Deposits_Max_Fields = {
 /** order by max() on columns of table "deposit" */
 export type Deposits_Max_Order_By = {
   block_number?: InputMaybe<Order_By>
-  block_timestamp?: InputMaybe<Order_By>
+  created_at?: InputMaybe<Order_By>
   curve_id?: InputMaybe<Order_By>
   entry_fee?: InputMaybe<Order_By>
   id?: InputMaybe<Order_By>
@@ -2453,7 +2284,7 @@ export type Deposits_Max_Order_By = {
 export type Deposits_Min_Fields = {
   __typename?: 'deposits_min_fields'
   block_number?: Maybe<Scalars['numeric']['output']>
-  block_timestamp?: Maybe<Scalars['bigint']['output']>
+  created_at?: Maybe<Scalars['timestamptz']['output']>
   curve_id?: Maybe<Scalars['numeric']['output']>
   entry_fee?: Maybe<Scalars['numeric']['output']>
   id?: Maybe<Scalars['String']['output']>
@@ -2469,7 +2300,7 @@ export type Deposits_Min_Fields = {
 /** order by min() on columns of table "deposit" */
 export type Deposits_Min_Order_By = {
   block_number?: InputMaybe<Order_By>
-  block_timestamp?: InputMaybe<Order_By>
+  created_at?: InputMaybe<Order_By>
   curve_id?: InputMaybe<Order_By>
   entry_fee?: InputMaybe<Order_By>
   id?: InputMaybe<Order_By>
@@ -2485,7 +2316,7 @@ export type Deposits_Min_Order_By = {
 /** Ordering options when selecting data from "deposit". */
 export type Deposits_Order_By = {
   block_number?: InputMaybe<Order_By>
-  block_timestamp?: InputMaybe<Order_By>
+  created_at?: InputMaybe<Order_By>
   curve_id?: InputMaybe<Order_By>
   entry_fee?: InputMaybe<Order_By>
   id?: InputMaybe<Order_By>
@@ -2509,7 +2340,7 @@ export type Deposits_Select_Column =
   /** column name */
   | 'block_number'
   /** column name */
-  | 'block_timestamp'
+  | 'created_at'
   /** column name */
   | 'curve_id'
   /** column name */
@@ -2553,7 +2384,6 @@ export type Deposits_Select_Column_Deposits_Aggregate_Bool_Exp_Bool_Or_Arguments
 export type Deposits_Stddev_Fields = {
   __typename?: 'deposits_stddev_fields'
   block_number?: Maybe<Scalars['Float']['output']>
-  block_timestamp?: Maybe<Scalars['Float']['output']>
   curve_id?: Maybe<Scalars['Float']['output']>
   entry_fee?: Maybe<Scalars['Float']['output']>
   receiver_total_shares_in_vault?: Maybe<Scalars['Float']['output']>
@@ -2565,7 +2395,6 @@ export type Deposits_Stddev_Fields = {
 /** order by stddev() on columns of table "deposit" */
 export type Deposits_Stddev_Order_By = {
   block_number?: InputMaybe<Order_By>
-  block_timestamp?: InputMaybe<Order_By>
   curve_id?: InputMaybe<Order_By>
   entry_fee?: InputMaybe<Order_By>
   receiver_total_shares_in_vault?: InputMaybe<Order_By>
@@ -2578,7 +2407,6 @@ export type Deposits_Stddev_Order_By = {
 export type Deposits_Stddev_Pop_Fields = {
   __typename?: 'deposits_stddev_pop_fields'
   block_number?: Maybe<Scalars['Float']['output']>
-  block_timestamp?: Maybe<Scalars['Float']['output']>
   curve_id?: Maybe<Scalars['Float']['output']>
   entry_fee?: Maybe<Scalars['Float']['output']>
   receiver_total_shares_in_vault?: Maybe<Scalars['Float']['output']>
@@ -2590,7 +2418,6 @@ export type Deposits_Stddev_Pop_Fields = {
 /** order by stddev_pop() on columns of table "deposit" */
 export type Deposits_Stddev_Pop_Order_By = {
   block_number?: InputMaybe<Order_By>
-  block_timestamp?: InputMaybe<Order_By>
   curve_id?: InputMaybe<Order_By>
   entry_fee?: InputMaybe<Order_By>
   receiver_total_shares_in_vault?: InputMaybe<Order_By>
@@ -2603,7 +2430,6 @@ export type Deposits_Stddev_Pop_Order_By = {
 export type Deposits_Stddev_Samp_Fields = {
   __typename?: 'deposits_stddev_samp_fields'
   block_number?: Maybe<Scalars['Float']['output']>
-  block_timestamp?: Maybe<Scalars['Float']['output']>
   curve_id?: Maybe<Scalars['Float']['output']>
   entry_fee?: Maybe<Scalars['Float']['output']>
   receiver_total_shares_in_vault?: Maybe<Scalars['Float']['output']>
@@ -2615,7 +2441,6 @@ export type Deposits_Stddev_Samp_Fields = {
 /** order by stddev_samp() on columns of table "deposit" */
 export type Deposits_Stddev_Samp_Order_By = {
   block_number?: InputMaybe<Order_By>
-  block_timestamp?: InputMaybe<Order_By>
   curve_id?: InputMaybe<Order_By>
   entry_fee?: InputMaybe<Order_By>
   receiver_total_shares_in_vault?: InputMaybe<Order_By>
@@ -2635,7 +2460,7 @@ export type Deposits_Stream_Cursor_Input = {
 /** Initial value of the column from where the streaming should start */
 export type Deposits_Stream_Cursor_Value_Input = {
   block_number?: InputMaybe<Scalars['numeric']['input']>
-  block_timestamp?: InputMaybe<Scalars['bigint']['input']>
+  created_at?: InputMaybe<Scalars['timestamptz']['input']>
   curve_id?: InputMaybe<Scalars['numeric']['input']>
   entry_fee?: InputMaybe<Scalars['numeric']['input']>
   id?: InputMaybe<Scalars['String']['input']>
@@ -2654,7 +2479,6 @@ export type Deposits_Stream_Cursor_Value_Input = {
 export type Deposits_Sum_Fields = {
   __typename?: 'deposits_sum_fields'
   block_number?: Maybe<Scalars['numeric']['output']>
-  block_timestamp?: Maybe<Scalars['bigint']['output']>
   curve_id?: Maybe<Scalars['numeric']['output']>
   entry_fee?: Maybe<Scalars['numeric']['output']>
   receiver_total_shares_in_vault?: Maybe<Scalars['numeric']['output']>
@@ -2666,7 +2490,6 @@ export type Deposits_Sum_Fields = {
 /** order by sum() on columns of table "deposit" */
 export type Deposits_Sum_Order_By = {
   block_number?: InputMaybe<Order_By>
-  block_timestamp?: InputMaybe<Order_By>
   curve_id?: InputMaybe<Order_By>
   entry_fee?: InputMaybe<Order_By>
   receiver_total_shares_in_vault?: InputMaybe<Order_By>
@@ -2679,7 +2502,6 @@ export type Deposits_Sum_Order_By = {
 export type Deposits_Var_Pop_Fields = {
   __typename?: 'deposits_var_pop_fields'
   block_number?: Maybe<Scalars['Float']['output']>
-  block_timestamp?: Maybe<Scalars['Float']['output']>
   curve_id?: Maybe<Scalars['Float']['output']>
   entry_fee?: Maybe<Scalars['Float']['output']>
   receiver_total_shares_in_vault?: Maybe<Scalars['Float']['output']>
@@ -2691,7 +2513,6 @@ export type Deposits_Var_Pop_Fields = {
 /** order by var_pop() on columns of table "deposit" */
 export type Deposits_Var_Pop_Order_By = {
   block_number?: InputMaybe<Order_By>
-  block_timestamp?: InputMaybe<Order_By>
   curve_id?: InputMaybe<Order_By>
   entry_fee?: InputMaybe<Order_By>
   receiver_total_shares_in_vault?: InputMaybe<Order_By>
@@ -2704,7 +2525,6 @@ export type Deposits_Var_Pop_Order_By = {
 export type Deposits_Var_Samp_Fields = {
   __typename?: 'deposits_var_samp_fields'
   block_number?: Maybe<Scalars['Float']['output']>
-  block_timestamp?: Maybe<Scalars['Float']['output']>
   curve_id?: Maybe<Scalars['Float']['output']>
   entry_fee?: Maybe<Scalars['Float']['output']>
   receiver_total_shares_in_vault?: Maybe<Scalars['Float']['output']>
@@ -2716,7 +2536,6 @@ export type Deposits_Var_Samp_Fields = {
 /** order by var_samp() on columns of table "deposit" */
 export type Deposits_Var_Samp_Order_By = {
   block_number?: InputMaybe<Order_By>
-  block_timestamp?: InputMaybe<Order_By>
   curve_id?: InputMaybe<Order_By>
   entry_fee?: InputMaybe<Order_By>
   receiver_total_shares_in_vault?: InputMaybe<Order_By>
@@ -2729,7 +2548,6 @@ export type Deposits_Var_Samp_Order_By = {
 export type Deposits_Variance_Fields = {
   __typename?: 'deposits_variance_fields'
   block_number?: Maybe<Scalars['Float']['output']>
-  block_timestamp?: Maybe<Scalars['Float']['output']>
   curve_id?: Maybe<Scalars['Float']['output']>
   entry_fee?: Maybe<Scalars['Float']['output']>
   receiver_total_shares_in_vault?: Maybe<Scalars['Float']['output']>
@@ -2741,7 +2559,6 @@ export type Deposits_Variance_Fields = {
 /** order by variance() on columns of table "deposit" */
 export type Deposits_Variance_Order_By = {
   block_number?: InputMaybe<Order_By>
-  block_timestamp?: InputMaybe<Order_By>
   curve_id?: InputMaybe<Order_By>
   entry_fee?: InputMaybe<Order_By>
   receiver_total_shares_in_vault?: InputMaybe<Order_By>
@@ -2770,7 +2587,7 @@ export type Events = {
   atom?: Maybe<Atoms>
   atom_id?: Maybe<Scalars['numeric']['output']>
   block_number: Scalars['numeric']['output']
-  block_timestamp: Scalars['bigint']['output']
+  created_at: Scalars['timestamptz']['output']
   /** An object relationship */
   deposit?: Maybe<Deposits>
   deposit_id?: Maybe<Scalars['String']['output']>
@@ -2822,7 +2639,6 @@ export type Events_Avg_Fields = {
   __typename?: 'events_avg_fields'
   atom_id?: Maybe<Scalars['Float']['output']>
   block_number?: Maybe<Scalars['Float']['output']>
-  block_timestamp?: Maybe<Scalars['Float']['output']>
   triple_id?: Maybe<Scalars['Float']['output']>
 }
 
@@ -2834,7 +2650,7 @@ export type Events_Bool_Exp = {
   atom?: InputMaybe<Atoms_Bool_Exp>
   atom_id?: InputMaybe<Numeric_Comparison_Exp>
   block_number?: InputMaybe<Numeric_Comparison_Exp>
-  block_timestamp?: InputMaybe<Bigint_Comparison_Exp>
+  created_at?: InputMaybe<Timestamptz_Comparison_Exp>
   deposit?: InputMaybe<Deposits_Bool_Exp>
   deposit_id?: InputMaybe<String_Comparison_Exp>
   fee_transfer?: InputMaybe<Fee_Transfers_Bool_Exp>
@@ -2853,7 +2669,7 @@ export type Events_Max_Fields = {
   __typename?: 'events_max_fields'
   atom_id?: Maybe<Scalars['numeric']['output']>
   block_number?: Maybe<Scalars['numeric']['output']>
-  block_timestamp?: Maybe<Scalars['bigint']['output']>
+  created_at?: Maybe<Scalars['timestamptz']['output']>
   deposit_id?: Maybe<Scalars['String']['output']>
   fee_transfer_id?: Maybe<Scalars['String']['output']>
   id?: Maybe<Scalars['String']['output']>
@@ -2868,7 +2684,7 @@ export type Events_Min_Fields = {
   __typename?: 'events_min_fields'
   atom_id?: Maybe<Scalars['numeric']['output']>
   block_number?: Maybe<Scalars['numeric']['output']>
-  block_timestamp?: Maybe<Scalars['bigint']['output']>
+  created_at?: Maybe<Scalars['timestamptz']['output']>
   deposit_id?: Maybe<Scalars['String']['output']>
   fee_transfer_id?: Maybe<Scalars['String']['output']>
   id?: Maybe<Scalars['String']['output']>
@@ -2883,7 +2699,7 @@ export type Events_Order_By = {
   atom?: InputMaybe<Atoms_Order_By>
   atom_id?: InputMaybe<Order_By>
   block_number?: InputMaybe<Order_By>
-  block_timestamp?: InputMaybe<Order_By>
+  created_at?: InputMaybe<Order_By>
   deposit?: InputMaybe<Deposits_Order_By>
   deposit_id?: InputMaybe<Order_By>
   fee_transfer?: InputMaybe<Fee_Transfers_Order_By>
@@ -2904,7 +2720,7 @@ export type Events_Select_Column =
   /** column name */
   | 'block_number'
   /** column name */
-  | 'block_timestamp'
+  | 'created_at'
   /** column name */
   | 'deposit_id'
   /** column name */
@@ -2925,7 +2741,6 @@ export type Events_Stddev_Fields = {
   __typename?: 'events_stddev_fields'
   atom_id?: Maybe<Scalars['Float']['output']>
   block_number?: Maybe<Scalars['Float']['output']>
-  block_timestamp?: Maybe<Scalars['Float']['output']>
   triple_id?: Maybe<Scalars['Float']['output']>
 }
 
@@ -2934,7 +2749,6 @@ export type Events_Stddev_Pop_Fields = {
   __typename?: 'events_stddev_pop_fields'
   atom_id?: Maybe<Scalars['Float']['output']>
   block_number?: Maybe<Scalars['Float']['output']>
-  block_timestamp?: Maybe<Scalars['Float']['output']>
   triple_id?: Maybe<Scalars['Float']['output']>
 }
 
@@ -2943,7 +2757,6 @@ export type Events_Stddev_Samp_Fields = {
   __typename?: 'events_stddev_samp_fields'
   atom_id?: Maybe<Scalars['Float']['output']>
   block_number?: Maybe<Scalars['Float']['output']>
-  block_timestamp?: Maybe<Scalars['Float']['output']>
   triple_id?: Maybe<Scalars['Float']['output']>
 }
 
@@ -2959,7 +2772,7 @@ export type Events_Stream_Cursor_Input = {
 export type Events_Stream_Cursor_Value_Input = {
   atom_id?: InputMaybe<Scalars['numeric']['input']>
   block_number?: InputMaybe<Scalars['numeric']['input']>
-  block_timestamp?: InputMaybe<Scalars['bigint']['input']>
+  created_at?: InputMaybe<Scalars['timestamptz']['input']>
   deposit_id?: InputMaybe<Scalars['String']['input']>
   fee_transfer_id?: InputMaybe<Scalars['String']['input']>
   id?: InputMaybe<Scalars['String']['input']>
@@ -2974,7 +2787,6 @@ export type Events_Sum_Fields = {
   __typename?: 'events_sum_fields'
   atom_id?: Maybe<Scalars['numeric']['output']>
   block_number?: Maybe<Scalars['numeric']['output']>
-  block_timestamp?: Maybe<Scalars['bigint']['output']>
   triple_id?: Maybe<Scalars['numeric']['output']>
 }
 
@@ -2983,7 +2795,6 @@ export type Events_Var_Pop_Fields = {
   __typename?: 'events_var_pop_fields'
   atom_id?: Maybe<Scalars['Float']['output']>
   block_number?: Maybe<Scalars['Float']['output']>
-  block_timestamp?: Maybe<Scalars['Float']['output']>
   triple_id?: Maybe<Scalars['Float']['output']>
 }
 
@@ -2992,7 +2803,6 @@ export type Events_Var_Samp_Fields = {
   __typename?: 'events_var_samp_fields'
   atom_id?: Maybe<Scalars['Float']['output']>
   block_number?: Maybe<Scalars['Float']['output']>
-  block_timestamp?: Maybe<Scalars['Float']['output']>
   triple_id?: Maybe<Scalars['Float']['output']>
 }
 
@@ -3001,7 +2811,6 @@ export type Events_Variance_Fields = {
   __typename?: 'events_variance_fields'
   atom_id?: Maybe<Scalars['Float']['output']>
   block_number?: Maybe<Scalars['Float']['output']>
-  block_timestamp?: Maybe<Scalars['Float']['output']>
   triple_id?: Maybe<Scalars['Float']['output']>
 }
 
@@ -3010,7 +2819,7 @@ export type Fee_Transfers = {
   __typename?: 'fee_transfers'
   amount: Scalars['numeric']['output']
   block_number: Scalars['numeric']['output']
-  block_timestamp: Scalars['bigint']['output']
+  created_at: Scalars['timestamptz']['output']
   id: Scalars['String']['output']
   /** An object relationship */
   receiver: Accounts
@@ -3081,14 +2890,12 @@ export type Fee_Transfers_Avg_Fields = {
   __typename?: 'fee_transfers_avg_fields'
   amount?: Maybe<Scalars['Float']['output']>
   block_number?: Maybe<Scalars['Float']['output']>
-  block_timestamp?: Maybe<Scalars['Float']['output']>
 }
 
 /** order by avg() on columns of table "fee_transfer" */
 export type Fee_Transfers_Avg_Order_By = {
   amount?: InputMaybe<Order_By>
   block_number?: InputMaybe<Order_By>
-  block_timestamp?: InputMaybe<Order_By>
 }
 
 /** Boolean expression to filter rows from the table "fee_transfer". All fields are combined with a logical 'AND'. */
@@ -3098,7 +2905,7 @@ export type Fee_Transfers_Bool_Exp = {
   _or?: InputMaybe<Array<Fee_Transfers_Bool_Exp>>
   amount?: InputMaybe<Numeric_Comparison_Exp>
   block_number?: InputMaybe<Numeric_Comparison_Exp>
-  block_timestamp?: InputMaybe<Bigint_Comparison_Exp>
+  created_at?: InputMaybe<Timestamptz_Comparison_Exp>
   id?: InputMaybe<String_Comparison_Exp>
   receiver?: InputMaybe<Accounts_Bool_Exp>
   receiver_id?: InputMaybe<String_Comparison_Exp>
@@ -3112,7 +2919,7 @@ export type Fee_Transfers_Max_Fields = {
   __typename?: 'fee_transfers_max_fields'
   amount?: Maybe<Scalars['numeric']['output']>
   block_number?: Maybe<Scalars['numeric']['output']>
-  block_timestamp?: Maybe<Scalars['bigint']['output']>
+  created_at?: Maybe<Scalars['timestamptz']['output']>
   id?: Maybe<Scalars['String']['output']>
   receiver_id?: Maybe<Scalars['String']['output']>
   sender_id?: Maybe<Scalars['String']['output']>
@@ -3123,7 +2930,7 @@ export type Fee_Transfers_Max_Fields = {
 export type Fee_Transfers_Max_Order_By = {
   amount?: InputMaybe<Order_By>
   block_number?: InputMaybe<Order_By>
-  block_timestamp?: InputMaybe<Order_By>
+  created_at?: InputMaybe<Order_By>
   id?: InputMaybe<Order_By>
   receiver_id?: InputMaybe<Order_By>
   sender_id?: InputMaybe<Order_By>
@@ -3135,7 +2942,7 @@ export type Fee_Transfers_Min_Fields = {
   __typename?: 'fee_transfers_min_fields'
   amount?: Maybe<Scalars['numeric']['output']>
   block_number?: Maybe<Scalars['numeric']['output']>
-  block_timestamp?: Maybe<Scalars['bigint']['output']>
+  created_at?: Maybe<Scalars['timestamptz']['output']>
   id?: Maybe<Scalars['String']['output']>
   receiver_id?: Maybe<Scalars['String']['output']>
   sender_id?: Maybe<Scalars['String']['output']>
@@ -3146,7 +2953,7 @@ export type Fee_Transfers_Min_Fields = {
 export type Fee_Transfers_Min_Order_By = {
   amount?: InputMaybe<Order_By>
   block_number?: InputMaybe<Order_By>
-  block_timestamp?: InputMaybe<Order_By>
+  created_at?: InputMaybe<Order_By>
   id?: InputMaybe<Order_By>
   receiver_id?: InputMaybe<Order_By>
   sender_id?: InputMaybe<Order_By>
@@ -3157,7 +2964,7 @@ export type Fee_Transfers_Min_Order_By = {
 export type Fee_Transfers_Order_By = {
   amount?: InputMaybe<Order_By>
   block_number?: InputMaybe<Order_By>
-  block_timestamp?: InputMaybe<Order_By>
+  created_at?: InputMaybe<Order_By>
   id?: InputMaybe<Order_By>
   receiver?: InputMaybe<Accounts_Order_By>
   receiver_id?: InputMaybe<Order_By>
@@ -3173,7 +2980,7 @@ export type Fee_Transfers_Select_Column =
   /** column name */
   | 'block_number'
   /** column name */
-  | 'block_timestamp'
+  | 'created_at'
   /** column name */
   | 'id'
   /** column name */
@@ -3188,14 +2995,12 @@ export type Fee_Transfers_Stddev_Fields = {
   __typename?: 'fee_transfers_stddev_fields'
   amount?: Maybe<Scalars['Float']['output']>
   block_number?: Maybe<Scalars['Float']['output']>
-  block_timestamp?: Maybe<Scalars['Float']['output']>
 }
 
 /** order by stddev() on columns of table "fee_transfer" */
 export type Fee_Transfers_Stddev_Order_By = {
   amount?: InputMaybe<Order_By>
   block_number?: InputMaybe<Order_By>
-  block_timestamp?: InputMaybe<Order_By>
 }
 
 /** aggregate stddev_pop on columns */
@@ -3203,14 +3008,12 @@ export type Fee_Transfers_Stddev_Pop_Fields = {
   __typename?: 'fee_transfers_stddev_pop_fields'
   amount?: Maybe<Scalars['Float']['output']>
   block_number?: Maybe<Scalars['Float']['output']>
-  block_timestamp?: Maybe<Scalars['Float']['output']>
 }
 
 /** order by stddev_pop() on columns of table "fee_transfer" */
 export type Fee_Transfers_Stddev_Pop_Order_By = {
   amount?: InputMaybe<Order_By>
   block_number?: InputMaybe<Order_By>
-  block_timestamp?: InputMaybe<Order_By>
 }
 
 /** aggregate stddev_samp on columns */
@@ -3218,14 +3021,12 @@ export type Fee_Transfers_Stddev_Samp_Fields = {
   __typename?: 'fee_transfers_stddev_samp_fields'
   amount?: Maybe<Scalars['Float']['output']>
   block_number?: Maybe<Scalars['Float']['output']>
-  block_timestamp?: Maybe<Scalars['Float']['output']>
 }
 
 /** order by stddev_samp() on columns of table "fee_transfer" */
 export type Fee_Transfers_Stddev_Samp_Order_By = {
   amount?: InputMaybe<Order_By>
   block_number?: InputMaybe<Order_By>
-  block_timestamp?: InputMaybe<Order_By>
 }
 
 /** Streaming cursor of the table "fee_transfers" */
@@ -3240,7 +3041,7 @@ export type Fee_Transfers_Stream_Cursor_Input = {
 export type Fee_Transfers_Stream_Cursor_Value_Input = {
   amount?: InputMaybe<Scalars['numeric']['input']>
   block_number?: InputMaybe<Scalars['numeric']['input']>
-  block_timestamp?: InputMaybe<Scalars['bigint']['input']>
+  created_at?: InputMaybe<Scalars['timestamptz']['input']>
   id?: InputMaybe<Scalars['String']['input']>
   receiver_id?: InputMaybe<Scalars['String']['input']>
   sender_id?: InputMaybe<Scalars['String']['input']>
@@ -3252,14 +3053,12 @@ export type Fee_Transfers_Sum_Fields = {
   __typename?: 'fee_transfers_sum_fields'
   amount?: Maybe<Scalars['numeric']['output']>
   block_number?: Maybe<Scalars['numeric']['output']>
-  block_timestamp?: Maybe<Scalars['bigint']['output']>
 }
 
 /** order by sum() on columns of table "fee_transfer" */
 export type Fee_Transfers_Sum_Order_By = {
   amount?: InputMaybe<Order_By>
   block_number?: InputMaybe<Order_By>
-  block_timestamp?: InputMaybe<Order_By>
 }
 
 /** aggregate var_pop on columns */
@@ -3267,14 +3066,12 @@ export type Fee_Transfers_Var_Pop_Fields = {
   __typename?: 'fee_transfers_var_pop_fields'
   amount?: Maybe<Scalars['Float']['output']>
   block_number?: Maybe<Scalars['Float']['output']>
-  block_timestamp?: Maybe<Scalars['Float']['output']>
 }
 
 /** order by var_pop() on columns of table "fee_transfer" */
 export type Fee_Transfers_Var_Pop_Order_By = {
   amount?: InputMaybe<Order_By>
   block_number?: InputMaybe<Order_By>
-  block_timestamp?: InputMaybe<Order_By>
 }
 
 /** aggregate var_samp on columns */
@@ -3282,14 +3079,12 @@ export type Fee_Transfers_Var_Samp_Fields = {
   __typename?: 'fee_transfers_var_samp_fields'
   amount?: Maybe<Scalars['Float']['output']>
   block_number?: Maybe<Scalars['Float']['output']>
-  block_timestamp?: Maybe<Scalars['Float']['output']>
 }
 
 /** order by var_samp() on columns of table "fee_transfer" */
 export type Fee_Transfers_Var_Samp_Order_By = {
   amount?: InputMaybe<Order_By>
   block_number?: InputMaybe<Order_By>
-  block_timestamp?: InputMaybe<Order_By>
 }
 
 /** aggregate variance on columns */
@@ -3297,14 +3092,12 @@ export type Fee_Transfers_Variance_Fields = {
   __typename?: 'fee_transfers_variance_fields'
   amount?: Maybe<Scalars['Float']['output']>
   block_number?: Maybe<Scalars['Float']['output']>
-  block_timestamp?: Maybe<Scalars['Float']['output']>
 }
 
 /** order by variance() on columns of table "fee_transfer" */
 export type Fee_Transfers_Variance_Order_By = {
   amount?: InputMaybe<Order_By>
   block_number?: InputMaybe<Order_By>
-  block_timestamp?: InputMaybe<Order_By>
 }
 
 /** Boolean expression to compare columns of type "float8". All fields are combined with logical 'AND'. */
@@ -3902,12 +3695,14 @@ export type Positions = {
   /** An object relationship */
   account?: Maybe<Accounts>
   account_id: Scalars['String']['output']
+  created_at: Scalars['timestamptz']['output']
   curve_id: Scalars['numeric']['output']
   id: Scalars['String']['output']
   shares: Scalars['numeric']['output']
   /** An object relationship */
   term: Terms
   term_id: Scalars['numeric']['output']
+  updated_at: Scalars['timestamptz']['output']
   /** An object relationship */
   vault?: Maybe<Vaults>
 }
@@ -3989,61 +3784,77 @@ export type Positions_Bool_Exp = {
   _or?: InputMaybe<Array<Positions_Bool_Exp>>
   account?: InputMaybe<Accounts_Bool_Exp>
   account_id?: InputMaybe<String_Comparison_Exp>
+  created_at?: InputMaybe<Timestamptz_Comparison_Exp>
   curve_id?: InputMaybe<Numeric_Comparison_Exp>
   id?: InputMaybe<String_Comparison_Exp>
   shares?: InputMaybe<Numeric_Comparison_Exp>
   term?: InputMaybe<Terms_Bool_Exp>
   term_id?: InputMaybe<Numeric_Comparison_Exp>
+  updated_at?: InputMaybe<Timestamptz_Comparison_Exp>
   vault?: InputMaybe<Vaults_Bool_Exp>
+}
+
+export type Positions_From_Following_Args = {
+  address?: InputMaybe<Scalars['String']['input']>
 }
 
 /** aggregate max on columns */
 export type Positions_Max_Fields = {
   __typename?: 'positions_max_fields'
   account_id?: Maybe<Scalars['String']['output']>
+  created_at?: Maybe<Scalars['timestamptz']['output']>
   curve_id?: Maybe<Scalars['numeric']['output']>
   id?: Maybe<Scalars['String']['output']>
   shares?: Maybe<Scalars['numeric']['output']>
   term_id?: Maybe<Scalars['numeric']['output']>
+  updated_at?: Maybe<Scalars['timestamptz']['output']>
 }
 
 /** order by max() on columns of table "position" */
 export type Positions_Max_Order_By = {
   account_id?: InputMaybe<Order_By>
+  created_at?: InputMaybe<Order_By>
   curve_id?: InputMaybe<Order_By>
   id?: InputMaybe<Order_By>
   shares?: InputMaybe<Order_By>
   term_id?: InputMaybe<Order_By>
+  updated_at?: InputMaybe<Order_By>
 }
 
 /** aggregate min on columns */
 export type Positions_Min_Fields = {
   __typename?: 'positions_min_fields'
   account_id?: Maybe<Scalars['String']['output']>
+  created_at?: Maybe<Scalars['timestamptz']['output']>
   curve_id?: Maybe<Scalars['numeric']['output']>
   id?: Maybe<Scalars['String']['output']>
   shares?: Maybe<Scalars['numeric']['output']>
   term_id?: Maybe<Scalars['numeric']['output']>
+  updated_at?: Maybe<Scalars['timestamptz']['output']>
 }
 
 /** order by min() on columns of table "position" */
 export type Positions_Min_Order_By = {
   account_id?: InputMaybe<Order_By>
+  created_at?: InputMaybe<Order_By>
   curve_id?: InputMaybe<Order_By>
   id?: InputMaybe<Order_By>
   shares?: InputMaybe<Order_By>
   term_id?: InputMaybe<Order_By>
+  updated_at?: InputMaybe<Order_By>
 }
 
 /** Ordering options when selecting data from "position". */
 export type Positions_Order_By = {
   account?: InputMaybe<Accounts_Order_By>
   account_id?: InputMaybe<Order_By>
+  created_at?: InputMaybe<Order_By>
   curve_id?: InputMaybe<Order_By>
   id?: InputMaybe<Order_By>
   shares?: InputMaybe<Order_By>
   term?: InputMaybe<Terms_Order_By>
   term_id?: InputMaybe<Order_By>
+  updated_at?: InputMaybe<Order_By>
   vault?: InputMaybe<Vaults_Order_By>
 }
 
@@ -4052,6 +3863,8 @@ export type Positions_Select_Column =
   /** column name */
   | 'account_id'
   /** column name */
+  | 'created_at'
+  /** column name */
   | 'curve_id'
   /** column name */
   | 'id'
@@ -4059,6 +3872,8 @@ export type Positions_Select_Column =
   | 'shares'
   /** column name */
   | 'term_id'
+  /** column name */
+  | 'updated_at'
 
 /** aggregate stddev on columns */
 export type Positions_Stddev_Fields = {
@@ -4116,10 +3931,12 @@ export type Positions_Stream_Cursor_Input = {
 /** Initial value of the column from where the streaming should start */
 export type Positions_Stream_Cursor_Value_Input = {
   account_id?: InputMaybe<Scalars['String']['input']>
+  created_at?: InputMaybe<Scalars['timestamptz']['input']>
   curve_id?: InputMaybe<Scalars['numeric']['input']>
   id?: InputMaybe<Scalars['String']['input']>
   shares?: InputMaybe<Scalars['numeric']['input']>
   term_id?: InputMaybe<Scalars['numeric']['input']>
+  updated_at?: InputMaybe<Scalars['timestamptz']['input']>
 }
 
 /** aggregate sum on columns */
@@ -4185,7 +4002,6 @@ export type Positions_Variance_Order_By = {
 /** columns and relationships of "predicate_object" */
 export type Predicate_Objects = {
   __typename?: 'predicate_objects'
-  claim_count: Scalars['Int']['output']
   id: Scalars['String']['output']
   /** An object relationship */
   object: Atoms
@@ -4254,7 +4070,6 @@ export type Predicate_Objects_Aggregate_Order_By = {
 /** aggregate avg on columns */
 export type Predicate_Objects_Avg_Fields = {
   __typename?: 'predicate_objects_avg_fields'
-  claim_count?: Maybe<Scalars['Float']['output']>
   object_id?: Maybe<Scalars['Float']['output']>
   predicate_id?: Maybe<Scalars['Float']['output']>
   triple_count?: Maybe<Scalars['Float']['output']>
@@ -4262,7 +4077,6 @@ export type Predicate_Objects_Avg_Fields = {
 
 /** order by avg() on columns of table "predicate_object" */
 export type Predicate_Objects_Avg_Order_By = {
-  claim_count?: InputMaybe<Order_By>
   object_id?: InputMaybe<Order_By>
   predicate_id?: InputMaybe<Order_By>
   triple_count?: InputMaybe<Order_By>
@@ -4273,7 +4087,6 @@ export type Predicate_Objects_Bool_Exp = {
   _and?: InputMaybe<Array<Predicate_Objects_Bool_Exp>>
   _not?: InputMaybe<Predicate_Objects_Bool_Exp>
   _or?: InputMaybe<Array<Predicate_Objects_Bool_Exp>>
-  claim_count?: InputMaybe<Int_Comparison_Exp>
   id?: InputMaybe<String_Comparison_Exp>
   object?: InputMaybe<Atoms_Bool_Exp>
   object_id?: InputMaybe<Numeric_Comparison_Exp>
@@ -4285,7 +4098,6 @@ export type Predicate_Objects_Bool_Exp = {
 /** aggregate max on columns */
 export type Predicate_Objects_Max_Fields = {
   __typename?: 'predicate_objects_max_fields'
-  claim_count?: Maybe<Scalars['Int']['output']>
   id?: Maybe<Scalars['String']['output']>
   object_id?: Maybe<Scalars['numeric']['output']>
   predicate_id?: Maybe<Scalars['numeric']['output']>
@@ -4294,7 +4106,6 @@ export type Predicate_Objects_Max_Fields = {
 
 /** order by max() on columns of table "predicate_object" */
 export type Predicate_Objects_Max_Order_By = {
-  claim_count?: InputMaybe<Order_By>
   id?: InputMaybe<Order_By>
   object_id?: InputMaybe<Order_By>
   predicate_id?: InputMaybe<Order_By>
@@ -4304,7 +4115,6 @@ export type Predicate_Objects_Max_Order_By = {
 /** aggregate min on columns */
 export type Predicate_Objects_Min_Fields = {
   __typename?: 'predicate_objects_min_fields'
-  claim_count?: Maybe<Scalars['Int']['output']>
   id?: Maybe<Scalars['String']['output']>
   object_id?: Maybe<Scalars['numeric']['output']>
   predicate_id?: Maybe<Scalars['numeric']['output']>
@@ -4313,7 +4123,6 @@ export type Predicate_Objects_Min_Fields = {
 
 /** order by min() on columns of table "predicate_object" */
 export type Predicate_Objects_Min_Order_By = {
-  claim_count?: InputMaybe<Order_By>
   id?: InputMaybe<Order_By>
   object_id?: InputMaybe<Order_By>
   predicate_id?: InputMaybe<Order_By>
@@ -4322,7 +4131,6 @@ export type Predicate_Objects_Min_Order_By = {
 
 /** Ordering options when selecting data from "predicate_object". */
 export type Predicate_Objects_Order_By = {
-  claim_count?: InputMaybe<Order_By>
   id?: InputMaybe<Order_By>
   object?: InputMaybe<Atoms_Order_By>
   object_id?: InputMaybe<Order_By>
@@ -4333,8 +4141,6 @@ export type Predicate_Objects_Order_By = {
 
 /** select columns of table "predicate_object" */
 export type Predicate_Objects_Select_Column =
-  /** column name */
-  | 'claim_count'
   /** column name */
   | 'id'
   /** column name */
@@ -4347,7 +4153,6 @@ export type Predicate_Objects_Select_Column =
 /** aggregate stddev on columns */
 export type Predicate_Objects_Stddev_Fields = {
   __typename?: 'predicate_objects_stddev_fields'
-  claim_count?: Maybe<Scalars['Float']['output']>
   object_id?: Maybe<Scalars['Float']['output']>
   predicate_id?: Maybe<Scalars['Float']['output']>
   triple_count?: Maybe<Scalars['Float']['output']>
@@ -4355,7 +4160,6 @@ export type Predicate_Objects_Stddev_Fields = {
 
 /** order by stddev() on columns of table "predicate_object" */
 export type Predicate_Objects_Stddev_Order_By = {
-  claim_count?: InputMaybe<Order_By>
   object_id?: InputMaybe<Order_By>
   predicate_id?: InputMaybe<Order_By>
   triple_count?: InputMaybe<Order_By>
@@ -4364,7 +4168,6 @@ export type Predicate_Objects_Stddev_Order_By = {
 /** aggregate stddev_pop on columns */
 export type Predicate_Objects_Stddev_Pop_Fields = {
   __typename?: 'predicate_objects_stddev_pop_fields'
-  claim_count?: Maybe<Scalars['Float']['output']>
   object_id?: Maybe<Scalars['Float']['output']>
   predicate_id?: Maybe<Scalars['Float']['output']>
   triple_count?: Maybe<Scalars['Float']['output']>
@@ -4372,7 +4175,6 @@ export type Predicate_Objects_Stddev_Pop_Fields = {
 
 /** order by stddev_pop() on columns of table "predicate_object" */
 export type Predicate_Objects_Stddev_Pop_Order_By = {
-  claim_count?: InputMaybe<Order_By>
   object_id?: InputMaybe<Order_By>
   predicate_id?: InputMaybe<Order_By>
   triple_count?: InputMaybe<Order_By>
@@ -4381,7 +4183,6 @@ export type Predicate_Objects_Stddev_Pop_Order_By = {
 /** aggregate stddev_samp on columns */
 export type Predicate_Objects_Stddev_Samp_Fields = {
   __typename?: 'predicate_objects_stddev_samp_fields'
-  claim_count?: Maybe<Scalars['Float']['output']>
   object_id?: Maybe<Scalars['Float']['output']>
   predicate_id?: Maybe<Scalars['Float']['output']>
   triple_count?: Maybe<Scalars['Float']['output']>
@@ -4389,7 +4190,6 @@ export type Predicate_Objects_Stddev_Samp_Fields = {
 
 /** order by stddev_samp() on columns of table "predicate_object" */
 export type Predicate_Objects_Stddev_Samp_Order_By = {
-  claim_count?: InputMaybe<Order_By>
   object_id?: InputMaybe<Order_By>
   predicate_id?: InputMaybe<Order_By>
   triple_count?: InputMaybe<Order_By>
@@ -4405,7 +4205,6 @@ export type Predicate_Objects_Stream_Cursor_Input = {
 
 /** Initial value of the column from where the streaming should start */
 export type Predicate_Objects_Stream_Cursor_Value_Input = {
-  claim_count?: InputMaybe<Scalars['Int']['input']>
   id?: InputMaybe<Scalars['String']['input']>
   object_id?: InputMaybe<Scalars['numeric']['input']>
   predicate_id?: InputMaybe<Scalars['numeric']['input']>
@@ -4415,7 +4214,6 @@ export type Predicate_Objects_Stream_Cursor_Value_Input = {
 /** aggregate sum on columns */
 export type Predicate_Objects_Sum_Fields = {
   __typename?: 'predicate_objects_sum_fields'
-  claim_count?: Maybe<Scalars['Int']['output']>
   object_id?: Maybe<Scalars['numeric']['output']>
   predicate_id?: Maybe<Scalars['numeric']['output']>
   triple_count?: Maybe<Scalars['Int']['output']>
@@ -4423,7 +4221,6 @@ export type Predicate_Objects_Sum_Fields = {
 
 /** order by sum() on columns of table "predicate_object" */
 export type Predicate_Objects_Sum_Order_By = {
-  claim_count?: InputMaybe<Order_By>
   object_id?: InputMaybe<Order_By>
   predicate_id?: InputMaybe<Order_By>
   triple_count?: InputMaybe<Order_By>
@@ -4432,7 +4229,6 @@ export type Predicate_Objects_Sum_Order_By = {
 /** aggregate var_pop on columns */
 export type Predicate_Objects_Var_Pop_Fields = {
   __typename?: 'predicate_objects_var_pop_fields'
-  claim_count?: Maybe<Scalars['Float']['output']>
   object_id?: Maybe<Scalars['Float']['output']>
   predicate_id?: Maybe<Scalars['Float']['output']>
   triple_count?: Maybe<Scalars['Float']['output']>
@@ -4440,7 +4236,6 @@ export type Predicate_Objects_Var_Pop_Fields = {
 
 /** order by var_pop() on columns of table "predicate_object" */
 export type Predicate_Objects_Var_Pop_Order_By = {
-  claim_count?: InputMaybe<Order_By>
   object_id?: InputMaybe<Order_By>
   predicate_id?: InputMaybe<Order_By>
   triple_count?: InputMaybe<Order_By>
@@ -4449,7 +4244,6 @@ export type Predicate_Objects_Var_Pop_Order_By = {
 /** aggregate var_samp on columns */
 export type Predicate_Objects_Var_Samp_Fields = {
   __typename?: 'predicate_objects_var_samp_fields'
-  claim_count?: Maybe<Scalars['Float']['output']>
   object_id?: Maybe<Scalars['Float']['output']>
   predicate_id?: Maybe<Scalars['Float']['output']>
   triple_count?: Maybe<Scalars['Float']['output']>
@@ -4457,7 +4251,6 @@ export type Predicate_Objects_Var_Samp_Fields = {
 
 /** order by var_samp() on columns of table "predicate_object" */
 export type Predicate_Objects_Var_Samp_Order_By = {
-  claim_count?: InputMaybe<Order_By>
   object_id?: InputMaybe<Order_By>
   predicate_id?: InputMaybe<Order_By>
   triple_count?: InputMaybe<Order_By>
@@ -4466,7 +4259,6 @@ export type Predicate_Objects_Var_Samp_Order_By = {
 /** aggregate variance on columns */
 export type Predicate_Objects_Variance_Fields = {
   __typename?: 'predicate_objects_variance_fields'
-  claim_count?: Maybe<Scalars['Float']['output']>
   object_id?: Maybe<Scalars['Float']['output']>
   predicate_id?: Maybe<Scalars['Float']['output']>
   triple_count?: Maybe<Scalars['Float']['output']>
@@ -4474,7 +4266,6 @@ export type Predicate_Objects_Variance_Fields = {
 
 /** order by variance() on columns of table "predicate_object" */
 export type Predicate_Objects_Variance_Order_By = {
-  claim_count?: InputMaybe<Order_By>
   object_id?: InputMaybe<Order_By>
   predicate_id?: InputMaybe<Order_By>
   triple_count?: InputMaybe<Order_By>
@@ -4488,10 +4279,6 @@ export type Query_Root = {
   accounts: Array<Accounts>
   /** An aggregate relationship */
   accounts_aggregate: Accounts_Aggregate
-  /** execute function "accounts_that_claim_about_account" which returns "account" */
-  accounts_that_claim_about_account: Array<Accounts>
-  /** execute function "accounts_that_claim_about_account" and query aggregates on result of table type "account" */
-  accounts_that_claim_about_account_aggregate: Accounts_Aggregate
   /** fetch data from the table: "atom" using primary key columns */
   atom?: Maybe<Atoms>
   /** fetch data from the table: "atom_value" using primary key columns */
@@ -4530,16 +4317,6 @@ export type Query_Root = {
   chainlink_price?: Maybe<Chainlink_Prices>
   /** fetch data from the table: "chainlink_price" */
   chainlink_prices: Array<Chainlink_Prices>
-  /** fetch data from the table: "claim" using primary key columns */
-  claim?: Maybe<Claims>
-  /** An array relationship */
-  claims: Array<Claims>
-  /** An aggregate relationship */
-  claims_aggregate: Claims_Aggregate
-  /** execute function "claims_from_following" which returns "claim" */
-  claims_from_following: Array<Claims>
-  /** execute function "claims_from_following" and query aggregates on result of table type "claim" */
-  claims_from_following_aggregate: Claims_Aggregate
   /** fetch data from the table: "deposit" using primary key columns */
   deposit?: Maybe<Deposits>
   /** An array relationship */
@@ -4586,6 +4363,10 @@ export type Query_Root = {
   positions: Array<Positions>
   /** An aggregate relationship */
   positions_aggregate: Positions_Aggregate
+  /** execute function "positions_from_following" which returns "position" */
+  positions_from_following: Array<Positions>
+  /** execute function "positions_from_following" and query aggregates on result of table type "position" */
+  positions_from_following_aggregate: Positions_Aggregate
   /** fetch data from the table: "predicate_object" */
   predicate_objects: Array<Predicate_Objects>
   /** fetch aggregated fields from the table: "predicate_object" */
@@ -4598,14 +4379,34 @@ export type Query_Root = {
   redemptions: Array<Redemptions>
   /** An aggregate relationship */
   redemptions_aggregate: Redemptions_Aggregate
-  /** fetch data from the table: "share_price_change" using primary key columns */
-  share_price_change?: Maybe<Share_Price_Changes>
-  /** An array relationship */
+  /** execute function "search_term" which returns "term" */
+  search_term: Array<Terms>
+  /** execute function "search_term" and query aggregates on result of table type "term" */
+  search_term_aggregate: Terms_Aggregate
+  /** execute function "search_term_from_following" which returns "term" */
+  search_term_from_following: Array<Terms>
+  /** execute function "search_term_from_following" and query aggregates on result of table type "term" */
+  search_term_from_following_aggregate: Terms_Aggregate
+  /** fetch data from the table: "share_price_change_stats_daily" */
+  share_price_change_stats_daily: Array<Share_Price_Change_Stats_Daily>
+  /** fetch data from the table: "share_price_change_stats_hourly" */
+  share_price_change_stats_hourly: Array<Share_Price_Change_Stats_Hourly>
+  /** fetch data from the table: "share_price_change_stats_monthly" */
+  share_price_change_stats_monthly: Array<Share_Price_Change_Stats_Monthly>
+  /** fetch data from the table: "share_price_change_stats_weekly" */
+  share_price_change_stats_weekly: Array<Share_Price_Change_Stats_Weekly>
+  /** fetch data from the table: "share_price_change" */
   share_price_changes: Array<Share_Price_Changes>
-  /** An aggregate relationship */
+  /** fetch aggregated fields from the table: "share_price_change" */
   share_price_changes_aggregate: Share_Price_Changes_Aggregate
-  /** fetch data from the table: "signal" using primary key columns */
-  signal?: Maybe<Signals>
+  /** fetch data from the table: "signal_stats_daily" */
+  signal_stats_daily: Array<Signal_Stats_Daily>
+  /** fetch data from the table: "signal_stats_hourly" */
+  signal_stats_hourly: Array<Signal_Stats_Hourly>
+  /** fetch data from the table: "signal_stats_monthly" */
+  signal_stats_monthly: Array<Signal_Stats_Monthly>
+  /** fetch data from the table: "signal_stats_weekly" */
+  signal_stats_weekly: Array<Signal_Stats_Weekly>
   /** An array relationship */
   signals: Array<Signals>
   /** An aggregate relationship */
@@ -4665,24 +4466,6 @@ export type Query_RootAccountsArgs = {
 }
 
 export type Query_RootAccounts_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Accounts_Select_Column>>
-  limit?: InputMaybe<Scalars['Int']['input']>
-  offset?: InputMaybe<Scalars['Int']['input']>
-  order_by?: InputMaybe<Array<Accounts_Order_By>>
-  where?: InputMaybe<Accounts_Bool_Exp>
-}
-
-export type Query_RootAccounts_That_Claim_About_AccountArgs = {
-  args: Accounts_That_Claim_About_Account_Args
-  distinct_on?: InputMaybe<Array<Accounts_Select_Column>>
-  limit?: InputMaybe<Scalars['Int']['input']>
-  offset?: InputMaybe<Scalars['Int']['input']>
-  order_by?: InputMaybe<Array<Accounts_Order_By>>
-  where?: InputMaybe<Accounts_Bool_Exp>
-}
-
-export type Query_RootAccounts_That_Claim_About_Account_AggregateArgs = {
-  args: Accounts_That_Claim_About_Account_Args
   distinct_on?: InputMaybe<Array<Accounts_Select_Column>>
   limit?: InputMaybe<Scalars['Int']['input']>
   offset?: InputMaybe<Scalars['Int']['input']>
@@ -4812,44 +4595,6 @@ export type Query_RootChainlink_PricesArgs = {
   offset?: InputMaybe<Scalars['Int']['input']>
   order_by?: InputMaybe<Array<Chainlink_Prices_Order_By>>
   where?: InputMaybe<Chainlink_Prices_Bool_Exp>
-}
-
-export type Query_RootClaimArgs = {
-  id: Scalars['String']['input']
-}
-
-export type Query_RootClaimsArgs = {
-  distinct_on?: InputMaybe<Array<Claims_Select_Column>>
-  limit?: InputMaybe<Scalars['Int']['input']>
-  offset?: InputMaybe<Scalars['Int']['input']>
-  order_by?: InputMaybe<Array<Claims_Order_By>>
-  where?: InputMaybe<Claims_Bool_Exp>
-}
-
-export type Query_RootClaims_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Claims_Select_Column>>
-  limit?: InputMaybe<Scalars['Int']['input']>
-  offset?: InputMaybe<Scalars['Int']['input']>
-  order_by?: InputMaybe<Array<Claims_Order_By>>
-  where?: InputMaybe<Claims_Bool_Exp>
-}
-
-export type Query_RootClaims_From_FollowingArgs = {
-  args: Claims_From_Following_Args
-  distinct_on?: InputMaybe<Array<Claims_Select_Column>>
-  limit?: InputMaybe<Scalars['Int']['input']>
-  offset?: InputMaybe<Scalars['Int']['input']>
-  order_by?: InputMaybe<Array<Claims_Order_By>>
-  where?: InputMaybe<Claims_Bool_Exp>
-}
-
-export type Query_RootClaims_From_Following_AggregateArgs = {
-  args: Claims_From_Following_Args
-  distinct_on?: InputMaybe<Array<Claims_Select_Column>>
-  limit?: InputMaybe<Scalars['Int']['input']>
-  offset?: InputMaybe<Scalars['Int']['input']>
-  order_by?: InputMaybe<Array<Claims_Order_By>>
-  where?: InputMaybe<Claims_Bool_Exp>
 }
 
 export type Query_RootDepositArgs = {
@@ -5010,6 +4755,24 @@ export type Query_RootPositions_AggregateArgs = {
   where?: InputMaybe<Positions_Bool_Exp>
 }
 
+export type Query_RootPositions_From_FollowingArgs = {
+  args: Positions_From_Following_Args
+  distinct_on?: InputMaybe<Array<Positions_Select_Column>>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  order_by?: InputMaybe<Array<Positions_Order_By>>
+  where?: InputMaybe<Positions_Bool_Exp>
+}
+
+export type Query_RootPositions_From_Following_AggregateArgs = {
+  args: Positions_From_Following_Args
+  distinct_on?: InputMaybe<Array<Positions_Select_Column>>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  order_by?: InputMaybe<Array<Positions_Order_By>>
+  where?: InputMaybe<Positions_Bool_Exp>
+}
+
 export type Query_RootPredicate_ObjectsArgs = {
   distinct_on?: InputMaybe<Array<Predicate_Objects_Select_Column>>
   limit?: InputMaybe<Scalars['Int']['input']>
@@ -5050,8 +4813,74 @@ export type Query_RootRedemptions_AggregateArgs = {
   where?: InputMaybe<Redemptions_Bool_Exp>
 }
 
-export type Query_RootShare_Price_ChangeArgs = {
-  id: Scalars['bigint']['input']
+export type Query_RootSearch_TermArgs = {
+  args: Search_Term_Args
+  distinct_on?: InputMaybe<Array<Terms_Select_Column>>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  order_by?: InputMaybe<Array<Terms_Order_By>>
+  where?: InputMaybe<Terms_Bool_Exp>
+}
+
+export type Query_RootSearch_Term_AggregateArgs = {
+  args: Search_Term_Args
+  distinct_on?: InputMaybe<Array<Terms_Select_Column>>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  order_by?: InputMaybe<Array<Terms_Order_By>>
+  where?: InputMaybe<Terms_Bool_Exp>
+}
+
+export type Query_RootSearch_Term_From_FollowingArgs = {
+  args: Search_Term_From_Following_Args
+  distinct_on?: InputMaybe<Array<Terms_Select_Column>>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  order_by?: InputMaybe<Array<Terms_Order_By>>
+  where?: InputMaybe<Terms_Bool_Exp>
+}
+
+export type Query_RootSearch_Term_From_Following_AggregateArgs = {
+  args: Search_Term_From_Following_Args
+  distinct_on?: InputMaybe<Array<Terms_Select_Column>>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  order_by?: InputMaybe<Array<Terms_Order_By>>
+  where?: InputMaybe<Terms_Bool_Exp>
+}
+
+export type Query_RootShare_Price_Change_Stats_DailyArgs = {
+  distinct_on?: InputMaybe<Array<Share_Price_Change_Stats_Daily_Select_Column>>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  order_by?: InputMaybe<Array<Share_Price_Change_Stats_Daily_Order_By>>
+  where?: InputMaybe<Share_Price_Change_Stats_Daily_Bool_Exp>
+}
+
+export type Query_RootShare_Price_Change_Stats_HourlyArgs = {
+  distinct_on?: InputMaybe<Array<Share_Price_Change_Stats_Hourly_Select_Column>>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  order_by?: InputMaybe<Array<Share_Price_Change_Stats_Hourly_Order_By>>
+  where?: InputMaybe<Share_Price_Change_Stats_Hourly_Bool_Exp>
+}
+
+export type Query_RootShare_Price_Change_Stats_MonthlyArgs = {
+  distinct_on?: InputMaybe<
+    Array<Share_Price_Change_Stats_Monthly_Select_Column>
+  >
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  order_by?: InputMaybe<Array<Share_Price_Change_Stats_Monthly_Order_By>>
+  where?: InputMaybe<Share_Price_Change_Stats_Monthly_Bool_Exp>
+}
+
+export type Query_RootShare_Price_Change_Stats_WeeklyArgs = {
+  distinct_on?: InputMaybe<Array<Share_Price_Change_Stats_Weekly_Select_Column>>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  order_by?: InputMaybe<Array<Share_Price_Change_Stats_Weekly_Order_By>>
+  where?: InputMaybe<Share_Price_Change_Stats_Weekly_Bool_Exp>
 }
 
 export type Query_RootShare_Price_ChangesArgs = {
@@ -5070,8 +4899,36 @@ export type Query_RootShare_Price_Changes_AggregateArgs = {
   where?: InputMaybe<Share_Price_Changes_Bool_Exp>
 }
 
-export type Query_RootSignalArgs = {
-  id: Scalars['String']['input']
+export type Query_RootSignal_Stats_DailyArgs = {
+  distinct_on?: InputMaybe<Array<Signal_Stats_Daily_Select_Column>>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  order_by?: InputMaybe<Array<Signal_Stats_Daily_Order_By>>
+  where?: InputMaybe<Signal_Stats_Daily_Bool_Exp>
+}
+
+export type Query_RootSignal_Stats_HourlyArgs = {
+  distinct_on?: InputMaybe<Array<Signal_Stats_Hourly_Select_Column>>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  order_by?: InputMaybe<Array<Signal_Stats_Hourly_Order_By>>
+  where?: InputMaybe<Signal_Stats_Hourly_Bool_Exp>
+}
+
+export type Query_RootSignal_Stats_MonthlyArgs = {
+  distinct_on?: InputMaybe<Array<Signal_Stats_Monthly_Select_Column>>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  order_by?: InputMaybe<Array<Signal_Stats_Monthly_Order_By>>
+  where?: InputMaybe<Signal_Stats_Monthly_Bool_Exp>
+}
+
+export type Query_RootSignal_Stats_WeeklyArgs = {
+  distinct_on?: InputMaybe<Array<Signal_Stats_Weekly_Select_Column>>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  order_by?: InputMaybe<Array<Signal_Stats_Weekly_Order_By>>
+  where?: InputMaybe<Signal_Stats_Weekly_Bool_Exp>
 }
 
 export type Query_RootSignalsArgs = {
@@ -5234,7 +5091,7 @@ export type Redemptions = {
   __typename?: 'redemptions'
   assets_for_receiver: Scalars['numeric']['output']
   block_number: Scalars['numeric']['output']
-  block_timestamp: Scalars['bigint']['output']
+  created_at: Scalars['timestamptz']['output']
   curve_id: Scalars['numeric']['output']
   exit_fee: Scalars['numeric']['output']
   id: Scalars['String']['output']
@@ -5314,7 +5171,6 @@ export type Redemptions_Avg_Fields = {
   __typename?: 'redemptions_avg_fields'
   assets_for_receiver?: Maybe<Scalars['Float']['output']>
   block_number?: Maybe<Scalars['Float']['output']>
-  block_timestamp?: Maybe<Scalars['Float']['output']>
   curve_id?: Maybe<Scalars['Float']['output']>
   exit_fee?: Maybe<Scalars['Float']['output']>
   sender_total_shares_in_vault?: Maybe<Scalars['Float']['output']>
@@ -5326,7 +5182,6 @@ export type Redemptions_Avg_Fields = {
 export type Redemptions_Avg_Order_By = {
   assets_for_receiver?: InputMaybe<Order_By>
   block_number?: InputMaybe<Order_By>
-  block_timestamp?: InputMaybe<Order_By>
   curve_id?: InputMaybe<Order_By>
   exit_fee?: InputMaybe<Order_By>
   sender_total_shares_in_vault?: InputMaybe<Order_By>
@@ -5341,7 +5196,7 @@ export type Redemptions_Bool_Exp = {
   _or?: InputMaybe<Array<Redemptions_Bool_Exp>>
   assets_for_receiver?: InputMaybe<Numeric_Comparison_Exp>
   block_number?: InputMaybe<Numeric_Comparison_Exp>
-  block_timestamp?: InputMaybe<Bigint_Comparison_Exp>
+  created_at?: InputMaybe<Timestamptz_Comparison_Exp>
   curve_id?: InputMaybe<Numeric_Comparison_Exp>
   exit_fee?: InputMaybe<Numeric_Comparison_Exp>
   id?: InputMaybe<String_Comparison_Exp>
@@ -5362,7 +5217,7 @@ export type Redemptions_Max_Fields = {
   __typename?: 'redemptions_max_fields'
   assets_for_receiver?: Maybe<Scalars['numeric']['output']>
   block_number?: Maybe<Scalars['numeric']['output']>
-  block_timestamp?: Maybe<Scalars['bigint']['output']>
+  created_at?: Maybe<Scalars['timestamptz']['output']>
   curve_id?: Maybe<Scalars['numeric']['output']>
   exit_fee?: Maybe<Scalars['numeric']['output']>
   id?: Maybe<Scalars['String']['output']>
@@ -5378,7 +5233,7 @@ export type Redemptions_Max_Fields = {
 export type Redemptions_Max_Order_By = {
   assets_for_receiver?: InputMaybe<Order_By>
   block_number?: InputMaybe<Order_By>
-  block_timestamp?: InputMaybe<Order_By>
+  created_at?: InputMaybe<Order_By>
   curve_id?: InputMaybe<Order_By>
   exit_fee?: InputMaybe<Order_By>
   id?: InputMaybe<Order_By>
@@ -5395,7 +5250,7 @@ export type Redemptions_Min_Fields = {
   __typename?: 'redemptions_min_fields'
   assets_for_receiver?: Maybe<Scalars['numeric']['output']>
   block_number?: Maybe<Scalars['numeric']['output']>
-  block_timestamp?: Maybe<Scalars['bigint']['output']>
+  created_at?: Maybe<Scalars['timestamptz']['output']>
   curve_id?: Maybe<Scalars['numeric']['output']>
   exit_fee?: Maybe<Scalars['numeric']['output']>
   id?: Maybe<Scalars['String']['output']>
@@ -5411,7 +5266,7 @@ export type Redemptions_Min_Fields = {
 export type Redemptions_Min_Order_By = {
   assets_for_receiver?: InputMaybe<Order_By>
   block_number?: InputMaybe<Order_By>
-  block_timestamp?: InputMaybe<Order_By>
+  created_at?: InputMaybe<Order_By>
   curve_id?: InputMaybe<Order_By>
   exit_fee?: InputMaybe<Order_By>
   id?: InputMaybe<Order_By>
@@ -5427,7 +5282,7 @@ export type Redemptions_Min_Order_By = {
 export type Redemptions_Order_By = {
   assets_for_receiver?: InputMaybe<Order_By>
   block_number?: InputMaybe<Order_By>
-  block_timestamp?: InputMaybe<Order_By>
+  created_at?: InputMaybe<Order_By>
   curve_id?: InputMaybe<Order_By>
   exit_fee?: InputMaybe<Order_By>
   id?: InputMaybe<Order_By>
@@ -5450,7 +5305,7 @@ export type Redemptions_Select_Column =
   /** column name */
   | 'block_number'
   /** column name */
-  | 'block_timestamp'
+  | 'created_at'
   /** column name */
   | 'curve_id'
   /** column name */
@@ -5475,7 +5330,6 @@ export type Redemptions_Stddev_Fields = {
   __typename?: 'redemptions_stddev_fields'
   assets_for_receiver?: Maybe<Scalars['Float']['output']>
   block_number?: Maybe<Scalars['Float']['output']>
-  block_timestamp?: Maybe<Scalars['Float']['output']>
   curve_id?: Maybe<Scalars['Float']['output']>
   exit_fee?: Maybe<Scalars['Float']['output']>
   sender_total_shares_in_vault?: Maybe<Scalars['Float']['output']>
@@ -5487,7 +5341,6 @@ export type Redemptions_Stddev_Fields = {
 export type Redemptions_Stddev_Order_By = {
   assets_for_receiver?: InputMaybe<Order_By>
   block_number?: InputMaybe<Order_By>
-  block_timestamp?: InputMaybe<Order_By>
   curve_id?: InputMaybe<Order_By>
   exit_fee?: InputMaybe<Order_By>
   sender_total_shares_in_vault?: InputMaybe<Order_By>
@@ -5500,7 +5353,6 @@ export type Redemptions_Stddev_Pop_Fields = {
   __typename?: 'redemptions_stddev_pop_fields'
   assets_for_receiver?: Maybe<Scalars['Float']['output']>
   block_number?: Maybe<Scalars['Float']['output']>
-  block_timestamp?: Maybe<Scalars['Float']['output']>
   curve_id?: Maybe<Scalars['Float']['output']>
   exit_fee?: Maybe<Scalars['Float']['output']>
   sender_total_shares_in_vault?: Maybe<Scalars['Float']['output']>
@@ -5512,7 +5364,6 @@ export type Redemptions_Stddev_Pop_Fields = {
 export type Redemptions_Stddev_Pop_Order_By = {
   assets_for_receiver?: InputMaybe<Order_By>
   block_number?: InputMaybe<Order_By>
-  block_timestamp?: InputMaybe<Order_By>
   curve_id?: InputMaybe<Order_By>
   exit_fee?: InputMaybe<Order_By>
   sender_total_shares_in_vault?: InputMaybe<Order_By>
@@ -5525,7 +5376,6 @@ export type Redemptions_Stddev_Samp_Fields = {
   __typename?: 'redemptions_stddev_samp_fields'
   assets_for_receiver?: Maybe<Scalars['Float']['output']>
   block_number?: Maybe<Scalars['Float']['output']>
-  block_timestamp?: Maybe<Scalars['Float']['output']>
   curve_id?: Maybe<Scalars['Float']['output']>
   exit_fee?: Maybe<Scalars['Float']['output']>
   sender_total_shares_in_vault?: Maybe<Scalars['Float']['output']>
@@ -5537,7 +5387,6 @@ export type Redemptions_Stddev_Samp_Fields = {
 export type Redemptions_Stddev_Samp_Order_By = {
   assets_for_receiver?: InputMaybe<Order_By>
   block_number?: InputMaybe<Order_By>
-  block_timestamp?: InputMaybe<Order_By>
   curve_id?: InputMaybe<Order_By>
   exit_fee?: InputMaybe<Order_By>
   sender_total_shares_in_vault?: InputMaybe<Order_By>
@@ -5557,7 +5406,7 @@ export type Redemptions_Stream_Cursor_Input = {
 export type Redemptions_Stream_Cursor_Value_Input = {
   assets_for_receiver?: InputMaybe<Scalars['numeric']['input']>
   block_number?: InputMaybe<Scalars['numeric']['input']>
-  block_timestamp?: InputMaybe<Scalars['bigint']['input']>
+  created_at?: InputMaybe<Scalars['timestamptz']['input']>
   curve_id?: InputMaybe<Scalars['numeric']['input']>
   exit_fee?: InputMaybe<Scalars['numeric']['input']>
   id?: InputMaybe<Scalars['String']['input']>
@@ -5574,7 +5423,6 @@ export type Redemptions_Sum_Fields = {
   __typename?: 'redemptions_sum_fields'
   assets_for_receiver?: Maybe<Scalars['numeric']['output']>
   block_number?: Maybe<Scalars['numeric']['output']>
-  block_timestamp?: Maybe<Scalars['bigint']['output']>
   curve_id?: Maybe<Scalars['numeric']['output']>
   exit_fee?: Maybe<Scalars['numeric']['output']>
   sender_total_shares_in_vault?: Maybe<Scalars['numeric']['output']>
@@ -5586,7 +5434,6 @@ export type Redemptions_Sum_Fields = {
 export type Redemptions_Sum_Order_By = {
   assets_for_receiver?: InputMaybe<Order_By>
   block_number?: InputMaybe<Order_By>
-  block_timestamp?: InputMaybe<Order_By>
   curve_id?: InputMaybe<Order_By>
   exit_fee?: InputMaybe<Order_By>
   sender_total_shares_in_vault?: InputMaybe<Order_By>
@@ -5599,7 +5446,6 @@ export type Redemptions_Var_Pop_Fields = {
   __typename?: 'redemptions_var_pop_fields'
   assets_for_receiver?: Maybe<Scalars['Float']['output']>
   block_number?: Maybe<Scalars['Float']['output']>
-  block_timestamp?: Maybe<Scalars['Float']['output']>
   curve_id?: Maybe<Scalars['Float']['output']>
   exit_fee?: Maybe<Scalars['Float']['output']>
   sender_total_shares_in_vault?: Maybe<Scalars['Float']['output']>
@@ -5611,7 +5457,6 @@ export type Redemptions_Var_Pop_Fields = {
 export type Redemptions_Var_Pop_Order_By = {
   assets_for_receiver?: InputMaybe<Order_By>
   block_number?: InputMaybe<Order_By>
-  block_timestamp?: InputMaybe<Order_By>
   curve_id?: InputMaybe<Order_By>
   exit_fee?: InputMaybe<Order_By>
   sender_total_shares_in_vault?: InputMaybe<Order_By>
@@ -5624,7 +5469,6 @@ export type Redemptions_Var_Samp_Fields = {
   __typename?: 'redemptions_var_samp_fields'
   assets_for_receiver?: Maybe<Scalars['Float']['output']>
   block_number?: Maybe<Scalars['Float']['output']>
-  block_timestamp?: Maybe<Scalars['Float']['output']>
   curve_id?: Maybe<Scalars['Float']['output']>
   exit_fee?: Maybe<Scalars['Float']['output']>
   sender_total_shares_in_vault?: Maybe<Scalars['Float']['output']>
@@ -5636,7 +5480,6 @@ export type Redemptions_Var_Samp_Fields = {
 export type Redemptions_Var_Samp_Order_By = {
   assets_for_receiver?: InputMaybe<Order_By>
   block_number?: InputMaybe<Order_By>
-  block_timestamp?: InputMaybe<Order_By>
   curve_id?: InputMaybe<Order_By>
   exit_fee?: InputMaybe<Order_By>
   sender_total_shares_in_vault?: InputMaybe<Order_By>
@@ -5649,7 +5492,6 @@ export type Redemptions_Variance_Fields = {
   __typename?: 'redemptions_variance_fields'
   assets_for_receiver?: Maybe<Scalars['Float']['output']>
   block_number?: Maybe<Scalars['Float']['output']>
-  block_timestamp?: Maybe<Scalars['Float']['output']>
   curve_id?: Maybe<Scalars['Float']['output']>
   exit_fee?: Maybe<Scalars['Float']['output']>
   sender_total_shares_in_vault?: Maybe<Scalars['Float']['output']>
@@ -5661,12 +5503,328 @@ export type Redemptions_Variance_Fields = {
 export type Redemptions_Variance_Order_By = {
   assets_for_receiver?: InputMaybe<Order_By>
   block_number?: InputMaybe<Order_By>
-  block_timestamp?: InputMaybe<Order_By>
   curve_id?: InputMaybe<Order_By>
   exit_fee?: InputMaybe<Order_By>
   sender_total_shares_in_vault?: InputMaybe<Order_By>
   shares_redeemed_by_sender?: InputMaybe<Order_By>
   term_id?: InputMaybe<Order_By>
+}
+
+export type Search_Term_Args = {
+  query?: InputMaybe<Scalars['String']['input']>
+}
+
+export type Search_Term_From_Following_Args = {
+  address?: InputMaybe<Scalars['String']['input']>
+  query?: InputMaybe<Scalars['String']['input']>
+}
+
+/** columns and relationships of "share_price_change_stats_daily" */
+export type Share_Price_Change_Stats_Daily = {
+  __typename?: 'share_price_change_stats_daily'
+  bucket?: Maybe<Scalars['timestamptz']['output']>
+  change_count?: Maybe<Scalars['numeric']['output']>
+  curve_id?: Maybe<Scalars['numeric']['output']>
+  difference?: Maybe<Scalars['numeric']['output']>
+  first_share_price?: Maybe<Scalars['numeric']['output']>
+  last_share_price?: Maybe<Scalars['numeric']['output']>
+  /** An object relationship */
+  term?: Maybe<Terms>
+  term_id?: Maybe<Scalars['numeric']['output']>
+}
+
+/** Boolean expression to filter rows from the table "share_price_change_stats_daily". All fields are combined with a logical 'AND'. */
+export type Share_Price_Change_Stats_Daily_Bool_Exp = {
+  _and?: InputMaybe<Array<Share_Price_Change_Stats_Daily_Bool_Exp>>
+  _not?: InputMaybe<Share_Price_Change_Stats_Daily_Bool_Exp>
+  _or?: InputMaybe<Array<Share_Price_Change_Stats_Daily_Bool_Exp>>
+  bucket?: InputMaybe<Timestamptz_Comparison_Exp>
+  change_count?: InputMaybe<Numeric_Comparison_Exp>
+  curve_id?: InputMaybe<Numeric_Comparison_Exp>
+  difference?: InputMaybe<Numeric_Comparison_Exp>
+  first_share_price?: InputMaybe<Numeric_Comparison_Exp>
+  last_share_price?: InputMaybe<Numeric_Comparison_Exp>
+  term?: InputMaybe<Terms_Bool_Exp>
+  term_id?: InputMaybe<Numeric_Comparison_Exp>
+}
+
+/** Ordering options when selecting data from "share_price_change_stats_daily". */
+export type Share_Price_Change_Stats_Daily_Order_By = {
+  bucket?: InputMaybe<Order_By>
+  change_count?: InputMaybe<Order_By>
+  curve_id?: InputMaybe<Order_By>
+  difference?: InputMaybe<Order_By>
+  first_share_price?: InputMaybe<Order_By>
+  last_share_price?: InputMaybe<Order_By>
+  term?: InputMaybe<Terms_Order_By>
+  term_id?: InputMaybe<Order_By>
+}
+
+/** select columns of table "share_price_change_stats_daily" */
+export type Share_Price_Change_Stats_Daily_Select_Column =
+  /** column name */
+  | 'bucket'
+  /** column name */
+  | 'change_count'
+  /** column name */
+  | 'curve_id'
+  /** column name */
+  | 'difference'
+  /** column name */
+  | 'first_share_price'
+  /** column name */
+  | 'last_share_price'
+  /** column name */
+  | 'term_id'
+
+/** Streaming cursor of the table "share_price_change_stats_daily" */
+export type Share_Price_Change_Stats_Daily_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Share_Price_Change_Stats_Daily_Stream_Cursor_Value_Input
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>
+}
+
+/** Initial value of the column from where the streaming should start */
+export type Share_Price_Change_Stats_Daily_Stream_Cursor_Value_Input = {
+  bucket?: InputMaybe<Scalars['timestamptz']['input']>
+  change_count?: InputMaybe<Scalars['numeric']['input']>
+  curve_id?: InputMaybe<Scalars['numeric']['input']>
+  difference?: InputMaybe<Scalars['numeric']['input']>
+  first_share_price?: InputMaybe<Scalars['numeric']['input']>
+  last_share_price?: InputMaybe<Scalars['numeric']['input']>
+  term_id?: InputMaybe<Scalars['numeric']['input']>
+}
+
+/** columns and relationships of "share_price_change_stats_hourly" */
+export type Share_Price_Change_Stats_Hourly = {
+  __typename?: 'share_price_change_stats_hourly'
+  bucket?: Maybe<Scalars['timestamptz']['output']>
+  change_count?: Maybe<Scalars['bigint']['output']>
+  curve_id?: Maybe<Scalars['numeric']['output']>
+  difference?: Maybe<Scalars['numeric']['output']>
+  first_share_price?: Maybe<Scalars['numeric']['output']>
+  last_share_price?: Maybe<Scalars['numeric']['output']>
+  /** An object relationship */
+  term?: Maybe<Terms>
+  term_id?: Maybe<Scalars['numeric']['output']>
+}
+
+/** Boolean expression to filter rows from the table "share_price_change_stats_hourly". All fields are combined with a logical 'AND'. */
+export type Share_Price_Change_Stats_Hourly_Bool_Exp = {
+  _and?: InputMaybe<Array<Share_Price_Change_Stats_Hourly_Bool_Exp>>
+  _not?: InputMaybe<Share_Price_Change_Stats_Hourly_Bool_Exp>
+  _or?: InputMaybe<Array<Share_Price_Change_Stats_Hourly_Bool_Exp>>
+  bucket?: InputMaybe<Timestamptz_Comparison_Exp>
+  change_count?: InputMaybe<Bigint_Comparison_Exp>
+  curve_id?: InputMaybe<Numeric_Comparison_Exp>
+  difference?: InputMaybe<Numeric_Comparison_Exp>
+  first_share_price?: InputMaybe<Numeric_Comparison_Exp>
+  last_share_price?: InputMaybe<Numeric_Comparison_Exp>
+  term?: InputMaybe<Terms_Bool_Exp>
+  term_id?: InputMaybe<Numeric_Comparison_Exp>
+}
+
+/** Ordering options when selecting data from "share_price_change_stats_hourly". */
+export type Share_Price_Change_Stats_Hourly_Order_By = {
+  bucket?: InputMaybe<Order_By>
+  change_count?: InputMaybe<Order_By>
+  curve_id?: InputMaybe<Order_By>
+  difference?: InputMaybe<Order_By>
+  first_share_price?: InputMaybe<Order_By>
+  last_share_price?: InputMaybe<Order_By>
+  term?: InputMaybe<Terms_Order_By>
+  term_id?: InputMaybe<Order_By>
+}
+
+/** select columns of table "share_price_change_stats_hourly" */
+export type Share_Price_Change_Stats_Hourly_Select_Column =
+  /** column name */
+  | 'bucket'
+  /** column name */
+  | 'change_count'
+  /** column name */
+  | 'curve_id'
+  /** column name */
+  | 'difference'
+  /** column name */
+  | 'first_share_price'
+  /** column name */
+  | 'last_share_price'
+  /** column name */
+  | 'term_id'
+
+/** Streaming cursor of the table "share_price_change_stats_hourly" */
+export type Share_Price_Change_Stats_Hourly_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Share_Price_Change_Stats_Hourly_Stream_Cursor_Value_Input
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>
+}
+
+/** Initial value of the column from where the streaming should start */
+export type Share_Price_Change_Stats_Hourly_Stream_Cursor_Value_Input = {
+  bucket?: InputMaybe<Scalars['timestamptz']['input']>
+  change_count?: InputMaybe<Scalars['bigint']['input']>
+  curve_id?: InputMaybe<Scalars['numeric']['input']>
+  difference?: InputMaybe<Scalars['numeric']['input']>
+  first_share_price?: InputMaybe<Scalars['numeric']['input']>
+  last_share_price?: InputMaybe<Scalars['numeric']['input']>
+  term_id?: InputMaybe<Scalars['numeric']['input']>
+}
+
+/** columns and relationships of "share_price_change_stats_monthly" */
+export type Share_Price_Change_Stats_Monthly = {
+  __typename?: 'share_price_change_stats_monthly'
+  bucket?: Maybe<Scalars['timestamptz']['output']>
+  change_count?: Maybe<Scalars['numeric']['output']>
+  curve_id?: Maybe<Scalars['numeric']['output']>
+  difference?: Maybe<Scalars['numeric']['output']>
+  first_share_price?: Maybe<Scalars['numeric']['output']>
+  last_share_price?: Maybe<Scalars['numeric']['output']>
+  /** An object relationship */
+  term?: Maybe<Terms>
+  term_id?: Maybe<Scalars['numeric']['output']>
+}
+
+/** Boolean expression to filter rows from the table "share_price_change_stats_monthly". All fields are combined with a logical 'AND'. */
+export type Share_Price_Change_Stats_Monthly_Bool_Exp = {
+  _and?: InputMaybe<Array<Share_Price_Change_Stats_Monthly_Bool_Exp>>
+  _not?: InputMaybe<Share_Price_Change_Stats_Monthly_Bool_Exp>
+  _or?: InputMaybe<Array<Share_Price_Change_Stats_Monthly_Bool_Exp>>
+  bucket?: InputMaybe<Timestamptz_Comparison_Exp>
+  change_count?: InputMaybe<Numeric_Comparison_Exp>
+  curve_id?: InputMaybe<Numeric_Comparison_Exp>
+  difference?: InputMaybe<Numeric_Comparison_Exp>
+  first_share_price?: InputMaybe<Numeric_Comparison_Exp>
+  last_share_price?: InputMaybe<Numeric_Comparison_Exp>
+  term?: InputMaybe<Terms_Bool_Exp>
+  term_id?: InputMaybe<Numeric_Comparison_Exp>
+}
+
+/** Ordering options when selecting data from "share_price_change_stats_monthly". */
+export type Share_Price_Change_Stats_Monthly_Order_By = {
+  bucket?: InputMaybe<Order_By>
+  change_count?: InputMaybe<Order_By>
+  curve_id?: InputMaybe<Order_By>
+  difference?: InputMaybe<Order_By>
+  first_share_price?: InputMaybe<Order_By>
+  last_share_price?: InputMaybe<Order_By>
+  term?: InputMaybe<Terms_Order_By>
+  term_id?: InputMaybe<Order_By>
+}
+
+/** select columns of table "share_price_change_stats_monthly" */
+export type Share_Price_Change_Stats_Monthly_Select_Column =
+  /** column name */
+  | 'bucket'
+  /** column name */
+  | 'change_count'
+  /** column name */
+  | 'curve_id'
+  /** column name */
+  | 'difference'
+  /** column name */
+  | 'first_share_price'
+  /** column name */
+  | 'last_share_price'
+  /** column name */
+  | 'term_id'
+
+/** Streaming cursor of the table "share_price_change_stats_monthly" */
+export type Share_Price_Change_Stats_Monthly_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Share_Price_Change_Stats_Monthly_Stream_Cursor_Value_Input
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>
+}
+
+/** Initial value of the column from where the streaming should start */
+export type Share_Price_Change_Stats_Monthly_Stream_Cursor_Value_Input = {
+  bucket?: InputMaybe<Scalars['timestamptz']['input']>
+  change_count?: InputMaybe<Scalars['numeric']['input']>
+  curve_id?: InputMaybe<Scalars['numeric']['input']>
+  difference?: InputMaybe<Scalars['numeric']['input']>
+  first_share_price?: InputMaybe<Scalars['numeric']['input']>
+  last_share_price?: InputMaybe<Scalars['numeric']['input']>
+  term_id?: InputMaybe<Scalars['numeric']['input']>
+}
+
+/** columns and relationships of "share_price_change_stats_weekly" */
+export type Share_Price_Change_Stats_Weekly = {
+  __typename?: 'share_price_change_stats_weekly'
+  bucket?: Maybe<Scalars['timestamptz']['output']>
+  change_count?: Maybe<Scalars['numeric']['output']>
+  curve_id?: Maybe<Scalars['numeric']['output']>
+  difference?: Maybe<Scalars['numeric']['output']>
+  first_share_price?: Maybe<Scalars['numeric']['output']>
+  last_share_price?: Maybe<Scalars['numeric']['output']>
+  /** An object relationship */
+  term?: Maybe<Terms>
+  term_id?: Maybe<Scalars['numeric']['output']>
+}
+
+/** Boolean expression to filter rows from the table "share_price_change_stats_weekly". All fields are combined with a logical 'AND'. */
+export type Share_Price_Change_Stats_Weekly_Bool_Exp = {
+  _and?: InputMaybe<Array<Share_Price_Change_Stats_Weekly_Bool_Exp>>
+  _not?: InputMaybe<Share_Price_Change_Stats_Weekly_Bool_Exp>
+  _or?: InputMaybe<Array<Share_Price_Change_Stats_Weekly_Bool_Exp>>
+  bucket?: InputMaybe<Timestamptz_Comparison_Exp>
+  change_count?: InputMaybe<Numeric_Comparison_Exp>
+  curve_id?: InputMaybe<Numeric_Comparison_Exp>
+  difference?: InputMaybe<Numeric_Comparison_Exp>
+  first_share_price?: InputMaybe<Numeric_Comparison_Exp>
+  last_share_price?: InputMaybe<Numeric_Comparison_Exp>
+  term?: InputMaybe<Terms_Bool_Exp>
+  term_id?: InputMaybe<Numeric_Comparison_Exp>
+}
+
+/** Ordering options when selecting data from "share_price_change_stats_weekly". */
+export type Share_Price_Change_Stats_Weekly_Order_By = {
+  bucket?: InputMaybe<Order_By>
+  change_count?: InputMaybe<Order_By>
+  curve_id?: InputMaybe<Order_By>
+  difference?: InputMaybe<Order_By>
+  first_share_price?: InputMaybe<Order_By>
+  last_share_price?: InputMaybe<Order_By>
+  term?: InputMaybe<Terms_Order_By>
+  term_id?: InputMaybe<Order_By>
+}
+
+/** select columns of table "share_price_change_stats_weekly" */
+export type Share_Price_Change_Stats_Weekly_Select_Column =
+  /** column name */
+  | 'bucket'
+  /** column name */
+  | 'change_count'
+  /** column name */
+  | 'curve_id'
+  /** column name */
+  | 'difference'
+  /** column name */
+  | 'first_share_price'
+  /** column name */
+  | 'last_share_price'
+  /** column name */
+  | 'term_id'
+
+/** Streaming cursor of the table "share_price_change_stats_weekly" */
+export type Share_Price_Change_Stats_Weekly_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Share_Price_Change_Stats_Weekly_Stream_Cursor_Value_Input
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>
+}
+
+/** Initial value of the column from where the streaming should start */
+export type Share_Price_Change_Stats_Weekly_Stream_Cursor_Value_Input = {
+  bucket?: InputMaybe<Scalars['timestamptz']['input']>
+  change_count?: InputMaybe<Scalars['numeric']['input']>
+  curve_id?: InputMaybe<Scalars['numeric']['input']>
+  difference?: InputMaybe<Scalars['numeric']['input']>
+  first_share_price?: InputMaybe<Scalars['numeric']['input']>
+  last_share_price?: InputMaybe<Scalars['numeric']['input']>
+  term_id?: InputMaybe<Scalars['numeric']['input']>
 }
 
 /** columns and relationships of "share_price_change" */
@@ -5683,7 +5841,7 @@ export type Share_Price_Changes = {
   total_assets: Scalars['numeric']['output']
   total_shares: Scalars['numeric']['output']
   transaction_hash: Scalars['String']['output']
-  updated_at?: Maybe<Scalars['timestamptz']['output']>
+  updated_at: Scalars['timestamptz']['output']
   /** An object relationship */
   vault?: Maybe<Vaults>
 }
@@ -5693,17 +5851,6 @@ export type Share_Price_Changes_Aggregate = {
   __typename?: 'share_price_changes_aggregate'
   aggregate?: Maybe<Share_Price_Changes_Aggregate_Fields>
   nodes: Array<Share_Price_Changes>
-}
-
-export type Share_Price_Changes_Aggregate_Bool_Exp = {
-  count?: InputMaybe<Share_Price_Changes_Aggregate_Bool_Exp_Count>
-}
-
-export type Share_Price_Changes_Aggregate_Bool_Exp_Count = {
-  arguments?: InputMaybe<Array<Share_Price_Changes_Select_Column>>
-  distinct?: InputMaybe<Scalars['Boolean']['input']>
-  filter?: InputMaybe<Share_Price_Changes_Bool_Exp>
-  predicate: Int_Comparison_Exp
 }
 
 /** aggregate fields of "share_price_change" */
@@ -5728,21 +5875,6 @@ export type Share_Price_Changes_Aggregate_FieldsCountArgs = {
   distinct?: InputMaybe<Scalars['Boolean']['input']>
 }
 
-/** order by aggregate values of table "share_price_change" */
-export type Share_Price_Changes_Aggregate_Order_By = {
-  avg?: InputMaybe<Share_Price_Changes_Avg_Order_By>
-  count?: InputMaybe<Order_By>
-  max?: InputMaybe<Share_Price_Changes_Max_Order_By>
-  min?: InputMaybe<Share_Price_Changes_Min_Order_By>
-  stddev?: InputMaybe<Share_Price_Changes_Stddev_Order_By>
-  stddev_pop?: InputMaybe<Share_Price_Changes_Stddev_Pop_Order_By>
-  stddev_samp?: InputMaybe<Share_Price_Changes_Stddev_Samp_Order_By>
-  sum?: InputMaybe<Share_Price_Changes_Sum_Order_By>
-  var_pop?: InputMaybe<Share_Price_Changes_Var_Pop_Order_By>
-  var_samp?: InputMaybe<Share_Price_Changes_Var_Samp_Order_By>
-  variance?: InputMaybe<Share_Price_Changes_Variance_Order_By>
-}
-
 /** aggregate avg on columns */
 export type Share_Price_Changes_Avg_Fields = {
   __typename?: 'share_price_changes_avg_fields'
@@ -5754,18 +5886,6 @@ export type Share_Price_Changes_Avg_Fields = {
   term_id?: Maybe<Scalars['Float']['output']>
   total_assets?: Maybe<Scalars['Float']['output']>
   total_shares?: Maybe<Scalars['Float']['output']>
-}
-
-/** order by avg() on columns of table "share_price_change" */
-export type Share_Price_Changes_Avg_Order_By = {
-  block_number?: InputMaybe<Order_By>
-  block_timestamp?: InputMaybe<Order_By>
-  curve_id?: InputMaybe<Order_By>
-  id?: InputMaybe<Order_By>
-  share_price?: InputMaybe<Order_By>
-  term_id?: InputMaybe<Order_By>
-  total_assets?: InputMaybe<Order_By>
-  total_shares?: InputMaybe<Order_By>
 }
 
 /** Boolean expression to filter rows from the table "share_price_change". All fields are combined with a logical 'AND'. */
@@ -5802,20 +5922,6 @@ export type Share_Price_Changes_Max_Fields = {
   updated_at?: Maybe<Scalars['timestamptz']['output']>
 }
 
-/** order by max() on columns of table "share_price_change" */
-export type Share_Price_Changes_Max_Order_By = {
-  block_number?: InputMaybe<Order_By>
-  block_timestamp?: InputMaybe<Order_By>
-  curve_id?: InputMaybe<Order_By>
-  id?: InputMaybe<Order_By>
-  share_price?: InputMaybe<Order_By>
-  term_id?: InputMaybe<Order_By>
-  total_assets?: InputMaybe<Order_By>
-  total_shares?: InputMaybe<Order_By>
-  transaction_hash?: InputMaybe<Order_By>
-  updated_at?: InputMaybe<Order_By>
-}
-
 /** aggregate min on columns */
 export type Share_Price_Changes_Min_Fields = {
   __typename?: 'share_price_changes_min_fields'
@@ -5829,20 +5935,6 @@ export type Share_Price_Changes_Min_Fields = {
   total_shares?: Maybe<Scalars['numeric']['output']>
   transaction_hash?: Maybe<Scalars['String']['output']>
   updated_at?: Maybe<Scalars['timestamptz']['output']>
-}
-
-/** order by min() on columns of table "share_price_change" */
-export type Share_Price_Changes_Min_Order_By = {
-  block_number?: InputMaybe<Order_By>
-  block_timestamp?: InputMaybe<Order_By>
-  curve_id?: InputMaybe<Order_By>
-  id?: InputMaybe<Order_By>
-  share_price?: InputMaybe<Order_By>
-  term_id?: InputMaybe<Order_By>
-  total_assets?: InputMaybe<Order_By>
-  total_shares?: InputMaybe<Order_By>
-  transaction_hash?: InputMaybe<Order_By>
-  updated_at?: InputMaybe<Order_By>
 }
 
 /** Ordering options when selecting data from "share_price_change". */
@@ -5897,18 +5989,6 @@ export type Share_Price_Changes_Stddev_Fields = {
   total_shares?: Maybe<Scalars['Float']['output']>
 }
 
-/** order by stddev() on columns of table "share_price_change" */
-export type Share_Price_Changes_Stddev_Order_By = {
-  block_number?: InputMaybe<Order_By>
-  block_timestamp?: InputMaybe<Order_By>
-  curve_id?: InputMaybe<Order_By>
-  id?: InputMaybe<Order_By>
-  share_price?: InputMaybe<Order_By>
-  term_id?: InputMaybe<Order_By>
-  total_assets?: InputMaybe<Order_By>
-  total_shares?: InputMaybe<Order_By>
-}
-
 /** aggregate stddev_pop on columns */
 export type Share_Price_Changes_Stddev_Pop_Fields = {
   __typename?: 'share_price_changes_stddev_pop_fields'
@@ -5922,18 +6002,6 @@ export type Share_Price_Changes_Stddev_Pop_Fields = {
   total_shares?: Maybe<Scalars['Float']['output']>
 }
 
-/** order by stddev_pop() on columns of table "share_price_change" */
-export type Share_Price_Changes_Stddev_Pop_Order_By = {
-  block_number?: InputMaybe<Order_By>
-  block_timestamp?: InputMaybe<Order_By>
-  curve_id?: InputMaybe<Order_By>
-  id?: InputMaybe<Order_By>
-  share_price?: InputMaybe<Order_By>
-  term_id?: InputMaybe<Order_By>
-  total_assets?: InputMaybe<Order_By>
-  total_shares?: InputMaybe<Order_By>
-}
-
 /** aggregate stddev_samp on columns */
 export type Share_Price_Changes_Stddev_Samp_Fields = {
   __typename?: 'share_price_changes_stddev_samp_fields'
@@ -5945,18 +6013,6 @@ export type Share_Price_Changes_Stddev_Samp_Fields = {
   term_id?: Maybe<Scalars['Float']['output']>
   total_assets?: Maybe<Scalars['Float']['output']>
   total_shares?: Maybe<Scalars['Float']['output']>
-}
-
-/** order by stddev_samp() on columns of table "share_price_change" */
-export type Share_Price_Changes_Stddev_Samp_Order_By = {
-  block_number?: InputMaybe<Order_By>
-  block_timestamp?: InputMaybe<Order_By>
-  curve_id?: InputMaybe<Order_By>
-  id?: InputMaybe<Order_By>
-  share_price?: InputMaybe<Order_By>
-  term_id?: InputMaybe<Order_By>
-  total_assets?: InputMaybe<Order_By>
-  total_shares?: InputMaybe<Order_By>
 }
 
 /** Streaming cursor of the table "share_price_changes" */
@@ -5994,18 +6050,6 @@ export type Share_Price_Changes_Sum_Fields = {
   total_shares?: Maybe<Scalars['numeric']['output']>
 }
 
-/** order by sum() on columns of table "share_price_change" */
-export type Share_Price_Changes_Sum_Order_By = {
-  block_number?: InputMaybe<Order_By>
-  block_timestamp?: InputMaybe<Order_By>
-  curve_id?: InputMaybe<Order_By>
-  id?: InputMaybe<Order_By>
-  share_price?: InputMaybe<Order_By>
-  term_id?: InputMaybe<Order_By>
-  total_assets?: InputMaybe<Order_By>
-  total_shares?: InputMaybe<Order_By>
-}
-
 /** aggregate var_pop on columns */
 export type Share_Price_Changes_Var_Pop_Fields = {
   __typename?: 'share_price_changes_var_pop_fields'
@@ -6017,18 +6061,6 @@ export type Share_Price_Changes_Var_Pop_Fields = {
   term_id?: Maybe<Scalars['Float']['output']>
   total_assets?: Maybe<Scalars['Float']['output']>
   total_shares?: Maybe<Scalars['Float']['output']>
-}
-
-/** order by var_pop() on columns of table "share_price_change" */
-export type Share_Price_Changes_Var_Pop_Order_By = {
-  block_number?: InputMaybe<Order_By>
-  block_timestamp?: InputMaybe<Order_By>
-  curve_id?: InputMaybe<Order_By>
-  id?: InputMaybe<Order_By>
-  share_price?: InputMaybe<Order_By>
-  term_id?: InputMaybe<Order_By>
-  total_assets?: InputMaybe<Order_By>
-  total_shares?: InputMaybe<Order_By>
 }
 
 /** aggregate var_samp on columns */
@@ -6044,18 +6076,6 @@ export type Share_Price_Changes_Var_Samp_Fields = {
   total_shares?: Maybe<Scalars['Float']['output']>
 }
 
-/** order by var_samp() on columns of table "share_price_change" */
-export type Share_Price_Changes_Var_Samp_Order_By = {
-  block_number?: InputMaybe<Order_By>
-  block_timestamp?: InputMaybe<Order_By>
-  curve_id?: InputMaybe<Order_By>
-  id?: InputMaybe<Order_By>
-  share_price?: InputMaybe<Order_By>
-  term_id?: InputMaybe<Order_By>
-  total_assets?: InputMaybe<Order_By>
-  total_shares?: InputMaybe<Order_By>
-}
-
 /** aggregate variance on columns */
 export type Share_Price_Changes_Variance_Fields = {
   __typename?: 'share_price_changes_variance_fields'
@@ -6069,16 +6089,264 @@ export type Share_Price_Changes_Variance_Fields = {
   total_shares?: Maybe<Scalars['Float']['output']>
 }
 
-/** order by variance() on columns of table "share_price_change" */
-export type Share_Price_Changes_Variance_Order_By = {
-  block_number?: InputMaybe<Order_By>
-  block_timestamp?: InputMaybe<Order_By>
+/** columns and relationships of "signal_stats_daily" */
+export type Signal_Stats_Daily = {
+  __typename?: 'signal_stats_daily'
+  bucket?: Maybe<Scalars['timestamptz']['output']>
+  count?: Maybe<Scalars['numeric']['output']>
+  curve_id?: Maybe<Scalars['numeric']['output']>
+  /** An object relationship */
+  term?: Maybe<Terms>
+  term_id?: Maybe<Scalars['numeric']['output']>
+  volume?: Maybe<Scalars['numeric']['output']>
+}
+
+/** Boolean expression to filter rows from the table "signal_stats_daily". All fields are combined with a logical 'AND'. */
+export type Signal_Stats_Daily_Bool_Exp = {
+  _and?: InputMaybe<Array<Signal_Stats_Daily_Bool_Exp>>
+  _not?: InputMaybe<Signal_Stats_Daily_Bool_Exp>
+  _or?: InputMaybe<Array<Signal_Stats_Daily_Bool_Exp>>
+  bucket?: InputMaybe<Timestamptz_Comparison_Exp>
+  count?: InputMaybe<Numeric_Comparison_Exp>
+  curve_id?: InputMaybe<Numeric_Comparison_Exp>
+  term?: InputMaybe<Terms_Bool_Exp>
+  term_id?: InputMaybe<Numeric_Comparison_Exp>
+  volume?: InputMaybe<Numeric_Comparison_Exp>
+}
+
+/** Ordering options when selecting data from "signal_stats_daily". */
+export type Signal_Stats_Daily_Order_By = {
+  bucket?: InputMaybe<Order_By>
+  count?: InputMaybe<Order_By>
   curve_id?: InputMaybe<Order_By>
-  id?: InputMaybe<Order_By>
-  share_price?: InputMaybe<Order_By>
+  term?: InputMaybe<Terms_Order_By>
   term_id?: InputMaybe<Order_By>
-  total_assets?: InputMaybe<Order_By>
-  total_shares?: InputMaybe<Order_By>
+  volume?: InputMaybe<Order_By>
+}
+
+/** select columns of table "signal_stats_daily" */
+export type Signal_Stats_Daily_Select_Column =
+  /** column name */
+  | 'bucket'
+  /** column name */
+  | 'count'
+  /** column name */
+  | 'curve_id'
+  /** column name */
+  | 'term_id'
+  /** column name */
+  | 'volume'
+
+/** Streaming cursor of the table "signal_stats_daily" */
+export type Signal_Stats_Daily_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Signal_Stats_Daily_Stream_Cursor_Value_Input
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>
+}
+
+/** Initial value of the column from where the streaming should start */
+export type Signal_Stats_Daily_Stream_Cursor_Value_Input = {
+  bucket?: InputMaybe<Scalars['timestamptz']['input']>
+  count?: InputMaybe<Scalars['numeric']['input']>
+  curve_id?: InputMaybe<Scalars['numeric']['input']>
+  term_id?: InputMaybe<Scalars['numeric']['input']>
+  volume?: InputMaybe<Scalars['numeric']['input']>
+}
+
+/** columns and relationships of "signal_stats_hourly" */
+export type Signal_Stats_Hourly = {
+  __typename?: 'signal_stats_hourly'
+  bucket?: Maybe<Scalars['timestamptz']['output']>
+  count?: Maybe<Scalars['bigint']['output']>
+  curve_id?: Maybe<Scalars['numeric']['output']>
+  /** An object relationship */
+  term?: Maybe<Terms>
+  term_id?: Maybe<Scalars['numeric']['output']>
+  volume?: Maybe<Scalars['numeric']['output']>
+}
+
+/** Boolean expression to filter rows from the table "signal_stats_hourly". All fields are combined with a logical 'AND'. */
+export type Signal_Stats_Hourly_Bool_Exp = {
+  _and?: InputMaybe<Array<Signal_Stats_Hourly_Bool_Exp>>
+  _not?: InputMaybe<Signal_Stats_Hourly_Bool_Exp>
+  _or?: InputMaybe<Array<Signal_Stats_Hourly_Bool_Exp>>
+  bucket?: InputMaybe<Timestamptz_Comparison_Exp>
+  count?: InputMaybe<Bigint_Comparison_Exp>
+  curve_id?: InputMaybe<Numeric_Comparison_Exp>
+  term?: InputMaybe<Terms_Bool_Exp>
+  term_id?: InputMaybe<Numeric_Comparison_Exp>
+  volume?: InputMaybe<Numeric_Comparison_Exp>
+}
+
+/** Ordering options when selecting data from "signal_stats_hourly". */
+export type Signal_Stats_Hourly_Order_By = {
+  bucket?: InputMaybe<Order_By>
+  count?: InputMaybe<Order_By>
+  curve_id?: InputMaybe<Order_By>
+  term?: InputMaybe<Terms_Order_By>
+  term_id?: InputMaybe<Order_By>
+  volume?: InputMaybe<Order_By>
+}
+
+/** select columns of table "signal_stats_hourly" */
+export type Signal_Stats_Hourly_Select_Column =
+  /** column name */
+  | 'bucket'
+  /** column name */
+  | 'count'
+  /** column name */
+  | 'curve_id'
+  /** column name */
+  | 'term_id'
+  /** column name */
+  | 'volume'
+
+/** Streaming cursor of the table "signal_stats_hourly" */
+export type Signal_Stats_Hourly_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Signal_Stats_Hourly_Stream_Cursor_Value_Input
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>
+}
+
+/** Initial value of the column from where the streaming should start */
+export type Signal_Stats_Hourly_Stream_Cursor_Value_Input = {
+  bucket?: InputMaybe<Scalars['timestamptz']['input']>
+  count?: InputMaybe<Scalars['bigint']['input']>
+  curve_id?: InputMaybe<Scalars['numeric']['input']>
+  term_id?: InputMaybe<Scalars['numeric']['input']>
+  volume?: InputMaybe<Scalars['numeric']['input']>
+}
+
+/** columns and relationships of "signal_stats_monthly" */
+export type Signal_Stats_Monthly = {
+  __typename?: 'signal_stats_monthly'
+  bucket?: Maybe<Scalars['timestamptz']['output']>
+  count?: Maybe<Scalars['numeric']['output']>
+  curve_id?: Maybe<Scalars['numeric']['output']>
+  /** An object relationship */
+  term?: Maybe<Terms>
+  term_id?: Maybe<Scalars['numeric']['output']>
+  volume?: Maybe<Scalars['numeric']['output']>
+}
+
+/** Boolean expression to filter rows from the table "signal_stats_monthly". All fields are combined with a logical 'AND'. */
+export type Signal_Stats_Monthly_Bool_Exp = {
+  _and?: InputMaybe<Array<Signal_Stats_Monthly_Bool_Exp>>
+  _not?: InputMaybe<Signal_Stats_Monthly_Bool_Exp>
+  _or?: InputMaybe<Array<Signal_Stats_Monthly_Bool_Exp>>
+  bucket?: InputMaybe<Timestamptz_Comparison_Exp>
+  count?: InputMaybe<Numeric_Comparison_Exp>
+  curve_id?: InputMaybe<Numeric_Comparison_Exp>
+  term?: InputMaybe<Terms_Bool_Exp>
+  term_id?: InputMaybe<Numeric_Comparison_Exp>
+  volume?: InputMaybe<Numeric_Comparison_Exp>
+}
+
+/** Ordering options when selecting data from "signal_stats_monthly". */
+export type Signal_Stats_Monthly_Order_By = {
+  bucket?: InputMaybe<Order_By>
+  count?: InputMaybe<Order_By>
+  curve_id?: InputMaybe<Order_By>
+  term?: InputMaybe<Terms_Order_By>
+  term_id?: InputMaybe<Order_By>
+  volume?: InputMaybe<Order_By>
+}
+
+/** select columns of table "signal_stats_monthly" */
+export type Signal_Stats_Monthly_Select_Column =
+  /** column name */
+  | 'bucket'
+  /** column name */
+  | 'count'
+  /** column name */
+  | 'curve_id'
+  /** column name */
+  | 'term_id'
+  /** column name */
+  | 'volume'
+
+/** Streaming cursor of the table "signal_stats_monthly" */
+export type Signal_Stats_Monthly_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Signal_Stats_Monthly_Stream_Cursor_Value_Input
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>
+}
+
+/** Initial value of the column from where the streaming should start */
+export type Signal_Stats_Monthly_Stream_Cursor_Value_Input = {
+  bucket?: InputMaybe<Scalars['timestamptz']['input']>
+  count?: InputMaybe<Scalars['numeric']['input']>
+  curve_id?: InputMaybe<Scalars['numeric']['input']>
+  term_id?: InputMaybe<Scalars['numeric']['input']>
+  volume?: InputMaybe<Scalars['numeric']['input']>
+}
+
+/** columns and relationships of "signal_stats_weekly" */
+export type Signal_Stats_Weekly = {
+  __typename?: 'signal_stats_weekly'
+  bucket?: Maybe<Scalars['timestamptz']['output']>
+  count?: Maybe<Scalars['numeric']['output']>
+  curve_id?: Maybe<Scalars['numeric']['output']>
+  /** An object relationship */
+  term?: Maybe<Terms>
+  term_id?: Maybe<Scalars['numeric']['output']>
+  volume?: Maybe<Scalars['numeric']['output']>
+}
+
+/** Boolean expression to filter rows from the table "signal_stats_weekly". All fields are combined with a logical 'AND'. */
+export type Signal_Stats_Weekly_Bool_Exp = {
+  _and?: InputMaybe<Array<Signal_Stats_Weekly_Bool_Exp>>
+  _not?: InputMaybe<Signal_Stats_Weekly_Bool_Exp>
+  _or?: InputMaybe<Array<Signal_Stats_Weekly_Bool_Exp>>
+  bucket?: InputMaybe<Timestamptz_Comparison_Exp>
+  count?: InputMaybe<Numeric_Comparison_Exp>
+  curve_id?: InputMaybe<Numeric_Comparison_Exp>
+  term?: InputMaybe<Terms_Bool_Exp>
+  term_id?: InputMaybe<Numeric_Comparison_Exp>
+  volume?: InputMaybe<Numeric_Comparison_Exp>
+}
+
+/** Ordering options when selecting data from "signal_stats_weekly". */
+export type Signal_Stats_Weekly_Order_By = {
+  bucket?: InputMaybe<Order_By>
+  count?: InputMaybe<Order_By>
+  curve_id?: InputMaybe<Order_By>
+  term?: InputMaybe<Terms_Order_By>
+  term_id?: InputMaybe<Order_By>
+  volume?: InputMaybe<Order_By>
+}
+
+/** select columns of table "signal_stats_weekly" */
+export type Signal_Stats_Weekly_Select_Column =
+  /** column name */
+  | 'bucket'
+  /** column name */
+  | 'count'
+  /** column name */
+  | 'curve_id'
+  /** column name */
+  | 'term_id'
+  /** column name */
+  | 'volume'
+
+/** Streaming cursor of the table "signal_stats_weekly" */
+export type Signal_Stats_Weekly_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Signal_Stats_Weekly_Stream_Cursor_Value_Input
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>
+}
+
+/** Initial value of the column from where the streaming should start */
+export type Signal_Stats_Weekly_Stream_Cursor_Value_Input = {
+  bucket?: InputMaybe<Scalars['timestamptz']['input']>
+  count?: InputMaybe<Scalars['numeric']['input']>
+  curve_id?: InputMaybe<Scalars['numeric']['input']>
+  term_id?: InputMaybe<Scalars['numeric']['input']>
+  volume?: InputMaybe<Scalars['numeric']['input']>
 }
 
 /** columns and relationships of "signal" */
@@ -6089,7 +6357,7 @@ export type Signals = {
   account_id: Scalars['String']['output']
   atom_id?: Maybe<Scalars['numeric']['output']>
   block_number: Scalars['numeric']['output']
-  block_timestamp: Scalars['bigint']['output']
+  created_at: Scalars['timestamptz']['output']
   delta: Scalars['numeric']['output']
   /** An object relationship */
   deposit?: Maybe<Deposits>
@@ -6166,7 +6434,6 @@ export type Signals_Avg_Fields = {
   __typename?: 'signals_avg_fields'
   atom_id?: Maybe<Scalars['Float']['output']>
   block_number?: Maybe<Scalars['Float']['output']>
-  block_timestamp?: Maybe<Scalars['Float']['output']>
   delta?: Maybe<Scalars['Float']['output']>
   triple_id?: Maybe<Scalars['Float']['output']>
 }
@@ -6175,7 +6442,6 @@ export type Signals_Avg_Fields = {
 export type Signals_Avg_Order_By = {
   atom_id?: InputMaybe<Order_By>
   block_number?: InputMaybe<Order_By>
-  block_timestamp?: InputMaybe<Order_By>
   delta?: InputMaybe<Order_By>
   triple_id?: InputMaybe<Order_By>
 }
@@ -6189,7 +6455,7 @@ export type Signals_Bool_Exp = {
   account_id?: InputMaybe<String_Comparison_Exp>
   atom_id?: InputMaybe<Numeric_Comparison_Exp>
   block_number?: InputMaybe<Numeric_Comparison_Exp>
-  block_timestamp?: InputMaybe<Bigint_Comparison_Exp>
+  created_at?: InputMaybe<Timestamptz_Comparison_Exp>
   delta?: InputMaybe<Numeric_Comparison_Exp>
   deposit?: InputMaybe<Deposits_Bool_Exp>
   deposit_id?: InputMaybe<String_Comparison_Exp>
@@ -6212,7 +6478,7 @@ export type Signals_Max_Fields = {
   account_id?: Maybe<Scalars['String']['output']>
   atom_id?: Maybe<Scalars['numeric']['output']>
   block_number?: Maybe<Scalars['numeric']['output']>
-  block_timestamp?: Maybe<Scalars['bigint']['output']>
+  created_at?: Maybe<Scalars['timestamptz']['output']>
   delta?: Maybe<Scalars['numeric']['output']>
   deposit_id?: Maybe<Scalars['String']['output']>
   id?: Maybe<Scalars['String']['output']>
@@ -6226,7 +6492,7 @@ export type Signals_Max_Order_By = {
   account_id?: InputMaybe<Order_By>
   atom_id?: InputMaybe<Order_By>
   block_number?: InputMaybe<Order_By>
-  block_timestamp?: InputMaybe<Order_By>
+  created_at?: InputMaybe<Order_By>
   delta?: InputMaybe<Order_By>
   deposit_id?: InputMaybe<Order_By>
   id?: InputMaybe<Order_By>
@@ -6241,7 +6507,7 @@ export type Signals_Min_Fields = {
   account_id?: Maybe<Scalars['String']['output']>
   atom_id?: Maybe<Scalars['numeric']['output']>
   block_number?: Maybe<Scalars['numeric']['output']>
-  block_timestamp?: Maybe<Scalars['bigint']['output']>
+  created_at?: Maybe<Scalars['timestamptz']['output']>
   delta?: Maybe<Scalars['numeric']['output']>
   deposit_id?: Maybe<Scalars['String']['output']>
   id?: Maybe<Scalars['String']['output']>
@@ -6255,7 +6521,7 @@ export type Signals_Min_Order_By = {
   account_id?: InputMaybe<Order_By>
   atom_id?: InputMaybe<Order_By>
   block_number?: InputMaybe<Order_By>
-  block_timestamp?: InputMaybe<Order_By>
+  created_at?: InputMaybe<Order_By>
   delta?: InputMaybe<Order_By>
   deposit_id?: InputMaybe<Order_By>
   id?: InputMaybe<Order_By>
@@ -6270,7 +6536,7 @@ export type Signals_Order_By = {
   account_id?: InputMaybe<Order_By>
   atom_id?: InputMaybe<Order_By>
   block_number?: InputMaybe<Order_By>
-  block_timestamp?: InputMaybe<Order_By>
+  created_at?: InputMaybe<Order_By>
   delta?: InputMaybe<Order_By>
   deposit?: InputMaybe<Deposits_Order_By>
   deposit_id?: InputMaybe<Order_By>
@@ -6292,7 +6558,7 @@ export type Signals_Select_Column =
   /** column name */
   | 'block_number'
   /** column name */
-  | 'block_timestamp'
+  | 'created_at'
   /** column name */
   | 'delta'
   /** column name */
@@ -6311,7 +6577,6 @@ export type Signals_Stddev_Fields = {
   __typename?: 'signals_stddev_fields'
   atom_id?: Maybe<Scalars['Float']['output']>
   block_number?: Maybe<Scalars['Float']['output']>
-  block_timestamp?: Maybe<Scalars['Float']['output']>
   delta?: Maybe<Scalars['Float']['output']>
   triple_id?: Maybe<Scalars['Float']['output']>
 }
@@ -6320,7 +6585,6 @@ export type Signals_Stddev_Fields = {
 export type Signals_Stddev_Order_By = {
   atom_id?: InputMaybe<Order_By>
   block_number?: InputMaybe<Order_By>
-  block_timestamp?: InputMaybe<Order_By>
   delta?: InputMaybe<Order_By>
   triple_id?: InputMaybe<Order_By>
 }
@@ -6330,7 +6594,6 @@ export type Signals_Stddev_Pop_Fields = {
   __typename?: 'signals_stddev_pop_fields'
   atom_id?: Maybe<Scalars['Float']['output']>
   block_number?: Maybe<Scalars['Float']['output']>
-  block_timestamp?: Maybe<Scalars['Float']['output']>
   delta?: Maybe<Scalars['Float']['output']>
   triple_id?: Maybe<Scalars['Float']['output']>
 }
@@ -6339,7 +6602,6 @@ export type Signals_Stddev_Pop_Fields = {
 export type Signals_Stddev_Pop_Order_By = {
   atom_id?: InputMaybe<Order_By>
   block_number?: InputMaybe<Order_By>
-  block_timestamp?: InputMaybe<Order_By>
   delta?: InputMaybe<Order_By>
   triple_id?: InputMaybe<Order_By>
 }
@@ -6349,7 +6611,6 @@ export type Signals_Stddev_Samp_Fields = {
   __typename?: 'signals_stddev_samp_fields'
   atom_id?: Maybe<Scalars['Float']['output']>
   block_number?: Maybe<Scalars['Float']['output']>
-  block_timestamp?: Maybe<Scalars['Float']['output']>
   delta?: Maybe<Scalars['Float']['output']>
   triple_id?: Maybe<Scalars['Float']['output']>
 }
@@ -6358,7 +6619,6 @@ export type Signals_Stddev_Samp_Fields = {
 export type Signals_Stddev_Samp_Order_By = {
   atom_id?: InputMaybe<Order_By>
   block_number?: InputMaybe<Order_By>
-  block_timestamp?: InputMaybe<Order_By>
   delta?: InputMaybe<Order_By>
   triple_id?: InputMaybe<Order_By>
 }
@@ -6376,7 +6636,7 @@ export type Signals_Stream_Cursor_Value_Input = {
   account_id?: InputMaybe<Scalars['String']['input']>
   atom_id?: InputMaybe<Scalars['numeric']['input']>
   block_number?: InputMaybe<Scalars['numeric']['input']>
-  block_timestamp?: InputMaybe<Scalars['bigint']['input']>
+  created_at?: InputMaybe<Scalars['timestamptz']['input']>
   delta?: InputMaybe<Scalars['numeric']['input']>
   deposit_id?: InputMaybe<Scalars['String']['input']>
   id?: InputMaybe<Scalars['String']['input']>
@@ -6390,7 +6650,6 @@ export type Signals_Sum_Fields = {
   __typename?: 'signals_sum_fields'
   atom_id?: Maybe<Scalars['numeric']['output']>
   block_number?: Maybe<Scalars['numeric']['output']>
-  block_timestamp?: Maybe<Scalars['bigint']['output']>
   delta?: Maybe<Scalars['numeric']['output']>
   triple_id?: Maybe<Scalars['numeric']['output']>
 }
@@ -6399,7 +6658,6 @@ export type Signals_Sum_Fields = {
 export type Signals_Sum_Order_By = {
   atom_id?: InputMaybe<Order_By>
   block_number?: InputMaybe<Order_By>
-  block_timestamp?: InputMaybe<Order_By>
   delta?: InputMaybe<Order_By>
   triple_id?: InputMaybe<Order_By>
 }
@@ -6409,7 +6667,6 @@ export type Signals_Var_Pop_Fields = {
   __typename?: 'signals_var_pop_fields'
   atom_id?: Maybe<Scalars['Float']['output']>
   block_number?: Maybe<Scalars['Float']['output']>
-  block_timestamp?: Maybe<Scalars['Float']['output']>
   delta?: Maybe<Scalars['Float']['output']>
   triple_id?: Maybe<Scalars['Float']['output']>
 }
@@ -6418,7 +6675,6 @@ export type Signals_Var_Pop_Fields = {
 export type Signals_Var_Pop_Order_By = {
   atom_id?: InputMaybe<Order_By>
   block_number?: InputMaybe<Order_By>
-  block_timestamp?: InputMaybe<Order_By>
   delta?: InputMaybe<Order_By>
   triple_id?: InputMaybe<Order_By>
 }
@@ -6428,7 +6684,6 @@ export type Signals_Var_Samp_Fields = {
   __typename?: 'signals_var_samp_fields'
   atom_id?: Maybe<Scalars['Float']['output']>
   block_number?: Maybe<Scalars['Float']['output']>
-  block_timestamp?: Maybe<Scalars['Float']['output']>
   delta?: Maybe<Scalars['Float']['output']>
   triple_id?: Maybe<Scalars['Float']['output']>
 }
@@ -6437,7 +6692,6 @@ export type Signals_Var_Samp_Fields = {
 export type Signals_Var_Samp_Order_By = {
   atom_id?: InputMaybe<Order_By>
   block_number?: InputMaybe<Order_By>
-  block_timestamp?: InputMaybe<Order_By>
   delta?: InputMaybe<Order_By>
   triple_id?: InputMaybe<Order_By>
 }
@@ -6447,7 +6701,6 @@ export type Signals_Variance_Fields = {
   __typename?: 'signals_variance_fields'
   atom_id?: Maybe<Scalars['Float']['output']>
   block_number?: Maybe<Scalars['Float']['output']>
-  block_timestamp?: Maybe<Scalars['Float']['output']>
   delta?: Maybe<Scalars['Float']['output']>
   triple_id?: Maybe<Scalars['Float']['output']>
 }
@@ -6456,7 +6709,6 @@ export type Signals_Variance_Fields = {
 export type Signals_Variance_Order_By = {
   atom_id?: InputMaybe<Order_By>
   block_number?: InputMaybe<Order_By>
-  block_timestamp?: InputMaybe<Order_By>
   delta?: InputMaybe<Order_By>
   triple_id?: InputMaybe<Order_By>
 }
@@ -6709,10 +6961,6 @@ export type Subscription_Root = {
   accounts_aggregate: Accounts_Aggregate
   /** fetch data from the table in a streaming manner: "account" */
   accounts_stream: Array<Accounts>
-  /** execute function "accounts_that_claim_about_account" which returns "account" */
-  accounts_that_claim_about_account: Array<Accounts>
-  /** execute function "accounts_that_claim_about_account" and query aggregates on result of table type "account" */
-  accounts_that_claim_about_account_aggregate: Accounts_Aggregate
   /** fetch data from the table: "atom" using primary key columns */
   atom?: Maybe<Atoms>
   /** fetch data from the table: "atom_value" using primary key columns */
@@ -6765,18 +7013,6 @@ export type Subscription_Root = {
   chainlink_prices: Array<Chainlink_Prices>
   /** fetch data from the table in a streaming manner: "chainlink_price" */
   chainlink_prices_stream: Array<Chainlink_Prices>
-  /** fetch data from the table: "claim" using primary key columns */
-  claim?: Maybe<Claims>
-  /** An array relationship */
-  claims: Array<Claims>
-  /** An aggregate relationship */
-  claims_aggregate: Claims_Aggregate
-  /** execute function "claims_from_following" which returns "claim" */
-  claims_from_following: Array<Claims>
-  /** execute function "claims_from_following" and query aggregates on result of table type "claim" */
-  claims_from_following_aggregate: Claims_Aggregate
-  /** fetch data from the table in a streaming manner: "claim" */
-  claims_stream: Array<Claims>
   /** fetch data from the table: "deposit" using primary key columns */
   deposit?: Maybe<Deposits>
   /** An array relationship */
@@ -6835,6 +7071,10 @@ export type Subscription_Root = {
   positions: Array<Positions>
   /** An aggregate relationship */
   positions_aggregate: Positions_Aggregate
+  /** execute function "positions_from_following" which returns "position" */
+  positions_from_following: Array<Positions>
+  /** execute function "positions_from_following" and query aggregates on result of table type "position" */
+  positions_from_following_aggregate: Positions_Aggregate
   /** fetch data from the table in a streaming manner: "position" */
   positions_stream: Array<Positions>
   /** fetch data from the table: "predicate_object" */
@@ -6853,16 +7093,52 @@ export type Subscription_Root = {
   redemptions_aggregate: Redemptions_Aggregate
   /** fetch data from the table in a streaming manner: "redemption" */
   redemptions_stream: Array<Redemptions>
-  /** fetch data from the table: "share_price_change" using primary key columns */
-  share_price_change?: Maybe<Share_Price_Changes>
-  /** An array relationship */
+  /** execute function "search_term" which returns "term" */
+  search_term: Array<Terms>
+  /** execute function "search_term" and query aggregates on result of table type "term" */
+  search_term_aggregate: Terms_Aggregate
+  /** execute function "search_term_from_following" which returns "term" */
+  search_term_from_following: Array<Terms>
+  /** execute function "search_term_from_following" and query aggregates on result of table type "term" */
+  search_term_from_following_aggregate: Terms_Aggregate
+  /** fetch data from the table: "share_price_change_stats_daily" */
+  share_price_change_stats_daily: Array<Share_Price_Change_Stats_Daily>
+  /** fetch data from the table in a streaming manner: "share_price_change_stats_daily" */
+  share_price_change_stats_daily_stream: Array<Share_Price_Change_Stats_Daily>
+  /** fetch data from the table: "share_price_change_stats_hourly" */
+  share_price_change_stats_hourly: Array<Share_Price_Change_Stats_Hourly>
+  /** fetch data from the table in a streaming manner: "share_price_change_stats_hourly" */
+  share_price_change_stats_hourly_stream: Array<Share_Price_Change_Stats_Hourly>
+  /** fetch data from the table: "share_price_change_stats_monthly" */
+  share_price_change_stats_monthly: Array<Share_Price_Change_Stats_Monthly>
+  /** fetch data from the table in a streaming manner: "share_price_change_stats_monthly" */
+  share_price_change_stats_monthly_stream: Array<Share_Price_Change_Stats_Monthly>
+  /** fetch data from the table: "share_price_change_stats_weekly" */
+  share_price_change_stats_weekly: Array<Share_Price_Change_Stats_Weekly>
+  /** fetch data from the table in a streaming manner: "share_price_change_stats_weekly" */
+  share_price_change_stats_weekly_stream: Array<Share_Price_Change_Stats_Weekly>
+  /** fetch data from the table: "share_price_change" */
   share_price_changes: Array<Share_Price_Changes>
-  /** An aggregate relationship */
+  /** fetch aggregated fields from the table: "share_price_change" */
   share_price_changes_aggregate: Share_Price_Changes_Aggregate
   /** fetch data from the table in a streaming manner: "share_price_change" */
   share_price_changes_stream: Array<Share_Price_Changes>
-  /** fetch data from the table: "signal" using primary key columns */
-  signal?: Maybe<Signals>
+  /** fetch data from the table: "signal_stats_daily" */
+  signal_stats_daily: Array<Signal_Stats_Daily>
+  /** fetch data from the table in a streaming manner: "signal_stats_daily" */
+  signal_stats_daily_stream: Array<Signal_Stats_Daily>
+  /** fetch data from the table: "signal_stats_hourly" */
+  signal_stats_hourly: Array<Signal_Stats_Hourly>
+  /** fetch data from the table in a streaming manner: "signal_stats_hourly" */
+  signal_stats_hourly_stream: Array<Signal_Stats_Hourly>
+  /** fetch data from the table: "signal_stats_monthly" */
+  signal_stats_monthly: Array<Signal_Stats_Monthly>
+  /** fetch data from the table in a streaming manner: "signal_stats_monthly" */
+  signal_stats_monthly_stream: Array<Signal_Stats_Monthly>
+  /** fetch data from the table: "signal_stats_weekly" */
+  signal_stats_weekly: Array<Signal_Stats_Weekly>
+  /** fetch data from the table in a streaming manner: "signal_stats_weekly" */
+  signal_stats_weekly_stream: Array<Signal_Stats_Weekly>
   /** An array relationship */
   signals: Array<Signals>
   /** An aggregate relationship */
@@ -6946,24 +7222,6 @@ export type Subscription_RootAccounts_AggregateArgs = {
 export type Subscription_RootAccounts_StreamArgs = {
   batch_size: Scalars['Int']['input']
   cursor: Array<InputMaybe<Accounts_Stream_Cursor_Input>>
-  where?: InputMaybe<Accounts_Bool_Exp>
-}
-
-export type Subscription_RootAccounts_That_Claim_About_AccountArgs = {
-  args: Accounts_That_Claim_About_Account_Args
-  distinct_on?: InputMaybe<Array<Accounts_Select_Column>>
-  limit?: InputMaybe<Scalars['Int']['input']>
-  offset?: InputMaybe<Scalars['Int']['input']>
-  order_by?: InputMaybe<Array<Accounts_Order_By>>
-  where?: InputMaybe<Accounts_Bool_Exp>
-}
-
-export type Subscription_RootAccounts_That_Claim_About_Account_AggregateArgs = {
-  args: Accounts_That_Claim_About_Account_Args
-  distinct_on?: InputMaybe<Array<Accounts_Select_Column>>
-  limit?: InputMaybe<Scalars['Int']['input']>
-  offset?: InputMaybe<Scalars['Int']['input']>
-  order_by?: InputMaybe<Array<Accounts_Order_By>>
   where?: InputMaybe<Accounts_Bool_Exp>
 }
 
@@ -7131,50 +7389,6 @@ export type Subscription_RootChainlink_Prices_StreamArgs = {
   batch_size: Scalars['Int']['input']
   cursor: Array<InputMaybe<Chainlink_Prices_Stream_Cursor_Input>>
   where?: InputMaybe<Chainlink_Prices_Bool_Exp>
-}
-
-export type Subscription_RootClaimArgs = {
-  id: Scalars['String']['input']
-}
-
-export type Subscription_RootClaimsArgs = {
-  distinct_on?: InputMaybe<Array<Claims_Select_Column>>
-  limit?: InputMaybe<Scalars['Int']['input']>
-  offset?: InputMaybe<Scalars['Int']['input']>
-  order_by?: InputMaybe<Array<Claims_Order_By>>
-  where?: InputMaybe<Claims_Bool_Exp>
-}
-
-export type Subscription_RootClaims_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Claims_Select_Column>>
-  limit?: InputMaybe<Scalars['Int']['input']>
-  offset?: InputMaybe<Scalars['Int']['input']>
-  order_by?: InputMaybe<Array<Claims_Order_By>>
-  where?: InputMaybe<Claims_Bool_Exp>
-}
-
-export type Subscription_RootClaims_From_FollowingArgs = {
-  args: Claims_From_Following_Args
-  distinct_on?: InputMaybe<Array<Claims_Select_Column>>
-  limit?: InputMaybe<Scalars['Int']['input']>
-  offset?: InputMaybe<Scalars['Int']['input']>
-  order_by?: InputMaybe<Array<Claims_Order_By>>
-  where?: InputMaybe<Claims_Bool_Exp>
-}
-
-export type Subscription_RootClaims_From_Following_AggregateArgs = {
-  args: Claims_From_Following_Args
-  distinct_on?: InputMaybe<Array<Claims_Select_Column>>
-  limit?: InputMaybe<Scalars['Int']['input']>
-  offset?: InputMaybe<Scalars['Int']['input']>
-  order_by?: InputMaybe<Array<Claims_Order_By>>
-  where?: InputMaybe<Claims_Bool_Exp>
-}
-
-export type Subscription_RootClaims_StreamArgs = {
-  batch_size: Scalars['Int']['input']
-  cursor: Array<InputMaybe<Claims_Stream_Cursor_Input>>
-  where?: InputMaybe<Claims_Bool_Exp>
 }
 
 export type Subscription_RootDepositArgs = {
@@ -7371,6 +7585,24 @@ export type Subscription_RootPositions_AggregateArgs = {
   where?: InputMaybe<Positions_Bool_Exp>
 }
 
+export type Subscription_RootPositions_From_FollowingArgs = {
+  args: Positions_From_Following_Args
+  distinct_on?: InputMaybe<Array<Positions_Select_Column>>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  order_by?: InputMaybe<Array<Positions_Order_By>>
+  where?: InputMaybe<Positions_Bool_Exp>
+}
+
+export type Subscription_RootPositions_From_Following_AggregateArgs = {
+  args: Positions_From_Following_Args
+  distinct_on?: InputMaybe<Array<Positions_Select_Column>>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  order_by?: InputMaybe<Array<Positions_Order_By>>
+  where?: InputMaybe<Positions_Bool_Exp>
+}
+
 export type Subscription_RootPositions_StreamArgs = {
   batch_size: Scalars['Int']['input']
   cursor: Array<InputMaybe<Positions_Stream_Cursor_Input>>
@@ -7429,8 +7661,100 @@ export type Subscription_RootRedemptions_StreamArgs = {
   where?: InputMaybe<Redemptions_Bool_Exp>
 }
 
-export type Subscription_RootShare_Price_ChangeArgs = {
-  id: Scalars['bigint']['input']
+export type Subscription_RootSearch_TermArgs = {
+  args: Search_Term_Args
+  distinct_on?: InputMaybe<Array<Terms_Select_Column>>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  order_by?: InputMaybe<Array<Terms_Order_By>>
+  where?: InputMaybe<Terms_Bool_Exp>
+}
+
+export type Subscription_RootSearch_Term_AggregateArgs = {
+  args: Search_Term_Args
+  distinct_on?: InputMaybe<Array<Terms_Select_Column>>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  order_by?: InputMaybe<Array<Terms_Order_By>>
+  where?: InputMaybe<Terms_Bool_Exp>
+}
+
+export type Subscription_RootSearch_Term_From_FollowingArgs = {
+  args: Search_Term_From_Following_Args
+  distinct_on?: InputMaybe<Array<Terms_Select_Column>>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  order_by?: InputMaybe<Array<Terms_Order_By>>
+  where?: InputMaybe<Terms_Bool_Exp>
+}
+
+export type Subscription_RootSearch_Term_From_Following_AggregateArgs = {
+  args: Search_Term_From_Following_Args
+  distinct_on?: InputMaybe<Array<Terms_Select_Column>>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  order_by?: InputMaybe<Array<Terms_Order_By>>
+  where?: InputMaybe<Terms_Bool_Exp>
+}
+
+export type Subscription_RootShare_Price_Change_Stats_DailyArgs = {
+  distinct_on?: InputMaybe<Array<Share_Price_Change_Stats_Daily_Select_Column>>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  order_by?: InputMaybe<Array<Share_Price_Change_Stats_Daily_Order_By>>
+  where?: InputMaybe<Share_Price_Change_Stats_Daily_Bool_Exp>
+}
+
+export type Subscription_RootShare_Price_Change_Stats_Daily_StreamArgs = {
+  batch_size: Scalars['Int']['input']
+  cursor: Array<InputMaybe<Share_Price_Change_Stats_Daily_Stream_Cursor_Input>>
+  where?: InputMaybe<Share_Price_Change_Stats_Daily_Bool_Exp>
+}
+
+export type Subscription_RootShare_Price_Change_Stats_HourlyArgs = {
+  distinct_on?: InputMaybe<Array<Share_Price_Change_Stats_Hourly_Select_Column>>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  order_by?: InputMaybe<Array<Share_Price_Change_Stats_Hourly_Order_By>>
+  where?: InputMaybe<Share_Price_Change_Stats_Hourly_Bool_Exp>
+}
+
+export type Subscription_RootShare_Price_Change_Stats_Hourly_StreamArgs = {
+  batch_size: Scalars['Int']['input']
+  cursor: Array<InputMaybe<Share_Price_Change_Stats_Hourly_Stream_Cursor_Input>>
+  where?: InputMaybe<Share_Price_Change_Stats_Hourly_Bool_Exp>
+}
+
+export type Subscription_RootShare_Price_Change_Stats_MonthlyArgs = {
+  distinct_on?: InputMaybe<
+    Array<Share_Price_Change_Stats_Monthly_Select_Column>
+  >
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  order_by?: InputMaybe<Array<Share_Price_Change_Stats_Monthly_Order_By>>
+  where?: InputMaybe<Share_Price_Change_Stats_Monthly_Bool_Exp>
+}
+
+export type Subscription_RootShare_Price_Change_Stats_Monthly_StreamArgs = {
+  batch_size: Scalars['Int']['input']
+  cursor: Array<
+    InputMaybe<Share_Price_Change_Stats_Monthly_Stream_Cursor_Input>
+  >
+  where?: InputMaybe<Share_Price_Change_Stats_Monthly_Bool_Exp>
+}
+
+export type Subscription_RootShare_Price_Change_Stats_WeeklyArgs = {
+  distinct_on?: InputMaybe<Array<Share_Price_Change_Stats_Weekly_Select_Column>>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  order_by?: InputMaybe<Array<Share_Price_Change_Stats_Weekly_Order_By>>
+  where?: InputMaybe<Share_Price_Change_Stats_Weekly_Bool_Exp>
+}
+
+export type Subscription_RootShare_Price_Change_Stats_Weekly_StreamArgs = {
+  batch_size: Scalars['Int']['input']
+  cursor: Array<InputMaybe<Share_Price_Change_Stats_Weekly_Stream_Cursor_Input>>
+  where?: InputMaybe<Share_Price_Change_Stats_Weekly_Bool_Exp>
 }
 
 export type Subscription_RootShare_Price_ChangesArgs = {
@@ -7455,8 +7779,60 @@ export type Subscription_RootShare_Price_Changes_StreamArgs = {
   where?: InputMaybe<Share_Price_Changes_Bool_Exp>
 }
 
-export type Subscription_RootSignalArgs = {
-  id: Scalars['String']['input']
+export type Subscription_RootSignal_Stats_DailyArgs = {
+  distinct_on?: InputMaybe<Array<Signal_Stats_Daily_Select_Column>>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  order_by?: InputMaybe<Array<Signal_Stats_Daily_Order_By>>
+  where?: InputMaybe<Signal_Stats_Daily_Bool_Exp>
+}
+
+export type Subscription_RootSignal_Stats_Daily_StreamArgs = {
+  batch_size: Scalars['Int']['input']
+  cursor: Array<InputMaybe<Signal_Stats_Daily_Stream_Cursor_Input>>
+  where?: InputMaybe<Signal_Stats_Daily_Bool_Exp>
+}
+
+export type Subscription_RootSignal_Stats_HourlyArgs = {
+  distinct_on?: InputMaybe<Array<Signal_Stats_Hourly_Select_Column>>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  order_by?: InputMaybe<Array<Signal_Stats_Hourly_Order_By>>
+  where?: InputMaybe<Signal_Stats_Hourly_Bool_Exp>
+}
+
+export type Subscription_RootSignal_Stats_Hourly_StreamArgs = {
+  batch_size: Scalars['Int']['input']
+  cursor: Array<InputMaybe<Signal_Stats_Hourly_Stream_Cursor_Input>>
+  where?: InputMaybe<Signal_Stats_Hourly_Bool_Exp>
+}
+
+export type Subscription_RootSignal_Stats_MonthlyArgs = {
+  distinct_on?: InputMaybe<Array<Signal_Stats_Monthly_Select_Column>>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  order_by?: InputMaybe<Array<Signal_Stats_Monthly_Order_By>>
+  where?: InputMaybe<Signal_Stats_Monthly_Bool_Exp>
+}
+
+export type Subscription_RootSignal_Stats_Monthly_StreamArgs = {
+  batch_size: Scalars['Int']['input']
+  cursor: Array<InputMaybe<Signal_Stats_Monthly_Stream_Cursor_Input>>
+  where?: InputMaybe<Signal_Stats_Monthly_Bool_Exp>
+}
+
+export type Subscription_RootSignal_Stats_WeeklyArgs = {
+  distinct_on?: InputMaybe<Array<Signal_Stats_Weekly_Select_Column>>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  order_by?: InputMaybe<Array<Signal_Stats_Weekly_Order_By>>
+  where?: InputMaybe<Signal_Stats_Weekly_Bool_Exp>
+}
+
+export type Subscription_RootSignal_Stats_Weekly_StreamArgs = {
+  batch_size: Scalars['Int']['input']
+  cursor: Array<InputMaybe<Signal_Stats_Weekly_Stream_Cursor_Input>>
+  where?: InputMaybe<Signal_Stats_Weekly_Bool_Exp>
 }
 
 export type Subscription_RootSignalsArgs = {
@@ -7691,10 +8067,6 @@ export type Terms = {
   /** An aggregate relationship */
   redemptions_aggregate: Redemptions_Aggregate
   /** An array relationship */
-  share_price_changes: Array<Share_Price_Changes>
-  /** An aggregate relationship */
-  share_price_changes_aggregate: Share_Price_Changes_Aggregate
-  /** An array relationship */
   signals: Array<Signals>
   /** An aggregate relationship */
   signals_aggregate: Signals_Aggregate
@@ -7767,24 +8139,6 @@ export type TermsRedemptions_AggregateArgs = {
 }
 
 /** columns and relationships of "term" */
-export type TermsShare_Price_ChangesArgs = {
-  distinct_on?: InputMaybe<Array<Share_Price_Changes_Select_Column>>
-  limit?: InputMaybe<Scalars['Int']['input']>
-  offset?: InputMaybe<Scalars['Int']['input']>
-  order_by?: InputMaybe<Array<Share_Price_Changes_Order_By>>
-  where?: InputMaybe<Share_Price_Changes_Bool_Exp>
-}
-
-/** columns and relationships of "term" */
-export type TermsShare_Price_Changes_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Share_Price_Changes_Select_Column>>
-  limit?: InputMaybe<Scalars['Int']['input']>
-  offset?: InputMaybe<Scalars['Int']['input']>
-  order_by?: InputMaybe<Array<Share_Price_Changes_Order_By>>
-  where?: InputMaybe<Share_Price_Changes_Bool_Exp>
-}
-
-/** columns and relationships of "term" */
 export type TermsSignalsArgs = {
   distinct_on?: InputMaybe<Array<Signals_Select_Column>>
   limit?: InputMaybe<Scalars['Int']['input']>
@@ -7820,7 +8174,6 @@ export type TermsVaults_AggregateArgs = {
   where?: InputMaybe<Vaults_Bool_Exp>
 }
 
-/** aggregated selection of "term" */
 export type Terms_Aggregate = {
   __typename?: 'terms_aggregate'
   aggregate?: Maybe<Terms_Aggregate_Fields>
@@ -7874,8 +8227,6 @@ export type Terms_Bool_Exp = {
   positions_aggregate?: InputMaybe<Positions_Aggregate_Bool_Exp>
   redemptions?: InputMaybe<Redemptions_Bool_Exp>
   redemptions_aggregate?: InputMaybe<Redemptions_Aggregate_Bool_Exp>
-  share_price_changes?: InputMaybe<Share_Price_Changes_Bool_Exp>
-  share_price_changes_aggregate?: InputMaybe<Share_Price_Changes_Aggregate_Bool_Exp>
   signals?: InputMaybe<Signals_Bool_Exp>
   signals_aggregate?: InputMaybe<Signals_Aggregate_Bool_Exp>
   total_assets?: InputMaybe<Numeric_Comparison_Exp>
@@ -7919,7 +8270,6 @@ export type Terms_Order_By = {
   id?: InputMaybe<Order_By>
   positions_aggregate?: InputMaybe<Positions_Aggregate_Order_By>
   redemptions_aggregate?: InputMaybe<Redemptions_Aggregate_Order_By>
-  share_price_changes_aggregate?: InputMaybe<Share_Price_Changes_Aggregate_Order_By>
   signals_aggregate?: InputMaybe<Signals_Aggregate_Order_By>
   total_assets?: InputMaybe<Order_By>
   total_market_cap?: InputMaybe<Order_By>
@@ -8351,7 +8701,6 @@ export type Timestamptz_Comparison_Exp = {
 export type Triples = {
   __typename?: 'triples'
   block_number: Scalars['numeric']['output']
-  block_timestamp: Scalars['bigint']['output']
   /** An array relationship */
   counter_positions: Array<Positions>
   /** An aggregate relationship */
@@ -8359,6 +8708,7 @@ export type Triples = {
   /** An object relationship */
   counter_term?: Maybe<Terms>
   counter_term_id: Scalars['numeric']['output']
+  created_at: Scalars['timestamptz']['output']
   /** An object relationship */
   creator?: Maybe<Accounts>
   creator_id: Scalars['String']['output']
@@ -8476,7 +8826,6 @@ export type Triples_Aggregate_Order_By = {
 export type Triples_Avg_Fields = {
   __typename?: 'triples_avg_fields'
   block_number?: Maybe<Scalars['Float']['output']>
-  block_timestamp?: Maybe<Scalars['Float']['output']>
   counter_term_id?: Maybe<Scalars['Float']['output']>
   object_id?: Maybe<Scalars['Float']['output']>
   predicate_id?: Maybe<Scalars['Float']['output']>
@@ -8487,7 +8836,6 @@ export type Triples_Avg_Fields = {
 /** order by avg() on columns of table "triple" */
 export type Triples_Avg_Order_By = {
   block_number?: InputMaybe<Order_By>
-  block_timestamp?: InputMaybe<Order_By>
   counter_term_id?: InputMaybe<Order_By>
   object_id?: InputMaybe<Order_By>
   predicate_id?: InputMaybe<Order_By>
@@ -8501,11 +8849,11 @@ export type Triples_Bool_Exp = {
   _not?: InputMaybe<Triples_Bool_Exp>
   _or?: InputMaybe<Array<Triples_Bool_Exp>>
   block_number?: InputMaybe<Numeric_Comparison_Exp>
-  block_timestamp?: InputMaybe<Bigint_Comparison_Exp>
   counter_positions?: InputMaybe<Positions_Bool_Exp>
   counter_positions_aggregate?: InputMaybe<Positions_Aggregate_Bool_Exp>
   counter_term?: InputMaybe<Terms_Bool_Exp>
   counter_term_id?: InputMaybe<Numeric_Comparison_Exp>
+  created_at?: InputMaybe<Timestamptz_Comparison_Exp>
   creator?: InputMaybe<Accounts_Bool_Exp>
   creator_id?: InputMaybe<String_Comparison_Exp>
   object?: InputMaybe<Atoms_Bool_Exp>
@@ -8525,8 +8873,8 @@ export type Triples_Bool_Exp = {
 export type Triples_Max_Fields = {
   __typename?: 'triples_max_fields'
   block_number?: Maybe<Scalars['numeric']['output']>
-  block_timestamp?: Maybe<Scalars['bigint']['output']>
   counter_term_id?: Maybe<Scalars['numeric']['output']>
+  created_at?: Maybe<Scalars['timestamptz']['output']>
   creator_id?: Maybe<Scalars['String']['output']>
   object_id?: Maybe<Scalars['numeric']['output']>
   predicate_id?: Maybe<Scalars['numeric']['output']>
@@ -8538,8 +8886,8 @@ export type Triples_Max_Fields = {
 /** order by max() on columns of table "triple" */
 export type Triples_Max_Order_By = {
   block_number?: InputMaybe<Order_By>
-  block_timestamp?: InputMaybe<Order_By>
   counter_term_id?: InputMaybe<Order_By>
+  created_at?: InputMaybe<Order_By>
   creator_id?: InputMaybe<Order_By>
   object_id?: InputMaybe<Order_By>
   predicate_id?: InputMaybe<Order_By>
@@ -8552,8 +8900,8 @@ export type Triples_Max_Order_By = {
 export type Triples_Min_Fields = {
   __typename?: 'triples_min_fields'
   block_number?: Maybe<Scalars['numeric']['output']>
-  block_timestamp?: Maybe<Scalars['bigint']['output']>
   counter_term_id?: Maybe<Scalars['numeric']['output']>
+  created_at?: Maybe<Scalars['timestamptz']['output']>
   creator_id?: Maybe<Scalars['String']['output']>
   object_id?: Maybe<Scalars['numeric']['output']>
   predicate_id?: Maybe<Scalars['numeric']['output']>
@@ -8565,8 +8913,8 @@ export type Triples_Min_Fields = {
 /** order by min() on columns of table "triple" */
 export type Triples_Min_Order_By = {
   block_number?: InputMaybe<Order_By>
-  block_timestamp?: InputMaybe<Order_By>
   counter_term_id?: InputMaybe<Order_By>
+  created_at?: InputMaybe<Order_By>
   creator_id?: InputMaybe<Order_By>
   object_id?: InputMaybe<Order_By>
   predicate_id?: InputMaybe<Order_By>
@@ -8578,10 +8926,10 @@ export type Triples_Min_Order_By = {
 /** Ordering options when selecting data from "triple". */
 export type Triples_Order_By = {
   block_number?: InputMaybe<Order_By>
-  block_timestamp?: InputMaybe<Order_By>
   counter_positions_aggregate?: InputMaybe<Positions_Aggregate_Order_By>
   counter_term?: InputMaybe<Terms_Order_By>
   counter_term_id?: InputMaybe<Order_By>
+  created_at?: InputMaybe<Order_By>
   creator?: InputMaybe<Accounts_Order_By>
   creator_id?: InputMaybe<Order_By>
   object?: InputMaybe<Atoms_Order_By>
@@ -8601,9 +8949,9 @@ export type Triples_Select_Column =
   /** column name */
   | 'block_number'
   /** column name */
-  | 'block_timestamp'
-  /** column name */
   | 'counter_term_id'
+  /** column name */
+  | 'created_at'
   /** column name */
   | 'creator_id'
   /** column name */
@@ -8621,7 +8969,6 @@ export type Triples_Select_Column =
 export type Triples_Stddev_Fields = {
   __typename?: 'triples_stddev_fields'
   block_number?: Maybe<Scalars['Float']['output']>
-  block_timestamp?: Maybe<Scalars['Float']['output']>
   counter_term_id?: Maybe<Scalars['Float']['output']>
   object_id?: Maybe<Scalars['Float']['output']>
   predicate_id?: Maybe<Scalars['Float']['output']>
@@ -8632,7 +8979,6 @@ export type Triples_Stddev_Fields = {
 /** order by stddev() on columns of table "triple" */
 export type Triples_Stddev_Order_By = {
   block_number?: InputMaybe<Order_By>
-  block_timestamp?: InputMaybe<Order_By>
   counter_term_id?: InputMaybe<Order_By>
   object_id?: InputMaybe<Order_By>
   predicate_id?: InputMaybe<Order_By>
@@ -8644,7 +8990,6 @@ export type Triples_Stddev_Order_By = {
 export type Triples_Stddev_Pop_Fields = {
   __typename?: 'triples_stddev_pop_fields'
   block_number?: Maybe<Scalars['Float']['output']>
-  block_timestamp?: Maybe<Scalars['Float']['output']>
   counter_term_id?: Maybe<Scalars['Float']['output']>
   object_id?: Maybe<Scalars['Float']['output']>
   predicate_id?: Maybe<Scalars['Float']['output']>
@@ -8655,7 +9000,6 @@ export type Triples_Stddev_Pop_Fields = {
 /** order by stddev_pop() on columns of table "triple" */
 export type Triples_Stddev_Pop_Order_By = {
   block_number?: InputMaybe<Order_By>
-  block_timestamp?: InputMaybe<Order_By>
   counter_term_id?: InputMaybe<Order_By>
   object_id?: InputMaybe<Order_By>
   predicate_id?: InputMaybe<Order_By>
@@ -8667,7 +9011,6 @@ export type Triples_Stddev_Pop_Order_By = {
 export type Triples_Stddev_Samp_Fields = {
   __typename?: 'triples_stddev_samp_fields'
   block_number?: Maybe<Scalars['Float']['output']>
-  block_timestamp?: Maybe<Scalars['Float']['output']>
   counter_term_id?: Maybe<Scalars['Float']['output']>
   object_id?: Maybe<Scalars['Float']['output']>
   predicate_id?: Maybe<Scalars['Float']['output']>
@@ -8678,7 +9021,6 @@ export type Triples_Stddev_Samp_Fields = {
 /** order by stddev_samp() on columns of table "triple" */
 export type Triples_Stddev_Samp_Order_By = {
   block_number?: InputMaybe<Order_By>
-  block_timestamp?: InputMaybe<Order_By>
   counter_term_id?: InputMaybe<Order_By>
   object_id?: InputMaybe<Order_By>
   predicate_id?: InputMaybe<Order_By>
@@ -8697,8 +9039,8 @@ export type Triples_Stream_Cursor_Input = {
 /** Initial value of the column from where the streaming should start */
 export type Triples_Stream_Cursor_Value_Input = {
   block_number?: InputMaybe<Scalars['numeric']['input']>
-  block_timestamp?: InputMaybe<Scalars['bigint']['input']>
   counter_term_id?: InputMaybe<Scalars['numeric']['input']>
+  created_at?: InputMaybe<Scalars['timestamptz']['input']>
   creator_id?: InputMaybe<Scalars['String']['input']>
   object_id?: InputMaybe<Scalars['numeric']['input']>
   predicate_id?: InputMaybe<Scalars['numeric']['input']>
@@ -8711,7 +9053,6 @@ export type Triples_Stream_Cursor_Value_Input = {
 export type Triples_Sum_Fields = {
   __typename?: 'triples_sum_fields'
   block_number?: Maybe<Scalars['numeric']['output']>
-  block_timestamp?: Maybe<Scalars['bigint']['output']>
   counter_term_id?: Maybe<Scalars['numeric']['output']>
   object_id?: Maybe<Scalars['numeric']['output']>
   predicate_id?: Maybe<Scalars['numeric']['output']>
@@ -8722,7 +9063,6 @@ export type Triples_Sum_Fields = {
 /** order by sum() on columns of table "triple" */
 export type Triples_Sum_Order_By = {
   block_number?: InputMaybe<Order_By>
-  block_timestamp?: InputMaybe<Order_By>
   counter_term_id?: InputMaybe<Order_By>
   object_id?: InputMaybe<Order_By>
   predicate_id?: InputMaybe<Order_By>
@@ -8734,7 +9074,6 @@ export type Triples_Sum_Order_By = {
 export type Triples_Var_Pop_Fields = {
   __typename?: 'triples_var_pop_fields'
   block_number?: Maybe<Scalars['Float']['output']>
-  block_timestamp?: Maybe<Scalars['Float']['output']>
   counter_term_id?: Maybe<Scalars['Float']['output']>
   object_id?: Maybe<Scalars['Float']['output']>
   predicate_id?: Maybe<Scalars['Float']['output']>
@@ -8745,7 +9084,6 @@ export type Triples_Var_Pop_Fields = {
 /** order by var_pop() on columns of table "triple" */
 export type Triples_Var_Pop_Order_By = {
   block_number?: InputMaybe<Order_By>
-  block_timestamp?: InputMaybe<Order_By>
   counter_term_id?: InputMaybe<Order_By>
   object_id?: InputMaybe<Order_By>
   predicate_id?: InputMaybe<Order_By>
@@ -8757,7 +9095,6 @@ export type Triples_Var_Pop_Order_By = {
 export type Triples_Var_Samp_Fields = {
   __typename?: 'triples_var_samp_fields'
   block_number?: Maybe<Scalars['Float']['output']>
-  block_timestamp?: Maybe<Scalars['Float']['output']>
   counter_term_id?: Maybe<Scalars['Float']['output']>
   object_id?: Maybe<Scalars['Float']['output']>
   predicate_id?: Maybe<Scalars['Float']['output']>
@@ -8768,7 +9105,6 @@ export type Triples_Var_Samp_Fields = {
 /** order by var_samp() on columns of table "triple" */
 export type Triples_Var_Samp_Order_By = {
   block_number?: InputMaybe<Order_By>
-  block_timestamp?: InputMaybe<Order_By>
   counter_term_id?: InputMaybe<Order_By>
   object_id?: InputMaybe<Order_By>
   predicate_id?: InputMaybe<Order_By>
@@ -8780,7 +9116,6 @@ export type Triples_Var_Samp_Order_By = {
 export type Triples_Variance_Fields = {
   __typename?: 'triples_variance_fields'
   block_number?: Maybe<Scalars['Float']['output']>
-  block_timestamp?: Maybe<Scalars['Float']['output']>
   counter_term_id?: Maybe<Scalars['Float']['output']>
   object_id?: Maybe<Scalars['Float']['output']>
   predicate_id?: Maybe<Scalars['Float']['output']>
@@ -8791,7 +9126,6 @@ export type Triples_Variance_Fields = {
 /** order by variance() on columns of table "triple" */
 export type Triples_Variance_Order_By = {
   block_number?: InputMaybe<Order_By>
-  block_timestamp?: InputMaybe<Order_By>
   counter_term_id?: InputMaybe<Order_By>
   object_id?: InputMaybe<Order_By>
   predicate_id?: InputMaybe<Order_By>
@@ -8802,13 +9136,14 @@ export type Triples_Variance_Order_By = {
 /** columns and relationships of "vault" */
 export type Vaults = {
   __typename?: 'vaults'
+  created_at: Scalars['timestamptz']['output']
   current_share_price: Scalars['numeric']['output']
   curve_id: Scalars['numeric']['output']
   /** An array relationship */
   deposits: Array<Deposits>
   /** An aggregate relationship */
   deposits_aggregate: Deposits_Aggregate
-  market_cap?: Maybe<Scalars['numeric']['output']>
+  market_cap: Scalars['numeric']['output']
   position_count: Scalars['Int']['output']
   /** An array relationship */
   positions: Array<Positions>
@@ -8819,18 +9154,15 @@ export type Vaults = {
   /** An aggregate relationship */
   redemptions_aggregate: Redemptions_Aggregate
   /** An array relationship */
-  share_price_changes: Array<Share_Price_Changes>
-  /** An aggregate relationship */
-  share_price_changes_aggregate: Share_Price_Changes_Aggregate
-  /** An array relationship */
   signals: Array<Signals>
   /** An aggregate relationship */
   signals_aggregate: Signals_Aggregate
   /** An object relationship */
   term: Terms
   term_id: Scalars['numeric']['output']
-  total_assets?: Maybe<Scalars['numeric']['output']>
+  total_assets: Scalars['numeric']['output']
   total_shares: Scalars['numeric']['output']
+  updated_at: Scalars['timestamptz']['output']
 }
 
 /** columns and relationships of "vault" */
@@ -8885,24 +9217,6 @@ export type VaultsRedemptions_AggregateArgs = {
   offset?: InputMaybe<Scalars['Int']['input']>
   order_by?: InputMaybe<Array<Redemptions_Order_By>>
   where?: InputMaybe<Redemptions_Bool_Exp>
-}
-
-/** columns and relationships of "vault" */
-export type VaultsShare_Price_ChangesArgs = {
-  distinct_on?: InputMaybe<Array<Share_Price_Changes_Select_Column>>
-  limit?: InputMaybe<Scalars['Int']['input']>
-  offset?: InputMaybe<Scalars['Int']['input']>
-  order_by?: InputMaybe<Array<Share_Price_Changes_Order_By>>
-  where?: InputMaybe<Share_Price_Changes_Bool_Exp>
-}
-
-/** columns and relationships of "vault" */
-export type VaultsShare_Price_Changes_AggregateArgs = {
-  distinct_on?: InputMaybe<Array<Share_Price_Changes_Select_Column>>
-  limit?: InputMaybe<Scalars['Int']['input']>
-  offset?: InputMaybe<Scalars['Int']['input']>
-  order_by?: InputMaybe<Array<Share_Price_Changes_Order_By>>
-  where?: InputMaybe<Share_Price_Changes_Bool_Exp>
 }
 
 /** columns and relationships of "vault" */
@@ -9006,6 +9320,7 @@ export type Vaults_Bool_Exp = {
   _and?: InputMaybe<Array<Vaults_Bool_Exp>>
   _not?: InputMaybe<Vaults_Bool_Exp>
   _or?: InputMaybe<Array<Vaults_Bool_Exp>>
+  created_at?: InputMaybe<Timestamptz_Comparison_Exp>
   current_share_price?: InputMaybe<Numeric_Comparison_Exp>
   curve_id?: InputMaybe<Numeric_Comparison_Exp>
   deposits?: InputMaybe<Deposits_Bool_Exp>
@@ -9016,19 +9331,19 @@ export type Vaults_Bool_Exp = {
   positions_aggregate?: InputMaybe<Positions_Aggregate_Bool_Exp>
   redemptions?: InputMaybe<Redemptions_Bool_Exp>
   redemptions_aggregate?: InputMaybe<Redemptions_Aggregate_Bool_Exp>
-  share_price_changes?: InputMaybe<Share_Price_Changes_Bool_Exp>
-  share_price_changes_aggregate?: InputMaybe<Share_Price_Changes_Aggregate_Bool_Exp>
   signals?: InputMaybe<Signals_Bool_Exp>
   signals_aggregate?: InputMaybe<Signals_Aggregate_Bool_Exp>
   term?: InputMaybe<Terms_Bool_Exp>
   term_id?: InputMaybe<Numeric_Comparison_Exp>
   total_assets?: InputMaybe<Numeric_Comparison_Exp>
   total_shares?: InputMaybe<Numeric_Comparison_Exp>
+  updated_at?: InputMaybe<Timestamptz_Comparison_Exp>
 }
 
 /** aggregate max on columns */
 export type Vaults_Max_Fields = {
   __typename?: 'vaults_max_fields'
+  created_at?: Maybe<Scalars['timestamptz']['output']>
   current_share_price?: Maybe<Scalars['numeric']['output']>
   curve_id?: Maybe<Scalars['numeric']['output']>
   market_cap?: Maybe<Scalars['numeric']['output']>
@@ -9036,10 +9351,12 @@ export type Vaults_Max_Fields = {
   term_id?: Maybe<Scalars['numeric']['output']>
   total_assets?: Maybe<Scalars['numeric']['output']>
   total_shares?: Maybe<Scalars['numeric']['output']>
+  updated_at?: Maybe<Scalars['timestamptz']['output']>
 }
 
 /** order by max() on columns of table "vault" */
 export type Vaults_Max_Order_By = {
+  created_at?: InputMaybe<Order_By>
   current_share_price?: InputMaybe<Order_By>
   curve_id?: InputMaybe<Order_By>
   market_cap?: InputMaybe<Order_By>
@@ -9047,11 +9364,13 @@ export type Vaults_Max_Order_By = {
   term_id?: InputMaybe<Order_By>
   total_assets?: InputMaybe<Order_By>
   total_shares?: InputMaybe<Order_By>
+  updated_at?: InputMaybe<Order_By>
 }
 
 /** aggregate min on columns */
 export type Vaults_Min_Fields = {
   __typename?: 'vaults_min_fields'
+  created_at?: Maybe<Scalars['timestamptz']['output']>
   current_share_price?: Maybe<Scalars['numeric']['output']>
   curve_id?: Maybe<Scalars['numeric']['output']>
   market_cap?: Maybe<Scalars['numeric']['output']>
@@ -9059,10 +9378,12 @@ export type Vaults_Min_Fields = {
   term_id?: Maybe<Scalars['numeric']['output']>
   total_assets?: Maybe<Scalars['numeric']['output']>
   total_shares?: Maybe<Scalars['numeric']['output']>
+  updated_at?: Maybe<Scalars['timestamptz']['output']>
 }
 
 /** order by min() on columns of table "vault" */
 export type Vaults_Min_Order_By = {
+  created_at?: InputMaybe<Order_By>
   current_share_price?: InputMaybe<Order_By>
   curve_id?: InputMaybe<Order_By>
   market_cap?: InputMaybe<Order_By>
@@ -9070,10 +9391,12 @@ export type Vaults_Min_Order_By = {
   term_id?: InputMaybe<Order_By>
   total_assets?: InputMaybe<Order_By>
   total_shares?: InputMaybe<Order_By>
+  updated_at?: InputMaybe<Order_By>
 }
 
 /** Ordering options when selecting data from "vault". */
 export type Vaults_Order_By = {
+  created_at?: InputMaybe<Order_By>
   current_share_price?: InputMaybe<Order_By>
   curve_id?: InputMaybe<Order_By>
   deposits_aggregate?: InputMaybe<Deposits_Aggregate_Order_By>
@@ -9081,16 +9404,18 @@ export type Vaults_Order_By = {
   position_count?: InputMaybe<Order_By>
   positions_aggregate?: InputMaybe<Positions_Aggregate_Order_By>
   redemptions_aggregate?: InputMaybe<Redemptions_Aggregate_Order_By>
-  share_price_changes_aggregate?: InputMaybe<Share_Price_Changes_Aggregate_Order_By>
   signals_aggregate?: InputMaybe<Signals_Aggregate_Order_By>
   term?: InputMaybe<Terms_Order_By>
   term_id?: InputMaybe<Order_By>
   total_assets?: InputMaybe<Order_By>
   total_shares?: InputMaybe<Order_By>
+  updated_at?: InputMaybe<Order_By>
 }
 
 /** select columns of table "vault" */
 export type Vaults_Select_Column =
+  /** column name */
+  | 'created_at'
   /** column name */
   | 'current_share_price'
   /** column name */
@@ -9105,6 +9430,8 @@ export type Vaults_Select_Column =
   | 'total_assets'
   /** column name */
   | 'total_shares'
+  /** column name */
+  | 'updated_at'
 
 /** aggregate stddev on columns */
 export type Vaults_Stddev_Fields = {
@@ -9185,6 +9512,7 @@ export type Vaults_Stream_Cursor_Input = {
 
 /** Initial value of the column from where the streaming should start */
 export type Vaults_Stream_Cursor_Value_Input = {
+  created_at?: InputMaybe<Scalars['timestamptz']['input']>
   current_share_price?: InputMaybe<Scalars['numeric']['input']>
   curve_id?: InputMaybe<Scalars['numeric']['input']>
   market_cap?: InputMaybe<Scalars['numeric']['input']>
@@ -9192,6 +9520,7 @@ export type Vaults_Stream_Cursor_Value_Input = {
   term_id?: InputMaybe<Scalars['numeric']['input']>
   total_assets?: InputMaybe<Scalars['numeric']['input']>
   total_shares?: InputMaybe<Scalars['numeric']['input']>
+  updated_at?: InputMaybe<Scalars['timestamptz']['input']>
 }
 
 /** aggregate sum on columns */
@@ -9293,28 +9622,6 @@ export type AccountMetadataFragment = {
   id: string
   atom_id?: any | null
   type: any
-}
-
-export type AccountClaimsAggregateFragment = {
-  __typename?: 'accounts'
-  claims_aggregate: {
-    __typename?: 'claims_aggregate'
-    aggregate?: { __typename?: 'claims_aggregate_fields'; count: number } | null
-    nodes: Array<{
-      __typename?: 'claims'
-      id: string
-      position: { __typename?: 'positions'; shares: any }
-    }>
-  }
-}
-
-export type AccountClaimsFragment = {
-  __typename?: 'accounts'
-  claims: Array<{
-    __typename?: 'claims'
-    id: string
-    position: { __typename?: 'positions'; shares: any }
-  }>
 }
 
 export type AccountPositionsAggregateFragment = {
@@ -9491,6 +9798,12 @@ export type AtomValueFragment = {
       description?: string | null
       url?: string | null
     } | null
+    account?: {
+      __typename?: 'accounts'
+      id: string
+      label: string
+      image?: string | null
+    } | null
   } | null
 }
 
@@ -9532,13 +9845,19 @@ export type AtomMetadataFragment = {
       description?: string | null
       url?: string | null
     } | null
+    account?: {
+      __typename?: 'accounts'
+      id: string
+      label: string
+      image?: string | null
+    } | null
   } | null
 }
 
 export type AtomTxnFragment = {
   __typename?: 'atoms'
   block_number: any
-  block_timestamp: any
+  created_at: any
   transaction_hash: string
   creator_id: string
 }
@@ -9736,7 +10055,7 @@ export type DepositEventFragmentFragment = {
 export type EventDetailsFragment = {
   __typename?: 'events'
   block_number: any
-  block_timestamp: any
+  created_at: any
   type: any
   transaction_hash: string
   atom_id?: any | null
@@ -9799,6 +10118,12 @@ export type EventDetailsFragment = {
         image?: string | null
         description?: string | null
         url?: string | null
+      } | null
+      account?: {
+        __typename?: 'accounts'
+        id: string
+        label: string
+        image?: string | null
       } | null
     } | null
   } | null
@@ -9921,6 +10246,12 @@ export type EventDetailsFragment = {
           description?: string | null
           url?: string | null
         } | null
+        account?: {
+          __typename?: 'accounts'
+          id: string
+          label: string
+          image?: string | null
+        } | null
       } | null
     }
     predicate: {
@@ -9962,6 +10293,12 @@ export type EventDetailsFragment = {
           description?: string | null
           url?: string | null
         } | null
+        account?: {
+          __typename?: 'accounts'
+          id: string
+          label: string
+          image?: string | null
+        } | null
       } | null
     }
     object: {
@@ -10002,6 +10339,12 @@ export type EventDetailsFragment = {
           image?: string | null
           description?: string | null
           url?: string | null
+        } | null
+        account?: {
+          __typename?: 'accounts'
+          id: string
+          label: string
+          image?: string | null
         } | null
       } | null
     }
@@ -10164,6 +10507,12 @@ export type PositionDetailsFragment = {
               description?: string | null
               url?: string | null
             } | null
+            account?: {
+              __typename?: 'accounts'
+              id: string
+              label: string
+              image?: string | null
+            } | null
           } | null
         }
         predicate: {
@@ -10205,6 +10554,12 @@ export type PositionDetailsFragment = {
               description?: string | null
               url?: string | null
             } | null
+            account?: {
+              __typename?: 'accounts'
+              id: string
+              label: string
+              image?: string | null
+            } | null
           } | null
         }
         object: {
@@ -10245,6 +10600,12 @@ export type PositionDetailsFragment = {
               image?: string | null
               description?: string | null
               url?: string | null
+            } | null
+            account?: {
+              __typename?: 'accounts'
+              id: string
+              label: string
+              image?: string | null
             } | null
           } | null
         }
@@ -10342,6 +10703,12 @@ export type TripleMetadataFragment = {
         description?: string | null
         url?: string | null
       } | null
+      account?: {
+        __typename?: 'accounts'
+        id: string
+        label: string
+        image?: string | null
+      } | null
     } | null
   }
   predicate: {
@@ -10383,6 +10750,12 @@ export type TripleMetadataFragment = {
         description?: string | null
         url?: string | null
       } | null
+      account?: {
+        __typename?: 'accounts'
+        id: string
+        label: string
+        image?: string | null
+      } | null
     } | null
   }
   object: {
@@ -10423,6 +10796,12 @@ export type TripleMetadataFragment = {
         image?: string | null
         description?: string | null
         url?: string | null
+      } | null
+      account?: {
+        __typename?: 'accounts'
+        id: string
+        label: string
+        image?: string | null
       } | null
     } | null
   }
@@ -10491,7 +10870,7 @@ export type TripleMetadataFragment = {
 export type TripleTxnFragment = {
   __typename?: 'triples'
   block_number: any
-  block_timestamp: any
+  created_at: any
   transaction_hash: string
   creator_id: string
 }
@@ -10605,6 +10984,12 @@ export type TripleVaultDetailsFragment = {
                     description?: string | null
                     url?: string | null
                   } | null
+                  account?: {
+                    __typename?: 'accounts'
+                    id: string
+                    label: string
+                    image?: string | null
+                  } | null
                 } | null
               }
               predicate: {
@@ -10646,6 +11031,12 @@ export type TripleVaultDetailsFragment = {
                     description?: string | null
                     url?: string | null
                   } | null
+                  account?: {
+                    __typename?: 'accounts'
+                    id: string
+                    label: string
+                    image?: string | null
+                  } | null
                 } | null
               }
               object: {
@@ -10686,6 +11077,12 @@ export type TripleVaultDetailsFragment = {
                     image?: string | null
                     description?: string | null
                     url?: string | null
+                  } | null
+                  account?: {
+                    __typename?: 'accounts'
+                    id: string
+                    label: string
+                    image?: string | null
                   } | null
                 } | null
               }
@@ -10800,6 +11197,12 @@ export type TripleVaultDetailsFragment = {
                     description?: string | null
                     url?: string | null
                   } | null
+                  account?: {
+                    __typename?: 'accounts'
+                    id: string
+                    label: string
+                    image?: string | null
+                  } | null
                 } | null
               }
               predicate: {
@@ -10841,6 +11244,12 @@ export type TripleVaultDetailsFragment = {
                     description?: string | null
                     url?: string | null
                   } | null
+                  account?: {
+                    __typename?: 'accounts'
+                    id: string
+                    label: string
+                    image?: string | null
+                  } | null
                 } | null
               }
               object: {
@@ -10881,6 +11290,12 @@ export type TripleVaultDetailsFragment = {
                     image?: string | null
                     description?: string | null
                     url?: string | null
+                  } | null
+                  account?: {
+                    __typename?: 'accounts'
+                    id: string
+                    label: string
+                    image?: string | null
                   } | null
                 } | null
               }
@@ -11130,9 +11545,6 @@ export type GetAccountsQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']['input']>
   orderBy?: InputMaybe<Array<Accounts_Order_By> | Accounts_Order_By>
   where?: InputMaybe<Accounts_Bool_Exp>
-  claimsLimit?: InputMaybe<Scalars['Int']['input']>
-  claimsOffset?: InputMaybe<Scalars['Int']['input']>
-  claimsWhere?: InputMaybe<Claims_Bool_Exp>
   positionsLimit?: InputMaybe<Scalars['Int']['input']>
   positionsOffset?: InputMaybe<Scalars['Int']['input']>
   positionsWhere?: InputMaybe<Positions_Bool_Exp>
@@ -11181,11 +11593,6 @@ export type GetAccountsQuery = {
         }>
       }
     } | null
-    claims: Array<{
-      __typename?: 'claims'
-      id: string
-      position: { __typename?: 'positions'; shares: any }
-    }>
     positions: Array<{
       __typename?: 'positions'
       id: string
@@ -11214,9 +11621,6 @@ export type GetAccountsWithAggregatesQueryVariables = Exact<{
   offset?: InputMaybe<Scalars['Int']['input']>
   orderBy?: InputMaybe<Array<Accounts_Order_By> | Accounts_Order_By>
   where?: InputMaybe<Accounts_Bool_Exp>
-  claimsLimit?: InputMaybe<Scalars['Int']['input']>
-  claimsOffset?: InputMaybe<Scalars['Int']['input']>
-  claimsWhere?: InputMaybe<Claims_Bool_Exp>
   positionsLimit?: InputMaybe<Scalars['Int']['input']>
   positionsOffset?: InputMaybe<Scalars['Int']['input']>
   positionsWhere?: InputMaybe<Positions_Bool_Exp>
@@ -11241,11 +11645,6 @@ export type GetAccountsWithAggregatesQuery = {
       id: string
       atom_id?: any | null
       type: any
-      claims: Array<{
-        __typename?: 'claims'
-        id: string
-        position: { __typename?: 'positions'; shares: any }
-      }>
       positions: Array<{
         __typename?: 'positions'
         id: string
@@ -11287,9 +11686,6 @@ export type GetAccountsCountQuery = {
 
 export type GetAccountQueryVariables = Exact<{
   address: Scalars['String']['input']
-  claimsLimit?: InputMaybe<Scalars['Int']['input']>
-  claimsOffset?: InputMaybe<Scalars['Int']['input']>
-  claimsWhere?: InputMaybe<Claims_Bool_Exp>
   positionsLimit?: InputMaybe<Scalars['Int']['input']>
   positionsOffset?: InputMaybe<Scalars['Int']['input']>
   positionsWhere?: InputMaybe<Positions_Bool_Exp>
@@ -11380,13 +11776,14 @@ export type GetAccountQuery = {
           description?: string | null
           url?: string | null
         } | null
+        account?: {
+          __typename?: 'accounts'
+          id: string
+          label: string
+          image?: string | null
+        } | null
       } | null
     } | null
-    claims: Array<{
-      __typename?: 'claims'
-      id: string
-      position: { __typename?: 'positions'; shares: any }
-    }>
     positions: Array<{
       __typename?: 'positions'
       id: string
@@ -11448,9 +11845,6 @@ export type GetAccountQuery = {
 
 export type GetAccountWithPaginatedRelationsQueryVariables = Exact<{
   address: Scalars['String']['input']
-  claimsLimit?: InputMaybe<Scalars['Int']['input']>
-  claimsOffset?: InputMaybe<Scalars['Int']['input']>
-  claimsWhere?: InputMaybe<Claims_Bool_Exp>
   positionsLimit?: InputMaybe<Scalars['Int']['input']>
   positionsOffset?: InputMaybe<Scalars['Int']['input']>
   positionsWhere?: InputMaybe<Positions_Bool_Exp>
@@ -11473,11 +11867,6 @@ export type GetAccountWithPaginatedRelationsQuery = {
     id: string
     atom_id?: any | null
     type: any
-    claims: Array<{
-      __typename?: 'claims'
-      id: string
-      position: { __typename?: 'positions'; shares: any }
-    }>
     positions: Array<{
       __typename?: 'positions'
       id: string
@@ -11538,9 +11927,6 @@ export type GetAccountWithPaginatedRelationsQuery = {
 
 export type GetAccountWithAggregatesQueryVariables = Exact<{
   address: Scalars['String']['input']
-  claimsLimit?: InputMaybe<Scalars['Int']['input']>
-  claimsOffset?: InputMaybe<Scalars['Int']['input']>
-  claimsWhere?: InputMaybe<Claims_Bool_Exp>
   positionsLimit?: InputMaybe<Scalars['Int']['input']>
   positionsOffset?: InputMaybe<Scalars['Int']['input']>
   positionsWhere?: InputMaybe<Positions_Bool_Exp>
@@ -11563,18 +11949,6 @@ export type GetAccountWithAggregatesQuery = {
     id: string
     atom_id?: any | null
     type: any
-    claims_aggregate: {
-      __typename?: 'claims_aggregate'
-      aggregate?: {
-        __typename?: 'claims_aggregate_fields'
-        count: number
-      } | null
-      nodes: Array<{
-        __typename?: 'claims'
-        id: string
-        position: { __typename?: 'positions'; shares: any }
-      }>
-    }
     positions_aggregate: {
       __typename?: 'positions_aggregate'
       aggregate?: {
@@ -11648,6 +12022,68 @@ export type GetAccountWithAggregatesQuery = {
   } | null
 }
 
+export type GetAccountMetadataQueryVariables = Exact<{
+  address: Scalars['String']['input']
+}>
+
+export type GetAccountMetadataQuery = {
+  __typename?: 'query_root'
+  account?: {
+    __typename?: 'accounts'
+    label: string
+    image?: string | null
+    id: string
+    atom_id?: any | null
+    type: any
+    atom?: {
+      __typename?: 'atoms'
+      term_id: any
+      data?: string | null
+      image?: string | null
+      label?: string | null
+      emoji?: string | null
+      type: any
+      wallet_id: string
+      creator: {
+        __typename?: 'accounts'
+        id: string
+        label: string
+        image?: string | null
+      }
+      value?: {
+        __typename?: 'atom_values'
+        person?: {
+          __typename?: 'persons'
+          name?: string | null
+          image?: string | null
+          description?: string | null
+          url?: string | null
+        } | null
+        thing?: {
+          __typename?: 'things'
+          name?: string | null
+          image?: string | null
+          description?: string | null
+          url?: string | null
+        } | null
+        organization?: {
+          __typename?: 'organizations'
+          name?: string | null
+          image?: string | null
+          description?: string | null
+          url?: string | null
+        } | null
+        account?: {
+          __typename?: 'accounts'
+          id: string
+          label: string
+          image?: string | null
+        } | null
+      } | null
+    } | null
+  } | null
+}
+
 export type GetAtomsQueryVariables = Exact<{
   limit?: InputMaybe<Scalars['Int']['input']>
   offset?: InputMaybe<Scalars['Int']['input']>
@@ -11671,7 +12107,7 @@ export type GetAtomsQuery = {
     type: any
     wallet_id: string
     block_number: any
-    block_timestamp: any
+    created_at: any
     transaction_hash: string
     creator_id: string
     creator: {
@@ -11849,6 +12285,12 @@ export type GetAtomsQuery = {
         description?: string | null
         url?: string | null
       } | null
+      account?: {
+        __typename?: 'accounts'
+        id: string
+        label: string
+        image?: string | null
+      } | null
     } | null
   }>
 }
@@ -11877,7 +12319,7 @@ export type GetAtomsWithPositionsQuery = {
     type: any
     wallet_id: string
     block_number: any
-    block_timestamp: any
+    created_at: any
     transaction_hash: string
     creator_id: string
     term: {
@@ -11941,6 +12383,12 @@ export type GetAtomsWithPositionsQuery = {
         description?: string | null
         url?: string | null
       } | null
+      account?: {
+        __typename?: 'accounts'
+        id: string
+        label: string
+        image?: string | null
+      } | null
     } | null
   }>
 }
@@ -11967,7 +12415,7 @@ export type GetAtomsWithAggregatesQuery = {
       type: any
       wallet_id: string
       block_number: any
-      block_timestamp: any
+      created_at: any
       transaction_hash: string
       creator_id: string
       creator: {
@@ -12031,6 +12479,12 @@ export type GetAtomsWithAggregatesQuery = {
           description?: string | null
           url?: string | null
         } | null
+        account?: {
+          __typename?: 'accounts'
+          id: string
+          label: string
+          image?: string | null
+        } | null
       } | null
     }>
   }
@@ -12064,7 +12518,7 @@ export type GetAtomQuery = {
     type: any
     wallet_id: string
     block_number: any
-    block_timestamp: any
+    created_at: any
     transaction_hash: string
     creator_id: string
     creator: {
@@ -12241,6 +12695,12 @@ export type GetAtomQuery = {
         image?: string | null
         description?: string | null
         url?: string | null
+      } | null
+      account?: {
+        __typename?: 'accounts'
+        id: string
+        label: string
+        image?: string | null
       } | null
     } | null
   } | null
@@ -12262,7 +12722,7 @@ export type GetAtomByDataQuery = {
     type: any
     wallet_id: string
     block_number: any
-    block_timestamp: any
+    created_at: any
     transaction_hash: string
     creator_id: string
     creator: {
@@ -12440,6 +12900,12 @@ export type GetAtomByDataQuery = {
         description?: string | null
         url?: string | null
       } | null
+      account?: {
+        __typename?: 'accounts'
+        id: string
+        label: string
+        image?: string | null
+      } | null
     } | null
   }>
 }
@@ -12458,7 +12924,7 @@ export type GetVerifiedAtomDetailsQuery = {
     wallet_id: string
     image?: string | null
     type: any
-    block_timestamp: any
+    created_at: any
     data?: string | null
     creator: { __typename?: 'accounts'; id: string }
     value?: {
@@ -12543,7 +13009,7 @@ export type GetAtomDetailsQuery = {
     wallet_id: string
     image?: string | null
     type: any
-    block_timestamp: any
+    created_at: any
     data?: string | null
     creator: { __typename?: 'accounts'; id: string }
     value?: {
@@ -12591,37 +13057,6 @@ export type GetAtomDetailsQuery = {
   } | null
 }
 
-export type GetClaimsByAddressQueryVariables = Exact<{
-  address?: InputMaybe<Scalars['String']['input']>
-}>
-
-export type GetClaimsByAddressQuery = {
-  __typename?: 'query_root'
-  claims_aggregate: {
-    __typename?: 'claims_aggregate'
-    aggregate?: { __typename?: 'claims_aggregate_fields'; count: number } | null
-    nodes: Array<{
-      __typename?: 'claims'
-      account?: { __typename?: 'accounts'; label: string } | null
-      position: {
-        __typename?: 'positions'
-        shares: any
-        term: {
-          __typename?: 'terms'
-          triple?: {
-            __typename?: 'triples'
-            term_id: any
-            counter_term_id: any
-            subject: { __typename?: 'atoms'; label?: string | null }
-            predicate: { __typename?: 'atoms'; label?: string | null }
-            object: { __typename?: 'atoms'; label?: string | null }
-          } | null
-        }
-      }
-    }>
-  }
-}
-
 export type GetEventsQueryVariables = Exact<{
   limit?: InputMaybe<Scalars['Int']['input']>
   offset?: InputMaybe<Scalars['Int']['input']>
@@ -12642,7 +13077,7 @@ export type GetEventsQuery = {
     __typename?: 'events'
     id: string
     block_number: any
-    block_timestamp: any
+    created_at: any
     type: any
     transaction_hash: string
     atom_id?: any | null
@@ -12706,6 +13141,12 @@ export type GetEventsQuery = {
           description?: string | null
           url?: string | null
         } | null
+        account?: {
+          __typename?: 'accounts'
+          id: string
+          label: string
+          image?: string | null
+        } | null
       } | null
     } | null
     triple?: {
@@ -12758,6 +13199,12 @@ export type GetEventsQuery = {
             description?: string | null
             url?: string | null
           } | null
+          account?: {
+            __typename?: 'accounts'
+            id: string
+            label: string
+            image?: string | null
+          } | null
         } | null
       }
       predicate: {
@@ -12799,6 +13246,12 @@ export type GetEventsQuery = {
             description?: string | null
             url?: string | null
           } | null
+          account?: {
+            __typename?: 'accounts'
+            id: string
+            label: string
+            image?: string | null
+          } | null
         } | null
       }
       object: {
@@ -12839,6 +13292,12 @@ export type GetEventsQuery = {
             image?: string | null
             description?: string | null
             url?: string | null
+          } | null
+          account?: {
+            __typename?: 'accounts'
+            id: string
+            label: string
+            image?: string | null
           } | null
         } | null
       }
@@ -12931,19 +13390,19 @@ export type GetEventsWithAggregatesQuery = {
       count: number
       max?: {
         __typename?: 'events_max_fields'
-        block_timestamp?: any | null
+        created_at?: any | null
         block_number?: any | null
       } | null
       min?: {
         __typename?: 'events_min_fields'
-        block_timestamp?: any | null
+        created_at?: any | null
         block_number?: any | null
       } | null
     } | null
     nodes: Array<{
       __typename?: 'events'
       block_number: any
-      block_timestamp: any
+      created_at: any
       type: any
       transaction_hash: string
       atom_id?: any | null
@@ -13006,6 +13465,12 @@ export type GetEventsWithAggregatesQuery = {
             image?: string | null
             description?: string | null
             url?: string | null
+          } | null
+          account?: {
+            __typename?: 'accounts'
+            id: string
+            label: string
+            image?: string | null
           } | null
         } | null
       } | null
@@ -13128,6 +13593,12 @@ export type GetEventsWithAggregatesQuery = {
               description?: string | null
               url?: string | null
             } | null
+            account?: {
+              __typename?: 'accounts'
+              id: string
+              label: string
+              image?: string | null
+            } | null
           } | null
         }
         predicate: {
@@ -13169,6 +13640,12 @@ export type GetEventsWithAggregatesQuery = {
               description?: string | null
               url?: string | null
             } | null
+            account?: {
+              __typename?: 'accounts'
+              id: string
+              label: string
+              image?: string | null
+            } | null
           } | null
         }
         object: {
@@ -13209,6 +13686,12 @@ export type GetEventsWithAggregatesQuery = {
               image?: string | null
               description?: string | null
               url?: string | null
+            } | null
+            account?: {
+              __typename?: 'accounts'
+              id: string
+              label: string
+              image?: string | null
             } | null
           } | null
         }
@@ -13259,12 +13742,12 @@ export type GetEventsDataQuery = {
       count: number
       max?: {
         __typename?: 'events_max_fields'
-        block_timestamp?: any | null
+        created_at?: any | null
         block_number?: any | null
       } | null
       min?: {
         __typename?: 'events_min_fields'
-        block_timestamp?: any | null
+        created_at?: any | null
         block_number?: any | null
       } | null
       avg?: {
@@ -13359,6 +13842,12 @@ export type GetFollowingPositionsQuery = {
           description?: string | null
           url?: string | null
         } | null
+        account?: {
+          __typename?: 'accounts'
+          id: string
+          label: string
+          image?: string | null
+        } | null
       } | null
     }
     predicate: {
@@ -13399,6 +13888,12 @@ export type GetFollowingPositionsQuery = {
           description?: string | null
           url?: string | null
         } | null
+        account?: {
+          __typename?: 'accounts'
+          id: string
+          label: string
+          image?: string | null
+        } | null
       } | null
     }
     object: {
@@ -13438,6 +13933,12 @@ export type GetFollowingPositionsQuery = {
           image?: string | null
           description?: string | null
           url?: string | null
+        } | null
+        account?: {
+          __typename?: 'accounts'
+          id: string
+          label: string
+          image?: string | null
         } | null
       } | null
     }
@@ -13526,6 +14027,12 @@ export type GetFollowerPositionsQuery = {
           description?: string | null
           url?: string | null
         } | null
+        account?: {
+          __typename?: 'accounts'
+          id: string
+          label: string
+          image?: string | null
+        } | null
       } | null
     }
     predicate: {
@@ -13566,6 +14073,12 @@ export type GetFollowerPositionsQuery = {
           description?: string | null
           url?: string | null
         } | null
+        account?: {
+          __typename?: 'accounts'
+          id: string
+          label: string
+          image?: string | null
+        } | null
       } | null
     }
     object: {
@@ -13605,6 +14118,12 @@ export type GetFollowerPositionsQuery = {
           image?: string | null
           description?: string | null
           url?: string | null
+        } | null
+        account?: {
+          __typename?: 'accounts'
+          id: string
+          label: string
+          image?: string | null
         } | null
       } | null
     }
@@ -13797,7 +14316,6 @@ export type GetListsQuery = {
   predicate_objects: Array<{
     __typename?: 'predicate_objects'
     id: string
-    claim_count: number
     triple_count: number
     object: {
       __typename?: 'atoms'
@@ -13930,6 +14448,12 @@ export type GetListItemsQuery = {
                         description?: string | null
                         url?: string | null
                       } | null
+                      account?: {
+                        __typename?: 'accounts'
+                        id: string
+                        label: string
+                        image?: string | null
+                      } | null
                     } | null
                   }
                   predicate: {
@@ -13971,6 +14495,12 @@ export type GetListItemsQuery = {
                         description?: string | null
                         url?: string | null
                       } | null
+                      account?: {
+                        __typename?: 'accounts'
+                        id: string
+                        label: string
+                        image?: string | null
+                      } | null
                     } | null
                   }
                   object: {
@@ -14011,6 +14541,12 @@ export type GetListItemsQuery = {
                         image?: string | null
                         description?: string | null
                         url?: string | null
+                      } | null
+                      account?: {
+                        __typename?: 'accounts'
+                        id: string
+                        label: string
+                        image?: string | null
                       } | null
                     } | null
                   }
@@ -14125,6 +14661,12 @@ export type GetListItemsQuery = {
                         description?: string | null
                         url?: string | null
                       } | null
+                      account?: {
+                        __typename?: 'accounts'
+                        id: string
+                        label: string
+                        image?: string | null
+                      } | null
                     } | null
                   }
                   predicate: {
@@ -14165,6 +14707,12 @@ export type GetListItemsQuery = {
                         image?: string | null
                         description?: string | null
                         url?: string | null
+                      } | null
+                      account?: {
+                        __typename?: 'accounts'
+                        id: string
+                        label: string
+                        image?: string | null
                       } | null
                     } | null
                   }
@@ -14207,6 +14755,12 @@ export type GetListItemsQuery = {
                         description?: string | null
                         url?: string | null
                       } | null
+                      account?: {
+                        __typename?: 'accounts'
+                        id: string
+                        label: string
+                        image?: string | null
+                      } | null
                     } | null
                   }
                 } | null
@@ -14247,6 +14801,10 @@ export type GetListDetailsQuery = {
       wallet_id: string
       image?: string | null
       type: any
+      term: {
+        __typename?: 'terms'
+        vaults: Array<{ __typename?: 'vaults'; position_count: number }>
+      }
       tags: {
         __typename?: 'triples_aggregate'
         nodes: Array<{
@@ -14658,9 +15216,104 @@ export type GetListDetailsWithUserQuery = {
   }>
 }
 
+export type GetListDetailsSimplifiedQueryVariables = Exact<{
+  globalWhere?: InputMaybe<Triples_Bool_Exp>
+  address?: InputMaybe<Scalars['String']['input']>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  orderBy?: InputMaybe<Array<Triples_Order_By> | Triples_Order_By>
+}>
+
+export type GetListDetailsSimplifiedQuery = {
+  __typename?: 'query_root'
+  globalTriplesAggregate: {
+    __typename?: 'triples_aggregate'
+    aggregate?: {
+      __typename?: 'triples_aggregate_fields'
+      count: number
+    } | null
+  }
+  globalTriples: Array<{
+    __typename?: 'triples'
+    term_id: any
+    counter_term_id: any
+    subject: {
+      __typename?: 'atoms'
+      term_id: any
+      label?: string | null
+      wallet_id: string
+      image?: string | null
+      type: any
+      term: {
+        __typename?: 'terms'
+        vaults: Array<{
+          __typename?: 'vaults'
+          current_share_price: any
+          position_count: number
+          total_shares: any
+        }>
+      }
+    }
+    object: {
+      __typename?: 'atoms'
+      term_id: any
+      label?: string | null
+      wallet_id: string
+      image?: string | null
+      type: any
+    }
+    predicate: {
+      __typename?: 'atoms'
+      term_id: any
+      label?: string | null
+      wallet_id: string
+      image?: string | null
+      type: any
+    }
+    term?: {
+      __typename?: 'terms'
+      vaults: Array<{
+        __typename?: 'vaults'
+        current_share_price: any
+        position_count: number
+        total_shares: any
+        positions: Array<{
+          __typename?: 'positions'
+          shares: any
+          account?: {
+            __typename?: 'accounts'
+            id: string
+            label: string
+            image?: string | null
+          } | null
+        }>
+      }>
+    } | null
+    counter_term?: {
+      __typename?: 'terms'
+      vaults: Array<{
+        __typename?: 'vaults'
+        current_share_price: any
+        position_count: number
+        total_shares: any
+        positions: Array<{
+          __typename?: 'positions'
+          shares: any
+          account?: {
+            __typename?: 'accounts'
+            id: string
+            label: string
+            image?: string | null
+          } | null
+        }>
+      }>
+    } | null
+  }>
+}
+
 export type GetFeeTransfersQueryVariables = Exact<{
   address: Scalars['String']['input']
-  cutoff_timestamp?: InputMaybe<Scalars['bigint']['input']>
+  cutoff_timestamp?: InputMaybe<Scalars['timestamptz']['input']>
 }>
 
 export type GetFeeTransfersQuery = {
@@ -14805,6 +15458,12 @@ export type GetPositionsQuery = {
                 description?: string | null
                 url?: string | null
               } | null
+              account?: {
+                __typename?: 'accounts'
+                id: string
+                label: string
+                image?: string | null
+              } | null
             } | null
           }
           predicate: {
@@ -14846,6 +15505,12 @@ export type GetPositionsQuery = {
                 description?: string | null
                 url?: string | null
               } | null
+              account?: {
+                __typename?: 'accounts'
+                id: string
+                label: string
+                image?: string | null
+              } | null
             } | null
           }
           object: {
@@ -14886,6 +15551,12 @@ export type GetPositionsQuery = {
                 image?: string | null
                 description?: string | null
                 url?: string | null
+              } | null
+              account?: {
+                __typename?: 'accounts'
+                id: string
+                label: string
+                image?: string | null
               } | null
             } | null
           }
@@ -15022,6 +15693,12 @@ export type GetTriplePositionsByAddressQuery = {
                 description?: string | null
                 url?: string | null
               } | null
+              account?: {
+                __typename?: 'accounts'
+                id: string
+                label: string
+                image?: string | null
+              } | null
             } | null
           }
           predicate: {
@@ -15063,6 +15740,12 @@ export type GetTriplePositionsByAddressQuery = {
                 description?: string | null
                 url?: string | null
               } | null
+              account?: {
+                __typename?: 'accounts'
+                id: string
+                label: string
+                image?: string | null
+              } | null
             } | null
           }
           object: {
@@ -15103,6 +15786,12 @@ export type GetTriplePositionsByAddressQuery = {
                 image?: string | null
                 description?: string | null
                 url?: string | null
+              } | null
+              account?: {
+                __typename?: 'accounts'
+                id: string
+                label: string
+                image?: string | null
               } | null
             } | null
           }
@@ -15240,6 +15929,12 @@ export type GetPositionsWithAggregatesQuery = {
                   description?: string | null
                   url?: string | null
                 } | null
+                account?: {
+                  __typename?: 'accounts'
+                  id: string
+                  label: string
+                  image?: string | null
+                } | null
               } | null
             }
             predicate: {
@@ -15281,6 +15976,12 @@ export type GetPositionsWithAggregatesQuery = {
                   description?: string | null
                   url?: string | null
                 } | null
+                account?: {
+                  __typename?: 'accounts'
+                  id: string
+                  label: string
+                  image?: string | null
+                } | null
               } | null
             }
             object: {
@@ -15321,6 +16022,12 @@ export type GetPositionsWithAggregatesQuery = {
                   image?: string | null
                   description?: string | null
                   url?: string | null
+                } | null
+                account?: {
+                  __typename?: 'accounts'
+                  id: string
+                  label: string
+                  image?: string | null
                 } | null
               } | null
             }
@@ -15454,6 +16161,12 @@ export type GetPositionQuery = {
                 description?: string | null
                 url?: string | null
               } | null
+              account?: {
+                __typename?: 'accounts'
+                id: string
+                label: string
+                image?: string | null
+              } | null
             } | null
           }
           predicate: {
@@ -15495,6 +16208,12 @@ export type GetPositionQuery = {
                 description?: string | null
                 url?: string | null
               } | null
+              account?: {
+                __typename?: 'accounts'
+                id: string
+                label: string
+                image?: string | null
+              } | null
             } | null
           }
           object: {
@@ -15535,6 +16254,12 @@ export type GetPositionQuery = {
                 image?: string | null
                 description?: string | null
                 url?: string | null
+              } | null
+              account?: {
+                __typename?: 'accounts'
+                id: string
+                label: string
+                image?: string | null
               } | null
             } | null
           }
@@ -15583,7 +16308,7 @@ export type GetSignalsQuery = {
     __typename?: 'signals'
     id: string
     block_number: any
-    block_timestamp: any
+    created_at: any
     transaction_hash: string
     atom_id?: any | null
     triple_id?: any | null
@@ -15648,6 +16373,12 @@ export type GetSignalsQuery = {
             description?: string | null
             url?: string | null
           } | null
+          account?: {
+            __typename?: 'accounts'
+            id: string
+            label: string
+            image?: string | null
+          } | null
         } | null
       } | null
       triple?: {
@@ -15700,6 +16431,12 @@ export type GetSignalsQuery = {
               description?: string | null
               url?: string | null
             } | null
+            account?: {
+              __typename?: 'accounts'
+              id: string
+              label: string
+              image?: string | null
+            } | null
           } | null
         }
         predicate: {
@@ -15741,6 +16478,12 @@ export type GetSignalsQuery = {
               description?: string | null
               url?: string | null
             } | null
+            account?: {
+              __typename?: 'accounts'
+              id: string
+              label: string
+              image?: string | null
+            } | null
           } | null
         }
         object: {
@@ -15781,6 +16524,12 @@ export type GetSignalsQuery = {
               image?: string | null
               description?: string | null
               url?: string | null
+            } | null
+            account?: {
+              __typename?: 'accounts'
+              id: string
+              label: string
+              image?: string | null
             } | null
           } | null
         }
@@ -15919,6 +16668,12 @@ export type AtomMetadataMaybedeletethisFragment = {
       description?: string | null
       url?: string | null
     } | null
+    account?: {
+      __typename?: 'accounts'
+      id: string
+      label: string
+      image?: string | null
+    } | null
   } | null
 }
 
@@ -15990,6 +16745,12 @@ export type GetTagsQuery = {
           description?: string | null
           url?: string | null
         } | null
+        account?: {
+          __typename?: 'accounts'
+          id: string
+          label: string
+          image?: string | null
+        } | null
       } | null
     }
     predicate: {
@@ -16031,6 +16792,12 @@ export type GetTagsQuery = {
           description?: string | null
           url?: string | null
         } | null
+        account?: {
+          __typename?: 'accounts'
+          id: string
+          label: string
+          image?: string | null
+        } | null
       } | null
     }
     object: {
@@ -16071,6 +16838,12 @@ export type GetTagsQuery = {
           image?: string | null
           description?: string | null
           url?: string | null
+        } | null
+        account?: {
+          __typename?: 'accounts'
+          id: string
+          label: string
+          image?: string | null
         } | null
       } | null
     }
@@ -16196,6 +16969,12 @@ export type GetTagsCustomQuery = {
           description?: string | null
           url?: string | null
         } | null
+        account?: {
+          __typename?: 'accounts'
+          id: string
+          label: string
+          image?: string | null
+        } | null
       } | null
     }
     predicate: {
@@ -16237,6 +17016,12 @@ export type GetTagsCustomQuery = {
           description?: string | null
           url?: string | null
         } | null
+        account?: {
+          __typename?: 'accounts'
+          id: string
+          label: string
+          image?: string | null
+        } | null
       } | null
     }
     object: {
@@ -16277,6 +17062,12 @@ export type GetTagsCustomQuery = {
           image?: string | null
           description?: string | null
           url?: string | null
+        } | null
+        account?: {
+          __typename?: 'accounts'
+          id: string
+          label: string
+          image?: string | null
         } | null
       } | null
     }
@@ -16374,7 +17165,7 @@ export type GetTriplesQuery = {
     predicate_id: any
     object_id: any
     block_number: any
-    block_timestamp: any
+    created_at: any
     transaction_hash: string
     creator_id: string
     counter_term_id: any
@@ -16425,6 +17216,12 @@ export type GetTriplesQuery = {
           description?: string | null
           url?: string | null
         } | null
+        account?: {
+          __typename?: 'accounts'
+          id: string
+          label: string
+          image?: string | null
+        } | null
       } | null
     }
     predicate: {
@@ -16466,6 +17263,12 @@ export type GetTriplesQuery = {
           description?: string | null
           url?: string | null
         } | null
+        account?: {
+          __typename?: 'accounts'
+          id: string
+          label: string
+          image?: string | null
+        } | null
       } | null
     }
     object: {
@@ -16506,6 +17309,12 @@ export type GetTriplesQuery = {
           image?: string | null
           description?: string | null
           url?: string | null
+        } | null
+        account?: {
+          __typename?: 'accounts'
+          id: string
+          label: string
+          image?: string | null
         } | null
       } | null
     }
@@ -16629,6 +17438,12 @@ export type GetTriplesQuery = {
                       description?: string | null
                       url?: string | null
                     } | null
+                    account?: {
+                      __typename?: 'accounts'
+                      id: string
+                      label: string
+                      image?: string | null
+                    } | null
                   } | null
                 }
                 predicate: {
@@ -16670,6 +17485,12 @@ export type GetTriplesQuery = {
                       description?: string | null
                       url?: string | null
                     } | null
+                    account?: {
+                      __typename?: 'accounts'
+                      id: string
+                      label: string
+                      image?: string | null
+                    } | null
                   } | null
                 }
                 object: {
@@ -16710,6 +17531,12 @@ export type GetTriplesQuery = {
                       image?: string | null
                       description?: string | null
                       url?: string | null
+                    } | null
+                    account?: {
+                      __typename?: 'accounts'
+                      id: string
+                      label: string
+                      image?: string | null
                     } | null
                   } | null
                 }
@@ -16839,6 +17666,12 @@ export type GetTriplesQuery = {
                       description?: string | null
                       url?: string | null
                     } | null
+                    account?: {
+                      __typename?: 'accounts'
+                      id: string
+                      label: string
+                      image?: string | null
+                    } | null
                   } | null
                 }
                 predicate: {
@@ -16879,6 +17712,12 @@ export type GetTriplesQuery = {
                       image?: string | null
                       description?: string | null
                       url?: string | null
+                    } | null
+                    account?: {
+                      __typename?: 'accounts'
+                      id: string
+                      label: string
+                      image?: string | null
                     } | null
                   } | null
                 }
@@ -16921,6 +17760,12 @@ export type GetTriplesQuery = {
                       description?: string | null
                       url?: string | null
                     } | null
+                    account?: {
+                      __typename?: 'accounts'
+                      id: string
+                      label: string
+                      image?: string | null
+                    } | null
                   } | null
                 }
               } | null
@@ -16954,7 +17799,7 @@ export type GetTriplesWithAggregatesQuery = {
       predicate_id: any
       object_id: any
       block_number: any
-      block_timestamp: any
+      created_at: any
       transaction_hash: string
       creator_id: string
       counter_term_id: any
@@ -17005,6 +17850,12 @@ export type GetTriplesWithAggregatesQuery = {
             description?: string | null
             url?: string | null
           } | null
+          account?: {
+            __typename?: 'accounts'
+            id: string
+            label: string
+            image?: string | null
+          } | null
         } | null
       }
       predicate: {
@@ -17046,6 +17897,12 @@ export type GetTriplesWithAggregatesQuery = {
             description?: string | null
             url?: string | null
           } | null
+          account?: {
+            __typename?: 'accounts'
+            id: string
+            label: string
+            image?: string | null
+          } | null
         } | null
       }
       object: {
@@ -17086,6 +17943,12 @@ export type GetTriplesWithAggregatesQuery = {
             image?: string | null
             description?: string | null
             url?: string | null
+          } | null
+          account?: {
+            __typename?: 'accounts'
+            id: string
+            label: string
+            image?: string | null
           } | null
         } | null
       }
@@ -17209,6 +18072,12 @@ export type GetTriplesWithAggregatesQuery = {
                         description?: string | null
                         url?: string | null
                       } | null
+                      account?: {
+                        __typename?: 'accounts'
+                        id: string
+                        label: string
+                        image?: string | null
+                      } | null
                     } | null
                   }
                   predicate: {
@@ -17250,6 +18119,12 @@ export type GetTriplesWithAggregatesQuery = {
                         description?: string | null
                         url?: string | null
                       } | null
+                      account?: {
+                        __typename?: 'accounts'
+                        id: string
+                        label: string
+                        image?: string | null
+                      } | null
                     } | null
                   }
                   object: {
@@ -17290,6 +18165,12 @@ export type GetTriplesWithAggregatesQuery = {
                         image?: string | null
                         description?: string | null
                         url?: string | null
+                      } | null
+                      account?: {
+                        __typename?: 'accounts'
+                        id: string
+                        label: string
+                        image?: string | null
                       } | null
                     } | null
                   }
@@ -17419,6 +18300,12 @@ export type GetTriplesWithAggregatesQuery = {
                         description?: string | null
                         url?: string | null
                       } | null
+                      account?: {
+                        __typename?: 'accounts'
+                        id: string
+                        label: string
+                        image?: string | null
+                      } | null
                     } | null
                   }
                   predicate: {
@@ -17459,6 +18346,12 @@ export type GetTriplesWithAggregatesQuery = {
                         image?: string | null
                         description?: string | null
                         url?: string | null
+                      } | null
+                      account?: {
+                        __typename?: 'accounts'
+                        id: string
+                        label: string
+                        image?: string | null
                       } | null
                     } | null
                   }
@@ -17501,6 +18394,12 @@ export type GetTriplesWithAggregatesQuery = {
                         description?: string | null
                         url?: string | null
                       } | null
+                      account?: {
+                        __typename?: 'accounts'
+                        id: string
+                        label: string
+                        image?: string | null
+                      } | null
                     } | null
                   }
                 } | null
@@ -17538,7 +18437,7 @@ export type GetTripleQuery = {
     predicate_id: any
     object_id: any
     block_number: any
-    block_timestamp: any
+    created_at: any
     transaction_hash: string
     creator_id: string
     counter_term_id: any
@@ -17589,6 +18488,12 @@ export type GetTripleQuery = {
           description?: string | null
           url?: string | null
         } | null
+        account?: {
+          __typename?: 'accounts'
+          id: string
+          label: string
+          image?: string | null
+        } | null
       } | null
     }
     predicate: {
@@ -17630,6 +18535,12 @@ export type GetTripleQuery = {
           description?: string | null
           url?: string | null
         } | null
+        account?: {
+          __typename?: 'accounts'
+          id: string
+          label: string
+          image?: string | null
+        } | null
       } | null
     }
     object: {
@@ -17670,6 +18581,12 @@ export type GetTripleQuery = {
           image?: string | null
           description?: string | null
           url?: string | null
+        } | null
+        account?: {
+          __typename?: 'accounts'
+          id: string
+          label: string
+          image?: string | null
         } | null
       } | null
     }
@@ -17793,6 +18710,12 @@ export type GetTripleQuery = {
                       description?: string | null
                       url?: string | null
                     } | null
+                    account?: {
+                      __typename?: 'accounts'
+                      id: string
+                      label: string
+                      image?: string | null
+                    } | null
                   } | null
                 }
                 predicate: {
@@ -17834,6 +18757,12 @@ export type GetTripleQuery = {
                       description?: string | null
                       url?: string | null
                     } | null
+                    account?: {
+                      __typename?: 'accounts'
+                      id: string
+                      label: string
+                      image?: string | null
+                    } | null
                   } | null
                 }
                 object: {
@@ -17874,6 +18803,12 @@ export type GetTripleQuery = {
                       image?: string | null
                       description?: string | null
                       url?: string | null
+                    } | null
+                    account?: {
+                      __typename?: 'accounts'
+                      id: string
+                      label: string
+                      image?: string | null
                     } | null
                   } | null
                 }
@@ -18003,6 +18938,12 @@ export type GetTripleQuery = {
                       description?: string | null
                       url?: string | null
                     } | null
+                    account?: {
+                      __typename?: 'accounts'
+                      id: string
+                      label: string
+                      image?: string | null
+                    } | null
                   } | null
                 }
                 predicate: {
@@ -18044,6 +18985,12 @@ export type GetTripleQuery = {
                       description?: string | null
                       url?: string | null
                     } | null
+                    account?: {
+                      __typename?: 'accounts'
+                      id: string
+                      label: string
+                      image?: string | null
+                    } | null
                   } | null
                 }
                 object: {
@@ -18084,6 +19031,12 @@ export type GetTripleQuery = {
                       image?: string | null
                       description?: string | null
                       url?: string | null
+                    } | null
+                    account?: {
+                      __typename?: 'accounts'
+                      id: string
+                      label: string
+                      image?: string | null
                     } | null
                   } | null
                 }
@@ -18272,36 +19225,6 @@ export type GetVaultQuery = {
   } | null
 }
 
-export const AccountClaimsAggregateFragmentDoc = `
-    fragment AccountClaimsAggregate on accounts {
-  claims_aggregate(order_by: {position: {shares: desc}}) {
-    aggregate {
-      count
-    }
-    nodes {
-      id
-      position {
-        shares
-      }
-    }
-  }
-}
-    `
-export const AccountClaimsFragmentDoc = `
-    fragment AccountClaims on accounts {
-  claims(
-    order_by: {position: {shares: desc}}
-    limit: $claimsLimit
-    offset: $claimsOffset
-    where: $claimsWhere
-  ) {
-    id
-    position {
-      shares
-    }
-  }
-}
-    `
 export const AccountPositionsAggregateFragmentDoc = `
     fragment AccountPositionsAggregate on accounts {
   positions_aggregate(order_by: {shares: desc}) {
@@ -18479,7 +19402,7 @@ export const AccountTriplesAggregateFragmentDoc = `
 export const AtomTxnFragmentDoc = `
     fragment AtomTxn on atoms {
   block_number
-  block_timestamp
+  created_at
   transaction_hash
   creator_id
 }
@@ -18672,6 +19595,11 @@ export const AtomValueFragmentDoc = `
       description
       url
     }
+    account {
+      id
+      label
+      image
+    }
   }
 }
     `
@@ -18787,7 +19715,7 @@ export const TripleMetadataFragmentDoc = `
 export const EventDetailsFragmentDoc = `
     fragment EventDetails on events {
   block_number
-  block_timestamp
+  created_at
   type
   transaction_hash
   atom_id
@@ -18914,7 +19842,7 @@ export const StatDetailsFragmentDoc = `
 export const TripleTxnFragmentDoc = `
     fragment TripleTxn on triples {
   block_number
-  block_timestamp
+  created_at
   transaction_hash
   creator_id
 }
@@ -19176,10 +20104,9 @@ usePinThingMutation.fetcher = (
   )
 
 export const GetAccountsDocument = `
-    query GetAccounts($limit: Int, $offset: Int, $orderBy: [accounts_order_by!], $where: accounts_bool_exp, $claimsLimit: Int, $claimsOffset: Int, $claimsWhere: claims_bool_exp, $positionsLimit: Int, $positionsOffset: Int, $positionsWhere: positions_bool_exp) {
+    query GetAccounts($limit: Int, $offset: Int, $orderBy: [accounts_order_by!], $where: accounts_bool_exp, $positionsLimit: Int, $positionsOffset: Int, $positionsWhere: positions_bool_exp) {
   accounts(limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
     ...AccountMetadata
-    ...AccountClaims
     ...AccountPositions
     atom {
       term_id
@@ -19210,7 +20137,6 @@ export const GetAccountsDocument = `
   }
 }
     ${AccountMetadataFragmentDoc}
-${AccountClaimsFragmentDoc}
 ${AccountPositionsFragmentDoc}`
 
 export const useGetAccountsQuery = <TData = GetAccountsQuery, TError = unknown>(
@@ -19259,7 +20185,7 @@ export const useInfiniteGetAccountsQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          optionsQueryKey ?? variables === undefined
+          (optionsQueryKey ?? variables === undefined)
             ? ['GetAccounts.infinite']
             : ['GetAccounts.infinite', variables],
         queryFn: (metaData) =>
@@ -19289,7 +20215,7 @@ useGetAccountsQuery.fetcher = (
   )
 
 export const GetAccountsWithAggregatesDocument = `
-    query GetAccountsWithAggregates($limit: Int, $offset: Int, $orderBy: [accounts_order_by!], $where: accounts_bool_exp, $claimsLimit: Int, $claimsOffset: Int, $claimsWhere: claims_bool_exp, $positionsLimit: Int, $positionsOffset: Int, $positionsWhere: positions_bool_exp, $atomsWhere: atoms_bool_exp, $atomsOrderBy: [atoms_order_by!], $atomsLimit: Int, $atomsOffset: Int) {
+    query GetAccountsWithAggregates($limit: Int, $offset: Int, $orderBy: [accounts_order_by!], $where: accounts_bool_exp, $positionsLimit: Int, $positionsOffset: Int, $positionsWhere: positions_bool_exp, $atomsWhere: atoms_bool_exp, $atomsOrderBy: [atoms_order_by!], $atomsLimit: Int, $atomsOffset: Int) {
   accounts_aggregate(
     limit: $limit
     offset: $offset
@@ -19301,13 +20227,11 @@ export const GetAccountsWithAggregatesDocument = `
     }
     nodes {
       ...AccountMetadata
-      ...AccountClaims
       ...AccountPositions
     }
   }
 }
     ${AccountMetadataFragmentDoc}
-${AccountClaimsFragmentDoc}
 ${AccountPositionsFragmentDoc}`
 
 export const useGetAccountsWithAggregatesQuery = <
@@ -19369,7 +20293,7 @@ export const useInfiniteGetAccountsWithAggregatesQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          optionsQueryKey ?? variables === undefined
+          (optionsQueryKey ?? variables === undefined)
             ? ['GetAccountsWithAggregates.infinite']
             : ['GetAccountsWithAggregates.infinite', variables],
         queryFn: (metaData) =>
@@ -19467,7 +20391,7 @@ export const useInfiniteGetAccountsCountQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          optionsQueryKey ?? variables === undefined
+          (optionsQueryKey ?? variables === undefined)
             ? ['GetAccountsCount.infinite']
             : ['GetAccountsCount.infinite', variables],
         queryFn: (metaData) =>
@@ -19499,14 +20423,13 @@ useGetAccountsCountQuery.fetcher = (
   )
 
 export const GetAccountDocument = `
-    query GetAccount($address: String!, $claimsLimit: Int, $claimsOffset: Int, $claimsWhere: claims_bool_exp, $positionsLimit: Int, $positionsOffset: Int, $positionsWhere: positions_bool_exp, $atomsWhere: atoms_bool_exp, $atomsOrderBy: [atoms_order_by!], $atomsLimit: Int, $atomsOffset: Int, $triplesWhere: triples_bool_exp, $triplesOrderBy: [triples_order_by!], $triplesLimit: Int, $triplesOffset: Int) {
+    query GetAccount($address: String!, $positionsLimit: Int, $positionsOffset: Int, $positionsWhere: positions_bool_exp, $atomsWhere: atoms_bool_exp, $atomsOrderBy: [atoms_order_by!], $atomsLimit: Int, $atomsOffset: Int, $triplesWhere: triples_bool_exp, $triplesOrderBy: [triples_order_by!], $triplesLimit: Int, $triplesOffset: Int) {
   account(id: $address) {
     ...AccountMetadata
     atom {
       ...AtomMetadata
       ...AtomVaultDetails
     }
-    ...AccountClaims
     ...AccountPositions
     ...AccountAtoms
     ...AccountTriples
@@ -19519,7 +20442,6 @@ export const GetAccountDocument = `
 ${AtomMetadataFragmentDoc}
 ${AtomValueFragmentDoc}
 ${AtomVaultDetailsFragmentDoc}
-${AccountClaimsFragmentDoc}
 ${AccountPositionsFragmentDoc}
 ${AccountAtomsFragmentDoc}
 ${AccountTriplesFragmentDoc}`
@@ -19598,17 +20520,15 @@ useGetAccountQuery.fetcher = (
   )
 
 export const GetAccountWithPaginatedRelationsDocument = `
-    query GetAccountWithPaginatedRelations($address: String!, $claimsLimit: Int, $claimsOffset: Int, $claimsWhere: claims_bool_exp, $positionsLimit: Int, $positionsOffset: Int, $positionsWhere: positions_bool_exp, $atomsLimit: Int, $atomsOffset: Int, $atomsWhere: atoms_bool_exp, $atomsOrderBy: [atoms_order_by!], $triplesLimit: Int, $triplesOffset: Int, $triplesWhere: triples_bool_exp, $triplesOrderBy: [triples_order_by!]) {
+    query GetAccountWithPaginatedRelations($address: String!, $positionsLimit: Int, $positionsOffset: Int, $positionsWhere: positions_bool_exp, $atomsLimit: Int, $atomsOffset: Int, $atomsWhere: atoms_bool_exp, $atomsOrderBy: [atoms_order_by!], $triplesLimit: Int, $triplesOffset: Int, $triplesWhere: triples_bool_exp, $triplesOrderBy: [triples_order_by!]) {
   account(id: $address) {
     ...AccountMetadata
-    ...AccountClaims
     ...AccountPositions
     ...AccountAtoms
     ...AccountTriples
   }
 }
     ${AccountMetadataFragmentDoc}
-${AccountClaimsFragmentDoc}
 ${AccountPositionsFragmentDoc}
 ${AccountAtomsFragmentDoc}
 ${AccountTriplesFragmentDoc}`
@@ -19702,17 +20622,15 @@ useGetAccountWithPaginatedRelationsQuery.fetcher = (
   >(GetAccountWithPaginatedRelationsDocument, variables, options)
 
 export const GetAccountWithAggregatesDocument = `
-    query GetAccountWithAggregates($address: String!, $claimsLimit: Int, $claimsOffset: Int, $claimsWhere: claims_bool_exp, $positionsLimit: Int, $positionsOffset: Int, $positionsWhere: positions_bool_exp, $atomsWhere: atoms_bool_exp, $atomsOrderBy: [atoms_order_by!], $atomsLimit: Int, $atomsOffset: Int, $triplesWhere: triples_bool_exp, $triplesOrderBy: [triples_order_by!], $triplesLimit: Int, $triplesOffset: Int) {
+    query GetAccountWithAggregates($address: String!, $positionsLimit: Int, $positionsOffset: Int, $positionsWhere: positions_bool_exp, $atomsWhere: atoms_bool_exp, $atomsOrderBy: [atoms_order_by!], $atomsLimit: Int, $atomsOffset: Int, $triplesWhere: triples_bool_exp, $triplesOrderBy: [triples_order_by!], $triplesLimit: Int, $triplesOffset: Int) {
   account(id: $address) {
     ...AccountMetadata
-    ...AccountClaimsAggregate
     ...AccountPositionsAggregate
     ...AccountAtomsAggregate
     ...AccountTriplesAggregate
   }
 }
     ${AccountMetadataFragmentDoc}
-${AccountClaimsAggregateFragmentDoc}
 ${AccountPositionsAggregateFragmentDoc}
 ${AccountAtomsAggregateFragmentDoc}
 ${AccountTriplesAggregateFragmentDoc}`
@@ -19800,6 +20718,97 @@ useGetAccountWithAggregatesQuery.fetcher = (
     GetAccountWithAggregatesQueryVariables
   >(GetAccountWithAggregatesDocument, variables, options)
 
+export const GetAccountMetadataDocument = `
+    query GetAccountMetadata($address: String!) {
+  account(id: $address) {
+    ...AccountMetadata
+    atom {
+      ...AtomMetadata
+    }
+  }
+}
+    ${AccountMetadataFragmentDoc}
+${AtomMetadataFragmentDoc}
+${AtomValueFragmentDoc}`
+
+export const useGetAccountMetadataQuery = <
+  TData = GetAccountMetadataQuery,
+  TError = unknown,
+>(
+  variables: GetAccountMetadataQueryVariables,
+  options?: Omit<
+    UseQueryOptions<GetAccountMetadataQuery, TError, TData>,
+    'queryKey'
+  > & {
+    queryKey?: UseQueryOptions<
+      GetAccountMetadataQuery,
+      TError,
+      TData
+    >['queryKey']
+  },
+) => {
+  return useQuery<GetAccountMetadataQuery, TError, TData>({
+    queryKey: ['GetAccountMetadata', variables],
+    queryFn: fetcher<GetAccountMetadataQuery, GetAccountMetadataQueryVariables>(
+      GetAccountMetadataDocument,
+      variables,
+    ),
+    ...options,
+  })
+}
+
+useGetAccountMetadataQuery.document = GetAccountMetadataDocument
+
+useGetAccountMetadataQuery.getKey = (
+  variables: GetAccountMetadataQueryVariables,
+) => ['GetAccountMetadata', variables]
+
+export const useInfiniteGetAccountMetadataQuery = <
+  TData = InfiniteData<GetAccountMetadataQuery>,
+  TError = unknown,
+>(
+  variables: GetAccountMetadataQueryVariables,
+  options: Omit<
+    UseInfiniteQueryOptions<GetAccountMetadataQuery, TError, TData>,
+    'queryKey'
+  > & {
+    queryKey?: UseInfiniteQueryOptions<
+      GetAccountMetadataQuery,
+      TError,
+      TData
+    >['queryKey']
+  },
+) => {
+  return useInfiniteQuery<GetAccountMetadataQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey: optionsQueryKey ?? ['GetAccountMetadata.infinite', variables],
+        queryFn: (metaData) =>
+          fetcher<GetAccountMetadataQuery, GetAccountMetadataQueryVariables>(
+            GetAccountMetadataDocument,
+            { ...variables, ...(metaData.pageParam ?? {}) },
+          )(),
+        ...restOptions,
+      }
+    })(),
+  )
+}
+
+useInfiniteGetAccountMetadataQuery.getKey = (
+  variables: GetAccountMetadataQueryVariables,
+) => ['GetAccountMetadata.infinite', variables]
+
+useGetAccountMetadataQuery.fetcher = (
+  variables: GetAccountMetadataQueryVariables,
+  options?: RequestInit['headers'],
+) =>
+  fetcher<GetAccountMetadataQuery, GetAccountMetadataQueryVariables>(
+    GetAccountMetadataDocument,
+    variables,
+    options,
+  )
+
 export const GetAtomsDocument = `
     query GetAtoms($limit: Int, $offset: Int, $orderBy: [atoms_order_by!], $where: atoms_bool_exp) {
   total: atoms_aggregate(where: $where) {
@@ -19862,7 +20871,7 @@ export const useInfiniteGetAtomsQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          optionsQueryKey ?? variables === undefined
+          (optionsQueryKey ?? variables === undefined)
             ? ['GetAtoms.infinite']
             : ['GetAtoms.infinite', variables],
         queryFn: (metaData) =>
@@ -19914,7 +20923,7 @@ export const GetAtomsWithPositionsDocument = `
             }
           }
         }
-        positions(where: {account_id: {_eq: $address}}) {
+        positions(where: {account_id: {_ilike: $address}}) {
           id
           account {
             label
@@ -19993,7 +21002,7 @@ export const useInfiniteGetAtomsWithPositionsQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          optionsQueryKey ?? variables === undefined
+          (optionsQueryKey ?? variables === undefined)
             ? ['GetAtomsWithPositions.infinite']
             : ['GetAtomsWithPositions.infinite', variables],
         queryFn: (metaData) =>
@@ -20113,7 +21122,7 @@ export const useInfiniteGetAtomsWithAggregatesQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          optionsQueryKey ?? variables === undefined
+          (optionsQueryKey ?? variables === undefined)
             ? ['GetAtomsWithAggregates.infinite']
             : ['GetAtomsWithAggregates.infinite', variables],
         queryFn: (metaData) =>
@@ -20208,7 +21217,7 @@ export const useInfiniteGetAtomsCountQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          optionsQueryKey ?? variables === undefined
+          (optionsQueryKey ?? variables === undefined)
             ? ['GetAtomsCount.infinite']
             : ['GetAtomsCount.infinite', variables],
         queryFn: (metaData) =>
@@ -20426,7 +21435,7 @@ export const GetVerifiedAtomDetailsDocument = `
     wallet_id
     image
     type
-    block_timestamp
+    created_at
     data
     creator {
       id
@@ -20445,7 +21454,7 @@ export const GetVerifiedAtomDetailsDocument = `
         position_count
         userPosition: positions(
           limit: 1
-          where: {account_id: {_eq: $userPositionAddress}}
+          where: {account_id: {_ilike: $userPositionAddress}}
         ) {
           shares
           account_id
@@ -20588,7 +21597,7 @@ export const GetAtomDetailsDocument = `
     wallet_id
     image
     type
-    block_timestamp
+    created_at
     data
     creator {
       id
@@ -20709,129 +21718,6 @@ useGetAtomDetailsQuery.fetcher = (
     options,
   )
 
-export const GetClaimsByAddressDocument = `
-    query GetClaimsByAddress($address: String) {
-  claims_aggregate(where: {account_id: {_eq: $address}}) {
-    aggregate {
-      count
-    }
-    nodes {
-      account {
-        label
-      }
-      position {
-        term {
-          triple {
-            subject {
-              label
-            }
-            predicate {
-              label
-            }
-            object {
-              label
-            }
-            term_id
-            counter_term_id
-          }
-        }
-        shares
-      }
-    }
-  }
-}
-    `
-
-export const useGetClaimsByAddressQuery = <
-  TData = GetClaimsByAddressQuery,
-  TError = unknown,
->(
-  variables?: GetClaimsByAddressQueryVariables,
-  options?: Omit<
-    UseQueryOptions<GetClaimsByAddressQuery, TError, TData>,
-    'queryKey'
-  > & {
-    queryKey?: UseQueryOptions<
-      GetClaimsByAddressQuery,
-      TError,
-      TData
-    >['queryKey']
-  },
-) => {
-  return useQuery<GetClaimsByAddressQuery, TError, TData>({
-    queryKey:
-      variables === undefined
-        ? ['GetClaimsByAddress']
-        : ['GetClaimsByAddress', variables],
-    queryFn: fetcher<GetClaimsByAddressQuery, GetClaimsByAddressQueryVariables>(
-      GetClaimsByAddressDocument,
-      variables,
-    ),
-    ...options,
-  })
-}
-
-useGetClaimsByAddressQuery.document = GetClaimsByAddressDocument
-
-useGetClaimsByAddressQuery.getKey = (
-  variables?: GetClaimsByAddressQueryVariables,
-) =>
-  variables === undefined
-    ? ['GetClaimsByAddress']
-    : ['GetClaimsByAddress', variables]
-
-export const useInfiniteGetClaimsByAddressQuery = <
-  TData = InfiniteData<GetClaimsByAddressQuery>,
-  TError = unknown,
->(
-  variables: GetClaimsByAddressQueryVariables,
-  options: Omit<
-    UseInfiniteQueryOptions<GetClaimsByAddressQuery, TError, TData>,
-    'queryKey'
-  > & {
-    queryKey?: UseInfiniteQueryOptions<
-      GetClaimsByAddressQuery,
-      TError,
-      TData
-    >['queryKey']
-  },
-) => {
-  return useInfiniteQuery<GetClaimsByAddressQuery, TError, TData>(
-    (() => {
-      const { queryKey: optionsQueryKey, ...restOptions } = options
-      return {
-        queryKey:
-          optionsQueryKey ?? variables === undefined
-            ? ['GetClaimsByAddress.infinite']
-            : ['GetClaimsByAddress.infinite', variables],
-        queryFn: (metaData) =>
-          fetcher<GetClaimsByAddressQuery, GetClaimsByAddressQueryVariables>(
-            GetClaimsByAddressDocument,
-            { ...variables, ...(metaData.pageParam ?? {}) },
-          )(),
-        ...restOptions,
-      }
-    })(),
-  )
-}
-
-useInfiniteGetClaimsByAddressQuery.getKey = (
-  variables?: GetClaimsByAddressQueryVariables,
-) =>
-  variables === undefined
-    ? ['GetClaimsByAddress.infinite']
-    : ['GetClaimsByAddress.infinite', variables]
-
-useGetClaimsByAddressQuery.fetcher = (
-  variables?: GetClaimsByAddressQueryVariables,
-  options?: RequestInit['headers'],
-) =>
-  fetcher<GetClaimsByAddressQuery, GetClaimsByAddressQueryVariables>(
-    GetClaimsByAddressDocument,
-    variables,
-    options,
-  )
-
 export const GetEventsDocument = `
     query GetEvents($limit: Int, $offset: Int, $orderBy: [events_order_by!], $where: events_bool_exp, $addresses: [String!]) {
   total: events_aggregate(where: $where) {
@@ -20842,7 +21728,7 @@ export const GetEventsDocument = `
   events(limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
     id
     block_number
-    block_timestamp
+    created_at
     type
     transaction_hash
     atom_id
@@ -21015,7 +21901,7 @@ export const useInfiniteGetEventsQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          optionsQueryKey ?? variables === undefined
+          (optionsQueryKey ?? variables === undefined)
             ? ['GetEvents.infinite']
             : ['GetEvents.infinite', variables],
         queryFn: (metaData) =>
@@ -21055,11 +21941,11 @@ export const GetEventsWithAggregatesDocument = `
     aggregate {
       count
       max {
-        block_timestamp
+        created_at
         block_number
       }
       min {
-        block_timestamp
+        created_at
         block_number
       }
     }
@@ -21137,7 +22023,7 @@ export const useInfiniteGetEventsWithAggregatesQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          optionsQueryKey ?? variables === undefined
+          (optionsQueryKey ?? variables === undefined)
             ? ['GetEventsWithAggregates.infinite']
             : ['GetEventsWithAggregates.infinite', variables],
         queryFn: (metaData) =>
@@ -21232,7 +22118,7 @@ export const useInfiniteGetEventsCountQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          optionsQueryKey ?? variables === undefined
+          (optionsQueryKey ?? variables === undefined)
             ? ['GetEventsCount.infinite']
             : ['GetEventsCount.infinite', variables],
         queryFn: (metaData) =>
@@ -21269,11 +22155,11 @@ export const GetEventsDataDocument = `
     aggregate {
       count
       max {
-        block_timestamp
+        created_at
         block_number
       }
       min {
-        block_timestamp
+        created_at
         block_number
       }
       avg {
@@ -21335,7 +22221,7 @@ export const useInfiniteGetEventsDataQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          optionsQueryKey ?? variables === undefined
+          (optionsQueryKey ?? variables === undefined)
             ? ['GetEventsData.infinite']
             : ['GetEventsData.infinite', variables],
         queryFn: (metaData) =>
@@ -21433,7 +22319,7 @@ export const useInfiniteGetDebugEventsQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          optionsQueryKey ?? variables === undefined
+          (optionsQueryKey ?? variables === undefined)
             ? ['GetDebugEvents.infinite']
             : ['GetDebugEvents.infinite', variables],
         queryFn: (metaData) =>
@@ -21467,7 +22353,7 @@ useGetDebugEventsQuery.fetcher = (
 export const GetFollowingPositionsDocument = `
     query GetFollowingPositions($subjectId: numeric!, $predicateId: numeric!, $address: String!, $limit: Int, $offset: Int, $positionsOrderBy: [positions_order_by!]) {
   triples_aggregate(
-    where: {_and: [{subject_id: {_eq: $subjectId}}, {predicate_id: {_eq: $predicateId}}, {positions: {account_id: {_eq: $address}}}]}
+    where: {_and: [{subject_id: {_eq: $subjectId}}, {predicate_id: {_eq: $predicateId}}, {positions: {account_id: {_ilike: $address}}}]}
   ) {
     aggregate {
       count
@@ -21476,7 +22362,7 @@ export const GetFollowingPositionsDocument = `
   triples(
     limit: $limit
     offset: $offset
-    where: {_and: [{subject_id: {_eq: $subjectId}}, {predicate_id: {_eq: $predicateId}}, {positions: {account_id: {_eq: $address}}}]}
+    where: {_and: [{subject_id: {_eq: $subjectId}}, {predicate_id: {_eq: $predicateId}}, {positions: {account_id: {_ilike: $address}}}]}
   ) {
     term_id
     subject {
@@ -21500,7 +22386,7 @@ export const GetFollowingPositionsDocument = `
             }
           }
         }
-        positions(where: {account_id: {_eq: $address}}, order_by: $positionsOrderBy) {
+        positions(where: {account_id: {_ilike: $address}}, order_by: $positionsOrderBy) {
           account_id
           account {
             id
@@ -21837,7 +22723,7 @@ useGetConnectionsQuery.fetcher = (
 export const GetConnectionsCountDocument = `
     query GetConnectionsCount($subjectId: numeric!, $predicateId: numeric!, $objectId: numeric!, $address: String!) {
   following_count: triples_aggregate(
-    where: {_and: [{subject_id: {_eq: $subjectId}}, {predicate_id: {_eq: $predicateId}}, {positions: {account_id: {_eq: $address}}}]}
+    where: {_and: [{subject_id: {_eq: $subjectId}}, {predicate_id: {_eq: $predicateId}}, {positions: {account_id: {_ilike: $address}}}]}
   ) {
     aggregate {
       count
@@ -21950,12 +22836,8 @@ export const GetListsDocument = `
       count
     }
   }
-  predicate_objects(
-    where: $where
-    order_by: [{claim_count: desc}, {triple_count: desc}]
-  ) {
+  predicate_objects(where: $where, order_by: [{triple_count: desc}]) {
     id
-    claim_count
     triple_count
     object {
       term_id
@@ -22004,7 +22886,7 @@ export const useInfiniteGetListsQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          optionsQueryKey ?? variables === undefined
+          (optionsQueryKey ?? variables === undefined)
             ? ['GetLists.infinite']
             : ['GetLists.infinite', variables],
         queryFn: (metaData) =>
@@ -22101,7 +22983,7 @@ export const useInfiniteGetListItemsQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          optionsQueryKey ?? variables === undefined
+          (optionsQueryKey ?? variables === undefined)
             ? ['GetListItems.infinite']
             : ['GetListItems.infinite', variables],
         queryFn: (metaData) =>
@@ -22153,6 +23035,11 @@ export const GetListDetailsDocument = `
       wallet_id
       image
       type
+      term {
+        vaults {
+          position_count
+        }
+      }
       tags: as_subject_triples_aggregate(
         where: {predicate_id: {_eq: $tagPredicateId}}
       ) {
@@ -22262,7 +23149,7 @@ export const useInfiniteGetListDetailsQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          optionsQueryKey ?? variables === undefined
+          (optionsQueryKey ?? variables === undefined)
             ? ['GetListDetails.infinite']
             : ['GetListDetails.infinite', variables],
         queryFn: (metaData) =>
@@ -22360,7 +23247,7 @@ export const GetListDetailsWithPositionDocument = `
         position_count
         total_shares
       }
-      positions(where: {account_id: {_eq: $address}}) {
+      positions(where: {account_id: {_ilike: $address}}) {
         account {
           id
           label
@@ -22375,7 +23262,7 @@ export const GetListDetailsWithPositionDocument = `
         position_count
         total_shares
       }
-      positions(where: {account_id: {_eq: $address}}) {
+      positions(where: {account_id: {_ilike: $address}}) {
         account {
           id
           label
@@ -22447,7 +23334,7 @@ export const useInfiniteGetListDetailsWithPositionQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          optionsQueryKey ?? variables === undefined
+          (optionsQueryKey ?? variables === undefined)
             ? ['GetListDetailsWithPosition.infinite']
             : ['GetListDetailsWithPosition.infinite', variables],
         queryFn: (metaData) =>
@@ -22547,7 +23434,7 @@ export const GetListDetailsWithUserDocument = `
         position_count
         total_shares
       }
-      positions(where: {account_id: {_eq: $address}}) {
+      positions(where: {account_id: {_ilike: $address}}) {
         account {
           id
           label
@@ -22562,7 +23449,7 @@ export const GetListDetailsWithUserDocument = `
         position_count
         total_shares
       }
-      positions(where: {account_id: {_eq: $address}}) {
+      positions(where: {account_id: {_ilike: $address}}) {
         account {
           id
           label
@@ -22632,7 +23519,7 @@ export const GetListDetailsWithUserDocument = `
         position_count
         total_shares
       }
-      positions(where: {account_id: {_eq: $address}}) {
+      positions(where: {account_id: {_ilike: $address}}) {
         account {
           id
           label
@@ -22647,7 +23534,7 @@ export const GetListDetailsWithUserDocument = `
         position_count
         total_shares
       }
-      positions(where: {account_id: {_eq: $address}}) {
+      positions(where: {account_id: {_ilike: $address}}) {
         account {
           id
           label
@@ -22719,7 +23606,7 @@ export const useInfiniteGetListDetailsWithUserQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          optionsQueryKey ?? variables === undefined
+          (optionsQueryKey ?? variables === undefined)
             ? ['GetListDetailsWithUser.infinite']
             : ['GetListDetailsWithUser.infinite', variables],
         queryFn: (metaData) =>
@@ -22753,10 +23640,179 @@ useGetListDetailsWithUserQuery.fetcher = (
     options,
   )
 
+export const GetListDetailsSimplifiedDocument = `
+    query GetListDetailsSimplified($globalWhere: triples_bool_exp, $address: String, $limit: Int, $offset: Int, $orderBy: [triples_order_by!]) {
+  globalTriplesAggregate: triples_aggregate(where: $globalWhere) {
+    aggregate {
+      count
+    }
+  }
+  globalTriples: triples(
+    where: $globalWhere
+    limit: $limit
+    offset: $offset
+    order_by: $orderBy
+  ) {
+    term_id
+    counter_term_id
+    subject {
+      term_id
+      label
+      wallet_id
+      image
+      type
+      term {
+        vaults(where: {curve_id: {_eq: "1"}}) {
+          current_share_price
+          position_count
+          total_shares
+        }
+      }
+    }
+    object {
+      term_id
+      label
+      wallet_id
+      image
+      type
+    }
+    predicate {
+      term_id
+      label
+      wallet_id
+      image
+      type
+    }
+    term {
+      vaults(where: {curve_id: {_eq: "1"}}) {
+        current_share_price
+        position_count
+        total_shares
+        positions(where: {account_id: {_ilike: $address}}) {
+          account {
+            id
+            label
+            image
+          }
+          shares
+        }
+      }
+    }
+    counter_term {
+      vaults(where: {curve_id: {_eq: "1"}}) {
+        current_share_price
+        position_count
+        total_shares
+        positions(where: {account_id: {_ilike: $address}}) {
+          account {
+            id
+            label
+            image
+          }
+          shares
+        }
+      }
+    }
+  }
+}
+    `
+
+export const useGetListDetailsSimplifiedQuery = <
+  TData = GetListDetailsSimplifiedQuery,
+  TError = unknown,
+>(
+  variables?: GetListDetailsSimplifiedQueryVariables,
+  options?: Omit<
+    UseQueryOptions<GetListDetailsSimplifiedQuery, TError, TData>,
+    'queryKey'
+  > & {
+    queryKey?: UseQueryOptions<
+      GetListDetailsSimplifiedQuery,
+      TError,
+      TData
+    >['queryKey']
+  },
+) => {
+  return useQuery<GetListDetailsSimplifiedQuery, TError, TData>({
+    queryKey:
+      variables === undefined
+        ? ['GetListDetailsSimplified']
+        : ['GetListDetailsSimplified', variables],
+    queryFn: fetcher<
+      GetListDetailsSimplifiedQuery,
+      GetListDetailsSimplifiedQueryVariables
+    >(GetListDetailsSimplifiedDocument, variables),
+    ...options,
+  })
+}
+
+useGetListDetailsSimplifiedQuery.document = GetListDetailsSimplifiedDocument
+
+useGetListDetailsSimplifiedQuery.getKey = (
+  variables?: GetListDetailsSimplifiedQueryVariables,
+) =>
+  variables === undefined
+    ? ['GetListDetailsSimplified']
+    : ['GetListDetailsSimplified', variables]
+
+export const useInfiniteGetListDetailsSimplifiedQuery = <
+  TData = InfiniteData<GetListDetailsSimplifiedQuery>,
+  TError = unknown,
+>(
+  variables: GetListDetailsSimplifiedQueryVariables,
+  options: Omit<
+    UseInfiniteQueryOptions<GetListDetailsSimplifiedQuery, TError, TData>,
+    'queryKey'
+  > & {
+    queryKey?: UseInfiniteQueryOptions<
+      GetListDetailsSimplifiedQuery,
+      TError,
+      TData
+    >['queryKey']
+  },
+) => {
+  return useInfiniteQuery<GetListDetailsSimplifiedQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey:
+          (optionsQueryKey ?? variables === undefined)
+            ? ['GetListDetailsSimplified.infinite']
+            : ['GetListDetailsSimplified.infinite', variables],
+        queryFn: (metaData) =>
+          fetcher<
+            GetListDetailsSimplifiedQuery,
+            GetListDetailsSimplifiedQueryVariables
+          >(GetListDetailsSimplifiedDocument, {
+            ...variables,
+            ...(metaData.pageParam ?? {}),
+          })(),
+        ...restOptions,
+      }
+    })(),
+  )
+}
+
+useInfiniteGetListDetailsSimplifiedQuery.getKey = (
+  variables?: GetListDetailsSimplifiedQueryVariables,
+) =>
+  variables === undefined
+    ? ['GetListDetailsSimplified.infinite']
+    : ['GetListDetailsSimplified.infinite', variables]
+
+useGetListDetailsSimplifiedQuery.fetcher = (
+  variables?: GetListDetailsSimplifiedQueryVariables,
+  options?: RequestInit['headers'],
+) =>
+  fetcher<
+    GetListDetailsSimplifiedQuery,
+    GetListDetailsSimplifiedQueryVariables
+  >(GetListDetailsSimplifiedDocument, variables, options)
+
 export const GetFeeTransfersDocument = `
-    query GetFeeTransfers($address: String!, $cutoff_timestamp: bigint) {
+    query GetFeeTransfers($address: String!, $cutoff_timestamp: timestamptz) {
   before_cutoff: fee_transfers_aggregate(
-    where: {block_timestamp: {_lte: $cutoff_timestamp}, sender_id: {_eq: $address}}
+    where: {created_at: {_lte: $cutoff_timestamp}, sender_id: {_ilike: $address}}
   ) {
     aggregate {
       sum {
@@ -22765,7 +23821,7 @@ export const GetFeeTransfersDocument = `
     }
   }
   after_cutoff: fee_transfers_aggregate(
-    where: {block_timestamp: {_gt: $cutoff_timestamp}, sender_id: {_eq: $address}}
+    where: {created_at: {_gt: $cutoff_timestamp}, sender_id: {_ilike: $address}}
   ) {
     aggregate {
       sum {
@@ -22918,7 +23974,7 @@ export const useInfiniteGetPositionsQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          optionsQueryKey ?? variables === undefined
+          (optionsQueryKey ?? variables === undefined)
             ? ['GetPositions.infinite']
             : ['GetPositions.infinite', variables],
         queryFn: (metaData) =>
@@ -22966,7 +24022,7 @@ export const GetTriplePositionsByAddressDocument = `
       term {
         triple {
           term {
-            positions(where: {account_id: {_eq: $address}}) {
+            positions(where: {account_id: {_ilike: $address}}) {
               account {
                 id
                 label
@@ -22976,7 +24032,7 @@ export const GetTriplePositionsByAddressDocument = `
             }
           }
           counter_term {
-            positions(where: {account_id: {_eq: $address}}) {
+            positions(where: {account_id: {_ilike: $address}}) {
               account {
                 id
                 label
@@ -23157,7 +24213,7 @@ export const useInfiniteGetPositionsWithAggregatesQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          optionsQueryKey ?? variables === undefined
+          (optionsQueryKey ?? variables === undefined)
             ? ['GetPositionsWithAggregates.infinite']
             : ['GetPositionsWithAggregates.infinite', variables],
         queryFn: (metaData) =>
@@ -23262,7 +24318,7 @@ export const useInfiniteGetPositionsCountQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          optionsQueryKey ?? variables === undefined
+          (optionsQueryKey ?? variables === undefined)
             ? ['GetPositionsCount.infinite']
             : ['GetPositionsCount.infinite', variables],
         queryFn: (metaData) =>
@@ -23453,7 +24509,7 @@ export const useInfiniteGetPositionsCountByTypeQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          optionsQueryKey ?? variables === undefined
+          (optionsQueryKey ?? variables === undefined)
             ? ['GetPositionsCountByType.infinite']
             : ['GetPositionsCountByType.infinite', variables],
         queryFn: (metaData) =>
@@ -23497,7 +24553,7 @@ export const GetSignalsDocument = `
   signals(limit: $limit, offset: $offset, order_by: $orderBy) {
     id
     block_number
-    block_timestamp
+    created_at
     transaction_hash
     atom_id
     triple_id
@@ -23692,7 +24748,7 @@ export const useInfiniteGetSignalsQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          optionsQueryKey ?? variables === undefined
+          (optionsQueryKey ?? variables === undefined)
             ? ['GetSignals.infinite']
             : ['GetSignals.infinite', variables],
         queryFn: (metaData) =>
@@ -23767,7 +24823,7 @@ export const useInfiniteGetStatsQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          optionsQueryKey ?? variables === undefined
+          (optionsQueryKey ?? variables === undefined)
             ? ['GetStats.infinite']
             : ['GetStats.infinite', variables],
         queryFn: (metaData) =>
@@ -23939,7 +24995,7 @@ export const useInfiniteGetTagsCustomQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          optionsQueryKey ?? variables === undefined
+          (optionsQueryKey ?? variables === undefined)
             ? ['GetTagsCustom.infinite']
             : ['GetTagsCustom.infinite', variables],
         queryFn: (metaData) =>
@@ -24041,7 +25097,7 @@ export const useInfiniteGetTriplesQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          optionsQueryKey ?? variables === undefined
+          (optionsQueryKey ?? variables === undefined)
             ? ['GetTriples.infinite']
             : ['GetTriples.infinite', variables],
         queryFn: (metaData) =>
@@ -24159,7 +25215,7 @@ export const useInfiniteGetTriplesWithAggregatesQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          optionsQueryKey ?? variables === undefined
+          (optionsQueryKey ?? variables === undefined)
             ? ['GetTriplesWithAggregates.infinite']
             : ['GetTriplesWithAggregates.infinite', variables],
         queryFn: (metaData) =>
@@ -24253,7 +25309,7 @@ export const useInfiniteGetTriplesCountQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          optionsQueryKey ?? variables === undefined
+          (optionsQueryKey ?? variables === undefined)
             ? ['GetTriplesCount.infinite']
             : ['GetTriplesCount.infinite', variables],
         queryFn: (metaData) =>
@@ -24444,7 +25500,7 @@ export const useInfiniteGetAtomTriplesWithPositionsQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          optionsQueryKey ?? variables === undefined
+          (optionsQueryKey ?? variables === undefined)
             ? ['GetAtomTriplesWithPositions.infinite']
             : ['GetAtomTriplesWithPositions.infinite', variables],
         queryFn: (metaData) =>
@@ -24506,7 +25562,7 @@ export const GetTriplesWithPositionsDocument = `
       vaults {
         total_shares
         position_count
-        positions(where: {account_id: {_eq: $address}}) {
+        positions(where: {account_id: {_ilike: $address}}) {
           account {
             id
             label
@@ -24520,7 +25576,7 @@ export const GetTriplesWithPositionsDocument = `
       vaults {
         total_shares
         position_count
-        positions(where: {account_id: {_eq: $address}}) {
+        positions(where: {account_id: {_ilike: $address}}) {
           account {
             id
             label
@@ -24593,7 +25649,7 @@ export const useInfiniteGetTriplesWithPositionsQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          optionsQueryKey ?? variables === undefined
+          (optionsQueryKey ?? variables === undefined)
             ? ['GetTriplesWithPositions.infinite']
             : ['GetTriplesWithPositions.infinite', variables],
         queryFn: (metaData) =>
@@ -24720,7 +25776,7 @@ export const useInfiniteGetVaultsQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          optionsQueryKey ?? variables === undefined
+          (optionsQueryKey ?? variables === undefined)
             ? ['GetVaults.infinite']
             : ['GetVaults.infinite', variables],
         queryFn: (metaData) =>
@@ -24824,181 +25880,6 @@ useGetVaultQuery.fetcher = (
     options,
   )
 
-export const AccountClaimsAggregate = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'AccountClaimsAggregate' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'accounts' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'claims_aggregate' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'order_by' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'position' },
-                      value: {
-                        kind: 'ObjectValue',
-                        fields: [
-                          {
-                            kind: 'ObjectField',
-                            name: { kind: 'Name', value: 'shares' },
-                            value: { kind: 'EnumValue', value: 'desc' },
-                          },
-                        ],
-                      },
-                    },
-                  ],
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'aggregate' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'count' } },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'nodes' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'position' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'shares' },
-                            },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode
-export const AccountClaims = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'AccountClaims' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'accounts' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'claims' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'order_by' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'position' },
-                      value: {
-                        kind: 'ObjectValue',
-                        fields: [
-                          {
-                            kind: 'ObjectField',
-                            name: { kind: 'Name', value: 'shares' },
-                            value: { kind: 'EnumValue', value: 'desc' },
-                          },
-                        ],
-                      },
-                    },
-                  ],
-                },
-              },
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'limit' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'claimsLimit' },
-                },
-              },
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'offset' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'claimsOffset' },
-                },
-              },
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'where' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'claimsWhere' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'position' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'shares' },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode
 export const AccountPositionsAggregate = {
   kind: 'Document',
   definitions: [
@@ -25996,7 +26877,7 @@ export const AtomTxn = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: 'block_number' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'block_timestamp' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'created_at' } },
           { kind: 'Field', name: { kind: 'Name', value: 'transaction_hash' } },
           { kind: 'Field', name: { kind: 'Name', value: 'creator_id' } },
         ],
@@ -26759,6 +27640,18 @@ export const AtomValue = {
                     ],
                   },
                 },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -26867,6 +27760,18 @@ export const AtomMetadata = {
                         name: { kind: 'Name', value: 'description' },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                     ],
                   },
                 },
@@ -27335,6 +28240,18 @@ export const TripleMetadata = {
                     ],
                   },
                 },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -27436,7 +28353,7 @@ export const EventDetails = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: 'block_number' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'block_timestamp' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'created_at' } },
           { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           { kind: 'Field', name: { kind: 'Name', value: 'transaction_hash' } },
           { kind: 'Field', name: { kind: 'Name', value: 'atom_id' } },
@@ -27856,6 +28773,18 @@ export const EventDetails = {
                         name: { kind: 'Name', value: 'description' },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                     ],
                   },
                 },
@@ -28643,7 +29572,7 @@ export const TripleTxn = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: 'block_number' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'block_timestamp' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'created_at' } },
           { kind: 'Field', name: { kind: 'Name', value: 'transaction_hash' } },
           { kind: 'Field', name: { kind: 'Name', value: 'creator_id' } },
         ],
@@ -29197,6 +30126,18 @@ export const PositionDetails = {
                     ],
                   },
                 },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -29422,6 +30363,18 @@ export const TripleVaultDetails = {
                         name: { kind: 'Name', value: 'description' },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                     ],
                   },
                 },
@@ -31257,6 +32210,18 @@ export const AtomMetadataMaybedeletethis = {
                     ],
                   },
                 },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -31423,33 +32388,6 @@ export const GetAccounts = {
           kind: 'VariableDefinition',
           variable: {
             kind: 'Variable',
-            name: { kind: 'Name', value: 'claimsLimit' },
-          },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'claimsOffset' },
-          },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'claimsWhere' },
-          },
-          type: {
-            kind: 'NamedType',
-            name: { kind: 'Name', value: 'claims_bool_exp' },
-          },
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
             name: { kind: 'Name', value: 'positionsLimit' },
           },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
@@ -31520,10 +32458,6 @@ export const GetAccounts = {
                 {
                   kind: 'FragmentSpread',
                   name: { kind: 'Name', value: 'AccountMetadata' },
-                },
-                {
-                  kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'AccountClaims' },
                 },
                 {
                   kind: 'FragmentSpread',
@@ -31735,91 +32669,6 @@ export const GetAccounts = {
     },
     {
       kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'AccountClaims' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'accounts' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'claims' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'order_by' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'position' },
-                      value: {
-                        kind: 'ObjectValue',
-                        fields: [
-                          {
-                            kind: 'ObjectField',
-                            name: { kind: 'Name', value: 'shares' },
-                            value: { kind: 'EnumValue', value: 'desc' },
-                          },
-                        ],
-                      },
-                    },
-                  ],
-                },
-              },
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'limit' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'claimsLimit' },
-                },
-              },
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'offset' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'claimsOffset' },
-                },
-              },
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'where' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'claimsWhere' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'position' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'shares' },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
       name: { kind: 'Name', value: 'AccountPositions' },
       typeCondition: {
         kind: 'NamedType',
@@ -32000,33 +32849,6 @@ export const GetAccountsWithAggregates = {
           kind: 'VariableDefinition',
           variable: {
             kind: 'Variable',
-            name: { kind: 'Name', value: 'claimsLimit' },
-          },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'claimsOffset' },
-          },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'claimsWhere' },
-          },
-          type: {
-            kind: 'NamedType',
-            name: { kind: 'Name', value: 'claims_bool_exp' },
-          },
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
             name: { kind: 'Name', value: 'positionsLimit' },
           },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
@@ -32160,10 +32982,6 @@ export const GetAccountsWithAggregates = {
                       },
                       {
                         kind: 'FragmentSpread',
-                        name: { kind: 'Name', value: 'AccountClaims' },
-                      },
-                      {
-                        kind: 'FragmentSpread',
                         name: { kind: 'Name', value: 'AccountPositions' },
                       },
                     ],
@@ -32190,91 +33008,6 @@ export const GetAccountsWithAggregates = {
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'atom_id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'type' } },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'AccountClaims' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'accounts' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'claims' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'order_by' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'position' },
-                      value: {
-                        kind: 'ObjectValue',
-                        fields: [
-                          {
-                            kind: 'ObjectField',
-                            name: { kind: 'Name', value: 'shares' },
-                            value: { kind: 'EnumValue', value: 'desc' },
-                          },
-                        ],
-                      },
-                    },
-                  ],
-                },
-              },
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'limit' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'claimsLimit' },
-                },
-              },
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'offset' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'claimsOffset' },
-                },
-              },
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'where' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'claimsWhere' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'position' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'shares' },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
         ],
       },
     },
@@ -32487,33 +33220,6 @@ export const GetAccount = {
           kind: 'VariableDefinition',
           variable: {
             kind: 'Variable',
-            name: { kind: 'Name', value: 'claimsLimit' },
-          },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'claimsOffset' },
-          },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'claimsWhere' },
-          },
-          type: {
-            kind: 'NamedType',
-            name: { kind: 'Name', value: 'claims_bool_exp' },
-          },
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
             name: { kind: 'Name', value: 'positionsLimit' },
           },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
@@ -32668,10 +33374,6 @@ export const GetAccount = {
                 },
                 {
                   kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'AccountClaims' },
-                },
-                {
-                  kind: 'FragmentSpread',
                   name: { kind: 'Name', value: 'AccountPositions' },
                 },
                 {
@@ -32734,91 +33436,6 @@ export const GetAccount = {
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'atom_id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'type' } },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'AccountClaims' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'accounts' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'claims' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'order_by' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'position' },
-                      value: {
-                        kind: 'ObjectValue',
-                        fields: [
-                          {
-                            kind: 'ObjectField',
-                            name: { kind: 'Name', value: 'shares' },
-                            value: { kind: 'EnumValue', value: 'desc' },
-                          },
-                        ],
-                      },
-                    },
-                  ],
-                },
-              },
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'limit' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'claimsLimit' },
-                },
-              },
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'offset' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'claimsOffset' },
-                },
-              },
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'where' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'claimsWhere' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'position' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'shares' },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
         ],
       },
     },
@@ -33334,6 +33951,18 @@ export const GetAccount = {
                     ],
                   },
                 },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -33550,33 +34179,6 @@ export const GetAccountWithPaginatedRelations = {
           kind: 'VariableDefinition',
           variable: {
             kind: 'Variable',
-            name: { kind: 'Name', value: 'claimsLimit' },
-          },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'claimsOffset' },
-          },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'claimsWhere' },
-          },
-          type: {
-            kind: 'NamedType',
-            name: { kind: 'Name', value: 'claims_bool_exp' },
-          },
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
             name: { kind: 'Name', value: 'positionsLimit' },
           },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
@@ -33714,10 +34316,6 @@ export const GetAccountWithPaginatedRelations = {
                 },
                 {
                   kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'AccountClaims' },
-                },
-                {
-                  kind: 'FragmentSpread',
                   name: { kind: 'Name', value: 'AccountPositions' },
                 },
                 {
@@ -33749,91 +34347,6 @@ export const GetAccountWithPaginatedRelations = {
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'atom_id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'type' } },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'AccountClaims' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'accounts' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'claims' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'order_by' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'position' },
-                      value: {
-                        kind: 'ObjectValue',
-                        fields: [
-                          {
-                            kind: 'ObjectField',
-                            name: { kind: 'Name', value: 'shares' },
-                            value: { kind: 'EnumValue', value: 'desc' },
-                          },
-                        ],
-                      },
-                    },
-                  ],
-                },
-              },
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'limit' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'claimsLimit' },
-                },
-              },
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'offset' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'claimsOffset' },
-                },
-              },
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'where' },
-                value: {
-                  kind: 'Variable',
-                  name: { kind: 'Name', value: 'claimsWhere' },
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'position' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'shares' },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
         ],
       },
     },
@@ -34313,33 +34826,6 @@ export const GetAccountWithAggregates = {
           kind: 'VariableDefinition',
           variable: {
             kind: 'Variable',
-            name: { kind: 'Name', value: 'claimsLimit' },
-          },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'claimsOffset' },
-          },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'claimsWhere' },
-          },
-          type: {
-            kind: 'NamedType',
-            name: { kind: 'Name', value: 'claims_bool_exp' },
-          },
-        },
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
             name: { kind: 'Name', value: 'positionsLimit' },
           },
           type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
@@ -34477,10 +34963,6 @@ export const GetAccountWithAggregates = {
                 },
                 {
                   kind: 'FragmentSpread',
-                  name: { kind: 'Name', value: 'AccountClaimsAggregate' },
-                },
-                {
-                  kind: 'FragmentSpread',
                   name: { kind: 'Name', value: 'AccountPositionsAggregate' },
                 },
                 {
@@ -34512,86 +34994,6 @@ export const GetAccountWithAggregates = {
           { kind: 'Field', name: { kind: 'Name', value: 'id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'atom_id' } },
           { kind: 'Field', name: { kind: 'Name', value: 'type' } },
-        ],
-      },
-    },
-    {
-      kind: 'FragmentDefinition',
-      name: { kind: 'Name', value: 'AccountClaimsAggregate' },
-      typeCondition: {
-        kind: 'NamedType',
-        name: { kind: 'Name', value: 'accounts' },
-      },
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'claims_aggregate' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'order_by' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'position' },
-                      value: {
-                        kind: 'ObjectValue',
-                        fields: [
-                          {
-                            kind: 'ObjectField',
-                            name: { kind: 'Name', value: 'shares' },
-                            value: { kind: 'EnumValue', value: 'desc' },
-                          },
-                        ],
-                      },
-                    },
-                  ],
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'aggregate' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'count' } },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'nodes' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'position' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'shares' },
-                            },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
         ],
       },
     },
@@ -35102,6 +35504,209 @@ export const GetAccountWithAggregates = {
     },
   ],
 } as unknown as DocumentNode
+export const GetAccountMetadata = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'GetAccountMetadata' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'address' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'account' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'address' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'AccountMetadata' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'atom' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AtomMetadata' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'AccountMetadata' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'accounts' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'atom_id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'AtomValue' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'atoms' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'value' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'person' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'description' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'thing' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'description' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'organization' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'description' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'AtomMetadata' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'atoms' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'term_id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'data' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'emoji' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'wallet_id' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'creator' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+              ],
+            },
+          },
+          {
+            kind: 'FragmentSpread',
+            name: { kind: 'Name', value: 'AtomValue' },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
 export const GetAtoms = {
   kind: 'Document',
   definitions: [
@@ -35345,6 +35950,18 @@ export const GetAtoms = {
                     ],
                   },
                 },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -35398,7 +36015,7 @@ export const GetAtoms = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: 'block_number' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'block_timestamp' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'created_at' } },
           { kind: 'Field', name: { kind: 'Name', value: 'transaction_hash' } },
           { kind: 'Field', name: { kind: 'Name', value: 'creator_id' } },
         ],
@@ -36047,7 +36664,7 @@ export const GetAtomsWithPositions = {
                                               kind: 'ObjectField',
                                               name: {
                                                 kind: 'Name',
-                                                value: '_eq',
+                                                value: '_ilike',
                                               },
                                               value: {
                                                 kind: 'Variable',
@@ -36205,6 +36822,18 @@ export const GetAtomsWithPositions = {
                     ],
                   },
                 },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -36258,7 +36887,7 @@ export const GetAtomsWithPositions = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: 'block_number' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'block_timestamp' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'created_at' } },
           { kind: 'Field', name: { kind: 'Name', value: 'transaction_hash' } },
           { kind: 'Field', name: { kind: 'Name', value: 'creator_id' } },
         ],
@@ -36494,6 +37123,18 @@ export const GetAtomsWithAggregates = {
                     ],
                   },
                 },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -36547,7 +37188,7 @@ export const GetAtomsWithAggregates = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: 'block_number' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'block_timestamp' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'created_at' } },
           { kind: 'Field', name: { kind: 'Name', value: 'transaction_hash' } },
           { kind: 'Field', name: { kind: 'Name', value: 'creator_id' } },
         ],
@@ -36914,6 +37555,18 @@ export const GetAtom = {
                     ],
                   },
                 },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -36967,7 +37620,7 @@ export const GetAtom = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: 'block_number' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'block_timestamp' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'created_at' } },
           { kind: 'Field', name: { kind: 'Name', value: 'transaction_hash' } },
           { kind: 'Field', name: { kind: 'Name', value: 'creator_id' } },
         ],
@@ -37524,6 +38177,18 @@ export const GetAtomByData = {
                     ],
                   },
                 },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -37577,7 +38242,7 @@ export const GetAtomByData = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: 'block_number' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'block_timestamp' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'created_at' } },
           { kind: 'Field', name: { kind: 'Name', value: 'transaction_hash' } },
           { kind: 'Field', name: { kind: 'Name', value: 'creator_id' } },
         ],
@@ -38018,10 +38683,7 @@ export const GetVerifiedAtomDetails = {
                 { kind: 'Field', name: { kind: 'Name', value: 'wallet_id' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'type' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'block_timestamp' },
-                },
+                { kind: 'Field', name: { kind: 'Name', value: 'created_at' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'data' } },
                 {
                   kind: 'Field',
@@ -38165,7 +38827,7 @@ export const GetVerifiedAtomDetails = {
                                               kind: 'ObjectField',
                                               name: {
                                                 kind: 'Name',
-                                                value: '_eq',
+                                                value: '_ilike',
                                               },
                                               value: {
                                                 kind: 'Variable',
@@ -38695,10 +39357,7 @@ export const GetAtomDetails = {
                 { kind: 'Field', name: { kind: 'Name', value: 'wallet_id' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'type' } },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'block_timestamp' },
-                },
+                { kind: 'Field', name: { kind: 'Name', value: 'created_at' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'data' } },
                 {
                   kind: 'Field',
@@ -39056,202 +39715,6 @@ export const GetAtomDetails = {
     },
   ],
 } as unknown as DocumentNode
-export const GetClaimsByAddress = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'query',
-      name: { kind: 'Name', value: 'GetClaimsByAddress' },
-      variableDefinitions: [
-        {
-          kind: 'VariableDefinition',
-          variable: {
-            kind: 'Variable',
-            name: { kind: 'Name', value: 'address' },
-          },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
-        },
-      ],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'claims_aggregate' },
-            arguments: [
-              {
-                kind: 'Argument',
-                name: { kind: 'Name', value: 'where' },
-                value: {
-                  kind: 'ObjectValue',
-                  fields: [
-                    {
-                      kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'account_id' },
-                      value: {
-                        kind: 'ObjectValue',
-                        fields: [
-                          {
-                            kind: 'ObjectField',
-                            name: { kind: 'Name', value: '_eq' },
-                            value: {
-                              kind: 'Variable',
-                              name: { kind: 'Name', value: 'address' },
-                            },
-                          },
-                        ],
-                      },
-                    },
-                  ],
-                },
-              },
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'aggregate' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'count' } },
-                    ],
-                  },
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'nodes' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'account' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'label' },
-                            },
-                          ],
-                        },
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'position' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'term' },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  {
-                                    kind: 'Field',
-                                    name: { kind: 'Name', value: 'triple' },
-                                    selectionSet: {
-                                      kind: 'SelectionSet',
-                                      selections: [
-                                        {
-                                          kind: 'Field',
-                                          name: {
-                                            kind: 'Name',
-                                            value: 'subject',
-                                          },
-                                          selectionSet: {
-                                            kind: 'SelectionSet',
-                                            selections: [
-                                              {
-                                                kind: 'Field',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value: 'label',
-                                                },
-                                              },
-                                            ],
-                                          },
-                                        },
-                                        {
-                                          kind: 'Field',
-                                          name: {
-                                            kind: 'Name',
-                                            value: 'predicate',
-                                          },
-                                          selectionSet: {
-                                            kind: 'SelectionSet',
-                                            selections: [
-                                              {
-                                                kind: 'Field',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value: 'label',
-                                                },
-                                              },
-                                            ],
-                                          },
-                                        },
-                                        {
-                                          kind: 'Field',
-                                          name: {
-                                            kind: 'Name',
-                                            value: 'object',
-                                          },
-                                          selectionSet: {
-                                            kind: 'SelectionSet',
-                                            selections: [
-                                              {
-                                                kind: 'Field',
-                                                name: {
-                                                  kind: 'Name',
-                                                  value: 'label',
-                                                },
-                                              },
-                                            ],
-                                          },
-                                        },
-                                        {
-                                          kind: 'Field',
-                                          name: {
-                                            kind: 'Name',
-                                            value: 'term_id',
-                                          },
-                                        },
-                                        {
-                                          kind: 'Field',
-                                          name: {
-                                            kind: 'Name',
-                                            value: 'counter_term_id',
-                                          },
-                                        },
-                                      ],
-                                    },
-                                  },
-                                ],
-                              },
-                            },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'shares' },
-                            },
-                          ],
-                        },
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-  ],
-} as unknown as DocumentNode
 export const GetEvents = {
   kind: 'Document',
   definitions: [
@@ -39400,10 +39863,7 @@ export const GetEvents = {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'block_number' },
                 },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'block_timestamp' },
-                },
+                { kind: 'Field', name: { kind: 'Name', value: 'created_at' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'type' } },
                 {
                   kind: 'Field',
@@ -40394,6 +40854,18 @@ export const GetEvents = {
                     ],
                   },
                 },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -40566,7 +41038,7 @@ export const GetEventsWithAggregates = {
                           selections: [
                             {
                               kind: 'Field',
-                              name: { kind: 'Name', value: 'block_timestamp' },
+                              name: { kind: 'Name', value: 'created_at' },
                             },
                             {
                               kind: 'Field',
@@ -40583,7 +41055,7 @@ export const GetEventsWithAggregates = {
                           selections: [
                             {
                               kind: 'Field',
-                              name: { kind: 'Name', value: 'block_timestamp' },
+                              name: { kind: 'Name', value: 'created_at' },
                             },
                             {
                               kind: 'Field',
@@ -40696,6 +41168,18 @@ export const GetEventsWithAggregates = {
                     ],
                   },
                 },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -40804,7 +41288,7 @@ export const GetEventsWithAggregates = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: 'block_number' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'block_timestamp' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'created_at' } },
           { kind: 'Field', name: { kind: 'Name', value: 'type' } },
           { kind: 'Field', name: { kind: 'Name', value: 'transaction_hash' } },
           { kind: 'Field', name: { kind: 'Name', value: 'atom_id' } },
@@ -41653,7 +42137,7 @@ export const GetEventsData = {
                           selections: [
                             {
                               kind: 'Field',
-                              name: { kind: 'Name', value: 'block_timestamp' },
+                              name: { kind: 'Name', value: 'created_at' },
                             },
                             {
                               kind: 'Field',
@@ -41670,7 +42154,7 @@ export const GetEventsData = {
                           selections: [
                             {
                               kind: 'Field',
-                              name: { kind: 'Name', value: 'block_timestamp' },
+                              name: { kind: 'Name', value: 'created_at' },
                             },
                             {
                               kind: 'Field',
@@ -41995,7 +42479,7 @@ export const GetFollowingPositions = {
                                             kind: 'ObjectField',
                                             name: {
                                               kind: 'Name',
-                                              value: '_eq',
+                                              value: '_ilike',
                                             },
                                             value: {
                                               kind: 'Variable',
@@ -42140,7 +42624,7 @@ export const GetFollowingPositions = {
                                             kind: 'ObjectField',
                                             name: {
                                               kind: 'Name',
-                                              value: '_eq',
+                                              value: '_ilike',
                                             },
                                             value: {
                                               kind: 'Variable',
@@ -42327,7 +42811,7 @@ export const GetFollowingPositions = {
                                               kind: 'ObjectField',
                                               name: {
                                                 kind: 'Name',
-                                                value: '_eq',
+                                                value: '_ilike',
                                               },
                                               value: {
                                                 kind: 'Variable',
@@ -42462,6 +42946,18 @@ export const GetFollowingPositions = {
                         name: { kind: 'Name', value: 'description' },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                     ],
                   },
                 },
@@ -43003,6 +43499,18 @@ export const GetFollowerPositions = {
                         name: { kind: 'Name', value: 'description' },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                     ],
                   },
                 },
@@ -44023,7 +44531,7 @@ export const GetConnectionsCount = {
                                             kind: 'ObjectField',
                                             name: {
                                               kind: 'Name',
-                                              value: '_eq',
+                                              value: '_ilike',
                                             },
                                             value: {
                                               kind: 'Variable',
@@ -44340,16 +44848,6 @@ export const GetLists = {
                       fields: [
                         {
                           kind: 'ObjectField',
-                          name: { kind: 'Name', value: 'claim_count' },
-                          value: { kind: 'EnumValue', value: 'desc' },
-                        },
-                      ],
-                    },
-                    {
-                      kind: 'ObjectValue',
-                      fields: [
-                        {
-                          kind: 'ObjectField',
                           name: { kind: 'Name', value: 'triple_count' },
                           value: { kind: 'EnumValue', value: 'desc' },
                         },
@@ -44363,7 +44861,6 @@ export const GetLists = {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'claim_count' } },
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'triple_count' },
@@ -44647,6 +45144,18 @@ export const GetListItems = {
                         name: { kind: 'Name', value: 'description' },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                     ],
                   },
                 },
@@ -45411,6 +45920,31 @@ export const GetListDetails = {
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                       { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'term' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'vaults' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'position_count',
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
                       {
                         kind: 'Field',
                         alias: { kind: 'Name', value: 'tags' },
@@ -46182,7 +46716,7 @@ export const GetListDetailsWithPosition = {
                                     fields: [
                                       {
                                         kind: 'ObjectField',
-                                        name: { kind: 'Name', value: '_eq' },
+                                        name: { kind: 'Name', value: '_ilike' },
                                         value: {
                                           kind: 'Variable',
                                           name: {
@@ -46280,7 +46814,7 @@ export const GetListDetailsWithPosition = {
                                     fields: [
                                       {
                                         kind: 'ObjectField',
-                                        name: { kind: 'Name', value: '_eq' },
+                                        name: { kind: 'Name', value: '_ilike' },
                                         value: {
                                           kind: 'Variable',
                                           name: {
@@ -46775,7 +47309,7 @@ export const GetListDetailsWithUser = {
                                     fields: [
                                       {
                                         kind: 'ObjectField',
-                                        name: { kind: 'Name', value: '_eq' },
+                                        name: { kind: 'Name', value: '_ilike' },
                                         value: {
                                           kind: 'Variable',
                                           name: {
@@ -46873,7 +47407,7 @@ export const GetListDetailsWithUser = {
                                     fields: [
                                       {
                                         kind: 'ObjectField',
-                                        name: { kind: 'Name', value: '_eq' },
+                                        name: { kind: 'Name', value: '_ilike' },
                                         value: {
                                           kind: 'Variable',
                                           name: {
@@ -47256,7 +47790,7 @@ export const GetListDetailsWithUser = {
                                     fields: [
                                       {
                                         kind: 'ObjectField',
-                                        name: { kind: 'Name', value: '_eq' },
+                                        name: { kind: 'Name', value: '_ilike' },
                                         value: {
                                           kind: 'Variable',
                                           name: {
@@ -47354,7 +47888,7 @@ export const GetListDetailsWithUser = {
                                     fields: [
                                       {
                                         kind: 'ObjectField',
-                                        name: { kind: 'Name', value: '_eq' },
+                                        name: { kind: 'Name', value: '_ilike' },
                                         value: {
                                           kind: 'Variable',
                                           name: {
@@ -47412,6 +47946,566 @@ export const GetListDetailsWithUser = {
     },
   ],
 } as unknown as DocumentNode
+export const GetListDetailsSimplified = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'GetListDetailsSimplified' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'globalWhere' },
+          },
+          type: {
+            kind: 'NamedType',
+            name: { kind: 'Name', value: 'triples_bool_exp' },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'address' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'limit' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'offset' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'orderBy' },
+          },
+          type: {
+            kind: 'ListType',
+            type: {
+              kind: 'NonNullType',
+              type: {
+                kind: 'NamedType',
+                name: { kind: 'Name', value: 'triples_order_by' },
+              },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'globalTriplesAggregate' },
+            name: { kind: 'Name', value: 'triples_aggregate' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'globalWhere' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'aggregate' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'count' } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'globalTriples' },
+            name: { kind: 'Name', value: 'triples' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'globalWhere' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'limit' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'offset' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'offset' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'order_by' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'orderBy' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'term_id' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'counter_term_id' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'subject' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'term_id' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'wallet_id' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'term' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'vaults' },
+                              arguments: [
+                                {
+                                  kind: 'Argument',
+                                  name: { kind: 'Name', value: 'where' },
+                                  value: {
+                                    kind: 'ObjectValue',
+                                    fields: [
+                                      {
+                                        kind: 'ObjectField',
+                                        name: {
+                                          kind: 'Name',
+                                          value: 'curve_id',
+                                        },
+                                        value: {
+                                          kind: 'ObjectValue',
+                                          fields: [
+                                            {
+                                              kind: 'ObjectField',
+                                              name: {
+                                                kind: 'Name',
+                                                value: '_eq',
+                                              },
+                                              value: {
+                                                kind: 'StringValue',
+                                                value: '1',
+                                                block: false,
+                                              },
+                                            },
+                                          ],
+                                        },
+                                      },
+                                    ],
+                                  },
+                                },
+                              ],
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'current_share_price',
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'position_count',
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'total_shares',
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'object' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'term_id' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'wallet_id' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'predicate' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'term_id' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'wallet_id' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'term' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'vaults' },
+                        arguments: [
+                          {
+                            kind: 'Argument',
+                            name: { kind: 'Name', value: 'where' },
+                            value: {
+                              kind: 'ObjectValue',
+                              fields: [
+                                {
+                                  kind: 'ObjectField',
+                                  name: { kind: 'Name', value: 'curve_id' },
+                                  value: {
+                                    kind: 'ObjectValue',
+                                    fields: [
+                                      {
+                                        kind: 'ObjectField',
+                                        name: { kind: 'Name', value: '_eq' },
+                                        value: {
+                                          kind: 'StringValue',
+                                          value: '1',
+                                          block: false,
+                                        },
+                                      },
+                                    ],
+                                  },
+                                },
+                              ],
+                            },
+                          },
+                        ],
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: {
+                                kind: 'Name',
+                                value: 'current_share_price',
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'position_count' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'total_shares' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'positions' },
+                              arguments: [
+                                {
+                                  kind: 'Argument',
+                                  name: { kind: 'Name', value: 'where' },
+                                  value: {
+                                    kind: 'ObjectValue',
+                                    fields: [
+                                      {
+                                        kind: 'ObjectField',
+                                        name: {
+                                          kind: 'Name',
+                                          value: 'account_id',
+                                        },
+                                        value: {
+                                          kind: 'ObjectValue',
+                                          fields: [
+                                            {
+                                              kind: 'ObjectField',
+                                              name: {
+                                                kind: 'Name',
+                                                value: '_ilike',
+                                              },
+                                              value: {
+                                                kind: 'Variable',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'address',
+                                                },
+                                              },
+                                            },
+                                          ],
+                                        },
+                                      },
+                                    ],
+                                  },
+                                },
+                              ],
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'account' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'label',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'image',
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'shares' },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'counter_term' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'vaults' },
+                        arguments: [
+                          {
+                            kind: 'Argument',
+                            name: { kind: 'Name', value: 'where' },
+                            value: {
+                              kind: 'ObjectValue',
+                              fields: [
+                                {
+                                  kind: 'ObjectField',
+                                  name: { kind: 'Name', value: 'curve_id' },
+                                  value: {
+                                    kind: 'ObjectValue',
+                                    fields: [
+                                      {
+                                        kind: 'ObjectField',
+                                        name: { kind: 'Name', value: '_eq' },
+                                        value: {
+                                          kind: 'StringValue',
+                                          value: '1',
+                                          block: false,
+                                        },
+                                      },
+                                    ],
+                                  },
+                                },
+                              ],
+                            },
+                          },
+                        ],
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: {
+                                kind: 'Name',
+                                value: 'current_share_price',
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'position_count' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'total_shares' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'positions' },
+                              arguments: [
+                                {
+                                  kind: 'Argument',
+                                  name: { kind: 'Name', value: 'where' },
+                                  value: {
+                                    kind: 'ObjectValue',
+                                    fields: [
+                                      {
+                                        kind: 'ObjectField',
+                                        name: {
+                                          kind: 'Name',
+                                          value: 'account_id',
+                                        },
+                                        value: {
+                                          kind: 'ObjectValue',
+                                          fields: [
+                                            {
+                                              kind: 'ObjectField',
+                                              name: {
+                                                kind: 'Name',
+                                                value: '_ilike',
+                                              },
+                                              value: {
+                                                kind: 'Variable',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'address',
+                                                },
+                                              },
+                                            },
+                                          ],
+                                        },
+                                      },
+                                    ],
+                                  },
+                                },
+                              ],
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'account' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'label',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'image',
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'shares' },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
 export const GetFeeTransfers = {
   kind: 'Document',
   definitions: [
@@ -47440,7 +48534,10 @@ export const GetFeeTransfers = {
             kind: 'Variable',
             name: { kind: 'Name', value: 'cutoff_timestamp' },
           },
-          type: { kind: 'NamedType', name: { kind: 'Name', value: 'bigint' } },
+          type: {
+            kind: 'NamedType',
+            name: { kind: 'Name', value: 'timestamptz' },
+          },
         },
       ],
       selectionSet: {
@@ -47459,7 +48556,7 @@ export const GetFeeTransfers = {
                   fields: [
                     {
                       kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'block_timestamp' },
+                      name: { kind: 'Name', value: 'created_at' },
                       value: {
                         kind: 'ObjectValue',
                         fields: [
@@ -47482,7 +48579,7 @@ export const GetFeeTransfers = {
                         fields: [
                           {
                             kind: 'ObjectField',
-                            name: { kind: 'Name', value: '_eq' },
+                            name: { kind: 'Name', value: '_ilike' },
                             value: {
                               kind: 'Variable',
                               name: { kind: 'Name', value: 'address' },
@@ -47536,7 +48633,7 @@ export const GetFeeTransfers = {
                   fields: [
                     {
                       kind: 'ObjectField',
-                      name: { kind: 'Name', value: 'block_timestamp' },
+                      name: { kind: 'Name', value: 'created_at' },
                       value: {
                         kind: 'ObjectValue',
                         fields: [
@@ -47559,7 +48656,7 @@ export const GetFeeTransfers = {
                         fields: [
                           {
                             kind: 'ObjectField',
-                            name: { kind: 'Name', value: '_eq' },
+                            name: { kind: 'Name', value: '_ilike' },
                             value: {
                               kind: 'Variable',
                               name: { kind: 'Name', value: 'address' },
@@ -47833,6 +48930,18 @@ export const GetPositions = {
                         name: { kind: 'Name', value: 'description' },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                     ],
                   },
                 },
@@ -48519,7 +49628,7 @@ export const GetTriplePositionsByAddress = {
                                                           kind: 'ObjectField',
                                                           name: {
                                                             kind: 'Name',
-                                                            value: '_eq',
+                                                            value: '_ilike',
                                                           },
                                                           value: {
                                                             kind: 'Variable',
@@ -48623,7 +49732,7 @@ export const GetTriplePositionsByAddress = {
                                                           kind: 'ObjectField',
                                                           name: {
                                                             kind: 'Name',
-                                                            value: '_eq',
+                                                            value: '_ilike',
                                                           },
                                                           value: {
                                                             kind: 'Variable',
@@ -48783,6 +49892,18 @@ export const GetTriplePositionsByAddress = {
                         name: { kind: 'Name', value: 'description' },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                     ],
                   },
                 },
@@ -49462,6 +50583,18 @@ export const GetPositionsWithAggregates = {
                     ],
                   },
                 },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -50133,6 +51266,18 @@ export const GetPosition = {
                         name: { kind: 'Name', value: 'description' },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                     ],
                   },
                 },
@@ -50817,10 +51962,7 @@ export const GetSignals = {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'block_number' },
                 },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'block_timestamp' },
-                },
+                { kind: 'Field', name: { kind: 'Name', value: 'created_at' } },
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'transaction_hash' },
@@ -51812,6 +52954,18 @@ export const GetSignals = {
                     ],
                   },
                 },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -52109,6 +53263,18 @@ export const GetTags = {
                         name: { kind: 'Name', value: 'description' },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                     ],
                   },
                 },
@@ -52610,6 +53776,18 @@ export const GetTagsCustom = {
                         name: { kind: 'Name', value: 'description' },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                     ],
                   },
                 },
@@ -53222,6 +54400,18 @@ export const GetTriples = {
                     ],
                   },
                 },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -54062,7 +55252,7 @@ export const GetTriples = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: 'block_number' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'block_timestamp' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'created_at' } },
           { kind: 'Field', name: { kind: 'Name', value: 'transaction_hash' } },
           { kind: 'Field', name: { kind: 'Name', value: 'creator_id' } },
         ],
@@ -54433,6 +55623,18 @@ export const GetTriplesWithAggregates = {
                     ],
                   },
                 },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -55273,7 +56475,7 @@ export const GetTriplesWithAggregates = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: 'block_number' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'block_timestamp' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'created_at' } },
           { kind: 'Field', name: { kind: 'Name', value: 'transaction_hash' } },
           { kind: 'Field', name: { kind: 'Name', value: 'creator_id' } },
         ],
@@ -55629,6 +56831,18 @@ export const GetTriple = {
                     ],
                   },
                 },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -56469,7 +57683,7 @@ export const GetTriple = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: 'block_number' } },
-          { kind: 'Field', name: { kind: 'Name', value: 'block_timestamp' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'created_at' } },
           { kind: 'Field', name: { kind: 'Name', value: 'transaction_hash' } },
           { kind: 'Field', name: { kind: 'Name', value: 'creator_id' } },
         ],
@@ -56896,7 +58110,7 @@ export const GetTriplesWithPositions = {
                                               kind: 'ObjectField',
                                               name: {
                                                 kind: 'Name',
-                                                value: '_eq',
+                                                value: '_ilike',
                                               },
                                               value: {
                                                 kind: 'Variable',
@@ -56999,7 +58213,7 @@ export const GetTriplesWithPositions = {
                                               kind: 'ObjectField',
                                               name: {
                                                 kind: 'Name',
-                                                value: '_eq',
+                                                value: '_ilike',
                                               },
                                               value: {
                                                 kind: 'Variable',

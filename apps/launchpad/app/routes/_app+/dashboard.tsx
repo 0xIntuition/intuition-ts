@@ -37,7 +37,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const queryClient = new QueryClient()
 
   const user = await getUser(request)
-  const address = user?.wallet?.address?.toLowerCase()
+  const address = user?.wallet?.address
 
   if (address) {
     await queryClient.prefetchQuery({
@@ -75,7 +75,7 @@ export default function Dashboard() {
   const { data: points } = usePoints(address)
   const { data: protocolFees } = useGetFeeTransfersQuery({
     address: address ?? ZERO_ADDRESS,
-    cutoff_timestamp: 1733356800,
+    cutoff_timestamp: '2024-12-05T00:00:00Z',
   })
   const { data: rankData } = useUserRank(address)
   const { data: totalCompletedQuestions } = useTotalCompletedQuestions()

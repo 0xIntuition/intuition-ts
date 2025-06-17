@@ -7,12 +7,8 @@ query GetLists($where: predicate_objects_bool_exp) {
       count
     }
   }
-  predicate_objects(
-    where: $where
-    order_by: [{ claim_count: desc }, { triple_count: desc }]
-  ) {
+  predicate_objects(where: $where, order_by: [{ triple_count: desc }]) {
     id
-    claim_count
     triple_count
     object {
       term_id
@@ -72,6 +68,11 @@ query GetListDetails(
       wallet_id
       image
       type
+      term {
+        vaults {
+          position_count
+        }
+      }
       tags: as_subject_triples_aggregate(
         where: { predicate_id: { _eq: $tagPredicateId } }
       ) {
@@ -202,7 +203,7 @@ query GetListDetailsWithPosition(
         position_count
         total_shares
       }
-      positions(where: { account_id: { _eq: $address } }) {
+      positions(where: { account_id: { _ilike: $address } }) {
         account {
           id
           label
@@ -217,7 +218,7 @@ query GetListDetailsWithPosition(
         position_count
         total_shares
       }
-      positions(where: { account_id: { _eq: $address } }) {
+      positions(where: { account_id: { _ilike: $address } }) {
         account {
           id
           label
@@ -303,7 +304,7 @@ query GetListDetailsWithUser(
         position_count
         total_shares
       }
-      positions(where: { account_id: { _eq: $address } }) {
+      positions(where: { account_id: { _ilike: $address } }) {
         account {
           id
           label
@@ -318,7 +319,7 @@ query GetListDetailsWithUser(
         position_count
         total_shares
       }
-      positions(where: { account_id: { _eq: $address } }) {
+      positions(where: { account_id: { _ilike: $address } }) {
         account {
           id
           label
@@ -388,7 +389,7 @@ query GetListDetailsWithUser(
         position_count
         total_shares
       }
-      positions(where: { account_id: { _eq: $address } }) {
+      positions(where: { account_id: { _ilike: $address } }) {
         account {
           id
           label
@@ -403,13 +404,94 @@ query GetListDetailsWithUser(
         position_count
         total_shares
       }
-      positions(where: { account_id: { _eq: $address } }) {
+      positions(where: { account_id: { _ilike: $address } }) {
         account {
           id
           label
           image
         }
         shares
+      }
+    }
+  }
+}
+
+query GetListDetailsSimplified(
+  $globalWhere: triples_bool_exp
+  $address: String
+  $limit: Int
+  $offset: Int
+  $orderBy: [triples_order_by!]
+) {
+  globalTriplesAggregate: triples_aggregate(where: $globalWhere) {
+    aggregate {
+      count
+    }
+  }
+  globalTriples: triples(
+    where: $globalWhere
+    limit: $limit
+    offset: $offset
+    order_by: $orderBy
+  ) {
+    term_id
+    counter_term_id
+    subject {
+      term_id
+      label
+      wallet_id
+      image
+      type
+      term {
+        vaults(where: { curve_id: { _eq: "1" } }) {
+          current_share_price
+          position_count
+          total_shares
+        }
+      }
+    }
+    object {
+      term_id
+      label
+      wallet_id
+      image
+      type
+    }
+    predicate {
+      term_id
+      label
+      wallet_id
+      image
+      type
+    }
+    term {
+      vaults(where: { curve_id: { _eq: "1" } }) {
+        current_share_price
+        position_count
+        total_shares
+        positions(where: { account_id: { _ilike: $address } }) {
+          account {
+            id
+            label
+            image
+          }
+          shares
+        }
+      }
+    }
+    counter_term {
+      vaults(where: { curve_id: { _eq: "1" } }) {
+        current_share_price
+        position_count
+        total_shares
+        positions(where: { account_id: { _ilike: $address } }) {
+          account {
+            id
+            label
+            image
+          }
+          shares
+        }
       }
     }
   }

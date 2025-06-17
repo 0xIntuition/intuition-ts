@@ -12,7 +12,7 @@ query GetSignals(
   signals(limit: $limit, offset: $offset, order_by: $orderBy) {
     id
     block_number
-    block_timestamp
+    created_at
     transaction_hash
     atom_id
     triple_id
@@ -177,6 +177,11 @@ fragment AtomValue on atoms {
       image
       description
       url
+    }
+    account {
+      id
+      label
+      image
     }
   }
 }

@@ -19,7 +19,7 @@ query AtomsWithTags(
     wallet_id
     image
     type
-    block_timestamp
+    created_at
     data
     creator {
       id

@@ -108,7 +108,7 @@ query GetTriplesWithPositions(
       vaults {
         total_shares
         position_count
-        positions(where: { account_id: { _eq: $address } }) {
+        positions(where: { account_id: { _ilike: $address } }) {
           account {
             id
             label
@@ -122,7 +122,7 @@ query GetTriplesWithPositions(
       vaults {
         total_shares
         position_count
-        positions(where: { account_id: { _eq: $address } }) {
+        positions(where: { account_id: { _ilike: $address } }) {
           account {
             id
             label

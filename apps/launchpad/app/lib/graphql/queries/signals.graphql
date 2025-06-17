@@ -1,7 +1,7 @@
 query GetActivity($limit: Int, $offset: Int, $orderBy: [signals_order_by!]) {
   signals(limit: $limit, offset: $offset, order_by: $orderBy) {
     id
-    block_timestamp
+    created_at
     transaction_hash
     term {
       atom {

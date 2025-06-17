@@ -176,7 +176,7 @@ export function EcosystemModal({
                 as_subject_triples: {
                   predicate_id: { _eq: predicateId },
                   object_id: { _eq: objectId },
-                  vault: {
+                  term: {
                     positions: {
                       account: {
                         id: {
@@ -206,7 +206,7 @@ export function EcosystemModal({
             ? {
                 as_subject_triples: {
                   object: {
-                    vault_id: { _in: [tagObjectId] },
+                    term_id: { _in: [tagObjectId] },
                   },
                 },
               }
@@ -215,7 +215,7 @@ export function EcosystemModal({
       },
       limit: 500,
       tagPredicateIds: [predicateId], // dev - has tag predicate ID
-      orderBy: { vault: { total_shares: 'desc' } },
+      orderBy: { term: { total_market_cap: 'desc' } },
       userPositionAddress: userWallet,
       verifiedPositionAddress: VERIFICATION_ADDRESS,
     },
@@ -265,7 +265,7 @@ export function EcosystemModal({
     }
 
     const newTopics = searchData.atoms.map((atom) => ({
-      id: atom.vault_id,
+      id: atom.term_id,
       name: atom?.value?.account?.label ?? atom.label ?? '',
       image: atom.image ?? undefined,
       atom: atom as unknown as AtomsWithTagsQuery['atoms'][number],
@@ -310,12 +310,12 @@ export function EcosystemModal({
     // If we get here, this is a new atom from search results
     if (searchTerm) {
       const selectedAtom = searchData?.atoms?.find(
-        (atom) => atom.vault_id === id,
+        (atom) => atom.term_id === id,
       )
       if (selectedAtom) {
         // Create a new topic
         const newTopic: Topic = {
-          id: selectedAtom.vault_id,
+          id: selectedAtom.term_id,
           name: selectedAtom?.value?.account?.label ?? selectedAtom.label ?? '',
           image: selectedAtom.image ?? undefined,
           selected: true,
@@ -331,7 +331,7 @@ export function EcosystemModal({
         const metadata: NewAtomMetadata = {
           name: selectedAtom?.value?.account?.label ?? selectedAtom.label ?? '',
           image: selectedAtom.image ?? undefined,
-          vaultId: selectedAtom.vault_id,
+          vaultId: selectedAtom.term_id,
         }
 
         handleTransition((prev) => ({
@@ -624,7 +624,7 @@ export function EcosystemModal({
           image: metadata.image,
           selected: true,
           atom: searchData?.atoms.find(
-            (atom) => atom.vault_id === metadata.vaultId,
+            (atom) => atom.term_id === metadata.vaultId,
           ) as AtomsWithTagsQuery['atoms'][number],
         },
       }

@@ -49,7 +49,7 @@ query GetAtomsWithPositions(
             }
           }
         }
-        positions(where: { account_id: { _eq: $address } }) {
+        positions(where: { account_id: { _ilike: $address } }) {
           id
           account {
             label
@@ -132,7 +132,7 @@ query GetVerifiedAtomDetails($id: numeric!, $userPositionAddress: String!) {
     wallet_id
     image
     type
-    block_timestamp
+    created_at
     data
     creator {
       id
@@ -151,7 +151,7 @@ query GetVerifiedAtomDetails($id: numeric!, $userPositionAddress: String!) {
         position_count
         userPosition: positions(
           limit: 1
-          where: { account_id: { _eq: $userPositionAddress } }
+          where: { account_id: { _ilike: $userPositionAddress } }
         ) {
           shares
           account_id
@@ -218,7 +218,7 @@ query GetAtomDetails($id: numeric!, $userPositionAddress: String!) {
     wallet_id
     image
     type
-    block_timestamp
+    created_at
     data
     creator {
       id

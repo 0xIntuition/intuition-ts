@@ -1,6 +1,6 @@
 fragment EventDetails on events {
   block_number
-  block_timestamp
+  created_at
   type
   transaction_hash
   atom_id

@@ -18,6 +18,11 @@ fragment AtomValue on atoms {
       description
       url
     }
+    account {
+      id
+      label
+      image
+    }
   }
 }
 
@@ -39,7 +44,7 @@ fragment AtomMetadata on atoms {
 
 fragment AtomTxn on atoms {
   block_number
-  block_timestamp
+  created_at
   transaction_hash
   creator_id
 }

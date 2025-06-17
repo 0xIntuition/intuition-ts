@@ -14,7 +14,7 @@ query GetEvents(
   events(limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
     id
     block_number
-    block_timestamp
+    created_at
     type
     transaction_hash
     atom_id
@@ -158,11 +158,11 @@ query GetEventsWithAggregates(
     aggregate {
       count
       max {
-        block_timestamp
+        created_at
         block_number
       }
       min {
-        block_timestamp
+        created_at
         block_number
       }
     }
@@ -185,11 +185,11 @@ query GetEventsData($where: events_bool_exp) {
     aggregate {
       count
       max {
-        block_timestamp
+        created_at
         block_number
       }
       min {
-        block_timestamp
+        created_at
         block_number
       }
       avg {

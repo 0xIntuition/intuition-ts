@@ -168,7 +168,7 @@ export function SignalStep({
 
       try {
         // For existing triples, determine which vault to use based on vote direction
-        const vaultId = selectedTopic?.atom?.vault_id.toString() ?? ''
+        const vaultId = selectedTopic?.atom?.term_id.toString() ?? ''
 
         const txHash = await stake({
           val,
@@ -195,11 +195,11 @@ export function SignalStep({
             queryKey: [
               'get-vault-details',
               contract,
-              selectedTopic?.atom?.vault_id,
+              selectedTopic?.atom?.term_id,
             ],
           })
 
-          onStakingSuccess(selectedTopic?.atom?.vault_id?.toString() ?? '')
+          onStakingSuccess(selectedTopic?.atom?.term_id?.toString() ?? '')
         }
       } catch (error) {
         dispatch({

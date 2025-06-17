@@ -165,8 +165,8 @@ export function AddEntryModal({
         },
       },
       orderBy: {
-        vault: {
-          total_shares: 'desc',
+        term: {
+          total_market_cap: 'desc',
         },
       },
     },
@@ -189,8 +189,8 @@ export function AddEntryModal({
       },
       limit: 25,
       orderBy: {
-        vault: {
-          position_count: 'desc',
+        term: {
+          total_market_cap: 'desc',
         },
       },
     },
@@ -233,7 +233,7 @@ export function AddEntryModal({
     }
 
     const newTopics = listData.globalTriples.map((triple) => ({
-      id: triple.subject.vault_id,
+      id: triple.subject.term_id,
       name: triple.subject.label ?? '',
       image: triple.subject.image ?? undefined,
       triple: triple as TripleType,
@@ -277,13 +277,11 @@ export function AddEntryModal({
 
     // If we get here, this is a new atom from search results
     if (searchTerm) {
-      const selectedAtom = atomsData?.atoms?.find(
-        (atom) => atom.vault_id === id,
-      )
+      const selectedAtom = atomsData?.atoms?.find((atom) => atom.term_id === id)
       if (selectedAtom) {
         // Create a new topic
         const newTopic: Topic = {
-          id: selectedAtom.vault_id,
+          id: selectedAtom.term_id,
           name: selectedAtom.label ?? '',
           image: selectedAtom.image ?? undefined,
           selected: true,

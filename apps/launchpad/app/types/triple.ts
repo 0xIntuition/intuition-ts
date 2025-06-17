@@ -3,16 +3,15 @@ import { VaultType } from './vault'
 
 export type TripleType = {
   __typename?: 'triples'
-  id: string | number
-  vault_id: string | number
-  counter_vault_id: string | number
+  term_id: string | number
+  counter_term_id?: string | number
 
   // Transaction data (from TripleMetadata/TripleTxn)
   subject_id?: string | number
   predicate_id?: string | number
   object_id?: string | number
   block_number?: string | number
-  block_timestamp?: string | number
+  created_at?: string
   transaction_hash?: string
   creator_id?: string
 
@@ -26,59 +25,69 @@ export type TripleType = {
     image?: string | null
   }
 
-  // Vault data
-  vault?: VaultType & {
-    allPositions?: {
-      aggregate?: {
-        count: number
-        sum?: {
-          shares: string | number
+  // Term with vault data (from TripleMetadata/TripleVaultDetails)
+  term?: {
+    vaults?: Array<{
+      total_shares?: string | number
+      current_share_price?: string | number
+      position_count?: number
+      allPositions?: {
+        aggregate?: {
+          count: number
+          sum?: {
+            shares: string | number
+          }
         }
       }
-    }
-    positions_aggregate?: {
-      aggregate?: {
-        count: number
-        sum?: {
-          shares: string | number
+      positions_aggregate?: {
+        aggregate?: {
+          count: number
+          sum?: {
+            shares: string | number
+          }
         }
       }
-    }
-    positions?: Array<{
-      id?: string | number
-      account: {
-        id: string
-        label?: string | null
-        image?: string | null
-      }
-      shares: string | number
+      positions?: Array<{
+        id?: string | number
+        account: {
+          id: string
+          label?: string | null
+          image?: string | null
+        }
+        shares: string | number
+      }>
     }>
   }
-  counter_vault?: VaultType & {
-    allPositions?: {
-      aggregate?: {
-        count: number
-        sum?: {
-          shares: string | number
+  counter_term?: {
+    vaults?: Array<{
+      total_shares?: string | number
+      current_share_price?: string | number
+      position_count?: number
+      allPositions?: {
+        aggregate?: {
+          count: number
+          sum?: {
+            shares: string | number
+          }
         }
       }
-    }
-    positions_aggregate?: {
-      aggregate?: {
-        count: number
-        sum?: {
-          shares: string | number
+      positions_aggregate?: {
+        aggregate?: {
+          count: number
+          sum?: {
+            shares: string | number
+          }
         }
       }
-    }
-    positions?: Array<{
-      id?: string | number
-      account: {
-        id: string
-        label?: string | null
-        image?: string | null
-      }
-      shares: string | number
+      positions?: Array<{
+        id?: string | number
+        account: {
+          id: string
+          label?: string | null
+          image?: string | null
+        }
+        shares: string | number
+      }>
     }>
   }
 
@@ -98,10 +107,11 @@ export type TripleArrayType = Array<TripleType>
 export function isTripleType(obj: unknown): obj is TripleType {
   return Boolean(
     obj &&
-      typeof obj === 'object' &&
-      obj !== null &&
-      'id' in obj &&
-      'vault_id' in obj &&
-      'counter_vault_id' in obj,
+    typeof obj === 'object' &&
+    obj !== null &&
+    'term_id' in obj &&
+    'subject' in obj &&
+    'predicate' in obj &&
+    'object' in obj,
   )
 }

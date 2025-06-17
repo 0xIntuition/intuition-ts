@@ -40,7 +40,7 @@ query GetTriplePositionsByAddress(
       term {
         triple {
           term {
-            positions(where: { account_id: { _eq: $address } }) {
+            positions(where: { account_id: { _ilike: $address } }) {
               account {
                 id
                 label
@@ -50,7 +50,7 @@ query GetTriplePositionsByAddress(
             }
           }
           counter_term {
-            positions(where: { account_id: { _eq: $address } }) {
+            positions(where: { account_id: { _ilike: $address } }) {
               account {
                 id
                 label
