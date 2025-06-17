@@ -63,8 +63,8 @@
     "remix-utils": "^7.6.0",
     "satori": "^0.10.14",
     "tailwind-merge": "^2.3.0",
-    "viem": "^2.21.55",
-    "wagmi": "^2.5.20",
+    "viem": "^2.30.6",
+    "wagmi": "^2.15.5",
     "zod": "^3.23.4"
   },
   "devDependencies": {
