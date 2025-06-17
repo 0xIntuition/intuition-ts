@@ -25,9 +25,9 @@ export function AccountButton({
 
   const { data: accountResult, isLoading: isAccountLoading } =
     useGetAccountQuery(
-      { address: walletAddress.toLowerCase() },
+      { address: walletAddress },
       {
-        queryKey: ['get-account', { address: walletAddress.toLowerCase() }],
+        queryKey: ['get-account', { address: walletAddress }],
         enabled: !!walletAddress,
       },
     )

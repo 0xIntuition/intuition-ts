@@ -1,7 +1,7 @@
 import { CodegenConfig } from '@graphql-codegen/cli'
 import type { Types } from '@graphql-codegen/plugin-helpers'
 
-import { API_URL_DEV, API_URL_PROD } from './app/consts/general'
+import { API_URL_PROD } from './app/consts/general'
 
 const commonGenerateOptions: Types.ConfiguredOutput = {
   config: {

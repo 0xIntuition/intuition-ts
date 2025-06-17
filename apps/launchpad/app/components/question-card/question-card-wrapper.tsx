@@ -58,7 +58,7 @@ export function QuestionCardWrapper({ onStart, question }: QuestionCardProps) {
 
   const handleAtomClick = (id: number) => {
     const rowData = questionData.listData?.globalTriples?.find(
-      (triple) => triple.subject.vault_id === String(atomData?.atom?.vault_id),
+      (triple) => triple.subject.term_id === String(atomData?.atom?.term_id),
     )
 
     if (rowData) {
@@ -70,9 +70,7 @@ export function QuestionCardWrapper({ onStart, question }: QuestionCardProps) {
           image: rowData.subject.image || '',
           name: rowData.subject.label || '',
           list: rowData.object.label || '',
-          users: Number(
-            rowData.vault?.positions_aggregate?.aggregate?.count ?? 0,
-          ),
+          users: Number(rowData.term?.vaults[0]?.position_count ?? 0),
           forTvl: 0,
           againstTvl: 0,
         },
@@ -101,10 +99,10 @@ export function QuestionCardWrapper({ onStart, question }: QuestionCardProps) {
       completedAtom={
         atomData?.atom
           ? {
-              id: atomData.atom.id,
+              id: atomData.atom.term_id,
               label: atomData.atom.label || '',
               image: atomData.atom.image || undefined,
-              vault_id: String(atomData.atom.vault_id),
+              vault_id: String(atomData.atom.term_id),
             }
           : undefined
       }

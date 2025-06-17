@@ -62,7 +62,7 @@ export function QuestionCardWrapper({ onStart, question }: QuestionCardProps) {
 
   const handleAtomClick = (id: number) => {
     const rowData = questionData.atomsData?.atoms?.find(
-      (atom) => atom.vault_id === String(atomData?.atom?.vault_id),
+      (atom) => atom.term_id === String(atomData?.atom?.term_id),
     )
 
     if (rowData) {
@@ -74,9 +74,7 @@ export function QuestionCardWrapper({ onStart, question }: QuestionCardProps) {
           image: rowData.image || '',
           name: rowData.label || '',
           list: 'Base', // TODO: FIX ME
-          users: Number(
-            rowData.vault?.positions_aggregate?.aggregate?.count ?? 0,
-          ),
+          users: Number(rowData.term?.vaults[0]?.position_count ?? 0),
           forTvl: 0,
           againstTvl: 0,
         },
@@ -105,13 +103,13 @@ export function QuestionCardWrapper({ onStart, question }: QuestionCardProps) {
       completedAtom={
         atomData?.atom
           ? {
-              id: atomData.atom.id,
+              id: atomData.atom.term_id,
               label:
                 atomData.atom.value?.account?.label ||
                 atomData.atom.label ||
                 '',
               image: atomData.atom.image || undefined,
-              vault_id: String(atomData.atom.vault_id),
+              vault_id: String(atomData.atom.term_id),
             }
           : undefined
       }

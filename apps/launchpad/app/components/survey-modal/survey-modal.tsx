@@ -209,8 +209,8 @@ export function OnboardingModal({
         },
       },
       orderBy: {
-        vault: {
-          total_shares: 'desc',
+        term: {
+          total_market_cap: 'desc',
         },
       },
       limit: mode === 'preferences' ? 1000 : 50,
@@ -234,7 +234,7 @@ export function OnboardingModal({
     if (!listData?.globalTriples) {
       return []
     }
-    return listData.globalTriples.map((triple) => triple.subject.id)
+    return listData.globalTriples.map((triple) => triple.subject.term_id)
   }, [listData])
 
   // Query for preferences data when in preferences mode
@@ -259,8 +259,8 @@ export function OnboardingModal({
           },
         },
         orderBy: {
-          vault: {
-            total_shares: 'desc',
+          term: {
+            total_market_cap: 'desc',
           },
         },
         limit: 1000,
@@ -289,8 +289,8 @@ export function OnboardingModal({
       },
       limit: 25,
       orderBy: {
-        vault: {
-          position_count: 'desc',
+        term: {
+          total_market_cap: 'desc',
         },
       },
     },
@@ -338,30 +338,31 @@ export function OnboardingModal({
         .filter((listTriple) => {
           // Only include items that have a corresponding preferences triple
           return preferencesData.globalTriples.some(
-            (prefTriple) => prefTriple.object.id === listTriple.subject.id,
+            (prefTriple) =>
+              prefTriple.object.term_id === listTriple.subject.term_id,
           )
         })
         .map((listTriple) => {
           // Find the corresponding preferences triple for this list item
           const preferencesTriple = preferencesData.globalTriples.find(
-            (prefTriple) => prefTriple.object.id === listTriple.subject.id,
+            (prefTriple) =>
+              prefTriple.object.term_id === listTriple.subject.term_id,
           )!
 
           return {
-            id: listTriple.subject.vault_id,
+            id: listTriple.subject.term_id,
             name: listTriple.subject.label ?? '',
             image: listTriple.subject.image ?? undefined,
             triple: preferencesTriple as TripleType,
             selected: false,
-            totalSignals:
-              preferencesTriple.vault?.positions_aggregate?.aggregate?.count,
+            totalSignals: preferencesTriple.term?.vaults?.[0]?.position_count,
           }
         })
       setTopics(newTopics)
     } else {
       // In questions mode, create topics from list triples normally
       const newTopics: Topic[] = listData.globalTriples.map((triple) => ({
-        id: triple.subject.vault_id,
+        id: triple.subject.term_id,
         name: triple.subject.label ?? '',
         image: triple.subject.image ?? undefined,
         triple: triple as TripleType,
@@ -411,13 +412,11 @@ export function OnboardingModal({
 
     // If we get here, this is a new atom from search results
     if (searchTerm) {
-      const selectedAtom = atomsData?.atoms?.find(
-        (atom) => atom.vault_id === id,
-      )
+      const selectedAtom = atomsData?.atoms?.find((atom) => atom.term_id === id)
       if (selectedAtom) {
         // Create a new topic
         const newTopic: Topic = {
-          id: selectedAtom.vault_id,
+          id: selectedAtom.term_id,
           name: selectedAtom.label ?? '',
           image: selectedAtom.image ?? undefined,
           selected: true,
@@ -433,7 +432,7 @@ export function OnboardingModal({
         const metadata: NewAtomMetadata = {
           name: selectedAtom.label ?? '',
           image: selectedAtom.image ?? undefined,
-          vaultId: selectedAtom.vault_id,
+          vaultId: selectedAtom.term_id,
         }
 
         handleTransition((prev) => ({
@@ -847,8 +846,8 @@ export function OnboardingModal({
                         objectId={objectId}
                         objectLabel={
                           mode === 'preferences'
-                            ? listData?.globalTriples[0]?.object.label ?? ''
-                            : question?.object_label ?? ''
+                            ? (listData?.globalTriples[0]?.object.label ?? '')
+                            : (question?.object_label ?? '')
                         }
                         setTxState={setTxState}
                         onStakingSuccess={onStakingSuccess}

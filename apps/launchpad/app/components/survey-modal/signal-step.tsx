@@ -170,8 +170,8 @@ export function SignalStep({
         // For existing triples, determine which vault to use based on vote direction
         const vaultId =
           voteDirection === 'upvote'
-            ? selectedTopic?.triple?.vault_id.toString() ?? ''
-            : selectedTopic?.triple?.counter_vault_id?.toString() ?? ''
+            ? (selectedTopic?.triple?.term_id.toString() ?? '')
+            : (selectedTopic?.triple?.counter_term_id?.toString() ?? '')
 
         const txHash = await stake({
           val,
@@ -198,8 +198,8 @@ export function SignalStep({
             queryKey: [
               'get-vault-details',
               contract,
-              selectedTopic?.triple?.vault_id,
-              selectedTopic?.triple?.counter_vault_id,
+              selectedTopic?.triple?.term_id,
+              selectedTopic?.triple?.counter_term_id,
             ],
           })
 
@@ -207,8 +207,8 @@ export function SignalStep({
           // In questions mode, we want to pass the subject vault_id (the list item)
           const subjectIdForCallback =
             mode === 'preferences'
-              ? selectedTopic?.triple?.object?.vault_id?.toString() ?? ''
-              : selectedTopic?.triple?.subject?.vault_id?.toString() ?? ''
+              ? (selectedTopic?.triple?.object?.term_id?.toString() ?? '')
+              : (selectedTopic?.triple?.subject?.term_id?.toString() ?? '')
 
           onStakingSuccess(subjectIdForCallback)
         }
@@ -376,7 +376,7 @@ export function SignalStep({
   const preferencesTripleObject =
     mode === 'preferences'
       ? selectedTopic?.triple?.object.label
-      : newAtomMetadata?.name ?? selectedTopic?.triple?.subject.label
+      : (newAtomMetadata?.name ?? selectedTopic?.triple?.subject.label)
   const listTripleObject =
     mode === 'preferences' ? objectLabel : selectedTopic?.triple?.object.label
 

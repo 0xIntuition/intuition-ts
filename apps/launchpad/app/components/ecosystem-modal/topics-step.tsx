@@ -129,8 +129,7 @@ export function TopicsStep({
                         <Badge>
                           <Users className="w-4 h-4" />
                           {topic.totalSignals ??
-                            topic.atom?.vault?.positions_aggregate?.aggregate
-                              ?.count}
+                            topic.atom?.term?.vaults[0]?.position_count}
                         </Badge>
                         {/* <Badge className="flex flex-row gap-1 whitespace-nowrap">
                           {(

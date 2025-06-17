@@ -340,8 +340,8 @@ export default function MiniGameOne() {
     const sortDirection = sorting[0]?.desc ? 'desc' : 'asc'
 
     let orderBy: Atoms_Order_By = {
-      vault: {
-        total_shares: 'desc',
+      term: {
+        total_market_cap: 'desc',
       },
     }
 
@@ -349,8 +349,8 @@ export default function MiniGameOne() {
     switch (sortField) {
       case 'upvotes':
         orderBy = {
-          vault: {
-            total_shares: sortDirection,
+          term: {
+            total_market_cap: sortDirection,
           },
         }
         break
@@ -361,15 +361,15 @@ export default function MiniGameOne() {
         break
       case 'users':
         orderBy = {
-          vault: {
-            position_count: sortDirection,
+          term: {
+            total_market_cap: sortDirection,
           },
         }
         break
       case 'tvl':
         orderBy = {
-          vault: {
-            total_shares: sortDirection,
+          term: {
+            total_market_cap: sortDirection,
           },
         }
         break
@@ -390,11 +390,16 @@ export default function MiniGameOne() {
                 as_subject_triples: {
                   predicate_id: { _eq: predicateId },
                   object_id: { _eq: objectId },
-                  vault: {
-                    positions: {
-                      account: {
-                        id: {
-                          _in: WHITELISTED_ADDRESSES,
+                  term: {
+                    vaults: {
+                      positions_aggregate: {
+                        count: {
+                          filter: {
+                            account_id: {
+                              _in: WHITELISTED_ADDRESSES,
+                            },
+                          },
+                          predicate: { _gt: 0 },
                         },
                       },
                     },
@@ -407,7 +412,7 @@ export default function MiniGameOne() {
             ? {
                 as_subject_triples: {
                   object: {
-                    vault_id: { _in: [questionData.tag_object_id] },
+                    term_id: { _in: [questionData.tag_object_id] },
                   },
                 },
               }
@@ -432,11 +437,8 @@ export default function MiniGameOne() {
     sorting,
     questionId,
   ])
-
   const { data: atomsData, isLoading: isLoadingAtoms } = useAtomsWithTagsQuery(
-    {
-      ...queryVariables,
-    },
+    queryVariables,
     {
       enabled: !!queryVariables,
       queryKey: [
@@ -472,20 +474,20 @@ export default function MiniGameOne() {
   const tableData = React.useMemo(() => {
     const data =
       (atomsData?.atoms?.map((atom: AtomsWithTagsQuery['atoms'][number]) => ({
-        id: String(atom.vault_id),
+        id: String(atom.term_id),
         atom: atom as AtomsWithTagsQuery['atoms'][number],
         image: atom.image || '',
         name: atom.value?.account?.label || atom.label || 'Untitled Entry',
         list: atom.label || 'Untitled List',
-        vaultId: atom.vault_id,
-        users: Number(atom.vault?.positions_aggregate?.aggregate?.count ?? 0),
+        vaultId: atom.term_id,
+        users: Number(atom.term?.vaults[0]?.position_count ?? 0),
         upvotes: (() => {
           const amount =
-            (+formatUnits(
-              atom.vault?.positions_aggregate?.aggregate?.sum?.shares ?? 0,
-              18,
-            ) *
-              +formatUnits(atom.vault?.current_share_price ?? 0, 18)) /
+            (+formatUnits(atom.term?.vaults[0]?.total_shares ?? 0, 18) *
+              +formatUnits(
+                atom.term?.vaults[0]?.current_share_price ?? 0,
+                18,
+              )) /
             (+(multiVaultConfig?.formatted_min_deposit || MIN_DEPOSIT) *
               (1 -
                 +(multiVaultConfig?.entry_fee ?? 0) /
@@ -493,16 +495,19 @@ export default function MiniGameOne() {
           return amount < 0.1 ? 0 : Math.ceil(amount)
         })(),
         forTvl:
-          +formatUnits(atom.vault?.total_shares ?? 0, 18) *
-          +formatUnits(atom.vault?.current_share_price ?? 0, 18),
+          +formatUnits(atom.term?.vaults[0]?.total_shares ?? 0, 18) *
+          +formatUnits(atom.term?.vaults[0]?.current_share_price ?? 0, 18),
         userPosition:
-          atom.vault?.userPosition?.[0]?.shares > 0
-            ? +formatUnits(atom.vault?.userPosition?.[0].shares ?? 0, 18) *
-              +formatUnits(atom.vault?.current_share_price ?? 0, 18)
+          atom.term?.vaults[0]?.userPosition?.[0]?.shares > 0
+            ? +formatUnits(
+                atom.term?.vaults[0]?.userPosition?.[0].shares ?? 0,
+                18,
+              ) *
+              +formatUnits(atom.term?.vaults[0]?.current_share_price ?? 0, 18)
             : undefined,
         currentSharePrice:
-          atom.vault?.userPosition?.[0]?.shares > 0
-            ? +formatUnits(atom.vault?.current_share_price, 18)
+          atom.term?.vaults[0]?.userPosition?.[0]?.shares > 0
+            ? +formatUnits(atom.term?.vaults[0]?.current_share_price, 18)
             : undefined,
         multiVaultConfig,
       })) as TableRowData[]) ?? []
@@ -656,7 +661,7 @@ export default function MiniGameOne() {
     if (rowData) {
       setAtomDetailsModal({
         isOpen: true,
-        atomId: Number(rowData.atom.vault_id),
+        atomId: Number(rowData.atom.term_id),
         data: rowData,
       })
     }
@@ -735,14 +740,14 @@ export default function MiniGameOne() {
                             onClick={() => {
                               const rowData = tableData.find(
                                 (row) =>
-                                  row.atom.vault_id ===
-                                  String(atomData.atom?.vault_id),
+                                  row.atom.term_id ===
+                                  String(atomData.atom?.term_id),
                               )
 
                               if (rowData) {
                                 setAtomDetailsModal({
                                   isOpen: true,
-                                  atomId: Number(rowData.atom.vault_id),
+                                  atomId: Number(rowData.atom.term_id),
                                   data: rowData,
                                 })
                               }

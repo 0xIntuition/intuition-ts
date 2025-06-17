@@ -1,6 +1,6 @@
 fragment EventDetails on events {
   block_number
-  block_timestamp
+  created_at
   type
   transaction_hash
   atom_id
@@ -11,45 +11,51 @@ fragment EventDetails on events {
   ...RedemptionEventFragment
   atom {
     ...AtomMetadata
-    vault {
-      total_shares
-      position_count
-      positions {
-        account_id
-        shares
-        account {
-          id
-          label
-          image
+    term {
+      vaults(where: { curve_id: { _eq: "1" } }) {
+        total_shares
+        position_count
+        positions {
+          account_id
+          shares
+          account {
+            id
+            label
+            image
+          }
         }
       }
     }
   }
   triple {
     ...TripleMetadata
-    vault {
-      total_shares
-      position_count
-      positions {
-        account_id
-        shares
-        account {
-          id
-          label
-          image
+    term {
+      vaults(where: { curve_id: { _eq: "1" } }) {
+        total_shares
+        position_count
+        positions {
+          account_id
+          shares
+          account {
+            id
+            label
+            image
+          }
         }
       }
     }
-    counter_vault {
-      total_shares
-      position_count
-      positions {
-        account_id
-        shares
-        account {
-          id
-          label
-          image
+    counter_term {
+      vaults(where: { curve_id: { _eq: "1" } }) {
+        total_shares
+        position_count
+        positions {
+          account_id
+          shares
+          account {
+            id
+            label
+            image
+          }
         }
       }
     }

@@ -1,40 +1,42 @@
 fragment FollowMetadata on triples {
-  id
+  term_id
   subject {
-    id
+    term_id
     label
   }
   predicate {
-    id
+    term_id
     label
   }
   object {
-    id
+    term_id
     label
   }
-  vault {
-    id
-    total_shares
-    current_share_price
-    positions_aggregate(where: $positionsWhere) {
-      aggregate {
-        count
-        sum {
-          shares
+  term {
+    vaults(where: { curve_id: { _eq: "1" } }) {
+      term_id
+      total_shares
+      current_share_price
+      positions_aggregate(where: $positionsWhere) {
+        aggregate {
+          count
+          sum {
+            shares
+          }
         }
       }
-    }
-    positions(
-      limit: $positionsLimit
-      offset: $positionsOffset
-      order_by: $positionsOrderBy
-      where: $positionsWhere
-    ) {
-      account {
-        id
-        label
+      positions(
+        limit: $positionsLimit
+        offset: $positionsOffset
+        order_by: $positionsOrderBy
+        where: $positionsWhere
+      ) {
+        account {
+          id
+          label
+        }
+        shares
       }
-      shares
     }
   }
 }
