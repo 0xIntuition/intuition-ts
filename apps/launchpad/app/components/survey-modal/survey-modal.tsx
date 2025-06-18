@@ -67,23 +67,34 @@ const useStepTransition = (
   setState: React.Dispatch<React.SetStateAction<OnboardingState>>,
 ): StepTransition => {
   const [isTransitioning, setIsTransitioning] = useState(false)
-  const timeoutRef = useRef<number>()
-  const rafRef = useRef<number>()
+  const timeoutRef = useRef<number | null>(null)
+  const rafRef = useRef<number | null>(null)
   const updateFnRef = useRef<
     ((prev: OnboardingState) => OnboardingState) | null
   >(null)
+  const isMountedRef = useRef(true)
 
   const handleTransition = useCallback(
     (updateFn: (prev: OnboardingState) => OnboardingState) => {
+      if (!isMountedRef.current) {
+        return
+      }
+
       // Store the update function for later
       updateFnRef.current = updateFn
       setIsTransitioning(true)
 
       // Wait for fade out before updating state
-      rafRef.current = requestAnimationFrame(() => {
-        timeoutRef.current = window.setTimeout(() => {
-          if (!updateFnRef.current) {
-            setIsTransitioning(false)
+      const rafId = requestAnimationFrame(() => {
+        if (!isMountedRef.current) {
+          return
+        }
+
+        const timeoutId = window.setTimeout(() => {
+          if (!isMountedRef.current || !updateFnRef.current) {
+            if (isMountedRef.current) {
+              setIsTransitioning(false)
+            }
             return
           }
 
@@ -93,22 +104,37 @@ const useStepTransition = (
               if (!prevState) {
                 return INITIAL_STATE
               }
-              const newState = updateFnRef.current!(prevState)
-              return newState
+              // Create a local reference to avoid potential race conditions
+              const currentUpdateFn = updateFnRef.current
+              if (!currentUpdateFn || typeof currentUpdateFn !== 'function') {
+                return prevState
+              }
+              return currentUpdateFn(prevState)
             })
           } catch (error) {
-            setIsTransitioning(false)
+            console.error('Error in step transition:', error)
+            if (isMountedRef.current) {
+              setIsTransitioning(false)
+            }
             return
           }
 
           updateFnRef.current = null
 
           // Wait a frame before starting fade in
-          rafRef.current = requestAnimationFrame(() => {
-            setIsTransitioning(false)
+          const fadeInRafId = requestAnimationFrame(() => {
+            if (isMountedRef.current) {
+              setIsTransitioning(false)
+            }
           })
+
+          rafRef.current = fadeInRafId
         }, 150) // Match the CSS transition duration
+
+        timeoutRef.current = timeoutId
       })
+
+      rafRef.current = rafId
     },
     [setState],
   )
@@ -116,17 +142,21 @@ const useStepTransition = (
   const resetTransition = useCallback(() => {
     setIsTransitioning(false)
     updateFnRef.current = null
-    if (timeoutRef.current) {
+    if (timeoutRef.current !== null) {
       clearTimeout(timeoutRef.current)
+      timeoutRef.current = null
     }
-    if (rafRef.current) {
+    if (rafRef.current !== null) {
       cancelAnimationFrame(rafRef.current)
+      rafRef.current = null
     }
   }, [])
 
   // Cleanup timeouts and animation frames
   useEffect(() => {
+    isMountedRef.current = true
     return () => {
+      isMountedRef.current = false
       resetTransition()
     }
   }, [resetTransition])
@@ -303,24 +333,30 @@ export function OnboardingModal({
     }
 
     if (mode === 'preferences' && preferencesData?.globalTriples) {
-      // In preferences mode, create topics that display list items but use preferences triples
-      const newTopics: Topic[] = listData.globalTriples.map((listTriple) => {
-        // Find the corresponding preferences triple for this list item
-        const preferencesTriple = preferencesData.globalTriples.find(
-          (prefTriple) => prefTriple.object.id === listTriple.subject.id,
-        )
+      // In preferences mode, only show items that exist in BOTH the list data AND preferences data
+      const newTopics: Topic[] = listData.globalTriples
+        .filter((listTriple) => {
+          // Only include items that have a corresponding preferences triple
+          return preferencesData.globalTriples.some(
+            (prefTriple) => prefTriple.object.id === listTriple.subject.id,
+          )
+        })
+        .map((listTriple) => {
+          // Find the corresponding preferences triple for this list item
+          const preferencesTriple = preferencesData.globalTriples.find(
+            (prefTriple) => prefTriple.object.id === listTriple.subject.id,
+          )!
 
-        return {
-          id: listTriple.subject.vault_id,
-          name: listTriple.subject.label ?? '',
-          image: listTriple.subject.image ?? undefined,
-          triple: (preferencesTriple || listTriple) as TripleType,
-          selected: false,
-          totalSignals:
-            preferencesTriple?.vault?.positions_aggregate?.aggregate?.count ||
-            listTriple.vault?.positions_aggregate?.aggregate?.count,
-        }
-      })
+          return {
+            id: listTriple.subject.vault_id,
+            name: listTriple.subject.label ?? '',
+            image: listTriple.subject.image ?? undefined,
+            triple: preferencesTriple as TripleType,
+            selected: false,
+            totalSignals:
+              preferencesTriple.vault?.positions_aggregate?.aggregate?.count,
+          }
+        })
       setTopics(newTopics)
     } else {
       // In questions mode, create topics from list triples normally
