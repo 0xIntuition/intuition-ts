@@ -303,24 +303,30 @@ export function OnboardingModal({
     }
 
     if (mode === 'preferences' && preferencesData?.globalTriples) {
-      // In preferences mode, create topics that display list items but use preferences triples
-      const newTopics: Topic[] = listData.globalTriples.map((listTriple) => {
-        // Find the corresponding preferences triple for this list item
-        const preferencesTriple = preferencesData.globalTriples.find(
-          (prefTriple) => prefTriple.object.id === listTriple.subject.id,
-        )
+      // In preferences mode, only show items that exist in BOTH the list data AND preferences data
+      const newTopics: Topic[] = listData.globalTriples
+        .filter((listTriple) => {
+          // Only include items that have a corresponding preferences triple
+          return preferencesData.globalTriples.some(
+            (prefTriple) => prefTriple.object.id === listTriple.subject.id,
+          )
+        })
+        .map((listTriple) => {
+          // Find the corresponding preferences triple for this list item
+          const preferencesTriple = preferencesData.globalTriples.find(
+            (prefTriple) => prefTriple.object.id === listTriple.subject.id,
+          )!
 
-        return {
-          id: listTriple.subject.vault_id,
-          name: listTriple.subject.label ?? '',
-          image: listTriple.subject.image ?? undefined,
-          triple: (preferencesTriple || listTriple) as TripleType,
-          selected: false,
-          totalSignals:
-            preferencesTriple?.vault?.positions_aggregate?.aggregate?.count ||
-            listTriple.vault?.positions_aggregate?.aggregate?.count,
-        }
-      })
+          return {
+            id: listTriple.subject.vault_id,
+            name: listTriple.subject.label ?? '',
+            image: listTriple.subject.image ?? undefined,
+            triple: preferencesTriple as TripleType,
+            selected: false,
+            totalSignals:
+              preferencesTriple.vault?.positions_aggregate?.aggregate?.count,
+          }
+        })
       setTopics(newTopics)
     } else {
       // In questions mode, create topics from list triples normally
