@@ -64,23 +64,21 @@ export function TopicsStep({
       : // In questions mode, combine existing topics with search results
         (atomsData?.atoms ?? []).map((atom) => {
           // Check if this atom already exists in topics
-          const existingTopic = topics.find((t) => t.id === atom.vault_id)
+          const existingTopic = topics.find((t) => t.id === atom.term_id)
           if (existingTopic) {
             // If it exists, use the existing topic data but update selected state
             return {
               ...existingTopic,
-              selected: topics.some(
-                (t) => t.id === atom.vault_id && t.selected,
-              ),
+              selected: topics.some((t) => t.id === atom.term_id && t.selected),
             }
           }
           // If it's a new atom, create a new topic without triple
           return {
-            id: atom.vault_id,
+            id: atom.term_id,
             name: atom.label ?? '',
             image: atom.image ?? undefined,
-            selected: topics.some((t) => t.id === atom.vault_id && t.selected),
-            totalSignals: atom.vault?.position_count,
+            selected: topics.some((t) => t.id === atom.term_id && t.selected),
+            totalSignals: atom.term?.vaults[0]?.position_count,
             triple: undefined,
           } as Topic
         })
@@ -171,8 +169,8 @@ export function TopicsStep({
                         <Badge>
                           <Users className="w-4 h-4" />
                           {topic.totalSignals ??
-                            topic.triple?.subject?.vault?.positions_aggregate
-                              ?.aggregate?.count}
+                            topic.triple?.subject?.term?.vaults?.[0]
+                              .position_count}
                         </Badge>
                         {/* <Badge className="flex flex-row gap-1 whitespace-nowrap">
                           {(

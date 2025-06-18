@@ -6,76 +6,83 @@ fragment PositionDetails on positions {
     image
   }
   vault {
-    id
-    atom {
-      id
-      label
-      image
-    }
-    triple {
-      id
-      vault {
-        id
-        position_count
-        positions_aggregate {
-          aggregate {
-            sum {
-              shares
+    term_id
+    term {
+      atom {
+        term_id
+        label
+        image
+      }
+      triple {
+        term_id
+        term {
+          vaults(where: { curve_id: { _eq: "1" } }) {
+            term_id
+            position_count
+            positions_aggregate {
+              aggregate {
+                sum {
+                  shares
+                }
+              }
             }
           }
         }
-      }
-      counter_vault {
-        id
-        position_count
-        positions_aggregate {
-          aggregate {
-            sum {
-              shares
+        counter_term {
+          vaults(where: { curve_id: { _eq: "1" } }) {
+            term_id
+            position_count
+            positions_aggregate {
+              aggregate {
+                sum {
+                  shares
+                }
+              }
             }
           }
         }
-      }
-      subject {
-        data
-        id
-        label
-        image
-        emoji
-        type
-        ...AtomValue
-        creator {
-          ...AccountMetadata
+        subject {
+          data
+          term_id
+          label
+          image
+          emoji
+          type
+          ...AtomValue
+          creator {
+            ...AccountMetadata
+          }
         }
-      }
-      predicate {
-        data
-        id
-        label
-        image
-        emoji
-        type
-        ...AtomValue
-        creator {
-          ...AccountMetadata
+        predicate {
+          data
+          term_id
+          label
+          image
+          emoji
+          type
+          ...AtomValue
+          creator {
+            ...AccountMetadata
+          }
         }
-      }
-      object {
-        data
-        id
-        label
-        image
-        emoji
-        type
-        ...AtomValue
-        creator {
-          ...AccountMetadata
+        object {
+          data
+          term_id
+          label
+          image
+          emoji
+          type
+          ...AtomValue
+          creator {
+            ...AccountMetadata
+          }
         }
       }
     }
   }
   shares
-  vault_id
+  term_id
+  curve_id
 }
 
 fragment PositionFields on positions {
@@ -85,7 +92,7 @@ fragment PositionFields on positions {
   }
   shares
   vault {
-    id
+    term_id
     total_shares
     current_share_price
   }

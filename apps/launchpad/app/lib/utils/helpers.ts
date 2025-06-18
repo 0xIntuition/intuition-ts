@@ -27,7 +27,7 @@ export const getAtomLabel = (atom: AtomType | null | undefined) => {
     atom.value?.thing?.name ??
     atom.value?.organization?.name ??
     atom.wallet_id ??
-    atom.id ??
+    atom.term_id ??
     ''
   )
 }
@@ -45,7 +45,7 @@ export const getAtomIpfsLink = (atom: AtomType | null | undefined) => {
   if (!atom) {
     return ''
   }
-  if (atom.type === ('Account' || 'Default')) {
+  if (atom.type === 'Account' || atom.type === 'Default') {
     return `${BLOCK_EXPLORER_URL}/address/${atom.wallet_id}`
   }
   if (atom.data?.startsWith('https')) {
@@ -81,8 +81,8 @@ export const getAtomId = (atom: AtomType) => {
   if (!atom) {
     return ''
   }
-  if (atom.type === ('Account' || 'Default')) {
+  if (atom.type === 'Account' || atom.type === 'Default') {
     return atom.wallet_id
   }
-  return atom.id
+  return atom.term_id
 }

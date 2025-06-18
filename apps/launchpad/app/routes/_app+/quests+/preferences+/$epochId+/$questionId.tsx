@@ -472,8 +472,8 @@ export default function MiniGameOne() {
     const sortDirection = sorting[0]?.desc ? 'desc' : 'asc'
 
     let orderBy: Triples_Order_By = {
-      vault: {
-        total_shares: 'desc',
+      term: {
+        total_market_cap: 'desc',
       },
     }
 
@@ -481,15 +481,15 @@ export default function MiniGameOne() {
     switch (sortField) {
       case 'upvotes':
         orderBy = {
-          vault: {
-            total_shares: sortDirection,
+          term: {
+            total_market_cap: sortDirection,
           },
         }
         break
       case 'downvotes':
         orderBy = {
-          counter_vault: {
-            total_shares: sortDirection,
+          counter_term: {
+            total_market_cap: sortDirection,
           },
         }
         break
@@ -501,16 +501,17 @@ export default function MiniGameOne() {
         }
         break
       case 'users':
+        // TODO: Fix
         orderBy = {
-          vault: {
-            position_count: sortDirection,
+          term: {
+            total_market_cap: sortDirection,
           },
         }
         break
       case 'tvl':
         orderBy = {
-          vault: {
-            total_shares: sortDirection,
+          term: {
+            total_market_cap: sortDirection,
           },
         }
         break
@@ -573,7 +574,7 @@ export default function MiniGameOne() {
     if (!listData?.globalTriples) {
       return []
     }
-    return listData.globalTriples.map((triple) => triple.subject.id)
+    return listData.globalTriples.map((triple) => triple.subject.term_id)
   }, [listData])
 
   const preferencesQueryVariables = React.useMemo(() => {
@@ -587,8 +588,8 @@ export default function MiniGameOne() {
     const sortDirection = sorting[0]?.desc ? 'desc' : 'asc'
 
     let orderBy: Triples_Order_By = {
-      vault: {
-        total_shares: 'desc',
+      term: {
+        total_market_cap: 'desc',
       },
     }
 
@@ -596,15 +597,15 @@ export default function MiniGameOne() {
     switch (sortField) {
       case 'upvotes':
         orderBy = {
-          vault: {
-            total_shares: sortDirection,
+          term: {
+            total_market_cap: sortDirection,
           },
         }
         break
       case 'downvotes':
         orderBy = {
-          counter_vault: {
-            total_shares: sortDirection,
+          counter_term: {
+            total_market_cap: sortDirection,
           },
         }
         break
@@ -617,15 +618,15 @@ export default function MiniGameOne() {
         break
       case 'users':
         orderBy = {
-          vault: {
-            position_count: sortDirection,
+          term: {
+            total_market_cap: sortDirection,
           },
         }
         break
       case 'tvl':
         orderBy = {
-          vault: {
-            total_shares: sortDirection,
+          term: {
+            total_market_cap: sortDirection,
           },
         }
         break
@@ -676,7 +677,7 @@ export default function MiniGameOne() {
       address: ZERO_ADDRESS,
       limit: 0,
       offset: 0,
-      orderBy: { vault: { total_shares: 'desc' } },
+      orderBy: { term: { total_market_cap: 'desc' } },
     },
     {
       queryKey: [
@@ -729,21 +730,21 @@ export default function MiniGameOne() {
   const tableData = React.useMemo(() => {
     const data =
       (preferencesData?.globalTriples?.map((triple: Triple) => ({
-        id: String(triple.vault_id),
+        id: String(triple.term_id),
         triple: triple as TripleType,
         image: triple.object.image || '',
         name: triple.object.label || 'Untitled Entry',
         list: triple.predicate.label || 'Untitled List',
-        vaultId: triple.vault_id,
-        counterVaultId: triple.counter_vault_id,
-        users: Number(triple.vault?.positions_aggregate?.aggregate?.count ?? 0),
+        vaultId: triple.term_id,
+        counterVaultId: triple.counter_term_id,
+        users: Number(triple.term?.vaults[0]?.position_count ?? 0),
         upvotes: (() => {
           const amount =
-            (+formatUnits(
-              triple.vault?.positions_aggregate?.aggregate?.sum?.shares ?? 0,
-              18,
-            ) *
-              +formatUnits(triple.vault?.current_share_price ?? 0, 18)) /
+            (+formatUnits(triple.term?.vaults[0]?.total_shares ?? 0, 18) *
+              +formatUnits(
+                triple.term?.vaults[0]?.current_share_price ?? 0,
+                18,
+              )) /
             (+(multiVaultConfig?.formatted_min_deposit || MIN_DEPOSIT) *
               (1 -
                 +(multiVaultConfig?.entry_fee ?? 0) /
@@ -753,12 +754,11 @@ export default function MiniGameOne() {
         downvotes: (() => {
           const amount =
             (+formatUnits(
-              triple.counter_vault?.positions_aggregate?.aggregate?.sum
-                ?.shares ?? 0,
+              triple.counter_term?.vaults[0]?.total_shares ?? 0,
               18,
             ) *
               +formatUnits(
-                triple.counter_vault?.current_share_price ?? 0,
+                triple.counter_term?.vaults[0]?.current_share_price ?? 0,
                 18,
               )) /
             (+(multiVaultConfig?.formatted_min_deposit || MIN_DEPOSIT) *
@@ -768,33 +768,38 @@ export default function MiniGameOne() {
           return amount < 0.1 ? 0 : Math.ceil(amount)
         })(),
         forTvl:
-          +formatUnits(
-            triple.vault?.positions_aggregate?.aggregate?.sum?.shares ?? 0,
-            18,
-          ) * +formatUnits(triple.vault?.current_share_price ?? 0, 18),
+          +formatUnits(triple.term?.vaults[0]?.total_shares ?? 0, 18) *
+          +formatUnits(triple.term?.vaults[0]?.current_share_price ?? 0, 18),
         againstTvl:
+          +formatUnits(triple.counter_term?.vaults[0]?.total_shares ?? 0, 18) *
           +formatUnits(
-            triple.counter_vault?.positions_aggregate?.aggregate?.sum?.shares ??
-              0,
+            triple.counter_term?.vaults[0]?.current_share_price ?? 0,
             18,
-          ) * +formatUnits(triple.counter_vault?.current_share_price ?? 0, 18),
-        userPosition: triple.counter_vault?.positions?.[0]
+          ),
+        userPosition: triple.term?.vaults[0]?.positions?.[0]
           ? +formatUnits(
-              triple.counter_vault?.positions?.[0]?.shares ?? 0,
+              triple.term?.vaults[0]?.positions?.[0]?.shares ?? 0,
               18,
-            ) * +formatUnits(triple.counter_vault?.current_share_price ?? 0, 18)
-          : +formatUnits(triple.vault?.positions?.[0]?.shares ?? 0, 18) *
-            +formatUnits(triple.vault?.current_share_price ?? 0, 18),
-        positionDirection: triple.counter_vault?.positions?.[0]
+            ) *
+            +formatUnits(triple.term?.vaults[0]?.current_share_price ?? 0, 18)
+          : +formatUnits(
+              triple.term?.vaults[0]?.positions?.[0]?.shares ?? 0,
+              18,
+            ) *
+            +formatUnits(triple.term?.vaults[0]?.current_share_price ?? 0, 18),
+        positionDirection: triple.term?.vaults[0]?.positions?.[0]
           ? 'against'
-          : triple.vault?.positions?.[0]
+          : triple.term?.vaults[0]?.positions?.[0]
             ? 'for'
             : undefined,
         currentSharePrice:
-          triple.vault?.positions?.[0]?.shares > 0
-            ? +formatUnits(triple.vault?.current_share_price, 18)
-            : triple.counter_vault?.positions?.[0]?.shares > 0
-              ? +formatUnits(triple.counter_vault?.current_share_price, 18)
+          triple.term?.vaults[0]?.positions?.[0]?.shares > 0
+            ? +formatUnits(triple.term?.vaults[0]?.current_share_price, 18)
+            : triple.counter_term?.vaults[0]?.positions?.[0]?.shares > 0
+              ? +formatUnits(
+                  triple.counter_term?.vaults[0]?.current_share_price,
+                  18,
+                )
               : undefined,
         stakingDisabled: !completion,
         multiVaultConfig,
@@ -948,7 +953,7 @@ export default function MiniGameOne() {
     if (rowData) {
       setAtomDetailsModal({
         isOpen: true,
-        atomId: Number(rowData.triple.vault_id),
+        atomId: Number(rowData.triple.term_id),
         data: rowData,
       })
     }
@@ -1033,14 +1038,14 @@ export default function MiniGameOne() {
                             onClick={() => {
                               const rowData = tableData.find(
                                 (row) =>
-                                  row.triple.object.vault_id ===
-                                  String(atomData.atom?.vault_id),
+                                  row.triple.object.term_id ===
+                                  String(atomData.atom?.term_id),
                               )
 
                               if (rowData) {
                                 setAtomDetailsModal({
                                   isOpen: true,
-                                  atomId: Number(rowData.triple.vault_id),
+                                  atomId: Number(rowData.triple.term_id),
                                   data: rowData,
                                 })
                               }

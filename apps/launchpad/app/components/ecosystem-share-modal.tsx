@@ -90,7 +90,7 @@ function EcosystemShareModalContent({
           <div className="grid grid-cols-4 gap-4">
             {atomsData?.map((atom) => (
               <div
-                key={atom.vault_id}
+                key={atom.term_id}
                 className="aspect-square rounded-2xl bg-neutral-800/50 p-3 flex flex-col items-center justify-center"
               >
                 {atom.image && atom.image !== 'null' ? (

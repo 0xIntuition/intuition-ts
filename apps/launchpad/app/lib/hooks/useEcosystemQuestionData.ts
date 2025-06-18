@@ -101,7 +101,7 @@ export function useEcosystemQuestionData({ questionId }: UseQuestionDataProps) {
                 as_subject_triples: {
                   predicate_id: { _eq: predicateId },
                   object_id: { _eq: objectId },
-                  vault: {
+                  term: {
                     positions: {
                       account: {
                         id: {
@@ -118,7 +118,7 @@ export function useEcosystemQuestionData({ questionId }: UseQuestionDataProps) {
             ? {
               as_subject_triples: {
                 object: {
-                  vault_id: { _in: [tagObjectId] },
+                  term_id: { _in: [tagObjectId] },
                 },
               },
             }
@@ -126,7 +126,7 @@ export function useEcosystemQuestionData({ questionId }: UseQuestionDataProps) {
         ],
       },
       tagPredicateIds: [predicateId], // dev - has tag predicate ID
-      orderBy: { vault: { total_shares: 'desc' } },
+      orderBy: { term: { total_market_cap: 'desc' } },
       userPositionAddress: userWallet,
       verifiedPositionAddress: VERIFICATION_ADDRESS,
     },
@@ -149,7 +149,7 @@ export function useEcosystemQuestionData({ questionId }: UseQuestionDataProps) {
   const totalUsers =
     atomsData?.atoms?.reduce(
       (sum, atom) =>
-        sum + Number(atom.vault?.positions_aggregate?.aggregate?.count ?? 0),
+        sum + Number(atom.term?.vaults[0]?.position_count ?? 0),
       0,
     ) ?? 0
 
