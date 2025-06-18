@@ -21488,7 +21488,7 @@ export const GetVerifiedAtomDetailsDocument = `
           vaults(where: {curve_id: {_eq: "1"}}) {
             term_id
             positions(
-              where: {account_id: {_in: ["0xd99811847e634d33f0dace483c52949bec76300f", "0xbb285b543c96c927fc320fb28524899c2c90806c", "0x0b162525c5dc8c18f771e60fd296913030bfe42c", "0xbd2de08af9470c87c4475117fb912b8f1d588d9c", "0xb95ca3d3144e9d1daff0ee3d35a4488a4a5c9fc5"]}}
+              where: {account_id: {_in: ["0xD99811847E634d33f0DAcE483c52949bEc76300F", "0xBb285b543C96C927FC320Fb28524899C2C90806C", "0x0b162525C5dc8c18F771E60fD296913030Bfe42c", "0xbd2DE08aF9470c87C4475117Fb912B8f1d588D9c", "0xB95ca3D3144e9d1DAFF0EE3d35a4488A4A5C9Fc5"]}}
             ) {
               id
               shares
@@ -39196,31 +39196,31 @@ export const GetVerifiedAtomDetails = {
                                                               {
                                                                 kind: 'StringValue',
                                                                 value:
-                                                                  '0xd99811847e634d33f0dace483c52949bec76300f',
+                                                                  '0xD99811847E634d33f0DAcE483c52949bEc76300F',
                                                                 block: false,
                                                               },
                                                               {
                                                                 kind: 'StringValue',
                                                                 value:
-                                                                  '0xbb285b543c96c927fc320fb28524899c2c90806c',
+                                                                  '0xBb285b543C96C927FC320Fb28524899C2C90806C',
                                                                 block: false,
                                                               },
                                                               {
                                                                 kind: 'StringValue',
                                                                 value:
-                                                                  '0x0b162525c5dc8c18f771e60fd296913030bfe42c',
+                                                                  '0x0b162525C5dc8c18F771E60fD296913030Bfe42c',
                                                                 block: false,
                                                               },
                                                               {
                                                                 kind: 'StringValue',
                                                                 value:
-                                                                  '0xbd2de08af9470c87c4475117fb912b8f1d588d9c',
+                                                                  '0xbd2DE08aF9470c87C4475117Fb912B8f1d588D9c',
                                                                 block: false,
                                                               },
                                                               {
                                                                 kind: 'StringValue',
                                                                 value:
-                                                                  '0xb95ca3d3144e9d1daff0ee3d35a4488a4a5c9fc5',
+                                                                  '0xB95ca3D3144e9d1DAFF0EE3d35a4488A4A5C9Fc5',
                                                                 block: false,
                                                               },
                                                             ],

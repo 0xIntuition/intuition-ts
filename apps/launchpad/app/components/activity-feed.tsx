@@ -61,17 +61,17 @@ function ActivityRow({ activity }: { activity: Signals }) {
     ? activity.deposit?.sender_assets_after_total_fees
     : activity.redemption?.assets_for_receiver
 
-  const timestamp = activity.block_timestamp
-    ? new Date(parseInt(activity.block_timestamp.toString()) * 1000)
+  const timestamp = activity.created_at
+    ? new Date(activity.created_at)
     : new Date()
 
   const creator = activity.deposit
     ? activity.deposit.sender
     : activity.redemption?.receiver
 
-  const dataType = activity.atom
+  const dataType = activity.term?.atom
     ? 'atom'
-    : activity.triple
+    : activity.term?.triple
       ? 'triple'
       : 'unknown'
 
@@ -121,8 +121,8 @@ function ActivityRow({ activity }: { activity: Signals }) {
             variant={
               dataType === 'triple'
                 ? Identity.user
-                : activity.atom?.type === 'Default' ||
-                    activity.atom?.type === 'Account'
+                : activity.term?.atom?.type === 'Default' ||
+                    activity.term?.atom?.type === 'Account'
                   ? Identity.user
                   : Identity.nonUser
             }
@@ -131,11 +131,11 @@ function ActivityRow({ activity }: { activity: Signals }) {
             <Text className="max-w-[200px] sm:max-w-none">
               <Trunctacular
                 value={
-                  activity.atom?.label ||
+                  activity.term?.atom?.label ||
                   [
-                    activity.triple?.subject?.label,
-                    activity.triple?.predicate?.label,
-                    activity.triple?.object?.label,
+                    activity.term?.triple?.subject?.label,
+                    activity.term?.triple?.predicate?.label,
+                    activity.term?.triple?.object?.label,
                   ]
                     .filter(Boolean)
                     .join(' ')

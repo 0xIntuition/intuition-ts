@@ -288,9 +288,9 @@ export async function createOGImage(
               <span style={{ opacity: 0.7 }}>
                 {itemCount !== undefined ? itemCount : '0'} entries
               </span>
-              <span style={{ fontWeight: 'bold' }}>
+              {/* <span style={{ fontWeight: 'bold' }}>
                 {holders !== undefined ? holders : '0'} signals
-              </span>
+              </span> */}
             </div>
           )}
           {type === 'epoch' && (
