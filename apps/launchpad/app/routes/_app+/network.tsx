@@ -50,7 +50,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
         {
           limit: activityLimit,
           offset: activityOffset,
-          orderBy: [{ block_timestamp: 'desc' }],
+          orderBy: [{ created_at: 'desc' }],
         },
       ),
   })
@@ -93,7 +93,7 @@ export default function Network() {
       {
         limit: activityLimit,
         offset: activityOffset,
-        orderBy: [{ block_timestamp: 'desc' }],
+        orderBy: [{ created_at: 'desc' }],
       },
       {
         queryKey: [

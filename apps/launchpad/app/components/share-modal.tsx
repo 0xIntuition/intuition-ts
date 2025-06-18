@@ -43,18 +43,18 @@ function ShareModalContent({
       : window.location.origin
 
     const params = new URLSearchParams()
-    params.set('id', listData.globalTriples?.[0]?.object?.id?.toString() ?? '')
+    params.set(
+      'id',
+      listData.globalTriples?.[0]?.object?.term_id?.toString() ?? '',
+    )
     params.set('type', 'list')
     params.set(
       'data',
       JSON.stringify({
         title: listData.globalTriples?.[0]?.object?.label ?? '',
         holders:
-          listData.globalTriples?.[0]?.vault?.positions_aggregate?.aggregate
-            ?.count ?? '',
-        tvl:
-          listData.globalTriples?.[0]?.vault?.positions_aggregate?.aggregate
-            ?.sum?.shares ?? '',
+          listData.globalTriples?.[0]?.subject.term?.vaults?.[0]
+            ?.position_count ?? '',
         itemCount: listData.globalTriplesAggregate?.aggregate?.count ?? '',
         type: 'list',
       }),
@@ -200,7 +200,6 @@ export default function ShareModal({
   onClose,
   title,
   listData,
-  tvl,
   percentageChange,
   valueChange,
 }: ShareModalProps) {
@@ -216,7 +215,6 @@ export default function ShareModal({
         open={open}
         title={title}
         listData={listData}
-        tvl={tvl}
         percentageChange={percentageChange}
         valueChange={valueChange}
       />

@@ -155,7 +155,7 @@ export function SignalModal({
             >
               <SignalStep
                 vaultId={vaultId}
-                counterVaultId={triple?.counter_vault_id?.toString()}
+                counterVaultId={triple?.counter_term_id?.toString()}
                 atom={atom}
                 triple={triple}
                 open={isOpen}

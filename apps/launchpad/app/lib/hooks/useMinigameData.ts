@@ -21,7 +21,7 @@ export function useMinigameData() {
   const totalUsers =
     listData?.globalTriples?.reduce(
       (sum, triple) =>
-        sum + Number(triple.vault?.positions_aggregate?.aggregate?.count ?? 0),
+        sum + Number(triple.term?.vaults[0]?.position_count ?? 0),
       0,
     ) ?? 0
 

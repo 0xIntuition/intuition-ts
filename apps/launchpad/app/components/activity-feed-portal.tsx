@@ -65,15 +65,15 @@ function ActivityItemNew({
 }) {
   let messageKey: keyof EventMessagesNew | undefined
 
-  const isAtomAction = activity.atom !== null
+  const isAtomAction = activity.term?.atom !== null
 
   if (activity.deposit) {
     messageKey = isAtomAction ? 'depositAtom' : 'depositTriple'
   } else if (activity.redemption) {
     messageKey = isAtomAction ? 'redeemAtom' : 'redeemTriple'
-  } else if (activity.atom) {
+  } else if (activity.term?.atom) {
     messageKey = 'AtomCreated'
-  } else if (activity.triple) {
+  } else if (activity.term?.triple) {
     messageKey = 'TripleCreated'
   }
 
@@ -89,8 +89,8 @@ function ActivityItemNew({
       : eventMessage.toString()
     : ''
 
-  const timestamp = activity.block_timestamp
-    ? new Date(parseInt(activity.block_timestamp.toString()) * 1000)
+  const timestamp = activity.created_at
+    ? new Date(activity.created_at)
     : new Date()
 
   const creator = activity.deposit
@@ -115,50 +115,50 @@ function ActivityItemNew({
             />
           </IdentityTag>
           <Text>{message}</Text>
-          {activity.atom && (
+          {activity.term?.atom && (
             <IdentityTag
               variant={
-                activity.atom.type === 'Default' ||
-                activity.atom.type === 'Account'
+                activity.term?.atom?.type === 'Default' ||
+                activity.term?.atom?.type === 'Account'
                   ? Identity.user
                   : Identity.nonUser
               }
-              imgSrc={activity.atom.image ?? ''}
-              id={activity.atom.id}
+              imgSrc={activity.term?.atom?.image ?? ''}
+              id={activity.term?.atom?.term_id}
               disabled={true}
               className="!opacity-100"
             >
-              {activity.atom.label ?? activity.atom.id}
+              {activity.term?.atom?.label ?? activity.term?.atom?.term_id}
             </IdentityTag>
           )}
-          {activity.triple && (
+          {activity.term?.triple && (
             <Claim
               subject={{
                 variant:
-                  activity.triple.subject?.type === 'user'
+                  activity.term?.triple?.subject?.type === 'user'
                     ? Identity.user
                     : Identity.nonUser,
-                label: activity.triple.subject?.label ?? '',
-                imgSrc: activity.triple.subject?.image ?? '',
-                id: activity.triple.subject?.id,
+                label: activity.term?.triple?.subject?.label ?? '',
+                imgSrc: activity.term?.triple?.subject?.image ?? '',
+                id: activity.term?.triple?.subject?.term_id,
               }}
               predicate={{
                 variant:
-                  activity.triple.predicate?.type === 'user'
+                  activity.term?.triple?.predicate?.type === 'user'
                     ? Identity.user
                     : Identity.nonUser,
-                label: activity.triple.predicate?.label ?? '',
-                imgSrc: activity.triple.predicate?.image ?? '',
-                id: activity.triple.predicate?.id,
+                label: activity.term?.triple?.predicate?.label ?? '',
+                imgSrc: activity.term?.triple?.predicate?.image ?? '',
+                id: activity.term?.triple?.predicate?.term_id,
               }}
               object={{
                 variant:
-                  activity.triple.object?.type === 'user'
+                  activity.term?.triple?.object?.type === 'user'
                     ? Identity.user
                     : Identity.nonUser,
-                label: activity.triple.object?.label ?? '',
-                imgSrc: activity.triple.object?.image ?? '',
-                id: activity.triple.object?.id,
+                label: activity.term?.triple?.object?.label ?? '',
+                imgSrc: activity.term?.triple?.object?.image ?? '',
+                id: activity.term?.triple?.object?.term_id,
               }}
               shouldHover={false}
               disabled={true}

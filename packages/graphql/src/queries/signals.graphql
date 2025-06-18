@@ -12,92 +12,100 @@ query GetSignals(
   signals(limit: $limit, offset: $offset, order_by: $orderBy) {
     id
     block_number
-    block_timestamp
+    created_at
     transaction_hash
     atom_id
     triple_id
     deposit_id
     redemption_id
-    atom {
-      ...AtomMetadata
-      vault {
-        total_shares
-        position_count
-        positions(where: { account: { id: { _in: $addresses } } }) {
-          account_id
-          shares
-          account {
-            id
-            label
-            image
+    term {
+      atom {
+        ...AtomMetadata
+        term {
+          vaults {
+            total_shares
+            position_count
+            positions(where: { account: { id: { _in: $addresses } } }) {
+              account_id
+              shares
+              account {
+                id
+                label
+                image
+              }
+            }
           }
         }
       }
-    }
-    triple {
-      id
-      creator {
-        ...AccountMetadata
-      }
-      subject {
-        data
-        id
-        image
-        label
-        emoji
-        type
-        ...AtomValue
+      triple {
+        term_id
         creator {
           ...AccountMetadata
         }
-      }
-      predicate {
-        data
-        id
-        image
-        label
-        emoji
-        type
-        ...AtomValue
-        creator {
-          ...AccountMetadata
-        }
-      }
-      object {
-        data
-        id
-        image
-        label
-        emoji
-        type
-        ...AtomValue
-        creator {
-          ...AccountMetadata
-        }
-      }
-      vault {
-        total_shares
-        position_count
-        positions(where: { account: { id: { _in: $addresses } } }) {
-          account_id
-          shares
-          account {
-            id
-            label
-            image
+        subject {
+          data
+          term_id
+          image
+          label
+          emoji
+          type
+          ...AtomValue
+          creator {
+            ...AccountMetadata
           }
         }
-      }
-      counter_vault {
-        total_shares
-        position_count
-        positions(where: { account: { id: { _in: $addresses } } }) {
-          account_id
-          shares
-          account {
-            id
-            label
-            image
+        predicate {
+          data
+          term_id
+          image
+          label
+          emoji
+          type
+          ...AtomValue
+          creator {
+            ...AccountMetadata
+          }
+        }
+        object {
+          data
+          term_id
+          image
+          label
+          emoji
+          type
+          ...AtomValue
+          creator {
+            ...AccountMetadata
+          }
+        }
+        term {
+          vaults {
+            total_shares
+            position_count
+            positions(where: { account: { id: { _in: $addresses } } }) {
+              account_id
+              shares
+              account {
+                id
+                label
+                image
+              }
+            }
+          }
+        }
+        counter_term {
+          vaults {
+            total_shares
+            position_count
+            positions(where: { account: { id: { _in: $addresses } } }) {
+              account_id
+              shares
+              account {
+                id
+                label
+                image
+              }
+            }
           }
         }
       }
@@ -171,14 +179,15 @@ fragment AtomValue on atoms {
       url
     }
     account {
+      id
       label
       image
     }
   }
 }
 
-fragment AtomMetadata on atoms {
-  id
+fragment AtomMetadataMAYBEDELETETHIS on atoms {
+  term_id
   data
   image
   label

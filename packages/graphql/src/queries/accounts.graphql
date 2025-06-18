@@ -4,38 +4,36 @@ query GetAccounts(
   $offset: Int
   $orderBy: [accounts_order_by!]
   $where: accounts_bool_exp
-  $claimsLimit: Int
-  $claimsOffset: Int
-  $claimsWhere: claims_bool_exp
   $positionsLimit: Int
   $positionsOffset: Int
   $positionsWhere: positions_bool_exp
 ) {
   accounts(limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
     ...AccountMetadata
-    ...AccountClaims
     ...AccountPositions
     atom {
-      vault_id
+      term_id
       wallet_id
-      vault {
-        position_count
-        total_shares
-        positions_aggregate {
-          aggregate {
-            count
-            sum {
-              shares
+      term {
+        vaults(where: { curve_id: { _eq: "1" } }) {
+          position_count
+          total_shares
+          positions_aggregate {
+            aggregate {
+              count
+              sum {
+                shares
+              }
             }
           }
-        }
-        positions {
-          id
-          account {
-            label
+          positions {
             id
+            account {
+              label
+              id
+            }
+            shares
           }
-          shares
         }
       }
     }
@@ -48,9 +46,6 @@ query GetAccountsWithAggregates(
   $offset: Int
   $orderBy: [accounts_order_by!]
   $where: accounts_bool_exp
-  $claimsLimit: Int
-  $claimsOffset: Int
-  $claimsWhere: claims_bool_exp
   $positionsLimit: Int
   $positionsOffset: Int
   $positionsWhere: positions_bool_exp
@@ -70,7 +65,6 @@ query GetAccountsWithAggregates(
     }
     nodes {
       ...AccountMetadata
-      ...AccountClaims
       ...AccountPositions
     }
   }
@@ -86,10 +80,6 @@ query GetAccountsCount($where: accounts_bool_exp) {
 
 query GetAccount(
   $address: String!
-  # Claims pagination
-  $claimsLimit: Int
-  $claimsOffset: Int
-  $claimsWhere: claims_bool_exp
   # Positions pagination
   $positionsLimit: Int
   $positionsOffset: Int
@@ -111,7 +101,6 @@ query GetAccount(
       ...AtomMetadata
       ...AtomVaultDetails
     }
-    ...AccountClaims
     ...AccountPositions
     ...AccountAtoms
     ...AccountTriples
@@ -124,9 +113,6 @@ query GetAccount(
 # For paginated lists
 query GetAccountWithPaginatedRelations(
   $address: String!
-  $claimsLimit: Int
-  $claimsOffset: Int
-  $claimsWhere: claims_bool_exp
   $positionsLimit: Int
   $positionsOffset: Int
   $positionsWhere: positions_bool_exp
@@ -141,7 +127,6 @@ query GetAccountWithPaginatedRelations(
 ) {
   account(id: $address) {
     ...AccountMetadata
-    ...AccountClaims
     ...AccountPositions
     ...AccountAtoms
     ...AccountTriples
@@ -151,10 +136,6 @@ query GetAccountWithPaginatedRelations(
 # For aggregate views
 query GetAccountWithAggregates(
   $address: String!
-  # Claims pagination
-  $claimsLimit: Int
-  $claimsOffset: Int
-  $claimsWhere: claims_bool_exp
   # Positions pagination
   $positionsLimit: Int
   $positionsOffset: Int
@@ -172,7 +153,6 @@ query GetAccountWithAggregates(
 ) {
   account(id: $address) {
     ...AccountMetadata
-    ...AccountClaimsAggregate
     ...AccountPositionsAggregate
     ...AccountAtomsAggregate
     ...AccountTriplesAggregate

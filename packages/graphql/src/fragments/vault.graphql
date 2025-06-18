@@ -1,22 +1,25 @@
 fragment VaultBasicDetails on vaults {
-  id
-  atom {
-    id
-    label
-  }
-  triple {
-    id
-    subject {
-      id
+  term_id
+  curve_id
+  term {
+    atom {
+      term_id
       label
     }
-    predicate {
-      id
-      label
-    }
-    object {
-      id
-      label
+    triple {
+      term_id
+      subject {
+        term_id
+        label
+      }
+      predicate {
+        term_id
+        label
+      }
+      object {
+        term_id
+        label
+      }
     }
   }
   current_share_price

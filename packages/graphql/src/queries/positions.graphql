@@ -36,27 +36,28 @@ query GetTriplePositionsByAddress(
   positions(limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
     ...PositionDetails
     vault {
-      atom_id
-      triple_id
-      triple {
-        vault {
-          positions(where: { account_id: { _eq: $address } }) {
-            account {
-              id
-              label
-              image
+      term_id
+      term {
+        triple {
+          term {
+            positions(where: { account_id: { _ilike: $address } }) {
+              account {
+                id
+                label
+                image
+              }
+              shares
             }
-            shares
           }
-        }
-        counter_vault {
-          positions(where: { account_id: { _eq: $address } }) {
-            account {
-              id
-              label
-              image
+          counter_term {
+            positions(where: { account_id: { _ilike: $address } }) {
+              account {
+                id
+                label
+                image
+              }
+              shares
             }
-            shares
           }
         }
       }
@@ -114,8 +115,7 @@ query GetPositionsCountByType($where: positions_bool_exp) {
   }
   positions {
     vault {
-      atom_id
-      triple_id
+      term_id
     }
   }
 }

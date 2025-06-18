@@ -51,7 +51,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
             GetFeeTransfersQueryVariables
           >(GetFeeTransfersDocument, {
             address,
-            cutoff_timestamp: 1733356800,
+            cutoff_timestamp: '2024-12-05T00:00:00Z',
           })
           return response
         },
@@ -104,7 +104,7 @@ export default function RewardsRoute() {
   const { data: protocolFees, isLoading: isLoadingFees } =
     useGetFeeTransfersQuery({
       address: address ?? ZERO_ADDRESS,
-      cutoff_timestamp: 1733356800,
+      cutoff_timestamp: '2024-12-05T00:00:00Z',
     })
   const [selectedCategory, setSelectedCategory] = useState<string | null>(
     'Launchpad',

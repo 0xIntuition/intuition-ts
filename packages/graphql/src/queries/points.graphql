@@ -1,8 +1,8 @@
-query GetFeeTransfers($address: String!, $cutoff_timestamp: bigint) {
+query GetFeeTransfers($address: String!, $cutoff_timestamp: timestamptz) {
   before_cutoff: fee_transfers_aggregate(
     where: {
-      block_timestamp: { _lte: $cutoff_timestamp }
-      sender_id: { _eq: $address }
+      created_at: { _lte: $cutoff_timestamp }
+      sender_id: { _ilike: $address }
     }
   ) {
     aggregate {
@@ -14,8 +14,8 @@ query GetFeeTransfers($address: String!, $cutoff_timestamp: bigint) {
 
   after_cutoff: fee_transfers_aggregate(
     where: {
-      block_timestamp: { _gt: $cutoff_timestamp }
-      sender_id: { _eq: $address }
+      created_at: { _gt: $cutoff_timestamp }
+      sender_id: { _ilike: $address }
     }
   ) {
     aggregate {

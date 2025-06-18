@@ -54,7 +54,7 @@ export function DepositForm({
     )
 
   const atomExists = existingAtomData?.atoms?.[0]?.data === ipfsUri
-  const existingAtomId = existingAtomData?.atoms?.[0]?.id
+  const existingAtomId = existingAtomData?.atoms?.[0]?.term_id
 
   const form = useForm<DepositFormData>({
     resolver: zodResolver(createDepositSchema(minDeposit)),

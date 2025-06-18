@@ -138,7 +138,7 @@ function useEpochsData() {
   const { userWallet, epochId } = useLoaderData<typeof loader>()
 
   // Get all ecosystem epochs data (prefetched in loader)
-  const { data: epochs = [] } = useQuery<Epoch[]>({
+  const { data: epochs = [], isLoading: isLoadingEpochs } = useQuery<Epoch[]>({
     queryKey: ['get-ecosystem-epochs'],
     queryFn: async () => {
       const response = await fetch('/resources/get-epochs?type=ecosystem')
@@ -204,11 +204,14 @@ function useEpochsData() {
   )
 
   // Combine the data
-  return filteredEpochs.map((epoch) => ({
-    ...epoch,
-    questions: allQuestions.filter((q) => q.epoch_id === epoch.id),
-    progress: progressMap[epoch.id],
-  }))
+  return {
+    epochs: filteredEpochs.map((epoch) => ({
+      ...epoch,
+      questions: allQuestions.filter((q) => q.epoch_id === epoch.id),
+      progress: progressMap[epoch.id],
+    })),
+    isLoading: isLoadingEpochs,
+  }
 }
 
 export default function EcosystemEpoch() {
@@ -217,10 +220,8 @@ export default function EcosystemEpoch() {
   const [onboardingModal, setOnboardingModal] = useAtom(onboardingModalAtom)
   const [atomDetailsModal, setAtomDetailsModal] = useAtom(atomDetailsModalAtom)
 
-  const epochsWithQuestions = useEpochsData()
-  const { isLoading: isLoadingEpochs } = useQuery({
-    queryKey: ['get-ecosystem-epochs'],
-  })
+  const { epochs: epochsWithQuestions, isLoading: isLoadingEpochs } =
+    useEpochsData()
 
   // Show skeleton for initial loading
   if (isLoadingEpochs || !epochsWithQuestions.length) {

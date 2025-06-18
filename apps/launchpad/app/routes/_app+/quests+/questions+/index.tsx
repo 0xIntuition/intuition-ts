@@ -211,7 +211,7 @@ function useEpochsData() {
   const { userWallet } = useLoaderData<typeof loader>()
 
   // Get all epochs data (prefetched in loader)
-  const { data: epochs = [] } = useQuery<Epoch[]>({
+  const { data: epochs = [], isLoading: isLoadingEpochs } = useQuery<Epoch[]>({
     queryKey: ['get-epochs'],
     queryFn: async () => {
       const response = await fetch('/resources/get-epochs')
@@ -259,23 +259,28 @@ function useEpochsData() {
   })
 
   // Combine the data
-  return epochs.map((epoch, index) => {
-    const epochQuestions = allQuestions.filter((q) => q.epoch_id === epoch.id)
-    // Calculate total points based on the sum of points for all questions
-    const calculatedTotalPoints = epochQuestions.reduce(
-      (sum, q) => sum + q.point_award_amount,
-      0,
-    )
+  return {
+    epochs: epochs.map((epoch, index) => {
+      const epochQuestions = allQuestions.filter((q) => q.epoch_id === epoch.id)
+      // Calculate total points based on the sum of points for all questions
+      const calculatedTotalPoints = epochQuestions.reduce(
+        (sum, q) => sum + q.point_award_amount,
+        0,
+      )
 
-    return {
-      ...epoch,
-      questions: epochQuestions,
-      // Use the calculated total points if available, otherwise fall back to the epoch's total_points
-      total_points:
-        calculatedTotalPoints > 0 ? calculatedTotalPoints : epoch.total_points,
-      progress: progressResults[index].data as Progress | undefined,
-    }
-  })
+      return {
+        ...epoch,
+        questions: epochQuestions,
+        // Use the calculated total points if available, otherwise fall back to the epoch's total_points
+        total_points:
+          calculatedTotalPoints > 0
+            ? calculatedTotalPoints
+            : epoch.total_points,
+        progress: progressResults[index].data as Progress | undefined,
+      }
+    }),
+    isLoading: isLoadingEpochs,
+  }
 }
 
 export default function Questions() {
@@ -283,10 +288,8 @@ export default function Questions() {
   const [onboardingModal, setOnboardingModal] = useAtom(onboardingModalAtom)
   const [atomDetailsModal, setAtomDetailsModal] = useAtom(atomDetailsModalAtom)
 
-  const epochsWithQuestions = useEpochsData()
-  const { isLoading: isLoadingEpochs } = useQuery({
-    queryKey: ['get-epochs'],
-  })
+  const { epochs: epochsWithQuestions, isLoading: isLoadingEpochs } =
+    useEpochsData()
 
   // Show skeleton for initial loading
   if (isLoadingEpochs || !epochsWithQuestions.length) {
