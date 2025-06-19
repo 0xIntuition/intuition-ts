@@ -41,7 +41,7 @@ query AtomsWithTags(
         position_count
         userPosition: positions(
           limit: 1
-          where: { account_id: { _eq: $userPositionAddress } }
+          where: { account_id: { _ilike: $userPositionAddress } }
         ) {
           shares
           account_id
@@ -82,7 +82,7 @@ query AtomsWithTags(
             # Positions on the triple vault where the account matches verifiedPositionAddress
             verifiedPosition: positions(
               limit: 1
-              where: { account_id: { _eq: $verifiedPositionAddress } }
+              where: { account_id: { _ilike: $verifiedPositionAddress } }
             ) {
               id
               shares
@@ -96,7 +96,7 @@ query AtomsWithTags(
             # Positions on the triple counter vault where the account matches verifiedPositionAddress
             verifiedPosition: positions(
               limit: 1
-              where: { account_id: { _eq: $verifiedPositionAddress } }
+              where: { account_id: { _ilike: $verifiedPositionAddress } }
             ) {
               id
               shares
