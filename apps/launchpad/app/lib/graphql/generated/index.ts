@@ -9974,6 +9974,12 @@ export type AtomValueFragment = {
       description?: string | null
       url?: string | null
     } | null
+    account?: {
+      __typename?: 'accounts'
+      id: string
+      label: string
+      image?: string | null
+    } | null
   } | null
 }
 
@@ -10014,6 +10020,12 @@ export type AtomMetadataFragment = {
       image?: string | null
       description?: string | null
       url?: string | null
+    } | null
+    account?: {
+      __typename?: 'accounts'
+      id: string
+      label: string
+      image?: string | null
     } | null
   } | null
 }
@@ -10283,6 +10295,12 @@ export type EventDetailsFragment = {
         description?: string | null
         url?: string | null
       } | null
+      account?: {
+        __typename?: 'accounts'
+        id: string
+        label: string
+        image?: string | null
+      } | null
     } | null
   } | null
   triple?: {
@@ -10404,6 +10422,12 @@ export type EventDetailsFragment = {
           description?: string | null
           url?: string | null
         } | null
+        account?: {
+          __typename?: 'accounts'
+          id: string
+          label: string
+          image?: string | null
+        } | null
       } | null
     }
     predicate: {
@@ -10445,6 +10469,12 @@ export type EventDetailsFragment = {
           description?: string | null
           url?: string | null
         } | null
+        account?: {
+          __typename?: 'accounts'
+          id: string
+          label: string
+          image?: string | null
+        } | null
       } | null
     }
     object: {
@@ -10485,6 +10515,12 @@ export type EventDetailsFragment = {
           image?: string | null
           description?: string | null
           url?: string | null
+        } | null
+        account?: {
+          __typename?: 'accounts'
+          id: string
+          label: string
+          image?: string | null
         } | null
       } | null
     }
@@ -10647,6 +10683,12 @@ export type PositionDetailsFragment = {
               description?: string | null
               url?: string | null
             } | null
+            account?: {
+              __typename?: 'accounts'
+              id: string
+              label: string
+              image?: string | null
+            } | null
           } | null
         }
         predicate: {
@@ -10688,6 +10730,12 @@ export type PositionDetailsFragment = {
               description?: string | null
               url?: string | null
             } | null
+            account?: {
+              __typename?: 'accounts'
+              id: string
+              label: string
+              image?: string | null
+            } | null
           } | null
         }
         object: {
@@ -10728,6 +10776,12 @@ export type PositionDetailsFragment = {
               image?: string | null
               description?: string | null
               url?: string | null
+            } | null
+            account?: {
+              __typename?: 'accounts'
+              id: string
+              label: string
+              image?: string | null
             } | null
           } | null
         }
@@ -10825,6 +10879,12 @@ export type TripleMetadataFragment = {
         description?: string | null
         url?: string | null
       } | null
+      account?: {
+        __typename?: 'accounts'
+        id: string
+        label: string
+        image?: string | null
+      } | null
     } | null
   }
   predicate: {
@@ -10866,6 +10926,12 @@ export type TripleMetadataFragment = {
         description?: string | null
         url?: string | null
       } | null
+      account?: {
+        __typename?: 'accounts'
+        id: string
+        label: string
+        image?: string | null
+      } | null
     } | null
   }
   object: {
@@ -10906,6 +10972,12 @@ export type TripleMetadataFragment = {
         image?: string | null
         description?: string | null
         url?: string | null
+      } | null
+      account?: {
+        __typename?: 'accounts'
+        id: string
+        label: string
+        image?: string | null
       } | null
     } | null
   }
@@ -11088,6 +11160,12 @@ export type TripleVaultDetailsFragment = {
                     description?: string | null
                     url?: string | null
                   } | null
+                  account?: {
+                    __typename?: 'accounts'
+                    id: string
+                    label: string
+                    image?: string | null
+                  } | null
                 } | null
               }
               predicate: {
@@ -11129,6 +11207,12 @@ export type TripleVaultDetailsFragment = {
                     description?: string | null
                     url?: string | null
                   } | null
+                  account?: {
+                    __typename?: 'accounts'
+                    id: string
+                    label: string
+                    image?: string | null
+                  } | null
                 } | null
               }
               object: {
@@ -11169,6 +11253,12 @@ export type TripleVaultDetailsFragment = {
                     image?: string | null
                     description?: string | null
                     url?: string | null
+                  } | null
+                  account?: {
+                    __typename?: 'accounts'
+                    id: string
+                    label: string
+                    image?: string | null
                   } | null
                 } | null
               }
@@ -11283,6 +11373,12 @@ export type TripleVaultDetailsFragment = {
                     description?: string | null
                     url?: string | null
                   } | null
+                  account?: {
+                    __typename?: 'accounts'
+                    id: string
+                    label: string
+                    image?: string | null
+                  } | null
                 } | null
               }
               predicate: {
@@ -11324,6 +11420,12 @@ export type TripleVaultDetailsFragment = {
                     description?: string | null
                     url?: string | null
                   } | null
+                  account?: {
+                    __typename?: 'accounts'
+                    id: string
+                    label: string
+                    image?: string | null
+                  } | null
                 } | null
               }
               object: {
@@ -11364,6 +11466,12 @@ export type TripleVaultDetailsFragment = {
                     image?: string | null
                     description?: string | null
                     url?: string | null
+                  } | null
+                  account?: {
+                    __typename?: 'accounts'
+                    id: string
+                    label: string
+                    image?: string | null
                   } | null
                 } | null
               }
@@ -11844,6 +11952,12 @@ export type GetAccountQuery = {
           description?: string | null
           url?: string | null
         } | null
+        account?: {
+          __typename?: 'accounts'
+          id: string
+          label: string
+          image?: string | null
+        } | null
       } | null
     } | null
     positions: Array<{
@@ -12084,6 +12198,68 @@ export type GetAccountWithAggregatesQuery = {
   } | null
 }
 
+export type GetAccountMetadataQueryVariables = Exact<{
+  address: Scalars['String']['input']
+}>
+
+export type GetAccountMetadataQuery = {
+  __typename?: 'query_root'
+  account?: {
+    __typename?: 'accounts'
+    label: string
+    image?: string | null
+    id: string
+    atom_id?: any | null
+    type: any
+    atom?: {
+      __typename?: 'atoms'
+      term_id: any
+      data?: string | null
+      image?: string | null
+      label?: string | null
+      emoji?: string | null
+      type: any
+      wallet_id: string
+      creator: {
+        __typename?: 'accounts'
+        id: string
+        label: string
+        image?: string | null
+      }
+      value?: {
+        __typename?: 'atom_values'
+        person?: {
+          __typename?: 'persons'
+          name?: string | null
+          image?: string | null
+          description?: string | null
+          url?: string | null
+        } | null
+        thing?: {
+          __typename?: 'things'
+          name?: string | null
+          image?: string | null
+          description?: string | null
+          url?: string | null
+        } | null
+        organization?: {
+          __typename?: 'organizations'
+          name?: string | null
+          image?: string | null
+          description?: string | null
+          url?: string | null
+        } | null
+        account?: {
+          __typename?: 'accounts'
+          id: string
+          label: string
+          image?: string | null
+        } | null
+      } | null
+    } | null
+  } | null
+}
+
 export type GetAtomsQueryVariables = Exact<{
   limit?: InputMaybe<Scalars['Int']['input']>
   offset?: InputMaybe<Scalars['Int']['input']>
@@ -12285,6 +12461,12 @@ export type GetAtomsQuery = {
         description?: string | null
         url?: string | null
       } | null
+      account?: {
+        __typename?: 'accounts'
+        id: string
+        label: string
+        image?: string | null
+      } | null
     } | null
   }>
 }
@@ -12377,6 +12559,12 @@ export type GetAtomsWithPositionsQuery = {
         description?: string | null
         url?: string | null
       } | null
+      account?: {
+        __typename?: 'accounts'
+        id: string
+        label: string
+        image?: string | null
+      } | null
     } | null
   }>
 }
@@ -12466,6 +12654,12 @@ export type GetAtomsWithAggregatesQuery = {
           image?: string | null
           description?: string | null
           url?: string | null
+        } | null
+        account?: {
+          __typename?: 'accounts'
+          id: string
+          label: string
+          image?: string | null
         } | null
       } | null
     }>
@@ -12678,6 +12872,12 @@ export type GetAtomQuery = {
         description?: string | null
         url?: string | null
       } | null
+      account?: {
+        __typename?: 'accounts'
+        id: string
+        label: string
+        image?: string | null
+      } | null
     } | null
   } | null
 }
@@ -12875,6 +13075,12 @@ export type GetAtomByDataQuery = {
         image?: string | null
         description?: string | null
         url?: string | null
+      } | null
+      account?: {
+        __typename?: 'accounts'
+        id: string
+        label: string
+        image?: string | null
       } | null
     } | null
   }>
@@ -13111,6 +13317,12 @@ export type GetEventsQuery = {
           description?: string | null
           url?: string | null
         } | null
+        account?: {
+          __typename?: 'accounts'
+          id: string
+          label: string
+          image?: string | null
+        } | null
       } | null
     } | null
     triple?: {
@@ -13163,6 +13375,12 @@ export type GetEventsQuery = {
             description?: string | null
             url?: string | null
           } | null
+          account?: {
+            __typename?: 'accounts'
+            id: string
+            label: string
+            image?: string | null
+          } | null
         } | null
       }
       predicate: {
@@ -13204,6 +13422,12 @@ export type GetEventsQuery = {
             description?: string | null
             url?: string | null
           } | null
+          account?: {
+            __typename?: 'accounts'
+            id: string
+            label: string
+            image?: string | null
+          } | null
         } | null
       }
       object: {
@@ -13244,6 +13468,12 @@ export type GetEventsQuery = {
             image?: string | null
             description?: string | null
             url?: string | null
+          } | null
+          account?: {
+            __typename?: 'accounts'
+            id: string
+            label: string
+            image?: string | null
           } | null
         } | null
       }
@@ -13412,6 +13642,12 @@ export type GetEventsWithAggregatesQuery = {
             description?: string | null
             url?: string | null
           } | null
+          account?: {
+            __typename?: 'accounts'
+            id: string
+            label: string
+            image?: string | null
+          } | null
         } | null
       } | null
       triple?: {
@@ -13533,6 +13769,12 @@ export type GetEventsWithAggregatesQuery = {
               description?: string | null
               url?: string | null
             } | null
+            account?: {
+              __typename?: 'accounts'
+              id: string
+              label: string
+              image?: string | null
+            } | null
           } | null
         }
         predicate: {
@@ -13574,6 +13816,12 @@ export type GetEventsWithAggregatesQuery = {
               description?: string | null
               url?: string | null
             } | null
+            account?: {
+              __typename?: 'accounts'
+              id: string
+              label: string
+              image?: string | null
+            } | null
           } | null
         }
         object: {
@@ -13614,6 +13862,12 @@ export type GetEventsWithAggregatesQuery = {
               image?: string | null
               description?: string | null
               url?: string | null
+            } | null
+            account?: {
+              __typename?: 'accounts'
+              id: string
+              label: string
+              image?: string | null
             } | null
           } | null
         }
@@ -13764,6 +14018,12 @@ export type GetFollowingPositionsQuery = {
           description?: string | null
           url?: string | null
         } | null
+        account?: {
+          __typename?: 'accounts'
+          id: string
+          label: string
+          image?: string | null
+        } | null
       } | null
     }
     predicate: {
@@ -13804,6 +14064,12 @@ export type GetFollowingPositionsQuery = {
           description?: string | null
           url?: string | null
         } | null
+        account?: {
+          __typename?: 'accounts'
+          id: string
+          label: string
+          image?: string | null
+        } | null
       } | null
     }
     object: {
@@ -13843,6 +14109,12 @@ export type GetFollowingPositionsQuery = {
           image?: string | null
           description?: string | null
           url?: string | null
+        } | null
+        account?: {
+          __typename?: 'accounts'
+          id: string
+          label: string
+          image?: string | null
         } | null
       } | null
     }
@@ -13931,6 +14203,12 @@ export type GetFollowerPositionsQuery = {
           description?: string | null
           url?: string | null
         } | null
+        account?: {
+          __typename?: 'accounts'
+          id: string
+          label: string
+          image?: string | null
+        } | null
       } | null
     }
     predicate: {
@@ -13971,6 +14249,12 @@ export type GetFollowerPositionsQuery = {
           description?: string | null
           url?: string | null
         } | null
+        account?: {
+          __typename?: 'accounts'
+          id: string
+          label: string
+          image?: string | null
+        } | null
       } | null
     }
     object: {
@@ -14010,6 +14294,12 @@ export type GetFollowerPositionsQuery = {
           image?: string | null
           description?: string | null
           url?: string | null
+        } | null
+        account?: {
+          __typename?: 'accounts'
+          id: string
+          label: string
+          image?: string | null
         } | null
       } | null
     }
@@ -14334,6 +14624,12 @@ export type GetListItemsQuery = {
                         description?: string | null
                         url?: string | null
                       } | null
+                      account?: {
+                        __typename?: 'accounts'
+                        id: string
+                        label: string
+                        image?: string | null
+                      } | null
                     } | null
                   }
                   predicate: {
@@ -14375,6 +14671,12 @@ export type GetListItemsQuery = {
                         description?: string | null
                         url?: string | null
                       } | null
+                      account?: {
+                        __typename?: 'accounts'
+                        id: string
+                        label: string
+                        image?: string | null
+                      } | null
                     } | null
                   }
                   object: {
@@ -14415,6 +14717,12 @@ export type GetListItemsQuery = {
                         image?: string | null
                         description?: string | null
                         url?: string | null
+                      } | null
+                      account?: {
+                        __typename?: 'accounts'
+                        id: string
+                        label: string
+                        image?: string | null
                       } | null
                     } | null
                   }
@@ -14529,6 +14837,12 @@ export type GetListItemsQuery = {
                         description?: string | null
                         url?: string | null
                       } | null
+                      account?: {
+                        __typename?: 'accounts'
+                        id: string
+                        label: string
+                        image?: string | null
+                      } | null
                     } | null
                   }
                   predicate: {
@@ -14569,6 +14883,12 @@ export type GetListItemsQuery = {
                         image?: string | null
                         description?: string | null
                         url?: string | null
+                      } | null
+                      account?: {
+                        __typename?: 'accounts'
+                        id: string
+                        label: string
+                        image?: string | null
                       } | null
                     } | null
                   }
@@ -14611,6 +14931,12 @@ export type GetListItemsQuery = {
                         description?: string | null
                         url?: string | null
                       } | null
+                      account?: {
+                        __typename?: 'accounts'
+                        id: string
+                        label: string
+                        image?: string | null
+                      } | null
                     } | null
                   }
                 } | null
@@ -14651,6 +14977,10 @@ export type GetListDetailsQuery = {
       wallet_id: string
       image?: string | null
       type: any
+      term: {
+        __typename?: 'terms'
+        vaults: Array<{ __typename?: 'vaults'; position_count: number }>
+      }
       tags: {
         __typename?: 'triples_aggregate'
         nodes: Array<{
@@ -15062,6 +15392,101 @@ export type GetListDetailsWithUserQuery = {
   }>
 }
 
+export type GetListDetailsSimplifiedQueryVariables = Exact<{
+  globalWhere?: InputMaybe<Triples_Bool_Exp>
+  address?: InputMaybe<Scalars['String']['input']>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  orderBy?: InputMaybe<Array<Triples_Order_By> | Triples_Order_By>
+}>
+
+export type GetListDetailsSimplifiedQuery = {
+  __typename?: 'query_root'
+  globalTriplesAggregate: {
+    __typename?: 'triples_aggregate'
+    aggregate?: {
+      __typename?: 'triples_aggregate_fields'
+      count: number
+    } | null
+  }
+  globalTriples: Array<{
+    __typename?: 'triples'
+    term_id: any
+    counter_term_id: any
+    subject: {
+      __typename?: 'atoms'
+      term_id: any
+      label?: string | null
+      wallet_id: string
+      image?: string | null
+      type: any
+      term: {
+        __typename?: 'terms'
+        vaults: Array<{
+          __typename?: 'vaults'
+          current_share_price: any
+          position_count: number
+          total_shares: any
+        }>
+      }
+    }
+    object: {
+      __typename?: 'atoms'
+      term_id: any
+      label?: string | null
+      wallet_id: string
+      image?: string | null
+      type: any
+    }
+    predicate: {
+      __typename?: 'atoms'
+      term_id: any
+      label?: string | null
+      wallet_id: string
+      image?: string | null
+      type: any
+    }
+    term?: {
+      __typename?: 'terms'
+      vaults: Array<{
+        __typename?: 'vaults'
+        current_share_price: any
+        position_count: number
+        total_shares: any
+        positions: Array<{
+          __typename?: 'positions'
+          shares: any
+          account?: {
+            __typename?: 'accounts'
+            id: string
+            label: string
+            image?: string | null
+          } | null
+        }>
+      }>
+    } | null
+    counter_term?: {
+      __typename?: 'terms'
+      vaults: Array<{
+        __typename?: 'vaults'
+        current_share_price: any
+        position_count: number
+        total_shares: any
+        positions: Array<{
+          __typename?: 'positions'
+          shares: any
+          account?: {
+            __typename?: 'accounts'
+            id: string
+            label: string
+            image?: string | null
+          } | null
+        }>
+      }>
+    } | null
+  }>
+}
+
 export type GetFeeTransfersQueryVariables = Exact<{
   address: Scalars['String']['input']
   cutoff_timestamp?: InputMaybe<Scalars['timestamptz']['input']>
@@ -15209,6 +15634,12 @@ export type GetPositionsQuery = {
                 description?: string | null
                 url?: string | null
               } | null
+              account?: {
+                __typename?: 'accounts'
+                id: string
+                label: string
+                image?: string | null
+              } | null
             } | null
           }
           predicate: {
@@ -15250,6 +15681,12 @@ export type GetPositionsQuery = {
                 description?: string | null
                 url?: string | null
               } | null
+              account?: {
+                __typename?: 'accounts'
+                id: string
+                label: string
+                image?: string | null
+              } | null
             } | null
           }
           object: {
@@ -15290,6 +15727,12 @@ export type GetPositionsQuery = {
                 image?: string | null
                 description?: string | null
                 url?: string | null
+              } | null
+              account?: {
+                __typename?: 'accounts'
+                id: string
+                label: string
+                image?: string | null
               } | null
             } | null
           }
@@ -15426,6 +15869,12 @@ export type GetTriplePositionsByAddressQuery = {
                 description?: string | null
                 url?: string | null
               } | null
+              account?: {
+                __typename?: 'accounts'
+                id: string
+                label: string
+                image?: string | null
+              } | null
             } | null
           }
           predicate: {
@@ -15467,6 +15916,12 @@ export type GetTriplePositionsByAddressQuery = {
                 description?: string | null
                 url?: string | null
               } | null
+              account?: {
+                __typename?: 'accounts'
+                id: string
+                label: string
+                image?: string | null
+              } | null
             } | null
           }
           object: {
@@ -15507,6 +15962,12 @@ export type GetTriplePositionsByAddressQuery = {
                 image?: string | null
                 description?: string | null
                 url?: string | null
+              } | null
+              account?: {
+                __typename?: 'accounts'
+                id: string
+                label: string
+                image?: string | null
               } | null
             } | null
           }
@@ -15644,6 +16105,12 @@ export type GetPositionsWithAggregatesQuery = {
                   description?: string | null
                   url?: string | null
                 } | null
+                account?: {
+                  __typename?: 'accounts'
+                  id: string
+                  label: string
+                  image?: string | null
+                } | null
               } | null
             }
             predicate: {
@@ -15685,6 +16152,12 @@ export type GetPositionsWithAggregatesQuery = {
                   description?: string | null
                   url?: string | null
                 } | null
+                account?: {
+                  __typename?: 'accounts'
+                  id: string
+                  label: string
+                  image?: string | null
+                } | null
               } | null
             }
             object: {
@@ -15725,6 +16198,12 @@ export type GetPositionsWithAggregatesQuery = {
                   image?: string | null
                   description?: string | null
                   url?: string | null
+                } | null
+                account?: {
+                  __typename?: 'accounts'
+                  id: string
+                  label: string
+                  image?: string | null
                 } | null
               } | null
             }
@@ -15858,6 +16337,12 @@ export type GetPositionQuery = {
                 description?: string | null
                 url?: string | null
               } | null
+              account?: {
+                __typename?: 'accounts'
+                id: string
+                label: string
+                image?: string | null
+              } | null
             } | null
           }
           predicate: {
@@ -15899,6 +16384,12 @@ export type GetPositionQuery = {
                 description?: string | null
                 url?: string | null
               } | null
+              account?: {
+                __typename?: 'accounts'
+                id: string
+                label: string
+                image?: string | null
+              } | null
             } | null
           }
           object: {
@@ -15939,6 +16430,12 @@ export type GetPositionQuery = {
                 image?: string | null
                 description?: string | null
                 url?: string | null
+              } | null
+              account?: {
+                __typename?: 'accounts'
+                id: string
+                label: string
+                image?: string | null
               } | null
             } | null
           }
@@ -16052,6 +16549,12 @@ export type GetSignalsQuery = {
             description?: string | null
             url?: string | null
           } | null
+          account?: {
+            __typename?: 'accounts'
+            id: string
+            label: string
+            image?: string | null
+          } | null
         } | null
       } | null
       triple?: {
@@ -16104,6 +16607,12 @@ export type GetSignalsQuery = {
               description?: string | null
               url?: string | null
             } | null
+            account?: {
+              __typename?: 'accounts'
+              id: string
+              label: string
+              image?: string | null
+            } | null
           } | null
         }
         predicate: {
@@ -16145,6 +16654,12 @@ export type GetSignalsQuery = {
               description?: string | null
               url?: string | null
             } | null
+            account?: {
+              __typename?: 'accounts'
+              id: string
+              label: string
+              image?: string | null
+            } | null
           } | null
         }
         object: {
@@ -16185,6 +16700,12 @@ export type GetSignalsQuery = {
               image?: string | null
               description?: string | null
               url?: string | null
+            } | null
+            account?: {
+              __typename?: 'accounts'
+              id: string
+              label: string
+              image?: string | null
             } | null
           } | null
         }
@@ -16323,6 +16844,12 @@ export type AtomMetadataMaybedeletethisFragment = {
       description?: string | null
       url?: string | null
     } | null
+    account?: {
+      __typename?: 'accounts'
+      id: string
+      label: string
+      image?: string | null
+    } | null
   } | null
 }
 
@@ -16394,6 +16921,12 @@ export type GetTagsQuery = {
           description?: string | null
           url?: string | null
         } | null
+        account?: {
+          __typename?: 'accounts'
+          id: string
+          label: string
+          image?: string | null
+        } | null
       } | null
     }
     predicate: {
@@ -16435,6 +16968,12 @@ export type GetTagsQuery = {
           description?: string | null
           url?: string | null
         } | null
+        account?: {
+          __typename?: 'accounts'
+          id: string
+          label: string
+          image?: string | null
+        } | null
       } | null
     }
     object: {
@@ -16475,6 +17014,12 @@ export type GetTagsQuery = {
           image?: string | null
           description?: string | null
           url?: string | null
+        } | null
+        account?: {
+          __typename?: 'accounts'
+          id: string
+          label: string
+          image?: string | null
         } | null
       } | null
     }
@@ -16600,6 +17145,12 @@ export type GetTagsCustomQuery = {
           description?: string | null
           url?: string | null
         } | null
+        account?: {
+          __typename?: 'accounts'
+          id: string
+          label: string
+          image?: string | null
+        } | null
       } | null
     }
     predicate: {
@@ -16641,6 +17192,12 @@ export type GetTagsCustomQuery = {
           description?: string | null
           url?: string | null
         } | null
+        account?: {
+          __typename?: 'accounts'
+          id: string
+          label: string
+          image?: string | null
+        } | null
       } | null
     }
     object: {
@@ -16681,6 +17238,12 @@ export type GetTagsCustomQuery = {
           image?: string | null
           description?: string | null
           url?: string | null
+        } | null
+        account?: {
+          __typename?: 'accounts'
+          id: string
+          label: string
+          image?: string | null
         } | null
       } | null
     }
@@ -16829,6 +17392,12 @@ export type GetTriplesQuery = {
           description?: string | null
           url?: string | null
         } | null
+        account?: {
+          __typename?: 'accounts'
+          id: string
+          label: string
+          image?: string | null
+        } | null
       } | null
     }
     predicate: {
@@ -16870,6 +17439,12 @@ export type GetTriplesQuery = {
           description?: string | null
           url?: string | null
         } | null
+        account?: {
+          __typename?: 'accounts'
+          id: string
+          label: string
+          image?: string | null
+        } | null
       } | null
     }
     object: {
@@ -16910,6 +17485,12 @@ export type GetTriplesQuery = {
           image?: string | null
           description?: string | null
           url?: string | null
+        } | null
+        account?: {
+          __typename?: 'accounts'
+          id: string
+          label: string
+          image?: string | null
         } | null
       } | null
     }
@@ -17033,6 +17614,12 @@ export type GetTriplesQuery = {
                       description?: string | null
                       url?: string | null
                     } | null
+                    account?: {
+                      __typename?: 'accounts'
+                      id: string
+                      label: string
+                      image?: string | null
+                    } | null
                   } | null
                 }
                 predicate: {
@@ -17074,6 +17661,12 @@ export type GetTriplesQuery = {
                       description?: string | null
                       url?: string | null
                     } | null
+                    account?: {
+                      __typename?: 'accounts'
+                      id: string
+                      label: string
+                      image?: string | null
+                    } | null
                   } | null
                 }
                 object: {
@@ -17114,6 +17707,12 @@ export type GetTriplesQuery = {
                       image?: string | null
                       description?: string | null
                       url?: string | null
+                    } | null
+                    account?: {
+                      __typename?: 'accounts'
+                      id: string
+                      label: string
+                      image?: string | null
                     } | null
                   } | null
                 }
@@ -17243,6 +17842,12 @@ export type GetTriplesQuery = {
                       description?: string | null
                       url?: string | null
                     } | null
+                    account?: {
+                      __typename?: 'accounts'
+                      id: string
+                      label: string
+                      image?: string | null
+                    } | null
                   } | null
                 }
                 predicate: {
@@ -17284,6 +17889,12 @@ export type GetTriplesQuery = {
                       description?: string | null
                       url?: string | null
                     } | null
+                    account?: {
+                      __typename?: 'accounts'
+                      id: string
+                      label: string
+                      image?: string | null
+                    } | null
                   } | null
                 }
                 object: {
@@ -17324,6 +17935,12 @@ export type GetTriplesQuery = {
                       image?: string | null
                       description?: string | null
                       url?: string | null
+                    } | null
+                    account?: {
+                      __typename?: 'accounts'
+                      id: string
+                      label: string
+                      image?: string | null
                     } | null
                   } | null
                 }
@@ -17409,6 +18026,12 @@ export type GetTriplesWithAggregatesQuery = {
             description?: string | null
             url?: string | null
           } | null
+          account?: {
+            __typename?: 'accounts'
+            id: string
+            label: string
+            image?: string | null
+          } | null
         } | null
       }
       predicate: {
@@ -17450,6 +18073,12 @@ export type GetTriplesWithAggregatesQuery = {
             description?: string | null
             url?: string | null
           } | null
+          account?: {
+            __typename?: 'accounts'
+            id: string
+            label: string
+            image?: string | null
+          } | null
         } | null
       }
       object: {
@@ -17490,6 +18119,12 @@ export type GetTriplesWithAggregatesQuery = {
             image?: string | null
             description?: string | null
             url?: string | null
+          } | null
+          account?: {
+            __typename?: 'accounts'
+            id: string
+            label: string
+            image?: string | null
           } | null
         } | null
       }
@@ -17613,6 +18248,12 @@ export type GetTriplesWithAggregatesQuery = {
                         description?: string | null
                         url?: string | null
                       } | null
+                      account?: {
+                        __typename?: 'accounts'
+                        id: string
+                        label: string
+                        image?: string | null
+                      } | null
                     } | null
                   }
                   predicate: {
@@ -17654,6 +18295,12 @@ export type GetTriplesWithAggregatesQuery = {
                         description?: string | null
                         url?: string | null
                       } | null
+                      account?: {
+                        __typename?: 'accounts'
+                        id: string
+                        label: string
+                        image?: string | null
+                      } | null
                     } | null
                   }
                   object: {
@@ -17694,6 +18341,12 @@ export type GetTriplesWithAggregatesQuery = {
                         image?: string | null
                         description?: string | null
                         url?: string | null
+                      } | null
+                      account?: {
+                        __typename?: 'accounts'
+                        id: string
+                        label: string
+                        image?: string | null
                       } | null
                     } | null
                   }
@@ -17823,6 +18476,12 @@ export type GetTriplesWithAggregatesQuery = {
                         description?: string | null
                         url?: string | null
                       } | null
+                      account?: {
+                        __typename?: 'accounts'
+                        id: string
+                        label: string
+                        image?: string | null
+                      } | null
                     } | null
                   }
                   predicate: {
@@ -17864,6 +18523,12 @@ export type GetTriplesWithAggregatesQuery = {
                         description?: string | null
                         url?: string | null
                       } | null
+                      account?: {
+                        __typename?: 'accounts'
+                        id: string
+                        label: string
+                        image?: string | null
+                      } | null
                     } | null
                   }
                   object: {
@@ -17904,6 +18569,12 @@ export type GetTriplesWithAggregatesQuery = {
                         image?: string | null
                         description?: string | null
                         url?: string | null
+                      } | null
+                      account?: {
+                        __typename?: 'accounts'
+                        id: string
+                        label: string
+                        image?: string | null
                       } | null
                     } | null
                   }
@@ -17993,6 +18664,12 @@ export type GetTripleQuery = {
           description?: string | null
           url?: string | null
         } | null
+        account?: {
+          __typename?: 'accounts'
+          id: string
+          label: string
+          image?: string | null
+        } | null
       } | null
     }
     predicate: {
@@ -18034,6 +18711,12 @@ export type GetTripleQuery = {
           description?: string | null
           url?: string | null
         } | null
+        account?: {
+          __typename?: 'accounts'
+          id: string
+          label: string
+          image?: string | null
+        } | null
       } | null
     }
     object: {
@@ -18074,6 +18757,12 @@ export type GetTripleQuery = {
           image?: string | null
           description?: string | null
           url?: string | null
+        } | null
+        account?: {
+          __typename?: 'accounts'
+          id: string
+          label: string
+          image?: string | null
         } | null
       } | null
     }
@@ -18197,6 +18886,12 @@ export type GetTripleQuery = {
                       description?: string | null
                       url?: string | null
                     } | null
+                    account?: {
+                      __typename?: 'accounts'
+                      id: string
+                      label: string
+                      image?: string | null
+                    } | null
                   } | null
                 }
                 predicate: {
@@ -18238,6 +18933,12 @@ export type GetTripleQuery = {
                       description?: string | null
                       url?: string | null
                     } | null
+                    account?: {
+                      __typename?: 'accounts'
+                      id: string
+                      label: string
+                      image?: string | null
+                    } | null
                   } | null
                 }
                 object: {
@@ -18278,6 +18979,12 @@ export type GetTripleQuery = {
                       image?: string | null
                       description?: string | null
                       url?: string | null
+                    } | null
+                    account?: {
+                      __typename?: 'accounts'
+                      id: string
+                      label: string
+                      image?: string | null
                     } | null
                   } | null
                 }
@@ -18407,6 +19114,12 @@ export type GetTripleQuery = {
                       description?: string | null
                       url?: string | null
                     } | null
+                    account?: {
+                      __typename?: 'accounts'
+                      id: string
+                      label: string
+                      image?: string | null
+                    } | null
                   } | null
                 }
                 predicate: {
@@ -18448,6 +19161,12 @@ export type GetTripleQuery = {
                       description?: string | null
                       url?: string | null
                     } | null
+                    account?: {
+                      __typename?: 'accounts'
+                      id: string
+                      label: string
+                      image?: string | null
+                    } | null
                   } | null
                 }
                 object: {
@@ -18488,6 +19207,12 @@ export type GetTripleQuery = {
                       image?: string | null
                       description?: string | null
                       url?: string | null
+                    } | null
+                    account?: {
+                      __typename?: 'accounts'
+                      id: string
+                      label: string
+                      image?: string | null
                     } | null
                   } | null
                 }
@@ -19046,6 +19771,11 @@ export const AtomValueFragmentDoc = `
       description
       url
     }
+    account {
+      id
+      label
+      image
+    }
   }
 }
     `
@@ -19538,7 +20268,7 @@ export const AtomsWithTagsDocument = `
         position_count
         userPosition: positions(
           limit: 1
-          where: {account_id: {_eq: $userPositionAddress}}
+          where: {account_id: {_ilike: $userPositionAddress}}
         ) {
           shares
           account_id
@@ -19575,7 +20305,7 @@ export const AtomsWithTagsDocument = `
             term_id
             verifiedPosition: positions(
               limit: 1
-              where: {account_id: {_eq: $verifiedPositionAddress}}
+              where: {account_id: {_ilike: $verifiedPositionAddress}}
             ) {
               id
               shares
@@ -19588,7 +20318,7 @@ export const AtomsWithTagsDocument = `
             term_id
             verifiedPosition: positions(
               limit: 1
-              where: {account_id: {_eq: $verifiedPositionAddress}}
+              where: {account_id: {_ilike: $verifiedPositionAddress}}
             ) {
               id
               shares
@@ -19653,7 +20383,7 @@ export const useInfiniteAtomsWithTagsQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          (optionsQueryKey ?? variables === undefined)
+          optionsQueryKey ?? variables === undefined
             ? ['AtomsWithTags.infinite']
             : ['AtomsWithTags.infinite', variables],
         queryFn: (metaData) =>
@@ -19780,7 +20510,7 @@ export const useInfiniteGetActivityQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          (optionsQueryKey ?? variables === undefined)
+          optionsQueryKey ?? variables === undefined
             ? ['GetActivity.infinite']
             : ['GetActivity.infinite', variables],
         queryFn: (metaData) =>
@@ -19937,7 +20667,7 @@ export const useInfiniteGetAccountsQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          (optionsQueryKey ?? variables === undefined)
+          optionsQueryKey ?? variables === undefined
             ? ['GetAccounts.infinite']
             : ['GetAccounts.infinite', variables],
         queryFn: (metaData) =>
@@ -20045,7 +20775,7 @@ export const useInfiniteGetAccountsWithAggregatesQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          (optionsQueryKey ?? variables === undefined)
+          optionsQueryKey ?? variables === undefined
             ? ['GetAccountsWithAggregates.infinite']
             : ['GetAccountsWithAggregates.infinite', variables],
         queryFn: (metaData) =>
@@ -20143,7 +20873,7 @@ export const useInfiniteGetAccountsCountQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          (optionsQueryKey ?? variables === undefined)
+          optionsQueryKey ?? variables === undefined
             ? ['GetAccountsCount.infinite']
             : ['GetAccountsCount.infinite', variables],
         queryFn: (metaData) =>
@@ -20470,6 +21200,97 @@ useGetAccountWithAggregatesQuery.fetcher = (
     GetAccountWithAggregatesQueryVariables
   >(GetAccountWithAggregatesDocument, variables, options)
 
+export const GetAccountMetadataDocument = `
+    query GetAccountMetadata($address: String!) {
+  account(id: $address) {
+    ...AccountMetadata
+    atom {
+      ...AtomMetadata
+    }
+  }
+}
+    ${AccountMetadataFragmentDoc}
+${AtomMetadataFragmentDoc}
+${AtomValueFragmentDoc}`
+
+export const useGetAccountMetadataQuery = <
+  TData = GetAccountMetadataQuery,
+  TError = unknown,
+>(
+  variables: GetAccountMetadataQueryVariables,
+  options?: Omit<
+    UseQueryOptions<GetAccountMetadataQuery, TError, TData>,
+    'queryKey'
+  > & {
+    queryKey?: UseQueryOptions<
+      GetAccountMetadataQuery,
+      TError,
+      TData
+    >['queryKey']
+  },
+) => {
+  return useQuery<GetAccountMetadataQuery, TError, TData>({
+    queryKey: ['GetAccountMetadata', variables],
+    queryFn: fetcher<GetAccountMetadataQuery, GetAccountMetadataQueryVariables>(
+      GetAccountMetadataDocument,
+      variables,
+    ),
+    ...options,
+  })
+}
+
+useGetAccountMetadataQuery.document = GetAccountMetadataDocument
+
+useGetAccountMetadataQuery.getKey = (
+  variables: GetAccountMetadataQueryVariables,
+) => ['GetAccountMetadata', variables]
+
+export const useInfiniteGetAccountMetadataQuery = <
+  TData = InfiniteData<GetAccountMetadataQuery>,
+  TError = unknown,
+>(
+  variables: GetAccountMetadataQueryVariables,
+  options: Omit<
+    UseInfiniteQueryOptions<GetAccountMetadataQuery, TError, TData>,
+    'queryKey'
+  > & {
+    queryKey?: UseInfiniteQueryOptions<
+      GetAccountMetadataQuery,
+      TError,
+      TData
+    >['queryKey']
+  },
+) => {
+  return useInfiniteQuery<GetAccountMetadataQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey: optionsQueryKey ?? ['GetAccountMetadata.infinite', variables],
+        queryFn: (metaData) =>
+          fetcher<GetAccountMetadataQuery, GetAccountMetadataQueryVariables>(
+            GetAccountMetadataDocument,
+            { ...variables, ...(metaData.pageParam ?? {}) },
+          )(),
+        ...restOptions,
+      }
+    })(),
+  )
+}
+
+useInfiniteGetAccountMetadataQuery.getKey = (
+  variables: GetAccountMetadataQueryVariables,
+) => ['GetAccountMetadata.infinite', variables]
+
+useGetAccountMetadataQuery.fetcher = (
+  variables: GetAccountMetadataQueryVariables,
+  options?: RequestInit['headers'],
+) =>
+  fetcher<GetAccountMetadataQuery, GetAccountMetadataQueryVariables>(
+    GetAccountMetadataDocument,
+    variables,
+    options,
+  )
+
 export const GetAtomsDocument = `
     query GetAtoms($limit: Int, $offset: Int, $orderBy: [atoms_order_by!], $where: atoms_bool_exp) {
   total: atoms_aggregate(where: $where) {
@@ -20532,7 +21353,7 @@ export const useInfiniteGetAtomsQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          (optionsQueryKey ?? variables === undefined)
+          optionsQueryKey ?? variables === undefined
             ? ['GetAtoms.infinite']
             : ['GetAtoms.infinite', variables],
         queryFn: (metaData) =>
@@ -20584,7 +21405,7 @@ export const GetAtomsWithPositionsDocument = `
             }
           }
         }
-        positions(where: {account_id: {_eq: $address}}) {
+        positions(where: {account_id: {_ilike: $address}}) {
           id
           account {
             label
@@ -20663,7 +21484,7 @@ export const useInfiniteGetAtomsWithPositionsQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          (optionsQueryKey ?? variables === undefined)
+          optionsQueryKey ?? variables === undefined
             ? ['GetAtomsWithPositions.infinite']
             : ['GetAtomsWithPositions.infinite', variables],
         queryFn: (metaData) =>
@@ -20783,7 +21604,7 @@ export const useInfiniteGetAtomsWithAggregatesQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          (optionsQueryKey ?? variables === undefined)
+          optionsQueryKey ?? variables === undefined
             ? ['GetAtomsWithAggregates.infinite']
             : ['GetAtomsWithAggregates.infinite', variables],
         queryFn: (metaData) =>
@@ -20878,7 +21699,7 @@ export const useInfiniteGetAtomsCountQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          (optionsQueryKey ?? variables === undefined)
+          optionsQueryKey ?? variables === undefined
             ? ['GetAtomsCount.infinite']
             : ['GetAtomsCount.infinite', variables],
         queryFn: (metaData) =>
@@ -21115,7 +21936,7 @@ export const GetVerifiedAtomDetailsDocument = `
         position_count
         userPosition: positions(
           limit: 1
-          where: {account_id: {_eq: $userPositionAddress}}
+          where: {account_id: {_ilike: $userPositionAddress}}
         ) {
           shares
           account_id
@@ -21149,7 +21970,7 @@ export const GetVerifiedAtomDetailsDocument = `
           vaults(where: {curve_id: {_eq: "1"}}) {
             term_id
             positions(
-              where: {account_id: {_in: ["0xd99811847e634d33f0dace483c52949bec76300f", "0xbb285b543c96c927fc320fb28524899c2c90806c", "0x0b162525c5dc8c18f771e60fd296913030bfe42c", "0xbd2de08af9470c87c4475117fb912b8f1d588d9c", "0xb95ca3d3144e9d1daff0ee3d35a4488a4a5c9fc5"]}}
+              where: {account_id: {_in: ["0xD99811847E634d33f0DAcE483c52949bEc76300F", "0xBb285b543C96C927FC320Fb28524899C2C90806C", "0x0b162525C5dc8c18F771E60fD296913030Bfe42c", "0xbd2DE08aF9470c87C4475117Fb912B8f1d588D9c", "0xB95ca3D3144e9d1DAFF0EE3d35a4488A4A5C9Fc5"]}}
             ) {
               id
               shares
@@ -21562,7 +22383,7 @@ export const useInfiniteGetEventsQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          (optionsQueryKey ?? variables === undefined)
+          optionsQueryKey ?? variables === undefined
             ? ['GetEvents.infinite']
             : ['GetEvents.infinite', variables],
         queryFn: (metaData) =>
@@ -21684,7 +22505,7 @@ export const useInfiniteGetEventsWithAggregatesQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          (optionsQueryKey ?? variables === undefined)
+          optionsQueryKey ?? variables === undefined
             ? ['GetEventsWithAggregates.infinite']
             : ['GetEventsWithAggregates.infinite', variables],
         queryFn: (metaData) =>
@@ -21779,7 +22600,7 @@ export const useInfiniteGetEventsCountQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          (optionsQueryKey ?? variables === undefined)
+          optionsQueryKey ?? variables === undefined
             ? ['GetEventsCount.infinite']
             : ['GetEventsCount.infinite', variables],
         queryFn: (metaData) =>
@@ -21882,7 +22703,7 @@ export const useInfiniteGetEventsDataQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          (optionsQueryKey ?? variables === undefined)
+          optionsQueryKey ?? variables === undefined
             ? ['GetEventsData.infinite']
             : ['GetEventsData.infinite', variables],
         queryFn: (metaData) =>
@@ -21980,7 +22801,7 @@ export const useInfiniteGetDebugEventsQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          (optionsQueryKey ?? variables === undefined)
+          optionsQueryKey ?? variables === undefined
             ? ['GetDebugEvents.infinite']
             : ['GetDebugEvents.infinite', variables],
         queryFn: (metaData) =>
@@ -22014,7 +22835,7 @@ useGetDebugEventsQuery.fetcher = (
 export const GetFollowingPositionsDocument = `
     query GetFollowingPositions($subjectId: numeric!, $predicateId: numeric!, $address: String!, $limit: Int, $offset: Int, $positionsOrderBy: [positions_order_by!]) {
   triples_aggregate(
-    where: {_and: [{subject_id: {_eq: $subjectId}}, {predicate_id: {_eq: $predicateId}}, {positions: {account_id: {_eq: $address}}}]}
+    where: {_and: [{subject_id: {_eq: $subjectId}}, {predicate_id: {_eq: $predicateId}}, {positions: {account_id: {_ilike: $address}}}]}
   ) {
     aggregate {
       count
@@ -22023,7 +22844,7 @@ export const GetFollowingPositionsDocument = `
   triples(
     limit: $limit
     offset: $offset
-    where: {_and: [{subject_id: {_eq: $subjectId}}, {predicate_id: {_eq: $predicateId}}, {positions: {account_id: {_eq: $address}}}]}
+    where: {_and: [{subject_id: {_eq: $subjectId}}, {predicate_id: {_eq: $predicateId}}, {positions: {account_id: {_ilike: $address}}}]}
   ) {
     term_id
     subject {
@@ -22047,7 +22868,7 @@ export const GetFollowingPositionsDocument = `
             }
           }
         }
-        positions(where: {account_id: {_eq: $address}}, order_by: $positionsOrderBy) {
+        positions(where: {account_id: {_ilike: $address}}, order_by: $positionsOrderBy) {
           account_id
           account {
             id
@@ -22384,7 +23205,7 @@ useGetConnectionsQuery.fetcher = (
 export const GetConnectionsCountDocument = `
     query GetConnectionsCount($subjectId: numeric!, $predicateId: numeric!, $objectId: numeric!, $address: String!) {
   following_count: triples_aggregate(
-    where: {_and: [{subject_id: {_eq: $subjectId}}, {predicate_id: {_eq: $predicateId}}, {positions: {account_id: {_eq: $address}}}]}
+    where: {_and: [{subject_id: {_eq: $subjectId}}, {predicate_id: {_eq: $predicateId}}, {positions: {account_id: {_ilike: $address}}}]}
   ) {
     aggregate {
       count
@@ -22547,7 +23368,7 @@ export const useInfiniteGetListsQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          (optionsQueryKey ?? variables === undefined)
+          optionsQueryKey ?? variables === undefined
             ? ['GetLists.infinite']
             : ['GetLists.infinite', variables],
         queryFn: (metaData) =>
@@ -22644,7 +23465,7 @@ export const useInfiniteGetListItemsQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          (optionsQueryKey ?? variables === undefined)
+          optionsQueryKey ?? variables === undefined
             ? ['GetListItems.infinite']
             : ['GetListItems.infinite', variables],
         queryFn: (metaData) =>
@@ -22696,6 +23517,11 @@ export const GetListDetailsDocument = `
       wallet_id
       image
       type
+      term {
+        vaults {
+          position_count
+        }
+      }
       tags: as_subject_triples_aggregate(
         where: {predicate_id: {_eq: $tagPredicateId}}
       ) {
@@ -22805,7 +23631,7 @@ export const useInfiniteGetListDetailsQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          (optionsQueryKey ?? variables === undefined)
+          optionsQueryKey ?? variables === undefined
             ? ['GetListDetails.infinite']
             : ['GetListDetails.infinite', variables],
         queryFn: (metaData) =>
@@ -22903,7 +23729,7 @@ export const GetListDetailsWithPositionDocument = `
         position_count
         total_shares
       }
-      positions(where: {account_id: {_eq: $address}}) {
+      positions(where: {account_id: {_ilike: $address}}) {
         account {
           id
           label
@@ -22918,7 +23744,7 @@ export const GetListDetailsWithPositionDocument = `
         position_count
         total_shares
       }
-      positions(where: {account_id: {_eq: $address}}) {
+      positions(where: {account_id: {_ilike: $address}}) {
         account {
           id
           label
@@ -22990,7 +23816,7 @@ export const useInfiniteGetListDetailsWithPositionQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          (optionsQueryKey ?? variables === undefined)
+          optionsQueryKey ?? variables === undefined
             ? ['GetListDetailsWithPosition.infinite']
             : ['GetListDetailsWithPosition.infinite', variables],
         queryFn: (metaData) =>
@@ -23090,7 +23916,7 @@ export const GetListDetailsWithUserDocument = `
         position_count
         total_shares
       }
-      positions(where: {account_id: {_eq: $address}}) {
+      positions(where: {account_id: {_ilike: $address}}) {
         account {
           id
           label
@@ -23105,7 +23931,7 @@ export const GetListDetailsWithUserDocument = `
         position_count
         total_shares
       }
-      positions(where: {account_id: {_eq: $address}}) {
+      positions(where: {account_id: {_ilike: $address}}) {
         account {
           id
           label
@@ -23175,7 +24001,7 @@ export const GetListDetailsWithUserDocument = `
         position_count
         total_shares
       }
-      positions(where: {account_id: {_eq: $address}}) {
+      positions(where: {account_id: {_ilike: $address}}) {
         account {
           id
           label
@@ -23190,7 +24016,7 @@ export const GetListDetailsWithUserDocument = `
         position_count
         total_shares
       }
-      positions(where: {account_id: {_eq: $address}}) {
+      positions(where: {account_id: {_ilike: $address}}) {
         account {
           id
           label
@@ -23262,7 +24088,7 @@ export const useInfiniteGetListDetailsWithUserQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          (optionsQueryKey ?? variables === undefined)
+          optionsQueryKey ?? variables === undefined
             ? ['GetListDetailsWithUser.infinite']
             : ['GetListDetailsWithUser.infinite', variables],
         queryFn: (metaData) =>
@@ -23295,6 +24121,175 @@ useGetListDetailsWithUserQuery.fetcher = (
     variables,
     options,
   )
+
+export const GetListDetailsSimplifiedDocument = `
+    query GetListDetailsSimplified($globalWhere: triples_bool_exp, $address: String, $limit: Int, $offset: Int, $orderBy: [triples_order_by!]) {
+  globalTriplesAggregate: triples_aggregate(where: $globalWhere) {
+    aggregate {
+      count
+    }
+  }
+  globalTriples: triples(
+    where: $globalWhere
+    limit: $limit
+    offset: $offset
+    order_by: $orderBy
+  ) {
+    term_id
+    counter_term_id
+    subject {
+      term_id
+      label
+      wallet_id
+      image
+      type
+      term {
+        vaults(where: {curve_id: {_eq: "1"}}) {
+          current_share_price
+          position_count
+          total_shares
+        }
+      }
+    }
+    object {
+      term_id
+      label
+      wallet_id
+      image
+      type
+    }
+    predicate {
+      term_id
+      label
+      wallet_id
+      image
+      type
+    }
+    term {
+      vaults(where: {curve_id: {_eq: "1"}}) {
+        current_share_price
+        position_count
+        total_shares
+        positions(where: {account_id: {_ilike: $address}}) {
+          account {
+            id
+            label
+            image
+          }
+          shares
+        }
+      }
+    }
+    counter_term {
+      vaults(where: {curve_id: {_eq: "1"}}) {
+        current_share_price
+        position_count
+        total_shares
+        positions(where: {account_id: {_ilike: $address}}) {
+          account {
+            id
+            label
+            image
+          }
+          shares
+        }
+      }
+    }
+  }
+}
+    `
+
+export const useGetListDetailsSimplifiedQuery = <
+  TData = GetListDetailsSimplifiedQuery,
+  TError = unknown,
+>(
+  variables?: GetListDetailsSimplifiedQueryVariables,
+  options?: Omit<
+    UseQueryOptions<GetListDetailsSimplifiedQuery, TError, TData>,
+    'queryKey'
+  > & {
+    queryKey?: UseQueryOptions<
+      GetListDetailsSimplifiedQuery,
+      TError,
+      TData
+    >['queryKey']
+  },
+) => {
+  return useQuery<GetListDetailsSimplifiedQuery, TError, TData>({
+    queryKey:
+      variables === undefined
+        ? ['GetListDetailsSimplified']
+        : ['GetListDetailsSimplified', variables],
+    queryFn: fetcher<
+      GetListDetailsSimplifiedQuery,
+      GetListDetailsSimplifiedQueryVariables
+    >(GetListDetailsSimplifiedDocument, variables),
+    ...options,
+  })
+}
+
+useGetListDetailsSimplifiedQuery.document = GetListDetailsSimplifiedDocument
+
+useGetListDetailsSimplifiedQuery.getKey = (
+  variables?: GetListDetailsSimplifiedQueryVariables,
+) =>
+  variables === undefined
+    ? ['GetListDetailsSimplified']
+    : ['GetListDetailsSimplified', variables]
+
+export const useInfiniteGetListDetailsSimplifiedQuery = <
+  TData = InfiniteData<GetListDetailsSimplifiedQuery>,
+  TError = unknown,
+>(
+  variables: GetListDetailsSimplifiedQueryVariables,
+  options: Omit<
+    UseInfiniteQueryOptions<GetListDetailsSimplifiedQuery, TError, TData>,
+    'queryKey'
+  > & {
+    queryKey?: UseInfiniteQueryOptions<
+      GetListDetailsSimplifiedQuery,
+      TError,
+      TData
+    >['queryKey']
+  },
+) => {
+  return useInfiniteQuery<GetListDetailsSimplifiedQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey:
+          optionsQueryKey ?? variables === undefined
+            ? ['GetListDetailsSimplified.infinite']
+            : ['GetListDetailsSimplified.infinite', variables],
+        queryFn: (metaData) =>
+          fetcher<
+            GetListDetailsSimplifiedQuery,
+            GetListDetailsSimplifiedQueryVariables
+          >(GetListDetailsSimplifiedDocument, {
+            ...variables,
+            ...(metaData.pageParam ?? {}),
+          })(),
+        ...restOptions,
+      }
+    })(),
+  )
+}
+
+useInfiniteGetListDetailsSimplifiedQuery.getKey = (
+  variables?: GetListDetailsSimplifiedQueryVariables,
+) =>
+  variables === undefined
+    ? ['GetListDetailsSimplified.infinite']
+    : ['GetListDetailsSimplified.infinite', variables]
+
+useGetListDetailsSimplifiedQuery.fetcher = (
+  variables?: GetListDetailsSimplifiedQueryVariables,
+  options?: RequestInit['headers'],
+) =>
+  fetcher<
+    GetListDetailsSimplifiedQuery,
+    GetListDetailsSimplifiedQueryVariables
+  >(GetListDetailsSimplifiedDocument, variables, options)
 
 export const GetFeeTransfersDocument = `
     query GetFeeTransfers($address: String!, $cutoff_timestamp: timestamptz) {
@@ -23461,7 +24456,7 @@ export const useInfiniteGetPositionsQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          (optionsQueryKey ?? variables === undefined)
+          optionsQueryKey ?? variables === undefined
             ? ['GetPositions.infinite']
             : ['GetPositions.infinite', variables],
         queryFn: (metaData) =>
@@ -23509,7 +24504,7 @@ export const GetTriplePositionsByAddressDocument = `
       term {
         triple {
           term {
-            positions(where: {account_id: {_eq: $address}}) {
+            positions(where: {account_id: {_ilike: $address}}) {
               account {
                 id
                 label
@@ -23519,7 +24514,7 @@ export const GetTriplePositionsByAddressDocument = `
             }
           }
           counter_term {
-            positions(where: {account_id: {_eq: $address}}) {
+            positions(where: {account_id: {_ilike: $address}}) {
               account {
                 id
                 label
@@ -23700,7 +24695,7 @@ export const useInfiniteGetPositionsWithAggregatesQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          (optionsQueryKey ?? variables === undefined)
+          optionsQueryKey ?? variables === undefined
             ? ['GetPositionsWithAggregates.infinite']
             : ['GetPositionsWithAggregates.infinite', variables],
         queryFn: (metaData) =>
@@ -23805,7 +24800,7 @@ export const useInfiniteGetPositionsCountQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          (optionsQueryKey ?? variables === undefined)
+          optionsQueryKey ?? variables === undefined
             ? ['GetPositionsCount.infinite']
             : ['GetPositionsCount.infinite', variables],
         queryFn: (metaData) =>
@@ -23996,7 +24991,7 @@ export const useInfiniteGetPositionsCountByTypeQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          (optionsQueryKey ?? variables === undefined)
+          optionsQueryKey ?? variables === undefined
             ? ['GetPositionsCountByType.infinite']
             : ['GetPositionsCountByType.infinite', variables],
         queryFn: (metaData) =>
@@ -24235,7 +25230,7 @@ export const useInfiniteGetSignalsQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          (optionsQueryKey ?? variables === undefined)
+          optionsQueryKey ?? variables === undefined
             ? ['GetSignals.infinite']
             : ['GetSignals.infinite', variables],
         queryFn: (metaData) =>
@@ -24310,7 +25305,7 @@ export const useInfiniteGetStatsQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          (optionsQueryKey ?? variables === undefined)
+          optionsQueryKey ?? variables === undefined
             ? ['GetStats.infinite']
             : ['GetStats.infinite', variables],
         queryFn: (metaData) =>
@@ -24482,7 +25477,7 @@ export const useInfiniteGetTagsCustomQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          (optionsQueryKey ?? variables === undefined)
+          optionsQueryKey ?? variables === undefined
             ? ['GetTagsCustom.infinite']
             : ['GetTagsCustom.infinite', variables],
         queryFn: (metaData) =>
@@ -24584,7 +25579,7 @@ export const useInfiniteGetTriplesQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          (optionsQueryKey ?? variables === undefined)
+          optionsQueryKey ?? variables === undefined
             ? ['GetTriples.infinite']
             : ['GetTriples.infinite', variables],
         queryFn: (metaData) =>
@@ -24702,7 +25697,7 @@ export const useInfiniteGetTriplesWithAggregatesQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          (optionsQueryKey ?? variables === undefined)
+          optionsQueryKey ?? variables === undefined
             ? ['GetTriplesWithAggregates.infinite']
             : ['GetTriplesWithAggregates.infinite', variables],
         queryFn: (metaData) =>
@@ -24796,7 +25791,7 @@ export const useInfiniteGetTriplesCountQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          (optionsQueryKey ?? variables === undefined)
+          optionsQueryKey ?? variables === undefined
             ? ['GetTriplesCount.infinite']
             : ['GetTriplesCount.infinite', variables],
         queryFn: (metaData) =>
@@ -24987,7 +25982,7 @@ export const useInfiniteGetAtomTriplesWithPositionsQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          (optionsQueryKey ?? variables === undefined)
+          optionsQueryKey ?? variables === undefined
             ? ['GetAtomTriplesWithPositions.infinite']
             : ['GetAtomTriplesWithPositions.infinite', variables],
         queryFn: (metaData) =>
@@ -25049,7 +26044,7 @@ export const GetTriplesWithPositionsDocument = `
       vaults {
         total_shares
         position_count
-        positions(where: {account_id: {_eq: $address}}) {
+        positions(where: {account_id: {_ilike: $address}}) {
           account {
             id
             label
@@ -25063,7 +26058,7 @@ export const GetTriplesWithPositionsDocument = `
       vaults {
         total_shares
         position_count
-        positions(where: {account_id: {_eq: $address}}) {
+        positions(where: {account_id: {_ilike: $address}}) {
           account {
             id
             label
@@ -25136,7 +26131,7 @@ export const useInfiniteGetTriplesWithPositionsQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          (optionsQueryKey ?? variables === undefined)
+          optionsQueryKey ?? variables === undefined
             ? ['GetTriplesWithPositions.infinite']
             : ['GetTriplesWithPositions.infinite', variables],
         queryFn: (metaData) =>
@@ -25263,7 +26258,7 @@ export const useInfiniteGetVaultsQuery = <
       const { queryKey: optionsQueryKey, ...restOptions } = options
       return {
         queryKey:
-          (optionsQueryKey ?? variables === undefined)
+          optionsQueryKey ?? variables === undefined
             ? ['GetVaults.infinite']
             : ['GetVaults.infinite', variables],
         queryFn: (metaData) =>
@@ -27127,6 +28122,18 @@ export const AtomValue = {
                     ],
                   },
                 },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -27235,6 +28242,18 @@ export const AtomMetadata = {
                         name: { kind: 'Name', value: 'description' },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                     ],
                   },
                 },
@@ -27700,6 +28719,18 @@ export const TripleMetadata = {
                         name: { kind: 'Name', value: 'description' },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                     ],
                   },
                 },
@@ -28224,6 +29255,18 @@ export const EventDetails = {
                         name: { kind: 'Name', value: 'description' },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                     ],
                   },
                 },
@@ -29565,6 +30608,18 @@ export const PositionDetails = {
                     ],
                   },
                 },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -29790,6 +30845,18 @@ export const TripleVaultDetails = {
                         name: { kind: 'Name', value: 'description' },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                     ],
                   },
                 },
@@ -31625,6 +32692,18 @@ export const AtomMetadataMaybedeletethis = {
                     ],
                   },
                 },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -31945,7 +33024,7 @@ export const AtomsWithTags = {
                                               kind: 'ObjectField',
                                               name: {
                                                 kind: 'Name',
-                                                value: '_eq',
+                                                value: '_ilike',
                                               },
                                               value: {
                                                 kind: 'Variable',
@@ -32298,7 +33377,7 @@ export const AtomsWithTags = {
                                                           kind: 'ObjectField',
                                                           name: {
                                                             kind: 'Name',
-                                                            value: '_eq',
+                                                            value: '_ilike',
                                                           },
                                                           value: {
                                                             kind: 'Variable',
@@ -32447,7 +33526,7 @@ export const AtomsWithTags = {
                                                           kind: 'ObjectField',
                                                           name: {
                                                             kind: 'Name',
-                                                            value: '_eq',
+                                                            value: '_ilike',
                                                           },
                                                           value: {
                                                             kind: 'Variable',
@@ -34497,6 +35576,18 @@ export const GetAccount = {
                     ],
                   },
                 },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -36038,6 +37129,209 @@ export const GetAccountWithAggregates = {
     },
   ],
 } as unknown as DocumentNode
+export const GetAccountMetadata = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'GetAccountMetadata' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'address' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'account' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'id' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'address' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'FragmentSpread',
+                  name: { kind: 'Name', value: 'AccountMetadata' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'atom' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'FragmentSpread',
+                        name: { kind: 'Name', value: 'AtomMetadata' },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'AccountMetadata' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'accounts' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'atom_id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'AtomValue' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'atoms' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'value' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'person' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'description' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'thing' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'description' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'organization' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'description' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      kind: 'FragmentDefinition',
+      name: { kind: 'Name', value: 'AtomMetadata' },
+      typeCondition: {
+        kind: 'NamedType',
+        name: { kind: 'Name', value: 'atoms' },
+      },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          { kind: 'Field', name: { kind: 'Name', value: 'term_id' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'data' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'emoji' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'wallet_id' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'creator' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+              ],
+            },
+          },
+          {
+            kind: 'FragmentSpread',
+            name: { kind: 'Name', value: 'AtomValue' },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
 export const GetAtoms = {
   kind: 'Document',
   definitions: [
@@ -36278,6 +37572,18 @@ export const GetAtoms = {
                         name: { kind: 'Name', value: 'description' },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                     ],
                   },
                 },
@@ -36983,7 +38289,7 @@ export const GetAtomsWithPositions = {
                                               kind: 'ObjectField',
                                               name: {
                                                 kind: 'Name',
-                                                value: '_eq',
+                                                value: '_ilike',
                                               },
                                               value: {
                                                 kind: 'Variable',
@@ -37138,6 +38444,18 @@ export const GetAtomsWithPositions = {
                         name: { kind: 'Name', value: 'description' },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                     ],
                   },
                 },
@@ -37427,6 +38745,18 @@ export const GetAtomsWithAggregates = {
                         name: { kind: 'Name', value: 'description' },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                     ],
                   },
                 },
@@ -37847,6 +39177,18 @@ export const GetAtom = {
                         name: { kind: 'Name', value: 'description' },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                     ],
                   },
                 },
@@ -38457,6 +39799,18 @@ export const GetAtomByData = {
                         name: { kind: 'Name', value: 'description' },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                     ],
                   },
                 },
@@ -39098,7 +40452,7 @@ export const GetVerifiedAtomDetails = {
                                               kind: 'ObjectField',
                                               name: {
                                                 kind: 'Name',
-                                                value: '_eq',
+                                                value: '_ilike',
                                               },
                                               value: {
                                                 kind: 'Variable',
@@ -39467,31 +40821,31 @@ export const GetVerifiedAtomDetails = {
                                                               {
                                                                 kind: 'StringValue',
                                                                 value:
-                                                                  '0xd99811847e634d33f0dace483c52949bec76300f',
+                                                                  '0xD99811847E634d33f0DAcE483c52949bEc76300F',
                                                                 block: false,
                                                               },
                                                               {
                                                                 kind: 'StringValue',
                                                                 value:
-                                                                  '0xbb285b543c96c927fc320fb28524899c2c90806c',
+                                                                  '0xBb285b543C96C927FC320Fb28524899C2C90806C',
                                                                 block: false,
                                                               },
                                                               {
                                                                 kind: 'StringValue',
                                                                 value:
-                                                                  '0x0b162525c5dc8c18f771e60fd296913030bfe42c',
+                                                                  '0x0b162525C5dc8c18F771E60fD296913030Bfe42c',
                                                                 block: false,
                                                               },
                                                               {
                                                                 kind: 'StringValue',
                                                                 value:
-                                                                  '0xbd2de08af9470c87c4475117fb912b8f1d588d9c',
+                                                                  '0xbd2DE08aF9470c87C4475117Fb912B8f1d588D9c',
                                                                 block: false,
                                                               },
                                                               {
                                                                 kind: 'StringValue',
                                                                 value:
-                                                                  '0xb95ca3d3144e9d1daff0ee3d35a4488a4a5c9fc5',
+                                                                  '0xB95ca3D3144e9d1DAFF0EE3d35a4488A4A5C9Fc5',
                                                                 block: false,
                                                               },
                                                             ],
@@ -41125,6 +42479,18 @@ export const GetEvents = {
                     ],
                   },
                 },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -41424,6 +42790,18 @@ export const GetEventsWithAggregates = {
                         name: { kind: 'Name', value: 'description' },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                     ],
                   },
                 },
@@ -42726,7 +44104,7 @@ export const GetFollowingPositions = {
                                             kind: 'ObjectField',
                                             name: {
                                               kind: 'Name',
-                                              value: '_eq',
+                                              value: '_ilike',
                                             },
                                             value: {
                                               kind: 'Variable',
@@ -42871,7 +44249,7 @@ export const GetFollowingPositions = {
                                             kind: 'ObjectField',
                                             name: {
                                               kind: 'Name',
-                                              value: '_eq',
+                                              value: '_ilike',
                                             },
                                             value: {
                                               kind: 'Variable',
@@ -43058,7 +44436,7 @@ export const GetFollowingPositions = {
                                               kind: 'ObjectField',
                                               name: {
                                                 kind: 'Name',
-                                                value: '_eq',
+                                                value: '_ilike',
                                               },
                                               value: {
                                                 kind: 'Variable',
@@ -43193,6 +44571,18 @@ export const GetFollowingPositions = {
                         name: { kind: 'Name', value: 'description' },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                     ],
                   },
                 },
@@ -43734,6 +45124,18 @@ export const GetFollowerPositions = {
                         name: { kind: 'Name', value: 'description' },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                     ],
                   },
                 },
@@ -44754,7 +46156,7 @@ export const GetConnectionsCount = {
                                             kind: 'ObjectField',
                                             name: {
                                               kind: 'Name',
-                                              value: '_eq',
+                                              value: '_ilike',
                                             },
                                             value: {
                                               kind: 'Variable',
@@ -45367,6 +46769,18 @@ export const GetListItems = {
                         name: { kind: 'Name', value: 'description' },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                     ],
                   },
                 },
@@ -46131,6 +47545,31 @@ export const GetListDetails = {
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                       { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'term' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'vaults' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'position_count',
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
                       {
                         kind: 'Field',
                         alias: { kind: 'Name', value: 'tags' },
@@ -46902,7 +48341,7 @@ export const GetListDetailsWithPosition = {
                                     fields: [
                                       {
                                         kind: 'ObjectField',
-                                        name: { kind: 'Name', value: '_eq' },
+                                        name: { kind: 'Name', value: '_ilike' },
                                         value: {
                                           kind: 'Variable',
                                           name: {
@@ -47000,7 +48439,7 @@ export const GetListDetailsWithPosition = {
                                     fields: [
                                       {
                                         kind: 'ObjectField',
-                                        name: { kind: 'Name', value: '_eq' },
+                                        name: { kind: 'Name', value: '_ilike' },
                                         value: {
                                           kind: 'Variable',
                                           name: {
@@ -47495,7 +48934,7 @@ export const GetListDetailsWithUser = {
                                     fields: [
                                       {
                                         kind: 'ObjectField',
-                                        name: { kind: 'Name', value: '_eq' },
+                                        name: { kind: 'Name', value: '_ilike' },
                                         value: {
                                           kind: 'Variable',
                                           name: {
@@ -47593,7 +49032,7 @@ export const GetListDetailsWithUser = {
                                     fields: [
                                       {
                                         kind: 'ObjectField',
-                                        name: { kind: 'Name', value: '_eq' },
+                                        name: { kind: 'Name', value: '_ilike' },
                                         value: {
                                           kind: 'Variable',
                                           name: {
@@ -47976,7 +49415,7 @@ export const GetListDetailsWithUser = {
                                     fields: [
                                       {
                                         kind: 'ObjectField',
-                                        name: { kind: 'Name', value: '_eq' },
+                                        name: { kind: 'Name', value: '_ilike' },
                                         value: {
                                           kind: 'Variable',
                                           name: {
@@ -48074,7 +49513,7 @@ export const GetListDetailsWithUser = {
                                     fields: [
                                       {
                                         kind: 'ObjectField',
-                                        name: { kind: 'Name', value: '_eq' },
+                                        name: { kind: 'Name', value: '_ilike' },
                                         value: {
                                           kind: 'Variable',
                                           name: {
@@ -48117,6 +49556,566 @@ export const GetListDetailsWithUser = {
                             {
                               kind: 'Field',
                               name: { kind: 'Name', value: 'shares' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export const GetListDetailsSimplified = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'GetListDetailsSimplified' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'globalWhere' },
+          },
+          type: {
+            kind: 'NamedType',
+            name: { kind: 'Name', value: 'triples_bool_exp' },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'address' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'limit' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'offset' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'orderBy' },
+          },
+          type: {
+            kind: 'ListType',
+            type: {
+              kind: 'NonNullType',
+              type: {
+                kind: 'NamedType',
+                name: { kind: 'Name', value: 'triples_order_by' },
+              },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'globalTriplesAggregate' },
+            name: { kind: 'Name', value: 'triples_aggregate' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'globalWhere' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'aggregate' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'count' } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'globalTriples' },
+            name: { kind: 'Name', value: 'triples' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'globalWhere' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'limit' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'offset' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'offset' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'order_by' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'orderBy' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'term_id' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'counter_term_id' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'subject' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'term_id' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'wallet_id' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'term' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'vaults' },
+                              arguments: [
+                                {
+                                  kind: 'Argument',
+                                  name: { kind: 'Name', value: 'where' },
+                                  value: {
+                                    kind: 'ObjectValue',
+                                    fields: [
+                                      {
+                                        kind: 'ObjectField',
+                                        name: {
+                                          kind: 'Name',
+                                          value: 'curve_id',
+                                        },
+                                        value: {
+                                          kind: 'ObjectValue',
+                                          fields: [
+                                            {
+                                              kind: 'ObjectField',
+                                              name: {
+                                                kind: 'Name',
+                                                value: '_eq',
+                                              },
+                                              value: {
+                                                kind: 'StringValue',
+                                                value: '1',
+                                                block: false,
+                                              },
+                                            },
+                                          ],
+                                        },
+                                      },
+                                    ],
+                                  },
+                                },
+                              ],
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'current_share_price',
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'position_count',
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'total_shares',
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'object' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'term_id' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'wallet_id' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'predicate' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'term_id' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'wallet_id' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'term' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'vaults' },
+                        arguments: [
+                          {
+                            kind: 'Argument',
+                            name: { kind: 'Name', value: 'where' },
+                            value: {
+                              kind: 'ObjectValue',
+                              fields: [
+                                {
+                                  kind: 'ObjectField',
+                                  name: { kind: 'Name', value: 'curve_id' },
+                                  value: {
+                                    kind: 'ObjectValue',
+                                    fields: [
+                                      {
+                                        kind: 'ObjectField',
+                                        name: { kind: 'Name', value: '_eq' },
+                                        value: {
+                                          kind: 'StringValue',
+                                          value: '1',
+                                          block: false,
+                                        },
+                                      },
+                                    ],
+                                  },
+                                },
+                              ],
+                            },
+                          },
+                        ],
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: {
+                                kind: 'Name',
+                                value: 'current_share_price',
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'position_count' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'total_shares' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'positions' },
+                              arguments: [
+                                {
+                                  kind: 'Argument',
+                                  name: { kind: 'Name', value: 'where' },
+                                  value: {
+                                    kind: 'ObjectValue',
+                                    fields: [
+                                      {
+                                        kind: 'ObjectField',
+                                        name: {
+                                          kind: 'Name',
+                                          value: 'account_id',
+                                        },
+                                        value: {
+                                          kind: 'ObjectValue',
+                                          fields: [
+                                            {
+                                              kind: 'ObjectField',
+                                              name: {
+                                                kind: 'Name',
+                                                value: '_ilike',
+                                              },
+                                              value: {
+                                                kind: 'Variable',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'address',
+                                                },
+                                              },
+                                            },
+                                          ],
+                                        },
+                                      },
+                                    ],
+                                  },
+                                },
+                              ],
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'account' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'label',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'image',
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'shares' },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'counter_term' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'vaults' },
+                        arguments: [
+                          {
+                            kind: 'Argument',
+                            name: { kind: 'Name', value: 'where' },
+                            value: {
+                              kind: 'ObjectValue',
+                              fields: [
+                                {
+                                  kind: 'ObjectField',
+                                  name: { kind: 'Name', value: 'curve_id' },
+                                  value: {
+                                    kind: 'ObjectValue',
+                                    fields: [
+                                      {
+                                        kind: 'ObjectField',
+                                        name: { kind: 'Name', value: '_eq' },
+                                        value: {
+                                          kind: 'StringValue',
+                                          value: '1',
+                                          block: false,
+                                        },
+                                      },
+                                    ],
+                                  },
+                                },
+                              ],
+                            },
+                          },
+                        ],
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: {
+                                kind: 'Name',
+                                value: 'current_share_price',
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'position_count' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'total_shares' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'positions' },
+                              arguments: [
+                                {
+                                  kind: 'Argument',
+                                  name: { kind: 'Name', value: 'where' },
+                                  value: {
+                                    kind: 'ObjectValue',
+                                    fields: [
+                                      {
+                                        kind: 'ObjectField',
+                                        name: {
+                                          kind: 'Name',
+                                          value: 'account_id',
+                                        },
+                                        value: {
+                                          kind: 'ObjectValue',
+                                          fields: [
+                                            {
+                                              kind: 'ObjectField',
+                                              name: {
+                                                kind: 'Name',
+                                                value: '_ilike',
+                                              },
+                                              value: {
+                                                kind: 'Variable',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'address',
+                                                },
+                                              },
+                                            },
+                                          ],
+                                        },
+                                      },
+                                    ],
+                                  },
+                                },
+                              ],
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'account' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'id' },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'label',
+                                          },
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'image',
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'shares' },
+                                  },
+                                ],
+                              },
                             },
                           ],
                         },
@@ -48556,6 +50555,18 @@ export const GetPositions = {
                         name: { kind: 'Name', value: 'description' },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                     ],
                   },
                 },
@@ -49242,7 +51253,7 @@ export const GetTriplePositionsByAddress = {
                                                           kind: 'ObjectField',
                                                           name: {
                                                             kind: 'Name',
-                                                            value: '_eq',
+                                                            value: '_ilike',
                                                           },
                                                           value: {
                                                             kind: 'Variable',
@@ -49346,7 +51357,7 @@ export const GetTriplePositionsByAddress = {
                                                           kind: 'ObjectField',
                                                           name: {
                                                             kind: 'Name',
-                                                            value: '_eq',
+                                                            value: '_ilike',
                                                           },
                                                           value: {
                                                             kind: 'Variable',
@@ -49506,6 +51517,18 @@ export const GetTriplePositionsByAddress = {
                         name: { kind: 'Name', value: 'description' },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                     ],
                   },
                 },
@@ -50185,6 +52208,18 @@ export const GetPositionsWithAggregates = {
                     ],
                   },
                 },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -50856,6 +52891,18 @@ export const GetPosition = {
                         name: { kind: 'Name', value: 'description' },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                     ],
                   },
                 },
@@ -52532,6 +54579,18 @@ export const GetSignals = {
                     ],
                   },
                 },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -52829,6 +54888,18 @@ export const GetTags = {
                         name: { kind: 'Name', value: 'description' },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                     ],
                   },
                 },
@@ -53330,6 +55401,18 @@ export const GetTagsCustom = {
                         name: { kind: 'Name', value: 'description' },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                     ],
                   },
                 },
@@ -53939,6 +56022,18 @@ export const GetTriples = {
                         name: { kind: 'Name', value: 'description' },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                     ],
                   },
                 },
@@ -55153,6 +57248,18 @@ export const GetTriplesWithAggregates = {
                     ],
                   },
                 },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                    ],
+                  },
+                },
               ],
             },
           },
@@ -56346,6 +58453,18 @@ export const GetTriple = {
                         name: { kind: 'Name', value: 'description' },
                       },
                       { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'account' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
                     ],
                   },
                 },
@@ -57616,7 +59735,7 @@ export const GetTriplesWithPositions = {
                                               kind: 'ObjectField',
                                               name: {
                                                 kind: 'Name',
-                                                value: '_eq',
+                                                value: '_ilike',
                                               },
                                               value: {
                                                 kind: 'Variable',
@@ -57719,7 +59838,7 @@ export const GetTriplesWithPositions = {
                                               kind: 'ObjectField',
                                               name: {
                                                 kind: 'Name',
-                                                value: '_eq',
+                                                value: '_ilike',
                                               },
                                               value: {
                                                 kind: 'Variable',
