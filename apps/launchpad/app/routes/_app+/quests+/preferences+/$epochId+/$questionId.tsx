@@ -787,7 +787,7 @@ export default function MiniGameOne() {
               18,
             ) *
             +formatUnits(triple.term?.vaults[0]?.current_share_price ?? 0, 18),
-        positionDirection: triple.term?.vaults[0]?.positions?.[0]
+        positionDirection: triple.counter_term?.vaults[0]?.positions?.[0]
           ? 'against'
           : triple.term?.vaults[0]?.positions?.[0]
             ? 'for'
