@@ -34,7 +34,7 @@ export function SurveyFormContainer({
         {/* Header with Type Selector */}
         <div className="flex items-start justify-between gap-4 pb-5">
           <div className="space-y-1">
-            <h2 className="text-xl font-semibold">Publish Web3 Wallet Atom</h2>
+            <h2 className="text-xl font-semibold">Publish Atom</h2>
             <div className="flex flex-row gap-1 text-sm text-muted-foreground items-center">
               <Book className="h-4 w-4 text-primary/70" />
               Fill out the form to publish the atom metadata to IPFS. Learn more
