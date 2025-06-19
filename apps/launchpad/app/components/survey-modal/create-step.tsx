@@ -226,49 +226,74 @@ export function CreateStep({
           creator: Address
           atomWallet: Address
           atomData: string
-          vaultID: bigint
+          vaultId: bigint // Fixed: should be vaultId, not vaultID
         }
 
         if (
           txReceipt &&
-          txReceipt?.logs[0].data &&
+          txReceipt.logs.length > 0 &&
           txReceipt?.transactionHash !== lastTxHash
         ) {
-          const decodedLog = decodeEventLog({
-            abi: multivaultAbi,
-            data: txReceipt?.logs[2].data,
-            topics: txReceipt?.logs[2].topics,
-          })
+          try {
+            // Find the AtomCreated event in the logs instead of assuming it's at index 2
+            const atomCreatedLog = txReceipt.logs.find((log) => {
+              try {
+                const decoded = decodeEventLog({
+                  abi: multivaultAbi,
+                  data: log.data,
+                  topics: log.topics,
+                })
+                return decoded.eventName === 'AtomCreated'
+              } catch {
+                return false
+              }
+            })
 
-          const event = decodedLog as unknown as {
-            eventName: string
-            args: AtomCreatedArgs
-          }
-
-          if (
-            event.eventName === 'AtomCreated' &&
-            event.args.creator === (wallet?.address as `0x${string}`)
-          ) {
-            const vaultId = event.args.vaultID.toString()
-            setLastTxHash(txReceipt.transactionHash)
-
-            // Use setTimeout to avoid state updates during render
-            setTimeout(() => {
-              onCreationSuccess({
-                name: atomData?.name ?? '',
-                image: atomData?.image,
-                vaultId,
+            if (atomCreatedLog) {
+              const decodedLog = decodeEventLog({
+                abi: multivaultAbi,
+                data: atomCreatedLog.data,
+                topics: atomCreatedLog.topics,
               })
 
-              toast.custom(() => (
-                <CreateAtomToast
-                  id={vaultId}
-                  txHash={txReceipt.transactionHash}
-                />
-              ))
-            }, 0)
+              const event = decodedLog as unknown as {
+                eventName: string
+                args: AtomCreatedArgs
+              }
 
-            return TransactionStatus.complete
+              if (
+                event.eventName === 'AtomCreated' &&
+                event.args.creator === (wallet?.address as `0x${string}`)
+              ) {
+                const vaultId = event.args.vaultId.toString() // Fixed: use vaultId instead of vaultID
+                setLastTxHash(txReceipt.transactionHash)
+
+                console.log('AtomCreated event found:', {
+                  vaultId,
+                  creator: event.args.creator,
+                })
+
+                // Use setTimeout to avoid state updates during render
+                setTimeout(() => {
+                  onCreationSuccess({
+                    name: atomData?.name ?? '',
+                    image: atomData?.image,
+                    vaultId,
+                  })
+
+                  toast.custom(() => (
+                    <CreateAtomToast
+                      id={vaultId}
+                      txHash={txReceipt.transactionHash}
+                    />
+                  ))
+                }, 0)
+
+                return TransactionStatus.complete
+              }
+            }
+          } catch (error) {
+            console.error('Failed to decode transaction logs:', error)
           }
         }
         return TransactionStatus.inProgress
