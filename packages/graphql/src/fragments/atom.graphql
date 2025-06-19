@@ -18,11 +18,16 @@ fragment AtomValue on atoms {
       description
       url
     }
+    account {
+      id
+      label
+      image
+    }
   }
 }
 
 fragment AtomMetadata on atoms {
-  id
+  term_id
   data
   image
   label
@@ -39,43 +44,45 @@ fragment AtomMetadata on atoms {
 
 fragment AtomTxn on atoms {
   block_number
-  block_timestamp
+  created_at
   transaction_hash
   creator_id
 }
 
 fragment AtomVaultDetails on atoms {
-  vault_id
+  term_id
   wallet_id
-  vault {
-    position_count
-    total_shares
-    current_share_price
-    positions_aggregate {
-      aggregate {
-        count
-        sum {
-          shares
+  term {
+    vaults(where: { curve_id: { _eq: "1" } }) {
+      position_count
+      total_shares
+      current_share_price
+      positions_aggregate {
+        aggregate {
+          count
+          sum {
+            shares
+          }
         }
       }
-    }
-    positions {
-      id
-      account {
-        label
+      positions {
         id
+        account {
+          label
+          id
+        }
+        shares
       }
-      shares
     }
   }
 }
 
 fragment AtomTriple on atoms {
   as_subject_triples {
-    id
+    term_id
     object {
       data
-      id
+      term_id
       image
       label
       emoji
@@ -86,7 +93,7 @@ fragment AtomTriple on atoms {
     }
     predicate {
       data
-      id
+      term_id
       image
       label
       emoji
@@ -97,10 +104,10 @@ fragment AtomTriple on atoms {
     }
   }
   as_predicate_triples {
-    id
+    term_id
     subject {
       data
-      id
+      term_id
       image
       label
       emoji
@@ -111,7 +118,7 @@ fragment AtomTriple on atoms {
     }
     object {
       data
-      id
+      term_id
       image
       label
       emoji
@@ -122,10 +129,10 @@ fragment AtomTriple on atoms {
     }
   }
   as_object_triples {
-    id
+    term_id
     subject {
       data
-      id
+      term_id
       image
       label
       emoji
@@ -136,7 +143,7 @@ fragment AtomTriple on atoms {
     }
     predicate {
       data
-      id
+      term_id
       image
       label
       emoji
@@ -149,20 +156,22 @@ fragment AtomTriple on atoms {
 }
 
 fragment AtomVaultDetailsWithPositions on atoms {
-  vault {
-    total_shares
-    current_share_price
-    positions_aggregate(where: { account_id: { _in: $addresses } }) {
-      aggregate {
-        sum {
+  term {
+    vaults(where: { curve_id: { _eq: "1" } }) {
+      total_shares
+      current_share_price
+      positions_aggregate(where: { account_id: { _in: $addresses } }) {
+        aggregate {
+          sum {
+            shares
+          }
+        }
+        nodes {
+          account {
+            id
+          }
           shares
         }
-      }
-      nodes {
-        account {
-          id
-        }
-        shares
       }
     }
   }

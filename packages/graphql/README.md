@@ -166,7 +166,6 @@ The package can be configured through the following files:
 - `codegen.ts` - GraphQL code generation settings
 - `tsconfig.json` - TypeScript configuration
 - `vitest.config.ts` - Test configuration
-- `schema.graphql` - GraphQL schema (source of truth)
 
 ## Contributing
 

@@ -1,14 +1,17 @@
 {
   "name": "@0xintuition/sdk",
-  "version": "0.3.1",
-  "description": "Backend SDK",
-  "main": "src/index.js",
+  "version": "0.0.0-alpha.0",
+  "description": "Intuition SDK",
+  "type": "module",
+	"main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
   "exports": {
-    ".": "./src/index.js"
-  },
-  "types": "src/index.d.ts",
-  "scripts": {
-    "lint:fix": "pnpm lint --fix"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
   },
   "files": [
     "dist/**/*",
@@ -16,13 +19,32 @@
     "README.md",
     "LICENSE"
   ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "publish-dry": "pnpm build && pnpm publish --dry-run --no-git-checks --ignore-scripts",
+    "publish-next": "pnpm build && pnpm publish --tag next --no-git-checks --ignore-scripts",
+    "publish-latest": "pnpm build && pnpm publish --tag latest --no-git-checks --ignore-scripts",
+    "version:patch": "pnpm version patch --no-git-tag-version",
+    "version:minor": "pnpm version minor --no-git-tag-version",
+    "version:major": "pnpm version major --no-git-tag-version",
+    "version:beta": "pnpm version prerelease --preid beta --no-git-tag-version",
+    "lint:fix": "pnpm lint --fix",
+    "generate": "node ./scripts/generate.mjs",
+    "test": "vitest"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/0xIntuition/intuition-ts",
     "directory": "packages/sdk"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@0xintuition/protocol": "workspace:^",
+    "@0xintuition/graphql": "workspace:^",
+    "viem": "2.22.6"
+  },
   "devDependencies": {
+    "tsup": "^6.7.0",
     "typescript": "^5.4.5",
     "vite": "^5.2.11",
     "vitest": "^1.3.1"
