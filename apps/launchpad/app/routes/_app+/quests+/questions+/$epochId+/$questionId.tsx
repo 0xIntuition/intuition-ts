@@ -50,7 +50,7 @@ import {
 } from '@lib/state/store'
 import { usePrivy } from '@privy-io/react-auth'
 import type { LoaderFunctionArgs, MetaFunction } from '@remix-run/node'
-import { json } from '@remix-run/node'
+import { json, redirect } from '@remix-run/node'
 import {
   useLoaderData,
   useLocation,
@@ -85,13 +85,30 @@ import { formatUnits } from 'viem'
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const queryClient = new QueryClient()
 
+  // Validate route parameters
+  const epochId = Number(params.epochId)
+  const questionId = Number(params.questionId)
+
+  // Check for string 'null' specifically
+  if (params.questionId === 'null' || params.epochId === 'null') {
+    throw redirect('/quests')
+  }
+
+  if (isNaN(epochId) || epochId < 0) {
+    throw redirect('/quests')
+  }
+
+  if (isNaN(questionId) || questionId < 0) {
+    throw redirect(`/quests/questions/${epochId}`)
+  }
+
   // Start parallel fetches for independent data
   const [user, questionData, allQuestions, epoch, multiVaultConfig] =
     await Promise.all([
       getUser(request),
-      fetchEpochQuestion(Number(params.questionId)),
-      fetchEpochQuestions(Number(params.epochId)),
-      fetchEpochById(Number(params.epochId)),
+      fetchEpochQuestion(questionId),
+      fetchEpochQuestions(epochId),
+      fetchEpochById(epochId),
       getMultiVaultConfig(MULTIVAULT_CONTRACT_ADDRESS),
     ])
 
@@ -301,11 +318,15 @@ export default function MiniGameOne() {
 
   // Fetch completion data using resource route
   const { data: completion, isLoading: isLoadingCompletion } = useQuery({
-    queryKey: ['question-completion', userWallet?.toLowerCase(), questionId],
+    queryKey: [
+      'question-completion',
+      userWallet?.toLowerCase(),
+      questionData.id,
+    ],
     queryFn: async () => {
       try {
         const response = await fetch(
-          `/resources/get-question-completion?accountId=${userWallet}&questionId=${questionId}`,
+          `/resources/get-question-completion?accountId=${userWallet}&questionId=${questionData.id}`,
         )
         const data = await response.json()
         return data.completion
@@ -313,7 +334,7 @@ export default function MiniGameOne() {
         return null
       }
     },
-    enabled: !!userWallet && !!questionId,
+    enabled: !!userWallet && !!questionData.id,
   })
 
   let pointsAwarded = 0
@@ -765,7 +786,7 @@ export default function MiniGameOne() {
   const handleStartOnboarding = () => {
     // Ensure we have the complete question object with required fields
     const questionObj: Question = {
-      id: parseInt(questionId || '0', 10),
+      id: questionData.id,
       title: title || '',
       predicate_id: predicateId,
       object_id: objectId,
@@ -787,7 +808,12 @@ export default function MiniGameOne() {
 
   const handleCloseOnboarding = () => {
     // Only invalidate queries if we have all required values and the modal was actually open
-    if (userWallet && questionId && currentEpoch && onboardingModal.isOpen) {
+    if (
+      userWallet &&
+      questionData.id &&
+      currentEpoch &&
+      onboardingModal.isOpen
+    ) {
       // For the OnboardingModal (new completions), we need to invalidate queries
       // For the QuestModal (repeat completions), we don't need to invalidate as much
       if (!completion) {
@@ -796,7 +822,7 @@ export default function MiniGameOne() {
           queryKey: [
             'question-completion',
             userWallet.toLowerCase(),
-            questionId,
+            questionData.id,
           ],
         })
         queryClient.invalidateQueries({
@@ -1057,7 +1083,7 @@ export default function MiniGameOne() {
       />
       <Navigation
         prevItem={
-          prevQuestion
+          prevQuestion && prevQuestion.id != null
             ? {
                 id: String(prevQuestion.id),
                 title: prevQuestion.title,
@@ -1066,7 +1092,7 @@ export default function MiniGameOne() {
             : undefined
         }
         nextItem={
-          nextQuestion
+          nextQuestion && nextQuestion.id != null
             ? {
                 id: String(nextQuestion.id),
                 title: nextQuestion.title,
