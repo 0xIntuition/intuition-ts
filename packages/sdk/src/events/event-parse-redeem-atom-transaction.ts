@@ -4,7 +4,7 @@ import { Hex, parseEventLogs, PublicClient, WalletClient } from 'viem'
 
 import { getPublicClient } from '../helpers/get-public-client'
 
-export async function eventParseDepositAtomTransaction(
+export async function eventParseRedeemAtomTransaction(
   client: PublicClient | WalletClient,
   hash: Hex,
 ) {
@@ -19,7 +19,7 @@ export async function eventParseDepositAtomTransaction(
   const depositedEvents = parseEventLogs({
     abi: multiVaultAbi,
     logs,
-    eventName: 'Deposited',
+    eventName: 'Redeemed',
   })
 
   return depositedEvents[0].args
