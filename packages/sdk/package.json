@@ -3,7 +3,7 @@
   "version": "0.0.0-alpha.0",
   "description": "Intuition SDK",
   "type": "module",
-	"main": "./dist/index.js",
+  "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "exports": {
@@ -39,11 +39,12 @@
     "directory": "packages/sdk"
   },
   "dependencies": {
-    "@0xintuition/protocol": "workspace:^",
     "@0xintuition/graphql": "workspace:^",
+    "@0xintuition/protocol": "workspace:^",
     "viem": "2.22.6"
   },
   "devDependencies": {
+    "@viem/anvil": "^0.0.10",
     "tsup": "^6.7.0",
     "typescript": "^5.4.5",
     "vite": "^5.2.11",

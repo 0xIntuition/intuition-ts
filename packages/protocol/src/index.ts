@@ -3,3 +3,5 @@ export * from './constants'
 export { deployments } from './deployments'
 export { Multivault } from './multivault'
 export { multiVaultAbi } from './multivault-abi'
+export { multiVaultBytecode } from './multivault-bytecode'
+

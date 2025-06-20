@@ -1,13 +1,16 @@
 import { deployments } from '@0xintuition/protocol'
 
-import { Hex, WalletClient } from 'viem'
+import { Address, Hex, WalletClient } from 'viem'
 
-export function getMultiVaultAddressFromConnection(walletClient: WalletClient) {
+export function getMultiVaultAddressFromConnection(
+  walletClient: WalletClient,
+  address?: Address,
+) {
   if (!walletClient || !walletClient?.chain) {
     throw new Error('Wallet client is required to batch create atoms')
   }
 
-  const contractAddress = deployments[walletClient.chain.id]
+  const contractAddress = address ? address : deployments[walletClient.chain.id]
   if (!contractAddress) {
     throw new Error(
       `No contract address found for chain ID ${walletClient.chain.id}`,
