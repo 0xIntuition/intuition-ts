@@ -11,13 +11,13 @@ export async function createThing(
   data: PinThingMutationVariables,
   depositAmount?: bigint,
 ) {
-  const thingUri = await pinThing(data)
-  if (!thingUri) {
+  const uriRef = await pinThing(data)
+  if (!uriRef) {
     throw new Error('Failed to pin thing on IPFS')
   }
 
   const atomTransactionHash = await createAtom(config, {
-    args: [toHex(thingUri)],
+    args: [toHex(uriRef)],
     value: depositAmount,
   })
 
@@ -31,7 +31,7 @@ export async function createThing(
   )
 
   return {
-    uri: thingUri,
+    uri: uriRef,
     transactionHash: atomTransactionHash,
     state: atomData,
   }

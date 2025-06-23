@@ -1,8 +1,8 @@
 import {
-  multiVaultAbi,
-  multiVaultBytecode,
-  TransparentUpgradeableProxyAbi,
-  TransparentUpgradeableProxyBytecode,
+    EthMultiVaultAbi,
+    multiVaultBytecode,
+    TransparentUpgradeableProxyAbi,
+    TransparentUpgradeableProxyBytecode,
 } from '@0xintuition/protocol'
 
 import { isAddress, parseEther, parseUnits, type Address } from 'viem'
@@ -14,7 +14,7 @@ import { publicClient, walletClient } from './utils.js'
 
 export async function deployAndInit(): Promise<Address> {
   const hashEthMultiVault = await walletClient.deployContract({
-    abi: multiVaultAbi,
+    abi: EthMultiVaultAbi,
     bytecode: multiVaultBytecode,
     account: ALICE,
   })

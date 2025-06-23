@@ -1,4 +1,4 @@
-import { ATOM_COST, multiVaultAbi } from '@0xintuition/protocol'
+import { ATOM_COST, EthMultiVaultAbi } from '@0xintuition/protocol'
 
 import { Address, Hex, PublicClient, WalletClient } from 'viem'
 
@@ -22,7 +22,7 @@ export async function batchCreateAtom(
 
   const { request } = await publicClient.simulateContract({
     address,
-    abi: multiVaultAbi,
+    abi: EthMultiVaultAbi,
     functionName: 'batchCreateAtom',
     args,
     value: value ?? BigInt(ATOM_COST * args[0].length),

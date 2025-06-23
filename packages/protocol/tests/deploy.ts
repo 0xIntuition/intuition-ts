@@ -1,14 +1,14 @@
 import { isAddress, parseEther, parseUnits, type Address } from 'viem'
 import { expect } from 'vitest'
 
-import { abi } from '../src/abi'
+import { EthMultiVaultAbi } from '../src/contracts/EthMultiVault-abi.js'
 import { publicClient, walletClient } from '../tests/utils.js'
 import { bytecode } from './bytecode'
 import { ALICE, BOB } from './constants.js'
 
 export async function deployAndInit(): Promise<Address> {
   const hash = await walletClient.deployContract({
-    abi,
+    abi: EthMultiVaultAbi,
     bytecode,
     account: ALICE,
   })
@@ -25,7 +25,7 @@ export async function deployAndInit(): Promise<Address> {
   const hash2 = await walletClient.writeContract({
     address,
     account: ALICE,
-    abi,
+    abi: EthMultiVaultAbi,
     functionName: 'init',
     args: [
       {
@@ -44,7 +44,7 @@ export async function deployAndInit(): Promise<Address> {
       },
       {
         tripleCreationProtocolFee: parseEther('0.0002'), // Fee for creating a triple
-        atomDepositFractionOnTripleCreation: parseEther('0.0003'), // Static fee going towards increasing the amount of assets in the underlying atom vaults
+        totalAtomDepositsOnTripleCreation: parseEther('0.0003'), // Static fee going towards increasing the amount of assets in the underlying atom vaults
         atomDepositFractionForTriple: 1500n, // Fee for equity in atoms when creating a triple
       },
       {
@@ -57,6 +57,10 @@ export async function deployAndInit(): Promise<Address> {
         entryFee: 500n, // Entry fee for vault 0
         exitFee: 500n, // Exit fee for vault 0
         protocolFee: 100n, // Protocol fee for vault 0
+      },
+      {
+        registry: ALICE, // Address of the registry contract
+        defaultCurveId: BigInt(1), // Default curve ID for vault 0
       },
     ],
   })

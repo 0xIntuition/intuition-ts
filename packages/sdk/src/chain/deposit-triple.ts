@@ -1,4 +1,4 @@
-import { multiVaultAbi, TRIPLE_COST } from '@0xintuition/protocol'
+import { EthMultiVaultAbi, TRIPLE_COST } from '@0xintuition/protocol'
 
 import { Address, PublicClient, WalletClient } from 'viem'
 
@@ -23,7 +23,7 @@ export async function depositTriple(
   const { request } = await publicClient.simulateContract({
     account: walletClient.account,
     address,
-    abi: multiVaultAbi,
+    abi: EthMultiVaultAbi,
     functionName: 'depositTriple',
     args,
     value: value ?? BigInt(TRIPLE_COST),

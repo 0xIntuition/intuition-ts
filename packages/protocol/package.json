@@ -38,12 +38,11 @@
     "access": "public",
     "registry": "https://registry.npmjs.org/"
   },
-  "dependencies": {
-    "viem": "2.22.6"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@viem/anvil": "^0.0.10",
     "typescript": "^5.4.5",
+    "viem": "^2.31.4",
     "vite": "^5.2.11",
     "vitest": "^1.3.1",
     "tsup": "^6.7.0",

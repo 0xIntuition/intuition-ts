@@ -1,4 +1,4 @@
-import { ATOM_COST, multiVaultAbi } from '@0xintuition/protocol'
+import { ATOM_COST, EthMultiVaultAbi } from '@0xintuition/protocol'
 
 import { Address, Hex, PublicClient, WalletClient } from 'viem'
 
@@ -18,11 +18,12 @@ export async function createAtom(
   inputs: CreateAtomInputs,
 ): Promise<Hex> {
   const { address, walletClient, publicClient } = config
+
   const { args, value } = inputs
   const { request } = await publicClient.simulateContract({
     account: walletClient.account ?? null,
     address,
-    abi: multiVaultAbi,
+    abi: EthMultiVaultAbi,
     functionName: 'createAtom',
     args,
     value: value ?? BigInt(ATOM_COST),

@@ -1,4 +1,4 @@
-import { multiVaultAbi } from '@0xintuition/protocol'
+import { EthMultiVaultAbi } from '@0xintuition/protocol'
 
 import { Address, PublicClient, WalletClient } from 'viem'
 
@@ -22,7 +22,7 @@ export async function redeemAtom(
   const { request } = await publicClient.simulateContract({
     account: walletClient.account,
     address,
-    abi: multiVaultAbi,
+    abi: EthMultiVaultAbi,
     functionName: 'redeemAtom',
     args,
   })

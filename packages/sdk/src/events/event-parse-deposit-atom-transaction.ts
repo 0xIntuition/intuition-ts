@@ -1,4 +1,4 @@
-import { multiVaultAbi } from '@0xintuition/protocol'
+import { EthMultiVaultAbi } from '@0xintuition/protocol'
 
 import { Hex, parseEventLogs, PublicClient, WalletClient } from 'viem'
 
@@ -17,7 +17,7 @@ export async function eventParseDepositAtomTransaction(
   }
 
   const depositedEvents = parseEventLogs({
-    abi: multiVaultAbi,
+    abi: EthMultiVaultAbi,
     logs,
     eventName: 'Deposited',
   })

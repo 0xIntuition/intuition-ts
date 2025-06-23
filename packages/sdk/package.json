@@ -3,25 +3,28 @@
   "version": "0.0.0-alpha.0",
   "description": "Intuition SDK",
   "type": "module",
-  "main": "./dist/index.js",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
+  "sideEffects": false,
+  "files": [
+    "dist/**",
+    "!dist/**/*.tsbuildinfo",
+    "src/**/*.ts",
+    "!src/**/*.test.ts",
+    "!src/**/*.test-d.ts"
+  ],
+  "main": "./dist/esm/sdk/src/index.js",
+  "types": "./dist/types/sdk/src/index.d.ts",
+  "typings": "./dist/types/sdk/src/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.js"
-    }
+      "types": "./dist/types/sdk/src/index.d.ts",
+      "default": "./dist/esm/sdk/src/index.js"
+    },
+    "./package.json": "./package.json"
   },
-  "files": [
-    "dist/**/*",
-    "src/**/*",
-    "README.md",
-    "LICENSE"
-  ],
   "scripts": {
-    "build": "tsup",
-    "dev": "tsup --watch",
+    "build": "pnpm run clean && pnpm run build:esm+types",
+    "build:esm+types": "tsc --project tsconfig.json --outDir ./dist/esm --declaration --declarationMap --declarationDir ./dist/types",
+    "clean": "rm -rf dist tsconfig.tsbuildinfo",
     "publish-dry": "pnpm build && pnpm publish --dry-run --no-git-checks --ignore-scripts",
     "publish-next": "pnpm build && pnpm publish --tag next --no-git-checks --ignore-scripts",
     "publish-latest": "pnpm build && pnpm publish --tag latest --no-git-checks --ignore-scripts",
@@ -40,13 +43,13 @@
   },
   "dependencies": {
     "@0xintuition/graphql": "workspace:^",
-    "@0xintuition/protocol": "workspace:^",
-    "viem": "2.22.6"
+    "@0xintuition/protocol": "workspace:^"
   },
   "devDependencies": {
     "@viem/anvil": "^0.0.10",
     "tsup": "^6.7.0",
     "typescript": "^5.4.5",
+    "viem": "^2.31.4",
     "vite": "^5.2.11",
     "vitest": "^1.3.1"
   }

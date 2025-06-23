@@ -15,9 +15,9 @@ export async function createEthereumAccount(
     throw new Error('Invalid Ethereum address provided')
   }
 
-  const ref = `eip155:${data.chainId}:${getAddress(data.address)}`
+  const uriRef = `eip155:${data.chainId}:${getAddress(data.address)}`
   const atomTransactionHash = await createAtom(config, {
-    args: [toHex(ref)],
+    args: [toHex(uriRef)],
     value: depositAmount,
   })
 
@@ -31,7 +31,7 @@ export async function createEthereumAccount(
   )
 
   return {
-    uri: ref,
+    uri: uriRef,
     transactionHash: atomTransactionHash,
     state: atomData,
   }

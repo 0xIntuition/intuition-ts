@@ -1,16 +1,16 @@
 import { parseEther, type Address } from 'viem'
 import { beforeAll, describe, expect, it } from 'vitest'
 
-import { Multivault } from '../src/multivault.js'
+import { EthMultiVault } from '../src/ethmultivault.js'
 import { deployAndInit } from './deploy.js'
 import { publicClient, walletClient } from './utils.js'
 
 let address: Address
-let multiVault: Multivault
+let multiVault: EthMultiVault
 
 beforeAll(async () => {
   address = await deployAndInit()
-  multiVault = new Multivault(
+  multiVault = new EthMultiVault(
     {
       publicClient,
       walletClient,

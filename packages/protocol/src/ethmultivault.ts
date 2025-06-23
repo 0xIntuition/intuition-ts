@@ -15,12 +15,12 @@ import {
   WalletClient,
 } from 'viem'
 
-import { abi } from './abi'
-import { deployments } from './deployments'
+import { EthMultiVaultAbi } from './contracts/EthMultiVault-abi.js'
+import { deployments } from './deployments.js'
 
-export class Multivault {
+export class EthMultiVault {
   public readonly contract: GetContractReturnType<
-    typeof abi,
+    typeof EthMultiVaultAbi,
     WalletClient<Transport, Chain, Account>,
     Address
   >
@@ -36,11 +36,11 @@ export class Multivault {
 
     if (address === undefined && deployment === undefined) {
       throw new Error(
-        `Multivault not deployed on chain: ${this.client.publicClient.chain.id}`,
+        `EthMultiVault not deployed on chain: ${this.client.publicClient.chain.id}`,
       )
     }
     this.contract = getContract({
-      abi,
+      abi: EthMultiVaultAbi,
       client: {
         wallet: this.client.walletClient,
         public: this.client.publicClient,
@@ -313,8 +313,8 @@ export class Multivault {
    * @param vaultId vault id to get corresponding fraction for
    * @return amount of assets that would be used as atom deposit fraction
    */
-  public async getAtomDepositFractionAmount(assets: bigint, vaultId: bigint) {
-    return await this.contract.read.atomDepositFractionAmount([assets, vaultId])
+  public async getAtomsDepositAmount(assets: bigint, vaultId: bigint) {
+    return await this.contract.read.atomDepositsAmount([assets, vaultId])
   }
 
   /**
@@ -481,14 +481,18 @@ export class Multivault {
     }
 
     const atomCreatedEvents = parseEventLogs({
-      abi,
+      abi: EthMultiVaultAbi,
       logs,
       eventName: 'AtomCreated',
     })
 
-    const vaultId = atomCreatedEvents[0].args.vaultID
+    const vaultId = atomCreatedEvents[0].args.vaultId
 
-    return { vaultId, hash, events: parseEventLogs({ abi, logs }) }
+    return {
+      vaultId,
+      hash,
+      events: parseEventLogs({ abi: EthMultiVaultAbi, logs }),
+    }
   }
 
   /**
@@ -536,14 +540,18 @@ export class Multivault {
     }
 
     const atomCreatedEvents = parseEventLogs({
-      abi,
+      abi: EthMultiVaultAbi,
       logs,
       eventName: 'AtomCreated',
     })
 
-    const vaultIds = atomCreatedEvents.map((event) => event.args.vaultID)
+    const vaultIds = atomCreatedEvents.map((event) => event.args.vaultId)
 
-    return { vaultIds, hash, events: parseEventLogs({ abi, logs }) }
+    return {
+      vaultIds,
+      hash,
+      events: parseEventLogs({ abi: EthMultiVaultAbi, logs }),
+    }
   }
 
   /**
@@ -641,14 +649,18 @@ export class Multivault {
     }
 
     const tripleCreatedEvents = parseEventLogs({
-      abi,
+      abi: EthMultiVaultAbi,
       logs,
       eventName: 'TripleCreated',
     })
 
-    const vaultId = tripleCreatedEvents[0].args.vaultID
+    const vaultId = tripleCreatedEvents[0].args.vaultId
 
-    return { vaultId, hash, events: parseEventLogs({ abi, logs }) }
+    return {
+      vaultId,
+      hash,
+      events: parseEventLogs({ abi: EthMultiVaultAbi, logs }),
+    }
   }
 
   /**
@@ -698,14 +710,18 @@ export class Multivault {
     }
 
     const tripleCreatedEvents = parseEventLogs({
-      abi,
+      abi: EthMultiVaultAbi,
       logs,
       eventName: 'TripleCreated',
     })
 
-    const vaultIds = tripleCreatedEvents.map((event) => event.args.vaultID)
+    const vaultIds = tripleCreatedEvents.map((event) => event.args.vaultId)
 
-    return { vaultIds, hash, events: parseEventLogs({ abi, logs }) }
+    return {
+      vaultIds,
+      hash,
+      events: parseEventLogs({ abi: EthMultiVaultAbi, logs }),
+    }
   }
 
   /**
@@ -744,14 +760,18 @@ export class Multivault {
     }
 
     const depositedEvents = parseEventLogs({
-      abi,
+      abi: EthMultiVaultAbi,
       logs,
       eventName: 'Deposited',
     })
 
     const shares = depositedEvents[0].args.sharesForReceiver
 
-    return { shares, hash, events: parseEventLogs({ abi, logs }) }
+    return {
+      shares,
+      hash,
+      events: parseEventLogs({ abi: EthMultiVaultAbi, logs }),
+    }
   }
 
   /**
@@ -787,14 +807,18 @@ export class Multivault {
     }
 
     const redeemedEvents = parseEventLogs({
-      abi,
+      abi: EthMultiVaultAbi,
       logs,
       eventName: 'Redeemed',
     })
 
     const assets = redeemedEvents[0].args.assetsForReceiver
 
-    return { assets, hash, events: parseEventLogs({ abi, logs }) }
+    return {
+      assets,
+      hash,
+      events: parseEventLogs({ abi: EthMultiVaultAbi, logs }),
+    }
   }
 
   /**
@@ -833,14 +857,18 @@ export class Multivault {
     }
 
     const depositedEvents = parseEventLogs({
-      abi,
+      abi: EthMultiVaultAbi,
       logs,
       eventName: 'Deposited',
     })
 
     const shares = depositedEvents[0].args.sharesForReceiver
 
-    return { shares, hash, events: parseEventLogs({ abi, logs }) }
+    return {
+      shares,
+      hash,
+      events: parseEventLogs({ abi: EthMultiVaultAbi, logs }),
+    }
   }
 
   /**
@@ -880,13 +908,17 @@ export class Multivault {
     }
 
     const redeemedEvents = parseEventLogs({
-      abi,
+      abi: EthMultiVaultAbi,
       logs,
       eventName: 'Redeemed',
     })
 
     const assets = redeemedEvents[0].args.assetsForReceiver
 
-    return { assets, hash, events: parseEventLogs({ abi, logs }) }
+    return {
+      assets,
+      hash,
+      events: parseEventLogs({ abi: EthMultiVaultAbi, logs }),
+    }
   }
 }
