@@ -744,12 +744,12 @@ export function EcosystemSignalStep({
                 onClick={handleStakeButtonClick}
                 buttonText={
                   isSimplifiedRedeem
-                    ? `Redeem ${Number(actualValue).toFixed(5)} ETH`
+                    ? `Redeem ${Number(actualValue).toFixed(6)} ETH`
                     : !mode
                       ? 'No changes to apply'
                       : mode === 'deposit'
-                        ? `Stake ${Number(val).toFixed(5)} ETH`
-                        : `Redeem ${Number(val).toFixed(5)} ETH`
+                        ? `Stake ${Number(val).toFixed(6)} ETH`
+                        : `Redeem ${Number(val).toFixed(6)} ETH`
                 }
                 disabled={!mode || isLoading}
                 loadingText={'Processing...'}

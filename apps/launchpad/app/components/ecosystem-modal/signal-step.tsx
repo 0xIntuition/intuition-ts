@@ -266,7 +266,7 @@ export function SignalStep({
         args: EventLogArgs
       }
 
-      if (topics.args.sender.toLowerCase() === userWallet?.toLowerCase()) {
+      if (topics.args?.sender?.toLowerCase() === userWallet?.toLowerCase()) {
         assets = (topics.args as BuyArgs).senderAssetsAfterTotalFees.toString()
 
         toast.custom(() => (
@@ -506,7 +506,7 @@ export function SignalStep({
             <SubmitButton
               loading={isLoading}
               onClick={handleStakeButtonClick}
-              buttonText={`Stake ${Number(val).toFixed(5)} ETH`}
+              buttonText={`Stake ${Number(val).toFixed(6)} ETH`}
               loadingText={'Processing...'}
               actionText="Stake"
               disabled={
