@@ -170,8 +170,8 @@ export function SignalStep({
         // For existing triples, determine which vault to use based on vote direction
         const vaultId =
           voteDirection === 'upvote'
-            ? (selectedTopic?.triple?.term_id.toString() ?? '')
-            : (selectedTopic?.triple?.counter_term_id?.toString() ?? '')
+            ? selectedTopic?.triple?.term_id.toString() ?? ''
+            : selectedTopic?.triple?.counter_term_id?.toString() ?? ''
 
         const txHash = await stake({
           val,
@@ -207,8 +207,8 @@ export function SignalStep({
           // In questions mode, we want to pass the subject vault_id (the list item)
           const subjectIdForCallback =
             mode === 'preferences'
-              ? (selectedTopic?.triple?.object?.term_id?.toString() ?? '')
-              : (selectedTopic?.triple?.subject?.term_id?.toString() ?? '')
+              ? selectedTopic?.triple?.object?.term_id?.toString() ?? ''
+              : selectedTopic?.triple?.subject?.term_id?.toString() ?? ''
 
           onStakingSuccess(subjectIdForCallback)
         }
@@ -277,7 +277,7 @@ export function SignalStep({
         args: EventLogArgs
       }
 
-      if (topics.args.sender.toLowerCase() === userWallet?.toLowerCase()) {
+      if (topics.args?.sender?.toLowerCase() === userWallet?.toLowerCase()) {
         assets = (topics.args as BuyArgs).senderAssetsAfterTotalFees.toString()
 
         toast.custom(() => (
@@ -376,7 +376,7 @@ export function SignalStep({
   const preferencesTripleObject =
     mode === 'preferences'
       ? selectedTopic?.triple?.object.label
-      : (newAtomMetadata?.name ?? selectedTopic?.triple?.subject.label)
+      : newAtomMetadata?.name ?? selectedTopic?.triple?.subject.label
   const listTripleObject =
     mode === 'preferences' ? objectLabel : selectedTopic?.triple?.object.label
 
@@ -538,7 +538,7 @@ export function SignalStep({
             <SubmitButton
               loading={isLoading}
               onClick={handleStakeButtonClick}
-              buttonText={`Stake ${Number(val).toFixed(5)} ETH`}
+              buttonText={`Stake ${Number(val).toFixed(6)} ETH`}
               loadingText={'Processing...'}
               actionText="Stake"
               disabled={
