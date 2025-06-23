@@ -1,14 +1,13 @@
-import {
-  EthMultiVaultAbi,
-  EthMultiVaultBytecode,
-  initEncode,
-  TransparentUpgradeableProxyAbi,
-  TransparentUpgradeableProxyBytecode,
-} from '@0xintuition/protocol'
-
 import { isAddress, parseEther, parseUnits, type Address } from 'viem'
 import { expect } from 'vitest'
 
+import {
+  EthMultiVaultAbi,
+  EthMultiVaultBytecode,
+  TransparentUpgradeableProxyAbi,
+  TransparentUpgradeableProxyBytecode,
+} from '../../src/contracts/index.js'
+import { initEncode } from '../../src/core/init-encode.js'
 import { ALICE, BOB } from './constants.js'
 import { publicClient, walletClient } from './utils.js'
 

@@ -1,16 +1,12 @@
 import { EthMultiVaultAbi } from '@0xintuition/protocol'
 
-import { Hex, parseEventLogs, PublicClient, WalletClient } from 'viem'
-
-import { getPublicClient } from '../helpers/get-public-client'
+import { Hex, parseEventLogs, PublicClient } from 'viem'
 
 export async function eventParseRedeemAtomTransaction(
-  client: PublicClient | WalletClient,
+  client: PublicClient,
   hash: Hex,
 ) {
-  const _client = getPublicClient(client)
-
-  const { logs, status } = await _client.waitForTransactionReceipt({ hash })
+  const { logs, status } = await client.waitForTransactionReceipt({ hash })
 
   if (status === 'reverted') {
     throw new Error('Transaction reverted')

@@ -7,8 +7,5 @@ export {
   TRIPLE_COST
 } from '@0xintuition/protocol'
 export * from './api'
-export * from './chain'
 export * from './core'
-export * from './events'
-export * from './utils'
 

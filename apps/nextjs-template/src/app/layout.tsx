@@ -8,7 +8,7 @@ import './global.css';
 const OnchainProviders = dynamic(
   () => import('src/components/OnchainProviders'),
   {
-    ssr: false,
+    ssr: true,
   },
 );
 

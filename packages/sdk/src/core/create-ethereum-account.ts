@@ -1,7 +1,10 @@
-import { Address, getAddress, isAddress, toHex } from 'viem'
+import {
+  createAtom,
+  CreateAtomConfig,
+  eventParseDepositAtomTransaction,
+} from '@0xintuition/protocol'
 
-import { createAtom, CreateAtomConfig } from '../chain/create-atom'
-import { eventParseDepositAtomTransaction } from '../events/event-parse-deposit-atom-transaction'
+import { Address, getAddress, isAddress, toHex } from 'viem'
 
 export async function createEthereumAccount(
   config: CreateAtomConfig,

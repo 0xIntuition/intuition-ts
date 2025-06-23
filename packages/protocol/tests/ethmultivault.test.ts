@@ -2,8 +2,8 @@ import { parseEther, type Address } from 'viem'
 import { beforeAll, describe, expect, it } from 'vitest'
 
 import { EthMultiVault } from '../src/ethmultivault.js'
-import { deployAndInit } from './deploy.js'
-import { publicClient, walletClient } from './utils.js'
+import { deployAndInit } from './helpers/deploy.js'
+import { publicClient, walletClient } from './helpers/utils.js'
 
 let address: Address
 let multiVault: EthMultiVault
@@ -19,7 +19,7 @@ beforeAll(async () => {
   )
 })
 
-describe('MultiVault', () => {
+describe('EthMultiVault', () => {
   it('can get general config', async () => {
     const config = await multiVault.getGeneralConfig()
     expect(config).toBeDefined()
@@ -418,12 +418,9 @@ describe('triple life cycle', () => {
     expect(hash).toBeDefined()
   })
 
-  it('can get atom deposit fraction amount', async () => {
+  it('can get atom deposit amount', async () => {
     const assets = parseEther('1')
-    const amount = await multiVault.getAtomDepositFractionAmount(
-      assets,
-      tripleVaultId,
-    )
+    const amount = await multiVault.getAtomsDepositAmount(assets, tripleVaultId)
     expect(amount).toBeDefined()
   })
 
