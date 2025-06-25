@@ -1,6 +1,6 @@
-import { EthMultiVaultAbi } from '@0xintuition/protocol'
-
 import { Hex, parseEventLogs, PublicClient } from 'viem'
+
+import { EthMultiVaultAbi } from '../contracts/EthMultiVault-abi.js'
 
 export async function eventParseRedeemAtomTransaction(
   client: PublicClient,
@@ -12,11 +12,11 @@ export async function eventParseRedeemAtomTransaction(
     throw new Error('Transaction reverted')
   }
 
-  const depositedEvents = parseEventLogs({
+  const event = parseEventLogs({
     abi: EthMultiVaultAbi,
     logs,
     eventName: 'Redeemed',
   })
 
-  return depositedEvents[0].args
+  return event[0].args
 }

@@ -4,8 +4,10 @@ import { beforeEach, describe, expect, it } from 'vitest'
 import {
   createAtomFromIpfsUpload,
   createAtomFromIpfsUri,
+  createAtomFromString,
   createEthereumAccount,
   createThing,
+  createTripleStatement,
 } from '../src'
 import { deployAndInit } from './helpers/deploy'
 import { publicClient, walletClient } from './helpers/utils'
@@ -15,7 +17,33 @@ beforeEach(async () => {
   multivaultAddress = await deployAndInit()
 })
 
-describe('Core', () => {
+describe('Triple', () => {
+  it('should create a Triple', async () => {
+    const atom1 = await createAtomFromString(
+      { walletClient, publicClient, address: multivaultAddress },
+      'atom1',
+    )
+    const atom2 = await createAtomFromString(
+      { walletClient, publicClient, address: multivaultAddress },
+      'atom2',
+    )
+    const atom3 = await createAtomFromString(
+      { walletClient, publicClient, address: multivaultAddress },
+      'atom3',
+    )
+
+    const triple = await createTripleStatement(
+      { walletClient, publicClient, address: multivaultAddress },
+      {
+        args: [atom1.state.vaultId, atom2.state.vaultId, atom3.state.vaultId],
+      },
+    )
+
+    expect(triple.state.vaultId).toEqual(4n)
+  })
+})
+
+describe('Atoms', () => {
   it('should upload to IPFS and create Atom', async () => {
     const data = await createAtomFromIpfsUpload(
       {
@@ -55,13 +83,11 @@ describe('Core', () => {
   })
 
   it('should create a string Atom', async () => {
-    const data = await createEthereumAccount(
+    const data = await createAtomFromString(
       { walletClient, publicClient, address: multivaultAddress },
-      {
-        address: '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045',
-      },
+      'This is a test string atom',
     )
-    expect(data.uri).toEqual('0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045')
+    expect(data.uri).toEqual('This is a test string atom')
     expect(data.state.vaultId).toEqual(1n)
     expect(data.state.sharesForReceiver).toEqual(100000n)
   })

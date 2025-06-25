@@ -22,23 +22,20 @@ export async function createAtomFromString(
     address: multivaultAddress,
   })
 
-  const atomTransactionHash = await createAtom(config, {
+  const txHash = await createAtom(config, {
     args: [toHex(data)],
     value: atomBaseCost + BigInt(depositAmount || 0),
   })
 
-  if (!atomTransactionHash) {
+  if (!txHash) {
     throw new Error('Failed to create atom onchain')
   }
 
-  const atomData = await eventParseDepositAtomTransaction(
-    publicClient,
-    atomTransactionHash,
-  )
+  const atomData = await eventParseDepositAtomTransaction(publicClient, txHash)
 
   return {
     uri: data,
-    transactionHash: atomTransactionHash,
+    transactionHash: txHash,
     state: atomData,
   }
 }

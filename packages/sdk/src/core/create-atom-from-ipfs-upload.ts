@@ -24,23 +24,23 @@ export async function createAtomFromIpfsUpload(
     publicClient,
     address: multivaultAddress,
   })
-  const atomTransactionHash = await createAtom(config, {
+  const txHash = await createAtom(config, {
     args: [toHex(dataIpfs.IpfsHash)],
     value: atomBaseCost + BigInt(depositAmount || 0),
   })
 
-  if (!atomTransactionHash) {
+  if (!txHash) {
     throw new Error('Failed to create atom onchain')
   }
 
   const atomData = await eventParseDepositAtomTransaction(
     config.publicClient ?? config.walletClient,
-    atomTransactionHash,
+    txHash,
   )
 
   return {
     uri: `ipfs://${dataIpfs.IpfsHash}`,
-    transactionHash: atomTransactionHash,
+    transactionHash: txHash,
     state: atomData,
   }
 }

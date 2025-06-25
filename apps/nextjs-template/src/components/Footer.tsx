@@ -1,17 +1,13 @@
-'use client';
+'use client'
 
-import {
-  GITHUB_LINK,
-  INTUITION_LINK,
-  TWITTER_LINK
-} from '../links';
-import ArrowSvg from '../svg/ArrowSvg';
+import { GITHUB_LINK, INTUITION_LINK, TWITTER_LINK } from '../links'
+import ArrowSvg from '../svg/ArrowSvg'
 
 const docLinks = [
   { href: INTUITION_LINK, title: 'Docs' },
   { href: GITHUB_LINK, title: 'Github' },
   { href: TWITTER_LINK, title: 'X' },
-];
+]
 
 export default function Footer() {
   return (
@@ -47,5 +43,5 @@ export default function Footer() {
         ))}
       </ul>
     </section>
-  );
+  )
 }

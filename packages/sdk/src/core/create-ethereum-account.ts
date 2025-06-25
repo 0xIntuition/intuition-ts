@@ -31,23 +31,20 @@ export async function createEthereumAccount(
   } else {
     uriRef = `caip10:eip155:${data.chainId}:${getAddress(data.address)}`
   }
-  const atomTransactionHash = await createAtom(config, {
+  const txHash = await createAtom(config, {
     args: [toHex(uriRef)],
     value: atomBaseCost + BigInt(depositAmount || 0),
   })
 
-  if (!atomTransactionHash) {
+  if (!txHash) {
     throw new Error('Failed to create atom onchain')
   }
 
-  const atomData = await eventParseDepositAtomTransaction(
-    publicClient,
-    atomTransactionHash,
-  )
+  const atomData = await eventParseDepositAtomTransaction(publicClient, txHash)
 
   return {
     uri: uriRef,
-    transactionHash: atomTransactionHash,
+    transactionHash: txHash,
     state: atomData,
   }
 }

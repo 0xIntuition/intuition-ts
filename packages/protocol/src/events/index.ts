@@ -1,2 +1,3 @@
-export * from './event-parse-deposit-atom-transaction'
-export * from './event-parse-redeem-atom-transaction'
+export * from './event-parse-deposited'
+export * from './event-parse-redeemed'
+export * from './event-parse-triple-created'

@@ -1,35 +1,39 @@
-import { createThing, deployments } from '@0xintuition/sdk';
-import type * as React from 'react';
-import { useChainId, usePublicClient, useWalletClient } from 'wagmi';
+import type * as React from 'react'
 
-type IntuitionCreateThingButton = React.HTMLAttributes<HTMLElement>;
+import { createThing, intuitionDeployments } from '@0xintuition/sdk'
 
-const IntuitionCreateThingButton = ({ className }: IntuitionCreateThingButton) => {
-    const chainId = useChainId()
-    const publicClient = usePublicClient()
-    const {data: walletClient} = useWalletClient()
+import { useChainId, usePublicClient, useWalletClient } from 'wagmi'
 
-    const handleClick = async ()=> {
-        if(!walletClient || !publicClient) return;
-        const multiVaultAddress = deployments[chainId]
-        const data = await createThing(
-            { walletClient, publicClient, address: multiVaultAddress },
-            {
-                url: 'https://www.intuition.systems/',
-                name: 'Intuition',
-                description: `'A decentralized trust protocol: ${new Date().toLocaleDateString()}`,
-                image: 'https://example.com/image.png',
-            },
-            BigInt(420000000000000),
-        )
+export type IntuitionCreateThingButton = React.HTMLAttributes<HTMLElement>
 
-        alert(`Created Thing with ID: ${data.state.vaultId}`);
-    };
+export const IntuitionCreateThingButton = ({
+  className,
+}: IntuitionCreateThingButton) => {
+  const chainId = useChainId()
+  const publicClient = usePublicClient()
+  const { data: walletClient } = useWalletClient()
 
-    return(
-        <button className={className} onClick={handleClick}>
-            Create Thing
-        </button>
-    )}
+  const handleClick = async () => {
+    if (!walletClient || !publicClient) {
+      return
+    }
+    const multiVaultAddress = intuitionDeployments.EthMultiVault[chainId]
+    const data = await createThing(
+      { walletClient, publicClient, address: multiVaultAddress },
+      {
+        url: 'https://www.intuition.systems/',
+        name: 'Intuition',
+        description: `'A decentralized trust protocol: ${new Date().toLocaleDateString()}`,
+        image: 'https://example.com/image.png',
+      },
+    )
 
-export type { IntuitionCreateThingButton };
+    alert(`Created Thing with ID: ${data.state.vaultId}`)
+  }
+
+  return (
+    <button className={className} type="button" onClick={handleClick}>
+      Create Thing
+    </button>
+  )
+}
