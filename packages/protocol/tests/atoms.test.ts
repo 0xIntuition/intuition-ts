@@ -3,6 +3,7 @@ import { beforeEach, describe, expect, it } from 'vitest'
 
 import {
   createAtom,
+  createAtomCalculateBaseCost,
   depositAtom,
   eventParseDepositAtomTransaction,
   eventParseRedeemAtomTransaction,
@@ -12,20 +13,21 @@ import { ALICE } from './helpers/constants'
 import { deployAndInit } from './helpers/deploy'
 import { publicClient, walletClient } from './helpers/utils'
 
-// TODO: Use @viem/anvil to setup a local anvil node
-
 let multivaultAddress: Address
 beforeEach(async () => {
   multivaultAddress = await deployAndInit()
 })
-
 describe('Atoms', () => {
   it('should create new atom', async () => {
+    const atomCost = await createAtomCalculateBaseCost({
+      publicClient,
+      address: multivaultAddress,
+    })
     const data = await createAtom(
       { walletClient, publicClient, address: multivaultAddress },
       {
         args: [toHex('intuition.systems')],
-        value: BigInt(1e18),
+        value: BigInt(atomCost),
       },
     )
     const events = await eventParseDepositAtomTransaction(publicClient, data)

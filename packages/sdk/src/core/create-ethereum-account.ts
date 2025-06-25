@@ -18,7 +18,11 @@ export async function createEthereumAccount(
     throw new Error('Invalid Ethereum address provided')
   }
 
-  const uriRef = `eip155:${data.chainId}:${getAddress(data.address)}`
+  // DEVELOPER NOTE: The address type is the "Account" type.
+  // TODO: 2 types need to be supported here:
+  // 1. `caip10:eip155:1:0x123...` - CAIP10 format
+  // 2. `0x123...` - Ethereum address format
+  const uriRef = `caip10:eip155:${data.chainId}:${getAddress(data.address)}`
   const atomTransactionHash = await createAtom(config, {
     args: [toHex(uriRef)],
     value: depositAmount,

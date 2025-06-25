@@ -1,12 +1,9 @@
-
 import { Address } from 'viem'
 import { beforeEach, describe, expect, it } from 'vitest'
 
 import { createEthereumAccount, createThing } from '../src'
 import { deployAndInit } from './helpers/deploy'
 import { publicClient, walletClient } from './helpers/utils'
-
-// TODO: Use @viem/anvil to setup a local anvil node
 
 let multivaultAddress: Address
 beforeEach(async () => {
