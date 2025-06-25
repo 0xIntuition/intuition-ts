@@ -1,6 +1,6 @@
 {
   "name": "@0xintuition/protocol",
-  "version": "0.1.4",
+  "version": "1.0.0-alpha.0",
   "description": "Intuition Protocol",
   "type": "module",
   "sideEffects": false,
@@ -46,11 +46,11 @@
     "registry": "https://registry.npmjs.org/"
   },
   "dependencies": {
-    "dotenv": "^16.5.0"
   },
   "devDependencies": {
     "@viem/anvil": "^0.0.10",
     "concurrently": "^8.2.2",
+    "dotenv": "^16.5.0",
     "tsup": "^6.7.0",
     "typescript": "^5.4.5",
     "viem": "^2.31.4",

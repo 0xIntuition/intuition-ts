@@ -46,8 +46,8 @@
     "registry": "https://registry.npmjs.org/"
   },
   "dependencies": {
-    "@0xintuition/graphql": "workspace:^",
-    "@0xintuition/protocol": "workspace:^"
+    "@0xintuition/graphql": "1.0.0-alpha.0",
+    "@0xintuition/protocol": "1.0.0-alpha.0"
   },
   "devDependencies": {
     "@viem/anvil": "^0.0.10",
