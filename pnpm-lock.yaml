@@ -783,6 +783,10 @@ importers:
         version: 1.6.0(@types/node@22.7.5)(@vitest/ui@1.6.0)(jsdom@24.1.3(bufferutil@4.0.8)(utf-8-validate@6.0.4))(terser@5.31.1)
 
   packages/protocol:
+    dependencies:
+      dotenv:
+        specifier: ^16.5.0
+        version: 16.5.0
     devDependencies:
       '@viem/anvil':
         specifier: ^0.0.10
@@ -8661,6 +8665,10 @@ packages:
 
   dotenv@16.4.5:
     resolution: {integrity: sha512-ZmdL2rui+eB2YwhsWzjInR8LldtZHGDoQ1ugH85ppHKwpUHL7j7rN0Ti9NCnGiQbhaZ11FpR+7ao1dNsmduNUg==}
+    engines: {node: '>=12'}
+
+  dotenv@16.5.0:
+    resolution: {integrity: sha512-m/C+AwOAr9/W1UOIZUo232ejMNnJAJtYQjUbHoNTBNTJSvqzzDh7vnrei3o3r3m9blf6ZoDkvcw0VmozNRFJxg==}
     engines: {node: '>=12'}
 
   dset@3.1.4:
@@ -24231,7 +24239,7 @@ snapshots:
       pathe: 1.1.2
       picocolors: 1.0.1
       sirv: 2.0.4
-      vitest: 1.6.0(@types/node@18.16.9)(@vitest/ui@1.6.0)(jsdom@22.1.0(bufferutil@4.0.8)(utf-8-validate@5.0.10))(terser@5.31.1)
+      vitest: 1.6.0(@types/node@22.7.5)(@vitest/ui@1.6.0)(jsdom@24.1.3(bufferutil@4.0.8)(utf-8-validate@6.0.4))(terser@5.31.1)
 
   '@vitest/ui@3.2.4(vitest@3.2.4)':
     dependencies:
@@ -24242,7 +24250,7 @@ snapshots:
       sirv: 3.0.1
       tinyglobby: 0.2.14
       tinyrainbow: 2.0.0
-      vitest: 3.2.4(@types/debug@4.1.12)(@types/node@20.14.2)(@vitest/ui@3.2.4)(jsdom@24.1.3(bufferutil@4.0.8)(supports-color@9.4.0)(utf-8-validate@6.0.4))(supports-color@9.4.0)(terser@5.31.1)
+      vitest: 3.2.4(@types/debug@4.1.12)(@types/node@20.14.2)(@vitest/ui@3.2.4)(jsdom@22.1.0(bufferutil@4.0.8)(utf-8-validate@6.0.4))(terser@5.31.1)
 
   '@vitest/utils@1.3.1':
     dependencies:
@@ -27198,6 +27206,8 @@ snapshots:
   dotenv@16.3.2: {}
 
   dotenv@16.4.5: {}
+
+  dotenv@16.5.0: {}
 
   dset@3.1.4: {}
 
@@ -35770,7 +35780,6 @@ snapshots:
       - sugarss
       - supports-color
       - terser
-    optional: true
 
   vitest@3.2.4(@types/debug@4.1.12)(@types/node@20.14.2)(@vitest/ui@3.2.4)(jsdom@24.1.3(bufferutil@4.0.8)(supports-color@9.4.0)(utf-8-validate@6.0.4))(supports-color@9.4.0)(terser@5.31.1):
     dependencies:

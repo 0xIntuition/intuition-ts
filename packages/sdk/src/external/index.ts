@@ -1,2 +1,1 @@
-export * from './upload-json-to-pinata';
-
+export * from './upload-json-to-pinata'

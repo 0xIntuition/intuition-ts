@@ -12,7 +12,6 @@ describe('External', () => {
         image: 'https://example.com/intuition-logo.png',
       },
     )
-    console.log(data, 'data')
     expect(data.IpfsHash).toEqual(
       'QmYiJdC6KbkUuKVYeuQLm3DRbaok3h6yPyJjPqas8cotqx',
     )

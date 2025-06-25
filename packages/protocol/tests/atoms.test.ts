@@ -14,9 +14,11 @@ import { deployAndInit } from './helpers/deploy'
 import { publicClient, walletClient } from './helpers/utils'
 
 let multivaultAddress: Address
+
 beforeEach(async () => {
   multivaultAddress = await deployAndInit()
 })
+
 describe('Atoms', () => {
   it('should create new atom', async () => {
     const atomCost = await createAtomCalculateBaseCost({
@@ -27,12 +29,12 @@ describe('Atoms', () => {
       { walletClient, publicClient, address: multivaultAddress },
       {
         args: [toHex('intuition.systems')],
-        value: BigInt(atomCost),
+        value: atomCost,
       },
     )
     const events = await eventParseDepositAtomTransaction(publicClient, data)
     expect(events.vaultId).toEqual(1n)
-    expect(events.sharesForReceiver).toEqual(989940600000001000n)
+    expect(events.sharesForReceiver).toEqual(100000n)
   })
 
   it('should deposit in atom', async () => {

@@ -1,4 +1,4 @@
-import { EthMultiVaultAbi, TRIPLE_COST } from '@0xintuition/protocol'
+import { EthMultiVaultAbi } from '@0xintuition/protocol'
 
 import { Address, PublicClient, WalletClient } from 'viem'
 
@@ -26,7 +26,7 @@ export async function createTriple(
     abi: EthMultiVaultAbi,
     functionName: 'createTriple',
     args,
-    value: value ?? BigInt(TRIPLE_COST),
+    value,
   })
 
   return await walletClient.writeContract(request)

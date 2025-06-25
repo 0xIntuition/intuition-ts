@@ -1,7 +1,8 @@
 import {
-    createAtom,
-    CreateAtomConfig,
-    eventParseDepositAtomTransaction,
+  createAtom,
+  createAtomCalculateBaseCost,
+  CreateAtomConfig,
+  eventParseDepositAtomTransaction,
 } from '@0xintuition/protocol'
 
 import { toHex } from 'viem'
@@ -18,10 +19,14 @@ export async function createAtomFromIpfsUpload(
   depositAmount?: bigint,
 ) {
   const dataIpfs = await uploadJsonToPinata(config.pinataApiJWT, data)
-
+  const { address: multivaultAddress, publicClient } = config
+  const atomBaseCost = await createAtomCalculateBaseCost({
+    publicClient,
+    address: multivaultAddress,
+  })
   const atomTransactionHash = await createAtom(config, {
     args: [toHex(dataIpfs.IpfsHash)],
-    value: depositAmount,
+    value: atomBaseCost + BigInt(depositAmount || 0),
   })
 
   if (!atomTransactionHash) {
@@ -34,7 +39,7 @@ export async function createAtomFromIpfsUpload(
   )
 
   return {
-    uri: data,
+    uri: `ipfs://${dataIpfs.IpfsHash}`,
     transactionHash: atomTransactionHash,
     state: atomData,
   }

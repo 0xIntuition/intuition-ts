@@ -16,4 +16,3 @@ export * from './redeem-atom'
 export * from './redeem-atom-encode'
 export * from './redeem-triple'
 export * from './redeem-triple-encode'
-

@@ -1,4 +1,3 @@
-
 import { useGetAtomQuery } from '@0xintuition/graphql'
 
 import type { Meta, StoryObj } from '@storybook/react'

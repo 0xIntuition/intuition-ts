@@ -1,4 +1,4 @@
-import { ATOM_COST, EthMultiVaultAbi } from '@0xintuition/protocol'
+import { EthMultiVaultAbi } from '@0xintuition/protocol'
 
 import { Address, Hex, PublicClient, WalletClient } from 'viem'
 
@@ -26,7 +26,7 @@ export async function createAtom(
     abi: EthMultiVaultAbi,
     functionName: 'createAtom',
     args,
-    value: value ?? BigInt(ATOM_COST),
+    value,
   })
 
   return await config.walletClient.writeContract(request)

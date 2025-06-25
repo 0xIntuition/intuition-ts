@@ -1,4 +1,4 @@
-import { ATOM_COST, EthMultiVaultAbi } from '@0xintuition/protocol'
+import { EthMultiVaultAbi } from '@0xintuition/protocol'
 
 import { Address, PublicClient, WalletClient } from 'viem'
 
@@ -26,7 +26,7 @@ export async function depositAtom(
     abi: EthMultiVaultAbi,
     functionName: 'depositAtom',
     args,
-    value: value ?? BigInt(ATOM_COST),
+    value,
   })
 
   return await walletClient.writeContract(request)

@@ -3,4 +3,3 @@ export * from './create-atom-from-ipfs-uri'
 export * from './create-atom-from-string'
 export * from './create-ethereum-account'
 export * from './create-thing'
-

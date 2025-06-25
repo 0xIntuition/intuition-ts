@@ -1,5 +1,5 @@
 import { createThing, deployments } from '@0xintuition/sdk';
-import * as React from 'react';
+import type * as React from 'react';
 import { useChainId, usePublicClient, useWalletClient } from 'wagmi';
 
 type IntuitionCreateThingButton = React.HTMLAttributes<HTMLElement>;
@@ -32,4 +32,4 @@ const IntuitionCreateThingButton = ({ className }: IntuitionCreateThingButton) =
         </button>
     )}
 
-export { IntuitionCreateThingButton };
+export type { IntuitionCreateThingButton };

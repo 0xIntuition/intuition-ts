@@ -16,7 +16,7 @@ import {
 } from 'viem'
 
 import { EthMultiVaultAbi } from './contracts/EthMultiVault-abi.js'
-import { deployments } from './deployments.js'
+import { intuitionDeployments } from './deployments.js'
 
 export class EthMultiVault {
   public readonly contract: GetContractReturnType<
@@ -32,7 +32,8 @@ export class EthMultiVault {
     },
     address?: Address,
   ) {
-    const deployment = deployments[this.client.publicClient.chain.id]
+    const deployment =
+      intuitionDeployments.EthMultiVault?.[this.client.publicClient.chain.id]
 
     if (address === undefined && deployment === undefined) {
       throw new Error(

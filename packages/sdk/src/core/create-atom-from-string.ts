@@ -1,7 +1,8 @@
 import {
-    createAtom,
-    CreateAtomConfig,
-    eventParseDepositAtomTransaction,
+  createAtom,
+  createAtomCalculateBaseCost,
+  CreateAtomConfig,
+  eventParseDepositAtomTransaction,
 } from '@0xintuition/protocol'
 
 import { toHex } from 'viem'
@@ -15,9 +16,15 @@ export async function createAtomFromString(
     throw new Error('Not a valid String URI')
   }
 
+  const { address: multivaultAddress, publicClient } = config
+  const atomBaseCost = await createAtomCalculateBaseCost({
+    publicClient,
+    address: multivaultAddress,
+  })
+
   const atomTransactionHash = await createAtom(config, {
     args: [toHex(data)],
-    value: depositAmount,
+    value: atomBaseCost + BigInt(depositAmount || 0),
   })
 
   if (!atomTransactionHash) {
@@ -25,7 +32,7 @@ export async function createAtomFromString(
   }
 
   const atomData = await eventParseDepositAtomTransaction(
-    config.publicClient ?? config.walletClient,
+    publicClient,
     atomTransactionHash,
   )
 

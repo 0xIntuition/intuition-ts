@@ -1,5 +1,6 @@
 import {
   createAtom,
+  createAtomCalculateBaseCost,
   CreateAtomConfig,
   eventParseDepositAtomTransaction,
 } from '@0xintuition/protocol'
@@ -9,8 +10,8 @@ import { Address, getAddress, isAddress, toHex } from 'viem'
 export async function createEthereumAccount(
   config: CreateAtomConfig,
   data: {
-    chainId: number
     address: Address
+    chainId?: number
   },
   depositAmount?: bigint,
 ) {
@@ -18,14 +19,21 @@ export async function createEthereumAccount(
     throw new Error('Invalid Ethereum address provided')
   }
 
-  // DEVELOPER NOTE: The address type is the "Account" type.
-  // TODO: 2 types need to be supported here:
-  // 1. `caip10:eip155:1:0x123...` - CAIP10 format
-  // 2. `0x123...` - Ethereum address format
-  const uriRef = `caip10:eip155:${data.chainId}:${getAddress(data.address)}`
+  const { address: multivaultAddress, publicClient } = config
+  const atomBaseCost = await createAtomCalculateBaseCost({
+    publicClient,
+    address: multivaultAddress,
+  })
+
+  let uriRef: string
+  if (!data.chainId) {
+    uriRef = getAddress(data.address)
+  } else {
+    uriRef = `caip10:eip155:${data.chainId}:${getAddress(data.address)}`
+  }
   const atomTransactionHash = await createAtom(config, {
     args: [toHex(uriRef)],
-    value: depositAmount,
+    value: atomBaseCost + BigInt(depositAmount || 0),
   })
 
   if (!atomTransactionHash) {
@@ -33,7 +41,7 @@ export async function createEthereumAccount(
   }
 
   const atomData = await eventParseDepositAtomTransaction(
-    config.publicClient ?? config.walletClient,
+    publicClient,
     atomTransactionHash,
   )
 

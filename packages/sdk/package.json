@@ -41,6 +41,10 @@
     "url": "https://github.com/0xIntuition/intuition-ts",
     "directory": "packages/sdk"
   },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
   "dependencies": {
     "@0xintuition/graphql": "workspace:^",
     "@0xintuition/protocol": "workspace:^"

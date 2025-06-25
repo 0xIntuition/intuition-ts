@@ -1,6 +1,7 @@
 import { PinThingMutationVariables } from '@0xintuition/graphql'
 import {
   createAtom,
+  createAtomCalculateBaseCost,
   CreateAtomConfig,
   eventParseDepositAtomTransaction,
 } from '@0xintuition/protocol'
@@ -19,9 +20,15 @@ export async function createThing(
     throw new Error('Failed to pin thing on IPFS')
   }
 
+  const { address: multivaultAddress, publicClient } = config
+  const atomBaseCost = await createAtomCalculateBaseCost({
+    publicClient,
+    address: multivaultAddress,
+  })
+
   const atomTransactionHash = await createAtom(config, {
     args: [toHex(uriRef)],
-    value: depositAmount,
+    value: atomBaseCost + BigInt(depositAmount || 0),
   })
 
   if (!atomTransactionHash) {
@@ -29,7 +36,7 @@ export async function createThing(
   }
 
   const atomData = await eventParseDepositAtomTransaction(
-    config.publicClient ?? config.walletClient,
+    publicClient,
     atomTransactionHash,
   )
 
