@@ -12,9 +12,7 @@
     "format": "biome format --write .",
     "lint:fix": "biome lint --write .",
     "lint:unsafe": "biome lint --write --unsafe .",
-    "start": "next start",
-    "test": "vitest run",
-    "test:coverage": "vitest run --coverage"
+    "start": "next start"
   },
   "dependencies": {
     "@0xintuition/sdk": "workspace:^",
