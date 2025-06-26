@@ -12,6 +12,8 @@ permissions:
 jobs:
   build-test-lint:
     runs-on: ubuntu-latest
+    env:
+      MAINNET_RPC_URL: ${{ secrets.MAINNET_RPC_URL }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
