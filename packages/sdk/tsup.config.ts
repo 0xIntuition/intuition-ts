@@ -6,5 +6,7 @@ export default defineConfig({
   dts: true,
   splitting: false,
   sourcemap: true,
+  external: ['viem'],
   clean: true,
+  treeshake: true,
 })
