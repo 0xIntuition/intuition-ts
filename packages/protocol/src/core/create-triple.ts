@@ -1,6 +1,6 @@
-import { EthMultiVaultAbi } from '@0xintuition/protocol'
-
 import { Address, PublicClient, WalletClient } from 'viem'
+
+import { EthMultiVaultAbi } from '../contracts'
 
 export type CreateTripleConfig = {
   address: Address
