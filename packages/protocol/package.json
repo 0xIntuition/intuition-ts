@@ -23,6 +23,7 @@
   ],
   "scripts": {
     "build": "tsup",
+    "dev": "tsup --watch",
     "clean": "rm -rf dist tsconfig.tsbuildinfo",
     "publish-dry": "pnpm build && pnpm publish --dry-run --no-git-checks --ignore-scripts",
     "publish-next": "pnpm build && pnpm publish --tag next --no-git-checks --ignore-scripts",
@@ -31,7 +32,8 @@
     "version:minor": "pnpm version minor --no-git-tag-version",
     "version:major": "pnpm version major --no-git-tag-version",
     "version:beta": "pnpm version prerelease --preid beta --no-git-tag-version",
-    "lint:fix": "pnpm lint --fix",
+    "lint": "eslint",
+    "lint:fix": "eslint --fix",
     "generate": "node ./scripts/generate.mjs",
     "test": "vitest"
   },

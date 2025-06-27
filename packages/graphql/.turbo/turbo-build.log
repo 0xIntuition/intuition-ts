@@ -1,0 +1,323 @@
+
+
+> @0xintuition/graphql@1.0.0-alpha.0 prebuild /Users/metasudo/workspace/intution/code/intuition-ts/packages/graphql
+> pnpm codegen:build
+
+
+> @0xintuition/graphql@1.0.0-alpha.0 codegen:build /Users/metasudo/workspace/intution/code/intuition-ts/packages/graphql
+> NODE_ENV=production graphql-codegen --config codegen.ts
+
+(node:6608) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+[?25l[2m◼[22m Parse Configuration
+[?25l[2K[1A[2K[G[2m◼[22m Parse Configuration
+[2m◼[22m Generate outputs
+[?25l[?25l[2K[1A[2K[1A[2K[G[93m⠋[39m Parse Configuration
+[2m◼[22m Generate outputs
+[?25l[?25l[2K[1A[2K[1A[2K[G[32m✔[39m Parse Configuration
+[2m◼[22m Generate outputs
+[?25l[?25l[2K[1A[2K[1A[2K[G[32m✔[39m Parse Configuration
+[93m⠋[39m Generate outputs
+[?25l[2K[1A[2K[1A[2K[G[32m✔[39m Parse Configuration
+[33m❯[39m Generate outputs
+[?25l[2K[1A[2K[1A[2K[G[32m✔[39m Parse Configuration
+[33m❯[39m Generate outputs
+  [2m◼[22m Generate to ./src/generated/index.ts
+[?25l[2K[1A[2K[1A[2K[1A[2K[G[32m✔[39m Parse Configuration
+[33m❯[39m Generate outputs
+  [2m◼[22m Generate to ./src/generated/index.ts
+  [2m◼[22m Generate to ./schema.graphql
+[?25l[?25l[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[G[32m✔[39m Parse Configuration
+[33m❯[39m Generate outputs
+  [93m⠋[39m Generate to ./src/generated/index.ts
+  [2m◼[22m Generate to ./schema.graphql
+[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[G[32m✔[39m Parse Configuration
+[33m❯[39m Generate outputs
+  [93m⠋[39m Generate to ./src/generated/index.ts
+  [93m⠋[39m Generate to ./schema.graphql
+[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[G[32m✔[39m Parse Configuration
+[33m❯[39m Generate outputs
+  [33m❯[39m Generate to ./src/generated/index.ts
+  [93m⠋[39m Generate to ./schema.graphql
+[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[G[32m✔[39m Parse Configuration
+[33m❯[39m Generate outputs
+  [33m❯[39m Generate to ./src/generated/index.ts
+  [33m❯[39m Generate to ./schema.graphql
+[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[G[32m✔[39m Parse Configuration
+[33m❯[39m Generate outputs
+  [33m❯[39m Generate to ./src/generated/index.ts
+    [2m◼[22m Load GraphQL schemas
+  [33m❯[39m Generate to ./schema.graphql
+[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G[32m✔[39m Parse Configuration
+[33m❯[39m Generate outputs
+  [33m❯[39m Generate to ./src/generated/index.ts
+    [2m◼[22m Load GraphQL schemas
+    [2m◼[22m Load GraphQL documents
+  [33m❯[39m Generate to ./schema.graphql
+[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G[32m✔[39m Parse Configuration
+[33m❯[39m Generate outputs
+  [33m❯[39m Generate to ./src/generated/index.ts
+    [2m◼[22m Load GraphQL schemas
+    [2m◼[22m Load GraphQL documents
+    [2m◼[22m Generate
+  [33m❯[39m Generate to ./schema.graphql
+[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G[32m✔[39m Parse Configuration
+[33m❯[39m Generate outputs
+  [33m❯[39m Generate to ./src/generated/index.ts
+    [2m◼[22m Load GraphQL schemas
+    [2m◼[22m Load GraphQL documents
+    [2m◼[22m Generate
+  [33m❯[39m Generate to ./schema.graphql
+    [2m◼[22m Load GraphQL schemas
+[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G[32m✔[39m Parse Configuration
+[33m❯[39m Generate outputs
+  [33m❯[39m Generate to ./src/generated/index.ts
+    [2m◼[22m Load GraphQL schemas
+    [2m◼[22m Load GraphQL documents
+    [2m◼[22m Generate
+  [33m❯[39m Generate to ./schema.graphql
+    [2m◼[22m Load GraphQL schemas
+    [2m◼[22m Load GraphQL documents
+[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G[32m✔[39m Parse Configuration
+[33m❯[39m Generate outputs
+  [33m❯[39m Generate to ./src/generated/index.ts
+    [2m◼[22m Load GraphQL schemas
+    [2m◼[22m Load GraphQL documents
+    [2m◼[22m Generate
+  [33m❯[39m Generate to ./schema.graphql
+    [2m◼[22m Load GraphQL schemas
+    [2m◼[22m Load GraphQL documents
+    [2m◼[22m Generate
+[?25l[?25l[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G[32m✔[39m Parse Configuration
+[33m❯[39m Generate outputs
+  [33m❯[39m Generate to ./src/generated/index.ts
+    [93m⠋[39m Load GraphQL schemas
+    [2m◼[22m Load GraphQL documents
+    [2m◼[22m Generate
+  [33m❯[39m Generate to ./schema.graphql
+    [2m◼[22m Load GraphQL schemas
+    [2m◼[22m Load GraphQL documents
+    [2m◼[22m Generate
+[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G[32m✔[39m Parse Configuration
+[33m❯[39m Generate outputs
+  [33m❯[39m Generate to ./src/generated/index.ts
+    [93m⠋[39m Load GraphQL schemas
+    [2m◼[22m Load GraphQL documents
+    [2m◼[22m Generate
+  [33m❯[39m Generate to ./schema.graphql
+    [93m⠋[39m Load GraphQL schemas
+    [2m◼[22m Load GraphQL documents
+    [2m◼[22m Generate
+[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G[32m✔[39m Parse Configuration
+[33m❯[39m Generate outputs
+  [33m❯[39m Generate to ./src/generated/index.ts
+    [93m⠙[39m Load GraphQL schemas
+    [2m◼[22m Load GraphQL documents
+    [2m◼[22m Generate
+  [33m❯[39m Generate to ./schema.graphql
+    [93m⠙[39m Load GraphQL schemas
+    [2m◼[22m Load GraphQL documents
+    [2m◼[22m Generate
+[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G[32m✔[39m Parse Configuration
+[33m❯[39m Generate outputs
+  [33m❯[39m Generate to ./src/generated/index.ts
+    [93m⠹[39m Load GraphQL schemas
+    [2m◼[22m Load GraphQL documents
+    [2m◼[22m Generate
+  [33m❯[39m Generate to ./schema.graphql
+    [93m⠹[39m Load GraphQL schemas
+    [2m◼[22m Load GraphQL documents
+    [2m◼[22m Generate
+[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G[32m✔[39m Parse Configuration
+[33m❯[39m Generate outputs
+  [33m❯[39m Generate to ./src/generated/index.ts
+    [93m⠸[39m Load GraphQL schemas
+    [2m◼[22m Load GraphQL documents
+    [2m◼[22m Generate
+  [33m❯[39m Generate to ./schema.graphql
+    [93m⠸[39m Load GraphQL schemas
+    [2m◼[22m Load GraphQL documents
+    [2m◼[22m Generate
+[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G[32m✔[39m Parse Configuration
+[33m❯[39m Generate outputs
+  [33m❯[39m Generate to ./src/generated/index.ts
+    [93m⠼[39m Load GraphQL schemas
+    [2m◼[22m Load GraphQL documents
+    [2m◼[22m Generate
+  [33m❯[39m Generate to ./schema.graphql
+    [93m⠼[39m Load GraphQL schemas
+    [2m◼[22m Load GraphQL documents
+    [2m◼[22m Generate
+[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G[32m✔[39m Parse Configuration
+[33m❯[39m Generate outputs
+  [33m❯[39m Generate to ./src/generated/index.ts
+    [93m⠴[39m Load GraphQL schemas
+    [2m◼[22m Load GraphQL documents
+    [2m◼[22m Generate
+  [33m❯[39m Generate to ./schema.graphql
+    [93m⠴[39m Load GraphQL schemas
+    [2m◼[22m Load GraphQL documents
+    [2m◼[22m Generate
+[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G[32m✔[39m Parse Configuration
+[33m❯[39m Generate outputs
+  [33m❯[39m Generate to ./src/generated/index.ts
+    [93m⠦[39m Load GraphQL schemas
+    [2m◼[22m Load GraphQL documents
+    [2m◼[22m Generate
+  [33m❯[39m Generate to ./schema.graphql
+    [93m⠦[39m Load GraphQL schemas
+    [2m◼[22m Load GraphQL documents
+    [2m◼[22m Generate
+[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G[32m✔[39m Parse Configuration
+[33m❯[39m Generate outputs
+  [33m❯[39m Generate to ./src/generated/index.ts
+    [93m⠧[39m Load GraphQL schemas
+    [2m◼[22m Load GraphQL documents
+    [2m◼[22m Generate
+  [33m❯[39m Generate to ./schema.graphql
+    [93m⠧[39m Load GraphQL schemas
+    [2m◼[22m Load GraphQL documents
+    [2m◼[22m Generate
+[?25l[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G[32m✔[39m Parse Configuration
+[33m❯[39m Generate outputs
+  [33m❯[39m Generate to ./src/generated/index.ts
+    [32m✔[39m Load GraphQL schemas
+    [2m◼[22m Load GraphQL documents
+    [2m◼[22m Generate
+  [33m❯[39m Generate to ./schema.graphql
+    [93m⠧[39m Load GraphQL schemas
+    [2m◼[22m Load GraphQL documents
+    [2m◼[22m Generate
+[?25l[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G[32m✔[39m Parse Configuration
+[33m❯[39m Generate outputs
+  [33m❯[39m Generate to ./src/generated/index.ts
+    [32m✔[39m Load GraphQL schemas
+    [2m◼[22m Load GraphQL documents
+    [2m◼[22m Generate
+  [33m❯[39m Generate to ./schema.graphql
+    [32m✔[39m Load GraphQL schemas
+    [2m◼[22m Load GraphQL documents
+    [2m◼[22m Generate
+[?25l[?25l[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G[32m✔[39m Parse Configuration
+[33m❯[39m Generate outputs
+  [33m❯[39m Generate to ./src/generated/index.ts
+    [32m✔[39m Load GraphQL schemas
+    [93m⠧[39m Load GraphQL documents
+    [2m◼[22m Generate
+  [33m❯[39m Generate to ./schema.graphql
+    [32m✔[39m Load GraphQL schemas
+    [2m◼[22m Load GraphQL documents
+    [2m◼[22m Generate
+[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G[32m✔[39m Parse Configuration
+[33m❯[39m Generate outputs
+  [33m❯[39m Generate to ./src/generated/index.ts
+    [32m✔[39m Load GraphQL schemas
+    [93m⠧[39m Load GraphQL documents
+    [2m◼[22m Generate
+  [33m❯[39m Generate to ./schema.graphql
+    [32m✔[39m Load GraphQL schemas
+    [93m⠧[39m Load GraphQL documents
+    [2m◼[22m Generate
+[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G[32m✔[39m Parse Configuration
+[33m❯[39m Generate outputs
+  [33m❯[39m Generate to ./src/generated/index.ts
+    [32m✔[39m Load GraphQL schemas
+    [93m⠇[39m Load GraphQL documents
+    [2m◼[22m Generate
+  [33m❯[39m Generate to ./schema.graphql
+    [32m✔[39m Load GraphQL schemas
+    [93m⠇[39m Load GraphQL documents
+    [2m◼[22m Generate
+[?25l[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G[32m✔[39m Parse Configuration
+[33m❯[39m Generate outputs
+  [33m❯[39m Generate to ./src/generated/index.ts
+    [32m✔[39m Load GraphQL schemas
+    [32m✔[39m Load GraphQL documents
+    [2m◼[22m Generate
+  [33m❯[39m Generate to ./schema.graphql
+    [32m✔[39m Load GraphQL schemas
+    [93m⠇[39m Load GraphQL documents
+    [2m◼[22m Generate
+[?25l[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G[32m✔[39m Parse Configuration
+[33m❯[39m Generate outputs
+  [33m❯[39m Generate to ./src/generated/index.ts
+    [32m✔[39m Load GraphQL schemas
+    [32m✔[39m Load GraphQL documents
+    [2m◼[22m Generate
+  [33m❯[39m Generate to ./schema.graphql
+    [32m✔[39m Load GraphQL schemas
+    [32m✔[39m Load GraphQL documents
+    [2m◼[22m Generate
+[?25l[?25l[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G[32m✔[39m Parse Configuration
+[33m❯[39m Generate outputs
+  [33m❯[39m Generate to ./src/generated/index.ts
+    [32m✔[39m Load GraphQL schemas
+    [32m✔[39m Load GraphQL documents
+    [93m⠇[39m Generate
+  [33m❯[39m Generate to ./schema.graphql
+    [32m✔[39m Load GraphQL schemas
+    [32m✔[39m Load GraphQL documents
+    [2m◼[22m Generate
+[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G[32m✔[39m Parse Configuration
+[33m❯[39m Generate outputs
+  [33m❯[39m Generate to ./src/generated/index.ts
+    [32m✔[39m Load GraphQL schemas
+    [32m✔[39m Load GraphQL documents
+    [93m⠇[39m Generate
+  [33m❯[39m Generate to ./schema.graphql
+    [32m✔[39m Load GraphQL schemas
+    [32m✔[39m Load GraphQL documents
+    [93m⠇[39m Generate
+[?25l[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G[32m✔[39m Parse Configuration
+[33m❯[39m Generate outputs
+  [33m❯[39m Generate to ./src/generated/index.ts
+    [32m✔[39m Load GraphQL schemas
+    [32m✔[39m Load GraphQL documents
+    [93m⠇[39m Generate
+  [33m❯[39m Generate to ./schema.graphql
+    [32m✔[39m Load GraphQL schemas
+    [32m✔[39m Load GraphQL documents
+    [32m✔[39m Generate
+[?25l[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G[32m✔[39m Parse Configuration
+[33m❯[39m Generate outputs
+  [33m❯[39m Generate to ./src/generated/index.ts
+    [32m✔[39m Load GraphQL schemas
+    [32m✔[39m Load GraphQL documents
+    [93m⠇[39m Generate
+  [32m✔[39m Generate to ./schema.graphql
+[?25l[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G[32m✔[39m Parse Configuration
+[33m❯[39m Generate outputs
+  [33m❯[39m Generate to ./src/generated/index.ts
+    [32m✔[39m Load GraphQL schemas
+    [32m✔[39m Load GraphQL documents
+    [32m✔[39m Generate
+  [32m✔[39m Generate to ./schema.graphql
+[?25l[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G[32m✔[39m Parse Configuration
+[33m❯[39m Generate outputs
+  [32m✔[39m Generate to ./src/generated/index.ts
+  [32m✔[39m Generate to ./schema.graphql
+[?25l[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[G[32m✔[39m Parse Configuration
+[32m✔[39m Generate outputs
+[2K[1A[2K[1A[2K[G[?25h[32m✔[39m Parse Configuration
+[32m✔[39m Generate outputs
+[?25h
+> @0xintuition/graphql@1.0.0-alpha.0 build /Users/metasudo/workspace/intution/code/intuition-ts/packages/graphql
+> tsup
+
+[34mCLI[39m Building entry: src/index.ts
+[34mCLI[39m Using tsconfig: tsconfig.json
+[34mCLI[39m tsup v6.7.0
+[34mCLI[39m Using tsup config: /Users/metasudo/workspace/intution/code/intuition-ts/packages/graphql/tsup.config.ts
+[34mCLI[39m Target: esnext
+[34mCLI[39m Cleaning output folder
+[34mCJS[39m Build start
+[34mESM[39m Build start
+[34mDTS[39m Build start
+[32mCJS[39m [1mdist/index.js     [22m[32m1.38 MB[39m
+[32mCJS[39m [1mdist/index.js.map [22m[32m2.72 MB[39m
+[32mCJS[39m ⚡️ Build success in 811ms
+[32mESM[39m [1mdist/index.mjs     [22m[32m1.37 MB[39m
+[32mESM[39m [1mdist/index.mjs.map [22m[32m2.72 MB[39m
+[32mESM[39m ⚡️ Build success in 812ms
+[32mDTS[39m ⚡️ Build success in 2064ms
+[32mDTS[39m [1mdist/index.d.ts [22m[32m946.09 KB[39m

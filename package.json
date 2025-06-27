@@ -4,6 +4,17 @@
   "private": true,
   "homepage": "http://0xIntuition.github.io/intuition-ts",
   "scripts": {
+    "build": "turbo build",
+    "build:packages": "turbo build --filter='./packages/**'",
+    "dev": "turbo dev --parallel",
+    "format": "turbo format",
+    "check": "turbo check",
+    "check:types": "turbo check:types",
+    "lint": "turbo lint",
+    "lint:fix": "turbo lint:fix",
+    "test": "turbo test",
+    "typecheck": "turbo typecheck",
+    "start": "turbo start",
     "1ui:component:create": "npx nx g @0xintuition/automation-tools:ui-component",
     "1ui:build": "nx build @0xintuition/1ui",
     "1ui:build-storybook": "nx build-storybook @0xintuition/1ui",
@@ -42,11 +53,6 @@
     "sdk:build": "nx build @0xintuition/sdk",
     "sdk:lint": "nx lint @0xintuition/sdk",
     "sdk:test": "nx test @0xintuition/sdk --reporter=verbose",
-    "build": "nx run-many -t build",
-    "lint": "nx run-many -t lint --verbose",
-    "lint:fix": "nx run-many -t lint --verbose --fix",
-    "test": "nx run-many -t test",
-    "typecheck": "nx run-many -t typecheck",
     "storybook": "nx run @0xintuition/1ui:storybook",
     "publish": "nx run-many -t nx-release-publish",
     "publish-packages:local": "nx run-many -t publish-package --registry=http://localhost:4873",
@@ -115,6 +121,7 @@
     "pretty-quick": "^4.0.0",
     "ts-jest": "^29.1.0",
     "ts-node": "10.9.1",
+    "turbo": "^2.5.4",
     "typescript": "~5.4.2",
     "verdaccio": "^5.0.4",
     "vite": "~5.0.0",
@@ -133,8 +140,8 @@
     "includedScripts": []
   },
   "engines": {
-    "pnpm": ">=9.0.6",
-    "node": ">=19"
+    "pnpm": ">=9.11.0",
+    "node": ">=20"
   },
-  "packageManager": "pnpm@9.0.6+sha512.f6d863130973207cb7a336d6b439a242a26ac8068077df530d6a86069419853dc1ffe64029ec594a9c505a3a410d19643c870aba6776330f5cfddcf10a9c1617"
+  "packageManager": "pnpm@9.11.0"
 }

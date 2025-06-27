@@ -1,0 +1,26 @@
+
+
+> @0xintuition/sdk@1.0.0-alpha.0 build /Users/metasudo/workspace/intution/code/intuition-ts/packages/sdk
+> pnpm run clean && tsup
+
+
+> @0xintuition/sdk@1.0.0-alpha.0 clean /Users/metasudo/workspace/intution/code/intuition-ts/packages/sdk
+> rm -rf dist tsconfig.tsbuildinfo
+
+[34mCLI[39m Building entry: src/index.ts
+[34mCLI[39m Using tsconfig: tsconfig.json
+[34mCLI[39m tsup v6.7.0
+[34mCLI[39m Using tsup config: /Users/metasudo/workspace/intution/code/intuition-ts/packages/sdk/tsup.config.ts
+[34mCLI[39m Target: esnext
+[34mCLI[39m Cleaning output folder
+[34mCJS[39m Build start
+[34mESM[39m Build start
+[32mCJS[39m [1mdist/index.js     [22m[32m6.96 KB[39m
+[32mCJS[39m [1mdist/index.js.map [22m[32m14.09 KB[39m
+[32mCJS[39m ⚡️ Build success in 84ms
+[32mESM[39m [1mdist/index.mjs     [22m[32m6.47 KB[39m
+[32mESM[39m [1mdist/index.mjs.map [22m[32m14.09 KB[39m
+[32mESM[39m ⚡️ Build success in 84ms
+[34mDTS[39m Build start
+[32mDTS[39m ⚡️ Build success in 3248ms
+[32mDTS[39m [1mdist/index.d.ts [22m[32m41.15 KB[39m

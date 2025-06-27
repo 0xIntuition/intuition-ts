@@ -29,7 +29,8 @@
     "codegen:build": "NODE_ENV=production graphql-codegen --config codegen.ts",
     "codegen:watch": "NODE_ENV=development dotenv graphql-codegen --config codegen.ts",
     "test": "vitest",
-    "lint:fix": "pnpm lint --fix"
+    "lint": "eslint",
+    "lint:fix": "eslint --fix"
   },
   "repository": {
     "type": "git",
