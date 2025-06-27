@@ -46,8 +46,14 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      - name: Set SHAs
-        uses: nrwl/nx-set-shas@v4
+      # - name: Set SHAs
+      #   uses: nrwl/nx-set-shas@v4
 
-      - name: Run Affected Targets
-        run: npx nx affected -t lint test build
+      - name: Run Linting
+        run: pnpm lint
+      
+      - name: Run Tests
+        run: pnpm test
+     
+      - name: Run Build
+        run: pnpm build
