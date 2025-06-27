@@ -52,12 +52,17 @@ jobs:
 
       - name: Run Linting
         run: pnpm lint
-
-      - name: Write MAINNET_RPC_URL to packages/protocol/.env
-        run: echo "MAINNET_RPC_URL=${{ secrets.MAINNET_RPC_URL }}" >> packages/protocol/.env
+      
+      # TODO: Figure out why turbo isn't passing from global state.
+      - name: Write PINATA_API_JWT to packages/sdk/.env
+        run: echo "PINATA_API_JWT=${{ secrets.PINATA_API_JWT }}" >> packages/sdk/.env
 
       - name: Run Build
         run: pnpm build
-      
+
+      # TODO: Figure out why turbo isn't passing from global state.
+      - name: Write MAINNET_RPC_URL to packages/protocol/.env
+        run: echo "MAINNET_RPC_URL=${{ secrets.MAINNET_RPC_URL }}" >> packages/protocol/.env
+
       - name: Run Tests
         run: pnpm test
