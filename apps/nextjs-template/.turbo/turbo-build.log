@@ -1,29 +1,0 @@
-
-
-> @0xintuition/nextjs-template@0.0.0 build /Users/metasudo/workspace/intution/code/intuition-ts/apps/nextjs-template
-> next build
-
-   [1m[38;2;173;127;168m▲ Next.js 15.3.4[39m[22m
-
- [37m[1m [22m[39m Creating an optimized production build ...
- [32m[1m✓[22m[39m Compiled successfully in 6.0s
-[?25l [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m...[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m.[39m[2K[1G [37m[1m [22m[39m Linting and checking validity of types  [36m..[39m[2K[1G[?25h [37m[1m [22m[39m Linting and checking validity of types     [32m[1m✓[22m[39m Linting and checking validity of types 
-[?25l [37m[1m [22m[39m Collecting page data  [36m.[39m[2K[1G [37m[1m [22m[39m Collecting page data  [36m..[39m[2K[1G[?25h [37m[1m [22m[39m Collecting page data     [32m[1m✓[22m[39m Collecting page data 
-[?25l [37m[1m [22m[39m Generating static pages (0/4)  [36m[    ][39m[2K[1G [37m[1m [22m[39m Generating static pages (0/4)  [36m[=   ][39m[2K[1G[?25h(node:30806) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
-(Use `node --trace-deprecation ...` to show where the warning was created)
-[?25h [32m[1m✓[22m[39m Generating static pages (4/4)
-[?25l [37m[1m [22m[39m Finalizing page optimization  [36m.[39m[?25l [37m[1m [22m[39m Collecting build traces  [36m.[39m[2K[1G[?25h [37m[1m [22m[39m Collecting build traces     [32m[1m✓[22m[39m Collecting build traces 
-[2K[1G[?25h [37m[1m [22m[39m Finalizing page optimization     [32m[1m✓[22m[39m Finalizing page optimization 
-
-[4mRoute (app)[24m                                 [4mSize[24m  [4mFirst Load JS[24m  [4m[24m  [4m[24m
-┌ ○ /                                    17.3 kB         [37m[1m314 kB[22m[39m
-└ ○ /_not-found                            988 B         [37m[1m105 kB[22m[39m
-+ First Load JS shared by all             [37m[1m104 kB[22m[39m
-  ├ chunks/3134-d3385a125947404c.js      46.2 kB
-  ├ chunks/b0b7b1f8-ac97960fee2a8040.js  53.2 kB
-  └ other shared chunks (total)          4.58 kB
-
-
-○  (Static)  prerendered as static content
-
-[?25h

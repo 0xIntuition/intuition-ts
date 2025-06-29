@@ -3,9 +3,11 @@ node_modules/
 out/
 /dist/
 tmp/
-**/.turbo/*
-**/turbo-test.log/*
-**/turbo-build.log/*
+
+# Turbo cache and build files
+.turbo/
+**/.turbo/
+**/turbo-*.log
 
 .nx/cache
 .nx/workspace-data
