@@ -56,7 +56,7 @@ query GetTriplesCount($where: triples_bool_exp) {
 }
 
 query GetTriple($tripleId: numeric!) {
-  triple(id: $tripleId) {
+  triple(term_id: $tripleId) {
     ...TripleMetadata
     ...TripleTxn
     ...TripleVaultDetails
@@ -87,49 +87,49 @@ query GetTriplesWithPositions(
     }
   }
   triples(limit: $limit, offset: $offset, order_by: $orderBy, where: $where) {
-    id
-    vault_id
-    counter_vault_id
+    term_id
+    counter_term_id
     subject {
-      id
-      vault_id
+      term_id
       label
       image
     }
     predicate {
-      id
-      vault_id
+      term_id
       label
       image
     }
     object {
-      id
-      vault_id
+      term_id
       label
       image
     }
-    vault {
-      total_shares
-      position_count
-      positions(where: { account_id: { _eq: $address } }) {
-        account {
-          id
-          label
-          image
+    term {
+      vaults {
+        total_shares
+        position_count
+        positions(where: { account_id: { _ilike: $address } }) {
+          account {
+            id
+            label
+            image
+          }
+          shares
         }
-        shares
       }
     }
-    counter_vault {
-      total_shares
-      position_count
-      positions(where: { account_id: { _eq: $address } }) {
-        account {
-          id
-          label
-          image
+    counter_term {
+      vaults {
+        total_shares
+        position_count
+        positions(where: { account_id: { _ilike: $address } }) {
+          account {
+            id
+            label
+            image
+          }
+          shares
         }
-        shares
       }
     }
   }

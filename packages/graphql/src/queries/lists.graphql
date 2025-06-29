@@ -7,15 +7,11 @@ query GetLists($where: predicate_objects_bool_exp) {
       count
     }
   }
-  predicate_objects(
-    where: $where
-    order_by: [{ claim_count: desc }, { triple_count: desc }]
-  ) {
+  predicate_objects(where: $where, order_by: [{ triple_count: desc }]) {
     id
-    claim_count
     triple_count
     object {
-      id
+      term_id
       label
       image
     }
@@ -27,8 +23,8 @@ query GetListItems($predicateId: numeric, $objectId: numeric) {
     where: { predicate_id: { _eq: predicateId }, object_id: { _eq: $objectId } }
     order_by: [
       {
-        vault: { position_count: desc }
-        counter_vault: { position_count: desc }
+        term: { positions_aggregate: { count: desc } }
+        counter_term: { positions_aggregate: { count: desc } }
       }
     ]
   ) {
@@ -44,6 +40,8 @@ query GetListItems($predicateId: numeric, $objectId: numeric) {
 # GetListDetails query for List Details page
 ## Combines the aggregates and nodes within since we don't need pagination on the tags yet
 ## If we do, we'd need to paginate the triples and tags separately and split
+## SG: This appears to be getting the aggregate sum of shares across all positions in the vault....
+## We will correct this to just get the total_shares in the pro rata vault.
 query GetListDetails(
   $globalWhere: triples_bool_exp
   $tagPredicateId: numeric
@@ -62,30 +60,33 @@ query GetListDetails(
     offset: $offset
     order_by: $orderBy
   ) {
-    id
-    vault_id
-    counter_vault_id
+    term_id
+    counter_term_id
     subject {
-      id
-      vault_id
+      term_id
       label
       wallet_id
       image
       type
+      term {
+        vaults {
+          position_count
+        }
+      }
       tags: as_subject_triples_aggregate(
         where: { predicate_id: { _eq: $tagPredicateId } }
       ) {
         nodes {
           object {
             label
-            vault_id
+            term_id
             taggedIdentities: as_object_triples_aggregate {
               nodes {
                 subject {
                   label
-                  vault_id
+                  term_id
                 }
-                vault_id
+                term_id
               }
               aggregate {
                 count
@@ -99,41 +100,31 @@ query GetListDetails(
       }
     }
     object {
-      id
-      vault_id
+      term_id
       label
       wallet_id
       image
       type
     }
     predicate {
-      id
-      vault_id
+      term_id
       label
       wallet_id
       image
       type
     }
-    vault {
-      current_share_price
-      positions_aggregate {
-        aggregate {
-          count
-          sum {
-            shares
-          }
-        }
+    term {
+      vaults(where: { curve_id: { _eq: "1" } }) {
+        current_share_price
+        position_count
+        total_shares
       }
     }
-    counter_vault {
-      current_share_price
-      positions_aggregate {
-        aggregate {
-          count
-          sum {
-            shares
-          }
-        }
+    counter_term {
+      vaults(where: { curve_id: { _eq: "1" } }) {
+        current_share_price
+        position_count
+        total_shares
       }
     }
   }
@@ -158,12 +149,10 @@ query GetListDetailsWithPosition(
     offset: $offset
     order_by: $orderBy
   ) {
-    id
-    vault_id
-    counter_vault_id
+    term_id
+    counter_term_id
     subject {
-      id
-      vault_id
+      term_id
       label
       wallet_id
       image
@@ -174,14 +163,14 @@ query GetListDetailsWithPosition(
         nodes {
           object {
             label
-            vault_id
+            term_id
             taggedIdentities: as_object_triples_aggregate {
               nodes {
                 subject {
                   label
-                  vault_id
+                  term_id
                 }
-                vault_id
+                term_id
               }
               aggregate {
                 count
@@ -195,32 +184,26 @@ query GetListDetailsWithPosition(
       }
     }
     object {
-      id
-      vault_id
+      term_id
       label
       wallet_id
       image
       type
     }
     predicate {
-      id
-      vault_id
+      term_id
       label
       wallet_id
       image
       type
     }
-    vault {
-      current_share_price
-      positions_aggregate {
-        aggregate {
-          count
-          sum {
-            shares
-          }
-        }
+    term {
+      vaults {
+        current_share_price
+        position_count
+        total_shares
       }
-      positions(where: { account_id: { _eq: $address } }) {
+      positions(where: { account_id: { _ilike: $address } }) {
         account {
           id
           label
@@ -229,17 +212,13 @@ query GetListDetailsWithPosition(
         shares
       }
     }
-    counter_vault {
-      current_share_price
-      positions_aggregate {
-        aggregate {
-          count
-          sum {
-            shares
-          }
-        }
+    counter_term {
+      vaults {
+        current_share_price
+        position_count
+        total_shares
       }
-      positions(where: { account_id: { _eq: $address } }) {
+      positions(where: { account_id: { _ilike: $address } }) {
         account {
           id
           label
@@ -271,12 +250,10 @@ query GetListDetailsWithUser(
     offset: $offset
     order_by: $orderBy
   ) {
-    id
-    vault_id
-    counter_vault_id
+    term_id
+    counter_term_id
     subject {
-      id
-      vault_id
+      term_id
       label
       wallet_id
       image
@@ -287,14 +264,14 @@ query GetListDetailsWithUser(
         nodes {
           object {
             label
-            vault_id
+            term_id
             taggedIdentities: as_object_triples_aggregate {
               nodes {
                 subject {
                   label
-                  vault_id
+                  term_id
                 }
-                vault_id
+                term_id
               }
               aggregate {
                 count
@@ -308,32 +285,26 @@ query GetListDetailsWithUser(
       }
     }
     object {
-      id
-      vault_id
+      term_id
       label
       wallet_id
       image
       type
     }
     predicate {
-      id
-      vault_id
+      term_id
       label
       wallet_id
       image
       type
     }
-    vault {
-      current_share_price
-      positions_aggregate {
-        aggregate {
-          count
-          sum {
-            shares
-          }
-        }
+    term {
+      vaults {
+        current_share_price
+        position_count
+        total_shares
       }
-      positions(where: { account_id: { _eq: $address } }) {
+      positions(where: { account_id: { _ilike: $address } }) {
         account {
           id
           label
@@ -342,17 +313,13 @@ query GetListDetailsWithUser(
         shares
       }
     }
-    counter_vault {
-      current_share_price
-      positions_aggregate {
-        aggregate {
-          count
-          sum {
-            shares
-          }
-        }
+    counter_term {
+      vaults {
+        current_share_price
+        position_count
+        total_shares
       }
-      positions(where: { account_id: { _eq: $address } }) {
+      positions(where: { account_id: { _ilike: $address } }) {
         account {
           id
           label
@@ -368,12 +335,10 @@ query GetListDetailsWithUser(
     }
   }
   userTriples: triples(where: $userWhere) {
-    id
-    vault_id
-    counter_vault_id
+    term_id
+    counter_term_id
     subject {
-      id
-      vault_id
+      term_id
       label
       wallet_id
       image
@@ -384,14 +349,14 @@ query GetListDetailsWithUser(
         nodes {
           object {
             label
-            vault_id
+            term_id
             taggedIdentities: as_object_triples_aggregate {
               nodes {
                 subject {
                   label
-                  vault_id
+                  term_id
                 }
-                vault_id
+                term_id
               }
               aggregate {
                 count
@@ -405,32 +370,26 @@ query GetListDetailsWithUser(
       }
     }
     object {
-      id
-      vault_id
+      term_id
       label
       wallet_id
       image
       type
     }
     predicate {
-      id
-      vault_id
+      term_id
       label
       wallet_id
       image
       type
     }
-    vault {
-      current_share_price
-      positions_aggregate {
-        aggregate {
-          count
-          sum {
-            shares
-          }
-        }
+    term {
+      vaults {
+        current_share_price
+        position_count
+        total_shares
       }
-      positions(where: { account_id: { _eq: $address } }) {
+      positions(where: { account_id: { _ilike: $address } }) {
         account {
           id
           label
@@ -439,23 +398,100 @@ query GetListDetailsWithUser(
         shares
       }
     }
-    counter_vault {
-      current_share_price
-      positions_aggregate {
-        aggregate {
-          count
-          sum {
-            shares
-          }
-        }
+    counter_term {
+      vaults {
+        current_share_price
+        position_count
+        total_shares
       }
-      positions(where: { account_id: { _eq: $address } }) {
+      positions(where: { account_id: { _ilike: $address } }) {
         account {
           id
           label
           image
         }
         shares
+      }
+    }
+  }
+}
+
+query GetListDetailsSimplified(
+  $globalWhere: triples_bool_exp
+  $address: String
+  $limit: Int
+  $offset: Int
+  $orderBy: [triples_order_by!]
+) {
+  globalTriplesAggregate: triples_aggregate(where: $globalWhere) {
+    aggregate {
+      count
+    }
+  }
+  globalTriples: triples(
+    where: $globalWhere
+    limit: $limit
+    offset: $offset
+    order_by: $orderBy
+  ) {
+    term_id
+    counter_term_id
+    subject {
+      term_id
+      label
+      wallet_id
+      image
+      type
+      term {
+        vaults(where: { curve_id: { _eq: "1" } }) {
+          current_share_price
+          position_count
+          total_shares
+        }
+      }
+    }
+    object {
+      term_id
+      label
+      wallet_id
+      image
+      type
+    }
+    predicate {
+      term_id
+      label
+      wallet_id
+      image
+      type
+    }
+    term {
+      vaults(where: { curve_id: { _eq: "1" } }) {
+        current_share_price
+        position_count
+        total_shares
+        positions(where: { account_id: { _ilike: $address } }) {
+          account {
+            id
+            label
+            image
+          }
+          shares
+        }
+      }
+    }
+    counter_term {
+      vaults(where: { curve_id: { _eq: "1" } }) {
+        current_share_price
+        position_count
+        total_shares
+        positions(where: { account_id: { _ilike: $address } }) {
+          account {
+            id
+            label
+            image
+          }
+          shares
+        }
       }
     }
   }

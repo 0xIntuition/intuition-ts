@@ -4,7 +4,7 @@ This library is the API interaction layer of Intuition.
 
 ## Building
 
-Run `nx build @0xintuition/api` to build the library.
+Run `pnpm build @0xintuition/api` to build the library.
 
 ## Code Generation
 

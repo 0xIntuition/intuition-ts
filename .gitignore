@@ -4,6 +4,11 @@ out/
 /dist/
 tmp/
 
+# Turbo cache and build files
+.turbo/
+**/.turbo/
+**/turbo-*.log
+
 .nx/cache
 .nx/workspace-data
 packages/1ui/storybook-static
@@ -21,3 +26,6 @@ act.sh
 /dist/
 **/dist/
 packages/*/dist/
+
+# System
+.DS_Store

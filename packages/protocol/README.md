@@ -3,7 +3,7 @@
 ## Usage
 
 ```typescript
-import { Multivault } from '@0xintuition/protocol'
+import { EthMultiVault } from '@0xintuition/protocol'
 
 import { Chain, createPublicClient, http, PublicClient, Transport } from 'viem'
 import { base } from 'viem/chains'
@@ -18,20 +18,20 @@ const walletClient = createWalletClient({
   transport: custom(window.ethereum!),
 })
 
-const multivault = new Multivault({
+const ethMultiVault = new EthMultiVault({
   publicClient,
   walletClient,
 })
 
-const { vaultId, events } = await multivault.createAtom('hello')
+const { vaultId, events } = await ethMultiVault.createAtom('hello')
 
 console.log(events)
 ```
 
 ## Building
 
-Run `nx build @0xintuition/protocol` to build the library.
+Run `pnpm build` to build the library.
 
 ## Running unit tests
 
-Run `nx test @0xintuition/protocol` to execute the unit tests
+Run `pnpm test` to execute the unit tests
