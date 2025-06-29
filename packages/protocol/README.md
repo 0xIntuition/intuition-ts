@@ -30,8 +30,8 @@ console.log(events)
 
 ## Building
 
-Run `nx build @0xintuition/protocol` to build the library.
+Run `pnpm build` to build the library.
 
 ## Running unit tests
 
-Run `nx test @0xintuition/protocol` to execute the unit tests
+Run `pnpm test` to execute the unit tests

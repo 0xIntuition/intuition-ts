@@ -23,14 +23,9 @@
    [90m·[39m EthMultiVault[2m (12)[22m
    [90m·[39m atom life cycle[2m (21)[22m
    [90m·[39m triple life cycle[2m (13)[22m
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠼[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
  [90m·[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
 [?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠴[39m [2m[ beforeAll ][22m
+   [33m⠼[39m [2m[ beforeAll ][22m
    [90m·[39m EthMultiVault[2m (12)[22m
    [90m·[39m atom life cycle[2m (21)[22m
    [90m·[39m triple life cycle[2m (13)[22m
@@ -41,7 +36,7 @@
      [90m·[39m should deposit in atom
      [90m·[39m should redeem from atom
 [?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠦[39m [2m[ beforeAll ][22m
+   [33m⠴[39m [2m[ beforeAll ][22m
    [90m·[39m EthMultiVault[2m (12)[22m
    [90m·[39m atom life cycle[2m (21)[22m
    [90m·[39m triple life cycle[2m (13)[22m
@@ -52,7 +47,7 @@
      [90m·[39m should deposit in atom
      [90m·[39m should redeem from atom
 [?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠧[39m [2m[ beforeAll ][22m
+   [33m⠦[39m [2m[ beforeAll ][22m
    [90m·[39m EthMultiVault[2m (12)[22m
    [90m·[39m atom life cycle[2m (21)[22m
    [90m·[39m triple life cycle[2m (13)[22m
@@ -63,7 +58,7 @@
      [90m·[39m should deposit in atom
      [90m·[39m should redeem from atom
 [?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠇[39m [2m[ beforeAll ][22m
+   [33m⠧[39m [2m[ beforeAll ][22m
    [90m·[39m EthMultiVault[2m (12)[22m
    [90m·[39m atom life cycle[2m (21)[22m
    [90m·[39m triple life cycle[2m (13)[22m
@@ -74,7 +69,7 @@
      [90m·[39m should deposit in atom
      [90m·[39m should redeem from atom
 [?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠏[39m [2m[ beforeAll ][22m
+   [33m⠇[39m [2m[ beforeAll ][22m
    [90m·[39m EthMultiVault[2m (12)[22m
    [90m·[39m atom life cycle[2m (21)[22m
    [90m·[39m triple life cycle[2m (13)[22m
@@ -85,7 +80,7 @@
      [90m·[39m should deposit in atom
      [90m·[39m should redeem from atom
 [?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠋[39m [2m[ beforeAll ][22m
+   [33m⠏[39m [2m[ beforeAll ][22m
    [90m·[39m EthMultiVault[2m (12)[22m
    [90m·[39m atom life cycle[2m (21)[22m
    [90m·[39m triple life cycle[2m (13)[22m
@@ -96,7 +91,7 @@
      [90m·[39m should deposit in atom
      [90m·[39m should redeem from atom
 [?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠙[39m [2m[ beforeAll ][22m
+   [33m⠋[39m [2m[ beforeAll ][22m
    [90m·[39m EthMultiVault[2m (12)[22m
    [90m·[39m atom life cycle[2m (21)[22m
    [90m·[39m triple life cycle[2m (13)[22m
@@ -107,7 +102,7 @@
      [90m·[39m should deposit in atom
      [90m·[39m should redeem from atom
 [?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠹[39m [2m[ beforeAll ][22m
+   [33m⠙[39m [2m[ beforeAll ][22m
    [90m·[39m EthMultiVault[2m (12)[22m
    [90m·[39m atom life cycle[2m (21)[22m
    [90m·[39m triple life cycle[2m (13)[22m
@@ -118,7 +113,7 @@
      [90m·[39m should deposit in atom
      [90m·[39m should redeem from atom
 [?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠸[39m [2m[ beforeAll ][22m
+   [33m⠹[39m [2m[ beforeAll ][22m
    [90m·[39m EthMultiVault[2m (12)[22m
    [90m·[39m atom life cycle[2m (21)[22m
    [90m·[39m triple life cycle[2m (13)[22m
@@ -129,7 +124,7 @@
      [90m·[39m should deposit in atom
      [90m·[39m should redeem from atom
 [?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠼[39m [2m[ beforeAll ][22m
+   [33m⠸[39m [2m[ beforeAll ][22m
    [90m·[39m EthMultiVault[2m (12)[22m
    [90m·[39m atom life cycle[2m (21)[22m
    [90m·[39m triple life cycle[2m (13)[22m
@@ -140,7 +135,7 @@
      [90m·[39m should deposit in atom
      [90m·[39m should redeem from atom
 [?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠴[39m [2m[ beforeAll ][22m
+   [33m⠼[39m [2m[ beforeAll ][22m
    [90m·[39m EthMultiVault[2m (12)[22m
    [90m·[39m atom life cycle[2m (21)[22m
    [90m·[39m triple life cycle[2m (13)[22m
@@ -151,7 +146,7 @@
      [90m·[39m should deposit in atom
      [90m·[39m should redeem from atom
 [?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠦[39m [2m[ beforeAll ][22m
+   [33m⠴[39m [2m[ beforeAll ][22m
    [90m·[39m EthMultiVault[2m (12)[22m
    [90m·[39m atom life cycle[2m (21)[22m
    [90m·[39m triple life cycle[2m (13)[22m
@@ -162,7 +157,7 @@
      [90m·[39m should deposit in atom
      [90m·[39m should redeem from atom
 [?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠧[39m [2m[ beforeAll ][22m
+   [33m⠦[39m [2m[ beforeAll ][22m
    [90m·[39m EthMultiVault[2m (12)[22m
    [90m·[39m atom life cycle[2m (21)[22m
    [90m·[39m triple life cycle[2m (13)[22m
@@ -173,7 +168,7 @@
      [90m·[39m should deposit in atom
      [90m·[39m should redeem from atom
 [?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠇[39m [2m[ beforeAll ][22m
+   [33m⠧[39m [2m[ beforeAll ][22m
    [90m·[39m EthMultiVault[2m (12)[22m
    [90m·[39m atom life cycle[2m (21)[22m
    [90m·[39m triple life cycle[2m (13)[22m
@@ -184,7 +179,7 @@
      [90m·[39m should deposit in atom
      [90m·[39m should redeem from atom
 [?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠏[39m [2m[ beforeAll ][22m
+   [33m⠇[39m [2m[ beforeAll ][22m
    [90m·[39m EthMultiVault[2m (12)[22m
    [90m·[39m atom life cycle[2m (21)[22m
    [90m·[39m triple life cycle[2m (13)[22m
@@ -195,7 +190,7 @@
      [90m·[39m should deposit in atom
      [90m·[39m should redeem from atom
 [?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠋[39m [2m[ beforeAll ][22m
+   [33m⠏[39m [2m[ beforeAll ][22m
    [90m·[39m EthMultiVault[2m (12)[22m
    [90m·[39m atom life cycle[2m (21)[22m
    [90m·[39m triple life cycle[2m (13)[22m
@@ -206,7 +201,7 @@
      [90m·[39m should deposit in atom
      [90m·[39m should redeem from atom
 [?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠙[39m [2m[ beforeAll ][22m
+   [33m⠋[39m [2m[ beforeAll ][22m
    [90m·[39m EthMultiVault[2m (12)[22m
    [90m·[39m atom life cycle[2m (21)[22m
    [90m·[39m triple life cycle[2m (13)[22m
@@ -217,7 +212,7 @@
      [90m·[39m should deposit in atom
      [90m·[39m should redeem from atom
 [?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠹[39m [2m[ beforeAll ][22m
+   [33m⠙[39m [2m[ beforeAll ][22m
    [90m·[39m EthMultiVault[2m (12)[22m
    [90m·[39m atom life cycle[2m (21)[22m
    [90m·[39m triple life cycle[2m (13)[22m
@@ -228,7 +223,7 @@
      [90m·[39m should deposit in atom
      [90m·[39m should redeem from atom
 [?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠸[39m [2m[ beforeAll ][22m
+   [33m⠹[39m [2m[ beforeAll ][22m
    [90m·[39m EthMultiVault[2m (12)[22m
    [90m·[39m atom life cycle[2m (21)[22m
    [90m·[39m triple life cycle[2m (13)[22m
@@ -239,7 +234,7 @@
      [90m·[39m should deposit in atom
      [90m·[39m should redeem from atom
 [?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠼[39m [2m[ beforeAll ][22m
+   [33m⠸[39m [2m[ beforeAll ][22m
    [90m·[39m EthMultiVault[2m (12)[22m
    [90m·[39m atom life cycle[2m (21)[22m
    [90m·[39m triple life cycle[2m (13)[22m
@@ -250,7 +245,7 @@
      [90m·[39m should deposit in atom
      [90m·[39m should redeem from atom
 [?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠴[39m [2m[ beforeAll ][22m
+   [33m⠼[39m [2m[ beforeAll ][22m
    [90m·[39m EthMultiVault[2m (12)[22m
    [90m·[39m atom life cycle[2m (21)[22m
    [90m·[39m triple life cycle[2m (13)[22m
@@ -261,7 +256,7 @@
      [90m·[39m should deposit in atom
      [90m·[39m should redeem from atom
 [?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠦[39m [2m[ beforeAll ][22m
+   [33m⠴[39m [2m[ beforeAll ][22m
    [90m·[39m EthMultiVault[2m (12)[22m
    [90m·[39m atom life cycle[2m (21)[22m
    [90m·[39m triple life cycle[2m (13)[22m
@@ -272,7 +267,7 @@
      [90m·[39m should deposit in atom
      [90m·[39m should redeem from atom
 [?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠧[39m [2m[ beforeAll ][22m
+   [33m⠦[39m [2m[ beforeAll ][22m
    [90m·[39m EthMultiVault[2m (12)[22m
    [90m·[39m atom life cycle[2m (21)[22m
    [90m·[39m triple life cycle[2m (13)[22m
@@ -283,7 +278,7 @@
      [90m·[39m should deposit in atom
      [90m·[39m should redeem from atom
 [?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠇[39m [2m[ beforeAll ][22m
+   [33m⠧[39m [2m[ beforeAll ][22m
    [90m·[39m EthMultiVault[2m (12)[22m
    [90m·[39m atom life cycle[2m (21)[22m
    [90m·[39m triple life cycle[2m (13)[22m
@@ -294,7 +289,7 @@
      [90m·[39m should deposit in atom
      [90m·[39m should redeem from atom
 [?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠏[39m [2m[ beforeAll ][22m
+   [33m⠇[39m [2m[ beforeAll ][22m
    [90m·[39m EthMultiVault[2m (12)[22m
    [90m·[39m atom life cycle[2m (21)[22m
    [90m·[39m triple life cycle[2m (13)[22m
@@ -305,7 +300,7 @@
      [90m·[39m should deposit in atom
      [90m·[39m should redeem from atom
 [?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠋[39m [2m[ beforeAll ][22m
+   [33m⠏[39m [2m[ beforeAll ][22m
    [90m·[39m EthMultiVault[2m (12)[22m
    [90m·[39m atom life cycle[2m (21)[22m
    [90m·[39m triple life cycle[2m (13)[22m
@@ -316,7 +311,7 @@
      [90m·[39m should deposit in atom
      [90m·[39m should redeem from atom
 [?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠙[39m [2m[ beforeAll ][22m
+   [33m⠋[39m [2m[ beforeAll ][22m
    [90m·[39m EthMultiVault[2m (12)[22m
    [90m·[39m atom life cycle[2m (21)[22m
    [90m·[39m triple life cycle[2m (13)[22m
@@ -327,7 +322,7 @@
      [90m·[39m should deposit in atom
      [90m·[39m should redeem from atom
 [?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠹[39m [2m[ beforeAll ][22m
+   [33m⠙[39m [2m[ beforeAll ][22m
    [90m·[39m EthMultiVault[2m (12)[22m
    [90m·[39m atom life cycle[2m (21)[22m
    [90m·[39m triple life cycle[2m (13)[22m
@@ -338,7 +333,7 @@
      [90m·[39m should deposit in atom
      [90m·[39m should redeem from atom
 [?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠸[39m [2m[ beforeAll ][22m
+   [33m⠹[39m [2m[ beforeAll ][22m
    [90m·[39m EthMultiVault[2m (12)[22m
    [90m·[39m atom life cycle[2m (21)[22m
    [90m·[39m triple life cycle[2m (13)[22m
@@ -349,7 +344,7 @@
      [90m·[39m should deposit in atom
      [90m·[39m should redeem from atom
 [?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠼[39m [2m[ beforeAll ][22m
+   [33m⠸[39m [2m[ beforeAll ][22m
    [90m·[39m EthMultiVault[2m (12)[22m
    [90m·[39m atom life cycle[2m (21)[22m
    [90m·[39m triple life cycle[2m (13)[22m
@@ -360,7 +355,7 @@
      [90m·[39m should deposit in atom
      [90m·[39m should redeem from atom
 [?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠴[39m [2m[ beforeAll ][22m
+   [33m⠼[39m [2m[ beforeAll ][22m
    [90m·[39m EthMultiVault[2m (12)[22m
    [90m·[39m atom life cycle[2m (21)[22m
    [90m·[39m triple life cycle[2m (13)[22m
@@ -371,7 +366,7 @@
      [90m·[39m should deposit in atom
      [90m·[39m should redeem from atom
 [?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠦[39m [2m[ beforeAll ][22m
+   [33m⠴[39m [2m[ beforeAll ][22m
    [90m·[39m EthMultiVault[2m (12)[22m
    [90m·[39m atom life cycle[2m (21)[22m
    [90m·[39m triple life cycle[2m (13)[22m
@@ -382,7 +377,7 @@
      [90m·[39m should deposit in atom
      [90m·[39m should redeem from atom
 [?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠧[39m [2m[ beforeAll ][22m
+   [33m⠦[39m [2m[ beforeAll ][22m
    [90m·[39m EthMultiVault[2m (12)[22m
    [90m·[39m atom life cycle[2m (21)[22m
    [90m·[39m triple life cycle[2m (13)[22m
@@ -393,7 +388,7 @@
      [90m·[39m should deposit in atom
      [90m·[39m should redeem from atom
 [?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠇[39m [2m[ beforeAll ][22m
+   [33m⠧[39m [2m[ beforeAll ][22m
    [90m·[39m EthMultiVault[2m (12)[22m
    [90m·[39m atom life cycle[2m (21)[22m
    [90m·[39m triple life cycle[2m (13)[22m
@@ -404,7 +399,7 @@
      [90m·[39m should deposit in atom
      [90m·[39m should redeem from atom
 [?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠏[39m [2m[ beforeAll ][22m
+   [33m⠇[39m [2m[ beforeAll ][22m
    [90m·[39m EthMultiVault[2m (12)[22m
    [90m·[39m atom life cycle[2m (21)[22m
    [90m·[39m triple life cycle[2m (13)[22m
@@ -415,7 +410,7 @@
      [90m·[39m should deposit in atom
      [90m·[39m should redeem from atom
 [?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠋[39m [2m[ beforeAll ][22m
+   [33m⠏[39m [2m[ beforeAll ][22m
    [90m·[39m EthMultiVault[2m (12)[22m
    [90m·[39m atom life cycle[2m (21)[22m
    [90m·[39m triple life cycle[2m (13)[22m
@@ -426,7 +421,7 @@
      [90m·[39m should deposit in atom
      [90m·[39m should redeem from atom
 [?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠙[39m [2m[ beforeAll ][22m
+   [33m⠋[39m [2m[ beforeAll ][22m
    [90m·[39m EthMultiVault[2m (12)[22m
    [90m·[39m atom life cycle[2m (21)[22m
    [90m·[39m triple life cycle[2m (13)[22m
@@ -437,7 +432,7 @@
      [90m·[39m should deposit in atom
      [90m·[39m should redeem from atom
 [?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠹[39m [2m[ beforeAll ][22m
+   [33m⠙[39m [2m[ beforeAll ][22m
    [90m·[39m EthMultiVault[2m (12)[22m
    [90m·[39m atom life cycle[2m (21)[22m
    [90m·[39m triple life cycle[2m (13)[22m
@@ -448,7 +443,7 @@
      [90m·[39m should deposit in atom
      [90m·[39m should redeem from atom
 [?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠸[39m [2m[ beforeAll ][22m
+   [33m⠹[39m [2m[ beforeAll ][22m
    [90m·[39m EthMultiVault[2m (12)[22m
    [90m·[39m atom life cycle[2m (21)[22m
    [90m·[39m triple life cycle[2m (13)[22m
@@ -459,7 +454,7 @@
      [90m·[39m should deposit in atom
      [90m·[39m should redeem from atom
 [?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠼[39m [2m[ beforeAll ][22m
+   [33m⠸[39m [2m[ beforeAll ][22m
    [90m·[39m EthMultiVault[2m (12)[22m
    [90m·[39m atom life cycle[2m (21)[22m
    [90m·[39m triple life cycle[2m (13)[22m
@@ -470,7 +465,7 @@
      [90m·[39m should deposit in atom
      [90m·[39m should redeem from atom
 [?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠴[39m [2m[ beforeAll ][22m
+   [33m⠼[39m [2m[ beforeAll ][22m
    [90m·[39m EthMultiVault[2m (12)[22m
    [90m·[39m atom life cycle[2m (21)[22m
    [90m·[39m triple life cycle[2m (13)[22m
@@ -481,7 +476,7 @@
      [90m·[39m should deposit in atom
      [90m·[39m should redeem from atom
 [?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠦[39m [2m[ beforeAll ][22m
+   [33m⠴[39m [2m[ beforeAll ][22m
    [90m·[39m EthMultiVault[2m (12)[22m
    [90m·[39m atom life cycle[2m (21)[22m
    [90m·[39m triple life cycle[2m (13)[22m
@@ -492,7 +487,7 @@
      [90m·[39m should deposit in atom
      [90m·[39m should redeem from atom
 [?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠧[39m [2m[ beforeAll ][22m
+   [33m⠦[39m [2m[ beforeAll ][22m
    [90m·[39m EthMultiVault[2m (12)[22m
    [90m·[39m atom life cycle[2m (21)[22m
    [90m·[39m triple life cycle[2m (13)[22m
@@ -503,7 +498,7 @@
      [90m·[39m should deposit in atom
      [90m·[39m should redeem from atom
 [?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠇[39m [2m[ beforeAll ][22m
+   [33m⠧[39m [2m[ beforeAll ][22m
    [90m·[39m EthMultiVault[2m (12)[22m
    [90m·[39m atom life cycle[2m (21)[22m
    [90m·[39m triple life cycle[2m (13)[22m
@@ -514,7 +509,7 @@
      [90m·[39m should deposit in atom
      [90m·[39m should redeem from atom
 [?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠏[39m [2m[ beforeAll ][22m
+   [33m⠇[39m [2m[ beforeAll ][22m
    [90m·[39m EthMultiVault[2m (12)[22m
    [90m·[39m atom life cycle[2m (21)[22m
    [90m·[39m triple life cycle[2m (13)[22m
@@ -525,7 +520,7 @@
      [90m·[39m should deposit in atom
      [90m·[39m should redeem from atom
 [?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠋[39m [2m[ beforeAll ][22m
+   [33m⠏[39m [2m[ beforeAll ][22m
    [90m·[39m EthMultiVault[2m (12)[22m
    [90m·[39m atom life cycle[2m (21)[22m
    [90m·[39m triple life cycle[2m (13)[22m
@@ -536,1009 +531,13 @@
      [90m·[39m should deposit in atom
      [90m·[39m should redeem from atom
 [?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠙[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠧[39m should create new atom
-       [33m⠧[39m [2m[ beforeEach ][22m
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠹[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠇[39m should create new atom
-       [33m⠇[39m [2m[ beforeEach ][22m
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠸[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠏[39m should create new atom
-       [33m⠏[39m [2m[ beforeEach ][22m
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠼[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠋[39m should create new atom
-       [33m⠋[39m [2m[ beforeEach ][22m
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠴[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠙[39m should create new atom
-       [33m⠙[39m [2m[ beforeEach ][22m
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠦[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠹[39m should create new atom
-       [33m⠹[39m [2m[ beforeEach ][22m
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠧[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠸[39m should create new atom
-       [33m⠸[39m [2m[ beforeEach ][22m
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠇[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠼[39m should create new atom
-       [33m⠼[39m [2m[ beforeEach ][22m
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠏[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠴[39m should create new atom
-       [33m⠴[39m [2m[ beforeEach ][22m
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
    [33m⠋[39m [2m[ beforeAll ][22m
    [90m·[39m EthMultiVault[2m (12)[22m
    [90m·[39m atom life cycle[2m (21)[22m
    [90m·[39m triple life cycle[2m (13)[22m
  [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
    [33m❯[39m Atoms[2m (3)[22m
-     [33m⠦[39m should create new atom
-       [33m⠦[39m [2m[ beforeEach ][22m
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠙[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
      [33m⠧[39m should create new atom
-       [33m⠧[39m [2m[ beforeEach ][22m
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠹[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠇[39m should create new atom
-       [33m⠇[39m [2m[ beforeEach ][22m
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠸[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠏[39m should create new atom
-       [33m⠏[39m [2m[ beforeEach ][22m
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠼[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠋[39m should create new atom
-       [33m⠋[39m [2m[ beforeEach ][22m
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠴[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠙[39m should create new atom
-       [33m⠙[39m [2m[ beforeEach ][22m
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠦[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠹[39m should create new atom
-       [33m⠹[39m [2m[ beforeEach ][22m
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠧[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠸[39m should create new atom
-       [33m⠸[39m [2m[ beforeEach ][22m
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠇[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠼[39m should create new atom
-       [33m⠼[39m [2m[ beforeEach ][22m
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠏[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠴[39m should create new atom
-       [33m⠴[39m [2m[ beforeEach ][22m
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠋[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠦[39m should create new atom
-       [33m⠦[39m [2m[ beforeEach ][22m
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠙[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠧[39m should create new atom
-       [33m⠧[39m [2m[ beforeEach ][22m
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠹[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠇[39m should create new atom
-       [33m⠇[39m [2m[ beforeEach ][22m
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠸[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠏[39m should create new atom
-       [33m⠏[39m [2m[ beforeEach ][22m
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠼[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠋[39m should create new atom
-       [33m⠋[39m [2m[ beforeEach ][22m
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠴[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠙[39m should create new atom
-       [33m⠙[39m [2m[ beforeEach ][22m
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠦[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠹[39m should create new atom
-       [33m⠹[39m [2m[ beforeEach ][22m
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠧[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠸[39m should create new atom
-       [33m⠸[39m [2m[ beforeEach ][22m
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠇[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠼[39m should create new atom
-       [33m⠼[39m [2m[ beforeEach ][22m
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠏[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠴[39m should create new atom
-       [33m⠴[39m [2m[ beforeEach ][22m
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠋[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠦[39m should create new atom
-       [33m⠦[39m [2m[ beforeEach ][22m
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠙[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠧[39m should create new atom
-       [33m⠧[39m [2m[ beforeEach ][22m
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠹[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠇[39m should create new atom
-       [33m⠇[39m [2m[ beforeEach ][22m
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠸[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠏[39m should create new atom
-       [33m⠏[39m [2m[ beforeEach ][22m
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠼[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠋[39m should create new atom
-       [33m⠋[39m [2m[ beforeEach ][22m
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠴[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠙[39m should create new atom
-       [33m⠙[39m [2m[ beforeEach ][22m
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠦[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠹[39m should create new atom
-       [33m⠹[39m [2m[ beforeEach ][22m
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠧[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠸[39m should create new atom
-       [33m⠸[39m [2m[ beforeEach ][22m
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠇[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠼[39m should create new atom
-       [33m⠼[39m [2m[ beforeEach ][22m
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠏[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠴[39m should create new atom
-       [33m⠴[39m [2m[ beforeEach ][22m
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠋[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠦[39m should create new atom
-       [33m⠦[39m [2m[ beforeEach ][22m
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠙[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠧[39m should create new atom
-       [33m⠧[39m [2m[ beforeEach ][22m
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠹[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠇[39m should create new atom
-       [33m⠇[39m [2m[ beforeEach ][22m
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠸[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠏[39m should create new atom
-       [33m⠏[39m [2m[ beforeEach ][22m
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠼[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠋[39m should create new atom
-       [33m⠋[39m [2m[ beforeEach ][22m
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠴[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠙[39m should create new atom
-       [33m⠙[39m [2m[ beforeEach ][22m
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠦[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠹[39m should create new atom
-       [33m⠹[39m [2m[ beforeEach ][22m
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠧[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠸[39m should create new atom
-       [33m⠸[39m [2m[ beforeEach ][22m
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠇[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠼[39m should create new atom
-       [33m⠼[39m [2m[ beforeEach ][22m
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠏[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠴[39m should create new atom
-       [33m⠴[39m [2m[ beforeEach ][22m
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠋[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠦[39m should create new atom
-       [33m⠦[39m [2m[ beforeEach ][22m
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠙[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠧[39m should create new atom
-       [33m⠧[39m [2m[ beforeEach ][22m
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠹[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠇[39m should create new atom
-       [33m⠇[39m [2m[ beforeEach ][22m
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠸[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠏[39m should create new atom
-       [33m⠏[39m [2m[ beforeEach ][22m
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠼[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠋[39m should create new atom
-       [33m⠋[39m [2m[ beforeEach ][22m
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠴[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠙[39m should create new atom
-       [33m⠙[39m [2m[ beforeEach ][22m
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠦[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠹[39m should create new atom
-       [33m⠹[39m [2m[ beforeEach ][22m
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠧[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠸[39m should create new atom
-       [33m⠸[39m [2m[ beforeEach ][22m
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠇[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠼[39m should create new atom
-       [33m⠼[39m [2m[ beforeEach ][22m
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠏[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠴[39m should create new atom
-       [33m⠴[39m [2m[ beforeEach ][22m
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠋[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠦[39m should create new atom
-       [33m⠦[39m [2m[ beforeEach ][22m
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠙[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠧[39m should create new atom
-       [33m⠧[39m [2m[ beforeEach ][22m
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠹[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠇[39m should create new atom
-       [33m⠇[39m [2m[ beforeEach ][22m
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠸[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠏[39m should create new atom
-       [33m⠏[39m [2m[ beforeEach ][22m
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠼[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠋[39m should create new atom
-       [33m⠋[39m [2m[ beforeEach ][22m
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠴[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠙[39m should create new atom
-       [33m⠙[39m [2m[ beforeEach ][22m
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠦[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠹[39m should create new atom
-       [33m⠹[39m [2m[ beforeEach ][22m
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠧[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠸[39m should create new atom
-       [33m⠸[39m [2m[ beforeEach ][22m
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠇[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠼[39m should create new atom
-       [33m⠼[39m [2m[ beforeEach ][22m
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠏[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠴[39m should create new atom
-       [33m⠴[39m [2m[ beforeEach ][22m
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠋[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠦[39m should create new atom
-       [33m⠦[39m [2m[ beforeEach ][22m
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠙[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠧[39m should create new atom
-       [33m⠧[39m [2m[ beforeEach ][22m
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠹[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠇[39m should create new atom
-       [33m⠇[39m [2m[ beforeEach ][22m
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠸[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠏[39m should create new atom
-       [33m⠏[39m [2m[ beforeEach ][22m
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠼[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠋[39m should create new atom
-       [33m⠋[39m [2m[ beforeEach ][22m
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠴[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠙[39m should create new atom
-       [33m⠙[39m [2m[ beforeEach ][22m
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠦[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠹[39m should create new atom
-       [33m⠹[39m [2m[ beforeEach ][22m
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠧[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠸[39m should create new atom
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠇[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠼[39m should create new atom
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠏[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠴[39m should create new atom
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠋[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠦[39m should create new atom
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠙[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠧[39m should create new atom
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠹[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠇[39m should create new atom
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠸[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠏[39m should create new atom
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠼[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠋[39m should create new atom
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠴[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠙[39m should create new atom
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠦[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠹[39m should create new atom
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠧[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠸[39m should create new atom
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠇[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠼[39m should create new atom
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠏[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠴[39m should create new atom
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠋[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠦[39m should create new atom
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠙[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠧[39m should create new atom
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠹[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠇[39m should create new atom
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m⠸[39m [2m[ beforeAll ][22m
-   [90m·[39m EthMultiVault[2m (12)[22m
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠏[39m should create new atom
      [90m·[39m should deposit in atom
      [90m·[39m should redeem from atom
 [?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
@@ -1559,7 +558,7 @@
    [90m·[39m triple life cycle[2m (13)[22m
  [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
    [33m❯[39m Atoms[2m (3)[22m
-     [33m⠋[39m should create new atom
+     [33m⠇[39m should create new atom
      [90m·[39m should deposit in atom
      [90m·[39m should redeem from atom
 [?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
@@ -1580,595 +579,7 @@
    [90m·[39m triple life cycle[2m (13)[22m
  [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
    [33m❯[39m Atoms[2m (3)[22m
-     [33m⠙[39m should create new atom
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m❯[39m EthMultiVault[2m (12)[22m
-     [32m✓[39m can get general config
-     [32m✓[39m can get atom config
-     [32m✓[39m can get triple config
-     [32m✓[39m can get vault fees
-     [32m✓[39m can get atom cost
-     [33m⠸[39m can create atom
-     [90m·[39m throws error when creating atom with the same atomUri
-     [90m·[39m can create atom with initial deposit
-     [90m·[39m can batch create atoms
-     [90m·[39m can get triple cost
-     [90m·[39m can create triple
-     [90m·[39m can batch create triples
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠹[39m should create new atom
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m❯[39m EthMultiVault[2m (12)[22m
-     [32m✓[39m can get general config
-     [32m✓[39m can get atom config
-     [32m✓[39m can get triple config
-     [32m✓[39m can get vault fees
-     [32m✓[39m can get atom cost
-     [33m⠼[39m can create atom
-     [90m·[39m throws error when creating atom with the same atomUri
-     [90m·[39m can create atom with initial deposit
-     [90m·[39m can batch create atoms
-     [90m·[39m can get triple cost
-     [90m·[39m can create triple
-     [90m·[39m can batch create triples
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠸[39m should create new atom
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m❯[39m EthMultiVault[2m (12)[22m
-     [32m✓[39m can get general config
-     [32m✓[39m can get atom config
-     [32m✓[39m can get triple config
-     [32m✓[39m can get vault fees
-     [32m✓[39m can get atom cost
-     [33m⠴[39m can create atom
-     [90m·[39m throws error when creating atom with the same atomUri
-     [90m·[39m can create atom with initial deposit
-     [90m·[39m can batch create atoms
-     [90m·[39m can get triple cost
-     [90m·[39m can create triple
-     [90m·[39m can batch create triples
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠼[39m should create new atom
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m❯[39m EthMultiVault[2m (12)[22m
-     [32m✓[39m can get general config
-     [32m✓[39m can get atom config
-     [32m✓[39m can get triple config
-     [32m✓[39m can get vault fees
-     [32m✓[39m can get atom cost
-     [33m⠦[39m can create atom
-     [90m·[39m throws error when creating atom with the same atomUri
-     [90m·[39m can create atom with initial deposit
-     [90m·[39m can batch create atoms
-     [90m·[39m can get triple cost
-     [90m·[39m can create triple
-     [90m·[39m can batch create triples
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠴[39m should create new atom
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m❯[39m EthMultiVault[2m (12)[22m
-     [32m✓[39m can get general config
-     [32m✓[39m can get atom config
-     [32m✓[39m can get triple config
-     [32m✓[39m can get vault fees
-     [32m✓[39m can get atom cost
-     [33m⠧[39m can create atom
-     [90m·[39m throws error when creating atom with the same atomUri
-     [90m·[39m can create atom with initial deposit
-     [90m·[39m can batch create atoms
-     [90m·[39m can get triple cost
-     [90m·[39m can create triple
-     [90m·[39m can batch create triples
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠦[39m should create new atom
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m❯[39m EthMultiVault[2m (12)[22m
-     [32m✓[39m can get general config
-     [32m✓[39m can get atom config
-     [32m✓[39m can get triple config
-     [32m✓[39m can get vault fees
-     [32m✓[39m can get atom cost
-     [33m⠇[39m can create atom
-     [90m·[39m throws error when creating atom with the same atomUri
-     [90m·[39m can create atom with initial deposit
-     [90m·[39m can batch create atoms
-     [90m·[39m can get triple cost
-     [90m·[39m can create triple
-     [90m·[39m can batch create triples
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠧[39m should create new atom
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m❯[39m EthMultiVault[2m (12)[22m
-     [32m✓[39m can get general config
-     [32m✓[39m can get atom config
-     [32m✓[39m can get triple config
-     [32m✓[39m can get vault fees
-     [32m✓[39m can get atom cost
-     [33m⠏[39m can create atom
-     [90m·[39m throws error when creating atom with the same atomUri
-     [90m·[39m can create atom with initial deposit
-     [90m·[39m can batch create atoms
-     [90m·[39m can get triple cost
-     [90m·[39m can create triple
-     [90m·[39m can batch create triples
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠇[39m should create new atom
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m❯[39m EthMultiVault[2m (12)[22m
-     [32m✓[39m can get general config
-     [32m✓[39m can get atom config
-     [32m✓[39m can get triple config
-     [32m✓[39m can get vault fees
-     [32m✓[39m can get atom cost
-     [33m⠋[39m can create atom
-     [90m·[39m throws error when creating atom with the same atomUri
-     [90m·[39m can create atom with initial deposit
-     [90m·[39m can batch create atoms
-     [90m·[39m can get triple cost
-     [90m·[39m can create triple
-     [90m·[39m can batch create triples
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠏[39m should create new atom
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m❯[39m EthMultiVault[2m (12)[22m
-     [32m✓[39m can get general config
-     [32m✓[39m can get atom config
-     [32m✓[39m can get triple config
-     [32m✓[39m can get vault fees
-     [32m✓[39m can get atom cost
-     [33m⠙[39m can create atom
-     [90m·[39m throws error when creating atom with the same atomUri
-     [90m·[39m can create atom with initial deposit
-     [90m·[39m can batch create atoms
-     [90m·[39m can get triple cost
-     [90m·[39m can create triple
-     [90m·[39m can batch create triples
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠋[39m should create new atom
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m❯[39m EthMultiVault[2m (12)[22m
-     [32m✓[39m can get general config
-     [32m✓[39m can get atom config
-     [32m✓[39m can get triple config
-     [32m✓[39m can get vault fees
-     [32m✓[39m can get atom cost
-     [33m⠹[39m can create atom
-     [90m·[39m throws error when creating atom with the same atomUri
-     [90m·[39m can create atom with initial deposit
-     [90m·[39m can batch create atoms
-     [90m·[39m can get triple cost
-     [90m·[39m can create triple
-     [90m·[39m can batch create triples
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠙[39m should create new atom
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m❯[39m EthMultiVault[2m (12)[22m
-     [32m✓[39m can get general config
-     [32m✓[39m can get atom config
-     [32m✓[39m can get triple config
-     [32m✓[39m can get vault fees
-     [32m✓[39m can get atom cost
-     [33m⠸[39m can create atom
-     [90m·[39m throws error when creating atom with the same atomUri
-     [90m·[39m can create atom with initial deposit
-     [90m·[39m can batch create atoms
-     [90m·[39m can get triple cost
-     [90m·[39m can create triple
-     [90m·[39m can batch create triples
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠹[39m should create new atom
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m❯[39m EthMultiVault[2m (12)[22m
-     [32m✓[39m can get general config
-     [32m✓[39m can get atom config
-     [32m✓[39m can get triple config
-     [32m✓[39m can get vault fees
-     [32m✓[39m can get atom cost
-     [33m⠼[39m can create atom
-     [90m·[39m throws error when creating atom with the same atomUri
-     [90m·[39m can create atom with initial deposit
-     [90m·[39m can batch create atoms
-     [90m·[39m can get triple cost
-     [90m·[39m can create triple
-     [90m·[39m can batch create triples
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠸[39m should create new atom
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m❯[39m EthMultiVault[2m (12)[22m
-     [32m✓[39m can get general config
-     [32m✓[39m can get atom config
-     [32m✓[39m can get triple config
-     [32m✓[39m can get vault fees
-     [32m✓[39m can get atom cost
-     [33m⠴[39m can create atom
-     [90m·[39m throws error when creating atom with the same atomUri
-     [90m·[39m can create atom with initial deposit
-     [90m·[39m can batch create atoms
-     [90m·[39m can get triple cost
-     [90m·[39m can create triple
-     [90m·[39m can batch create triples
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠼[39m should create new atom
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m❯[39m EthMultiVault[2m (12)[22m
-     [32m✓[39m can get general config
-     [32m✓[39m can get atom config
-     [32m✓[39m can get triple config
-     [32m✓[39m can get vault fees
-     [32m✓[39m can get atom cost
-     [33m⠦[39m can create atom
-     [90m·[39m throws error when creating atom with the same atomUri
-     [90m·[39m can create atom with initial deposit
-     [90m·[39m can batch create atoms
-     [90m·[39m can get triple cost
-     [90m·[39m can create triple
-     [90m·[39m can batch create triples
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠴[39m should create new atom
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m❯[39m EthMultiVault[2m (12)[22m
-     [32m✓[39m can get general config
-     [32m✓[39m can get atom config
-     [32m✓[39m can get triple config
-     [32m✓[39m can get vault fees
-     [32m✓[39m can get atom cost
-     [33m⠧[39m can create atom
-     [90m·[39m throws error when creating atom with the same atomUri
-     [90m·[39m can create atom with initial deposit
-     [90m·[39m can batch create atoms
-     [90m·[39m can get triple cost
-     [90m·[39m can create triple
-     [90m·[39m can batch create triples
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠦[39m should create new atom
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m❯[39m EthMultiVault[2m (12)[22m
-     [32m✓[39m can get general config
-     [32m✓[39m can get atom config
-     [32m✓[39m can get triple config
-     [32m✓[39m can get vault fees
-     [32m✓[39m can get atom cost
-     [33m⠇[39m can create atom
-     [90m·[39m throws error when creating atom with the same atomUri
-     [90m·[39m can create atom with initial deposit
-     [90m·[39m can batch create atoms
-     [90m·[39m can get triple cost
-     [90m·[39m can create triple
-     [90m·[39m can batch create triples
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠧[39m should create new atom
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m❯[39m EthMultiVault[2m (12)[22m
-     [32m✓[39m can get general config
-     [32m✓[39m can get atom config
-     [32m✓[39m can get triple config
-     [32m✓[39m can get vault fees
-     [32m✓[39m can get atom cost
-     [33m⠏[39m can create atom
-     [90m·[39m throws error when creating atom with the same atomUri
-     [90m·[39m can create atom with initial deposit
-     [90m·[39m can batch create atoms
-     [90m·[39m can get triple cost
-     [90m·[39m can create triple
-     [90m·[39m can batch create triples
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠇[39m should create new atom
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m❯[39m EthMultiVault[2m (12)[22m
-     [32m✓[39m can get general config
-     [32m✓[39m can get atom config
-     [32m✓[39m can get triple config
-     [32m✓[39m can get vault fees
-     [32m✓[39m can get atom cost
-     [33m⠋[39m can create atom
-     [90m·[39m throws error when creating atom with the same atomUri
-     [90m·[39m can create atom with initial deposit
-     [90m·[39m can batch create atoms
-     [90m·[39m can get triple cost
-     [90m·[39m can create triple
-     [90m·[39m can batch create triples
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠏[39m should create new atom
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m❯[39m EthMultiVault[2m (12)[22m
-     [32m✓[39m can get general config
-     [32m✓[39m can get atom config
-     [32m✓[39m can get triple config
-     [32m✓[39m can get vault fees
-     [32m✓[39m can get atom cost
-     [33m⠙[39m can create atom
-     [90m·[39m throws error when creating atom with the same atomUri
-     [90m·[39m can create atom with initial deposit
-     [90m·[39m can batch create atoms
-     [90m·[39m can get triple cost
-     [90m·[39m can create triple
-     [90m·[39m can batch create triples
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠋[39m should create new atom
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m❯[39m EthMultiVault[2m (12)[22m
-     [32m✓[39m can get general config
-     [32m✓[39m can get atom config
-     [32m✓[39m can get triple config
-     [32m✓[39m can get vault fees
-     [32m✓[39m can get atom cost
-     [33m⠹[39m can create atom
-     [90m·[39m throws error when creating atom with the same atomUri
-     [90m·[39m can create atom with initial deposit
-     [90m·[39m can batch create atoms
-     [90m·[39m can get triple cost
-     [90m·[39m can create triple
-     [90m·[39m can batch create triples
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠙[39m should create new atom
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m❯[39m EthMultiVault[2m (12)[22m
-     [32m✓[39m can get general config
-     [32m✓[39m can get atom config
-     [32m✓[39m can get triple config
-     [32m✓[39m can get vault fees
-     [32m✓[39m can get atom cost
-     [33m⠸[39m can create atom
-     [90m·[39m throws error when creating atom with the same atomUri
-     [90m·[39m can create atom with initial deposit
-     [90m·[39m can batch create atoms
-     [90m·[39m can get triple cost
-     [90m·[39m can create triple
-     [90m·[39m can batch create triples
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠹[39m should create new atom
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m❯[39m EthMultiVault[2m (12)[22m
-     [32m✓[39m can get general config
-     [32m✓[39m can get atom config
-     [32m✓[39m can get triple config
-     [32m✓[39m can get vault fees
-     [32m✓[39m can get atom cost
-     [33m⠼[39m can create atom
-     [90m·[39m throws error when creating atom with the same atomUri
-     [90m·[39m can create atom with initial deposit
-     [90m·[39m can batch create atoms
-     [90m·[39m can get triple cost
-     [90m·[39m can create triple
-     [90m·[39m can batch create triples
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠸[39m should create new atom
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m❯[39m EthMultiVault[2m (12)[22m
-     [32m✓[39m can get general config
-     [32m✓[39m can get atom config
-     [32m✓[39m can get triple config
-     [32m✓[39m can get vault fees
-     [32m✓[39m can get atom cost
-     [33m⠴[39m can create atom
-     [90m·[39m throws error when creating atom with the same atomUri
-     [90m·[39m can create atom with initial deposit
-     [90m·[39m can batch create atoms
-     [90m·[39m can get triple cost
-     [90m·[39m can create triple
-     [90m·[39m can batch create triples
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠼[39m should create new atom
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m❯[39m EthMultiVault[2m (12)[22m
-     [32m✓[39m can get general config
-     [32m✓[39m can get atom config
-     [32m✓[39m can get triple config
-     [32m✓[39m can get vault fees
-     [32m✓[39m can get atom cost
-     [33m⠦[39m can create atom
-     [90m·[39m throws error when creating atom with the same atomUri
-     [90m·[39m can create atom with initial deposit
-     [90m·[39m can batch create atoms
-     [90m·[39m can get triple cost
-     [90m·[39m can create triple
-     [90m·[39m can batch create triples
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠴[39m should create new atom
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m❯[39m EthMultiVault[2m (12)[22m
-     [32m✓[39m can get general config
-     [32m✓[39m can get atom config
-     [32m✓[39m can get triple config
-     [32m✓[39m can get vault fees
-     [32m✓[39m can get atom cost
-     [33m⠧[39m can create atom
-     [90m·[39m throws error when creating atom with the same atomUri
-     [90m·[39m can create atom with initial deposit
-     [90m·[39m can batch create atoms
-     [90m·[39m can get triple cost
-     [90m·[39m can create triple
-     [90m·[39m can batch create triples
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠦[39m should create new atom
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m❯[39m EthMultiVault[2m (12)[22m
-     [32m✓[39m can get general config
-     [32m✓[39m can get atom config
-     [32m✓[39m can get triple config
-     [32m✓[39m can get vault fees
-     [32m✓[39m can get atom cost
-     [33m⠇[39m can create atom
-     [90m·[39m throws error when creating atom with the same atomUri
-     [90m·[39m can create atom with initial deposit
-     [90m·[39m can batch create atoms
-     [90m·[39m can get triple cost
-     [90m·[39m can create triple
-     [90m·[39m can batch create triples
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠧[39m should create new atom
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m❯[39m EthMultiVault[2m (12)[22m
-     [32m✓[39m can get general config
-     [32m✓[39m can get atom config
-     [32m✓[39m can get triple config
-     [32m✓[39m can get vault fees
-     [32m✓[39m can get atom cost
-     [33m⠏[39m can create atom
-     [90m·[39m throws error when creating atom with the same atomUri
-     [90m·[39m can create atom with initial deposit
-     [90m·[39m can batch create atoms
-     [90m·[39m can get triple cost
-     [90m·[39m can create triple
-     [90m·[39m can batch create triples
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [33m⠇[39m should create new atom
-     [90m·[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m❯[39m EthMultiVault[2m (12)[22m
-     [32m✓[39m can get general config
-     [32m✓[39m can get atom config
-     [32m✓[39m can get triple config
-     [32m✓[39m can get vault fees
-     [32m✓[39m can get atom cost
-     [33m⠋[39m can create atom
-     [90m·[39m throws error when creating atom with the same atomUri
-     [90m·[39m can create atom with initial deposit
-     [90m·[39m can batch create atoms
-     [90m·[39m can get triple cost
-     [90m·[39m can create triple
-     [90m·[39m can batch create triples
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
+     [32m✓[39m should create new atom[33m 813[2mms[22m[39m
      [33m⠙[39m should deposit in atom
        [33m⠙[39m [2m[ beforeEach ][22m
      [90m·[39m should redeem from atom
@@ -2179,50 +590,6 @@
      [32m✓[39m can get triple config
      [32m✓[39m can get vault fees
      [32m✓[39m can get atom cost
-     [33m⠙[39m can create atom
-     [90m·[39m throws error when creating atom with the same atomUri
-     [90m·[39m can create atom with initial deposit
-     [90m·[39m can batch create atoms
-     [90m·[39m can get triple cost
-     [90m·[39m can create triple
-     [90m·[39m can batch create triples
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [33m⠹[39m should deposit in atom
-       [33m⠹[39m [2m[ beforeEach ][22m
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m❯[39m EthMultiVault[2m (12)[22m
-     [32m✓[39m can get general config
-     [32m✓[39m can get atom config
-     [32m✓[39m can get triple config
-     [32m✓[39m can get vault fees
-     [32m✓[39m can get atom cost
-     [33m⠹[39m can create atom
-     [90m·[39m throws error when creating atom with the same atomUri
-     [90m·[39m can create atom with initial deposit
-     [90m·[39m can batch create atoms
-     [90m·[39m can get triple cost
-     [90m·[39m can create triple
-     [90m·[39m can batch create triples
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [33m⠸[39m should deposit in atom
-       [33m⠸[39m [2m[ beforeEach ][22m
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m❯[39m EthMultiVault[2m (12)[22m
-     [32m✓[39m can get general config
-     [32m✓[39m can get atom config
-     [32m✓[39m can get triple config
-     [32m✓[39m can get vault fees
-     [32m✓[39m can get atom cost
      [33m⠸[39m can create atom
      [90m·[39m throws error when creating atom with the same atomUri
      [90m·[39m can create atom with initial deposit
@@ -2234,128 +601,17 @@
    [90m·[39m triple life cycle[2m (13)[22m
  [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
    [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [33m⠼[39m should deposit in atom
-       [33m⠼[39m [2m[ beforeEach ][22m
+     [32m✓[39m should create new atom[33m 813[2mms[22m[39m
+     [33m⠹[39m should deposit in atom
      [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
+[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
    [33m❯[39m EthMultiVault[2m (12)[22m
      [32m✓[39m can get general config
      [32m✓[39m can get atom config
      [32m✓[39m can get triple config
      [32m✓[39m can get vault fees
      [32m✓[39m can get atom cost
-     [33m⠼[39m can create atom
-     [90m·[39m throws error when creating atom with the same atomUri
-     [90m·[39m can create atom with initial deposit
-     [90m·[39m can batch create atoms
-     [90m·[39m can get triple cost
-     [90m·[39m can create triple
-     [90m·[39m can batch create triples
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [33m⠴[39m should deposit in atom
-       [33m⠴[39m [2m[ beforeEach ][22m
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m❯[39m EthMultiVault[2m (12)[22m
-     [32m✓[39m can get general config
-     [32m✓[39m can get atom config
-     [32m✓[39m can get triple config
-     [32m✓[39m can get vault fees
-     [32m✓[39m can get atom cost
-     [33m⠴[39m can create atom
-     [90m·[39m throws error when creating atom with the same atomUri
-     [90m·[39m can create atom with initial deposit
-     [90m·[39m can batch create atoms
-     [90m·[39m can get triple cost
-     [90m·[39m can create triple
-     [90m·[39m can batch create triples
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [33m⠦[39m should deposit in atom
-       [33m⠦[39m [2m[ beforeEach ][22m
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m❯[39m EthMultiVault[2m (12)[22m
-     [32m✓[39m can get general config
-     [32m✓[39m can get atom config
-     [32m✓[39m can get triple config
-     [32m✓[39m can get vault fees
-     [32m✓[39m can get atom cost
-     [33m⠦[39m can create atom
-     [90m·[39m throws error when creating atom with the same atomUri
-     [90m·[39m can create atom with initial deposit
-     [90m·[39m can batch create atoms
-     [90m·[39m can get triple cost
-     [90m·[39m can create triple
-     [90m·[39m can batch create triples
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [33m⠧[39m should deposit in atom
-       [33m⠧[39m [2m[ beforeEach ][22m
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m❯[39m EthMultiVault[2m (12)[22m
-     [32m✓[39m can get general config
-     [32m✓[39m can get atom config
-     [32m✓[39m can get triple config
-     [32m✓[39m can get vault fees
-     [32m✓[39m can get atom cost
-     [33m⠧[39m can create atom
-     [90m·[39m throws error when creating atom with the same atomUri
-     [90m·[39m can create atom with initial deposit
-     [90m·[39m can batch create atoms
-     [90m·[39m can get triple cost
-     [90m·[39m can create triple
-     [90m·[39m can batch create triples
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [33m⠇[39m should deposit in atom
-       [33m⠇[39m [2m[ beforeEach ][22m
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m❯[39m EthMultiVault[2m (12)[22m
-     [32m✓[39m can get general config
-     [32m✓[39m can get atom config
-     [32m✓[39m can get triple config
-     [32m✓[39m can get vault fees
-     [32m✓[39m can get atom cost
-     [33m⠇[39m can create atom
-     [90m·[39m throws error when creating atom with the same atomUri
-     [90m·[39m can create atom with initial deposit
-     [90m·[39m can batch create atoms
-     [90m·[39m can get triple cost
-     [90m·[39m can create triple
-     [90m·[39m can batch create triples
-   [90m·[39m atom life cycle[2m (21)[22m
-   [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [33m⠏[39m should deposit in atom
-       [33m⠏[39m [2m[ beforeEach ][22m
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m❯[39m EthMultiVault[2m (12)[22m
-     [32m✓[39m can get general config
-     [32m✓[39m can get atom config
-     [32m✓[39m can get triple config
-     [32m✓[39m can get vault fees
-     [32m✓[39m can get atom cost
-     [32m✓[39m can create atom[33m 619[2mms[22m[39m
+     [32m✓[39m can create atom
      [32m✓[39m throws error when creating atom with the same atomUri
      [32m✓[39m can create atom with initial deposit
      [33m⠙[39m can batch create atoms
@@ -2364,20 +620,19 @@
      [90m·[39m can batch create triples
    [90m·[39m atom life cycle[2m (21)[22m
    [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
+ [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
    [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [33m⠋[39m should deposit in atom
-       [33m⠋[39m [2m[ beforeEach ][22m
+     [32m✓[39m should create new atom[33m 813[2mms[22m[39m
+     [33m⠸[39m should deposit in atom
      [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
+[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
    [33m❯[39m EthMultiVault[2m (12)[22m
      [32m✓[39m can get general config
      [32m✓[39m can get atom config
      [32m✓[39m can get triple config
      [32m✓[39m can get vault fees
      [32m✓[39m can get atom cost
-     [32m✓[39m can create atom[33m 619[2mms[22m[39m
+     [32m✓[39m can create atom
      [32m✓[39m throws error when creating atom with the same atomUri
      [32m✓[39m can create atom with initial deposit
      [32m✓[39m can batch create atoms
@@ -2388,10 +643,10 @@
    [90m·[39m triple life cycle[2m (13)[22m
  [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
    [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [33m⠙[39m should deposit in atom
+     [32m✓[39m should create new atom[33m 813[2mms[22m[39m
+     [32m✓[39m should deposit in atom
+     [33m⠙[39m should redeem from atom
        [33m⠙[39m [2m[ beforeEach ][22m
-     [90m·[39m should redeem from atom
 [?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
    [33m❯[39m EthMultiVault[2m (12)[22m
      [32m✓[39m can get general config
@@ -2399,7 +654,7 @@
      [32m✓[39m can get triple config
      [32m✓[39m can get vault fees
      [32m✓[39m can get atom cost
-     [32m✓[39m can create atom[33m 619[2mms[22m[39m
+     [32m✓[39m can create atom
      [32m✓[39m throws error when creating atom with the same atomUri
      [32m✓[39m can create atom with initial deposit
      [32m✓[39m can batch create atoms
@@ -2410,10 +665,10 @@
    [90m·[39m triple life cycle[2m (13)[22m
  [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
    [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [33m⠹[39m should deposit in atom
+     [32m✓[39m should create new atom[33m 813[2mms[22m[39m
+     [32m✓[39m should deposit in atom
+     [33m⠹[39m should redeem from atom
        [33m⠹[39m [2m[ beforeEach ][22m
-     [90m·[39m should redeem from atom
 [?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
    [33m❯[39m EthMultiVault[2m (12)[22m
      [32m✓[39m can get general config
@@ -2421,7 +676,7 @@
      [32m✓[39m can get triple config
      [32m✓[39m can get vault fees
      [32m✓[39m can get atom cost
-     [32m✓[39m can create atom[33m 619[2mms[22m[39m
+     [32m✓[39m can create atom
      [32m✓[39m throws error when creating atom with the same atomUri
      [32m✓[39m can create atom with initial deposit
      [32m✓[39m can batch create atoms
@@ -2432,18 +687,34 @@
    [90m·[39m triple life cycle[2m (13)[22m
  [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
    [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [33m⠸[39m should deposit in atom
-       [33m⠸[39m [2m[ beforeEach ][22m
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
+     [32m✓[39m should create new atom[33m 813[2mms[22m[39m
+     [32m✓[39m should deposit in atom
+     [33m⠸[39m should redeem from atom
+[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
    [33m❯[39m EthMultiVault[2m (12)[22m
      [32m✓[39m can get general config
      [32m✓[39m can get atom config
      [32m✓[39m can get triple config
      [32m✓[39m can get vault fees
      [32m✓[39m can get atom cost
-     [32m✓[39m can create atom[33m 619[2mms[22m[39m
+     [32m✓[39m can create atom
+     [32m✓[39m throws error when creating atom with the same atomUri
+     [32m✓[39m can create atom with initial deposit
+     [32m✓[39m can batch create atoms
+     [32m✓[39m can get triple cost
+     [33m⠼[39m can create triple
+     [90m·[39m can batch create triples
+   [90m·[39m atom life cycle[2m (21)[22m
+   [90m·[39m triple life cycle[2m (13)[22m
+ [32m✓[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m[33m 916[2mms[22m[39m
+[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
+   [33m❯[39m EthMultiVault[2m (12)[22m
+     [32m✓[39m can get general config
+     [32m✓[39m can get atom config
+     [32m✓[39m can get triple config
+     [32m✓[39m can get vault fees
+     [32m✓[39m can get atom cost
+     [32m✓[39m can create atom
      [32m✓[39m throws error when creating atom with the same atomUri
      [32m✓[39m can create atom with initial deposit
      [32m✓[39m can batch create atoms
@@ -2452,20 +723,15 @@
      [33m⠙[39m can batch create triples
    [90m·[39m atom life cycle[2m (21)[22m
    [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [33m⠼[39m should deposit in atom
-       [33m⠼[39m [2m[ beforeEach ][22m
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
+ [32m✓[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m[33m 916[2mms[22m[39m
+[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
    [33m❯[39m EthMultiVault[2m (12)[22m
      [32m✓[39m can get general config
      [32m✓[39m can get atom config
      [32m✓[39m can get triple config
      [32m✓[39m can get vault fees
      [32m✓[39m can get atom cost
-     [32m✓[39m can create atom[33m 619[2mms[22m[39m
+     [32m✓[39m can create atom
      [32m✓[39m throws error when creating atom with the same atomUri
      [32m✓[39m can create atom with initial deposit
      [32m✓[39m can batch create atoms
@@ -2474,20 +740,15 @@
      [33m⠹[39m can batch create triples
    [90m·[39m atom life cycle[2m (21)[22m
    [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [33m⠴[39m should deposit in atom
-       [33m⠴[39m [2m[ beforeEach ][22m
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
+ [32m✓[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m[33m 916[2mms[22m[39m
+[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
    [33m❯[39m EthMultiVault[2m (12)[22m
      [32m✓[39m can get general config
      [32m✓[39m can get atom config
      [32m✓[39m can get triple config
      [32m✓[39m can get vault fees
      [32m✓[39m can get atom cost
-     [32m✓[39m can create atom[33m 619[2mms[22m[39m
+     [32m✓[39m can create atom
      [32m✓[39m throws error when creating atom with the same atomUri
      [32m✓[39m can create atom with initial deposit
      [32m✓[39m can batch create atoms
@@ -2496,20 +757,15 @@
      [33m⠸[39m can batch create triples
    [90m·[39m atom life cycle[2m (21)[22m
    [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [33m⠦[39m should deposit in atom
-       [33m⠦[39m [2m[ beforeEach ][22m
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
+ [32m✓[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m[33m 916[2mms[22m[39m
+[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
    [33m❯[39m EthMultiVault[2m (12)[22m
      [32m✓[39m can get general config
      [32m✓[39m can get atom config
      [32m✓[39m can get triple config
      [32m✓[39m can get vault fees
      [32m✓[39m can get atom cost
-     [32m✓[39m can create atom[33m 619[2mms[22m[39m
+     [32m✓[39m can create atom
      [32m✓[39m throws error when creating atom with the same atomUri
      [32m✓[39m can create atom with initial deposit
      [32m✓[39m can batch create atoms
@@ -2518,20 +774,15 @@
      [33m⠼[39m can batch create triples
    [90m·[39m atom life cycle[2m (21)[22m
    [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [33m⠧[39m should deposit in atom
-       [33m⠧[39m [2m[ beforeEach ][22m
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
+ [32m✓[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m[33m 916[2mms[22m[39m
+[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
    [33m❯[39m EthMultiVault[2m (12)[22m
      [32m✓[39m can get general config
      [32m✓[39m can get atom config
      [32m✓[39m can get triple config
      [32m✓[39m can get vault fees
      [32m✓[39m can get atom cost
-     [32m✓[39m can create atom[33m 619[2mms[22m[39m
+     [32m✓[39m can create atom
      [32m✓[39m throws error when creating atom with the same atomUri
      [32m✓[39m can create atom with initial deposit
      [32m✓[39m can batch create atoms
@@ -2540,20 +791,15 @@
      [33m⠴[39m can batch create triples
    [90m·[39m atom life cycle[2m (21)[22m
    [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [33m⠇[39m should deposit in atom
-       [33m⠇[39m [2m[ beforeEach ][22m
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
+ [32m✓[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m[33m 916[2mms[22m[39m
+[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
    [33m❯[39m EthMultiVault[2m (12)[22m
      [32m✓[39m can get general config
      [32m✓[39m can get atom config
      [32m✓[39m can get triple config
      [32m✓[39m can get vault fees
      [32m✓[39m can get atom cost
-     [32m✓[39m can create atom[33m 619[2mms[22m[39m
+     [32m✓[39m can create atom
      [32m✓[39m throws error when creating atom with the same atomUri
      [32m✓[39m can create atom with initial deposit
      [32m✓[39m can batch create atoms
@@ -2562,58 +808,61 @@
      [33m⠦[39m can batch create triples
    [90m·[39m atom life cycle[2m (21)[22m
    [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [33m⠏[39m should deposit in atom
-       [33m⠏[39m [2m[ beforeEach ][22m
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m❯[39m EthMultiVault[2m (12)[22m
-     [32m✓[39m can get general config
-     [32m✓[39m can get atom config
-     [32m✓[39m can get triple config
-     [32m✓[39m can get vault fees
-     [32m✓[39m can get atom cost
-     [32m✓[39m can create atom[33m 619[2mms[22m[39m
-     [32m✓[39m throws error when creating atom with the same atomUri
-     [32m✓[39m can create atom with initial deposit
-     [32m✓[39m can batch create atoms
-     [32m✓[39m can get triple cost
-     [32m✓[39m can create triple
-     [33m⠧[39m can batch create triples
-   [90m·[39m atom life cycle[2m (21)[22m
+ [32m✓[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m[33m 916[2mms[22m[39m
+[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
+   [32m✓[39m EthMultiVault[2m (12)[22m
+   [33m❯[39m atom life cycle[2m (21)[22m
+     [32m✓[39m can check if atom exists
+     [32m✓[39m can create atom without waiting for transaction receipt
+     [32m✓[39m can wait for atom creation transaction receipt
+     [32m✓[39m can create atom
+     [32m✓[39m can check if atom exists
+     [32m✓[39m can get current share price for given vault id
+     [32m✓[39m can preview deposit
+     [32m✓[39m can get deposit fees
+     [32m✓[39m can get deposit shares and fees
+     [32m✓[39m can get entry fee amount
+     [32m✓[39m can deposit assets to atom vault
+     [32m✓[39m can get vault details
+     [32m✓[39m can get vault details for user
+     [32m✓[39m can get exit fee amount
+     [32m✓[39m can convert assets to shares
+     [32m✓[39m can convert shares to assets
+     [32m✓[39m can get redeem assets and fees
+     [32m✓[39m can preview redeem
+     [32m✓[39m can get max redeemable shares
+     [33m⠙[39m can redeem shares
+     [90m·[39m can get triple hash for givin atom vault ids
    [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [33m⠋[39m should deposit in atom
-       [33m⠋[39m [2m[ beforeEach ][22m
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [33m❯[39m EthMultiVault[2m (12)[22m
-     [32m✓[39m can get general config
-     [32m✓[39m can get atom config
-     [32m✓[39m can get triple config
-     [32m✓[39m can get vault fees
-     [32m✓[39m can get atom cost
-     [32m✓[39m can create atom[33m 619[2mms[22m[39m
-     [32m✓[39m throws error when creating atom with the same atomUri
-     [32m✓[39m can create atom with initial deposit
-     [32m✓[39m can batch create atoms
-     [32m✓[39m can get triple cost
-     [32m✓[39m can create triple
-     [33m⠇[39m can batch create triples
-   [90m·[39m atom life cycle[2m (21)[22m
+ [32m✓[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m[33m 916[2mms[22m[39m
+[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
+   [32m✓[39m EthMultiVault[2m (12)[22m
+   [33m❯[39m atom life cycle[2m (21)[22m
+     [32m✓[39m can check if atom exists
+     [32m✓[39m can create atom without waiting for transaction receipt
+     [32m✓[39m can wait for atom creation transaction receipt
+     [32m✓[39m can create atom
+     [32m✓[39m can check if atom exists
+     [32m✓[39m can get current share price for given vault id
+     [32m✓[39m can preview deposit
+     [32m✓[39m can get deposit fees
+     [32m✓[39m can get deposit shares and fees
+     [32m✓[39m can get entry fee amount
+     [32m✓[39m can deposit assets to atom vault
+     [32m✓[39m can get vault details
+     [32m✓[39m can get vault details for user
+     [32m✓[39m can get exit fee amount
+     [32m✓[39m can convert assets to shares
+     [32m✓[39m can convert shares to assets
+     [32m✓[39m can get redeem assets and fees
+     [32m✓[39m can preview redeem
+     [32m✓[39m can get max redeemable shares
+     [33m⠹[39m can redeem shares
+     [90m·[39m can get triple hash for givin atom vault ids
    [90m·[39m triple life cycle[2m (13)[22m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [33m⠙[39m should deposit in atom
-       [33m⠙[39m [2m[ beforeEach ][22m
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [32m✓[39m EthMultiVault[2m (12)[22m[33m 775[2mms[22m[39m
+ [32m✓[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m[33m 916[2mms[22m[39m
+[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
+   [32m✓[39m EthMultiVault[2m (12)[22m
    [32m✓[39m atom life cycle[2m (21)[22m
    [33m❯[39m triple life cycle[2m (13)[22m
      [33m⠙[39m can create triple
@@ -2629,14 +878,9 @@
      [90m·[39m can preview deposit
      [90m·[39m can deposit assets to triple vault
      [90m·[39m can redeem shares from triple vault
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [33m⠹[39m should deposit in atom
-       [33m⠹[39m [2m[ beforeEach ][22m
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [32m✓[39m EthMultiVault[2m (12)[22m[33m 775[2mms[22m[39m
+ [32m✓[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m[33m 916[2mms[22m[39m
+[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
+   [32m✓[39m EthMultiVault[2m (12)[22m
    [32m✓[39m atom life cycle[2m (21)[22m
    [33m❯[39m triple life cycle[2m (13)[22m
      [33m⠹[39m can create triple
@@ -2652,14 +896,9 @@
      [90m·[39m can preview deposit
      [90m·[39m can deposit assets to triple vault
      [90m·[39m can redeem shares from triple vault
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [33m⠸[39m should deposit in atom
-       [33m⠸[39m [2m[ beforeEach ][22m
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [32m✓[39m EthMultiVault[2m (12)[22m[33m 775[2mms[22m[39m
+ [32m✓[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m[33m 916[2mms[22m[39m
+[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
+   [32m✓[39m EthMultiVault[2m (12)[22m
    [32m✓[39m atom life cycle[2m (21)[22m
    [33m❯[39m triple life cycle[2m (13)[22m
      [33m⠸[39m can create triple
@@ -2675,14 +914,9 @@
      [90m·[39m can preview deposit
      [90m·[39m can deposit assets to triple vault
      [90m·[39m can redeem shares from triple vault
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [33m⠼[39m should deposit in atom
-       [33m⠼[39m [2m[ beforeEach ][22m
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [32m✓[39m EthMultiVault[2m (12)[22m[33m 775[2mms[22m[39m
+ [32m✓[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m[33m 916[2mms[22m[39m
+[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
+   [32m✓[39m EthMultiVault[2m (12)[22m
    [32m✓[39m atom life cycle[2m (21)[22m
    [33m❯[39m triple life cycle[2m (13)[22m
      [33m⠼[39m can create triple
@@ -2698,14 +932,99 @@
      [90m·[39m can preview deposit
      [90m·[39m can deposit assets to triple vault
      [90m·[39m can redeem shares from triple vault
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [33m⠴[39m should deposit in atom
-       [33m⠴[39m [2m[ beforeEach ][22m
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [32m✓[39m EthMultiVault[2m (12)[22m[33m 775[2mms[22m[39m
+ [32m✓[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m[33m 916[2mms[22m[39m
+[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
+   [32m✓[39m EthMultiVault[2m (12)[22m
+   [32m✓[39m atom life cycle[2m (21)[22m
+   [33m❯[39m triple life cycle[2m (13)[22m
+     [33m⠴[39m can create triple
+     [90m·[39m can create triple without waiting for transaction receipt
+     [90m·[39m can wait for triple creation transaction receipt
+     [90m·[39m throws error when creating triple with the same atoms
+     [90m·[39m can check if triple exists
+     [90m·[39m can check if vault is triple
+     [90m·[39m can get counter triple vault id
+     [90m·[39m can get triple atoms
+     [90m·[39m can get triple hash
+     [90m·[39m can get atom deposit amount
+     [90m·[39m can preview deposit
+     [90m·[39m can deposit assets to triple vault
+     [90m·[39m can redeem shares from triple vault
+ [32m✓[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m[33m 916[2mms[22m[39m
+[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
+   [32m✓[39m EthMultiVault[2m (12)[22m
+   [32m✓[39m atom life cycle[2m (21)[22m
+   [33m❯[39m triple life cycle[2m (13)[22m
+     [33m⠦[39m can create triple
+     [90m·[39m can create triple without waiting for transaction receipt
+     [90m·[39m can wait for triple creation transaction receipt
+     [90m·[39m throws error when creating triple with the same atoms
+     [90m·[39m can check if triple exists
+     [90m·[39m can check if vault is triple
+     [90m·[39m can get counter triple vault id
+     [90m·[39m can get triple atoms
+     [90m·[39m can get triple hash
+     [90m·[39m can get atom deposit amount
+     [90m·[39m can preview deposit
+     [90m·[39m can deposit assets to triple vault
+     [90m·[39m can redeem shares from triple vault
+ [32m✓[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m[33m 916[2mms[22m[39m
+[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
+   [32m✓[39m EthMultiVault[2m (12)[22m
+   [32m✓[39m atom life cycle[2m (21)[22m
+   [33m❯[39m triple life cycle[2m (13)[22m
+     [33m⠧[39m can create triple
+     [90m·[39m can create triple without waiting for transaction receipt
+     [90m·[39m can wait for triple creation transaction receipt
+     [90m·[39m throws error when creating triple with the same atoms
+     [90m·[39m can check if triple exists
+     [90m·[39m can check if vault is triple
+     [90m·[39m can get counter triple vault id
+     [90m·[39m can get triple atoms
+     [90m·[39m can get triple hash
+     [90m·[39m can get atom deposit amount
+     [90m·[39m can preview deposit
+     [90m·[39m can deposit assets to triple vault
+     [90m·[39m can redeem shares from triple vault
+ [32m✓[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m[33m 916[2mms[22m[39m
+[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
+   [32m✓[39m EthMultiVault[2m (12)[22m
+   [32m✓[39m atom life cycle[2m (21)[22m
+   [33m❯[39m triple life cycle[2m (13)[22m
+     [33m⠇[39m can create triple
+     [90m·[39m can create triple without waiting for transaction receipt
+     [90m·[39m can wait for triple creation transaction receipt
+     [90m·[39m throws error when creating triple with the same atoms
+     [90m·[39m can check if triple exists
+     [90m·[39m can check if vault is triple
+     [90m·[39m can get counter triple vault id
+     [90m·[39m can get triple atoms
+     [90m·[39m can get triple hash
+     [90m·[39m can get atom deposit amount
+     [90m·[39m can preview deposit
+     [90m·[39m can deposit assets to triple vault
+     [90m·[39m can redeem shares from triple vault
+ [32m✓[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m[33m 916[2mms[22m[39m
+[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
+   [32m✓[39m EthMultiVault[2m (12)[22m
+   [32m✓[39m atom life cycle[2m (21)[22m
+   [33m❯[39m triple life cycle[2m (13)[22m
+     [33m⠏[39m can create triple
+     [90m·[39m can create triple without waiting for transaction receipt
+     [90m·[39m can wait for triple creation transaction receipt
+     [90m·[39m throws error when creating triple with the same atoms
+     [90m·[39m can check if triple exists
+     [90m·[39m can check if vault is triple
+     [90m·[39m can get counter triple vault id
+     [90m·[39m can get triple atoms
+     [90m·[39m can get triple hash
+     [90m·[39m can get atom deposit amount
+     [90m·[39m can preview deposit
+     [90m·[39m can deposit assets to triple vault
+     [90m·[39m can redeem shares from triple vault
+ [32m✓[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m[33m 916[2mms[22m[39m
+[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
+   [32m✓[39m EthMultiVault[2m (12)[22m
    [32m✓[39m atom life cycle[2m (21)[22m
    [33m❯[39m triple life cycle[2m (13)[22m
      [32m✓[39m can create triple
@@ -2721,14 +1040,9 @@
      [90m·[39m can preview deposit
      [90m·[39m can deposit assets to triple vault
      [90m·[39m can redeem shares from triple vault
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [33m⠦[39m should deposit in atom
-       [33m⠦[39m [2m[ beforeEach ][22m
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [32m✓[39m EthMultiVault[2m (12)[22m[33m 775[2mms[22m[39m
+ [32m✓[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m[33m 916[2mms[22m[39m
+[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
+   [32m✓[39m EthMultiVault[2m (12)[22m
    [32m✓[39m atom life cycle[2m (21)[22m
    [33m❯[39m triple life cycle[2m (13)[22m
      [32m✓[39m can create triple
@@ -2744,14 +1058,9 @@
      [90m·[39m can preview deposit
      [90m·[39m can deposit assets to triple vault
      [90m·[39m can redeem shares from triple vault
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [33m⠧[39m should deposit in atom
-       [33m⠧[39m [2m[ beforeEach ][22m
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [32m✓[39m EthMultiVault[2m (12)[22m[33m 775[2mms[22m[39m
+ [32m✓[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m[33m 916[2mms[22m[39m
+[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
+   [32m✓[39m EthMultiVault[2m (12)[22m
    [32m✓[39m atom life cycle[2m (21)[22m
    [33m❯[39m triple life cycle[2m (13)[22m
      [32m✓[39m can create triple
@@ -2767,14 +1076,9 @@
      [90m·[39m can preview deposit
      [90m·[39m can deposit assets to triple vault
      [90m·[39m can redeem shares from triple vault
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [33m⠇[39m should deposit in atom
-       [33m⠇[39m [2m[ beforeEach ][22m
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [32m✓[39m EthMultiVault[2m (12)[22m[33m 775[2mms[22m[39m
+ [32m✓[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m[33m 916[2mms[22m[39m
+[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
+   [32m✓[39m EthMultiVault[2m (12)[22m
    [32m✓[39m atom life cycle[2m (21)[22m
    [33m❯[39m triple life cycle[2m (13)[22m
      [32m✓[39m can create triple
@@ -2790,14 +1094,9 @@
      [90m·[39m can preview deposit
      [90m·[39m can deposit assets to triple vault
      [90m·[39m can redeem shares from triple vault
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [33m⠏[39m should deposit in atom
-       [33m⠏[39m [2m[ beforeEach ][22m
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
-   [32m✓[39m EthMultiVault[2m (12)[22m[33m 775[2mms[22m[39m
+ [32m✓[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m[33m 916[2mms[22m[39m
+[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
+   [32m✓[39m EthMultiVault[2m (12)[22m
    [32m✓[39m atom life cycle[2m (21)[22m
    [33m❯[39m triple life cycle[2m (13)[22m
      [32m✓[39m can create triple
@@ -2813,388 +1112,70 @@
      [90m·[39m can preview deposit
      [90m·[39m can deposit assets to triple vault
      [90m·[39m can redeem shares from triple vault
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [33m⠋[39m should deposit in atom
-       [33m⠋[39m [2m[ beforeEach ][22m
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [32m✓[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m[33m 3412[2mms[22m[39m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [33m⠙[39m should deposit in atom
-       [33m⠙[39m [2m[ beforeEach ][22m
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [32m✓[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m[33m 3412[2mms[22m[39m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [33m⠹[39m should deposit in atom
-       [33m⠹[39m [2m[ beforeEach ][22m
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [32m✓[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m[33m 3412[2mms[22m[39m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [33m⠸[39m should deposit in atom
-       [33m⠸[39m [2m[ beforeEach ][22m
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [32m✓[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m[33m 3412[2mms[22m[39m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [33m⠼[39m should deposit in atom
-       [33m⠼[39m [2m[ beforeEach ][22m
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [32m✓[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m[33m 3412[2mms[22m[39m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [33m⠴[39m should deposit in atom
-       [33m⠴[39m [2m[ beforeEach ][22m
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [32m✓[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m[33m 3412[2mms[22m[39m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [33m⠦[39m should deposit in atom
-       [33m⠦[39m [2m[ beforeEach ][22m
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [32m✓[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m[33m 3412[2mms[22m[39m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [33m⠧[39m should deposit in atom
-       [33m⠧[39m [2m[ beforeEach ][22m
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [32m✓[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m[33m 3412[2mms[22m[39m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [33m⠇[39m should deposit in atom
-       [33m⠇[39m [2m[ beforeEach ][22m
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [32m✓[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m[33m 3412[2mms[22m[39m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [33m⠏[39m should deposit in atom
-       [33m⠏[39m [2m[ beforeEach ][22m
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [32m✓[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m[33m 3412[2mms[22m[39m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [33m⠋[39m should deposit in atom
-     [90m·[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [32m✓[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m[33m 3412[2mms[22m[39m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [32m✓[39m should deposit in atom[33m 650[2mms[22m[39m
-     [33m⠙[39m should redeem from atom
-       [33m⠙[39m [2m[ beforeEach ][22m
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [32m✓[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m[33m 3412[2mms[22m[39m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [32m✓[39m should deposit in atom[33m 650[2mms[22m[39m
-     [33m⠹[39m should redeem from atom
-       [33m⠹[39m [2m[ beforeEach ][22m
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [32m✓[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m[33m 3412[2mms[22m[39m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [32m✓[39m should deposit in atom[33m 650[2mms[22m[39m
-     [33m⠸[39m should redeem from atom
-       [33m⠸[39m [2m[ beforeEach ][22m
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [32m✓[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m[33m 3412[2mms[22m[39m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [32m✓[39m should deposit in atom[33m 650[2mms[22m[39m
-     [33m⠼[39m should redeem from atom
-       [33m⠼[39m [2m[ beforeEach ][22m
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [32m✓[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m[33m 3412[2mms[22m[39m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [32m✓[39m should deposit in atom[33m 650[2mms[22m[39m
-     [33m⠴[39m should redeem from atom
-       [33m⠴[39m [2m[ beforeEach ][22m
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [32m✓[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m[33m 3412[2mms[22m[39m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [32m✓[39m should deposit in atom[33m 650[2mms[22m[39m
-     [33m⠦[39m should redeem from atom
-       [33m⠦[39m [2m[ beforeEach ][22m
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [32m✓[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m[33m 3412[2mms[22m[39m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [32m✓[39m should deposit in atom[33m 650[2mms[22m[39m
-     [33m⠧[39m should redeem from atom
-       [33m⠧[39m [2m[ beforeEach ][22m
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [32m✓[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m[33m 3412[2mms[22m[39m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [32m✓[39m should deposit in atom[33m 650[2mms[22m[39m
-     [33m⠇[39m should redeem from atom
-       [33m⠇[39m [2m[ beforeEach ][22m
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [32m✓[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m[33m 3412[2mms[22m[39m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [32m✓[39m should deposit in atom[33m 650[2mms[22m[39m
-     [33m⠏[39m should redeem from atom
-       [33m⠏[39m [2m[ beforeEach ][22m
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [32m✓[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m[33m 3412[2mms[22m[39m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [32m✓[39m should deposit in atom[33m 650[2mms[22m[39m
-     [33m⠋[39m should redeem from atom
-       [33m⠋[39m [2m[ beforeEach ][22m
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [32m✓[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m[33m 3412[2mms[22m[39m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [32m✓[39m should deposit in atom[33m 650[2mms[22m[39m
-     [33m⠙[39m should redeem from atom
-       [33m⠙[39m [2m[ beforeEach ][22m
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [32m✓[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m[33m 3412[2mms[22m[39m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [32m✓[39m should deposit in atom[33m 650[2mms[22m[39m
-     [33m⠹[39m should redeem from atom
-       [33m⠹[39m [2m[ beforeEach ][22m
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [32m✓[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m[33m 3412[2mms[22m[39m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [32m✓[39m should deposit in atom[33m 650[2mms[22m[39m
-     [33m⠸[39m should redeem from atom
-       [33m⠸[39m [2m[ beforeEach ][22m
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [32m✓[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m[33m 3412[2mms[22m[39m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [32m✓[39m should deposit in atom[33m 650[2mms[22m[39m
-     [33m⠼[39m should redeem from atom
-       [33m⠼[39m [2m[ beforeEach ][22m
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [32m✓[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m[33m 3412[2mms[22m[39m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [32m✓[39m should deposit in atom[33m 650[2mms[22m[39m
-     [33m⠴[39m should redeem from atom
-       [33m⠴[39m [2m[ beforeEach ][22m
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [32m✓[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m[33m 3412[2mms[22m[39m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [32m✓[39m should deposit in atom[33m 650[2mms[22m[39m
-     [33m⠦[39m should redeem from atom
-       [33m⠦[39m [2m[ beforeEach ][22m
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [32m✓[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m[33m 3412[2mms[22m[39m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [32m✓[39m should deposit in atom[33m 650[2mms[22m[39m
-     [33m⠧[39m should redeem from atom
-       [33m⠧[39m [2m[ beforeEach ][22m
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [32m✓[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m[33m 3412[2mms[22m[39m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [32m✓[39m should deposit in atom[33m 650[2mms[22m[39m
-     [33m⠇[39m should redeem from atom
-       [33m⠇[39m [2m[ beforeEach ][22m
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [32m✓[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m[33m 3412[2mms[22m[39m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [32m✓[39m should deposit in atom[33m 650[2mms[22m[39m
-     [33m⠏[39m should redeem from atom
-       [33m⠏[39m [2m[ beforeEach ][22m
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [32m✓[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m[33m 3412[2mms[22m[39m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [32m✓[39m should deposit in atom[33m 650[2mms[22m[39m
-     [33m⠋[39m should redeem from atom
-       [33m⠋[39m [2m[ beforeEach ][22m
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [32m✓[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m[33m 3412[2mms[22m[39m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [32m✓[39m should deposit in atom[33m 650[2mms[22m[39m
-     [33m⠙[39m should redeem from atom
-       [33m⠙[39m [2m[ beforeEach ][22m
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [32m✓[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m[33m 3412[2mms[22m[39m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [32m✓[39m should deposit in atom[33m 650[2mms[22m[39m
-     [33m⠹[39m should redeem from atom
-       [33m⠹[39m [2m[ beforeEach ][22m
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [32m✓[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m[33m 3412[2mms[22m[39m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [32m✓[39m should deposit in atom[33m 650[2mms[22m[39m
-     [33m⠸[39m should redeem from atom
-       [33m⠸[39m [2m[ beforeEach ][22m
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [32m✓[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m[33m 3412[2mms[22m[39m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [32m✓[39m should deposit in atom[33m 650[2mms[22m[39m
-     [33m⠼[39m should redeem from atom
-       [33m⠼[39m [2m[ beforeEach ][22m
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [32m✓[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m[33m 3412[2mms[22m[39m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [32m✓[39m should deposit in atom[33m 650[2mms[22m[39m
-     [33m⠴[39m should redeem from atom
-       [33m⠴[39m [2m[ beforeEach ][22m
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [32m✓[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m[33m 3412[2mms[22m[39m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [32m✓[39m should deposit in atom[33m 650[2mms[22m[39m
-     [33m⠦[39m should redeem from atom
-       [33m⠦[39m [2m[ beforeEach ][22m
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [32m✓[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m[33m 3412[2mms[22m[39m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [32m✓[39m should deposit in atom[33m 650[2mms[22m[39m
-     [33m⠧[39m should redeem from atom
-       [33m⠧[39m [2m[ beforeEach ][22m
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [32m✓[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m[33m 3412[2mms[22m[39m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [32m✓[39m should deposit in atom[33m 650[2mms[22m[39m
-     [33m⠇[39m should redeem from atom
-       [33m⠇[39m [2m[ beforeEach ][22m
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [32m✓[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m[33m 3412[2mms[22m[39m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [32m✓[39m should deposit in atom[33m 650[2mms[22m[39m
-     [33m⠏[39m should redeem from atom
-       [33m⠏[39m [2m[ beforeEach ][22m
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [32m✓[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m[33m 3412[2mms[22m[39m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [32m✓[39m should deposit in atom[33m 650[2mms[22m[39m
-     [33m⠋[39m should redeem from atom
-       [33m⠋[39m [2m[ beforeEach ][22m
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [32m✓[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m[33m 3412[2mms[22m[39m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [32m✓[39m should deposit in atom[33m 650[2mms[22m[39m
-     [33m⠙[39m should redeem from atom
-       [33m⠙[39m [2m[ beforeEach ][22m
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [32m✓[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m[33m 3412[2mms[22m[39m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [32m✓[39m should deposit in atom[33m 650[2mms[22m[39m
-     [33m⠹[39m should redeem from atom
-       [33m⠹[39m [2m[ beforeEach ][22m
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [32m✓[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m[33m 3412[2mms[22m[39m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [32m✓[39m should deposit in atom[33m 650[2mms[22m[39m
-     [33m⠸[39m should redeem from atom
-       [33m⠸[39m [2m[ beforeEach ][22m
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [32m✓[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m[33m 3412[2mms[22m[39m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [32m✓[39m should deposit in atom[33m 650[2mms[22m[39m
-     [33m⠼[39m should redeem from atom
-       [33m⠼[39m [2m[ beforeEach ][22m
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [32m✓[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m[33m 3412[2mms[22m[39m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [32m✓[39m should deposit in atom[33m 650[2mms[22m[39m
-     [33m⠴[39m should redeem from atom
-       [33m⠴[39m [2m[ beforeEach ][22m
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [32m✓[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m[33m 3412[2mms[22m[39m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [32m✓[39m should deposit in atom[33m 650[2mms[22m[39m
-     [33m⠦[39m should redeem from atom
-       [33m⠦[39m [2m[ beforeEach ][22m
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [32m✓[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m[33m 3412[2mms[22m[39m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [32m✓[39m should deposit in atom[33m 650[2mms[22m[39m
-     [33m⠧[39m should redeem from atom
-       [33m⠧[39m [2m[ beforeEach ][22m
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [32m✓[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m[33m 3412[2mms[22m[39m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [32m✓[39m should deposit in atom[33m 650[2mms[22m[39m
-     [33m⠇[39m should redeem from atom
-       [33m⠇[39m [2m[ beforeEach ][22m
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [32m✓[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m[33m 3412[2mms[22m[39m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [32m✓[39m should deposit in atom[33m 650[2mms[22m[39m
-     [33m⠏[39m should redeem from atom
-       [33m⠏[39m [2m[ beforeEach ][22m
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [32m✓[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m[33m 3412[2mms[22m[39m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [32m✓[39m should deposit in atom[33m 650[2mms[22m[39m
-     [33m⠋[39m should redeem from atom
-       [33m⠋[39m [2m[ beforeEach ][22m
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [32m✓[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m[33m 3412[2mms[22m[39m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [32m✓[39m should deposit in atom[33m 650[2mms[22m[39m
-     [33m⠙[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [32m✓[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m[33m 3412[2mms[22m[39m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [32m✓[39m should deposit in atom[33m 650[2mms[22m[39m
-     [33m⠹[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [32m✓[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m[33m 3412[2mms[22m[39m
- [33m❯[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m
-   [33m❯[39m Atoms[2m (3)[22m
-     [32m✓[39m should create new atom[33m 2835[2mms[22m[39m
-     [32m✓[39m should deposit in atom[33m 650[2mms[22m[39m
-     [33m⠸[39m should redeem from atom
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [32m✓[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m[33m 3412[2mms[22m[39m
- [32m✓[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m[33m 4222[2mms[22m[39m
-[?25l[2K[1A[2K[1A[2K[G [32m✓[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m[33m 3412[2mms[22m[39m
- [32m✓[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m[33m 4222[2mms[22m[39m
+ [32m✓[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m[33m 916[2mms[22m[39m
+[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
+   [32m✓[39m EthMultiVault[2m (12)[22m
+   [32m✓[39m atom life cycle[2m (21)[22m
+   [33m❯[39m triple life cycle[2m (13)[22m
+     [32m✓[39m can create triple
+     [33m⠦[39m can create triple without waiting for transaction receipt
+     [90m·[39m can wait for triple creation transaction receipt
+     [90m·[39m throws error when creating triple with the same atoms
+     [90m·[39m can check if triple exists
+     [90m·[39m can check if vault is triple
+     [90m·[39m can get counter triple vault id
+     [90m·[39m can get triple atoms
+     [90m·[39m can get triple hash
+     [90m·[39m can get atom deposit amount
+     [90m·[39m can preview deposit
+     [90m·[39m can deposit assets to triple vault
+     [90m·[39m can redeem shares from triple vault
+ [32m✓[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m[33m 916[2mms[22m[39m
+[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
+   [32m✓[39m EthMultiVault[2m (12)[22m
+   [32m✓[39m atom life cycle[2m (21)[22m
+   [33m❯[39m triple life cycle[2m (13)[22m
+     [32m✓[39m can create triple
+     [32m✓[39m can create triple without waiting for transaction receipt
+     [33m⠙[39m can wait for triple creation transaction receipt
+     [90m·[39m throws error when creating triple with the same atoms
+     [90m·[39m can check if triple exists
+     [90m·[39m can check if vault is triple
+     [90m·[39m can get counter triple vault id
+     [90m·[39m can get triple atoms
+     [90m·[39m can get triple hash
+     [90m·[39m can get atom deposit amount
+     [90m·[39m can preview deposit
+     [90m·[39m can deposit assets to triple vault
+     [90m·[39m can redeem shares from triple vault
+ [32m✓[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m[33m 916[2mms[22m[39m
+[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [33m❯[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m
+   [32m✓[39m EthMultiVault[2m (12)[22m
+   [32m✓[39m atom life cycle[2m (21)[22m
+   [33m❯[39m triple life cycle[2m (13)[22m
+     [32m✓[39m can create triple
+     [32m✓[39m can create triple without waiting for transaction receipt
+     [33m⠹[39m can wait for triple creation transaction receipt
+     [90m·[39m throws error when creating triple with the same atoms
+     [90m·[39m can check if triple exists
+     [90m·[39m can check if vault is triple
+     [90m·[39m can get counter triple vault id
+     [90m·[39m can get triple atoms
+     [90m·[39m can get triple hash
+     [90m·[39m can get atom deposit amount
+     [90m·[39m can preview deposit
+     [90m·[39m can deposit assets to triple vault
+     [90m·[39m can redeem shares from triple vault
+ [32m✓[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m[33m 916[2mms[22m[39m
+[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G [32m✓[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m[33m 1410[2mms[22m[39m
+ [32m✓[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m[33m 916[2mms[22m[39m
+[2K[1A[2K[1A[2K[G [32m✓[39m [2mtests/[22methmultivault[2m.test.ts[22m[2m (46)[22m[33m 1410[2mms[22m[39m
+ [32m✓[39m [2mtests/[22matoms[2m.test.ts[22m[2m (3)[22m[33m 916[2mms[22m[39m
 
 [2m Test Files [22m [1m[32m2 passed[39m[22m[90m (2)[39m
 [2m      Tests [22m [1m[32m49 passed[39m[22m[90m (49)[39m
-[2m   Start at [22m 17:15:39
-[2m   Duration [22m 4.91s[2m (transform 221ms, setup 562ms, collect 247ms, tests 7.63s, environment 0ms, prepare 83ms)[22m
+[2m   Start at [22m 13:04:57
+[2m   Duration [22m 2.00s[2m (transform 190ms, setup 550ms, collect 207ms, tests 2.33s, environment 0ms, prepare 95ms)[22m
 
 
 [1m[7m[32m PASS [39m[27m[22m[32m Waiting for file changes...[39m

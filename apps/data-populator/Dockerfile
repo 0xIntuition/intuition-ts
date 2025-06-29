@@ -65,19 +65,16 @@ RUN apk add --no-cache \
     gcc \
     g++
 
-RUN npm install -g pnpm@9.0.6
+RUN npm install -g pnpm@9.11.0
 
 # Build stage
 FROM base as build
-
-# Install nx globally
-RUN npm install -g nx@latest
 
 # Install dependencies
 RUN pnpm install
 
 # Build the data-populator app
-RUN pnpm run data-populator:build
+RUN pnpm run build --filter=@0xintuition/data-populator
 
 # Production stage
 FROM base
@@ -94,4 +91,4 @@ ENV HOST=0.0.0.0
 EXPOSE 8080
 
 # Start the application
-CMD [ "pnpm", "run", "data-populator:start" ]
+CMD [ "pnpm", "run", "start" "--filter=@0xintuition/data-populator" ]

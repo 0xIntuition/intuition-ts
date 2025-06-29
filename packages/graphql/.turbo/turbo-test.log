@@ -14,8 +14,8 @@
 
 [2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
 [2m      Tests [22m [1m[32m2 passed[39m[22m[90m (2)[39m
-[2m   Start at [22m 17:15:39
-[2m   Duration [22m 260ms[2m (transform 39ms, setup 0ms, collect 56ms, tests 1ms, environment 0ms, prepare 89ms)[22m
+[2m   Start at [22m 13:04:57
+[2m   Duration [22m 285ms[2m (transform 40ms, setup 0ms, collect 68ms, tests 2ms, environment 0ms, prepare 106ms)[22m
 
 
 [1m[7m[32m PASS [39m[27m[22m[32m Waiting for file changes...[39m

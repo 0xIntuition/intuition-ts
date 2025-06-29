@@ -47,12 +47,8 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      # - name: Set SHAs
-      #   uses: nrwl/nx-set-shas@v4
-
       - name: Run Linting
         run: pnpm lint
-      
       # TODO: Figure out why turbo isn't passing from global state.
       - name: Write PINATA_API_JWT to packages/sdk/.env
         run: echo "PINATA_API_JWT=${{ secrets.PINATA_API_JWT }}" >> packages/sdk/.env

@@ -3,33 +3,29 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "outputs": [".next/**", "!.next/cache/**", "dist/**"]
+      "outputs": ["dist/**"]
     },
     "dev": {
       "cache": false,
       "persistent": true,
-      "dependsOn": ["^dev"],
-      "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "outputs": [".next/**", "!.next/cache/**", "dist/**"]
+      "dependsOn": ["^dev"]
     },
     "format": {
-      "dependsOn": ["^format"]
+      "dependsOn": ["format"]
     },
     "check:types": {
       "dependsOn": ["^build"]
     },
     "check": {
-      "dependsOn": ["^check"]
+      "dependsOn": ["check"]
     },
-    "lint": {
-      "dependsOn": ["^lint"]
+    "codegen": {
+      "dependsOn": []
     },
-    "lint:fix": {
-      "dependsOn": ["^lint:fix"]
-    },
+    "lint": {},
+    "lint:fix": {},
     "test": {
-      "dependsOn": ["^test"]
+      "dependsOn": ["^build", "^test"]
     },
     "typecheck": {
       "dependsOn": ["^typecheck"]
@@ -37,7 +33,7 @@
     "start": {
       "dependsOn": [],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "outputs": [".next/**", "!.next/cache/**", "dist/**"]
+      "outputs": ["build/**"]
     }
   }
 }

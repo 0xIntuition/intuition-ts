@@ -6,8 +6,7 @@
   "types": "src/index.d.ts",
   "scripts": {
     "dev": "tsup --watch",
-    "lint:fix": "pnpm lint --fix",
-    "publish-package": "pnpm publish --tag next --no-git-checks",
+    "lint:fix": "lint --fix",
     "typecheck": "tsc --noEmit -p ./tsconfig.json"
   },
   "keywords": [],

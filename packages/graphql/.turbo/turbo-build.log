@@ -1,13 +1,13 @@
 
 
 > @0xintuition/graphql@1.0.0-alpha.0 prebuild /Users/metasudo/workspace/intution/code/intuition-ts/packages/graphql
-> pnpm codegen:build
+> pnpm codegen
 
 
-> @0xintuition/graphql@1.0.0-alpha.0 codegen:build /Users/metasudo/workspace/intution/code/intuition-ts/packages/graphql
+> @0xintuition/graphql@1.0.0-alpha.0 codegen /Users/metasudo/workspace/intution/code/intuition-ts/packages/graphql
 > NODE_ENV=production graphql-codegen --config codegen.ts
 
-(node:8322) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+(node:33561) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
 (Use `node --trace-deprecation ...` to show where the warning was created)
 [?25l[2m◼[22m Parse Configuration
 [?25l[2K[1A[2K[G[2m◼[22m Parse Configuration
@@ -158,16 +158,6 @@
     [93m⠴[39m Load GraphQL schemas
     [2m◼[22m Load GraphQL documents
     [2m◼[22m Generate
-[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G[32m✔[39m Parse Configuration
-[33m❯[39m Generate outputs
-  [33m❯[39m Generate to ./src/generated/index.ts
-    [93m⠦[39m Load GraphQL schemas
-    [2m◼[22m Load GraphQL documents
-    [2m◼[22m Generate
-  [33m❯[39m Generate to ./schema.graphql
-    [93m⠦[39m Load GraphQL schemas
-    [2m◼[22m Load GraphQL documents
-    [2m◼[22m Generate
 [?25l[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G[32m✔[39m Parse Configuration
 [33m❯[39m Generate outputs
   [33m❯[39m Generate to ./src/generated/index.ts
@@ -175,7 +165,7 @@
     [2m◼[22m Load GraphQL documents
     [2m◼[22m Generate
   [33m❯[39m Generate to ./schema.graphql
-    [93m⠦[39m Load GraphQL schemas
+    [93m⠴[39m Load GraphQL schemas
     [2m◼[22m Load GraphQL documents
     [2m◼[22m Generate
 [?25l[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G[32m✔[39m Parse Configuration
@@ -192,7 +182,7 @@
 [33m❯[39m Generate outputs
   [33m❯[39m Generate to ./src/generated/index.ts
     [32m✔[39m Load GraphQL schemas
-    [93m⠦[39m Load GraphQL documents
+    [93m⠴[39m Load GraphQL documents
     [2m◼[22m Generate
   [33m❯[39m Generate to ./schema.graphql
     [32m✔[39m Load GraphQL schemas
@@ -202,21 +192,21 @@
 [33m❯[39m Generate outputs
   [33m❯[39m Generate to ./src/generated/index.ts
     [32m✔[39m Load GraphQL schemas
-    [93m⠦[39m Load GraphQL documents
+    [93m⠴[39m Load GraphQL documents
     [2m◼[22m Generate
   [33m❯[39m Generate to ./schema.graphql
     [32m✔[39m Load GraphQL schemas
-    [93m⠦[39m Load GraphQL documents
+    [93m⠴[39m Load GraphQL documents
     [2m◼[22m Generate
 [?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G[32m✔[39m Parse Configuration
 [33m❯[39m Generate outputs
   [33m❯[39m Generate to ./src/generated/index.ts
     [32m✔[39m Load GraphQL schemas
-    [93m⠧[39m Load GraphQL documents
+    [93m⠦[39m Load GraphQL documents
     [2m◼[22m Generate
   [33m❯[39m Generate to ./schema.graphql
     [32m✔[39m Load GraphQL schemas
-    [93m⠧[39m Load GraphQL documents
+    [93m⠦[39m Load GraphQL documents
     [2m◼[22m Generate
 [?25l[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G[32m✔[39m Parse Configuration
 [33m❯[39m Generate outputs
@@ -226,7 +216,7 @@
     [2m◼[22m Generate
   [33m❯[39m Generate to ./schema.graphql
     [32m✔[39m Load GraphQL schemas
-    [93m⠧[39m Load GraphQL documents
+    [93m⠦[39m Load GraphQL documents
     [2m◼[22m Generate
 [?25l[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G[32m✔[39m Parse Configuration
 [33m❯[39m Generate outputs
@@ -243,7 +233,7 @@
   [33m❯[39m Generate to ./src/generated/index.ts
     [32m✔[39m Load GraphQL schemas
     [32m✔[39m Load GraphQL documents
-    [93m⠧[39m Generate
+    [93m⠦[39m Generate
   [33m❯[39m Generate to ./schema.graphql
     [32m✔[39m Load GraphQL schemas
     [32m✔[39m Load GraphQL documents
@@ -253,17 +243,17 @@
   [33m❯[39m Generate to ./src/generated/index.ts
     [32m✔[39m Load GraphQL schemas
     [32m✔[39m Load GraphQL documents
-    [93m⠧[39m Generate
+    [93m⠦[39m Generate
   [33m❯[39m Generate to ./schema.graphql
     [32m✔[39m Load GraphQL schemas
     [32m✔[39m Load GraphQL documents
-    [93m⠧[39m Generate
+    [93m⠦[39m Generate
 [?25l[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G[32m✔[39m Parse Configuration
 [33m❯[39m Generate outputs
   [33m❯[39m Generate to ./src/generated/index.ts
     [32m✔[39m Load GraphQL schemas
     [32m✔[39m Load GraphQL documents
-    [93m⠧[39m Generate
+    [93m⠦[39m Generate
   [33m❯[39m Generate to ./schema.graphql
     [32m✔[39m Load GraphQL schemas
     [32m✔[39m Load GraphQL documents
@@ -273,7 +263,7 @@
   [33m❯[39m Generate to ./src/generated/index.ts
     [32m✔[39m Load GraphQL schemas
     [32m✔[39m Load GraphQL documents
-    [93m⠧[39m Generate
+    [93m⠦[39m Generate
   [32m✔[39m Generate to ./schema.graphql
 [?25l[?25l[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[1A[2K[G[32m✔[39m Parse Configuration
 [33m❯[39m Generate outputs
@@ -303,11 +293,11 @@
 [34mCJS[39m Build start
 [34mESM[39m Build start
 [34mDTS[39m Build start
-[32mCJS[39m [1mdist/index.js     [22m[32m1.38 MB[39m
-[32mCJS[39m [1mdist/index.js.map [22m[32m2.72 MB[39m
-[32mCJS[39m ⚡️ Build success in 792ms
 [32mESM[39m [1mdist/index.mjs     [22m[32m1.37 MB[39m
 [32mESM[39m [1mdist/index.mjs.map [22m[32m2.72 MB[39m
-[32mESM[39m ⚡️ Build success in 793ms
-[32mDTS[39m ⚡️ Build success in 2090ms
+[32mESM[39m ⚡️ Build success in 781ms
+[32mCJS[39m [1mdist/index.js     [22m[32m1.38 MB[39m
+[32mCJS[39m [1mdist/index.js.map [22m[32m2.72 MB[39m
+[32mCJS[39m ⚡️ Build success in 783ms
+[32mDTS[39m ⚡️ Build success in 2027ms
 [32mDTS[39m [1mdist/index.d.ts [22m[32m946.09 KB[39m

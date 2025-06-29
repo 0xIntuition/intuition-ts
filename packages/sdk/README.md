@@ -4,11 +4,11 @@ This Intuition SDK simplifies development with the Intuition backend systems.
 
 ## Building
 
-Run `nx build @0xintuition/sdk` to build the library.
+Run `pnpm build` to build the library.
 
 ## Running unit tests
 
-Run `nx test @0xintuition/sdk` to execute the unit tests
+Run `pnpm test` to execute the unit tests
 
 # Usage
 
