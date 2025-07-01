@@ -1,0 +1,82 @@
+{
+  "name": "@0xintuition/cli",
+  "description": "A CLI for the Intuition protocol.",
+  "version": "0.0.0",
+  "author": "Intuition Systems",
+  "bin": {
+    "intu": "./bin/run.js"
+  },
+  "bugs": "https://github.com/0xintuition/intuition-ts/issues",
+  "dependencies": {
+    "@0xintuition/protocol": "workspace:*",
+    "@0xintuition/sdk": "workspace:*",
+    "@inquirer/input": "^4.1.12",
+    "@inquirer/select": "^4.2.3",
+    "@oclif/core": "^4",
+    "@oclif/plugin-help": "^6",
+    "@oclif/plugin-plugins": "^5",
+    "chalk": "^5.4.1",
+    "conf": "^14.0.0",
+    "csv-parser": "^3.0.0",
+    "graphql-request": "^7.1.0",
+    "inquirer": "^12.6.3",
+    "viem": "^2.31.6"
+  },
+  "devDependencies": {
+    "@eslint/compat": "^1",
+    "@oclif/prettier-config": "^0.2.1",
+    "@oclif/test": "^4",
+    "@types/chai": "^4",
+    "@types/node": "^18",
+    "chai": "^4",
+    "eslint": "^9",
+    "eslint-config-oclif": "^6",
+    "eslint-config-prettier": "^10",
+    "oclif": "^4",
+    "shx": "^0.3.3",
+    "ts-node": "^10",
+    "typescript": "^5",
+    "zod": "^3.25.67"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "files": [
+    "./bin",
+    "./dist",
+    "./oclif.manifest.json"
+  ],
+  "homepage": "https://github.com/0xintuition/intuition-ts",
+  "keywords": [
+    "oclif"
+  ],
+  "license": "MIT",
+  "main": "dist/index.js",
+  "type": "module",
+  "oclif": {
+    "bin": "intu",
+    "dirname": "intu",
+    "commands": "./dist/commands",
+    "plugins": [
+      "@oclif/plugin-help",
+      "@oclif/plugin-plugins"
+    ],
+    "topicSeparator": " ",
+    "topics": {
+      "hello": {
+        "description": "Say hello to the world and others"
+      }
+    }
+  },
+  "repository": "0xintuition/intuition-ts",
+  "scripts": {
+    "build": "shx rm -rf dist && tsc -b && pnpm run copy-samples",
+    "copy-samples": "node ./scripts/copy-samples.js",
+    "lint": "eslint",
+    "postpack": "shx rm -f oclif.manifest.json",
+    "posttest": "pnpm run lint",
+    "prepack": "oclif manifest && oclif readme",
+    "version": "oclif readme && git add README.md"
+  },
+  "types": "dist/index.d.ts"
+}
