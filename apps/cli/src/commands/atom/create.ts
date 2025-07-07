@@ -8,8 +8,8 @@ import { type Address, createWalletClient, http } from 'viem'
 import { privateKeyToAccount } from 'viem/accounts'
 import { z } from 'zod'
 
-import { getAccounts, getDefaultAccount, getDefaultNetwork } from '../../config'
-import { base, baseSepolia, getNetworkByName } from '../../networks'
+import { getAccounts, getDefaultAccount, getDefaultNetwork } from '../../config.js'
+import { base, baseSepolia, getNetworkByName } from '../../networks.js'
 
 const AddressSchema = z.string().regex(/^0x[a-fA-F0-9]{40}$/, 'Invalid Ethereum address format')
 const IpfsUriSchema = z.string().regex(/^ipfs:\/\/[a-zA-Z0-9]+/, 'Invalid IPFS URI format (must start with ipfs://)')

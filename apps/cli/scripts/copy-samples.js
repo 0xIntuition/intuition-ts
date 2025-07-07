@@ -17,8 +17,8 @@ async function copyDir(src, dest) {
 }
 
 async function main() {
-  const src = path.resolve(__dirname, '../src/commands/batch/samples')
-  const dest = path.resolve(__dirname, '../dist/commands/batch/samples')
+  const src = path.resolve(__dirname, '../src/commands/atom/batch/samples')
+  const dest = path.resolve(__dirname, '../dist/commands/atom/batch/samples')
   await copyDir(src, dest)
   console.log(`Copied samples from ${src} to ${dest}`)
 }

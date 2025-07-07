@@ -6,11 +6,11 @@ import {
 
 import { Address, getAddress, toHex } from 'viem'
 
-export async function batchCreateEthereumAccount(
+export async function batchCreateAtomsFromSmartContracts(
   config: CreateAtomConfig,
   data: {
     address: Address
-    chainId?: number
+    chainId: number
   }[],
   depositAmount?: bigint,
 ) {
@@ -22,12 +22,7 @@ export async function batchCreateEthereumAccount(
 
   const results: `0x${string}`[] = []
   for (const item of data) {
-    let uriRef: string
-    if (!item.chainId) {
-      uriRef = getAddress(item.address)
-    } else {
-      uriRef = `caip10:eip155:${item.chainId}:${getAddress(item.address)}`
-    }
+     const uriRef = `caip10:eip155:${item.chainId}:${getAddress(item.address)}`
     results.push(toHex(uriRef))
   }
 

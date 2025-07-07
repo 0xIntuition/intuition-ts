@@ -12,12 +12,13 @@
     "@0xintuition/sdk": "workspace:*",
     "@inquirer/input": "^4.1.12",
     "@inquirer/select": "^4.2.3",
-    "@oclif/core": "^4",
+    "@oclif/core": "^4.4.0",
     "@oclif/plugin-help": "^6",
     "@oclif/plugin-plugins": "^5",
     "chalk": "^5.4.1",
     "conf": "^14.0.0",
     "csv-parser": "^3.0.0",
+    "csv-writer": "^1.6.0",
     "graphql-request": "^7.1.0",
     "inquirer": "^12.6.3",
     "viem": "^2.31.6"
@@ -48,7 +49,7 @@
   ],
   "homepage": "https://github.com/0xintuition/intuition-ts",
   "keywords": [
-    "oclif"
+    "intuition"
   ],
   "license": "MIT",
   "main": "dist/index.js",
@@ -58,13 +59,15 @@
     "dirname": "intu",
     "commands": "./dist/commands",
     "plugins": [
-      "@oclif/plugin-help",
-      "@oclif/plugin-plugins"
+      "@oclif/plugin-help"
     ],
     "topicSeparator": " ",
     "topics": {
       "hello": {
         "description": "Say hello to the world and others"
+      },
+      "account": {
+        "description": "Manage Ethereum accounts."
       }
     }
   },

@@ -1,4 +1,4 @@
-intuition-cli
+Intuition CLI
 =================
 
 A CLI for the Intuition protocol.
@@ -29,369 +29,152 @@ USAGE
 <!-- usagestop -->
 # Commands
 <!-- commands -->
-* [`intu hello PERSON`](#intu-hello-person)
-* [`intu hello world`](#intu-hello-world)
-* [`intu help [COMMAND]`](#intu-help-command)
-* [`intu plugins`](#intu-plugins)
-* [`intu plugins add PLUGIN`](#intu-plugins-add-plugin)
-* [`intu plugins:inspect PLUGIN...`](#intu-pluginsinspect-plugin)
-* [`intu plugins install PLUGIN`](#intu-plugins-install-plugin)
-* [`intu plugins link PATH`](#intu-plugins-link-path)
-* [`intu plugins remove [PLUGIN]`](#intu-plugins-remove-plugin)
-* [`intu plugins reset`](#intu-plugins-reset)
-* [`intu plugins uninstall [PLUGIN]`](#intu-plugins-uninstall-plugin)
-* [`intu plugins unlink [PLUGIN]`](#intu-plugins-unlink-plugin)
-* [`intu plugins update`](#intu-plugins-update)
 
-## `intu hello PERSON`
+## Account Commands
 
-Say hello
+### `intu account generate`
+Generate a new account.
 
+**Flags:**
+- `-n, --name <value>`: Name of the account to generate (optional)
+- `-d, --default`: Set as default account (optional)
+
+**Example:**
 ```
-USAGE
-  $ intu hello PERSON -f <value>
-
-ARGUMENTS
-  PERSON  Person to say hello to
-
-FLAGS
-  -f, --from=<value>  (required) Who is saying hello
-
-DESCRIPTION
-  Say hello
-
-EXAMPLES
-  $ intu hello friend --from oclif
-  hello friend from oclif! (./src/commands/hello/index.ts)
+$ intu account generate --name mywallet --default
 ```
 
-_See code: [src/commands/hello/index.ts](https://github.com/0xintuition/intuition-ts/blob/v0.0.0/src/commands/hello/index.ts)_
+### `intu account import PRIVATE_KEY`
+Import an account using a private key.
 
-## `intu hello world`
+**Arguments:**
+- `PRIVATE_KEY`: Private key to import (required)
 
-Say hello world
+**Flags:**
+- `-n, --name <value>`: Name of the account to import (optional)
+- `-d, --default`: Set as default account (optional)
 
+**Example:**
 ```
-USAGE
-  $ intu hello world
-
-DESCRIPTION
-  Say hello world
-
-EXAMPLES
-  $ intu hello world
-  hello world! (./src/commands/hello/world.ts)
+$ intu account import 0xabc123... --name mywallet --default
 ```
 
-_See code: [src/commands/hello/world.ts](https://github.com/0xintuition/intuition-ts/blob/v0.0.0/src/commands/hello/world.ts)_
+### `intu account list`
+List active accounts.
 
-## `intu help [COMMAND]`
-
-Display help for intu.
-
+**Example:**
 ```
-USAGE
-  $ intu help [COMMAND...] [-n]
-
-ARGUMENTS
-  COMMAND...  Command to show help for.
-
-FLAGS
-  -n, --nested-commands  Include all nested commands in the output.
-
-DESCRIPTION
-  Display help for intu.
+$ intu account list
 ```
 
-_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v6.2.29/src/commands/help.ts)_
+### `intu account set-default ADDRESS`
+Set the default account by address.
 
-## `intu plugins`
+**Arguments:**
+- `ADDRESS`: Address of the account to set as default (required)
 
-List installed plugins.
-
+**Example:**
 ```
-USAGE
-  $ intu plugins [--json] [--core]
-
-FLAGS
-  --core  Show core plugins.
-
-GLOBAL FLAGS
-  --json  Format output as json.
-
-DESCRIPTION
-  List installed plugins.
-
-EXAMPLES
-  $ intu plugins
+$ intu account set-default 0x1234...abcd
 ```
 
-_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v5.4.43/src/commands/plugins/index.ts)_
+### `intu account balance [ADDRESS]`
+Show the balance of an account on Base and Base Sepolia.
 
-## `intu plugins add PLUGIN`
+**Arguments:**
+- `ADDRESS`: Address to check balance for (optional; uses default account if omitted)
 
-Installs a plugin into intu.
-
+**Example:**
 ```
-USAGE
-  $ intu plugins add PLUGIN... [--json] [-f] [-h] [-s | -v]
-
-ARGUMENTS
-  PLUGIN...  Plugin to install.
-
-FLAGS
-  -f, --force    Force npm to fetch remote resources even if a local copy exists on disk.
-  -h, --help     Show CLI help.
-  -s, --silent   Silences npm output.
-  -v, --verbose  Show verbose npm output.
-
-GLOBAL FLAGS
-  --json  Format output as json.
-
-DESCRIPTION
-  Installs a plugin into intu.
-
-  Uses npm to install plugins.
-
-  Installation of a user-installed plugin will override a core plugin.
-
-  Use the INTU_NPM_LOG_LEVEL environment variable to set the npm loglevel.
-  Use the INTU_NPM_REGISTRY environment variable to set the npm registry.
-
-ALIASES
-  $ intu plugins add
-
-EXAMPLES
-  Install a plugin from npm registry.
-
-    $ intu plugins add myplugin
-
-  Install a plugin from a github url.
-
-    $ intu plugins add https://github.com/someuser/someplugin
-
-  Install a plugin from a github slug.
-
-    $ intu plugins add someuser/someplugin
+$ intu account balance
+$ intu account balance 0x1234...abcd
 ```
 
-## `intu plugins:inspect PLUGIN...`
+### `intu account reset`
+Remove all existing accounts after confirmation.
 
-Displays installation properties of a plugin.
-
+**Example:**
 ```
-USAGE
-  $ intu plugins inspect PLUGIN...
-
-ARGUMENTS
-  PLUGIN...  [default: .] Plugin to inspect.
-
-FLAGS
-  -h, --help     Show CLI help.
-  -v, --verbose
-
-GLOBAL FLAGS
-  --json  Format output as json.
-
-DESCRIPTION
-  Displays installation properties of a plugin.
-
-EXAMPLES
-  $ intu plugins inspect myplugin
+$ intu account reset
 ```
 
-_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v5.4.43/src/commands/plugins/inspect.ts)_
+---
 
-## `intu plugins install PLUGIN`
+## Atom Commands
 
-Installs a plugin into intu.
+### `intu atom create`
+Create a new atom on the blockchain.
 
+**Flags:**
+- `--network <value>`: Target network (base, base-sepolia)
+- `--deposit <value>`: Deposit amount in ETH (optional)
+
+**Interactive:** Prompts for atom type (Ethereum Account or IPFS URI) and relevant data.
+
+**Example:**
 ```
-USAGE
-  $ intu plugins install PLUGIN... [--json] [-f] [-h] [-s | -v]
-
-ARGUMENTS
-  PLUGIN...  Plugin to install.
-
-FLAGS
-  -f, --force    Force npm to fetch remote resources even if a local copy exists on disk.
-  -h, --help     Show CLI help.
-  -s, --silent   Silences npm output.
-  -v, --verbose  Show verbose npm output.
-
-GLOBAL FLAGS
-  --json  Format output as json.
-
-DESCRIPTION
-  Installs a plugin into intu.
-
-  Uses npm to install plugins.
-
-  Installation of a user-installed plugin will override a core plugin.
-
-  Use the INTU_NPM_LOG_LEVEL environment variable to set the npm loglevel.
-  Use the INTU_NPM_REGISTRY environment variable to set the npm registry.
-
-ALIASES
-  $ intu plugins add
-
-EXAMPLES
-  Install a plugin from npm registry.
-
-    $ intu plugins install myplugin
-
-  Install a plugin from a github url.
-
-    $ intu plugins install https://github.com/someuser/someplugin
-
-  Install a plugin from a github slug.
-
-    $ intu plugins install someuser/someplugin
+$ intu atom create --network base --deposit 0.01
 ```
 
-_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v5.4.43/src/commands/plugins/install.ts)_
+### `intu atom batch setup`
+Create a new CSV file to handle batch uploads.
 
-## `intu plugins link PATH`
+**Flags:**
+- `-n, --name <value>`: Name of file to create (default: intuition-data.csv)
 
-Links a plugin into the CLI for development.
+**Interactive:** Prompts for template type (Ethereum Accounts, IPFS URI, Things).
 
+**Example:**
 ```
-USAGE
-  $ intu plugins link PATH [-h] [--install] [-v]
-
-ARGUMENTS
-  PATH  [default: .] path to plugin
-
-FLAGS
-  -h, --help          Show CLI help.
-  -v, --verbose
-      --[no-]install  Install dependencies after linking the plugin.
-
-DESCRIPTION
-  Links a plugin into the CLI for development.
-
-  Installation of a linked plugin will override a user-installed or core plugin.
-
-  e.g. If you have a user-installed or core plugin that has a 'hello' command, installing a linked plugin with a 'hello'
-  command will override the user-installed or core plugin implementation. This is useful for development work.
-
-
-EXAMPLES
-  $ intu plugins link myplugin
+$ intu atom batch setup --name my-batch.csv
 ```
 
-_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v5.4.43/src/commands/plugins/link.ts)_
+**Sample templates:**
+- `ethereum-accounts.csv`:
+  ```csv
+  address,vaultId
+  0x0000000000000000000000000000000000000000,
+  ```
+- `things.csv`:
+  ```csv
+  name,description,image,url,vaultId,ipfsUri
+  "Example Name","Example description of thing.",https://example.com/logo.png,https://example.com/,,
+  ```
+- `ipfs-uri.csv`:
+  ```csv
+  ipfsUri,txHash
+  ipfs://,
+  ```
 
-## `intu plugins remove [PLUGIN]`
+### `intu atom batch start`
+Batch create atoms using a CSV file.
 
-Removes a plugin from the CLI.
+**Flags:**
+- `-n, --name <value>`: Filename to load (default: intuition-data.csv)
+- `-c, --count <value>`: Amount to batch together (default: 50)
+- `-l, --list <value>`: Add atoms to a list (optional)
 
+**Interactive:** Prompts for atom type (Thing, Ethereum Account).
+
+**Example:**
 ```
-USAGE
-  $ intu plugins remove [PLUGIN...] [-h] [-v]
-
-ARGUMENTS
-  PLUGIN...  plugin to uninstall
-
-FLAGS
-  -h, --help     Show CLI help.
-  -v, --verbose
-
-DESCRIPTION
-  Removes a plugin from the CLI.
-
-ALIASES
-  $ intu plugins unlink
-  $ intu plugins remove
-
-EXAMPLES
-  $ intu plugins remove myplugin
-```
-
-## `intu plugins reset`
-
-Remove all user-installed and linked plugins.
-
-```
-USAGE
-  $ intu plugins reset [--hard] [--reinstall]
-
-FLAGS
-  --hard       Delete node_modules and package manager related files in addition to uninstalling plugins.
-  --reinstall  Reinstall all plugins after uninstalling.
+$ intu atom batch start --name my-batch.csv --count 100 --list my-list
 ```
 
-_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v5.4.43/src/commands/plugins/reset.ts)_
+---
 
-## `intu plugins uninstall [PLUGIN]`
+## Config Commands
 
-Removes a plugin from the CLI.
+### `intu config default-network [NETWORK]`
+Set or show the default network (base or base-sepolia). Default is base.
 
+**Arguments:**
+- `NETWORK`: Network to set as default (base or base-sepolia)
+
+**Example:**
 ```
-USAGE
-  $ intu plugins uninstall [PLUGIN...] [-h] [-v]
-
-ARGUMENTS
-  PLUGIN...  plugin to uninstall
-
-FLAGS
-  -h, --help     Show CLI help.
-  -v, --verbose
-
-DESCRIPTION
-  Removes a plugin from the CLI.
-
-ALIASES
-  $ intu plugins unlink
-  $ intu plugins remove
-
-EXAMPLES
-  $ intu plugins uninstall myplugin
+$ intu config default-network base
+$ intu config default-network base-sepolia
+$ intu config default-network
 ```
 
-_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v5.4.43/src/commands/plugins/uninstall.ts)_
-
-## `intu plugins unlink [PLUGIN]`
-
-Removes a plugin from the CLI.
-
-```
-USAGE
-  $ intu plugins unlink [PLUGIN...] [-h] [-v]
-
-ARGUMENTS
-  PLUGIN...  plugin to uninstall
-
-FLAGS
-  -h, --help     Show CLI help.
-  -v, --verbose
-
-DESCRIPTION
-  Removes a plugin from the CLI.
-
-ALIASES
-  $ intu plugins unlink
-  $ intu plugins remove
-
-EXAMPLES
-  $ intu plugins unlink myplugin
-```
-
-## `intu plugins update`
-
-Update installed plugins.
-
-```
-USAGE
-  $ intu plugins update [-h] [-v]
-
-FLAGS
-  -h, --help     Show CLI help.
-  -v, --verbose
-
-DESCRIPTION
-  Update installed plugins.
-```
-
-_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v5.4.43/src/commands/plugins/update.ts)_
-<!-- commandsstop -->

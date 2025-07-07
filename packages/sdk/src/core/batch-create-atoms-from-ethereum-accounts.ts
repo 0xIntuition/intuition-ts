@@ -1,17 +1,14 @@
 import {
-    batchCreateAtom,
-    createAtomCalculateBaseCost,
-    CreateAtomConfig,
+  batchCreateAtom,
+  createAtomCalculateBaseCost,
+  CreateAtomConfig,
 } from '@0xintuition/protocol'
 
-import { Address, getAddress, toHex } from 'viem'
+import { Address } from 'viem'
 
-export async function batchCreateEthereumAccount(
+export async function batchCreateAtomsFromEthereumAccounts(
   config: CreateAtomConfig,
-  data: {
-    address: Address
-    chainId?: number
-  }[],
+  data: Address[],
   depositAmount?: bigint,
 ) {
   const { address, publicClient } = config
@@ -20,16 +17,6 @@ export async function batchCreateEthereumAccount(
     address,
   })
 
-  const results: `0x${string}`[] = []
-  for (const item of data) {
-    let uriRef: string
-    if (!item.chainId) {
-      uriRef = getAddress(item.address)
-    } else {
-      uriRef = `caip10:eip155:${item.chainId}:${getAddress(item.address)}`
-    }
-    results.push(toHex(uriRef))
-  }
 
   const depositAmountPerAccount = depositAmount
     ? depositAmount * BigInt(data.length)
@@ -38,7 +25,7 @@ export async function batchCreateEthereumAccount(
     atomBaseCost * BigInt(data.length) + depositAmountPerAccount
 
   const txHash = await batchCreateAtom(config, {
-    args: [results],
+    args: [data],
     value: calculatedCost,
   })
 

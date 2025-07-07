@@ -1,2 +1,10 @@
-type,address,txHash
-EthereumAccount,0x0000000000000000000000000000000000000000,
+"name","description","image","url","vaultId","ipfsUri"
+"Example 1","Example description of a thing.","https://example.com/logo.png","https://example.com/","25214","ipfs://bafkreic4kss4dvq3hut7iuhijxqujsmamioiizxsvwoyzaqrv4b4pp7nnu"
+"Example 2","Example description of a thing.","https://example.com/logo.png","https://example.com/","25215","ipfs://bafkreifoutxkn7pt2au2q7mpb7j2ut7qpllylnpovf636mq5xvoxstg4kq"
+"Example 3","Example description of a thing.","https://example.com/logo.png","https://example.com/","25216","ipfs://bafkreienjm54rwrd4t7jzvx2zgljvuaxt46fr64jthvomcyelqbq5crmpy"
+"Example 4","Example description of a thing.","https://example.com/logo.png","https://example.com/","25217","ipfs://bafkreich6ajzrekv36xu6h6fhvjkxo5rqmyn5fqr3bsvp4i735efuagecq"
+"Example 5","Example description of a thing.","https://example.com/logo.png","https://example.com/","25218","ipfs://bafkreih24z43kseygqwalnd523gua36w4mgdvbbbe4pscoax3ziryy72vi"
+"Example 6","Example description of a thing.","https://example.com/logo.png","https://example.com/","25219","ipfs://bafkreid5asku27atvt563zqdo247ueaktd5isip2otkv7znpchdxawgjiq"
+"Example 7","Example description of a thing.","https://example.com/logo.png","https://example.com/","25221","ipfs://bafkreiclh3gmfkkc6esgtilmoybqldzdci45bibhgbff54jtqnx24apgue"
+"Example 8","Example description of a thing.","https://example.com/logo.png","https://example.com/","25223","ipfs://bafkreicfwfhlbkd4x7o6xy4r6mvjpilx6jtxjvuoks7anwgzpg23uhepqy"
+"Example 9","Example description of a thing.","https://example.com/logo.png","https://example.com/","25226","ipfs://bafkreico3a3iohbtbtpsa7ghre7prpvqpdmjqenk4qbazcble5kvvjrv4q"
