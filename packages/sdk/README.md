@@ -8,15 +8,15 @@ This Intuition SDK simplifies development with the Intuition backend systems.
 ## Install
 
 ```sh-session
-npm install 0xintuition/protocol
+npm install 0xintuition/sdk
 ```
 
 ```sh-session
-pnpm install 0xintuition/protocol
+pnpm install 0xintuition/sdk
 ```
 
 ```sh-session
-bun install 0xintuition/protocol
+bun install 0xintuition/sdk
 ```
 
 # Usage
