@@ -1,6 +1,6 @@
 {
   "name": "@0xintuition/sdk",
-  "version": "1.0.0-alpha.0",
+  "version": "1.0.0-alpha.1",
   "description": "Intuition SDK",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
@@ -39,8 +39,11 @@
     "registry": "https://registry.npmjs.org/"
   },
   "dependencies": {
-    "@0xintuition/graphql": "workspace:*",
-    "@0xintuition/protocol": "workspace:*"
+    "@0xintuition/graphql": "1.0.0-alpha.0",
+    "@0xintuition/protocol": "1.0.0-alpha.1"
+  },
+  "peerDependencies": {
+    "viem": "^2.0.0"
   },
   "devDependencies": {
     "@viem/anvil": "^0.0.10",

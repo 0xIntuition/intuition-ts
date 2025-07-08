@@ -1,10 +1,11 @@
 import {
-    batchCreateAtom,
-    createAtomCalculateBaseCost,
-    CreateAtomConfig,
+  batchCreateAtom,
+  createAtomCalculateBaseCost,
+  eventParseAtomCreated,
+  type CreateAtomConfig,
 } from '@0xintuition/protocol'
 
-import { Address, getAddress, toHex } from 'viem'
+import { getAddress, toHex, type Address } from 'viem'
 
 export async function batchCreateAtomsFromSmartContracts(
   config: CreateAtomConfig,
@@ -22,7 +23,7 @@ export async function batchCreateAtomsFromSmartContracts(
 
   const results: `0x${string}`[] = []
   for (const item of data) {
-     const uriRef = `caip10:eip155:${item.chainId}:${getAddress(item.address)}`
+    const uriRef = `caip10:eip155:${item.chainId}:${getAddress(item.address)}`
     results.push(toHex(uriRef))
   }
 
@@ -38,10 +39,14 @@ export async function batchCreateAtomsFromSmartContracts(
   })
 
   if (!txHash) {
-    throw new Error('Failed to create atom onchain')
+    throw new Error('Failed to create atoms onchain')
   }
 
+  const state = await eventParseAtomCreated(publicClient, txHash)
+
   return {
+    uris: results,
+    state: state.map((i) => i.args),
     transactionHash: txHash,
   }
 }

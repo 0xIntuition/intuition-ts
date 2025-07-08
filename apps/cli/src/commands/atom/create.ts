@@ -1,31 +1,35 @@
-import { intuitionDeployments } from '@0xintuition/protocol'
-import { createAtomFromIpfsUri, createEthereumAccount } from '@0xintuition/sdk'
+import {intuitionDeployments} from '@0xintuition/protocol'
+import {createAtomFromEthereumAccount, createAtomFromIpfsUri} from '@0xintuition/sdk'
 import input from '@inquirer/input'
 import select from '@inquirer/select'
-import { Command, Flags } from '@oclif/core'
+import {Command, Flags} from '@oclif/core'
 import chalk from 'chalk'
-import { type Address, createWalletClient, http } from 'viem'
-import { privateKeyToAccount } from 'viem/accounts'
-import { z } from 'zod'
+import {type Address, createWalletClient, http} from 'viem'
+import {privateKeyToAccount} from 'viem/accounts'
+import {z} from 'zod'
 
-import { getAccounts, getDefaultAccount, getDefaultNetwork } from '../../config.js'
-import { base, baseSepolia, getNetworkByName } from '../../networks.js'
+import {getAccounts, getDefaultAccount, getDefaultNetwork} from '../../config.js'
+import {base, baseSepolia, getNetworkByName} from '../../networks.js'
 
 const AddressSchema = z.string().regex(/^0x[a-fA-F0-9]{40}$/, 'Invalid Ethereum address format')
 const IpfsUriSchema = z.string().regex(/^ipfs:\/\/[a-zA-Z0-9]+/, 'Invalid IPFS URI format (must start with ipfs://)')
 
 export default class AtomCreate extends Command {
   static override description = 'Create a new atom on the blockchain.'
-  static override examples = [
-    '<%= config.bin %> <%= command.id %> --network base --deposit 0.01',
-  ]
+  static override examples = ['<%= config.bin %> <%= command.id %> --network base --deposit 0.01']
   static override flags = {
-    deposit: Flags.string({ description: 'Deposit amount in ETH (optional)', required: false }),
-    network: Flags.string({ description: 'Target network (base, base-sepolia)', required: false }),
+    deposit: Flags.string({
+      description: 'Deposit amount in ETH (optional)',
+      required: false,
+    }),
+    network: Flags.string({
+      description: 'Target network (base, base-sepolia)',
+      required: false,
+    }),
   }
 
   public async run(): Promise<void> {
-    const { flags } = await this.parse(AtomCreate)
+    const {flags} = await this.parse(AtomCreate)
     try {
       // Determine network
       const networkName = flags.network || getDefaultNetwork() || 'base'
@@ -41,7 +45,9 @@ export default class AtomCreate extends Command {
       // Get default account
       const defaultAccountAddress = getDefaultAccount()
       const accounts = getAccounts()
-      const defaultAccount = accounts.find(acc => acc.address.toLowerCase() === (defaultAccountAddress || '').toLowerCase())
+      const defaultAccount = accounts.find(
+        (acc) => acc.address.toLowerCase() === (defaultAccountAddress || '').toLowerCase(),
+      )
       if (!defaultAccount) {
         this.log(chalk.red('❌ No default account found.'))
         this.log(chalk.gray('Set a default account: intuition account set-default <address>'))
@@ -58,7 +64,7 @@ export default class AtomCreate extends Command {
         transport: http(),
       })
       // Use viem's createPublicClient for publicClient
-      const { createPublicClient } = await import('viem')
+      const {createPublicClient} = await import('viem')
       const publicClient = createPublicClient({
         chain,
         transport: http(),
@@ -93,8 +99,16 @@ export default class AtomCreate extends Command {
       // Prompt for atom type
       const atomType = await select({
         choices: [
-          { description: 'Create an atom from an Ethereum address', name: 'Ethereum Account', value: 'ethereum-account' },
-          { description: 'Create an atom from an IPFS URI', name: 'IPFS URI', value: 'ipfs-uri' },
+          {
+            description: 'Create an atom from an Ethereum address',
+            name: 'Ethereum Account',
+            value: 'ethereum-account',
+          },
+          {
+            description: 'Create an atom from an IPFS URI',
+            name: 'IPFS URI',
+            value: 'ipfs-uri',
+          },
         ],
         message: 'Select atom type to create:',
       })
@@ -103,6 +117,7 @@ export default class AtomCreate extends Command {
         this.log(chalk.green('✅ Selected: Ethereum Account'))
         const address = await input({
           message: 'Enter Ethereum address:',
+
           validate(value) {
             const result = AddressSchema.safeParse(value)
             return result.success ? true : result.error.issues[0].message
@@ -111,8 +126,8 @@ export default class AtomCreate extends Command {
 
         this.log(chalk.blue(`📝 Creating atom for address: ${address}`))
         this.log(chalk.yellow('⚠️  This will create an atom on the blockchain'))
-        // @ts-expect-error Ignore the type error 
-        const result = await createEthereumAccount(atomConfig, { address: address as Address }, depositAmount)
+
+        const result = await createAtomFromEthereumAccount(atomConfig, address as Address, depositAmount)
         this.log(chalk.green('✅ Atom created successfully!'))
         this.log(chalk.cyan(`Transaction Hash: ${result.transactionHash}`))
         this.log(chalk.cyan(`URI: ${result.uri}`))
@@ -133,7 +148,7 @@ export default class AtomCreate extends Command {
 
         this.log(chalk.blue(`📝 Creating atom for IPFS URI: ${ipfsUri}`))
         this.log(chalk.yellow('⚠️  This will create an atom on the blockchain'))
-        // @ts-expect-error Ignore the type error 
+
         const result = await createAtomFromIpfsUri(atomConfig, ipfsUri as `ipfs://${string}`, depositAmount)
         this.log(chalk.green('✅ Atom created successfully!'))
         this.log(chalk.cyan(`Transaction Hash: ${result.transactionHash}`))

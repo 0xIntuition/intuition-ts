@@ -1,10 +1,11 @@
 import {
   batchCreateAtom,
   createAtomCalculateBaseCost,
-  CreateAtomConfig,
+  eventParseAtomCreated,
+  type CreateAtomConfig,
 } from '@0xintuition/protocol'
 
-import { Address } from 'viem'
+import type { Address } from 'viem'
 
 export async function batchCreateAtomsFromEthereumAccounts(
   config: CreateAtomConfig,
@@ -16,7 +17,6 @@ export async function batchCreateAtomsFromEthereumAccounts(
     publicClient,
     address,
   })
-
 
   const depositAmountPerAccount = depositAmount
     ? depositAmount * BigInt(data.length)
@@ -33,7 +33,11 @@ export async function batchCreateAtomsFromEthereumAccounts(
     throw new Error('Failed to create atom onchain')
   }
 
+  const state = await eventParseAtomCreated(publicClient, txHash)
+
   return {
+    uris: data,
+    state: state.map((i) => i.args),
     transactionHash: txHash,
   }
 }

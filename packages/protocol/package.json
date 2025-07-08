@@ -1,6 +1,6 @@
 {
   "name": "@0xintuition/protocol",
-  "version": "1.0.0-alpha.0",
+  "version": "1.0.0-alpha.1",
   "description": "Intuition Protocol",
   "sideEffects": false,
   "main": "./dist/index.js",
@@ -39,7 +39,9 @@
     "access": "public",
     "registry": "https://registry.npmjs.org/"
   },
-  "dependencies": {},
+  "peerDependencies": {
+    "viem": "^2.0.0"
+  },
   "devDependencies": {
     "@viem/anvil": "^0.0.10",
     "concurrently": "^8.2.2",

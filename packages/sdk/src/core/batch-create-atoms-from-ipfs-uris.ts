@@ -1,17 +1,15 @@
 import {
-    batchCreateAtom,
-    createAtomCalculateBaseCost,
-    CreateAtomConfig,
+  batchCreateAtom,
+  createAtomCalculateBaseCost,
+  eventParseAtomCreated,
+  type CreateAtomConfig,
 } from '@0xintuition/protocol'
 
-import { Address, getAddress, toHex } from 'viem'
+import { toHex } from 'viem'
 
-export async function batchCreateEthereumAccount(
+export async function batchCreateAtomsFromIpfsUris(
   config: CreateAtomConfig,
-  data: {
-    address: Address
-    chainId?: number
-  }[],
+  data: string[],
   depositAmount?: bigint,
 ) {
   const { address, publicClient } = config
@@ -20,25 +18,16 @@ export async function batchCreateEthereumAccount(
     address,
   })
 
-  const results: `0x${string}`[] = []
-  for (const item of data) {
-    let uriRef: string
-    if (!item.chainId) {
-      uriRef = getAddress(item.address)
-    } else {
-      uriRef = `caip10:eip155:${item.chainId}:${getAddress(item.address)}`
-    }
-    results.push(toHex(uriRef))
-  }
-
   const depositAmountPerAccount = depositAmount
     ? depositAmount * BigInt(data.length)
     : 0n
   const calculatedCost =
     atomBaseCost * BigInt(data.length) + depositAmountPerAccount
 
+  const dataFormatted = data.map((i) => toHex(i))
+
   const txHash = await batchCreateAtom(config, {
-    args: [results],
+    args: [dataFormatted],
     value: calculatedCost,
   })
 
@@ -46,7 +35,11 @@ export async function batchCreateEthereumAccount(
     throw new Error('Failed to create atom onchain')
   }
 
+  const state = await eventParseAtomCreated(publicClient, txHash)
+
   return {
+    uris: data,
+    state: state.map((i) => i.args),
     transactionHash: txHash,
   }
 }

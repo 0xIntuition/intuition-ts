@@ -1,180 +1,172 @@
-Intuition CLI
-=================
+# Intuition CLI
 
-A CLI for the Intuition protocol.
-
+The Intuition CLI is a powerful command-line interface that allows you to interact with the Intuition protocol directly from your terminal. With this tool, you can manage accounts, create and manage Intuition Atoms, and configure your settings with ease.
 
 [![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
-[![Version](https://img.shields.io/npm/v/intuition-cli.svg)](https://npmjs.org/package/intuition-cli)
-[![Downloads/week](https://img.shields.io/npm/dw/intuition-cli.svg)](https://npmjs.org/package/intuition-cli)
+[![Version](https://img.shields.io/npm/v/@0xintuition/cli.svg)](https://www.npmjs.com/package/@0xintuition/cli)
+[![Downloads/week](https://img.shields.io/npm/dw/@0xintuition/cli.svg)](https://npmjs.org/package/@0xintuition/cli)
 
+## Installation
 
-<!-- toc -->
-* [Usage](#usage)
-* [Commands](#commands)
-<!-- tocstop -->
-# Usage
-<!-- usage -->
+To get started, install the Intuition CLI globally using npm:
+
 ```sh-session
-$ npm install -g intuition-cli
-$ intu COMMAND
-running command...
-$ intu (--version)
-intuition-cli/0.0.0 darwin-arm64 node-v22.12.0
-$ intu --help [COMMAND]
-USAGE
-  $ intu COMMAND
-...
-```
-<!-- usagestop -->
-# Commands
-<!-- commands -->
-
-## Account Commands
-
-### `intu account generate`
-Generate a new account.
-
-**Flags:**
-- `-n, --name <value>`: Name of the account to generate (optional)
-- `-d, --default`: Set as default account (optional)
-
-**Example:**
-```
-$ intu account generate --name mywallet --default
+npm install -g @0xintuition/cli
 ```
 
-### `intu account import PRIVATE_KEY`
-Import an account using a private key.
+## Usage
 
-**Arguments:**
-- `PRIVATE_KEY`: Private key to import (required)
+Once installed, you can use the `intu` command to access the CLI's features. To see a list of available commands, run:
 
-**Flags:**
-- `-n, --name <value>`: Name of the account to import (optional)
-- `-d, --default`: Set as default account (optional)
-
-**Example:**
-```
-$ intu account import 0xabc123... --name mywallet --default
+```sh-session
+intu --help
 ```
 
-### `intu account list`
-List active accounts.
+## Commands
 
-**Example:**
-```
-$ intu account list
-```
+The Intuition CLI provides a range of commands to help you manage your interactions with the protocol. Below is an overview of the main commands and their functions.
 
-### `intu account set-default ADDRESS`
-Set the default account by address.
+## Account Management
 
-**Arguments:**
-- `ADDRESS`: Address of the account to set as default (required)
+You can manage your Ethereum accounts using the `account` commands.
 
-**Example:**
-```
-$ intu account set-default 0x1234...abcd
-```
+- **Generate a new account:**
 
-### `intu account balance [ADDRESS]`
-Show the balance of an account on Base and Base Sepolia.
-
-**Arguments:**
-- `ADDRESS`: Address to check balance for (optional; uses default account if omitted)
-
-**Example:**
-```
-$ intu account balance
-$ intu account balance 0x1234...abcd
-```
-
-### `intu account reset`
-Remove all existing accounts after confirmation.
-
-**Example:**
-```
-$ intu account reset
-```
-
----
-
-## Atom Commands
-
-### `intu atom create`
-Create a new atom on the blockchain.
-
-**Flags:**
-- `--network <value>`: Target network (base, base-sepolia)
-- `--deposit <value>`: Deposit amount in ETH (optional)
-
-**Interactive:** Prompts for atom type (Ethereum Account or IPFS URI) and relevant data.
-
-**Example:**
-```
-$ intu atom create --network base --deposit 0.01
-```
-
-### `intu atom batch setup`
-Create a new CSV file to handle batch uploads.
-
-**Flags:**
-- `-n, --name <value>`: Name of file to create (default: intuition-data.csv)
-
-**Interactive:** Prompts for template type (Ethereum Accounts, IPFS URI, Things).
-
-**Example:**
-```
-$ intu atom batch setup --name my-batch.csv
-```
-
-**Sample templates:**
-- `ethereum-accounts.csv`:
-  ```csv
-  address,vaultId
-  0x0000000000000000000000000000000000000000,
-  ```
-- `things.csv`:
-  ```csv
-  name,description,image,url,vaultId,ipfsUri
-  "Example Name","Example description of thing.",https://example.com/logo.png,https://example.com/,,
-  ```
-- `ipfs-uri.csv`:
-  ```csv
-  ipfsUri,txHash
-  ipfs://,
+  ```sh-session
+  intu account generate [--name <NAME>] [--default]
   ```
 
-### `intu atom batch start`
-Batch create atoms using a CSV file.
+  **Flags:**
 
-**Flags:**
-- `-n, --name <value>`: Filename to load (default: intuition-data.csv)
-- `-c, --count <value>`: Amount to batch together (default: 50)
-- `-l, --list <value>`: Add atoms to a list (optional)
+  - `-n, --name <value>`: Name of the account to generate (optional)
+  - `-d, --default`: Set as default account (optional)
 
-**Interactive:** Prompts for atom type (Thing, Ethereum Account).
+- **Import an account from a private key:**
 
-**Example:**
-```
-$ intu atom batch start --name my-batch.csv --count 100 --list my-list
-```
+  ```sh-session
+  intu account import <PRIVATE_KEY> [--name <NAME>] [--default]
+  ```
 
----
+  **Flags:**
 
-## Config Commands
+  - `-n, --name <value>`: Name of the account to import (optional)
+  - `-d, --default`: Set as default account (optional)
 
-### `intu config default-network [NETWORK]`
-Set or show the default network (base or base-sepolia). Default is base.
+- **List your accounts:**
 
-**Arguments:**
-- `NETWORK`: Network to set as default (base or base-sepolia)
+  ```sh-session
+  intu account list [--export]
+  ```
 
-**Example:**
-```
-$ intu config default-network base
-$ intu config default-network base-sepolia
-$ intu config default-network
-```
+  **Flags:**
 
+  - `-e, --export`: Show the private key for each account (optional)
+
+- **Set your default account:**
+
+  ```sh-session
+  intu account default <ADDRESS>
+  ```
+
+  **Flags:**
+  (No flags)
+
+- **Check account balance:**
+
+  ```sh-session
+  intu account balance <ADDRESS?>
+  ```
+
+  **Flags:**
+  (No flags)
+
+- **Reset accounts:**
+  ```sh-session
+  intu account reset
+  ```
+  **Flags:**
+  (No flags)
+
+## Creating Atoms
+
+Atoms are the core of the Intuition protocol. You can create them one by one or in batches.
+
+- **Create a single Atom:**
+  ```sh-session
+  intu atom create [--network <NETWORK>] [--deposit <AMOUNT>]
+  ```
+  **Flags:**
+  - `--network <value>`: Target network (base, base-sepolia) (optional)
+  - `--deposit <value>`: Deposit amount in ETH (optional)
+
+## Batch Atom Creation
+
+For creating multiple Atoms at once, the batch functionality is recommended.
+
+### 1. **Setup a batch file:**
+
+    ```sh-session
+    intu atom batch setup [--name <FILENAME>.csv]
+    ```
+    **Flags:**
+    - `-n, --name <value>`: Name of file to create (default: intuition-data.csv)
+
+    First, create a CSV file for your batch. The CLI provides a simple setup command to generate a template file.
+
+    By default the new CSV filename is intuition-data.csv
+
+    This will create a CSV file with the required headers. You can then open this file and add the data for the Atoms you want to create.
+
+    **Example `atoms.csv`:**
+
+    ```csv
+    name,description,image,uris
+    "My First Atom","This is a description of my first Atom.","","[{""uri"":"https://example.com""}]"
+    "My Second Atom","This is a description of my second Atom.","","[{""uri"":"https://anotherexample.com""}]"
+    ```
+
+### 2. **Start the batch creation:**
+
+    ```sh-session
+    intu atom batch start [--name <FILENAME>.csv] [--count <NUMBER>] [--list <LIST_IDS>] [--network <NETWORK>]
+    ```
+    **Flags:**
+    - `-n, --name <value>`: Filename to load (default: intuition-data.csv)
+    - `-c, --count <value>`: Amount to batch together (default: 50)
+    - `-l, --list <value>`: Add atoms to a list (comma-separated for multiple)
+    - `--network <value>`: Network to use (optional)
+
+    Once your CSV file is ready, you can start the batch creation process.
+
+    New atoms can automatically be added to a list using the `list` flag.
+    Atoms can be added to multiple lists using comma separated values.
+
+    The CLI will then read the CSV file and create the Atoms on the blockchain.
+
+### Configuration
+
+You can manage the CLI's configuration using the `config` commands.
+
+- **Set the default network:**
+
+  ```sh-session
+  intu config default-network <NETWORK>
+  ```
+
+  **Flags:**
+  (No flags)
+
+- **Show the current default network:**
+  ```sh-session
+  intu config default-network
+  ```
+  **Flags:**
+  (No flags)
+
+## Contributing
+
+Contributions are welcome! Please see the [main repository](https://github.com/0xintuition/intuition-ts) for more information on how to contribute.
+
+## License
+
+This project is licensed under the MIT License.

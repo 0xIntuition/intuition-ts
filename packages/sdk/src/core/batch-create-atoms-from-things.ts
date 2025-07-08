@@ -1,9 +1,9 @@
-import { PinThingMutationVariables } from '@0xintuition/graphql'
+import type { PinThingMutationVariables } from '@0xintuition/graphql'
 import {
   batchCreateAtom,
   createAtomCalculateBaseCost,
-  CreateAtomConfig,
   eventParseAtomCreated,
+  type CreateAtomConfig,
 } from '@0xintuition/protocol'
 
 import { toHex } from 'viem'

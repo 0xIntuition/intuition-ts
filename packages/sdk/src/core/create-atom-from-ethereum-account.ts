@@ -1,20 +1,18 @@
 import {
-    createAtom,
-    createAtomCalculateBaseCost,
-    CreateAtomConfig,
-    eventParseDepositAtomTransaction,
+  createAtom,
+  createAtomCalculateBaseCost,
+  eventParseDepositAtomTransaction,
+  type CreateAtomConfig,
 } from '@0xintuition/protocol'
 
-import { Address, getAddress, isAddress } from 'viem'
+import { getAddress, isAddress, type Address } from 'viem'
 
 export async function createAtomFromEthereumAccount(
   config: CreateAtomConfig,
-  data: {
-    address: Address
-  },
+  data: Address,
   depositAmount?: bigint,
 ) {
-  if (!isAddress(getAddress(data.address))) {
+  if (!isAddress(getAddress(data))) {
     throw new Error('Invalid Ethereum address provided')
   }
 
@@ -24,7 +22,7 @@ export async function createAtomFromEthereumAccount(
     address,
   })
 
-  const uriRef: Address = getAddress(data.address)
+  const uriRef: Address = getAddress(data)
   const txHash = await createAtom(config, {
     args: [uriRef],
     value: atomBaseCost + BigInt(depositAmount || 0),

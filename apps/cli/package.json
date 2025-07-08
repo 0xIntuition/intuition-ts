@@ -21,7 +21,7 @@
     "csv-writer": "^1.6.0",
     "graphql-request": "^7.1.0",
     "inquirer": "^12.6.3",
-    "viem": "^2.31.6"
+    "viem": "^2.31.4"
   },
   "devDependencies": {
     "@eslint/compat": "^1",
@@ -63,11 +63,14 @@
     ],
     "topicSeparator": " ",
     "topics": {
-      "hello": {
-        "description": "Say hello to the world and others"
-      },
       "account": {
-        "description": "Manage Ethereum accounts."
+        "description": "Create and manage Ethereum accounts."
+      },
+      "atom": {
+        "description": "Create and manage Atoms."
+      },
+      "config": {
+        "description": "Manage configurations."
       }
     }
   },
@@ -76,6 +79,7 @@
     "build": "shx rm -rf dist && tsc -b && pnpm run copy-samples",
     "copy-samples": "node ./scripts/copy-samples.js",
     "lint": "eslint",
+    "lint:fix": "eslint --fix",
     "postpack": "shx rm -f oclif.manifest.json",
     "posttest": "pnpm run lint",
     "prepack": "oclif manifest && oclif readme",
