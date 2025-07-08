@@ -103,45 +103,49 @@ Atoms are the core of the Intuition protocol. You can create them one by one or 
 
 For creating multiple Atoms at once, the batch functionality is recommended.
 
-### 1. **Setup a batch file:**
+1. ### **Setup a batch file:**
 
-    ```sh-session
-    intu atom batch setup [--name <FILENAME>.csv]
-    ```
-    **Flags:**
-    - `-n, --name <value>`: Name of file to create (default: intuition-data.csv)
+   ```sh-session
+   intu atom batch setup [--name <FILENAME>.csv]
+   ```
 
-    First, create a CSV file for your batch. The CLI provides a simple setup command to generate a template file.
+   **Flags:**
 
-    By default the new CSV filename is intuition-data.csv
+   - `-n, --name <value>`: Name of file to create (default: intuition-data.csv)
 
-    This will create a CSV file with the required headers. You can then open this file and add the data for the Atoms you want to create.
+   First, create a CSV file for your batch. The CLI provides a simple setup command to generate a template file.
 
-    **Example `atoms.csv`:**
+   By default the new CSV filename is intuition-data.csv
 
-    ```csv
-    name,description,image,uris
-    "My First Atom","This is a description of my first Atom.","","[{""uri"":"https://example.com""}]"
-    "My Second Atom","This is a description of my second Atom.","","[{""uri"":"https://anotherexample.com""}]"
-    ```
+   This will create a CSV file with the required headers. You can then open this file and add the data for the Atoms you want to create.
 
-### 2. **Start the batch creation:**
+   **Example `atoms.csv`:**
 
-    ```sh-session
-    intu atom batch start [--name <FILENAME>.csv] [--count <NUMBER>] [--list <LIST_IDS>] [--network <NETWORK>]
-    ```
-    **Flags:**
-    - `-n, --name <value>`: Filename to load (default: intuition-data.csv)
-    - `-c, --count <value>`: Amount to batch together (default: 50)
-    - `-l, --list <value>`: Add atoms to a list (comma-separated for multiple)
-    - `--network <value>`: Network to use (optional)
+   ```csv
+   name,description,image,uris
+   "My First Atom","This is a description of my first Atom.","","[{""uri"":"https://example.com""}]"
+   "My Second Atom","This is a description of my second Atom.","","[{""uri"":"https://anotherexample.com""}]"
+   ```
 
-    Once your CSV file is ready, you can start the batch creation process.
+2. ### **Start the batch creation:**
 
-    New atoms can automatically be added to a list using the `list` flag.
-    Atoms can be added to multiple lists using comma separated values.
+   ```sh-session
+   intu atom batch start [--name <FILENAME>.csv] [--count <NUMBER>] [--list <LIST_IDS>] [--network <NETWORK>]
+   ```
 
-    The CLI will then read the CSV file and create the Atoms on the blockchain.
+   **Flags:**
+
+   - `-n, --name <value>`: Filename to load (default: intuition-data.csv)
+   - `-c, --count <value>`: Amount to batch together (default: 50)
+   - `-l, --list <value>`: Add atoms to a list (comma-separated for multiple)
+   - `--network <value>`: Network to use (optional)
+
+   Once your CSV file is ready, you can start the batch creation process.
+
+   New atoms can automatically be added to a list using the `list` flag.
+   Atoms can be added to multiple lists using comma separated values.
+
+   The CLI will then read the CSV file and create the Atoms on the blockchain.
 
 ### Configuration
 
