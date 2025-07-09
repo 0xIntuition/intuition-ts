@@ -1,5 +1,6 @@
 /* eslint-disable max-params */
 /* eslint-disable no-await-in-loop */
+
 import {
   batchCreateAtomsFromEthereumAccounts,
   batchCreateAtomsFromIpfsUris,
@@ -13,7 +14,7 @@ import chalk from 'chalk'
 import csv from 'csv-parser'
 import {createObjectCsvWriter} from 'csv-writer'
 import fs from 'node:fs'
-import {createPublicClient, createWalletClient, getAddress, http, PublicClient, WalletClient} from 'viem'
+import {createPublicClient, createWalletClient, getAddress, http, type PublicClient, type WalletClient} from 'viem'
 import {privateKeyToAccount} from 'viem/accounts'
 
 import {getAccounts, getDefaultAccount, getDefaultNetwork} from '../../../config.js'
@@ -44,9 +45,16 @@ export default class BatchStart extends Command {
   static override description = 'Batch create atoms using a CSV file'
   static override examples = ['<%= config.bin %> <%= command.id %> --name my-batch.csv']
   static override flags = {
-    count: Flags.string({char: 'c', default: '50', description: 'Amount to batch together. Default is 50'}),
+    count: Flags.string({
+      char: 'c',
+      default: '50',
+      description: 'Amount to batch together. Default is 50',
+    }),
     list: Flags.string({char: 'l', description: 'Add atoms to a list.'}),
-    name: Flags.string({char: 'n', description: 'Filename to load. Default is intuition-data.csv'}),
+    name: Flags.string({
+      char: 'n',
+      description: 'Filename to load. Default is intuition-data.csv',
+    }),
     network: Flags.string({description: 'Network to use.'}),
   }
 
@@ -76,7 +84,11 @@ export default class BatchStart extends Command {
     this.log(chalk.blue(`📄 ${allRows.length} rows loaded, ${unprocessedRows.length} to process.`))
 
     // 4. Process batches
-    const atomConfig = {address: contractAddress as `0x${string}`, publicClient, walletClient}
+    const atomConfig = {
+      address: contractAddress as `0x${string}`,
+      publicClient,
+      walletClient,
+    }
     const processedCount = await this.processBatches({allRows, headers, unprocessedRows}, {atomConfig, atomType, flags})
 
     this.log(chalk.green(`🎉 Done! ${processedCount} atoms processed and CSV updated.`))
@@ -105,13 +117,21 @@ export default class BatchStart extends Command {
   private async getAtomType(): Promise<string> {
     const atomType = await select({
       choices: [
-        {description: 'Batch create atoms from Things', name: 'Thing', value: 'thing'},
+        {
+          description: 'Batch create atoms from Things',
+          name: 'Thing',
+          value: 'thing',
+        },
         {
           description: 'Batch create atoms from Ethereum addresses',
           name: 'Ethereum Account',
           value: 'ethereum-account',
         },
-        {description: 'Batch create atoms from IPFS URIs', name: 'IPFS URI', value: 'ipfs-uri'},
+        {
+          description: 'Batch create atoms from IPFS URIs',
+          name: 'IPFS URI',
+          value: 'ipfs-uri',
+        },
       ],
       message: 'Select atom type to batch create:',
     })
@@ -136,7 +156,15 @@ export default class BatchStart extends Command {
 
   private async processBatches(
     {allRows, headers, unprocessedRows}: {allRows: CsvRow[]; headers: string[]; unprocessedRows: CsvRow[]},
-    {atomConfig, atomType, flags}: {atomConfig: CreateAtomConfig; atomType: string; flags: Record<string, unknown>},
+    {
+      atomConfig,
+      atomType,
+      flags,
+    }: {
+      atomConfig: CreateAtomConfig
+      atomType: string
+      flags: Record<string, unknown>
+    },
   ) {
     const {count, list, name: fileName} = flags as {count: string; list?: string; name?: string}
     const batchSize = Number.parseInt(count, 10)
@@ -360,7 +388,11 @@ export default class BatchStart extends Command {
     // 3. Create Viem clients
     const account = privateKeyToAccount(defaultAccount.privateKey as `0x${string}`)
     const chain = network.id === base.id ? base : baseSepolia
-    const walletClient = createWalletClient({account, chain, transport: http()})
+    const walletClient = createWalletClient({
+      account,
+      chain,
+      transport: http(),
+    })
     const publicClient = createPublicClient({chain, transport: http()})
 
     // 4. Get contract address

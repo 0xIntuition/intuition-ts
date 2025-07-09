@@ -1,8 +1,8 @@
 import {
   Transaction,
   TransactionStatus,
-  TransactionStatusType,
-  TransactionType,
+  type TransactionStatusType,
+  type TransactionType,
 } from 'types'
 
 import { IconName } from '..'

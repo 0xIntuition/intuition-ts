@@ -1,6 +1,6 @@
 import { cn } from 'styles'
 
-export interface SkeletonProps {}
+export type SkeletonProps = {}
 
 function Skeleton({
   className,

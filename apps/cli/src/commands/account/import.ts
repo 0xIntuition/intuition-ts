@@ -5,13 +5,24 @@ import {addAccount, getAccounts, setDefaultAccount} from '../../config.js'
 
 export default class AccountImport extends Command {
   static override args = {
-    privateKey: Args.string({description: 'Private key to import', required: true}),
+    privateKey: Args.string({
+      description: 'Private key to import',
+      required: true,
+    }),
   }
   static override description = 'Import an account using a private key.'
   static override examples = ['<%= config.bin %> <%= command.id %> 0xabc123... --name MyWallet --default']
   static override flags = {
-    default: Flags.boolean({char: 'd', description: 'Set as default account', required: false}),
-    name: Flags.string({char: 'n', description: 'Name of the account to import', required: false}),
+    default: Flags.boolean({
+      char: 'd',
+      description: 'Set as default account',
+      required: false,
+    }),
+    name: Flags.string({
+      char: 'n',
+      description: 'Name of the account to import',
+      required: false,
+    }),
   }
 
   public async run(): Promise<void> {

@@ -1,7 +1,12 @@
 import { multivaultAbi } from '@lib/abis/multivault'
 import { transportsMap } from '@lib/utils/chains'
 import { CURRENT_ENV, MULTIVAULT_CONTRACT_ADDRESS } from 'app/consts'
-import { createPublicClient, getContract, PublicClient, type Abi } from 'viem'
+import {
+  createPublicClient,
+  getContract,
+  type Abi,
+  type PublicClient,
+} from 'viem'
 import { base, baseSepolia } from 'viem/chains'
 
 export const publicClient: PublicClient = createPublicClient({

@@ -1,19 +1,19 @@
 import * as React from 'react'
 
 import {
-  ButtonProps,
   buttonVariants,
   Icon,
   IconName,
   Select,
   SelectContent,
   SelectItem,
-  SelectProps,
   SelectTrigger,
   SelectValue,
   Text,
-  TextProps,
   TextVariant,
+  type ButtonProps,
+  type SelectProps,
+  type TextProps,
 } from '..'
 import { cn } from '../../styles'
 

@@ -1,4 +1,4 @@
-import { Chain, http, Transport } from 'viem'
+import { http, type Chain, type Transport } from 'viem'
 import { base, baseSepolia } from 'viem/chains'
 
 // these will always be available in the browser as they're bundled

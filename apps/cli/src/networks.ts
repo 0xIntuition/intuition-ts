@@ -1,8 +1,8 @@
-import { defineChain } from 'viem'
+import {defineChain} from 'viem'
 
 export const base = defineChain({
   blockExplorers: {
-    default: { name: 'Basescan', url: 'https://basescan.org' },
+    default: {name: 'Basescan', url: 'https://basescan.org'},
   },
   id: 8453,
   name: 'Base',
@@ -13,14 +13,14 @@ export const base = defineChain({
   },
   network: 'base',
   rpcUrls: {
-    default: { http: ['https://mainnet.base.org'] },
-    public: { http: ['https://mainnet.base.org'] },
+    default: {http: ['https://mainnet.base.org']},
+    public: {http: ['https://mainnet.base.org']},
   },
 })
 
 export const baseSepolia = defineChain({
   blockExplorers: {
-    default: { name: 'Basescan', url: 'https://sepolia.basescan.org' },
+    default: {name: 'Basescan', url: 'https://sepolia.basescan.org'},
   },
   id: 84_532,
   name: 'Base Sepolia',
@@ -31,15 +31,13 @@ export const baseSepolia = defineChain({
   },
   network: 'base-sepolia',
   rpcUrls: {
-    default: { http: ['https://sepolia.base.org'] },
-    public: { http: ['https://sepolia.base.org'] },
+    default: {http: ['https://sepolia.base.org']},
+    public: {http: ['https://sepolia.base.org']},
   },
 })
 
 export const supportedNetworks = [base, baseSepolia]
 
 export function getNetworkByName(name: string) {
-  return supportedNetworks.find(
-    n => n.name.toLowerCase() === name.toLowerCase() || n.network === name.toLowerCase()
-  )
-} 
+  return supportedNetworks.find((n) => n.name.toLowerCase() === name.toLowerCase() || n.network === name.toLowerCase())
+}

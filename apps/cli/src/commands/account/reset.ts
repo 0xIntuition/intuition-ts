@@ -1,14 +1,12 @@
-import { Command } from '@oclif/core'
+import {Command} from '@oclif/core'
 import inquirer from 'inquirer'
 
-import { clearAccounts } from '../../config.js'
+import {clearAccounts} from '../../config.js'
 
 export default class AccountReset extends Command {
   static override args = {}
   static override description = 'Remove all existing accounts after confirmation.'
-  static override examples = [
-    '<%= config.bin %> <%= command.id %>',
-  ]
+  static override examples = ['<%= config.bin %> <%= command.id %>']
   static override flags = {}
 
   public async run(): Promise<void> {

@@ -6,7 +6,7 @@ import {
   type ActionFunctionArgs,
   type LoaderFunctionArgs,
 } from '@remix-run/node'
-import { Thing, WithContext } from 'schema-dts'
+import type { Thing, WithContext } from 'schema-dts'
 
 import {
   checkAtomsExist,
@@ -136,7 +136,10 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         'Publish and tag atoms request hash:',
         publishAndTagAtomsRequestHash,
       )
-      return json({ success: true, requestHash: publishAndTagAtomsRequestHash })
+      return json({
+        success: true,
+        requestHash: publishAndTagAtomsRequestHash,
+      })
     }
 
     case 'llmInteraction':

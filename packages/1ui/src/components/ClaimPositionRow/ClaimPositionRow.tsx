@@ -1,4 +1,4 @@
-import * as React from 'react'
+import type * as React from 'react'
 
 import {
   Avatar,
@@ -14,19 +14,19 @@ import {
   ProfileCard,
   TagsContent,
   TagWithValue,
-  TagWithValueProps,
   Text,
   TextVariant,
   TextWeight,
   Trunctacular,
+  type TagWithValueProps,
 } from 'components'
 import { cn } from 'styles'
-import { ClaimPositionType, CurrencyType } from 'types'
+import type { ClaimPositionType, CurrencyType } from 'types'
 import { formatDate } from 'utils/date'
 
 import {
   ClaimPositionRowVariant,
-  ClaimPositionRowVariantType,
+  type ClaimPositionRowVariantType,
 } from './ClaimPositionRow.utils'
 
 interface CommonProps extends React.HTMLAttributes<HTMLDivElement> {

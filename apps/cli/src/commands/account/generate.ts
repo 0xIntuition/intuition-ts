@@ -8,8 +8,16 @@ export default class AccountGenerate extends Command {
   static description = 'Generate a new account.'
   static examples = [`<%= config.bin %> <%= command.id %> --name mywallet --default`]
   static flags = {
-    default: Flags.boolean({char: 'd', description: 'Set as default account', required: false}),
-    name: Flags.string({char: 'n', description: 'Name of the account to generate', required: false}),
+    default: Flags.boolean({
+      char: 'd',
+      description: 'Set as default account',
+      required: false,
+    }),
+    name: Flags.string({
+      char: 'n',
+      description: 'Name of the account to generate',
+      required: false,
+    }),
   }
 
   async run(): Promise<void> {

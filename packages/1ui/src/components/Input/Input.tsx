@@ -2,7 +2,14 @@ import * as React from 'react'
 
 import { cn } from 'styles'
 
-import { Icon, IconName, IconNameType, Text, TextVariant, TextWeight } from '..'
+import {
+  Icon,
+  IconName,
+  Text,
+  TextVariant,
+  TextWeight,
+  type IconNameType,
+} from '..'
 
 export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {

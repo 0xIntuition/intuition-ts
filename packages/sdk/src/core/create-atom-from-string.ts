@@ -1,8 +1,8 @@
 import {
   createAtom,
   createAtomCalculateBaseCost,
-  CreateAtomConfig,
   eventParseDepositAtomTransaction,
+  type CreateAtomConfig,
 } from '@0xintuition/protocol'
 
 import { toHex } from 'viem'

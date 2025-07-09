@@ -1,4 +1,4 @@
-import * as React from 'react'
+import type * as React from 'react'
 
 import { Button, ButtonVariant, Icon, IconName, Text, TextVariant } from '..'
 

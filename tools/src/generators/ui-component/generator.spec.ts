@@ -1,8 +1,8 @@
-import { names, Tree } from '@nx/devkit'
+import { names, type Tree } from '@nx/devkit'
 import { createTreeWithEmptyWorkspace } from '@nx/devkit/testing'
 
 import { uiComponentGenerator } from './generator'
-import { uiComponentGeneratorSchema } from './schema'
+import type { uiComponentGeneratorSchema } from './schema'
 
 describe('ui-component generator', () => {
   let tree: Tree

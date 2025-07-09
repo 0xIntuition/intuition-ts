@@ -8,8 +8,8 @@
   },
   "bugs": "https://github.com/0xintuition/intuition-ts/issues",
   "dependencies": {
-    "@0xintuition/protocol": "1.0.0-alpha.1",
-    "@0xintuition/sdk": "1.0.0-alpha.1",
+    "@0xintuition/protocol": "workspace:*",
+    "@0xintuition/sdk": "workspace:*",
     "@inquirer/input": "^4.1.12",
     "@inquirer/select": "^4.2.3",
     "@oclif/core": "^4.4.0",

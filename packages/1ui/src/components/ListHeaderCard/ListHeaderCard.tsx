@@ -1,8 +1,8 @@
-import * as React from 'react'
+import type * as React from 'react'
 
 import { cn } from 'styles'
 
-import { ClaimProps, Text, TextVariant, TextWeight } from '..'
+import { Text, TextVariant, TextWeight, type ClaimProps } from '..'
 
 export interface ListHeaderCardProps
   extends React.HTMLAttributes<HTMLDivElement> {

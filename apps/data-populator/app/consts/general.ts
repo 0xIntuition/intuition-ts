@@ -1,5 +1,5 @@
 import { multivaultContractsMap } from '@lib/utils/chains'
-import { ChainEnv } from '@lib/utils/environment'
+import type { ChainEnv } from '@lib/utils/environment'
 import { base, baseSepolia } from 'viem/chains'
 
 export const CURRENT_ENV: ChainEnv =
@@ -8,7 +8,7 @@ export const CURRENT_ENV: ChainEnv =
 export const DEFAULT_CHAIN_ID =
   CURRENT_ENV === 'development' ? baseSepolia.id.toString() : base.id.toString()
 
-export const DEFAULT_VERIFIER = function (): void {
+export const DEFAULT_VERIFIER = (): void => {
   throw new Error('verify function must be implemented')
 }
 

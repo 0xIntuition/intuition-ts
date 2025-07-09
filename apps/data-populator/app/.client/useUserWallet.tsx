@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 
 import { usePrivy } from '@privy-io/react-auth'
 import { useSmartWallets } from '@privy-io/react-auth/smart-wallets'
-import { PublicClient, WalletClient } from 'viem'
+import type { PublicClient, WalletClient } from 'viem'
 import { useAccount, usePublicClient, useWalletClient } from 'wagmi'
 
 export const useUserClient = (): {

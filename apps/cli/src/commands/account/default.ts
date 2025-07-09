@@ -4,7 +4,9 @@ import {getAccounts, getDefaultAccount, setDefaultAccount} from '../../config.js
 
 export default class AccountSetDefault extends Command {
   static args = {
-    address: Args.string({description: 'Address of the account to set as default'}),
+    address: Args.string({
+      description: 'Address of the account to set as default',
+    }),
   }
   static description = 'Get or set the default account by address.'
   static examples = ['<%= config.bin %> <%= command.id %>', '<%= config.bin %> <%= command.id %> 0x1234...abcd']

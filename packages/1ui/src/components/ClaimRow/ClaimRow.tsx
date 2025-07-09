@@ -1,4 +1,4 @@
-import React from 'react'
+import type React from 'react'
 
 import { Button, ButtonSize, ButtonVariant } from 'components/Button'
 import {
@@ -13,7 +13,7 @@ import { StakeButton, StakeButtonVariant } from 'components/StakeButton'
 import { StakeTVL } from 'components/StakeTVL'
 import { Text, TextVariant } from 'components/Text'
 import { cn } from 'styles'
-import { ClaimPosition, ClaimPositionType, CurrencyType } from 'types'
+import { ClaimPosition, type ClaimPositionType, type CurrencyType } from 'types'
 
 export interface ClaimRowProps extends React.HTMLAttributes<HTMLDivElement> {
   numPositionsFor: number

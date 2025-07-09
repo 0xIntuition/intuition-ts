@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Thing, WithContext } from 'schema-dts'
+import type { Thing, WithContext } from 'schema-dts'
 
 export async function parseCsv(content: File): Promise<string[][]> {
   const text = await fileToText(content)
@@ -165,9 +165,7 @@ export function jsonToTable(jsonString: string): string[][] {
 
   dataArray.forEach((item) => {
     const row = headers.map((header) => {
-      return Object.prototype.hasOwnProperty.call(item, header)
-        ? String(item[header])
-        : ''
+      return Object.hasOwn(item, header) ? String(item[header]) : ''
     })
     table.push(row)
   })

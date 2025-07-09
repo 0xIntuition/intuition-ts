@@ -1,18 +1,18 @@
 import {
-  Account,
-  Address,
   BaseError,
-  Chain,
   ContractFunctionRevertedError,
   getContract,
-  GetContractReturnType,
   keccak256,
   parseEventLogs,
-  ParseEventLogsReturnType,
-  PublicClient,
   toHex,
-  Transport,
-  WalletClient,
+  type Account,
+  type Address,
+  type Chain,
+  type GetContractReturnType,
+  type ParseEventLogsReturnType,
+  type PublicClient,
+  type Transport,
+  type WalletClient,
 } from 'viem'
 
 import { EthMultiVaultAbi } from './contracts/EthMultiVault-abi.js'

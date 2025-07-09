@@ -1,6 +1,6 @@
 import './styles/globals.css'
 
-export * from './styles'
 export * from './components'
-export * from './utils'
+export * from './styles'
 export * from './types'
+export * from './utils'

@@ -1,7 +1,7 @@
-import * as React from 'react'
+import type * as React from 'react'
 
-import { cva, VariantProps } from 'class-variance-authority'
-import { Icon, IconName, IconNameType } from 'components/Icon'
+import { cva, type VariantProps } from 'class-variance-authority'
+import { Icon, IconName, type IconNameType } from 'components/Icon'
 import { Text, TextVariant } from 'components/Text'
 import { cn } from 'styles'
 

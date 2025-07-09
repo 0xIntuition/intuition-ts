@@ -1,8 +1,8 @@
 import {
   QuestCriteriaStatus,
-  QuestCriteriaStatusType,
   QuestStatus,
-  QuestStatusType,
+  type QuestCriteriaStatusType,
+  type QuestStatusType,
 } from '@0xintuition/1ui'
 
 export type MockQuestPresenter = {

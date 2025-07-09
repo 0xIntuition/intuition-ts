@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import * as LabelPrimitive from '@radix-ui/react-label'
+import type * as LabelPrimitive from '@radix-ui/react-label'
 import * as RadioGroupPrimitive from '@radix-ui/react-radio-group'
 
 import { Label } from '..'

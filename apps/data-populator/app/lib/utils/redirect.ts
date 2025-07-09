@@ -1,4 +1,4 @@
-import { RedirectOptions } from 'app/types/navigation'
+import type { RedirectOptions } from 'app/types/navigation'
 
 import { invariant } from './misc'
 

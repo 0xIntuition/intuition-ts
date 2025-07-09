@@ -1,4 +1,4 @@
-import { Address, PublicClient } from 'viem'
+import type { Address, PublicClient } from 'viem'
 
 import { EthMultiVaultAbi } from '../contracts'
 

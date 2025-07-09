@@ -26,6 +26,8 @@
     "clean": "rm -rf dist tsconfig.tsbuildinfo",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
+    "format": "prettier --check \"src/**/*.{ts,tsx,js,jsx,json,md}\"",
+    "format:fix": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json,md}\"",
     "generate": "node ./scripts/generate.mjs",
     "test": "vitest"
   },
@@ -39,8 +41,8 @@
     "registry": "https://registry.npmjs.org/"
   },
   "dependencies": {
-    "@0xintuition/graphql": "1.0.0-alpha.0",
-    "@0xintuition/protocol": "1.0.0-alpha.1"
+    "@0xintuition/graphql": "workspace:*",
+    "@0xintuition/protocol": "workspace:*"
   },
   "peerDependencies": {
     "viem": "^2.0.0"

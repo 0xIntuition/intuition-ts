@@ -6,7 +6,9 @@ import {getNetworkByName} from '../../networks.js'
 
 export default class ConfigDefaultNetwork extends Command {
   static override args = {
-    network: Args.string({description: 'Network to set as default (base or base-sepolia)'}),
+    network: Args.string({
+      description: 'Network to set as default (base or base-sepolia)',
+    }),
   }
   static override description = 'Set or show the default network (base or base-sepolia). Default is base.'
   static override examples = ['<%= config.bin %> <%= command.id %>', '<%= config.bin %> <%= command.id %> base']

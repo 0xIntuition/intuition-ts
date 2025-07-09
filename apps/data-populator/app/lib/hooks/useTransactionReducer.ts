@@ -1,6 +1,6 @@
 import { useReducer, type Reducer } from 'react'
 
-import {
+import type {
   IdentityTransactionActionType,
   IdentityTransactionStateType,
   TransactionActionType,

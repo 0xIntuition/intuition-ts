@@ -1,6 +1,6 @@
 import { FeesAccrued } from 'components/Indicators'
 import { Text, TextVariant, TextWeight } from 'components/Text'
-import { CurrencyType } from 'types'
+import type { CurrencyType } from 'types'
 
 interface PositionCardFeesAccruedProps
   extends React.HTMLAttributes<HTMLDivElement> {

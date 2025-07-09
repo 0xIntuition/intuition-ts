@@ -1,6 +1,6 @@
-import * as React from 'react'
+import type * as React from 'react'
 
-import { Currency, CurrencyType, Identity, IdentityType } from 'types'
+import { Currency, Identity, type CurrencyType, type IdentityType } from 'types'
 
 import {
   Avatar,

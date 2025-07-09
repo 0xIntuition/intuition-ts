@@ -1,5 +1,5 @@
-export * from './claimr'
 export * from './claim'
+export * from './claimr'
 export * from './identity'
 export * from './navigation'
 export * from './pagination'

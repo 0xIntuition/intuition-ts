@@ -1,6 +1,6 @@
 import { MonetaryValue } from 'components/Indicators'
 import { Text } from 'components/Text'
-import { CurrencyType } from 'types'
+import type { CurrencyType } from 'types'
 
 interface PositionCardStakedProps extends React.HTMLAttributes<HTMLDivElement> {
   amount: number

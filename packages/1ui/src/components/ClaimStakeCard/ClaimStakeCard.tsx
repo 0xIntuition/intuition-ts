@@ -1,6 +1,6 @@
-import * as React from 'react'
+import type * as React from 'react'
 
-import { CurrencyType } from 'types'
+import type { CurrencyType } from 'types'
 
 import {
   Button,

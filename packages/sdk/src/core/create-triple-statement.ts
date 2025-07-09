@@ -1,9 +1,9 @@
 import {
   createTriple as createTripleBase,
   createTripleCalculateBaseCost,
-  CreateTripleConfig,
-  CreateTripleInputs,
   eventParseTripleCreated,
+  type CreateTripleConfig,
+  type CreateTripleInputs,
 } from '@0xintuition/protocol'
 
 export async function createTripleStatement(

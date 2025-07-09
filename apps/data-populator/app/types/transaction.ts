@@ -1,6 +1,6 @@
-import { TransactionStatusType } from '@0xintuition/1ui'
+import type { TransactionStatusType } from '@0xintuition/1ui'
 
-import { TransactionReceipt } from 'viem'
+import type { TransactionReceipt } from 'viem'
 
 export type TStatus = string
 

@@ -1,8 +1,8 @@
 import {
   fetcher,
   GetTripleDocument,
-  GetTripleQuery,
-  GetTripleQueryVariables,
+  type GetTripleQuery,
+  type GetTripleQueryVariables,
 } from '@0xintuition/graphql'
 
 export async function getTriple(id: string) {

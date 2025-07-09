@@ -1,5 +1,5 @@
 import logger from '@lib/utils/logger'
-import { json, LoaderFunctionArgs } from '@remix-run/node'
+import { json, type LoaderFunctionArgs } from '@remix-run/node'
 import { requireUserWallet } from '@server/auth'
 import { getVaultDetails } from '@server/multivault'
 

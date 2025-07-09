@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { Button, Icon } from '@0xintuition/1ui'
 
 import logger from '@lib/utils/logger'
-import { useLogin, User } from '@privy-io/react-auth'
+import { useLogin, type User } from '@privy-io/react-auth'
 
 interface PrivyLoginButtonProps {
   handleLogin: (

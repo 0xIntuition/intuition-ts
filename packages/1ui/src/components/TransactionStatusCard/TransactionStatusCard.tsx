@@ -1,7 +1,7 @@
-import * as React from 'react'
+import type * as React from 'react'
 
 import { cn } from 'styles'
-import { TransactionStatus, TransactionStatusType } from 'types'
+import { TransactionStatus, type TransactionStatusType } from 'types'
 
 import {
   Icon,

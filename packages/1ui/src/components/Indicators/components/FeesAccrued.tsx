@@ -1,5 +1,5 @@
-import { Text, TextProps, TextVariant, TextWeight } from 'components/Text'
-import { Currency, CurrencyType } from 'types'
+import { Text, TextVariant, TextWeight, type TextProps } from 'components/Text'
+import { Currency, type CurrencyType } from 'types'
 
 interface FeesAccruedProps extends TextProps {
   value: number

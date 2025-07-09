@@ -1,4 +1,4 @@
-import { Address, encodeFunctionData, Hex } from 'viem'
+import { encodeFunctionData, type Address, type Hex } from 'viem'
 
 export function depositAtomEncode(receiver: Address, id: bigint): Hex {
   return encodeFunctionData({

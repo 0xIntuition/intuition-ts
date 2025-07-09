@@ -1,7 +1,7 @@
-import * as React from 'react'
+import type * as React from 'react'
 
 import { cn } from 'styles'
-import { CurrencyType, Identity, IdentityType } from 'types'
+import { Identity, type CurrencyType, type IdentityType } from 'types'
 
 import { Button, IdentityTag, MonetaryValue, Text, Trunctacular } from '..'
 

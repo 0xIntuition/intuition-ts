@@ -1,4 +1,4 @@
-import { Address } from 'viem'
+import type { Address } from 'viem'
 import { beforeEach, describe, expect, it } from 'vitest'
 
 import {

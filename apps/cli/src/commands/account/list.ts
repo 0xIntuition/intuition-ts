@@ -25,7 +25,11 @@ export default class AccountList extends Command {
     this.log('Saved accounts:')
     let idx = 1
     for (const acc of accounts) {
-      const {address, name, privateKey} = acc as {address: string; name: string; privateKey?: string}
+      const {address, name, privateKey} = acc as {
+        address: string
+        name: string
+        privateKey?: string
+      }
       const isDefault = address === defaultAccount
       let line = `${idx++}. ${name} - ${address}${isDefault ? ' (default)' : ''}`
       if (flags.export && privateKey) {

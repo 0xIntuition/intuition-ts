@@ -73,7 +73,10 @@ export function ProofreadModal({
 
   const handleSuggestedValueChange = (index: number, newValue: string) => {
     const updatedIssues = [...editableIssues]
-    updatedIssues[index] = { ...updatedIssues[index], suggestedValue: newValue }
+    updatedIssues[index] = {
+      ...updatedIssues[index],
+      suggestedValue: newValue,
+    }
     setEditableIssues(updatedIssues)
   }
 

@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react'
 import { Button } from 'components/Button'
 import { Identity } from 'types'
 
-import { ProfileCard, ProfileCardProps } from './ProfileCard'
+import { ProfileCard, type ProfileCardProps } from './ProfileCard'
 
 const meta: Meta<typeof ProfileCard> = {
   title: 'Components/ProfileCard',

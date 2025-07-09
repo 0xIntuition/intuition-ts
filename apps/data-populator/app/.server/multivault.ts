@@ -3,7 +3,7 @@ import {
   getMultivaultContract,
   publicClient,
 } from '@server/viem'
-import {
+import type {
   IdentityVaultDetailsType,
   MultivaultConfig,
   VaultDetailsType,

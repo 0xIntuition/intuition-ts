@@ -103,7 +103,9 @@ describe('EthMultiVault', () => {
   })
 
   it('can create triple', async () => {
-    const { vaultId: subjectId } = await multiVault.createAtom({ uri: 'Alice' })
+    const { vaultId: subjectId } = await multiVault.createAtom({
+      uri: 'Alice',
+    })
     const { vaultId: predicateId } = await multiVault.createAtom({
       uri: 'likes',
     })

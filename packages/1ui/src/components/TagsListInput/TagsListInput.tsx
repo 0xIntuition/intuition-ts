@@ -1,4 +1,4 @@
-import * as React from 'react'
+import type * as React from 'react'
 
 import { Button, Icon, TagVariant, TagWithValue, Text } from 'components'
 import { cn } from 'styles'

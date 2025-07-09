@@ -1,6 +1,6 @@
 import { PATHS } from '@consts/paths'
 import logger from '@lib/utils/logger'
-import { json, LoaderFunctionArgs, redirect } from '@remix-run/node'
+import { json, redirect, type LoaderFunctionArgs } from '@remix-run/node'
 import { getPrivyTokens } from '@server/privy'
 
 export async function loader({ request }: LoaderFunctionArgs) {

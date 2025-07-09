@@ -1,4 +1,4 @@
-import { Theme, themesList } from '@0xintuition/1ui'
+import { themesList, type Theme } from '@0xintuition/1ui'
 
 import * as cookie from 'cookie'
 

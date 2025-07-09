@@ -1,4 +1,4 @@
-import { ChainEnv, DEFAULT_CHAIN_ENV } from './environment'
+import { DEFAULT_CHAIN_ENV, type ChainEnv } from './environment'
 import logger from './logger'
 
 export type SpecialObjectConfig = {

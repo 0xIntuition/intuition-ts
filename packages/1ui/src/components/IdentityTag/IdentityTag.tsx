@@ -1,7 +1,7 @@
-import * as React from 'react'
+import type * as React from 'react'
 
 import { cva, type VariantProps } from 'class-variance-authority'
-import { Identity, IdentityType } from 'types'
+import { Identity, type IdentityType } from 'types'
 
 import { Avatar, HoverCard, HoverCardContent, HoverCardTrigger } from '..'
 import { cn } from '../../styles'

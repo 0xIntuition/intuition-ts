@@ -1,4 +1,4 @@
-import { Hex, parseEventLogs, PublicClient } from 'viem'
+import { parseEventLogs, type Hex, type PublicClient } from 'viem'
 
 import { EthMultiVaultAbi } from '../contracts/EthMultiVault-abi.js'
 

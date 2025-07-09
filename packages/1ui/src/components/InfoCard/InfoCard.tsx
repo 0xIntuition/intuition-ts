@@ -1,7 +1,7 @@
-import * as React from 'react'
+import type * as React from 'react'
 
 import { cn } from 'styles'
-import { Identity, IdentityType } from 'types'
+import { Identity, type IdentityType } from 'types'
 
 import {
   Button,

@@ -2,7 +2,7 @@ import React from 'react'
 
 import { Icon, IconName, Text, Theme } from '@0xintuition/1ui'
 
-import { SubmitFunction } from '@remix-run/react'
+import type { SubmitFunction } from '@remix-run/react'
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 import { formatUnits } from 'viem'

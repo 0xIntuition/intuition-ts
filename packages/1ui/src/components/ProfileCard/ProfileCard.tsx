@@ -1,10 +1,11 @@
-import React, { HTMLAttributes } from 'react'
+import type React from 'react'
+import type { HTMLAttributes } from 'react'
 
 import { Link } from '@remix-run/react'
 import { Text } from 'components/Text'
 import { Trunctacular } from 'components/Trunctacular'
 import { cn } from 'styles'
-import { Identity, IdentityType } from 'types'
+import { Identity, type IdentityType } from 'types'
 
 import { ProfileCardHeader, ProfileCardStatItem } from './components'
 

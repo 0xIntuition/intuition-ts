@@ -1,7 +1,8 @@
 // Import React
-import React from 'react'
 
 // Import Storybook meta and StoryObj type
+import React from 'react'
+
 import type { Meta, StoryObj } from '@storybook/react'
 
 // Import your actual component

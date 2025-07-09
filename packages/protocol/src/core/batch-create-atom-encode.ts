@@ -1,4 +1,4 @@
-import { encodeFunctionData, Hex } from 'viem'
+import { encodeFunctionData, type Hex } from 'viem'
 
 export function batchCreateAtomEncode(atomUri: Hex[]) {
   return encodeFunctionData({

@@ -1,6 +1,6 @@
-import { IconNameType } from '@0xintuition/1ui'
+import type { IconNameType } from '@0xintuition/1ui'
 
-import { User as PrivyUser, Wallet } from '@privy-io/react-auth'
+import type { User as PrivyUser, Wallet } from '@privy-io/react-auth'
 
 export interface User {
   id: string

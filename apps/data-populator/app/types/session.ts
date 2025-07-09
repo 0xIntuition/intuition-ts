@@ -1,4 +1,4 @@
-import { SessionUser } from './user'
+import type { SessionUser } from './user'
 
 declare global {
   type SessionData = {
@@ -10,5 +10,3 @@ declare global {
     error: string
   }
 }
-
-export {}

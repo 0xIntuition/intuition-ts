@@ -1,6 +1,6 @@
 import { Icon, IconName } from 'components/Icon'
 import { Text, TextVariant } from 'components/Text'
-import { CurrencyType } from 'types'
+import type { CurrencyType } from 'types'
 
 import { MonetaryValue } from './MonetaryValue'
 

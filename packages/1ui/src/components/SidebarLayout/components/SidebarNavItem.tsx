@@ -1,21 +1,21 @@
-import { ReactNode } from 'react'
+import type { ReactNode } from 'react'
 
-import { type VariantProps } from 'class-variance-authority'
+import type { VariantProps } from 'class-variance-authority'
 import { cn } from 'styles'
 
 import {
   Button,
   ButtonSize,
   ButtonVariant,
-  buttonVariants,
   Icon,
-  IconNameType,
   Text,
   TextVariant,
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
+  type buttonVariants,
+  type IconNameType,
 } from '../..'
 import { useSidebarLayoutContext } from './SidebarLayoutProvider'
 

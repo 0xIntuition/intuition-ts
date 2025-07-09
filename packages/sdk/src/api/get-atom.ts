@@ -1,8 +1,8 @@
 import {
   fetcher,
   GetAtomDocument,
-  GetAtomQuery,
-  GetAtomQueryVariables,
+  type GetAtomQuery,
+  type GetAtomQueryVariables,
 } from '@0xintuition/graphql'
 
 export async function getAtom(atomId: string) {

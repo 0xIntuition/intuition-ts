@@ -1,9 +1,9 @@
 import {
   batchCreateTriple,
-  BatchCreateTripleConfig,
-  BatchCreateTripleInputs,
   createTripleCalculateBaseCost,
   eventParseTripleCreated,
+  type BatchCreateTripleConfig,
+  type BatchCreateTripleInputs,
 } from '@0xintuition/protocol'
 
 export async function batchCreateTripleStatements(

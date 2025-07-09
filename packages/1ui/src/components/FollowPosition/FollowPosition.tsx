@@ -1,6 +1,6 @@
-import * as React from 'react'
+import type * as React from 'react'
 
-import { ClaimPositionType, CurrencyType } from 'types'
+import type { ClaimPositionType, CurrencyType } from 'types'
 import { formatDate } from 'utils/date'
 import { formatWalletAddress } from 'utils/wallet'
 
@@ -9,10 +9,10 @@ import {
   PositionValueDisplay,
   TagsContent,
   TagWithValue,
-  TagWithValueProps,
   Text,
   TextVariant,
   TextWeight,
+  type TagWithValueProps,
 } from '..'
 
 interface FollowPositionProps extends React.HTMLAttributes<HTMLDivElement> {

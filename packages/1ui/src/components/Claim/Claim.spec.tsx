@@ -2,7 +2,7 @@ import React from 'react'
 
 import { render } from '@testing-library/react'
 
-import { Claim, ClaimProps } from './Claim'
+import { Claim, type ClaimProps } from './Claim'
 
 describe('Claim', () => {
   const defaultProps: ClaimProps = {

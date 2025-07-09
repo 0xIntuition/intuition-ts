@@ -1,11 +1,11 @@
 import {
   createAtom,
   createAtomCalculateBaseCost,
-  CreateAtomConfig,
   eventParseDepositAtomTransaction,
+  type CreateAtomConfig,
 } from '@0xintuition/protocol'
 
-import { Address, getAddress, isAddress, toHex } from 'viem'
+import { getAddress, isAddress, toHex, type Address } from 'viem'
 
 export async function createAtomFromSmartContract(
   config: CreateAtomConfig,
