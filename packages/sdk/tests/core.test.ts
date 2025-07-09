@@ -2,11 +2,12 @@ import type { Address } from 'viem'
 import { beforeEach, describe, expect, it } from 'vitest'
 
 import {
+  createAtomFromEthereumAccount,
   createAtomFromIpfsUpload,
   createAtomFromIpfsUri,
+  createAtomFromSmartContract,
   createAtomFromString,
-  createEthereumAccount,
-  createThing,
+  createAtomFromThing,
   createTripleStatement,
 } from '../src'
 import { deployAndInit } from './helpers/deploy'
@@ -93,11 +94,9 @@ describe('Atoms', () => {
   })
 
   it('should create ethereum account Atom', async () => {
-    const data = await createEthereumAccount(
+    const data = await createAtomFromEthereumAccount(
       { walletClient, publicClient, address: multivaultAddress },
-      {
-        address: '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045',
-      },
+      '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045',
     )
     expect(data.uri).toEqual('0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045')
     expect(data.state.vaultId).toEqual(1n)
@@ -105,7 +104,7 @@ describe('Atoms', () => {
   })
 
   it('should create CAIP10 ethereum account Atom', async () => {
-    const data = await createEthereumAccount(
+    const data = await createAtomFromSmartContract(
       { walletClient, publicClient, address: multivaultAddress },
       {
         address: '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045',
@@ -120,7 +119,7 @@ describe('Atoms', () => {
   })
 
   it('should create Thing Atom', async () => {
-    const data = await createThing(
+    const data = await createAtomFromThing(
       { walletClient, publicClient, address: multivaultAddress },
       {
         url: 'https://www.intuition.systems/',
