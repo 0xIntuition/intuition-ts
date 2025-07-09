@@ -1,7 +1,7 @@
 import {
   PieChart,
   PieChartSize,
-  PieChartVariantType,
+  type PieChartVariantType,
 } from 'components/PieChart'
 import { Text } from 'components/Text'
 

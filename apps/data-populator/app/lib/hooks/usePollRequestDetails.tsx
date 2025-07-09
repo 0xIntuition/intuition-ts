@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 
-import { RequestData } from '@lib/services/request'
+import type { RequestData } from '@lib/services/request'
 import { useFetcher } from '@remix-run/react'
 
 export function usePollRequestDetails({

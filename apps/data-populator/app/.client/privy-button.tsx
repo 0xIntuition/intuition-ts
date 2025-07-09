@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import type React from 'react'
+import { useState } from 'react'
 
 import {
   Button,
@@ -13,7 +14,7 @@ import {
   Text,
   Trunctacular,
 } from '@0xintuition/1ui'
-import { UserPresenter } from '@0xintuition/api'
+import type { UserPresenter } from '@0xintuition/api'
 
 import PrivyLogoutButton from '@client/privy-logout-button'
 import { usePrivy } from '@privy-io/react-auth'

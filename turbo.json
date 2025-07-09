@@ -10,20 +10,20 @@
       "persistent": true,
       "dependsOn": ["^dev"]
     },
-    "format": {
-      "dependsOn": ["format"]
-    },
-    "check:types": {
-      "dependsOn": ["^build"]
-    },
+    "format": {},
+    "format:fix": {},
     "check": {
-      "dependsOn": ["check"]
+      "dependsOn": []
     },
     "codegen": {
       "dependsOn": []
     },
-    "lint": {},
-    "lint:fix": {},
+    "lint": {
+      "dependsOn": ["^build"]
+    },
+    "lint:fix": {
+      "dependsOn": ["^build"]
+    },
     "test": {
       "dependsOn": ["^build", "^test"]
     },

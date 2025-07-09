@@ -1,31 +1,35 @@
-import { PinThingMutationVariables } from '@0xintuition/graphql'
 import {
   createAtom,
   createAtomCalculateBaseCost,
-  CreateAtomConfig,
   eventParseDepositAtomTransaction,
+  type CreateAtomConfig,
 } from '@0xintuition/protocol'
 
-import { toHex } from 'viem'
+import { getAddress, isAddress, toHex, type Address } from 'viem'
 
-import { pinThing } from '../api/pin-thing'
-
-export async function createThing(
+export async function createAtomFromSmartContract(
   config: CreateAtomConfig,
-  data: PinThingMutationVariables,
+  data: {
+    address: Address
+    chainId: number
+  },
   depositAmount?: bigint,
 ) {
-  const uriRef = await pinThing(data)
-  if (!uriRef) {
-    throw new Error('Failed to pin thing on IPFS')
+  if (!isAddress(data.address)) {
+    throw new Error('Invalid Ethereum address provided')
   }
 
-  const { address: multivaultAddress, publicClient } = config
+  if (!data.chainId) {
+    throw new Error('Chain ID is required to create atom')
+  }
+
+  const { address, publicClient } = config
   const atomBaseCost = await createAtomCalculateBaseCost({
     publicClient,
-    address: multivaultAddress,
+    address,
   })
 
+  const uriRef: string = `caip10:eip155:${data.chainId}:${getAddress(data.address)}`
   const txHash = await createAtom(config, {
     args: [toHex(uriRef)],
     value: atomBaseCost + BigInt(depositAmount || 0),

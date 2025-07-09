@@ -1,11 +1,11 @@
 import React from 'react'
 
-import { cva, VariantProps } from 'class-variance-authority'
+import { cva, type VariantProps } from 'class-variance-authority'
 import { Button, ButtonVariant } from 'components/Button'
 import { Icon, IconName } from 'components/Icon'
 import { Text, TextVariant } from 'components/Text'
 import { cn } from 'styles'
-import { ClaimPosition, ClaimPositionType } from 'types'
+import { ClaimPosition, type ClaimPositionType } from 'types'
 import { formatNumber } from 'utils'
 
 export const StakeButtonVariant = {

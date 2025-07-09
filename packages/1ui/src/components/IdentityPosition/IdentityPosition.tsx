@@ -1,7 +1,7 @@
-import * as React from 'react'
+import type * as React from 'react'
 
 import { cn } from 'styles'
-import { CurrencyType, Identity, IdentityType } from 'types'
+import { Identity, type CurrencyType, type IdentityType } from 'types'
 import { formatDate } from 'utils/date'
 
 import {
@@ -18,11 +18,11 @@ import {
   ProfileCard,
   TagsContent,
   TagWithValue,
-  TagWithValueProps,
   Text,
   TextVariant,
   TextWeight,
   Trunctacular,
+  type TagWithValueProps,
 } from '..'
 
 export interface IdentityPositionProps

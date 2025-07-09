@@ -1,4 +1,4 @@
-import React from 'react'
+import type React from 'react'
 
 import { Button, Icon } from '@0xintuition/1ui'
 

@@ -1,6 +1,6 @@
 {
   "name": "@0xintuition/sdk",
-  "version": "1.0.0-alpha.0",
+  "version": "1.0.0-alpha.1",
   "description": "Intuition SDK",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
@@ -26,6 +26,8 @@
     "clean": "rm -rf dist tsconfig.tsbuildinfo",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
+    "format": "prettier --check \"src/**/*.{ts,tsx,js,jsx,json,md}\"",
+    "format:fix": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json,md}\"",
     "generate": "node ./scripts/generate.mjs",
     "test": "vitest"
   },
@@ -41,6 +43,9 @@
   "dependencies": {
     "@0xintuition/graphql": "workspace:*",
     "@0xintuition/protocol": "workspace:*"
+  },
+  "peerDependencies": {
+    "viem": "^2.0.0"
   },
   "devDependencies": {
     "@viem/anvil": "^0.0.10",

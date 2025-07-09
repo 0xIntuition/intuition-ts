@@ -1,4 +1,4 @@
-import React from 'react'
+import type React from 'react'
 
 import {
   HoverCard,
@@ -22,9 +22,9 @@ import { Icon, IconName } from 'components/Icon'
 import { IdentityTag, IdentityTagSize } from 'components/IdentityTag'
 import { StakeButton } from 'components/StakeButton'
 import { StakeTVL } from 'components/StakeTVL'
-import { TagWithValueProps } from 'components/Tags'
+import type { TagWithValueProps } from 'components/Tags'
 import { cn } from 'styles'
-import { CurrencyType, Identity, IdentityType } from 'types'
+import { Identity, type CurrencyType, type IdentityType } from 'types'
 
 export interface IdentityRowProps extends React.HTMLAttributes<HTMLDivElement> {
   variant?: IdentityType

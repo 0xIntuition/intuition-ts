@@ -1,4 +1,4 @@
-import { Transport } from 'viem'
+import type { Transport } from 'viem'
 import { base, baseSepolia, type mainnet } from 'viem/chains'
 
 import { multivaultContractsMap, transportsMap } from './chains'

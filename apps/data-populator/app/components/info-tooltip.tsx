@@ -1,11 +1,10 @@
-import { ReactNode } from 'react'
+import type { ReactNode } from 'react'
 
 import {
   Button,
   ButtonVariant,
   Icon,
   IconName,
-  IconNameType,
   Text,
   TextVariant,
   TextWeight,
@@ -13,6 +12,7 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
+  type IconNameType,
 } from '@0xintuition/1ui'
 
 export const InfoTooltip = ({

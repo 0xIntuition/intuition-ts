@@ -2,13 +2,22 @@
 
 This Intuition SDK simplifies development with the Intuition backend systems.
 
-## Building
+[![Version](https://img.shields.io/npm/v/@0xintuition/sdk.svg)](https://www.npmjs.com/package/@0xintuition/sdk)
+[![Downloads/week](https://img.shields.io/npm/dw/@0xintuition/sdk.svg)](https://npmjs.org/package/@0xintuition/sdk)
 
-Run `pnpm build` to build the library.
+## Install
 
-## Running unit tests
+```sh-session
+npm install 0xintuition/sdk
+```
 
-Run `pnpm test` to execute the unit tests
+```sh-session
+pnpm install 0xintuition/sdk
+```
+
+```sh-session
+bun install 0xintuition/sdk
+```
 
 # Usage
 
@@ -225,3 +234,21 @@ const IntuitionButton = ({ children, className }: IntuitionButton) => {
 
 export { IntuitionButton }
 ```
+
+# Development
+
+## Building
+
+Run `pnpm build` to build the library.
+
+## Running unit tests
+
+Run `pnpm test` to execute the unit tests
+
+## Contributing
+
+Contributions are welcome! Please see the [main repository](https://github.com/0xintuition/intuition-ts) for more information on how to contribute.
+
+## License
+
+This project is licensed under the MIT License.

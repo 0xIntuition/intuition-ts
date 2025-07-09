@@ -6,11 +6,10 @@
   "scripts": {
     "build": "turbo build",
     "build:packages": "turbo build --filter='./packages/**'",
+    "codegen": "turbo codegen",
     "dev": "turbo dev --parallel",
     "format": "turbo format",
-    "check": "turbo check",
-    "check:types": "turbo check:types",
-    "codegen": "turbo codegen",
+    "format:fix": "turbo format:fix",
     "lint": "turbo lint",
     "lint:fix": "turbo lint:fix",
     "test": "turbo test",
@@ -88,5 +87,10 @@
     "pnpm": ">=9.11.0",
     "node": ">=20"
   },
-  "packageManager": "pnpm@9.11.0"
+  "packageManager": "pnpm@9.11.0",
+  "pnpm": {
+    "overrides": {
+      "viem": "2.31.4"
+    }
+  }
 }

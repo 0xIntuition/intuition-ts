@@ -1,6 +1,6 @@
 import type * as React from 'react'
 
-import { createThing, intuitionDeployments } from '@0xintuition/sdk'
+import { createAtomFromThing, intuitionDeployments } from '@0xintuition/sdk'
 
 import { useChainId, usePublicClient, useWalletClient } from 'wagmi'
 
@@ -18,7 +18,7 @@ export const IntuitionCreateThingButton = ({
       return
     }
     const multiVaultAddress = intuitionDeployments.EthMultiVault[chainId]
-    const data = await createThing(
+    const data = await createAtomFromThing(
       { walletClient, publicClient, address: multiVaultAddress },
       {
         url: 'https://www.intuition.systems/',

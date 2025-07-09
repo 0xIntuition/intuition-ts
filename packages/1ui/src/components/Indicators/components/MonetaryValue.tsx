@@ -1,11 +1,11 @@
 import {
   Text,
-  TextProps,
   TextVariant,
-  TextVariantType,
   TextWeight,
+  type TextProps,
+  type TextVariantType,
 } from 'components/Text'
-import { Currency, CurrencyType } from 'types'
+import { Currency, type CurrencyType } from 'types'
 
 interface MonetaryValueProps extends TextProps {
   value: number

@@ -1,6 +1,6 @@
-import React from 'react'
+import type React from 'react'
 
-import { PrivyClientConfig, PrivyProvider } from '@privy-io/react-auth'
+import { PrivyProvider, type PrivyClientConfig } from '@privy-io/react-auth'
 
 const privyConfig: PrivyClientConfig = {
   embeddedWallets: {

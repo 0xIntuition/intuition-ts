@@ -1,6 +1,6 @@
-import * as React from 'react'
+import type * as React from 'react'
 
-import { IdentityType } from 'types'
+import type { IdentityType } from 'types'
 
 import {
   Button,

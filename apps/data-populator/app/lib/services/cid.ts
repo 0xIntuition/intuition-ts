@@ -2,7 +2,7 @@
 import { CID } from 'multiformats/cid'
 import * as raw from 'multiformats/codecs/raw'
 import { sha256 } from 'multiformats/hashes/sha2'
-import { Thing, WithContext } from 'schema-dts'
+import type { Thing, WithContext } from 'schema-dts'
 
 import { pushUpdate } from './request'
 

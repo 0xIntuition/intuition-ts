@@ -1,8 +1,8 @@
 import {
   fetcher,
   PinThingDocument,
-  PinThingMutation,
-  PinThingMutationVariables,
+  type PinThingMutation,
+  type PinThingMutationVariables,
 } from '@0xintuition/graphql'
 
 export async function pinThing(variables: PinThingMutationVariables) {

@@ -1,8 +1,8 @@
 import React from 'react'
 
-import { SortDirection } from '@0xintuition/api'
+import type { SortDirection } from '@0xintuition/api'
 
-import { SortOption, SortSelect } from '@components/sort-select'
+import { SortSelect, type SortOption } from '@components/sort-select'
 
 interface SortProps<T> {
   options: SortOption<T>[]

@@ -1,8 +1,8 @@
 import { buttonVariants } from '@0xintuition/1ui'
 
 import { cn } from '@lib/utils/misc'
-import { NavLink, NavLinkProps } from '@remix-run/react'
-import { type VariantProps } from 'class-variance-authority'
+import { NavLink, type NavLinkProps } from '@remix-run/react'
+import type { VariantProps } from 'class-variance-authority'
 
 interface NavigationButtonProps
   extends NavLinkProps,

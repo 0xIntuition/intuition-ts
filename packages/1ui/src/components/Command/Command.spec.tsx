@@ -23,7 +23,7 @@ describe('Command', () => {
 
     vi.stubGlobal('ResizeObserver', ResizeObserverMock)
 
-    window.HTMLElement.prototype.scrollIntoView = function () {}
+    window.HTMLElement.prototype.scrollIntoView = () => {}
   })
   it('should render appropriate element', () => {
     const { asFragment } = render(

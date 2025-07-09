@@ -1,10 +1,10 @@
-import * as React from 'react'
+import type * as React from 'react'
 
 import { Avatar } from 'components/Avatar'
 import { Button } from 'components/Button'
 import { Icon } from 'components/Icon'
 import { Text, TextVariant, TextWeight } from 'components/Text'
-import { Currency, CurrencyType } from 'types'
+import { Currency, type CurrencyType } from 'types'
 
 export interface ListIdentityCardProps {
   displayName: string

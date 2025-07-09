@@ -1,7 +1,7 @@
-import { Address, formatUnits, PublicClient } from 'viem'
+import { formatUnits, type Address, type PublicClient } from 'viem'
 
 import { EthMultiVaultAbi } from '../contracts'
-import { MultivaultConfig } from '../types'
+import type { MultivaultConfig } from '../types'
 
 export type MultiCallIntuitionConfigs = {
   address: Address

@@ -1,4 +1,4 @@
-import React from 'react'
+import type React from 'react'
 
 import { ProgressBar } from 'components/ProgressBar'
 import { Text, TextVariant } from 'components/Text'

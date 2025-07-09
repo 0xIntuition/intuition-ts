@@ -1,9 +1,9 @@
-import { UserPresenter } from '@0xintuition/api'
+import type { UserPresenter } from '@0xintuition/api'
 
-import { User as PrivyUser } from '@privy-io/react-auth'
-import { AuthTokenClaims } from '@privy-io/server-auth'
+import type { User as PrivyUser } from '@privy-io/react-auth'
+import type { AuthTokenClaims } from '@privy-io/server-auth'
 
-import { PlatformUserDetails } from './privy'
+import type { PlatformUserDetails } from './privy'
 
 export type ExtendedPrivyUser = PrivyUser & {
   twitter?: PlatformUserDetails

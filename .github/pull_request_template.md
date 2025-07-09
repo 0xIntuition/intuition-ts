@@ -2,8 +2,8 @@
 
 Apps
 
+- [ ] cli
 - [ ] data populator
-- [ ] portal
 - [ ] template
 
 Packages

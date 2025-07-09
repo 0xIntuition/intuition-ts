@@ -6,7 +6,7 @@ We're using a monorepo to organize the development of our ecosystem. Our monorep
 
 ## Monorepo Structure
 
-Our monorepo uses [pnpm](https://pnpm.io/) and [Nx](https://nx.dev/) and is organized into `apps` and `packages`. Our `apps` folder contains our core applications. We'll be expanding our monorepo to include additional apps and our starter templates. Our `packages` folder contains our utilities and libraries that will eventually be published and available to the community and larger ecosystem.
+Our monorepo uses [pnpm](https://pnpm.io/) and is organized into `apps` and `packages`. Our `apps` folder contains our core applications. We'll be expanding our monorepo to include additional apps and our starter templates. Our `packages` folder contains our utilities and libraries that will eventually be published and available to the community and larger ecosystem.
 
 Each app and package has it's own README with instructions for getting up and running.
 

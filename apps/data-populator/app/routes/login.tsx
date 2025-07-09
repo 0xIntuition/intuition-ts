@@ -4,12 +4,12 @@ import PrivyLoginButton from '@client/privy-login-button'
 import { BuiltOnBase } from '@components/built-on-base'
 import { HeaderLogo } from '@components/header-logo'
 import logger from '@lib/utils/logger'
-import { User as PrivyUser } from '@privy-io/react-auth'
+import type { User as PrivyUser } from '@privy-io/react-auth'
 import {
-  ActionFunctionArgs,
   json,
-  LoaderFunctionArgs,
   redirect,
+  type ActionFunctionArgs,
+  type LoaderFunctionArgs,
 } from '@remix-run/node'
 import { Link, useLoaderData, useSubmit } from '@remix-run/react'
 import { verifyPrivyAccessToken } from '@server/privy'

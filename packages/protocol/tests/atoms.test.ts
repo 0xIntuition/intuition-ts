@@ -1,4 +1,4 @@
-import { Address, toHex } from 'viem'
+import { toHex, type Address } from 'viem'
 import { beforeEach, describe, expect, it } from 'vitest'
 
 import {

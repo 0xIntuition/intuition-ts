@@ -1,6 +1,13 @@
-import * as React from 'react'
+import type * as React from 'react'
 
-import { Button, Icon, IconName, IconNameType, Tag, TagProps } from '..'
+import {
+  Button,
+  Icon,
+  IconName,
+  Tag,
+  type IconNameType,
+  type TagProps,
+} from '..'
 import { cn } from '../../styles'
 
 export interface SocialLinksProps

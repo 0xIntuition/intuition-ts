@@ -6,10 +6,10 @@ import {
   Icon,
   IconName,
   Tag,
-  TagProps,
   Text,
   TextVariant,
   Trunctacular,
+  type TagProps,
 } from 'components'
 
 import { cn } from '../../styles'

@@ -1,8 +1,8 @@
 import * as path from 'path'
 
-import { formatFiles, generateFiles, names, Tree } from '@nx/devkit'
+import { formatFiles, generateFiles, names, type Tree } from '@nx/devkit'
 
-import { uiComponentGeneratorSchema } from './schema'
+import type { uiComponentGeneratorSchema } from './schema'
 
 export async function uiComponentGenerator(
   tree: Tree,

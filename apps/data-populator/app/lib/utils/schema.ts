@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { Thing, WithContext } from 'schema-dts'
+import type { Thing, WithContext } from 'schema-dts'
 
 export function convertCsvToSchemaObjects<T extends Thing>(
   csvData: string[][],

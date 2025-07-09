@@ -1,4 +1,4 @@
-import { IdentityPresenter, TagEmbeddedPresenter } from '@0xintuition/api'
+import type { IdentityPresenter, TagEmbeddedPresenter } from '@0xintuition/api'
 
 import type { WritableAtom } from 'jotai'
 import { atom, createStore } from 'jotai'

@@ -5,10 +5,10 @@ import {
   attestorContractsMap,
   multivaultContractsMap,
 } from '@lib/utils/chains'
-import { encodePacked, Hex, keccak256, toBytes, toHex } from 'viem'
+import { encodePacked, keccak256, toBytes, toHex, type Hex } from 'viem'
 import { base, baseSepolia } from 'viem/chains'
 
-import { callAndConfirm, EVMCallRequest, evmRead } from './evm'
+import { callAndConfirm, evmRead, type EVMCallRequest } from './evm'
 import { getAtomID } from './offchain-store'
 
 const environment = import.meta.env.VITE_DEPLOY_ENV

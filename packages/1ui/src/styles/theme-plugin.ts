@@ -6,7 +6,7 @@ import { colorMix } from './utils'
 
 export const themePlugin = plugin(
   // 1. Add css variable definitions to the base layer
-  function ({ addBase, addUtilities }) {
+  ({ addBase, addUtilities }) => {
     addBase({
       ':root': {
         '--background': themes.light.background,

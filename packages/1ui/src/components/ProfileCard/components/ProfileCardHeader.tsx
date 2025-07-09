@@ -1,4 +1,4 @@
-import { Identity, IdentityType } from 'types'
+import { Identity, type IdentityType } from 'types'
 
 import { Avatar, Copy, Trunctacular } from '../..'
 

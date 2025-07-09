@@ -1,9 +1,9 @@
 import {
   createTriple as createTripleBase,
   createTripleCalculateBaseCost,
-  CreateTripleConfig,
-  CreateTripleInputs,
   eventParseTripleCreated,
+  type CreateTripleConfig,
+  type CreateTripleInputs,
 } from '@0xintuition/protocol'
 
 export async function createTripleStatement(
@@ -13,10 +13,10 @@ export async function createTripleStatement(
     depositAmount?: bigint
   },
 ) {
-  const { address: multivaultAddress, publicClient } = config
+  const { address, publicClient } = config
   const tripleBaseCost = await createTripleCalculateBaseCost({
     publicClient,
-    address: multivaultAddress,
+    address,
   })
 
   const { args, depositAmount } = data
@@ -26,7 +26,7 @@ export async function createTripleStatement(
   })
 
   if (!txHash) {
-    throw new Error('Failed to create atom onchain')
+    throw new Error('Failed to create triple onchain')
   }
 
   const event = await eventParseTripleCreated(publicClient, txHash)

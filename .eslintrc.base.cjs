@@ -22,7 +22,7 @@ module.exports = {
   extends: ['eslint:recommended'],
   overrides: [
     {
-      files: ['**/*.{js,jsx,ts,tsx}'],
+      files: ['**/*.{cjs,js,jsx,ts,tsx}'],
       plugins: ['react', 'jsx-a11y', 'prettier'],
       extends: [
         'plugin:react/recommended',

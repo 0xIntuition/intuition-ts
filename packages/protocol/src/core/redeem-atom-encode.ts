@@ -1,4 +1,4 @@
-import { Address, encodeFunctionData, Hex } from 'viem'
+import { encodeFunctionData, type Address, type Hex } from 'viem'
 
 export function redeemAtomEncode(
   shares: bigint,

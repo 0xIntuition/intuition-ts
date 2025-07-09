@@ -4,7 +4,7 @@ import { MIN_DEPOSIT, MULTIVAULT_CONTRACT_ADDRESS } from '@consts/general'
 import { multivaultAbi } from '@lib/abis/multivault'
 import logger from '@lib/utils/logger'
 import { truncateString } from '@lib/utils/misc'
-import { Thing, WithContext } from 'schema-dts'
+import type { Thing, WithContext } from 'schema-dts'
 import { encodeFunctionData, parseUnits, toHex } from 'viem'
 
 import {

@@ -9,7 +9,7 @@ import {
 import { PieChart, PieChartSize, PieChartVariant } from 'components/PieChart'
 import { Text, TextVariant } from 'components/Text'
 import { cn } from 'styles'
-import { CurrencyType } from 'types'
+import type { CurrencyType } from 'types'
 
 export interface StakeTVLProps {
   totalTVL: number

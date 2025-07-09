@@ -1,6 +1,6 @@
 // export theme-plugin , theme-preset, hexToHSL, themes
 
-export * from './theme-plugin'
-export * from './utils'
 export * from './palette'
+export * from './theme-plugin'
 export { default as themePreset } from './theme-preset'
+export * from './utils'

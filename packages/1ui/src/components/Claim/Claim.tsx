@@ -14,7 +14,7 @@ import { Separator } from 'components/Separator'
 import { Trunctacular } from 'components/Trunctacular'
 import { Fragment } from 'react/jsx-runtime'
 import { cn } from 'styles'
-import { IdentityType } from 'types'
+import type { IdentityType } from 'types'
 
 interface ClaimItemProps {
   variant?: IdentityType

@@ -1,17 +1,17 @@
-import { ReactNode } from 'react'
+import type { ReactNode } from 'react'
 
 import {
   Button,
   ButtonVariant,
   Icon,
   IconName,
-  IconNameType,
   Popover,
   PopoverContent,
   PopoverTrigger,
   Text,
   TextVariant,
   TextWeight,
+  type IconNameType,
 } from '@0xintuition/1ui'
 
 export const InfoPopover = ({

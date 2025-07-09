@@ -1,5 +1,9 @@
 import logger from '@lib/utils/logger'
-import { AuthTokenClaims, PrivyClient, User } from '@privy-io/server-auth'
+import {
+  PrivyClient,
+  type AuthTokenClaims,
+  type User,
+} from '@privy-io/server-auth'
 import { parse } from 'cookie'
 
 export function getPrivyClient() {

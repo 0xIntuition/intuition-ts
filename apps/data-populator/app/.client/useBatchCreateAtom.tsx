@@ -5,12 +5,12 @@ import { toast } from '@0xintuition/1ui'
 import type { BatchAtomsRequest, PinDataResult } from '@lib/services/populate'
 import logger from '@lib/utils/logger'
 import { useFetcher } from '@remix-run/react'
-import {
+import type {
   InitiateActionData,
   LogTxActionData,
   PublishActionData,
 } from '@routes/app+'
-import { Thing, WithContext } from 'schema-dts'
+import type { Thing, WithContext } from 'schema-dts'
 import { useSendTransaction } from 'wagmi'
 
 import { useUserClient } from './useUserWallet'

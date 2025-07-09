@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 
-import { IdentityPresenter } from '@0xintuition/api'
+import type { IdentityPresenter } from '@0xintuition/api'
 
-import { SubmissionResult } from '@conform-to/react'
+import type { SubmissionResult } from '@conform-to/react'
 import { useFetcher } from '@remix-run/react'
 
 export interface OffChainFetcherData {

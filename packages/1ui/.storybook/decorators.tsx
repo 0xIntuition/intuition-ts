@@ -3,9 +3,10 @@
  *
  * This file contains the decorators we use for the UI Storybook instance.
  */
-import React, { FC, useLayoutEffect } from 'react'
 
-import { Decorator } from '@storybook/react'
+import React, { useLayoutEffect, type FC } from 'react'
+
+import type { Decorator } from '@storybook/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 /**

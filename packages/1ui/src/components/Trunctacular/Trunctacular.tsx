@@ -1,15 +1,15 @@
-import * as React from 'react'
+import type * as React from 'react'
 
 import { formatWalletAddress } from 'utils'
 
 import {
   Text,
-  TextVariantType,
-  TextWeightType,
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
+  type TextVariantType,
+  type TextWeightType,
 } from '..'
 
 export interface TrunctacularProps

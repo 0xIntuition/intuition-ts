@@ -23,12 +23,12 @@ import { ProgressModal } from '@components/progress-modal'
 import { ProofreadModal } from '@components/proofread-modal'
 import { Progress } from '@components/ui/progress'
 import {
-  BatchAtomsRequest,
   createPopulateAtomsRequest,
   generateBatchAtomsCalldata,
   logTransactionHashAndVerifyAtoms,
   pinAtoms,
-  PinDataResult,
+  type BatchAtomsRequest,
+  type PinDataResult,
 } from '@lib/services/populate'
 import { generateCsvContent, parseCsv } from '@lib/utils/csv'
 import { loadThumbnail, loadThumbnails } from '@lib/utils/image'
@@ -52,7 +52,7 @@ import {
   useSubmit,
 } from '@remix-run/react'
 import { CheckCircle2, Loader2, Minus, Plus, Save, Search } from 'lucide-react'
-import { Thing, WithContext } from 'schema-dts'
+import type { Thing, WithContext } from 'schema-dts'
 
 // Add this new interface
 interface AtomExistsResult {
@@ -118,7 +118,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         const requestHash = await createPopulateAtomsRequest(selectedAtoms)
         logger(`Initiated batch atom request with hash: ${requestHash}`)
         logger(`Selected rows: ${selectedRows}`)
-        return json({ success: true, requestHash, selectedRows, selectedAtoms })
+        return json({
+          success: true,
+          requestHash,
+          selectedRows,
+          selectedAtoms,
+        })
       }
       case 'publishAtoms': {
         const requestHash = formData.get('requestHash') as string

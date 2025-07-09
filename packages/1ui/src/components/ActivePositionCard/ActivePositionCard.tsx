@@ -1,6 +1,11 @@
-import * as React from 'react'
+import type * as React from 'react'
 
-import { ClaimPosition, ClaimPositionType, Currency, CurrencyType } from 'types'
+import {
+  ClaimPosition,
+  Currency,
+  type ClaimPositionType,
+  type CurrencyType,
+} from 'types'
 
 import { Tag, TagSize, TagVariant, Text, TextVariant } from '..'
 

@@ -1,8 +1,8 @@
 import {
-  ClaimSortColumn,
-  PositionSortColumn,
   SortColumn,
   SortDirection,
+  type ClaimSortColumn,
+  type PositionSortColumn,
 } from '@0xintuition/api'
 
 const getParam = ({

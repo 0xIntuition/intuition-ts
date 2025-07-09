@@ -1,8 +1,8 @@
 import React from 'react'
 
-import { Currency, CurrencyType } from 'types'
+import { Currency, type CurrencyType } from 'types'
 
-import { Tag, TagVariant, TextProps } from '../..'
+import { Tag, TagVariant, type TextProps } from '../..'
 // import { FeesAccrued } from './FeesAccrued'
 import { MonetaryValue } from './MonetaryValue'
 

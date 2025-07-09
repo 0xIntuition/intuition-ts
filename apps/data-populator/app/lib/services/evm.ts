@@ -1,11 +1,11 @@
 import {
-  Abi,
-  Address,
   createPublicClient,
   createWalletClient,
-  Hex,
   http,
   parseAbi,
+  type Abi,
+  type Address,
+  type Hex,
 } from 'viem'
 import { privateKeyToAccount } from 'viem/accounts'
 
