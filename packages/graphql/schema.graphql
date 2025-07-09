@@ -6764,7 +6764,7 @@ type query_root {
     where: share_price_change_stats_weekly_bool_exp
   ): [share_price_change_stats_weekly!]!
   """
-  fetch data from the table: "share_price_change"
+  An array relationship
   """
   share_price_changes(
     """
@@ -6789,7 +6789,7 @@ type query_root {
     where: share_price_changes_bool_exp
   ): [share_price_changes!]!
   """
-  fetch aggregated fields from the table: "share_price_change"
+  An aggregate relationship
   """
   share_price_changes_aggregate(
     """
@@ -7241,6 +7241,64 @@ type query_root {
   fetch data from the table: "triple" using primary key columns
   """
   triple(term_id: numeric!): triples
+  """
+  fetch data from the table: "triple_term" using primary key columns
+  """
+  triple_term(term_id: numeric!): triple_term
+  """
+  fetch data from the table: "triple_term"
+  """
+  triple_terms(
+    """
+    distinct select on columns
+    """
+    distinct_on: [triple_term_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [triple_term_order_by!]
+    """
+    filter the rows returned
+    """
+    where: triple_term_bool_exp
+  ): [triple_term!]!
+  """
+  fetch data from the table: "triple_vault" using primary key columns
+  """
+  triple_vault(curve_id: numeric!, term_id: numeric!): triple_vault
+  """
+  fetch data from the table: "triple_vault"
+  """
+  triple_vaults(
+    """
+    distinct select on columns
+    """
+    distinct_on: [triple_vault_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [triple_vault_order_by!]
+    """
+    filter the rows returned
+    """
+    where: triple_vault_bool_exp
+  ): [triple_vault!]!
   """
   An array relationship
   """
@@ -8324,6 +8382,17 @@ type share_price_changes_aggregate {
   nodes: [share_price_changes!]!
 }
 
+input share_price_changes_aggregate_bool_exp {
+  count: share_price_changes_aggregate_bool_exp_count
+}
+
+input share_price_changes_aggregate_bool_exp_count {
+  arguments: [share_price_changes_select_column!]
+  distinct: Boolean
+  filter: share_price_changes_bool_exp
+  predicate: Int_comparison_exp!
+}
+
 """
 aggregate fields of "share_price_change"
 """
@@ -8342,6 +8411,23 @@ type share_price_changes_aggregate_fields {
 }
 
 """
+order by aggregate values of table "share_price_change"
+"""
+input share_price_changes_aggregate_order_by {
+  avg: share_price_changes_avg_order_by
+  count: order_by
+  max: share_price_changes_max_order_by
+  min: share_price_changes_min_order_by
+  stddev: share_price_changes_stddev_order_by
+  stddev_pop: share_price_changes_stddev_pop_order_by
+  stddev_samp: share_price_changes_stddev_samp_order_by
+  sum: share_price_changes_sum_order_by
+  var_pop: share_price_changes_var_pop_order_by
+  var_samp: share_price_changes_var_samp_order_by
+  variance: share_price_changes_variance_order_by
+}
+
+"""
 aggregate avg on columns
 """
 type share_price_changes_avg_fields {
@@ -8353,6 +8439,20 @@ type share_price_changes_avg_fields {
   term_id: Float
   total_assets: Float
   total_shares: Float
+}
+
+"""
+order by avg() on columns of table "share_price_change"
+"""
+input share_price_changes_avg_order_by {
+  block_number: order_by
+  block_timestamp: order_by
+  curve_id: order_by
+  id: order_by
+  share_price: order_by
+  term_id: order_by
+  total_assets: order_by
+  total_shares: order_by
 }
 
 """
@@ -8393,6 +8493,22 @@ type share_price_changes_max_fields {
 }
 
 """
+order by max() on columns of table "share_price_change"
+"""
+input share_price_changes_max_order_by {
+  block_number: order_by
+  block_timestamp: order_by
+  curve_id: order_by
+  id: order_by
+  share_price: order_by
+  term_id: order_by
+  total_assets: order_by
+  total_shares: order_by
+  transaction_hash: order_by
+  updated_at: order_by
+}
+
+"""
 aggregate min on columns
 """
 type share_price_changes_min_fields {
@@ -8406,6 +8522,22 @@ type share_price_changes_min_fields {
   total_shares: numeric
   transaction_hash: String
   updated_at: timestamptz
+}
+
+"""
+order by min() on columns of table "share_price_change"
+"""
+input share_price_changes_min_order_by {
+  block_number: order_by
+  block_timestamp: order_by
+  curve_id: order_by
+  id: order_by
+  share_price: order_by
+  term_id: order_by
+  total_assets: order_by
+  total_shares: order_by
+  transaction_hash: order_by
+  updated_at: order_by
 }
 
 """
@@ -8487,6 +8619,20 @@ type share_price_changes_stddev_fields {
 }
 
 """
+order by stddev() on columns of table "share_price_change"
+"""
+input share_price_changes_stddev_order_by {
+  block_number: order_by
+  block_timestamp: order_by
+  curve_id: order_by
+  id: order_by
+  share_price: order_by
+  term_id: order_by
+  total_assets: order_by
+  total_shares: order_by
+}
+
+"""
 aggregate stddev_pop on columns
 """
 type share_price_changes_stddev_pop_fields {
@@ -8501,6 +8647,20 @@ type share_price_changes_stddev_pop_fields {
 }
 
 """
+order by stddev_pop() on columns of table "share_price_change"
+"""
+input share_price_changes_stddev_pop_order_by {
+  block_number: order_by
+  block_timestamp: order_by
+  curve_id: order_by
+  id: order_by
+  share_price: order_by
+  term_id: order_by
+  total_assets: order_by
+  total_shares: order_by
+}
+
+"""
 aggregate stddev_samp on columns
 """
 type share_price_changes_stddev_samp_fields {
@@ -8512,6 +8672,20 @@ type share_price_changes_stddev_samp_fields {
   term_id: Float
   total_assets: Float
   total_shares: Float
+}
+
+"""
+order by stddev_samp() on columns of table "share_price_change"
+"""
+input share_price_changes_stddev_samp_order_by {
+  block_number: order_by
+  block_timestamp: order_by
+  curve_id: order_by
+  id: order_by
+  share_price: order_by
+  term_id: order_by
+  total_assets: order_by
+  total_shares: order_by
 }
 
 """
@@ -8559,6 +8733,20 @@ type share_price_changes_sum_fields {
 }
 
 """
+order by sum() on columns of table "share_price_change"
+"""
+input share_price_changes_sum_order_by {
+  block_number: order_by
+  block_timestamp: order_by
+  curve_id: order_by
+  id: order_by
+  share_price: order_by
+  term_id: order_by
+  total_assets: order_by
+  total_shares: order_by
+}
+
+"""
 aggregate var_pop on columns
 """
 type share_price_changes_var_pop_fields {
@@ -8570,6 +8758,20 @@ type share_price_changes_var_pop_fields {
   term_id: Float
   total_assets: Float
   total_shares: Float
+}
+
+"""
+order by var_pop() on columns of table "share_price_change"
+"""
+input share_price_changes_var_pop_order_by {
+  block_number: order_by
+  block_timestamp: order_by
+  curve_id: order_by
+  id: order_by
+  share_price: order_by
+  term_id: order_by
+  total_assets: order_by
+  total_shares: order_by
 }
 
 """
@@ -8587,6 +8789,20 @@ type share_price_changes_var_samp_fields {
 }
 
 """
+order by var_samp() on columns of table "share_price_change"
+"""
+input share_price_changes_var_samp_order_by {
+  block_number: order_by
+  block_timestamp: order_by
+  curve_id: order_by
+  id: order_by
+  share_price: order_by
+  term_id: order_by
+  total_assets: order_by
+  total_shares: order_by
+}
+
+"""
 aggregate variance on columns
 """
 type share_price_changes_variance_fields {
@@ -8598,6 +8814,20 @@ type share_price_changes_variance_fields {
   term_id: Float
   total_assets: Float
   total_shares: Float
+}
+
+"""
+order by variance() on columns of table "share_price_change"
+"""
+input share_price_changes_variance_order_by {
+  block_number: order_by
+  block_timestamp: order_by
+  curve_id: order_by
+  id: order_by
+  share_price: order_by
+  term_id: order_by
+  total_assets: order_by
+  total_shares: order_by
 }
 
 """
@@ -11245,7 +11475,7 @@ type subscription_root {
     where: share_price_change_stats_weekly_bool_exp
   ): [share_price_change_stats_weekly!]!
   """
-  fetch data from the table: "share_price_change"
+  An array relationship
   """
   share_price_changes(
     """
@@ -11270,7 +11500,7 @@ type subscription_root {
     where: share_price_changes_bool_exp
   ): [share_price_changes!]!
   """
-  fetch aggregated fields from the table: "share_price_change"
+  An aggregate relationship
   """
   share_price_changes_aggregate(
     """
@@ -11893,6 +12123,98 @@ type subscription_root {
   """
   triple(term_id: numeric!): triples
   """
+  fetch data from the table: "triple_term" using primary key columns
+  """
+  triple_term(term_id: numeric!): triple_term
+  """
+  fetch data from the table in a streaming manner: "triple_term"
+  """
+  triple_term_stream(
+    """
+    maximum number of rows returned in a single batch
+    """
+    batch_size: Int!
+    """
+    cursor to stream the results returned by the query
+    """
+    cursor: [triple_term_stream_cursor_input]!
+    """
+    filter the rows returned
+    """
+    where: triple_term_bool_exp
+  ): [triple_term!]!
+  """
+  fetch data from the table: "triple_term"
+  """
+  triple_terms(
+    """
+    distinct select on columns
+    """
+    distinct_on: [triple_term_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [triple_term_order_by!]
+    """
+    filter the rows returned
+    """
+    where: triple_term_bool_exp
+  ): [triple_term!]!
+  """
+  fetch data from the table: "triple_vault" using primary key columns
+  """
+  triple_vault(curve_id: numeric!, term_id: numeric!): triple_vault
+  """
+  fetch data from the table in a streaming manner: "triple_vault"
+  """
+  triple_vault_stream(
+    """
+    maximum number of rows returned in a single batch
+    """
+    batch_size: Int!
+    """
+    cursor to stream the results returned by the query
+    """
+    cursor: [triple_vault_stream_cursor_input]!
+    """
+    filter the rows returned
+    """
+    where: triple_vault_bool_exp
+  ): [triple_vault!]!
+  """
+  fetch data from the table: "triple_vault"
+  """
+  triple_vaults(
+    """
+    distinct select on columns
+    """
+    distinct_on: [triple_vault_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [triple_vault_order_by!]
+    """
+    filter the rows returned
+    """
+    where: triple_vault_bool_exp
+  ): [triple_vault!]!
+  """
   An array relationship
   """
   triples(
@@ -12216,6 +12538,56 @@ type terms {
   """
   An array relationship
   """
+  share_price_changes(
+    """
+    distinct select on columns
+    """
+    distinct_on: [share_price_changes_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [share_price_changes_order_by!]
+    """
+    filter the rows returned
+    """
+    where: share_price_changes_bool_exp
+  ): [share_price_changes!]!
+  """
+  An aggregate relationship
+  """
+  share_price_changes_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [share_price_changes_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [share_price_changes_order_by!]
+    """
+    filter the rows returned
+    """
+    where: share_price_changes_bool_exp
+  ): share_price_changes_aggregate!
+  """
+  An array relationship
+  """
   signals(
     """
     distinct select on columns
@@ -12377,6 +12749,8 @@ input terms_bool_exp {
   positions_aggregate: positions_aggregate_bool_exp
   redemptions: redemptions_bool_exp
   redemptions_aggregate: redemptions_aggregate_bool_exp
+  share_price_changes: share_price_changes_bool_exp
+  share_price_changes_aggregate: share_price_changes_aggregate_bool_exp
   signals: signals_bool_exp
   signals_aggregate: signals_aggregate_bool_exp
   total_assets: numeric_comparison_exp
@@ -12424,6 +12798,7 @@ input terms_order_by {
   id: order_by
   positions_aggregate: positions_aggregate_order_by
   redemptions_aggregate: redemptions_aggregate_order_by
+  share_price_changes_aggregate: share_price_changes_aggregate_order_by
   signals_aggregate: signals_aggregate_order_by
   total_assets: order_by
   total_market_cap: order_by
@@ -12948,6 +13323,252 @@ input timestamptz_comparison_exp {
 }
 
 """
+columns and relationships of "triple_term"
+"""
+type triple_term {
+  """
+  An object relationship
+  """
+  counter_term: terms!
+  counter_term_id: numeric!
+  """
+  An object relationship
+  """
+  term: terms!
+  term_id: numeric!
+  total_assets: numeric!
+  total_market_cap: numeric!
+  total_position_count: bigint!
+  updated_at: timestamptz!
+}
+
+"""
+Boolean expression to filter rows from the table "triple_term". All fields are combined with a logical 'AND'.
+"""
+input triple_term_bool_exp {
+  _and: [triple_term_bool_exp!]
+  _not: triple_term_bool_exp
+  _or: [triple_term_bool_exp!]
+  counter_term: terms_bool_exp
+  counter_term_id: numeric_comparison_exp
+  term: terms_bool_exp
+  term_id: numeric_comparison_exp
+  total_assets: numeric_comparison_exp
+  total_market_cap: numeric_comparison_exp
+  total_position_count: bigint_comparison_exp
+  updated_at: timestamptz_comparison_exp
+}
+
+"""
+Ordering options when selecting data from "triple_term".
+"""
+input triple_term_order_by {
+  counter_term: terms_order_by
+  counter_term_id: order_by
+  term: terms_order_by
+  term_id: order_by
+  total_assets: order_by
+  total_market_cap: order_by
+  total_position_count: order_by
+  updated_at: order_by
+}
+
+"""
+select columns of table "triple_term"
+"""
+enum triple_term_select_column {
+  """
+  column name
+  """
+  counter_term_id
+  """
+  column name
+  """
+  term_id
+  """
+  column name
+  """
+  total_assets
+  """
+  column name
+  """
+  total_market_cap
+  """
+  column name
+  """
+  total_position_count
+  """
+  column name
+  """
+  updated_at
+}
+
+"""
+Streaming cursor of the table "triple_term"
+"""
+input triple_term_stream_cursor_input {
+  """
+  Stream column input with initial value
+  """
+  initial_value: triple_term_stream_cursor_value_input!
+  """
+  cursor ordering
+  """
+  ordering: cursor_ordering
+}
+
+"""
+Initial value of the column from where the streaming should start
+"""
+input triple_term_stream_cursor_value_input {
+  counter_term_id: numeric
+  term_id: numeric
+  total_assets: numeric
+  total_market_cap: numeric
+  total_position_count: bigint
+  updated_at: timestamptz
+}
+
+"""
+columns and relationships of "triple_vault"
+"""
+type triple_vault {
+  block_number: numeric!
+  """
+  An object relationship
+  """
+  counter_term: terms
+  counter_term_id: numeric!
+  curve_id: numeric!
+  log_index: bigint!
+  market_cap: numeric!
+  position_count: bigint!
+  """
+  An object relationship
+  """
+  term: terms
+  term_id: numeric!
+  total_assets: numeric!
+  total_shares: numeric!
+  updated_at: timestamptz!
+}
+
+"""
+Boolean expression to filter rows from the table "triple_vault". All fields are combined with a logical 'AND'.
+"""
+input triple_vault_bool_exp {
+  _and: [triple_vault_bool_exp!]
+  _not: triple_vault_bool_exp
+  _or: [triple_vault_bool_exp!]
+  block_number: numeric_comparison_exp
+  counter_term: terms_bool_exp
+  counter_term_id: numeric_comparison_exp
+  curve_id: numeric_comparison_exp
+  log_index: bigint_comparison_exp
+  market_cap: numeric_comparison_exp
+  position_count: bigint_comparison_exp
+  term: terms_bool_exp
+  term_id: numeric_comparison_exp
+  total_assets: numeric_comparison_exp
+  total_shares: numeric_comparison_exp
+  updated_at: timestamptz_comparison_exp
+}
+
+"""
+Ordering options when selecting data from "triple_vault".
+"""
+input triple_vault_order_by {
+  block_number: order_by
+  counter_term: terms_order_by
+  counter_term_id: order_by
+  curve_id: order_by
+  log_index: order_by
+  market_cap: order_by
+  position_count: order_by
+  term: terms_order_by
+  term_id: order_by
+  total_assets: order_by
+  total_shares: order_by
+  updated_at: order_by
+}
+
+"""
+select columns of table "triple_vault"
+"""
+enum triple_vault_select_column {
+  """
+  column name
+  """
+  block_number
+  """
+  column name
+  """
+  counter_term_id
+  """
+  column name
+  """
+  curve_id
+  """
+  column name
+  """
+  log_index
+  """
+  column name
+  """
+  market_cap
+  """
+  column name
+  """
+  position_count
+  """
+  column name
+  """
+  term_id
+  """
+  column name
+  """
+  total_assets
+  """
+  column name
+  """
+  total_shares
+  """
+  column name
+  """
+  updated_at
+}
+
+"""
+Streaming cursor of the table "triple_vault"
+"""
+input triple_vault_stream_cursor_input {
+  """
+  Stream column input with initial value
+  """
+  initial_value: triple_vault_stream_cursor_value_input!
+  """
+  cursor ordering
+  """
+  ordering: cursor_ordering
+}
+
+"""
+Initial value of the column from where the streaming should start
+"""
+input triple_vault_stream_cursor_value_input {
+  block_number: numeric
+  counter_term_id: numeric
+  curve_id: numeric
+  log_index: bigint
+  market_cap: numeric
+  position_count: bigint
+  term_id: numeric
+  total_assets: numeric
+  total_shares: numeric
+  updated_at: timestamptz
+}
+
+"""
 columns and relationships of "triple"
 """
 type triples {
@@ -13084,6 +13705,14 @@ type triples {
   term: terms
   term_id: numeric!
   transaction_hash: String!
+  """
+  An object relationship
+  """
+  triple_term: triple_term
+  """
+  An object relationship
+  """
+  triple_vault: triple_vault
 }
 
 """
@@ -13189,6 +13818,8 @@ input triples_bool_exp {
   term: terms_bool_exp
   term_id: numeric_comparison_exp
   transaction_hash: String_comparison_exp
+  triple_term: triple_term_bool_exp
+  triple_vault: triple_vault_bool_exp
 }
 
 """
@@ -13272,6 +13903,8 @@ input triples_order_by {
   term: terms_order_by
   term_id: order_by
   transaction_hash: order_by
+  triple_term: triple_term_order_by
+  triple_vault: triple_vault_order_by
 }
 
 """
