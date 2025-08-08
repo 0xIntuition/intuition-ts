@@ -10,7 +10,7 @@ import { toHex } from 'viem'
 
 import { pinThing } from '../api/pin-thing'
 
-export async function createAtomFromThing(
+export async function atomExists(
   config: CreateAtomConfig,
   data: PinThingMutationVariables,
   depositAmount?: bigint,

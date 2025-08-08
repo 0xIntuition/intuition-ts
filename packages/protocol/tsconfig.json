@@ -1,7 +1,7 @@
 {
-  "extends": "../../tsconfig.base.json",
   "include": ["src/**/*.ts"],
   "compilerOptions": {
+    "outDir": "./dist",
     "composite": false,
     "declaration": true,
     "declarationMap": true,
@@ -17,5 +17,5 @@
     "skipLibCheck": true,
     "strict": true
   },
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "dist", "**/*.spec.ts"]
 }

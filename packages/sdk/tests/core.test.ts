@@ -13,34 +13,34 @@ import {
 import { deployAndInit } from './helpers/deploy'
 import { publicClient, walletClient } from './helpers/utils'
 
-let multivaultAddress: Address
+let ethMultiVaultAddress: Address
 beforeEach(async () => {
-  multivaultAddress = await deployAndInit()
+  ethMultiVaultAddress = await deployAndInit()
 })
 
 describe('Triple', () => {
   it('should create a Triple', async () => {
     const atom1 = await createAtomFromString(
-      { walletClient, publicClient, address: multivaultAddress },
+      { walletClient, publicClient, address: ethMultiVaultAddress },
       'atom1',
     )
     const atom2 = await createAtomFromString(
-      { walletClient, publicClient, address: multivaultAddress },
+      { walletClient, publicClient, address: ethMultiVaultAddress },
       'atom2',
     )
     const atom3 = await createAtomFromString(
-      { walletClient, publicClient, address: multivaultAddress },
+      { walletClient, publicClient, address: ethMultiVaultAddress },
       'atom3',
     )
 
     const triple = await createTripleStatement(
-      { walletClient, publicClient, address: multivaultAddress },
+      { walletClient, publicClient, address: ethMultiVaultAddress },
       {
         args: [atom1.state.vaultId, atom2.state.vaultId, atom3.state.vaultId],
       },
     )
 
-    expect(triple.state.vaultId).toEqual(4n)
+    expect(triple.state[0].args.vaultId).toEqual(4n)
   })
 })
 
@@ -50,7 +50,7 @@ describe('Atoms', () => {
       {
         walletClient,
         publicClient,
-        address: multivaultAddress,
+        address: ethMultiVaultAddress,
         pinataApiJWT: String(process.env.PINATA_API_JWT),
       },
       {
@@ -72,7 +72,7 @@ describe('Atoms', () => {
       {
         walletClient,
         publicClient,
-        address: multivaultAddress,
+        address: ethMultiVaultAddress,
       },
       'ipfs://bafkreib7534cszxn2c6qwoviv43sqh244yfrxomjbealjdwntd6a7atq6u',
     )
@@ -85,7 +85,7 @@ describe('Atoms', () => {
 
   it('should create a string Atom', async () => {
     const data = await createAtomFromString(
-      { walletClient, publicClient, address: multivaultAddress },
+      { walletClient, publicClient, address: ethMultiVaultAddress },
       'This is a test string atom',
     )
     expect(data.uri).toEqual('This is a test string atom')
@@ -95,7 +95,7 @@ describe('Atoms', () => {
 
   it('should create ethereum account Atom', async () => {
     const data = await createAtomFromEthereumAccount(
-      { walletClient, publicClient, address: multivaultAddress },
+      { walletClient, publicClient, address: ethMultiVaultAddress },
       '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045',
     )
     expect(data.uri).toEqual('0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045')
@@ -105,7 +105,7 @@ describe('Atoms', () => {
 
   it('should create CAIP10 ethereum account Atom', async () => {
     const data = await createAtomFromSmartContract(
-      { walletClient, publicClient, address: multivaultAddress },
+      { walletClient, publicClient, address: ethMultiVaultAddress },
       {
         address: '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045',
         chainId: 1, // Mainnet
@@ -120,7 +120,7 @@ describe('Atoms', () => {
 
   it('should create Thing Atom', async () => {
     const data = await createAtomFromThing(
-      { walletClient, publicClient, address: multivaultAddress },
+      { walletClient, publicClient, address: ethMultiVaultAddress },
       {
         url: 'https://www.intuition.systems/',
         name: 'Intuition',

@@ -3,15 +3,15 @@
 The Intuition CLI is a powerful command-line interface that allows you to interact with the Intuition protocol directly from your terminal. With this tool, you can manage accounts, create and manage Intuition Atoms, and configure your settings with ease.
 
 [![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
-[![Version](https://img.shields.io/npm/v/@0xintuition/cli.svg)](https://www.npmjs.com/package/@0xintuition/cli)
-[![Downloads/week](https://img.shields.io/npm/dw/@0xintuition/cli.svg)](https://npmjs.org/package/@0xintuition/cli)
+[![Version](https://img.shields.io/npm/v/intuition-cli.svg)](https://www.npmjs.com/package/intuition-cli)
+[![Downloads/week](https://img.shields.io/npm/dw/intuition-cli.svg)](https://npmjs.org/package/intuition-cli)
 
 ## Installation
 
 To get started, install the Intuition CLI globally using npm:
 
 ```sh-session
-npm install -g @0xintuition/cli
+npm install -g intuition-cli
 ```
 
 ## Usage
@@ -119,12 +119,12 @@ For creating multiple Atoms at once, the batch functionality is recommended.
 
    This will create a CSV file with the required headers. You can then open this file and add the data for the Atoms you want to create.
 
-   **Example `atoms.csv`:**
+   **Example `things.csv`:**
 
    ```csv
-   name,description,image,uris
-   "My First Atom","This is a description of my first Atom.","","[{""uri"":"https://example.com""}]"
-   "My Second Atom","This is a description of my second Atom.","","[{""uri"":"https://anotherexample.com""}]"
+   name,description,image,url
+   "Example Name","Example description of thing.",https://example.com/logo.png,https://example.com/
+
    ```
 
 2. ### **Start the batch creation:**

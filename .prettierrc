@@ -3,7 +3,6 @@
     "prettier-plugin-tailwindcss",
     "@ianvs/prettier-plugin-sort-imports"
   ],
-  "pluginSearchDirs": ["./node_modules"],
   "semi": false,
   "singleQuote": true,
   "printWidth": 80,

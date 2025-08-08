@@ -1,7 +1,7 @@
 import {
   createAtom,
   createAtomCalculateBaseCost,
-  eventParseDepositAtomTransaction,
+  eventParseDeposited,
   type CreateAtomConfig,
 } from '@0xintuition/protocol'
 
@@ -33,7 +33,7 @@ export async function createAtomFromIpfsUpload(
     throw new Error('Failed to create atom onchain')
   }
 
-  const atomData = await eventParseDepositAtomTransaction(
+  const events = await eventParseDeposited(
     config.publicClient ?? config.walletClient,
     txHash,
   )
@@ -41,6 +41,6 @@ export async function createAtomFromIpfsUpload(
   return {
     uri: `ipfs://${dataIpfs.IpfsHash}`,
     transactionHash: txHash,
-    state: atomData,
+    state: events[0].args,
   }
 }

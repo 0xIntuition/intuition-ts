@@ -2,31 +2,30 @@ import type { Address, PublicClient, WalletClient } from 'viem'
 
 import { EthMultiVaultAbi } from '../contracts'
 
-export type CreateTripleConfig = {
+export type RedeemAtomCurveConfig = {
   address: Address
   walletClient: WalletClient
   publicClient: PublicClient
 }
 
-export type CreateTripleInputs = {
-  args: [bigint, bigint, bigint]
+export type RedeemAtomCurveInputs = {
+  args: [bigint, Address, bigint, bigint]
   value?: bigint
 }
 
-export async function createTriple(
-  config: CreateTripleConfig,
-  inputs: CreateTripleInputs,
+export async function redeemAtomCurve(
+  config: RedeemAtomCurveConfig,
+  inputs: RedeemAtomCurveInputs,
 ) {
   const { address, walletClient, publicClient } = config
-  const { args, value } = inputs
+  const { args } = inputs
 
   const { request } = await publicClient.simulateContract({
     account: walletClient.account,
     address,
     abi: EthMultiVaultAbi,
-    functionName: 'createTriple',
+    functionName: 'redeemAtomCurve',
     args,
-    value,
   })
 
   return await walletClient.writeContract(request)

@@ -27,6 +27,7 @@ export async function batchCreateTriple(
   const { address, walletClient, publicClient } = config
   const { args, value } = inputs
   const { request } = await publicClient.simulateContract({
+    account: walletClient.account,
     address,
     abi: EthMultiVaultAbi,
     functionName: 'batchCreateTriple',
@@ -34,8 +35,5 @@ export async function batchCreateTriple(
     value,
   })
 
-  return await walletClient.writeContract({
-    ...request,
-    account: walletClient.account ?? null,
-  })
+  return await walletClient.writeContract(request)
 }

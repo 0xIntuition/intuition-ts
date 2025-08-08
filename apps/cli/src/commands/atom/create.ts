@@ -132,9 +132,9 @@ export default class AtomCreate extends Command {
         this.log(chalk.cyan(`Transaction Hash: ${result.transactionHash}`))
         this.log(chalk.cyan(`URI: ${result.uri}`))
         if (result.state) {
-          this.log(chalk.cyan(`Vault ID: ${result.state.vaultId}`))
-          this.log(chalk.cyan(`Shares: ${result.state.sharesForReceiver}`))
-          this.log(chalk.cyan(`Entry Fee: ${result.state.entryFee}`))
+          this.log(chalk.cyan(`Vault ID: ${result.state[0].args.vaultId}`))
+          this.log(chalk.cyan(`Shares: ${result.state[0].args.sharesForReceiver}`))
+          this.log(chalk.cyan(`Entry Fee: ${result.state[0].args.entryFee}`))
         }
       } else if (atomType === 'ipfs-uri') {
         this.log(chalk.green('✅ Selected: IPFS URI'))

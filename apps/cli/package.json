@@ -1,7 +1,7 @@
 {
-  "name": "0xintuition/cli",
+  "name": "intuition-cli",
   "description": "A CLI for the Intuition protocol.",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "author": "Intuition Systems",
   "bin": {
     "intu": "./bin/run.js"
@@ -83,7 +83,8 @@
     "postpack": "shx rm -f oclif.manifest.json",
     "posttest": "pnpm run lint",
     "prepack": "oclif manifest && oclif readme",
-    "version": "oclif readme && git add README.md"
+    "version": "oclif readme && git add README.md",
+    "intu": "node bin/run.js"
   },
   "types": "dist/index.d.ts"
 }

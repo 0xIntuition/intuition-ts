@@ -21,6 +21,7 @@ export async function batchCreateAtom(
   const { args, value } = inputs
 
   const { request } = await publicClient.simulateContract({
+    account: walletClient.account,
     address,
     abi: EthMultiVaultAbi,
     functionName: 'batchCreateAtom',
@@ -28,8 +29,5 @@ export async function batchCreateAtom(
     value,
   })
 
-  return await walletClient.writeContract({
-    ...request,
-    account: walletClient.account ?? null,
-  })
+  return await walletClient.writeContract(request)
 }
