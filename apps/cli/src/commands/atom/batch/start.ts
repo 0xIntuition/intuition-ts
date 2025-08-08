@@ -4,6 +4,7 @@
 import {
   batchCreateAtomsFromEthereumAccounts,
   batchCreateAtomsFromIpfsUris,
+  batchCreateAtomsFromSmartContracts,
   batchCreateAtomsFromThings,
   batchCreateTripleStatements,
   intuitionDeployments,
@@ -132,6 +133,11 @@ export default class BatchStart extends Command {
           name: 'IPFS URI',
           value: 'ipfs-uri',
         },
+        {
+          description: 'Batch create atoms from Smart Contracts',
+          name: 'Smart Contract',
+          value: 'smart-contract',
+        },
       ],
       message: 'Select atom type to batch create:',
     })
@@ -183,6 +189,11 @@ export default class BatchStart extends Command {
 
           case 'ipfs-uri': {
             await this.processIpfsUriBatch(batch, allRows, headers, atomConfig, list as string | undefined)
+            break
+          }
+
+          case 'smart-contract': {
+            await this.processSmartContractBatch(batch, allRows, headers, atomConfig, list as string | undefined)
             break
           }
 
@@ -292,6 +303,62 @@ export default class BatchStart extends Command {
         row.vaultId = state[idx]?.vaultId?.toString?.() || ''
         vaultIds.push(row.vaultId)
         this.log(chalk.green(`✅ Created atom for IPFS URI: ${row.ipfsUri} (VaultId: ${row.vaultId})`))
+        idx++
+      }
+    }
+
+    // 5. Tag list if needed
+    if (listFlag && vaultIds.length > 0) {
+      await this.batchTagAtomsInList(atomConfig, vaultIds, listFlag)
+    }
+  }
+
+  private async processSmartContractBatch(
+    batch: CsvRow[],
+    allRows: CsvRow[],
+    headers: string[],
+    atomConfig: CreateAtomConfig,
+    listFlag?: string,
+  ) {
+    // 1. Ensure required columns
+    const requiredCols = ['vaultId']
+    for (const col of requiredCols) {
+      if (!headers.includes(col)) {
+        headers.push(col)
+        for (const row of allRows) {
+          if (!(col in row)) row[col] = ''
+        }
+      }
+    }
+
+    // 2. Prepare batch input
+    const batchInput = batch.map((row) => ({
+      address: getAddress(row.address),
+      chainId: Number(row.chainId),
+    }))
+
+    // 3. Call SDK batch function
+    const result = await batchCreateAtomsFromSmartContracts(atomConfig, batchInput)
+    const {state} = result
+
+    // 4. Update allRows and collect vaultIds
+    let idx = 0
+    const vaultIds: string[] = []
+    for (let j = 0; j < allRows.length && idx < batch.length; j++) {
+      const row = allRows[j]
+      if (
+        (!row.vaultId || row.vaultId.trim() === '') &&
+        row.address &&
+        row.chainId &&
+        batchInput.some((input) => input.address === getAddress(row.address) && input.chainId === Number(row.chainId))
+      ) {
+        row.vaultId = state[idx]?.vaultId?.toString?.() || ''
+        vaultIds.push(row.vaultId)
+        this.log(
+          chalk.green(
+            `✅ Created atom for smart contract: ${row.address} (ChainId: ${row.chainId}, VaultId: ${row.vaultId})`,
+          ),
+        )
         idx++
       }
     }

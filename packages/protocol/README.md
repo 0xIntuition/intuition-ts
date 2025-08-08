@@ -95,6 +95,55 @@ await redeemTriple(
 )
 ```
 
+### Curve Deposits and Redemptions
+
+```typescript
+import {
+  batchDepositCurve,
+  batchRedeemCurve,
+  depositAtomCurve,
+  depositTripleCurve,
+  redeemAtomCurve,
+  redeemTripleCurve,
+} from '@0xintuition/protocol/core'
+
+// Deposit into an atom using the curve
+await depositAtomCurve(
+  { address, walletClient, publicClient },
+  { args: [receiver, atomId, curveId], value },
+)
+
+// Deposit into a triple using the curve
+await depositTripleCurve(
+  { address, walletClient, publicClient },
+  { args: [receiver, tripleId, curveId], value },
+)
+
+// Batch deposit into atoms/triples using the curve
+await batchDepositCurve(
+  { address, walletClient, publicClient },
+  { args: [receiver, ids, curveIds, amounts], value },
+)
+
+// Redeem atom shares using the curve
+await redeemAtomCurve(
+  { address, walletClient, publicClient },
+  { args: [shares, receiver, atomId, curveId] },
+)
+
+// Redeem triple shares using the curve
+await redeemTripleCurve(
+  { address, walletClient, publicClient },
+  { args: [shares, receiver, tripleId, curveId] },
+)
+
+// Batch redeem shares from atoms/triples using the curve
+await batchRedeemCurve(
+  { address, walletClient, publicClient },
+  { args: [shares, receiver, ids, curveIds] },
+)
+```
+
 ### Cost Calculation and Multicall
 
 ```typescript
@@ -155,13 +204,13 @@ import {
 const atomEvents = await eventParseAtomCreated(publicClient, txHash)
 
 // Parse Deposited event logs
-const depositArgs = await eventParseDepositAtomTransaction(publicClient, txHash)
+const depositEvents = await eventParseDeposited(publicClient, txHash)
 
 // Parse Redeemed event logs
-const redeemArgs = await eventParseRedeemAtomTransaction(publicClient, txHash)
+const redeemEvents = await eventParseRedeemed(publicClient, txHash)
 
 // Parse TripleCreated event logs
-const tripleArgs = await eventParseTripleCreated(publicClient, txHash)
+const tripleEvents = await eventParseTripleCreated(publicClient, txHash)
 ```
 
 ## EthMultiVault

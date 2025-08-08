@@ -1,7 +1,7 @@
 import {
   createAtom,
   createAtomCalculateBaseCost,
-  eventParseDepositAtomTransaction,
+  eventParseDeposited,
   type CreateAtomConfig,
 } from '@0xintuition/protocol'
 
@@ -16,10 +16,10 @@ export async function createAtomFromString(
     throw new Error('Not a valid String URI')
   }
 
-  const { address: multivaultAddress, publicClient } = config
+  const { address, publicClient } = config
   const atomBaseCost = await createAtomCalculateBaseCost({
     publicClient,
-    address: multivaultAddress,
+    address,
   })
 
   const txHash = await createAtom(config, {
@@ -31,11 +31,11 @@ export async function createAtomFromString(
     throw new Error('Failed to create atom onchain')
   }
 
-  const atomData = await eventParseDepositAtomTransaction(publicClient, txHash)
+  const events = await eventParseDeposited(publicClient, txHash)
 
   return {
     uri: data,
     transactionHash: txHash,
-    state: atomData,
+    state: events[0].args,
   }
 }

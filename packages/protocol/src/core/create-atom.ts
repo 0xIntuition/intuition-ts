@@ -21,7 +21,7 @@ export async function createAtom(
 
   const { args, value } = inputs
   const { request } = await publicClient.simulateContract({
-    account: walletClient.account ?? null,
+    account: walletClient.account,
     address,
     abi: EthMultiVaultAbi,
     functionName: 'createAtom',

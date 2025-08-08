@@ -26,10 +26,10 @@ export async function batchCreateTripleStatements(
     throw new Error('Failed to create triple onchain')
   }
 
-  const event = await eventParseTripleCreated(publicClient, txHash)
+  const events = await eventParseTripleCreated(publicClient, txHash)
 
   return {
     transactionHash: txHash,
-    state: event,
+    state: events.map((i) => i.args),
   }
 }

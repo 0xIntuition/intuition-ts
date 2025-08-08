@@ -9,22 +9,28 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 const SAMPLES = [
   {
+    description: 'Template for "Things" data',
+    file: 'things.csv',
+    name: 'Things',
+    value: 'things',
+  },
+  {
     description: 'Template for Ethereum account data',
     file: 'ethereum-accounts.csv',
     name: 'Ethereum Accounts',
     value: 'ethereum-accounts',
   },
   {
+    description: 'Template for smart contract data',
+    file: 'smart-contracts.csv',
+    name: 'Smart Contracts',
+    value: 'smart-contracts',
+  },
+  {
     description: 'Template for IPFS URI data',
     file: 'ipfs-uri.csv',
     name: 'IPFS URI',
     value: 'ipfs-uri',
-  },
-  {
-    description: 'Template for "Things" data',
-    file: 'things.csv',
-    name: 'Things',
-    value: 'things',
   },
 ]
 export default class BatchCreate extends Command {

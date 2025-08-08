@@ -1,7 +1,7 @@
 import {
   createAtom,
   createAtomCalculateBaseCost,
-  eventParseDepositAtomTransaction,
+  eventParseDeposited,
   type CreateAtomConfig,
 } from '@0xintuition/protocol'
 
@@ -32,7 +32,7 @@ export async function createAtomFromEthereumAccount(
     throw new Error('Failed to create atom onchain')
   }
 
-  const atomData = await eventParseDepositAtomTransaction(publicClient, txHash)
+  const atomData = await eventParseDeposited(publicClient, txHash)
 
   return {
     uri: uriRef,

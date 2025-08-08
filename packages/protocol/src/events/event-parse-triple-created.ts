@@ -9,11 +9,11 @@ export async function eventParseTripleCreated(client: PublicClient, hash: Hex) {
     throw new Error('Transaction reverted')
   }
 
-  const event = parseEventLogs({
+  const events = parseEventLogs({
     abi: EthMultiVaultAbi,
     logs,
     eventName: 'TripleCreated',
   })
 
-  return event[0].args
+  return events
 }
