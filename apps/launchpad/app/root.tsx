@@ -6,6 +6,8 @@ import {
   Scripts,
   ScrollRestoration,
   useLoaderData,
+  useRouteError,
+  isRouteErrorResponse,
 } from '@remix-run/react'
 
 import { Providers } from './lib/providers'
@@ -21,6 +23,7 @@ import { VideoBackground } from '@components/video-background'
 import { API_URL_DEV, API_URL_PROD, CURRENT_ENV } from '@consts/general'
 import { json } from '@remix-run/node'
 import { getEnv, getFeatureFlags } from '@server/env'
+import { getMaintenanceMode } from '@lib/utils/maintenance'
 import { ClientOnly } from 'remix-utils/client-only'
 
 // Configure GraphQL client at module initialization using the URLs from the package. For now, we should use the local URL for development
@@ -29,7 +32,9 @@ configureClient({
   apiUrl: CURRENT_ENV === 'development' ? API_URL_DEV : API_URL_PROD, // TODO: Update these in GraphQL package and import from there instead
 })
 
-export async function loader() {
+export async function loader({ request }: { request: Request }) {
+  getMaintenanceMode(request)
+  
   console.log('HASURA_POINTS_ENDPOINT:', process.env.HASURA_POINTS_ENDPOINT)
   return json({
     env: getEnv(),
@@ -129,5 +134,34 @@ export function AppLayout() {
       <VideoBackground />
       <Outlet />
     </main>
+  )
+}
+
+export function ErrorBoundary() {
+  const error = useRouteError()
+
+  return (
+    <Document>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#060504] via-black to-[#101010] p-4">
+        <div className="text-center text-white">
+          <h1 className="text-4xl font-bold mb-4">
+            {isRouteErrorResponse(error) && error.status === 404
+              ? 'Page Not Found'
+              : 'Something went wrong'}
+          </h1>
+          <p className="text-lg opacity-80 mb-8">
+            {isRouteErrorResponse(error) && error.status === 404
+              ? 'The page you are looking for does not exist.'
+              : 'An unexpected error occurred.'}
+          </p>
+          <a
+            href="/"
+            className="inline-block px-6 py-3 bg-white text-black rounded-lg hover:bg-gray-200 transition-colors"
+          >
+            Go Home
+          </a>
+        </div>
+      </div>
+    </Document>
   )
 }
