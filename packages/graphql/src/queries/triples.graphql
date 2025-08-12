@@ -134,3 +134,15 @@ query GetTriplesWithPositions(
     }
   }
 }
+
+query FindTriples($where: triples_bool_exp = {}, $address: String!) {
+  triples(where: $where) {
+    term_id
+    subject_id
+    predicate_id
+    object_id
+    positions(where: { account_id: { _eq: $address } }) {
+      shares
+    }
+  }
+}

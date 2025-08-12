@@ -38,6 +38,7 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean }
   Int: { input: number; output: number }
   Float: { input: number; output: number }
+  _text: { input: any; output: any }
   account_type: { input: any; output: any }
   atom_type: { input: any; output: any }
   bigint: { input: any; output: any }
@@ -4379,6 +4380,10 @@ export type Query_Root = {
   redemptions: Array<Redemptions>
   /** An aggregate relationship */
   redemptions_aggregate: Redemptions_Aggregate
+  /** execute function "search_positions_on_subject" which returns "position" */
+  search_positions_on_subject: Array<Positions>
+  /** execute function "search_positions_on_subject" and query aggregates on result of table type "position" */
+  search_positions_on_subject_aggregate: Positions_Aggregate
   /** execute function "search_term" which returns "term" */
   search_term: Array<Terms>
   /** execute function "search_term" and query aggregates on result of table type "term" */
@@ -4387,13 +4392,13 @@ export type Query_Root = {
   search_term_from_following: Array<Terms>
   /** execute function "search_term_from_following" and query aggregates on result of table type "term" */
   search_term_from_following_aggregate: Terms_Aggregate
-  /** fetch data from the table: "share_price_change_stats_daily" */
+  /** An array relationship */
   share_price_change_stats_daily: Array<Share_Price_Change_Stats_Daily>
-  /** fetch data from the table: "share_price_change_stats_hourly" */
+  /** An array relationship */
   share_price_change_stats_hourly: Array<Share_Price_Change_Stats_Hourly>
-  /** fetch data from the table: "share_price_change_stats_monthly" */
+  /** An array relationship */
   share_price_change_stats_monthly: Array<Share_Price_Change_Stats_Monthly>
-  /** fetch data from the table: "share_price_change_stats_weekly" */
+  /** An array relationship */
   share_price_change_stats_weekly: Array<Share_Price_Change_Stats_Weekly>
   /** An array relationship */
   share_price_changes: Array<Share_Price_Changes>
@@ -4819,6 +4824,24 @@ export type Query_RootRedemptions_AggregateArgs = {
   offset?: InputMaybe<Scalars['Int']['input']>
   order_by?: InputMaybe<Array<Redemptions_Order_By>>
   where?: InputMaybe<Redemptions_Bool_Exp>
+}
+
+export type Query_RootSearch_Positions_On_SubjectArgs = {
+  args: Search_Positions_On_Subject_Args
+  distinct_on?: InputMaybe<Array<Positions_Select_Column>>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  order_by?: InputMaybe<Array<Positions_Order_By>>
+  where?: InputMaybe<Positions_Bool_Exp>
+}
+
+export type Query_RootSearch_Positions_On_Subject_AggregateArgs = {
+  args: Search_Positions_On_Subject_Args
+  distinct_on?: InputMaybe<Array<Positions_Select_Column>>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  order_by?: InputMaybe<Array<Positions_Order_By>>
+  where?: InputMaybe<Positions_Bool_Exp>
 }
 
 export type Query_RootSearch_TermArgs = {
@@ -5543,6 +5566,11 @@ export type Redemptions_Variance_Order_By = {
   term_id?: InputMaybe<Order_By>
 }
 
+export type Search_Positions_On_Subject_Args = {
+  addresses?: InputMaybe<Scalars['_text']['input']>
+  search_fields?: InputMaybe<Scalars['jsonb']['input']>
+}
+
 export type Search_Term_Args = {
   query?: InputMaybe<Scalars['String']['input']>
 }
@@ -5566,6 +5594,31 @@ export type Share_Price_Change_Stats_Daily = {
   term_id?: Maybe<Scalars['numeric']['output']>
 }
 
+/** order by aggregate values of table "share_price_change_stats_daily" */
+export type Share_Price_Change_Stats_Daily_Aggregate_Order_By = {
+  avg?: InputMaybe<Share_Price_Change_Stats_Daily_Avg_Order_By>
+  count?: InputMaybe<Order_By>
+  max?: InputMaybe<Share_Price_Change_Stats_Daily_Max_Order_By>
+  min?: InputMaybe<Share_Price_Change_Stats_Daily_Min_Order_By>
+  stddev?: InputMaybe<Share_Price_Change_Stats_Daily_Stddev_Order_By>
+  stddev_pop?: InputMaybe<Share_Price_Change_Stats_Daily_Stddev_Pop_Order_By>
+  stddev_samp?: InputMaybe<Share_Price_Change_Stats_Daily_Stddev_Samp_Order_By>
+  sum?: InputMaybe<Share_Price_Change_Stats_Daily_Sum_Order_By>
+  var_pop?: InputMaybe<Share_Price_Change_Stats_Daily_Var_Pop_Order_By>
+  var_samp?: InputMaybe<Share_Price_Change_Stats_Daily_Var_Samp_Order_By>
+  variance?: InputMaybe<Share_Price_Change_Stats_Daily_Variance_Order_By>
+}
+
+/** order by avg() on columns of table "share_price_change_stats_daily" */
+export type Share_Price_Change_Stats_Daily_Avg_Order_By = {
+  change_count?: InputMaybe<Order_By>
+  curve_id?: InputMaybe<Order_By>
+  difference?: InputMaybe<Order_By>
+  first_share_price?: InputMaybe<Order_By>
+  last_share_price?: InputMaybe<Order_By>
+  term_id?: InputMaybe<Order_By>
+}
+
 /** Boolean expression to filter rows from the table "share_price_change_stats_daily". All fields are combined with a logical 'AND'. */
 export type Share_Price_Change_Stats_Daily_Bool_Exp = {
   _and?: InputMaybe<Array<Share_Price_Change_Stats_Daily_Bool_Exp>>
@@ -5579,6 +5632,28 @@ export type Share_Price_Change_Stats_Daily_Bool_Exp = {
   last_share_price?: InputMaybe<Numeric_Comparison_Exp>
   term?: InputMaybe<Terms_Bool_Exp>
   term_id?: InputMaybe<Numeric_Comparison_Exp>
+}
+
+/** order by max() on columns of table "share_price_change_stats_daily" */
+export type Share_Price_Change_Stats_Daily_Max_Order_By = {
+  bucket?: InputMaybe<Order_By>
+  change_count?: InputMaybe<Order_By>
+  curve_id?: InputMaybe<Order_By>
+  difference?: InputMaybe<Order_By>
+  first_share_price?: InputMaybe<Order_By>
+  last_share_price?: InputMaybe<Order_By>
+  term_id?: InputMaybe<Order_By>
+}
+
+/** order by min() on columns of table "share_price_change_stats_daily" */
+export type Share_Price_Change_Stats_Daily_Min_Order_By = {
+  bucket?: InputMaybe<Order_By>
+  change_count?: InputMaybe<Order_By>
+  curve_id?: InputMaybe<Order_By>
+  difference?: InputMaybe<Order_By>
+  first_share_price?: InputMaybe<Order_By>
+  last_share_price?: InputMaybe<Order_By>
+  term_id?: InputMaybe<Order_By>
 }
 
 /** Ordering options when selecting data from "share_price_change_stats_daily". */
@@ -5610,6 +5685,36 @@ export type Share_Price_Change_Stats_Daily_Select_Column =
   /** column name */
   | 'term_id'
 
+/** order by stddev() on columns of table "share_price_change_stats_daily" */
+export type Share_Price_Change_Stats_Daily_Stddev_Order_By = {
+  change_count?: InputMaybe<Order_By>
+  curve_id?: InputMaybe<Order_By>
+  difference?: InputMaybe<Order_By>
+  first_share_price?: InputMaybe<Order_By>
+  last_share_price?: InputMaybe<Order_By>
+  term_id?: InputMaybe<Order_By>
+}
+
+/** order by stddev_pop() on columns of table "share_price_change_stats_daily" */
+export type Share_Price_Change_Stats_Daily_Stddev_Pop_Order_By = {
+  change_count?: InputMaybe<Order_By>
+  curve_id?: InputMaybe<Order_By>
+  difference?: InputMaybe<Order_By>
+  first_share_price?: InputMaybe<Order_By>
+  last_share_price?: InputMaybe<Order_By>
+  term_id?: InputMaybe<Order_By>
+}
+
+/** order by stddev_samp() on columns of table "share_price_change_stats_daily" */
+export type Share_Price_Change_Stats_Daily_Stddev_Samp_Order_By = {
+  change_count?: InputMaybe<Order_By>
+  curve_id?: InputMaybe<Order_By>
+  difference?: InputMaybe<Order_By>
+  first_share_price?: InputMaybe<Order_By>
+  last_share_price?: InputMaybe<Order_By>
+  term_id?: InputMaybe<Order_By>
+}
+
 /** Streaming cursor of the table "share_price_change_stats_daily" */
 export type Share_Price_Change_Stats_Daily_Stream_Cursor_Input = {
   /** Stream column input with initial value */
@@ -5629,6 +5734,46 @@ export type Share_Price_Change_Stats_Daily_Stream_Cursor_Value_Input = {
   term_id?: InputMaybe<Scalars['numeric']['input']>
 }
 
+/** order by sum() on columns of table "share_price_change_stats_daily" */
+export type Share_Price_Change_Stats_Daily_Sum_Order_By = {
+  change_count?: InputMaybe<Order_By>
+  curve_id?: InputMaybe<Order_By>
+  difference?: InputMaybe<Order_By>
+  first_share_price?: InputMaybe<Order_By>
+  last_share_price?: InputMaybe<Order_By>
+  term_id?: InputMaybe<Order_By>
+}
+
+/** order by var_pop() on columns of table "share_price_change_stats_daily" */
+export type Share_Price_Change_Stats_Daily_Var_Pop_Order_By = {
+  change_count?: InputMaybe<Order_By>
+  curve_id?: InputMaybe<Order_By>
+  difference?: InputMaybe<Order_By>
+  first_share_price?: InputMaybe<Order_By>
+  last_share_price?: InputMaybe<Order_By>
+  term_id?: InputMaybe<Order_By>
+}
+
+/** order by var_samp() on columns of table "share_price_change_stats_daily" */
+export type Share_Price_Change_Stats_Daily_Var_Samp_Order_By = {
+  change_count?: InputMaybe<Order_By>
+  curve_id?: InputMaybe<Order_By>
+  difference?: InputMaybe<Order_By>
+  first_share_price?: InputMaybe<Order_By>
+  last_share_price?: InputMaybe<Order_By>
+  term_id?: InputMaybe<Order_By>
+}
+
+/** order by variance() on columns of table "share_price_change_stats_daily" */
+export type Share_Price_Change_Stats_Daily_Variance_Order_By = {
+  change_count?: InputMaybe<Order_By>
+  curve_id?: InputMaybe<Order_By>
+  difference?: InputMaybe<Order_By>
+  first_share_price?: InputMaybe<Order_By>
+  last_share_price?: InputMaybe<Order_By>
+  term_id?: InputMaybe<Order_By>
+}
+
 /** columns and relationships of "share_price_change_stats_hourly" */
 export type Share_Price_Change_Stats_Hourly = {
   __typename?: 'share_price_change_stats_hourly'
@@ -5641,6 +5786,31 @@ export type Share_Price_Change_Stats_Hourly = {
   /** An object relationship */
   term?: Maybe<Terms>
   term_id?: Maybe<Scalars['numeric']['output']>
+}
+
+/** order by aggregate values of table "share_price_change_stats_hourly" */
+export type Share_Price_Change_Stats_Hourly_Aggregate_Order_By = {
+  avg?: InputMaybe<Share_Price_Change_Stats_Hourly_Avg_Order_By>
+  count?: InputMaybe<Order_By>
+  max?: InputMaybe<Share_Price_Change_Stats_Hourly_Max_Order_By>
+  min?: InputMaybe<Share_Price_Change_Stats_Hourly_Min_Order_By>
+  stddev?: InputMaybe<Share_Price_Change_Stats_Hourly_Stddev_Order_By>
+  stddev_pop?: InputMaybe<Share_Price_Change_Stats_Hourly_Stddev_Pop_Order_By>
+  stddev_samp?: InputMaybe<Share_Price_Change_Stats_Hourly_Stddev_Samp_Order_By>
+  sum?: InputMaybe<Share_Price_Change_Stats_Hourly_Sum_Order_By>
+  var_pop?: InputMaybe<Share_Price_Change_Stats_Hourly_Var_Pop_Order_By>
+  var_samp?: InputMaybe<Share_Price_Change_Stats_Hourly_Var_Samp_Order_By>
+  variance?: InputMaybe<Share_Price_Change_Stats_Hourly_Variance_Order_By>
+}
+
+/** order by avg() on columns of table "share_price_change_stats_hourly" */
+export type Share_Price_Change_Stats_Hourly_Avg_Order_By = {
+  change_count?: InputMaybe<Order_By>
+  curve_id?: InputMaybe<Order_By>
+  difference?: InputMaybe<Order_By>
+  first_share_price?: InputMaybe<Order_By>
+  last_share_price?: InputMaybe<Order_By>
+  term_id?: InputMaybe<Order_By>
 }
 
 /** Boolean expression to filter rows from the table "share_price_change_stats_hourly". All fields are combined with a logical 'AND'. */
@@ -5656,6 +5826,28 @@ export type Share_Price_Change_Stats_Hourly_Bool_Exp = {
   last_share_price?: InputMaybe<Numeric_Comparison_Exp>
   term?: InputMaybe<Terms_Bool_Exp>
   term_id?: InputMaybe<Numeric_Comparison_Exp>
+}
+
+/** order by max() on columns of table "share_price_change_stats_hourly" */
+export type Share_Price_Change_Stats_Hourly_Max_Order_By = {
+  bucket?: InputMaybe<Order_By>
+  change_count?: InputMaybe<Order_By>
+  curve_id?: InputMaybe<Order_By>
+  difference?: InputMaybe<Order_By>
+  first_share_price?: InputMaybe<Order_By>
+  last_share_price?: InputMaybe<Order_By>
+  term_id?: InputMaybe<Order_By>
+}
+
+/** order by min() on columns of table "share_price_change_stats_hourly" */
+export type Share_Price_Change_Stats_Hourly_Min_Order_By = {
+  bucket?: InputMaybe<Order_By>
+  change_count?: InputMaybe<Order_By>
+  curve_id?: InputMaybe<Order_By>
+  difference?: InputMaybe<Order_By>
+  first_share_price?: InputMaybe<Order_By>
+  last_share_price?: InputMaybe<Order_By>
+  term_id?: InputMaybe<Order_By>
 }
 
 /** Ordering options when selecting data from "share_price_change_stats_hourly". */
@@ -5687,6 +5879,36 @@ export type Share_Price_Change_Stats_Hourly_Select_Column =
   /** column name */
   | 'term_id'
 
+/** order by stddev() on columns of table "share_price_change_stats_hourly" */
+export type Share_Price_Change_Stats_Hourly_Stddev_Order_By = {
+  change_count?: InputMaybe<Order_By>
+  curve_id?: InputMaybe<Order_By>
+  difference?: InputMaybe<Order_By>
+  first_share_price?: InputMaybe<Order_By>
+  last_share_price?: InputMaybe<Order_By>
+  term_id?: InputMaybe<Order_By>
+}
+
+/** order by stddev_pop() on columns of table "share_price_change_stats_hourly" */
+export type Share_Price_Change_Stats_Hourly_Stddev_Pop_Order_By = {
+  change_count?: InputMaybe<Order_By>
+  curve_id?: InputMaybe<Order_By>
+  difference?: InputMaybe<Order_By>
+  first_share_price?: InputMaybe<Order_By>
+  last_share_price?: InputMaybe<Order_By>
+  term_id?: InputMaybe<Order_By>
+}
+
+/** order by stddev_samp() on columns of table "share_price_change_stats_hourly" */
+export type Share_Price_Change_Stats_Hourly_Stddev_Samp_Order_By = {
+  change_count?: InputMaybe<Order_By>
+  curve_id?: InputMaybe<Order_By>
+  difference?: InputMaybe<Order_By>
+  first_share_price?: InputMaybe<Order_By>
+  last_share_price?: InputMaybe<Order_By>
+  term_id?: InputMaybe<Order_By>
+}
+
 /** Streaming cursor of the table "share_price_change_stats_hourly" */
 export type Share_Price_Change_Stats_Hourly_Stream_Cursor_Input = {
   /** Stream column input with initial value */
@@ -5706,6 +5928,46 @@ export type Share_Price_Change_Stats_Hourly_Stream_Cursor_Value_Input = {
   term_id?: InputMaybe<Scalars['numeric']['input']>
 }
 
+/** order by sum() on columns of table "share_price_change_stats_hourly" */
+export type Share_Price_Change_Stats_Hourly_Sum_Order_By = {
+  change_count?: InputMaybe<Order_By>
+  curve_id?: InputMaybe<Order_By>
+  difference?: InputMaybe<Order_By>
+  first_share_price?: InputMaybe<Order_By>
+  last_share_price?: InputMaybe<Order_By>
+  term_id?: InputMaybe<Order_By>
+}
+
+/** order by var_pop() on columns of table "share_price_change_stats_hourly" */
+export type Share_Price_Change_Stats_Hourly_Var_Pop_Order_By = {
+  change_count?: InputMaybe<Order_By>
+  curve_id?: InputMaybe<Order_By>
+  difference?: InputMaybe<Order_By>
+  first_share_price?: InputMaybe<Order_By>
+  last_share_price?: InputMaybe<Order_By>
+  term_id?: InputMaybe<Order_By>
+}
+
+/** order by var_samp() on columns of table "share_price_change_stats_hourly" */
+export type Share_Price_Change_Stats_Hourly_Var_Samp_Order_By = {
+  change_count?: InputMaybe<Order_By>
+  curve_id?: InputMaybe<Order_By>
+  difference?: InputMaybe<Order_By>
+  first_share_price?: InputMaybe<Order_By>
+  last_share_price?: InputMaybe<Order_By>
+  term_id?: InputMaybe<Order_By>
+}
+
+/** order by variance() on columns of table "share_price_change_stats_hourly" */
+export type Share_Price_Change_Stats_Hourly_Variance_Order_By = {
+  change_count?: InputMaybe<Order_By>
+  curve_id?: InputMaybe<Order_By>
+  difference?: InputMaybe<Order_By>
+  first_share_price?: InputMaybe<Order_By>
+  last_share_price?: InputMaybe<Order_By>
+  term_id?: InputMaybe<Order_By>
+}
+
 /** columns and relationships of "share_price_change_stats_monthly" */
 export type Share_Price_Change_Stats_Monthly = {
   __typename?: 'share_price_change_stats_monthly'
@@ -5718,6 +5980,31 @@ export type Share_Price_Change_Stats_Monthly = {
   /** An object relationship */
   term?: Maybe<Terms>
   term_id?: Maybe<Scalars['numeric']['output']>
+}
+
+/** order by aggregate values of table "share_price_change_stats_monthly" */
+export type Share_Price_Change_Stats_Monthly_Aggregate_Order_By = {
+  avg?: InputMaybe<Share_Price_Change_Stats_Monthly_Avg_Order_By>
+  count?: InputMaybe<Order_By>
+  max?: InputMaybe<Share_Price_Change_Stats_Monthly_Max_Order_By>
+  min?: InputMaybe<Share_Price_Change_Stats_Monthly_Min_Order_By>
+  stddev?: InputMaybe<Share_Price_Change_Stats_Monthly_Stddev_Order_By>
+  stddev_pop?: InputMaybe<Share_Price_Change_Stats_Monthly_Stddev_Pop_Order_By>
+  stddev_samp?: InputMaybe<Share_Price_Change_Stats_Monthly_Stddev_Samp_Order_By>
+  sum?: InputMaybe<Share_Price_Change_Stats_Monthly_Sum_Order_By>
+  var_pop?: InputMaybe<Share_Price_Change_Stats_Monthly_Var_Pop_Order_By>
+  var_samp?: InputMaybe<Share_Price_Change_Stats_Monthly_Var_Samp_Order_By>
+  variance?: InputMaybe<Share_Price_Change_Stats_Monthly_Variance_Order_By>
+}
+
+/** order by avg() on columns of table "share_price_change_stats_monthly" */
+export type Share_Price_Change_Stats_Monthly_Avg_Order_By = {
+  change_count?: InputMaybe<Order_By>
+  curve_id?: InputMaybe<Order_By>
+  difference?: InputMaybe<Order_By>
+  first_share_price?: InputMaybe<Order_By>
+  last_share_price?: InputMaybe<Order_By>
+  term_id?: InputMaybe<Order_By>
 }
 
 /** Boolean expression to filter rows from the table "share_price_change_stats_monthly". All fields are combined with a logical 'AND'. */
@@ -5733,6 +6020,28 @@ export type Share_Price_Change_Stats_Monthly_Bool_Exp = {
   last_share_price?: InputMaybe<Numeric_Comparison_Exp>
   term?: InputMaybe<Terms_Bool_Exp>
   term_id?: InputMaybe<Numeric_Comparison_Exp>
+}
+
+/** order by max() on columns of table "share_price_change_stats_monthly" */
+export type Share_Price_Change_Stats_Monthly_Max_Order_By = {
+  bucket?: InputMaybe<Order_By>
+  change_count?: InputMaybe<Order_By>
+  curve_id?: InputMaybe<Order_By>
+  difference?: InputMaybe<Order_By>
+  first_share_price?: InputMaybe<Order_By>
+  last_share_price?: InputMaybe<Order_By>
+  term_id?: InputMaybe<Order_By>
+}
+
+/** order by min() on columns of table "share_price_change_stats_monthly" */
+export type Share_Price_Change_Stats_Monthly_Min_Order_By = {
+  bucket?: InputMaybe<Order_By>
+  change_count?: InputMaybe<Order_By>
+  curve_id?: InputMaybe<Order_By>
+  difference?: InputMaybe<Order_By>
+  first_share_price?: InputMaybe<Order_By>
+  last_share_price?: InputMaybe<Order_By>
+  term_id?: InputMaybe<Order_By>
 }
 
 /** Ordering options when selecting data from "share_price_change_stats_monthly". */
@@ -5764,6 +6073,36 @@ export type Share_Price_Change_Stats_Monthly_Select_Column =
   /** column name */
   | 'term_id'
 
+/** order by stddev() on columns of table "share_price_change_stats_monthly" */
+export type Share_Price_Change_Stats_Monthly_Stddev_Order_By = {
+  change_count?: InputMaybe<Order_By>
+  curve_id?: InputMaybe<Order_By>
+  difference?: InputMaybe<Order_By>
+  first_share_price?: InputMaybe<Order_By>
+  last_share_price?: InputMaybe<Order_By>
+  term_id?: InputMaybe<Order_By>
+}
+
+/** order by stddev_pop() on columns of table "share_price_change_stats_monthly" */
+export type Share_Price_Change_Stats_Monthly_Stddev_Pop_Order_By = {
+  change_count?: InputMaybe<Order_By>
+  curve_id?: InputMaybe<Order_By>
+  difference?: InputMaybe<Order_By>
+  first_share_price?: InputMaybe<Order_By>
+  last_share_price?: InputMaybe<Order_By>
+  term_id?: InputMaybe<Order_By>
+}
+
+/** order by stddev_samp() on columns of table "share_price_change_stats_monthly" */
+export type Share_Price_Change_Stats_Monthly_Stddev_Samp_Order_By = {
+  change_count?: InputMaybe<Order_By>
+  curve_id?: InputMaybe<Order_By>
+  difference?: InputMaybe<Order_By>
+  first_share_price?: InputMaybe<Order_By>
+  last_share_price?: InputMaybe<Order_By>
+  term_id?: InputMaybe<Order_By>
+}
+
 /** Streaming cursor of the table "share_price_change_stats_monthly" */
 export type Share_Price_Change_Stats_Monthly_Stream_Cursor_Input = {
   /** Stream column input with initial value */
@@ -5783,6 +6122,46 @@ export type Share_Price_Change_Stats_Monthly_Stream_Cursor_Value_Input = {
   term_id?: InputMaybe<Scalars['numeric']['input']>
 }
 
+/** order by sum() on columns of table "share_price_change_stats_monthly" */
+export type Share_Price_Change_Stats_Monthly_Sum_Order_By = {
+  change_count?: InputMaybe<Order_By>
+  curve_id?: InputMaybe<Order_By>
+  difference?: InputMaybe<Order_By>
+  first_share_price?: InputMaybe<Order_By>
+  last_share_price?: InputMaybe<Order_By>
+  term_id?: InputMaybe<Order_By>
+}
+
+/** order by var_pop() on columns of table "share_price_change_stats_monthly" */
+export type Share_Price_Change_Stats_Monthly_Var_Pop_Order_By = {
+  change_count?: InputMaybe<Order_By>
+  curve_id?: InputMaybe<Order_By>
+  difference?: InputMaybe<Order_By>
+  first_share_price?: InputMaybe<Order_By>
+  last_share_price?: InputMaybe<Order_By>
+  term_id?: InputMaybe<Order_By>
+}
+
+/** order by var_samp() on columns of table "share_price_change_stats_monthly" */
+export type Share_Price_Change_Stats_Monthly_Var_Samp_Order_By = {
+  change_count?: InputMaybe<Order_By>
+  curve_id?: InputMaybe<Order_By>
+  difference?: InputMaybe<Order_By>
+  first_share_price?: InputMaybe<Order_By>
+  last_share_price?: InputMaybe<Order_By>
+  term_id?: InputMaybe<Order_By>
+}
+
+/** order by variance() on columns of table "share_price_change_stats_monthly" */
+export type Share_Price_Change_Stats_Monthly_Variance_Order_By = {
+  change_count?: InputMaybe<Order_By>
+  curve_id?: InputMaybe<Order_By>
+  difference?: InputMaybe<Order_By>
+  first_share_price?: InputMaybe<Order_By>
+  last_share_price?: InputMaybe<Order_By>
+  term_id?: InputMaybe<Order_By>
+}
+
 /** columns and relationships of "share_price_change_stats_weekly" */
 export type Share_Price_Change_Stats_Weekly = {
   __typename?: 'share_price_change_stats_weekly'
@@ -5795,6 +6174,31 @@ export type Share_Price_Change_Stats_Weekly = {
   /** An object relationship */
   term?: Maybe<Terms>
   term_id?: Maybe<Scalars['numeric']['output']>
+}
+
+/** order by aggregate values of table "share_price_change_stats_weekly" */
+export type Share_Price_Change_Stats_Weekly_Aggregate_Order_By = {
+  avg?: InputMaybe<Share_Price_Change_Stats_Weekly_Avg_Order_By>
+  count?: InputMaybe<Order_By>
+  max?: InputMaybe<Share_Price_Change_Stats_Weekly_Max_Order_By>
+  min?: InputMaybe<Share_Price_Change_Stats_Weekly_Min_Order_By>
+  stddev?: InputMaybe<Share_Price_Change_Stats_Weekly_Stddev_Order_By>
+  stddev_pop?: InputMaybe<Share_Price_Change_Stats_Weekly_Stddev_Pop_Order_By>
+  stddev_samp?: InputMaybe<Share_Price_Change_Stats_Weekly_Stddev_Samp_Order_By>
+  sum?: InputMaybe<Share_Price_Change_Stats_Weekly_Sum_Order_By>
+  var_pop?: InputMaybe<Share_Price_Change_Stats_Weekly_Var_Pop_Order_By>
+  var_samp?: InputMaybe<Share_Price_Change_Stats_Weekly_Var_Samp_Order_By>
+  variance?: InputMaybe<Share_Price_Change_Stats_Weekly_Variance_Order_By>
+}
+
+/** order by avg() on columns of table "share_price_change_stats_weekly" */
+export type Share_Price_Change_Stats_Weekly_Avg_Order_By = {
+  change_count?: InputMaybe<Order_By>
+  curve_id?: InputMaybe<Order_By>
+  difference?: InputMaybe<Order_By>
+  first_share_price?: InputMaybe<Order_By>
+  last_share_price?: InputMaybe<Order_By>
+  term_id?: InputMaybe<Order_By>
 }
 
 /** Boolean expression to filter rows from the table "share_price_change_stats_weekly". All fields are combined with a logical 'AND'. */
@@ -5810,6 +6214,28 @@ export type Share_Price_Change_Stats_Weekly_Bool_Exp = {
   last_share_price?: InputMaybe<Numeric_Comparison_Exp>
   term?: InputMaybe<Terms_Bool_Exp>
   term_id?: InputMaybe<Numeric_Comparison_Exp>
+}
+
+/** order by max() on columns of table "share_price_change_stats_weekly" */
+export type Share_Price_Change_Stats_Weekly_Max_Order_By = {
+  bucket?: InputMaybe<Order_By>
+  change_count?: InputMaybe<Order_By>
+  curve_id?: InputMaybe<Order_By>
+  difference?: InputMaybe<Order_By>
+  first_share_price?: InputMaybe<Order_By>
+  last_share_price?: InputMaybe<Order_By>
+  term_id?: InputMaybe<Order_By>
+}
+
+/** order by min() on columns of table "share_price_change_stats_weekly" */
+export type Share_Price_Change_Stats_Weekly_Min_Order_By = {
+  bucket?: InputMaybe<Order_By>
+  change_count?: InputMaybe<Order_By>
+  curve_id?: InputMaybe<Order_By>
+  difference?: InputMaybe<Order_By>
+  first_share_price?: InputMaybe<Order_By>
+  last_share_price?: InputMaybe<Order_By>
+  term_id?: InputMaybe<Order_By>
 }
 
 /** Ordering options when selecting data from "share_price_change_stats_weekly". */
@@ -5841,6 +6267,36 @@ export type Share_Price_Change_Stats_Weekly_Select_Column =
   /** column name */
   | 'term_id'
 
+/** order by stddev() on columns of table "share_price_change_stats_weekly" */
+export type Share_Price_Change_Stats_Weekly_Stddev_Order_By = {
+  change_count?: InputMaybe<Order_By>
+  curve_id?: InputMaybe<Order_By>
+  difference?: InputMaybe<Order_By>
+  first_share_price?: InputMaybe<Order_By>
+  last_share_price?: InputMaybe<Order_By>
+  term_id?: InputMaybe<Order_By>
+}
+
+/** order by stddev_pop() on columns of table "share_price_change_stats_weekly" */
+export type Share_Price_Change_Stats_Weekly_Stddev_Pop_Order_By = {
+  change_count?: InputMaybe<Order_By>
+  curve_id?: InputMaybe<Order_By>
+  difference?: InputMaybe<Order_By>
+  first_share_price?: InputMaybe<Order_By>
+  last_share_price?: InputMaybe<Order_By>
+  term_id?: InputMaybe<Order_By>
+}
+
+/** order by stddev_samp() on columns of table "share_price_change_stats_weekly" */
+export type Share_Price_Change_Stats_Weekly_Stddev_Samp_Order_By = {
+  change_count?: InputMaybe<Order_By>
+  curve_id?: InputMaybe<Order_By>
+  difference?: InputMaybe<Order_By>
+  first_share_price?: InputMaybe<Order_By>
+  last_share_price?: InputMaybe<Order_By>
+  term_id?: InputMaybe<Order_By>
+}
+
 /** Streaming cursor of the table "share_price_change_stats_weekly" */
 export type Share_Price_Change_Stats_Weekly_Stream_Cursor_Input = {
   /** Stream column input with initial value */
@@ -5858,6 +6314,46 @@ export type Share_Price_Change_Stats_Weekly_Stream_Cursor_Value_Input = {
   first_share_price?: InputMaybe<Scalars['numeric']['input']>
   last_share_price?: InputMaybe<Scalars['numeric']['input']>
   term_id?: InputMaybe<Scalars['numeric']['input']>
+}
+
+/** order by sum() on columns of table "share_price_change_stats_weekly" */
+export type Share_Price_Change_Stats_Weekly_Sum_Order_By = {
+  change_count?: InputMaybe<Order_By>
+  curve_id?: InputMaybe<Order_By>
+  difference?: InputMaybe<Order_By>
+  first_share_price?: InputMaybe<Order_By>
+  last_share_price?: InputMaybe<Order_By>
+  term_id?: InputMaybe<Order_By>
+}
+
+/** order by var_pop() on columns of table "share_price_change_stats_weekly" */
+export type Share_Price_Change_Stats_Weekly_Var_Pop_Order_By = {
+  change_count?: InputMaybe<Order_By>
+  curve_id?: InputMaybe<Order_By>
+  difference?: InputMaybe<Order_By>
+  first_share_price?: InputMaybe<Order_By>
+  last_share_price?: InputMaybe<Order_By>
+  term_id?: InputMaybe<Order_By>
+}
+
+/** order by var_samp() on columns of table "share_price_change_stats_weekly" */
+export type Share_Price_Change_Stats_Weekly_Var_Samp_Order_By = {
+  change_count?: InputMaybe<Order_By>
+  curve_id?: InputMaybe<Order_By>
+  difference?: InputMaybe<Order_By>
+  first_share_price?: InputMaybe<Order_By>
+  last_share_price?: InputMaybe<Order_By>
+  term_id?: InputMaybe<Order_By>
+}
+
+/** order by variance() on columns of table "share_price_change_stats_weekly" */
+export type Share_Price_Change_Stats_Weekly_Variance_Order_By = {
+  change_count?: InputMaybe<Order_By>
+  curve_id?: InputMaybe<Order_By>
+  difference?: InputMaybe<Order_By>
+  first_share_price?: InputMaybe<Order_By>
+  last_share_price?: InputMaybe<Order_By>
+  term_id?: InputMaybe<Order_By>
 }
 
 /** columns and relationships of "share_price_change" */
@@ -7276,6 +7772,10 @@ export type Subscription_Root = {
   redemptions_aggregate: Redemptions_Aggregate
   /** fetch data from the table in a streaming manner: "redemption" */
   redemptions_stream: Array<Redemptions>
+  /** execute function "search_positions_on_subject" which returns "position" */
+  search_positions_on_subject: Array<Positions>
+  /** execute function "search_positions_on_subject" and query aggregates on result of table type "position" */
+  search_positions_on_subject_aggregate: Positions_Aggregate
   /** execute function "search_term" which returns "term" */
   search_term: Array<Terms>
   /** execute function "search_term" and query aggregates on result of table type "term" */
@@ -7284,19 +7784,19 @@ export type Subscription_Root = {
   search_term_from_following: Array<Terms>
   /** execute function "search_term_from_following" and query aggregates on result of table type "term" */
   search_term_from_following_aggregate: Terms_Aggregate
-  /** fetch data from the table: "share_price_change_stats_daily" */
+  /** An array relationship */
   share_price_change_stats_daily: Array<Share_Price_Change_Stats_Daily>
   /** fetch data from the table in a streaming manner: "share_price_change_stats_daily" */
   share_price_change_stats_daily_stream: Array<Share_Price_Change_Stats_Daily>
-  /** fetch data from the table: "share_price_change_stats_hourly" */
+  /** An array relationship */
   share_price_change_stats_hourly: Array<Share_Price_Change_Stats_Hourly>
   /** fetch data from the table in a streaming manner: "share_price_change_stats_hourly" */
   share_price_change_stats_hourly_stream: Array<Share_Price_Change_Stats_Hourly>
-  /** fetch data from the table: "share_price_change_stats_monthly" */
+  /** An array relationship */
   share_price_change_stats_monthly: Array<Share_Price_Change_Stats_Monthly>
   /** fetch data from the table in a streaming manner: "share_price_change_stats_monthly" */
   share_price_change_stats_monthly_stream: Array<Share_Price_Change_Stats_Monthly>
-  /** fetch data from the table: "share_price_change_stats_weekly" */
+  /** An array relationship */
   share_price_change_stats_weekly: Array<Share_Price_Change_Stats_Weekly>
   /** fetch data from the table in a streaming manner: "share_price_change_stats_weekly" */
   share_price_change_stats_weekly_stream: Array<Share_Price_Change_Stats_Weekly>
@@ -7856,6 +8356,24 @@ export type Subscription_RootRedemptions_StreamArgs = {
   where?: InputMaybe<Redemptions_Bool_Exp>
 }
 
+export type Subscription_RootSearch_Positions_On_SubjectArgs = {
+  args: Search_Positions_On_Subject_Args
+  distinct_on?: InputMaybe<Array<Positions_Select_Column>>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  order_by?: InputMaybe<Array<Positions_Order_By>>
+  where?: InputMaybe<Positions_Bool_Exp>
+}
+
+export type Subscription_RootSearch_Positions_On_Subject_AggregateArgs = {
+  args: Search_Positions_On_Subject_Args
+  distinct_on?: InputMaybe<Array<Positions_Select_Column>>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  order_by?: InputMaybe<Array<Positions_Order_By>>
+  where?: InputMaybe<Positions_Bool_Exp>
+}
+
 export type Subscription_RootSearch_TermArgs = {
   args: Search_Term_Args
   distinct_on?: InputMaybe<Array<Terms_Select_Column>>
@@ -8299,6 +8817,14 @@ export type Terms = {
   /** An aggregate relationship */
   redemptions_aggregate: Redemptions_Aggregate
   /** An array relationship */
+  share_price_change_stats_daily: Array<Share_Price_Change_Stats_Daily>
+  /** An array relationship */
+  share_price_change_stats_hourly: Array<Share_Price_Change_Stats_Hourly>
+  /** An array relationship */
+  share_price_change_stats_monthly: Array<Share_Price_Change_Stats_Monthly>
+  /** An array relationship */
+  share_price_change_stats_weekly: Array<Share_Price_Change_Stats_Weekly>
+  /** An array relationship */
   share_price_changes: Array<Share_Price_Changes>
   /** An aggregate relationship */
   share_price_changes_aggregate: Share_Price_Changes_Aggregate
@@ -8372,6 +8898,44 @@ export type TermsRedemptions_AggregateArgs = {
   offset?: InputMaybe<Scalars['Int']['input']>
   order_by?: InputMaybe<Array<Redemptions_Order_By>>
   where?: InputMaybe<Redemptions_Bool_Exp>
+}
+
+/** columns and relationships of "term" */
+export type TermsShare_Price_Change_Stats_DailyArgs = {
+  distinct_on?: InputMaybe<Array<Share_Price_Change_Stats_Daily_Select_Column>>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  order_by?: InputMaybe<Array<Share_Price_Change_Stats_Daily_Order_By>>
+  where?: InputMaybe<Share_Price_Change_Stats_Daily_Bool_Exp>
+}
+
+/** columns and relationships of "term" */
+export type TermsShare_Price_Change_Stats_HourlyArgs = {
+  distinct_on?: InputMaybe<Array<Share_Price_Change_Stats_Hourly_Select_Column>>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  order_by?: InputMaybe<Array<Share_Price_Change_Stats_Hourly_Order_By>>
+  where?: InputMaybe<Share_Price_Change_Stats_Hourly_Bool_Exp>
+}
+
+/** columns and relationships of "term" */
+export type TermsShare_Price_Change_Stats_MonthlyArgs = {
+  distinct_on?: InputMaybe<
+    Array<Share_Price_Change_Stats_Monthly_Select_Column>
+  >
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  order_by?: InputMaybe<Array<Share_Price_Change_Stats_Monthly_Order_By>>
+  where?: InputMaybe<Share_Price_Change_Stats_Monthly_Bool_Exp>
+}
+
+/** columns and relationships of "term" */
+export type TermsShare_Price_Change_Stats_WeeklyArgs = {
+  distinct_on?: InputMaybe<Array<Share_Price_Change_Stats_Weekly_Select_Column>>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  order_by?: InputMaybe<Array<Share_Price_Change_Stats_Weekly_Order_By>>
+  where?: InputMaybe<Share_Price_Change_Stats_Weekly_Bool_Exp>
 }
 
 /** columns and relationships of "term" */
@@ -8481,6 +9045,10 @@ export type Terms_Bool_Exp = {
   positions_aggregate?: InputMaybe<Positions_Aggregate_Bool_Exp>
   redemptions?: InputMaybe<Redemptions_Bool_Exp>
   redemptions_aggregate?: InputMaybe<Redemptions_Aggregate_Bool_Exp>
+  share_price_change_stats_daily?: InputMaybe<Share_Price_Change_Stats_Daily_Bool_Exp>
+  share_price_change_stats_hourly?: InputMaybe<Share_Price_Change_Stats_Hourly_Bool_Exp>
+  share_price_change_stats_monthly?: InputMaybe<Share_Price_Change_Stats_Monthly_Bool_Exp>
+  share_price_change_stats_weekly?: InputMaybe<Share_Price_Change_Stats_Weekly_Bool_Exp>
   share_price_changes?: InputMaybe<Share_Price_Changes_Bool_Exp>
   share_price_changes_aggregate?: InputMaybe<Share_Price_Changes_Aggregate_Bool_Exp>
   signals?: InputMaybe<Signals_Bool_Exp>
@@ -8526,6 +9094,10 @@ export type Terms_Order_By = {
   id?: InputMaybe<Order_By>
   positions_aggregate?: InputMaybe<Positions_Aggregate_Order_By>
   redemptions_aggregate?: InputMaybe<Redemptions_Aggregate_Order_By>
+  share_price_change_stats_daily_aggregate?: InputMaybe<Share_Price_Change_Stats_Daily_Aggregate_Order_By>
+  share_price_change_stats_hourly_aggregate?: InputMaybe<Share_Price_Change_Stats_Hourly_Aggregate_Order_By>
+  share_price_change_stats_monthly_aggregate?: InputMaybe<Share_Price_Change_Stats_Monthly_Aggregate_Order_By>
+  share_price_change_stats_weekly_aggregate?: InputMaybe<Share_Price_Change_Stats_Weekly_Aggregate_Order_By>
   share_price_changes_aggregate?: InputMaybe<Share_Price_Changes_Aggregate_Order_By>
   signals_aggregate?: InputMaybe<Signals_Aggregate_Order_By>
   total_assets?: InputMaybe<Order_By>
@@ -9593,6 +10165,18 @@ export type Vaults = {
   /** An aggregate relationship */
   redemptions_aggregate: Redemptions_Aggregate
   /** An array relationship */
+  share_price_change_stats_daily: Array<Share_Price_Change_Stats_Daily>
+  /** An array relationship */
+  share_price_change_stats_hourly: Array<Share_Price_Change_Stats_Hourly>
+  /** An array relationship */
+  share_price_change_stats_monthly: Array<Share_Price_Change_Stats_Monthly>
+  /** An array relationship */
+  share_price_change_stats_weekly: Array<Share_Price_Change_Stats_Weekly>
+  /** An array relationship */
+  share_price_changes: Array<Share_Price_Changes>
+  /** An aggregate relationship */
+  share_price_changes_aggregate: Share_Price_Changes_Aggregate
+  /** An array relationship */
   signals: Array<Signals>
   /** An aggregate relationship */
   signals_aggregate: Signals_Aggregate
@@ -9656,6 +10240,62 @@ export type VaultsRedemptions_AggregateArgs = {
   offset?: InputMaybe<Scalars['Int']['input']>
   order_by?: InputMaybe<Array<Redemptions_Order_By>>
   where?: InputMaybe<Redemptions_Bool_Exp>
+}
+
+/** columns and relationships of "vault" */
+export type VaultsShare_Price_Change_Stats_DailyArgs = {
+  distinct_on?: InputMaybe<Array<Share_Price_Change_Stats_Daily_Select_Column>>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  order_by?: InputMaybe<Array<Share_Price_Change_Stats_Daily_Order_By>>
+  where?: InputMaybe<Share_Price_Change_Stats_Daily_Bool_Exp>
+}
+
+/** columns and relationships of "vault" */
+export type VaultsShare_Price_Change_Stats_HourlyArgs = {
+  distinct_on?: InputMaybe<Array<Share_Price_Change_Stats_Hourly_Select_Column>>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  order_by?: InputMaybe<Array<Share_Price_Change_Stats_Hourly_Order_By>>
+  where?: InputMaybe<Share_Price_Change_Stats_Hourly_Bool_Exp>
+}
+
+/** columns and relationships of "vault" */
+export type VaultsShare_Price_Change_Stats_MonthlyArgs = {
+  distinct_on?: InputMaybe<
+    Array<Share_Price_Change_Stats_Monthly_Select_Column>
+  >
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  order_by?: InputMaybe<Array<Share_Price_Change_Stats_Monthly_Order_By>>
+  where?: InputMaybe<Share_Price_Change_Stats_Monthly_Bool_Exp>
+}
+
+/** columns and relationships of "vault" */
+export type VaultsShare_Price_Change_Stats_WeeklyArgs = {
+  distinct_on?: InputMaybe<Array<Share_Price_Change_Stats_Weekly_Select_Column>>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  order_by?: InputMaybe<Array<Share_Price_Change_Stats_Weekly_Order_By>>
+  where?: InputMaybe<Share_Price_Change_Stats_Weekly_Bool_Exp>
+}
+
+/** columns and relationships of "vault" */
+export type VaultsShare_Price_ChangesArgs = {
+  distinct_on?: InputMaybe<Array<Share_Price_Changes_Select_Column>>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  order_by?: InputMaybe<Array<Share_Price_Changes_Order_By>>
+  where?: InputMaybe<Share_Price_Changes_Bool_Exp>
+}
+
+/** columns and relationships of "vault" */
+export type VaultsShare_Price_Changes_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Share_Price_Changes_Select_Column>>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  order_by?: InputMaybe<Array<Share_Price_Changes_Order_By>>
+  where?: InputMaybe<Share_Price_Changes_Bool_Exp>
 }
 
 /** columns and relationships of "vault" */
@@ -9770,6 +10410,12 @@ export type Vaults_Bool_Exp = {
   positions_aggregate?: InputMaybe<Positions_Aggregate_Bool_Exp>
   redemptions?: InputMaybe<Redemptions_Bool_Exp>
   redemptions_aggregate?: InputMaybe<Redemptions_Aggregate_Bool_Exp>
+  share_price_change_stats_daily?: InputMaybe<Share_Price_Change_Stats_Daily_Bool_Exp>
+  share_price_change_stats_hourly?: InputMaybe<Share_Price_Change_Stats_Hourly_Bool_Exp>
+  share_price_change_stats_monthly?: InputMaybe<Share_Price_Change_Stats_Monthly_Bool_Exp>
+  share_price_change_stats_weekly?: InputMaybe<Share_Price_Change_Stats_Weekly_Bool_Exp>
+  share_price_changes?: InputMaybe<Share_Price_Changes_Bool_Exp>
+  share_price_changes_aggregate?: InputMaybe<Share_Price_Changes_Aggregate_Bool_Exp>
   signals?: InputMaybe<Signals_Bool_Exp>
   signals_aggregate?: InputMaybe<Signals_Aggregate_Bool_Exp>
   term?: InputMaybe<Terms_Bool_Exp>
@@ -9843,6 +10489,11 @@ export type Vaults_Order_By = {
   position_count?: InputMaybe<Order_By>
   positions_aggregate?: InputMaybe<Positions_Aggregate_Order_By>
   redemptions_aggregate?: InputMaybe<Redemptions_Aggregate_Order_By>
+  share_price_change_stats_daily_aggregate?: InputMaybe<Share_Price_Change_Stats_Daily_Aggregate_Order_By>
+  share_price_change_stats_hourly_aggregate?: InputMaybe<Share_Price_Change_Stats_Hourly_Aggregate_Order_By>
+  share_price_change_stats_monthly_aggregate?: InputMaybe<Share_Price_Change_Stats_Monthly_Aggregate_Order_By>
+  share_price_change_stats_weekly_aggregate?: InputMaybe<Share_Price_Change_Stats_Weekly_Aggregate_Order_By>
+  share_price_changes_aggregate?: InputMaybe<Share_Price_Changes_Aggregate_Order_By>
   signals_aggregate?: InputMaybe<Signals_Aggregate_Order_By>
   term?: InputMaybe<Terms_Order_By>
   term_id?: InputMaybe<Order_By>
@@ -13496,6 +14147,15 @@ export type GetAtomDetailsQuery = {
   } | null
 }
 
+export type FindAtomIdsQueryVariables = Exact<{
+  where?: InputMaybe<Atoms_Bool_Exp>
+}>
+
+export type FindAtomIdsQuery = {
+  __typename?: 'query_root'
+  atoms: Array<{ __typename?: 'atoms'; term_id: any; data?: string | null }>
+}
+
 export type GetEventsQueryVariables = Exact<{
   limit?: InputMaybe<Scalars['Int']['input']>
   offset?: InputMaybe<Scalars['Int']['input']>
@@ -14220,6 +14880,15 @@ export type GetDebugEventsQuery = {
       }
     } | null
   }>
+}
+
+export type GetTransactionEventsQueryVariables = Exact<{
+  hash: Scalars['String']['input']
+}>
+
+export type GetTransactionEventsQuery = {
+  __typename?: 'query_root'
+  events: Array<{ __typename?: 'events'; transaction_hash: string }>
 }
 
 export type GetFollowingPositionsQueryVariables = Exact<{
@@ -16725,6 +17394,27 @@ export type GetPositionsCountByTypeQuery = {
   positions: Array<{
     __typename?: 'positions'
     vault?: { __typename?: 'vaults'; term_id: any } | null
+  }>
+}
+
+export type SearchPositionsQueryVariables = Exact<{
+  addresses?: InputMaybe<Scalars['_text']['input']>
+  search_fields?: InputMaybe<Scalars['jsonb']['input']>
+}>
+
+export type SearchPositionsQuery = {
+  __typename?: 'query_root'
+  positions: Array<{
+    __typename?: 'positions'
+    term: {
+      __typename?: 'terms'
+      triple?: {
+        __typename?: 'triples'
+        subject: { __typename?: 'atoms'; data?: string | null }
+        predicate: { __typename?: 'atoms'; data?: string | null }
+        object: { __typename?: 'atoms'; data?: string | null }
+      } | null
+    }
   }>
 }
 
@@ -19581,6 +20271,23 @@ export type GetTriplesWithPositionsQuery = {
   }>
 }
 
+export type FindTriplesQueryVariables = Exact<{
+  where?: InputMaybe<Triples_Bool_Exp>
+  address: Scalars['String']['input']
+}>
+
+export type FindTriplesQuery = {
+  __typename?: 'query_root'
+  triples: Array<{
+    __typename?: 'triples'
+    term_id: any
+    subject_id: any
+    predicate_id: any
+    object_id: any
+    positions: Array<{ __typename?: 'positions'; shares: any }>
+  }>
+}
+
 export type GetVaultsQueryVariables = Exact<{
   limit?: InputMaybe<Scalars['Int']['input']>
   offset?: InputMaybe<Scalars['Int']['input']>
@@ -22157,6 +22864,90 @@ useGetAtomDetailsQuery.fetcher = (
     options,
   )
 
+export const FindAtomIdsDocument = `
+    query FindAtomIds($where: atoms_bool_exp = {}) {
+  atoms(where: $where) {
+    term_id
+    data
+  }
+}
+    `
+
+export const useFindAtomIdsQuery = <TData = FindAtomIdsQuery, TError = unknown>(
+  variables?: FindAtomIdsQueryVariables,
+  options?: Omit<
+    UseQueryOptions<FindAtomIdsQuery, TError, TData>,
+    'queryKey'
+  > & {
+    queryKey?: UseQueryOptions<FindAtomIdsQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useQuery<FindAtomIdsQuery, TError, TData>({
+    queryKey:
+      variables === undefined ? ['FindAtomIds'] : ['FindAtomIds', variables],
+    queryFn: fetcher<FindAtomIdsQuery, FindAtomIdsQueryVariables>(
+      FindAtomIdsDocument,
+      variables,
+    ),
+    ...options,
+  })
+}
+
+useFindAtomIdsQuery.document = FindAtomIdsDocument
+
+useFindAtomIdsQuery.getKey = (variables?: FindAtomIdsQueryVariables) =>
+  variables === undefined ? ['FindAtomIds'] : ['FindAtomIds', variables]
+
+export const useInfiniteFindAtomIdsQuery = <
+  TData = InfiniteData<FindAtomIdsQuery>,
+  TError = unknown,
+>(
+  variables: FindAtomIdsQueryVariables,
+  options: Omit<
+    UseInfiniteQueryOptions<FindAtomIdsQuery, TError, TData>,
+    'queryKey'
+  > & {
+    queryKey?: UseInfiniteQueryOptions<
+      FindAtomIdsQuery,
+      TError,
+      TData
+    >['queryKey']
+  },
+) => {
+  return useInfiniteQuery<FindAtomIdsQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey:
+          optionsQueryKey ?? variables === undefined
+            ? ['FindAtomIds.infinite']
+            : ['FindAtomIds.infinite', variables],
+        queryFn: (metaData) =>
+          fetcher<FindAtomIdsQuery, FindAtomIdsQueryVariables>(
+            FindAtomIdsDocument,
+            { ...variables, ...(metaData.pageParam ?? {}) },
+          )(),
+        ...restOptions,
+      }
+    })(),
+  )
+}
+
+useInfiniteFindAtomIdsQuery.getKey = (variables?: FindAtomIdsQueryVariables) =>
+  variables === undefined
+    ? ['FindAtomIds.infinite']
+    : ['FindAtomIds.infinite', variables]
+
+useFindAtomIdsQuery.fetcher = (
+  variables?: FindAtomIdsQueryVariables,
+  options?: RequestInit['headers'],
+) =>
+  fetcher<FindAtomIdsQuery, FindAtomIdsQueryVariables>(
+    FindAtomIdsDocument,
+    variables,
+    options,
+  )
+
 export const GetEventsDocument = `
     query GetEvents($limit: Int, $offset: Int, $orderBy: [events_order_by!], $where: events_bool_exp, $addresses: [String!]) {
   total: events_aggregate(where: $where) {
@@ -22785,6 +23576,98 @@ useGetDebugEventsQuery.fetcher = (
 ) =>
   fetcher<GetDebugEventsQuery, GetDebugEventsQueryVariables>(
     GetDebugEventsDocument,
+    variables,
+    options,
+  )
+
+export const GetTransactionEventsDocument = `
+    query GetTransactionEvents($hash: String!) {
+  events(where: {transaction_hash: {_eq: $hash}}) {
+    transaction_hash
+  }
+}
+    `
+
+export const useGetTransactionEventsQuery = <
+  TData = GetTransactionEventsQuery,
+  TError = unknown,
+>(
+  variables: GetTransactionEventsQueryVariables,
+  options?: Omit<
+    UseQueryOptions<GetTransactionEventsQuery, TError, TData>,
+    'queryKey'
+  > & {
+    queryKey?: UseQueryOptions<
+      GetTransactionEventsQuery,
+      TError,
+      TData
+    >['queryKey']
+  },
+) => {
+  return useQuery<GetTransactionEventsQuery, TError, TData>({
+    queryKey: ['GetTransactionEvents', variables],
+    queryFn: fetcher<
+      GetTransactionEventsQuery,
+      GetTransactionEventsQueryVariables
+    >(GetTransactionEventsDocument, variables),
+    ...options,
+  })
+}
+
+useGetTransactionEventsQuery.document = GetTransactionEventsDocument
+
+useGetTransactionEventsQuery.getKey = (
+  variables: GetTransactionEventsQueryVariables,
+) => ['GetTransactionEvents', variables]
+
+export const useInfiniteGetTransactionEventsQuery = <
+  TData = InfiniteData<GetTransactionEventsQuery>,
+  TError = unknown,
+>(
+  variables: GetTransactionEventsQueryVariables,
+  options: Omit<
+    UseInfiniteQueryOptions<GetTransactionEventsQuery, TError, TData>,
+    'queryKey'
+  > & {
+    queryKey?: UseInfiniteQueryOptions<
+      GetTransactionEventsQuery,
+      TError,
+      TData
+    >['queryKey']
+  },
+) => {
+  return useInfiniteQuery<GetTransactionEventsQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey: optionsQueryKey ?? [
+          'GetTransactionEvents.infinite',
+          variables,
+        ],
+        queryFn: (metaData) =>
+          fetcher<
+            GetTransactionEventsQuery,
+            GetTransactionEventsQueryVariables
+          >(GetTransactionEventsDocument, {
+            ...variables,
+            ...(metaData.pageParam ?? {}),
+          })(),
+        ...restOptions,
+      }
+    })(),
+  )
+}
+
+useInfiniteGetTransactionEventsQuery.getKey = (
+  variables: GetTransactionEventsQueryVariables,
+) => ['GetTransactionEvents.infinite', variables]
+
+useGetTransactionEventsQuery.fetcher = (
+  variables: GetTransactionEventsQueryVariables,
+  options?: RequestInit['headers'],
+) =>
+  fetcher<GetTransactionEventsQuery, GetTransactionEventsQueryVariables>(
+    GetTransactionEventsDocument,
     variables,
     options,
   )
@@ -24982,6 +25865,110 @@ useGetPositionsCountByTypeQuery.fetcher = (
     options,
   )
 
+export const SearchPositionsDocument = `
+    query SearchPositions($addresses: _text, $search_fields: jsonb) {
+  positions: search_positions_on_subject(
+    args: {addresses: $addresses, search_fields: $search_fields}
+  ) {
+    term {
+      triple {
+        subject {
+          data
+        }
+        predicate {
+          data
+        }
+        object {
+          data
+        }
+      }
+    }
+  }
+}
+    `
+
+export const useSearchPositionsQuery = <
+  TData = SearchPositionsQuery,
+  TError = unknown,
+>(
+  variables?: SearchPositionsQueryVariables,
+  options?: Omit<
+    UseQueryOptions<SearchPositionsQuery, TError, TData>,
+    'queryKey'
+  > & {
+    queryKey?: UseQueryOptions<SearchPositionsQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useQuery<SearchPositionsQuery, TError, TData>({
+    queryKey:
+      variables === undefined
+        ? ['SearchPositions']
+        : ['SearchPositions', variables],
+    queryFn: fetcher<SearchPositionsQuery, SearchPositionsQueryVariables>(
+      SearchPositionsDocument,
+      variables,
+    ),
+    ...options,
+  })
+}
+
+useSearchPositionsQuery.document = SearchPositionsDocument
+
+useSearchPositionsQuery.getKey = (variables?: SearchPositionsQueryVariables) =>
+  variables === undefined ? ['SearchPositions'] : ['SearchPositions', variables]
+
+export const useInfiniteSearchPositionsQuery = <
+  TData = InfiniteData<SearchPositionsQuery>,
+  TError = unknown,
+>(
+  variables: SearchPositionsQueryVariables,
+  options: Omit<
+    UseInfiniteQueryOptions<SearchPositionsQuery, TError, TData>,
+    'queryKey'
+  > & {
+    queryKey?: UseInfiniteQueryOptions<
+      SearchPositionsQuery,
+      TError,
+      TData
+    >['queryKey']
+  },
+) => {
+  return useInfiniteQuery<SearchPositionsQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey:
+          optionsQueryKey ?? variables === undefined
+            ? ['SearchPositions.infinite']
+            : ['SearchPositions.infinite', variables],
+        queryFn: (metaData) =>
+          fetcher<SearchPositionsQuery, SearchPositionsQueryVariables>(
+            SearchPositionsDocument,
+            { ...variables, ...(metaData.pageParam ?? {}) },
+          )(),
+        ...restOptions,
+      }
+    })(),
+  )
+}
+
+useInfiniteSearchPositionsQuery.getKey = (
+  variables?: SearchPositionsQueryVariables,
+) =>
+  variables === undefined
+    ? ['SearchPositions.infinite']
+    : ['SearchPositions.infinite', variables]
+
+useSearchPositionsQuery.fetcher = (
+  variables?: SearchPositionsQueryVariables,
+  options?: RequestInit['headers'],
+) =>
+  fetcher<SearchPositionsQuery, SearchPositionsQueryVariables>(
+    SearchPositionsDocument,
+    variables,
+    options,
+  )
+
 export const GetSignalsDocument = `
     query GetSignals($limit: Int, $offset: Int, $orderBy: [signals_order_by!], $addresses: [String!]) {
   total: events_aggregate {
@@ -26118,6 +27105,93 @@ useGetTriplesWithPositionsQuery.fetcher = (
 ) =>
   fetcher<GetTriplesWithPositionsQuery, GetTriplesWithPositionsQueryVariables>(
     GetTriplesWithPositionsDocument,
+    variables,
+    options,
+  )
+
+export const FindTriplesDocument = `
+    query FindTriples($where: triples_bool_exp = {}, $address: String!) {
+  triples(where: $where) {
+    term_id
+    subject_id
+    predicate_id
+    object_id
+    positions(where: {account_id: {_eq: $address}}) {
+      shares
+    }
+  }
+}
+    `
+
+export const useFindTriplesQuery = <TData = FindTriplesQuery, TError = unknown>(
+  variables: FindTriplesQueryVariables,
+  options?: Omit<
+    UseQueryOptions<FindTriplesQuery, TError, TData>,
+    'queryKey'
+  > & {
+    queryKey?: UseQueryOptions<FindTriplesQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useQuery<FindTriplesQuery, TError, TData>({
+    queryKey: ['FindTriples', variables],
+    queryFn: fetcher<FindTriplesQuery, FindTriplesQueryVariables>(
+      FindTriplesDocument,
+      variables,
+    ),
+    ...options,
+  })
+}
+
+useFindTriplesQuery.document = FindTriplesDocument
+
+useFindTriplesQuery.getKey = (variables: FindTriplesQueryVariables) => [
+  'FindTriples',
+  variables,
+]
+
+export const useInfiniteFindTriplesQuery = <
+  TData = InfiniteData<FindTriplesQuery>,
+  TError = unknown,
+>(
+  variables: FindTriplesQueryVariables,
+  options: Omit<
+    UseInfiniteQueryOptions<FindTriplesQuery, TError, TData>,
+    'queryKey'
+  > & {
+    queryKey?: UseInfiniteQueryOptions<
+      FindTriplesQuery,
+      TError,
+      TData
+    >['queryKey']
+  },
+) => {
+  return useInfiniteQuery<FindTriplesQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey: optionsQueryKey ?? ['FindTriples.infinite', variables],
+        queryFn: (metaData) =>
+          fetcher<FindTriplesQuery, FindTriplesQueryVariables>(
+            FindTriplesDocument,
+            { ...variables, ...(metaData.pageParam ?? {}) },
+          )(),
+        ...restOptions,
+      }
+    })(),
+  )
+}
+
+useInfiniteFindTriplesQuery.getKey = (variables: FindTriplesQueryVariables) => [
+  'FindTriples.infinite',
+  variables,
+]
+
+useFindTriplesQuery.fetcher = (
+  variables: FindTriplesQueryVariables,
+  options?: RequestInit['headers'],
+) =>
+  fetcher<FindTriplesQuery, FindTriplesQueryVariables>(
+    FindTriplesDocument,
     variables,
     options,
   )
@@ -40154,6 +41228,56 @@ export const GetAtomDetails = {
     },
   ],
 } as unknown as DocumentNode
+export const FindAtomIds = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FindAtomIds' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'where' },
+          },
+          type: {
+            kind: 'NamedType',
+            name: { kind: 'Name', value: 'atoms_bool_exp' },
+          },
+          defaultValue: { kind: 'ObjectValue', fields: [] },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'atoms' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'where' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'term_id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'data' } },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
 export const GetEvents = {
   kind: 'Document',
   definitions: [
@@ -42734,6 +43858,75 @@ export const GetDebugEvents = {
                       },
                     ],
                   },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export const GetTransactionEvents = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'GetTransactionEvents' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'hash' } },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'events' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'transaction_hash' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: '_eq' },
+                            value: {
+                              kind: 'Variable',
+                              name: { kind: 'Name', value: 'hash' },
+                            },
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'transaction_hash' },
                 },
               ],
             },
@@ -52282,6 +53475,133 @@ export const GetPositionsCountByType = {
     },
   ],
 } as unknown as DocumentNode
+export const SearchPositions = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'SearchPositions' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'addresses' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: '_text' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'search_fields' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'jsonb' } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'positions' },
+            name: { kind: 'Name', value: 'search_positions_on_subject' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'args' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'addresses' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'addresses' },
+                      },
+                    },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'search_fields' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'search_fields' },
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'term' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'triple' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'subject' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'data' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'predicate' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'data' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'object' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'data' },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
 export const GetSignals = {
   kind: 'Document',
   definitions: [
@@ -58708,6 +60028,116 @@ export const GetTriplesWithPositions = {
                             },
                           ],
                         },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export const FindTriples = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'FindTriples' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'where' },
+          },
+          type: {
+            kind: 'NamedType',
+            name: { kind: 'Name', value: 'triples_bool_exp' },
+          },
+          defaultValue: { kind: 'ObjectValue', fields: [] },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'address' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'triples' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'where' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'term_id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'subject_id' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'predicate_id' },
+                },
+                { kind: 'Field', name: { kind: 'Name', value: 'object_id' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'positions' },
+                  arguments: [
+                    {
+                      kind: 'Argument',
+                      name: { kind: 'Name', value: 'where' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'account_id' },
+                            value: {
+                              kind: 'ObjectValue',
+                              fields: [
+                                {
+                                  kind: 'ObjectField',
+                                  name: { kind: 'Name', value: '_eq' },
+                                  value: {
+                                    kind: 'Variable',
+                                    name: { kind: 'Name', value: 'address' },
+                                  },
+                                },
+                              ],
+                            },
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'shares' },
                       },
                     ],
                   },
