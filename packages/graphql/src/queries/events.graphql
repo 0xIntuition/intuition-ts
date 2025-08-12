@@ -213,3 +213,9 @@ query GetDebugEvents($addresses: [String!]) {
     }
   }
 }
+
+query GetTransactionEvents($hash: String!) {
+  events(where: { transaction_hash: { _eq: $hash } }) {
+    transaction_hash
+  }
+}

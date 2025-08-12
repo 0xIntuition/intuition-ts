@@ -119,3 +119,23 @@ query GetPositionsCountByType($where: positions_bool_exp) {
     }
   }
 }
+
+query SearchPositions($addresses: _text, $search_fields: jsonb) {
+  positions: search_positions_on_subject(
+    args: { addresses: $addresses, search_fields: $search_fields }
+  ) {
+    term {
+      triple {
+        subject {
+          data
+        }
+        predicate {
+          data
+        }
+        object {
+          data
+        }
+      }
+    }
+  }
+}

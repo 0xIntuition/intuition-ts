@@ -131,6 +131,8 @@ input String_comparison_exp {
   _similar: String
 }
 
+scalar _text
+
 scalar account_type
 
 """
@@ -6548,6 +6550,64 @@ type query_root {
     where: redemptions_bool_exp
   ): redemptions_aggregate!
   """
+  execute function "search_positions_on_subject" which returns "position"
+  """
+  search_positions_on_subject(
+    """
+    input parameters for function "search_positions_on_subject"
+    """
+    args: search_positions_on_subject_args!
+    """
+    distinct select on columns
+    """
+    distinct_on: [positions_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [positions_order_by!]
+    """
+    filter the rows returned
+    """
+    where: positions_bool_exp
+  ): [positions!]!
+  """
+  execute function "search_positions_on_subject" and query aggregates on result of table type "position"
+  """
+  search_positions_on_subject_aggregate(
+    """
+    input parameters for function "search_positions_on_subject_aggregate"
+    """
+    args: search_positions_on_subject_args!
+    """
+    distinct select on columns
+    """
+    distinct_on: [positions_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [positions_order_by!]
+    """
+    filter the rows returned
+    """
+    where: positions_bool_exp
+  ): positions_aggregate!
+  """
   execute function "search_term" which returns "term"
   """
   search_term(
@@ -6664,7 +6724,7 @@ type query_root {
     where: terms_bool_exp
   ): terms_aggregate!
   """
-  fetch data from the table: "share_price_change_stats_daily"
+  An array relationship
   """
   share_price_change_stats_daily(
     """
@@ -6689,7 +6749,7 @@ type query_root {
     where: share_price_change_stats_daily_bool_exp
   ): [share_price_change_stats_daily!]!
   """
-  fetch data from the table: "share_price_change_stats_hourly"
+  An array relationship
   """
   share_price_change_stats_hourly(
     """
@@ -6714,7 +6774,7 @@ type query_root {
     where: share_price_change_stats_hourly_bool_exp
   ): [share_price_change_stats_hourly!]!
   """
-  fetch data from the table: "share_price_change_stats_monthly"
+  An array relationship
   """
   share_price_change_stats_monthly(
     """
@@ -6739,7 +6799,7 @@ type query_root {
     where: share_price_change_stats_monthly_bool_exp
   ): [share_price_change_stats_monthly!]!
   """
-  fetch data from the table: "share_price_change_stats_weekly"
+  An array relationship
   """
   share_price_change_stats_weekly(
     """
@@ -7905,6 +7965,11 @@ input redemptions_variance_order_by {
   term_id: order_by
 }
 
+input search_positions_on_subject_args {
+  addresses: _text
+  search_fields: jsonb
+}
+
 input search_term_args {
   query: String
 }
@@ -7932,6 +7997,35 @@ type share_price_change_stats_daily {
 }
 
 """
+order by aggregate values of table "share_price_change_stats_daily"
+"""
+input share_price_change_stats_daily_aggregate_order_by {
+  avg: share_price_change_stats_daily_avg_order_by
+  count: order_by
+  max: share_price_change_stats_daily_max_order_by
+  min: share_price_change_stats_daily_min_order_by
+  stddev: share_price_change_stats_daily_stddev_order_by
+  stddev_pop: share_price_change_stats_daily_stddev_pop_order_by
+  stddev_samp: share_price_change_stats_daily_stddev_samp_order_by
+  sum: share_price_change_stats_daily_sum_order_by
+  var_pop: share_price_change_stats_daily_var_pop_order_by
+  var_samp: share_price_change_stats_daily_var_samp_order_by
+  variance: share_price_change_stats_daily_variance_order_by
+}
+
+"""
+order by avg() on columns of table "share_price_change_stats_daily"
+"""
+input share_price_change_stats_daily_avg_order_by {
+  change_count: order_by
+  curve_id: order_by
+  difference: order_by
+  first_share_price: order_by
+  last_share_price: order_by
+  term_id: order_by
+}
+
+"""
 Boolean expression to filter rows from the table "share_price_change_stats_daily". All fields are combined with a logical 'AND'.
 """
 input share_price_change_stats_daily_bool_exp {
@@ -7946,6 +8040,32 @@ input share_price_change_stats_daily_bool_exp {
   last_share_price: numeric_comparison_exp
   term: terms_bool_exp
   term_id: numeric_comparison_exp
+}
+
+"""
+order by max() on columns of table "share_price_change_stats_daily"
+"""
+input share_price_change_stats_daily_max_order_by {
+  bucket: order_by
+  change_count: order_by
+  curve_id: order_by
+  difference: order_by
+  first_share_price: order_by
+  last_share_price: order_by
+  term_id: order_by
+}
+
+"""
+order by min() on columns of table "share_price_change_stats_daily"
+"""
+input share_price_change_stats_daily_min_order_by {
+  bucket: order_by
+  change_count: order_by
+  curve_id: order_by
+  difference: order_by
+  first_share_price: order_by
+  last_share_price: order_by
+  term_id: order_by
 }
 
 """
@@ -7997,6 +8117,42 @@ enum share_price_change_stats_daily_select_column {
 }
 
 """
+order by stddev() on columns of table "share_price_change_stats_daily"
+"""
+input share_price_change_stats_daily_stddev_order_by {
+  change_count: order_by
+  curve_id: order_by
+  difference: order_by
+  first_share_price: order_by
+  last_share_price: order_by
+  term_id: order_by
+}
+
+"""
+order by stddev_pop() on columns of table "share_price_change_stats_daily"
+"""
+input share_price_change_stats_daily_stddev_pop_order_by {
+  change_count: order_by
+  curve_id: order_by
+  difference: order_by
+  first_share_price: order_by
+  last_share_price: order_by
+  term_id: order_by
+}
+
+"""
+order by stddev_samp() on columns of table "share_price_change_stats_daily"
+"""
+input share_price_change_stats_daily_stddev_samp_order_by {
+  change_count: order_by
+  curve_id: order_by
+  difference: order_by
+  first_share_price: order_by
+  last_share_price: order_by
+  term_id: order_by
+}
+
+"""
 Streaming cursor of the table "share_price_change_stats_daily"
 """
 input share_price_change_stats_daily_stream_cursor_input {
@@ -8024,6 +8180,54 @@ input share_price_change_stats_daily_stream_cursor_value_input {
 }
 
 """
+order by sum() on columns of table "share_price_change_stats_daily"
+"""
+input share_price_change_stats_daily_sum_order_by {
+  change_count: order_by
+  curve_id: order_by
+  difference: order_by
+  first_share_price: order_by
+  last_share_price: order_by
+  term_id: order_by
+}
+
+"""
+order by var_pop() on columns of table "share_price_change_stats_daily"
+"""
+input share_price_change_stats_daily_var_pop_order_by {
+  change_count: order_by
+  curve_id: order_by
+  difference: order_by
+  first_share_price: order_by
+  last_share_price: order_by
+  term_id: order_by
+}
+
+"""
+order by var_samp() on columns of table "share_price_change_stats_daily"
+"""
+input share_price_change_stats_daily_var_samp_order_by {
+  change_count: order_by
+  curve_id: order_by
+  difference: order_by
+  first_share_price: order_by
+  last_share_price: order_by
+  term_id: order_by
+}
+
+"""
+order by variance() on columns of table "share_price_change_stats_daily"
+"""
+input share_price_change_stats_daily_variance_order_by {
+  change_count: order_by
+  curve_id: order_by
+  difference: order_by
+  first_share_price: order_by
+  last_share_price: order_by
+  term_id: order_by
+}
+
+"""
 columns and relationships of "share_price_change_stats_hourly"
 """
 type share_price_change_stats_hourly {
@@ -8041,6 +8245,35 @@ type share_price_change_stats_hourly {
 }
 
 """
+order by aggregate values of table "share_price_change_stats_hourly"
+"""
+input share_price_change_stats_hourly_aggregate_order_by {
+  avg: share_price_change_stats_hourly_avg_order_by
+  count: order_by
+  max: share_price_change_stats_hourly_max_order_by
+  min: share_price_change_stats_hourly_min_order_by
+  stddev: share_price_change_stats_hourly_stddev_order_by
+  stddev_pop: share_price_change_stats_hourly_stddev_pop_order_by
+  stddev_samp: share_price_change_stats_hourly_stddev_samp_order_by
+  sum: share_price_change_stats_hourly_sum_order_by
+  var_pop: share_price_change_stats_hourly_var_pop_order_by
+  var_samp: share_price_change_stats_hourly_var_samp_order_by
+  variance: share_price_change_stats_hourly_variance_order_by
+}
+
+"""
+order by avg() on columns of table "share_price_change_stats_hourly"
+"""
+input share_price_change_stats_hourly_avg_order_by {
+  change_count: order_by
+  curve_id: order_by
+  difference: order_by
+  first_share_price: order_by
+  last_share_price: order_by
+  term_id: order_by
+}
+
+"""
 Boolean expression to filter rows from the table "share_price_change_stats_hourly". All fields are combined with a logical 'AND'.
 """
 input share_price_change_stats_hourly_bool_exp {
@@ -8055,6 +8288,32 @@ input share_price_change_stats_hourly_bool_exp {
   last_share_price: numeric_comparison_exp
   term: terms_bool_exp
   term_id: numeric_comparison_exp
+}
+
+"""
+order by max() on columns of table "share_price_change_stats_hourly"
+"""
+input share_price_change_stats_hourly_max_order_by {
+  bucket: order_by
+  change_count: order_by
+  curve_id: order_by
+  difference: order_by
+  first_share_price: order_by
+  last_share_price: order_by
+  term_id: order_by
+}
+
+"""
+order by min() on columns of table "share_price_change_stats_hourly"
+"""
+input share_price_change_stats_hourly_min_order_by {
+  bucket: order_by
+  change_count: order_by
+  curve_id: order_by
+  difference: order_by
+  first_share_price: order_by
+  last_share_price: order_by
+  term_id: order_by
 }
 
 """
@@ -8106,6 +8365,42 @@ enum share_price_change_stats_hourly_select_column {
 }
 
 """
+order by stddev() on columns of table "share_price_change_stats_hourly"
+"""
+input share_price_change_stats_hourly_stddev_order_by {
+  change_count: order_by
+  curve_id: order_by
+  difference: order_by
+  first_share_price: order_by
+  last_share_price: order_by
+  term_id: order_by
+}
+
+"""
+order by stddev_pop() on columns of table "share_price_change_stats_hourly"
+"""
+input share_price_change_stats_hourly_stddev_pop_order_by {
+  change_count: order_by
+  curve_id: order_by
+  difference: order_by
+  first_share_price: order_by
+  last_share_price: order_by
+  term_id: order_by
+}
+
+"""
+order by stddev_samp() on columns of table "share_price_change_stats_hourly"
+"""
+input share_price_change_stats_hourly_stddev_samp_order_by {
+  change_count: order_by
+  curve_id: order_by
+  difference: order_by
+  first_share_price: order_by
+  last_share_price: order_by
+  term_id: order_by
+}
+
+"""
 Streaming cursor of the table "share_price_change_stats_hourly"
 """
 input share_price_change_stats_hourly_stream_cursor_input {
@@ -8133,6 +8428,54 @@ input share_price_change_stats_hourly_stream_cursor_value_input {
 }
 
 """
+order by sum() on columns of table "share_price_change_stats_hourly"
+"""
+input share_price_change_stats_hourly_sum_order_by {
+  change_count: order_by
+  curve_id: order_by
+  difference: order_by
+  first_share_price: order_by
+  last_share_price: order_by
+  term_id: order_by
+}
+
+"""
+order by var_pop() on columns of table "share_price_change_stats_hourly"
+"""
+input share_price_change_stats_hourly_var_pop_order_by {
+  change_count: order_by
+  curve_id: order_by
+  difference: order_by
+  first_share_price: order_by
+  last_share_price: order_by
+  term_id: order_by
+}
+
+"""
+order by var_samp() on columns of table "share_price_change_stats_hourly"
+"""
+input share_price_change_stats_hourly_var_samp_order_by {
+  change_count: order_by
+  curve_id: order_by
+  difference: order_by
+  first_share_price: order_by
+  last_share_price: order_by
+  term_id: order_by
+}
+
+"""
+order by variance() on columns of table "share_price_change_stats_hourly"
+"""
+input share_price_change_stats_hourly_variance_order_by {
+  change_count: order_by
+  curve_id: order_by
+  difference: order_by
+  first_share_price: order_by
+  last_share_price: order_by
+  term_id: order_by
+}
+
+"""
 columns and relationships of "share_price_change_stats_monthly"
 """
 type share_price_change_stats_monthly {
@@ -8150,6 +8493,35 @@ type share_price_change_stats_monthly {
 }
 
 """
+order by aggregate values of table "share_price_change_stats_monthly"
+"""
+input share_price_change_stats_monthly_aggregate_order_by {
+  avg: share_price_change_stats_monthly_avg_order_by
+  count: order_by
+  max: share_price_change_stats_monthly_max_order_by
+  min: share_price_change_stats_monthly_min_order_by
+  stddev: share_price_change_stats_monthly_stddev_order_by
+  stddev_pop: share_price_change_stats_monthly_stddev_pop_order_by
+  stddev_samp: share_price_change_stats_monthly_stddev_samp_order_by
+  sum: share_price_change_stats_monthly_sum_order_by
+  var_pop: share_price_change_stats_monthly_var_pop_order_by
+  var_samp: share_price_change_stats_monthly_var_samp_order_by
+  variance: share_price_change_stats_monthly_variance_order_by
+}
+
+"""
+order by avg() on columns of table "share_price_change_stats_monthly"
+"""
+input share_price_change_stats_monthly_avg_order_by {
+  change_count: order_by
+  curve_id: order_by
+  difference: order_by
+  first_share_price: order_by
+  last_share_price: order_by
+  term_id: order_by
+}
+
+"""
 Boolean expression to filter rows from the table "share_price_change_stats_monthly". All fields are combined with a logical 'AND'.
 """
 input share_price_change_stats_monthly_bool_exp {
@@ -8164,6 +8536,32 @@ input share_price_change_stats_monthly_bool_exp {
   last_share_price: numeric_comparison_exp
   term: terms_bool_exp
   term_id: numeric_comparison_exp
+}
+
+"""
+order by max() on columns of table "share_price_change_stats_monthly"
+"""
+input share_price_change_stats_monthly_max_order_by {
+  bucket: order_by
+  change_count: order_by
+  curve_id: order_by
+  difference: order_by
+  first_share_price: order_by
+  last_share_price: order_by
+  term_id: order_by
+}
+
+"""
+order by min() on columns of table "share_price_change_stats_monthly"
+"""
+input share_price_change_stats_monthly_min_order_by {
+  bucket: order_by
+  change_count: order_by
+  curve_id: order_by
+  difference: order_by
+  first_share_price: order_by
+  last_share_price: order_by
+  term_id: order_by
 }
 
 """
@@ -8215,6 +8613,42 @@ enum share_price_change_stats_monthly_select_column {
 }
 
 """
+order by stddev() on columns of table "share_price_change_stats_monthly"
+"""
+input share_price_change_stats_monthly_stddev_order_by {
+  change_count: order_by
+  curve_id: order_by
+  difference: order_by
+  first_share_price: order_by
+  last_share_price: order_by
+  term_id: order_by
+}
+
+"""
+order by stddev_pop() on columns of table "share_price_change_stats_monthly"
+"""
+input share_price_change_stats_monthly_stddev_pop_order_by {
+  change_count: order_by
+  curve_id: order_by
+  difference: order_by
+  first_share_price: order_by
+  last_share_price: order_by
+  term_id: order_by
+}
+
+"""
+order by stddev_samp() on columns of table "share_price_change_stats_monthly"
+"""
+input share_price_change_stats_monthly_stddev_samp_order_by {
+  change_count: order_by
+  curve_id: order_by
+  difference: order_by
+  first_share_price: order_by
+  last_share_price: order_by
+  term_id: order_by
+}
+
+"""
 Streaming cursor of the table "share_price_change_stats_monthly"
 """
 input share_price_change_stats_monthly_stream_cursor_input {
@@ -8242,6 +8676,54 @@ input share_price_change_stats_monthly_stream_cursor_value_input {
 }
 
 """
+order by sum() on columns of table "share_price_change_stats_monthly"
+"""
+input share_price_change_stats_monthly_sum_order_by {
+  change_count: order_by
+  curve_id: order_by
+  difference: order_by
+  first_share_price: order_by
+  last_share_price: order_by
+  term_id: order_by
+}
+
+"""
+order by var_pop() on columns of table "share_price_change_stats_monthly"
+"""
+input share_price_change_stats_monthly_var_pop_order_by {
+  change_count: order_by
+  curve_id: order_by
+  difference: order_by
+  first_share_price: order_by
+  last_share_price: order_by
+  term_id: order_by
+}
+
+"""
+order by var_samp() on columns of table "share_price_change_stats_monthly"
+"""
+input share_price_change_stats_monthly_var_samp_order_by {
+  change_count: order_by
+  curve_id: order_by
+  difference: order_by
+  first_share_price: order_by
+  last_share_price: order_by
+  term_id: order_by
+}
+
+"""
+order by variance() on columns of table "share_price_change_stats_monthly"
+"""
+input share_price_change_stats_monthly_variance_order_by {
+  change_count: order_by
+  curve_id: order_by
+  difference: order_by
+  first_share_price: order_by
+  last_share_price: order_by
+  term_id: order_by
+}
+
+"""
 columns and relationships of "share_price_change_stats_weekly"
 """
 type share_price_change_stats_weekly {
@@ -8259,6 +8741,35 @@ type share_price_change_stats_weekly {
 }
 
 """
+order by aggregate values of table "share_price_change_stats_weekly"
+"""
+input share_price_change_stats_weekly_aggregate_order_by {
+  avg: share_price_change_stats_weekly_avg_order_by
+  count: order_by
+  max: share_price_change_stats_weekly_max_order_by
+  min: share_price_change_stats_weekly_min_order_by
+  stddev: share_price_change_stats_weekly_stddev_order_by
+  stddev_pop: share_price_change_stats_weekly_stddev_pop_order_by
+  stddev_samp: share_price_change_stats_weekly_stddev_samp_order_by
+  sum: share_price_change_stats_weekly_sum_order_by
+  var_pop: share_price_change_stats_weekly_var_pop_order_by
+  var_samp: share_price_change_stats_weekly_var_samp_order_by
+  variance: share_price_change_stats_weekly_variance_order_by
+}
+
+"""
+order by avg() on columns of table "share_price_change_stats_weekly"
+"""
+input share_price_change_stats_weekly_avg_order_by {
+  change_count: order_by
+  curve_id: order_by
+  difference: order_by
+  first_share_price: order_by
+  last_share_price: order_by
+  term_id: order_by
+}
+
+"""
 Boolean expression to filter rows from the table "share_price_change_stats_weekly". All fields are combined with a logical 'AND'.
 """
 input share_price_change_stats_weekly_bool_exp {
@@ -8273,6 +8784,32 @@ input share_price_change_stats_weekly_bool_exp {
   last_share_price: numeric_comparison_exp
   term: terms_bool_exp
   term_id: numeric_comparison_exp
+}
+
+"""
+order by max() on columns of table "share_price_change_stats_weekly"
+"""
+input share_price_change_stats_weekly_max_order_by {
+  bucket: order_by
+  change_count: order_by
+  curve_id: order_by
+  difference: order_by
+  first_share_price: order_by
+  last_share_price: order_by
+  term_id: order_by
+}
+
+"""
+order by min() on columns of table "share_price_change_stats_weekly"
+"""
+input share_price_change_stats_weekly_min_order_by {
+  bucket: order_by
+  change_count: order_by
+  curve_id: order_by
+  difference: order_by
+  first_share_price: order_by
+  last_share_price: order_by
+  term_id: order_by
 }
 
 """
@@ -8324,6 +8861,42 @@ enum share_price_change_stats_weekly_select_column {
 }
 
 """
+order by stddev() on columns of table "share_price_change_stats_weekly"
+"""
+input share_price_change_stats_weekly_stddev_order_by {
+  change_count: order_by
+  curve_id: order_by
+  difference: order_by
+  first_share_price: order_by
+  last_share_price: order_by
+  term_id: order_by
+}
+
+"""
+order by stddev_pop() on columns of table "share_price_change_stats_weekly"
+"""
+input share_price_change_stats_weekly_stddev_pop_order_by {
+  change_count: order_by
+  curve_id: order_by
+  difference: order_by
+  first_share_price: order_by
+  last_share_price: order_by
+  term_id: order_by
+}
+
+"""
+order by stddev_samp() on columns of table "share_price_change_stats_weekly"
+"""
+input share_price_change_stats_weekly_stddev_samp_order_by {
+  change_count: order_by
+  curve_id: order_by
+  difference: order_by
+  first_share_price: order_by
+  last_share_price: order_by
+  term_id: order_by
+}
+
+"""
 Streaming cursor of the table "share_price_change_stats_weekly"
 """
 input share_price_change_stats_weekly_stream_cursor_input {
@@ -8348,6 +8921,54 @@ input share_price_change_stats_weekly_stream_cursor_value_input {
   first_share_price: numeric
   last_share_price: numeric
   term_id: numeric
+}
+
+"""
+order by sum() on columns of table "share_price_change_stats_weekly"
+"""
+input share_price_change_stats_weekly_sum_order_by {
+  change_count: order_by
+  curve_id: order_by
+  difference: order_by
+  first_share_price: order_by
+  last_share_price: order_by
+  term_id: order_by
+}
+
+"""
+order by var_pop() on columns of table "share_price_change_stats_weekly"
+"""
+input share_price_change_stats_weekly_var_pop_order_by {
+  change_count: order_by
+  curve_id: order_by
+  difference: order_by
+  first_share_price: order_by
+  last_share_price: order_by
+  term_id: order_by
+}
+
+"""
+order by var_samp() on columns of table "share_price_change_stats_weekly"
+"""
+input share_price_change_stats_weekly_var_samp_order_by {
+  change_count: order_by
+  curve_id: order_by
+  difference: order_by
+  first_share_price: order_by
+  last_share_price: order_by
+  term_id: order_by
+}
+
+"""
+order by variance() on columns of table "share_price_change_stats_weekly"
+"""
+input share_price_change_stats_weekly_variance_order_by {
+  change_count: order_by
+  curve_id: order_by
+  difference: order_by
+  first_share_price: order_by
+  last_share_price: order_by
+  term_id: order_by
 }
 
 """
@@ -11191,6 +11812,64 @@ type subscription_root {
     where: redemptions_bool_exp
   ): [redemptions!]!
   """
+  execute function "search_positions_on_subject" which returns "position"
+  """
+  search_positions_on_subject(
+    """
+    input parameters for function "search_positions_on_subject"
+    """
+    args: search_positions_on_subject_args!
+    """
+    distinct select on columns
+    """
+    distinct_on: [positions_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [positions_order_by!]
+    """
+    filter the rows returned
+    """
+    where: positions_bool_exp
+  ): [positions!]!
+  """
+  execute function "search_positions_on_subject" and query aggregates on result of table type "position"
+  """
+  search_positions_on_subject_aggregate(
+    """
+    input parameters for function "search_positions_on_subject_aggregate"
+    """
+    args: search_positions_on_subject_args!
+    """
+    distinct select on columns
+    """
+    distinct_on: [positions_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [positions_order_by!]
+    """
+    filter the rows returned
+    """
+    where: positions_bool_exp
+  ): positions_aggregate!
+  """
   execute function "search_term" which returns "term"
   """
   search_term(
@@ -11307,7 +11986,7 @@ type subscription_root {
     where: terms_bool_exp
   ): terms_aggregate!
   """
-  fetch data from the table: "share_price_change_stats_daily"
+  An array relationship
   """
   share_price_change_stats_daily(
     """
@@ -11349,7 +12028,7 @@ type subscription_root {
     where: share_price_change_stats_daily_bool_exp
   ): [share_price_change_stats_daily!]!
   """
-  fetch data from the table: "share_price_change_stats_hourly"
+  An array relationship
   """
   share_price_change_stats_hourly(
     """
@@ -11391,7 +12070,7 @@ type subscription_root {
     where: share_price_change_stats_hourly_bool_exp
   ): [share_price_change_stats_hourly!]!
   """
-  fetch data from the table: "share_price_change_stats_monthly"
+  An array relationship
   """
   share_price_change_stats_monthly(
     """
@@ -11433,7 +12112,7 @@ type subscription_root {
     where: share_price_change_stats_monthly_bool_exp
   ): [share_price_change_stats_monthly!]!
   """
-  fetch data from the table: "share_price_change_stats_weekly"
+  An array relationship
   """
   share_price_change_stats_weekly(
     """
@@ -12538,6 +13217,106 @@ type terms {
   """
   An array relationship
   """
+  share_price_change_stats_daily(
+    """
+    distinct select on columns
+    """
+    distinct_on: [share_price_change_stats_daily_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [share_price_change_stats_daily_order_by!]
+    """
+    filter the rows returned
+    """
+    where: share_price_change_stats_daily_bool_exp
+  ): [share_price_change_stats_daily!]!
+  """
+  An array relationship
+  """
+  share_price_change_stats_hourly(
+    """
+    distinct select on columns
+    """
+    distinct_on: [share_price_change_stats_hourly_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [share_price_change_stats_hourly_order_by!]
+    """
+    filter the rows returned
+    """
+    where: share_price_change_stats_hourly_bool_exp
+  ): [share_price_change_stats_hourly!]!
+  """
+  An array relationship
+  """
+  share_price_change_stats_monthly(
+    """
+    distinct select on columns
+    """
+    distinct_on: [share_price_change_stats_monthly_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [share_price_change_stats_monthly_order_by!]
+    """
+    filter the rows returned
+    """
+    where: share_price_change_stats_monthly_bool_exp
+  ): [share_price_change_stats_monthly!]!
+  """
+  An array relationship
+  """
+  share_price_change_stats_weekly(
+    """
+    distinct select on columns
+    """
+    distinct_on: [share_price_change_stats_weekly_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [share_price_change_stats_weekly_order_by!]
+    """
+    filter the rows returned
+    """
+    where: share_price_change_stats_weekly_bool_exp
+  ): [share_price_change_stats_weekly!]!
+  """
+  An array relationship
+  """
   share_price_changes(
     """
     distinct select on columns
@@ -12749,6 +13528,10 @@ input terms_bool_exp {
   positions_aggregate: positions_aggregate_bool_exp
   redemptions: redemptions_bool_exp
   redemptions_aggregate: redemptions_aggregate_bool_exp
+  share_price_change_stats_daily: share_price_change_stats_daily_bool_exp
+  share_price_change_stats_hourly: share_price_change_stats_hourly_bool_exp
+  share_price_change_stats_monthly: share_price_change_stats_monthly_bool_exp
+  share_price_change_stats_weekly: share_price_change_stats_weekly_bool_exp
   share_price_changes: share_price_changes_bool_exp
   share_price_changes_aggregate: share_price_changes_aggregate_bool_exp
   signals: signals_bool_exp
@@ -12798,6 +13581,10 @@ input terms_order_by {
   id: order_by
   positions_aggregate: positions_aggregate_order_by
   redemptions_aggregate: redemptions_aggregate_order_by
+  share_price_change_stats_daily_aggregate: share_price_change_stats_daily_aggregate_order_by
+  share_price_change_stats_hourly_aggregate: share_price_change_stats_hourly_aggregate_order_by
+  share_price_change_stats_monthly_aggregate: share_price_change_stats_monthly_aggregate_order_by
+  share_price_change_stats_weekly_aggregate: share_price_change_stats_weekly_aggregate_order_by
   share_price_changes_aggregate: share_price_changes_aggregate_order_by
   signals_aggregate: signals_aggregate_order_by
   total_assets: order_by
@@ -14308,6 +15095,156 @@ type vaults {
   """
   An array relationship
   """
+  share_price_change_stats_daily(
+    """
+    distinct select on columns
+    """
+    distinct_on: [share_price_change_stats_daily_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [share_price_change_stats_daily_order_by!]
+    """
+    filter the rows returned
+    """
+    where: share_price_change_stats_daily_bool_exp
+  ): [share_price_change_stats_daily!]!
+  """
+  An array relationship
+  """
+  share_price_change_stats_hourly(
+    """
+    distinct select on columns
+    """
+    distinct_on: [share_price_change_stats_hourly_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [share_price_change_stats_hourly_order_by!]
+    """
+    filter the rows returned
+    """
+    where: share_price_change_stats_hourly_bool_exp
+  ): [share_price_change_stats_hourly!]!
+  """
+  An array relationship
+  """
+  share_price_change_stats_monthly(
+    """
+    distinct select on columns
+    """
+    distinct_on: [share_price_change_stats_monthly_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [share_price_change_stats_monthly_order_by!]
+    """
+    filter the rows returned
+    """
+    where: share_price_change_stats_monthly_bool_exp
+  ): [share_price_change_stats_monthly!]!
+  """
+  An array relationship
+  """
+  share_price_change_stats_weekly(
+    """
+    distinct select on columns
+    """
+    distinct_on: [share_price_change_stats_weekly_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [share_price_change_stats_weekly_order_by!]
+    """
+    filter the rows returned
+    """
+    where: share_price_change_stats_weekly_bool_exp
+  ): [share_price_change_stats_weekly!]!
+  """
+  An array relationship
+  """
+  share_price_changes(
+    """
+    distinct select on columns
+    """
+    distinct_on: [share_price_changes_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [share_price_changes_order_by!]
+    """
+    filter the rows returned
+    """
+    where: share_price_changes_bool_exp
+  ): [share_price_changes!]!
+  """
+  An aggregate relationship
+  """
+  share_price_changes_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [share_price_changes_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [share_price_changes_order_by!]
+    """
+    filter the rows returned
+    """
+    where: share_price_changes_bool_exp
+  ): share_price_changes_aggregate!
+  """
+  An array relationship
+  """
   signals(
     """
     distinct select on columns
@@ -14462,6 +15399,12 @@ input vaults_bool_exp {
   positions_aggregate: positions_aggregate_bool_exp
   redemptions: redemptions_bool_exp
   redemptions_aggregate: redemptions_aggregate_bool_exp
+  share_price_change_stats_daily: share_price_change_stats_daily_bool_exp
+  share_price_change_stats_hourly: share_price_change_stats_hourly_bool_exp
+  share_price_change_stats_monthly: share_price_change_stats_monthly_bool_exp
+  share_price_change_stats_weekly: share_price_change_stats_weekly_bool_exp
+  share_price_changes: share_price_changes_bool_exp
+  share_price_changes_aggregate: share_price_changes_aggregate_bool_exp
   signals: signals_bool_exp
   signals_aggregate: signals_aggregate_bool_exp
   term: terms_bool_exp
@@ -14543,6 +15486,11 @@ input vaults_order_by {
   position_count: order_by
   positions_aggregate: positions_aggregate_order_by
   redemptions_aggregate: redemptions_aggregate_order_by
+  share_price_change_stats_daily_aggregate: share_price_change_stats_daily_aggregate_order_by
+  share_price_change_stats_hourly_aggregate: share_price_change_stats_hourly_aggregate_order_by
+  share_price_change_stats_monthly_aggregate: share_price_change_stats_monthly_aggregate_order_by
+  share_price_change_stats_weekly_aggregate: share_price_change_stats_weekly_aggregate_order_by
+  share_price_changes_aggregate: share_price_changes_aggregate_order_by
   signals_aggregate: signals_aggregate_order_by
   term: terms_order_by
   term_id: order_by

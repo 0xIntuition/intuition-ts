@@ -262,3 +262,10 @@ query GetAtomDetails($id: numeric!, $userPositionAddress: String!) {
     }
   }
 }
+
+query FindAtomIds($where: atoms_bool_exp = {}) {
+  atoms(where: $where) {
+    term_id
+    data
+  }
+}
