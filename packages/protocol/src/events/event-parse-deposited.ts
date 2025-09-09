@@ -1,6 +1,6 @@
 import { parseEventLogs, type Hex, type PublicClient } from 'viem'
 
-import { EthMultiVaultAbi } from '../contracts/EthMultiVault-abi.js'
+import { MultiVaultAbi } from '../contracts/MultiVault-abi.js'
 
 export async function eventParseDeposited(client: PublicClient, hash: Hex) {
   const { logs, status } = await client.waitForTransactionReceipt({ hash })
@@ -10,7 +10,7 @@ export async function eventParseDeposited(client: PublicClient, hash: Hex) {
   }
 
   const events = parseEventLogs({
-    abi: EthMultiVaultAbi,
+    abi: MultiVaultAbi,
     logs,
     eventName: 'Deposited',
   })

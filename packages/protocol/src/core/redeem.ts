@@ -1,21 +1,20 @@
-import type { Address, PublicClient, WalletClient } from 'viem'
+import type { Address, Hex, PublicClient, WalletClient } from 'viem'
+import { MultiVaultAbi } from '../contracts'
 
-import { EthMultiVaultAbi } from '../contracts'
-
-export type RedeemAtomCurveConfig = {
+export type RedeemConfig = {
   address: Address
   walletClient: WalletClient
   publicClient: PublicClient
 }
 
-export type RedeemAtomCurveInputs = {
-  args: [bigint, Address, bigint, bigint]
+export type RedeemInputs = {
+  args: [Address, Hex, bigint, bigint, bigint]
   value?: bigint
 }
 
 export async function redeemAtomCurve(
-  config: RedeemAtomCurveConfig,
-  inputs: RedeemAtomCurveInputs,
+  config: RedeemConfig,
+  inputs: RedeemInputs,
 ) {
   const { address, walletClient, publicClient } = config
   const { args } = inputs
@@ -23,8 +22,8 @@ export async function redeemAtomCurve(
   const { request } = await publicClient.simulateContract({
     account: walletClient.account,
     address,
-    abi: EthMultiVaultAbi,
-    functionName: 'redeemAtomCurve',
+    abi: MultiVaultAbi,
+    functionName: 'redeem',
     args,
   })
 

@@ -1,20 +1,19 @@
-import type { Address, PublicClient, WalletClient } from 'viem'
+import type { Address, Hex, PublicClient, WalletClient } from 'viem'
+import { MultiVaultAbi } from '../contracts'
 
-import { EthMultiVaultAbi } from '../contracts'
-
-export type BatchRedeemCurveConfig = {
+export type RedeemBatchConfig = {
   address: Address
   walletClient: WalletClient
   publicClient: PublicClient
 }
 
-export type BatchRedeemCurveInputs = {
-  args: [bigint, Address, bigint[], bigint[]]
+export type RedeemBatchInputs = {
+  args: [Address, Hex[], bigint[], bigint[], bigint[]]
 }
 
 export async function batchRedeemCurve(
-  config: BatchRedeemCurveConfig,
-  inputs: BatchRedeemCurveInputs,
+  config: RedeemBatchConfig,
+  inputs: RedeemBatchInputs,
 ) {
   const { address, walletClient, publicClient } = config
   const { args } = inputs
@@ -22,8 +21,8 @@ export async function batchRedeemCurve(
   const { request } = await publicClient.simulateContract({
     account: walletClient.account,
     address,
-    abi: EthMultiVaultAbi,
-    functionName: 'batchRedeemCurve',
+    abi: MultiVaultAbi,
+    functionName: 'redeemBatch',
     args,
   })
 

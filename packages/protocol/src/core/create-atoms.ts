@@ -1,21 +1,20 @@
-import type { Address, PublicClient, WalletClient } from 'viem'
+import type { Address, Hex, PublicClient, WalletClient } from 'viem'
+import { MultiVaultAbi } from '../contracts'
 
-import { EthMultiVaultAbi } from '../contracts'
-
-export type DepositAtomConfig = {
+export type CreateAtomsConfig = {
   address: Address
   walletClient: WalletClient
   publicClient: PublicClient
 }
 
-export type DepositAtomInputs = {
-  args: [Address, bigint]
+export type CreateAtomsInputs = {
+  args: [Hex[], bigint[]]
   value?: bigint
 }
 
-export async function depositAtom(
-  config: DepositAtomConfig,
-  inputs: DepositAtomInputs,
+export async function batchCreateAtom(
+  config: CreateAtomsConfig,
+  inputs: CreateAtomsInputs,
 ) {
   const { address, walletClient, publicClient } = config
   const { args, value } = inputs
@@ -23,8 +22,8 @@ export async function depositAtom(
   const { request } = await publicClient.simulateContract({
     account: walletClient.account,
     address,
-    abi: EthMultiVaultAbi,
-    functionName: 'depositAtom',
+    abi: MultiVaultAbi,
+    functionName: 'createAtoms',
     args,
     value,
   })

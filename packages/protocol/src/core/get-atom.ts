@@ -1,7 +1,7 @@
-import { EthMultiVaultAbi } from '../contracts'
+import { MultiVaultAbi } from '../contracts'
 import type { ReadConfig } from '../types'
 
-export async function atomsByHash(
+export async function getAtom(
   config: ReadConfig,
   inputs: {
     args: [`0x${string}`]
@@ -12,8 +12,8 @@ export async function atomsByHash(
 
   return await publicClient.readContract({
     address,
-    abi: EthMultiVaultAbi,
-    functionName: 'atomsByHash',
+    abi: MultiVaultAbi,
+    functionName: 'getAtom',
     args,
   })
 }

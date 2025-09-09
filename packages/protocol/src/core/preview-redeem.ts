@@ -1,6 +1,5 @@
-import type { Address, PublicClient, WalletClient } from 'viem'
-
-import { EthMultiVaultAbi } from '../contracts'
+import type { Address, Hex, PublicClient, WalletClient } from 'viem'
+import { MultiVaultAbi } from '../contracts'
 
 export type PreviewRedeemCurveConfig = {
   address: Address
@@ -9,7 +8,7 @@ export type PreviewRedeemCurveConfig = {
 }
 
 export type PreviewRedeemCurveInputs = {
-  args: [bigint, bigint, bigint]
+  args: [Hex, bigint, bigint]
 }
 
 export async function previewRedeemCurve(
@@ -22,8 +21,8 @@ export async function previewRedeemCurve(
   return await publicClient.readContract({
     account: walletClient.account,
     address,
-    abi: EthMultiVaultAbi,
-    functionName: 'previewRedeemCurve',
+    abi: MultiVaultAbi,
+    functionName: 'previewRedeem',
     args,
   })
 }

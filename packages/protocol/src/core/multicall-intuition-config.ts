@@ -1,6 +1,6 @@
 import { formatUnits, type Address, type PublicClient } from 'viem'
 
-import { EthMultiVaultAbi } from '../contracts'
+import { MultiVaultAbi } from '../contracts'
 import type { MultivaultConfig } from '../types'
 
 export type MultiCallIntuitionConfigs = {
@@ -15,7 +15,7 @@ export async function multiCallIntuitionConfigs(
 
   const wagmiContract = {
     address,
-    abi: EthMultiVaultAbi,
+    abi: MultiVaultAbi,
   } as const
 
   const resp = await publicClient.multicall({
@@ -43,7 +43,7 @@ export async function multiCallIntuitionConfigs(
       {
         ...wagmiContract,
         functionName: 'vaultFees',
-        args: [BigInt(0)],
+        args: [],
       },
       {
         ...wagmiContract,
@@ -101,7 +101,7 @@ export async function multiCallIntuitionConfigs(
   const feeDenominator = resp[5]?.result?.[2] as bigint
   const formattedFeeDenominator = formatUnits(feeDenominator, 18)
 
-  const minDeposit = resp[5]?.result?.[3] as bigint
+  const minDeposit = resp[5]?.result?.[4] as bigint
   const formattedMinDeposit = formatUnits(minDeposit, 18)
 
   return {

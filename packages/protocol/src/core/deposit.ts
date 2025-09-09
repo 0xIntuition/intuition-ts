@@ -1,21 +1,21 @@
-import type { Address, PublicClient, WalletClient } from 'viem'
+import type { Address, Hex, PublicClient, WalletClient } from 'viem'
 
-import { EthMultiVaultAbi } from '../contracts'
+import { MultiVaultAbi } from '../contracts'
 
-export type CreateTripleConfig = {
+export type DepositConfig = {
   address: Address
   walletClient: WalletClient
   publicClient: PublicClient
 }
 
-export type CreateTripleInputs = {
-  args: [bigint, bigint, bigint]
+export type DepositInputs = {
+  args: [Address, Hex, bigint, bigint]
   value?: bigint
 }
 
-export async function createTriple(
-  config: CreateTripleConfig,
-  inputs: CreateTripleInputs,
+export async function deposit(
+  config: DepositConfig,
+  inputs: DepositInputs,
 ) {
   const { address, walletClient, publicClient } = config
   const { args, value } = inputs
@@ -23,8 +23,8 @@ export async function createTriple(
   const { request } = await publicClient.simulateContract({
     account: walletClient.account,
     address,
-    abi: EthMultiVaultAbi,
-    functionName: 'createTriple',
+    abi: MultiVaultAbi,
+    functionName: 'deposit',
     args,
     value,
   })
