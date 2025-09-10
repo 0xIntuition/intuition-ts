@@ -123,8 +123,8 @@ query GetSignals(
         label
         image
       }
-      shares_for_receiver
-      sender_assets_after_total_fees
+      shares
+      assets_after_fees
       vault {
         total_shares
         position_count
@@ -152,8 +152,8 @@ query GetSignals(
         label
         image
       }
-      assets_for_receiver
-      shares_redeemed_by_sender
+      assets
+      shares
     }
   }
 }

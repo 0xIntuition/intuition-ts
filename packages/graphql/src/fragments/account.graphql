@@ -93,9 +93,6 @@ fragment AccountAtomsAggregate on accounts {
   ) {
     aggregate {
       count
-      sum {
-        term_id
-      }
     }
     nodes {
       term_id

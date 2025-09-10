@@ -55,7 +55,7 @@ query GetTriplesCount($where: triples_bool_exp) {
   }
 }
 
-query GetTriple($tripleId: numeric!) {
+query GetTriple($tripleId: String!) {
   triple(term_id: $tripleId) {
     ...TripleMetadata
     ...TripleTxn

@@ -116,8 +116,8 @@ query GetEvents(
       sender {
         id
       }
-      shares_for_receiver
-      sender_assets_after_total_fees
+      shares
+      assets_after_fees
       vault {
         total_shares
         position_count

@@ -2,8 +2,8 @@ fragment DepositEventFragment on events {
   deposit {
     term_id
     curve_id
-    sender_assets_after_total_fees
-    shares_for_receiver
+    assets_after_fees
+    shares
     receiver {
       id
     }

@@ -18,9 +18,9 @@ query GetLists($where: predicate_objects_bool_exp) {
   }
 }
 
-query GetListItems($predicateId: numeric, $objectId: numeric) {
+query GetListItems($predicateId: String, $objectId: String) {
   triples_aggregate(
-    where: { predicate_id: { _eq: predicateId }, object_id: { _eq: $objectId } }
+    where: { predicate_id: { _eq: $predicateId }, object_id: { _eq: $objectId } }
     order_by: [
       {
         term: { positions_aggregate: { count: desc } }
@@ -44,7 +44,7 @@ query GetListItems($predicateId: numeric, $objectId: numeric) {
 ## We will correct this to just get the total_shares in the pro rata vault.
 query GetListDetails(
   $globalWhere: triples_bool_exp
-  $tagPredicateId: numeric
+  $tagPredicateId: String
   $limit: Int
   $offset: Int
   $orderBy: [triples_order_by!]
@@ -132,7 +132,7 @@ query GetListDetails(
 
 query GetListDetailsWithPosition(
   $globalWhere: triples_bool_exp
-  $tagPredicateId: numeric
+  $tagPredicateId: String
   $address: String
   $limit: Int
   $offset: Int
@@ -233,7 +233,7 @@ query GetListDetailsWithPosition(
 query GetListDetailsWithUser(
   $globalWhere: triples_bool_exp
   $userWhere: triples_bool_exp
-  $tagPredicateId: numeric
+  $tagPredicateId: String
   $address: String
   $limit: Int
   $offset: Int

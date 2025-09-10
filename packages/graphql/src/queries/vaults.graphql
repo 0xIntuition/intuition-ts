@@ -51,7 +51,7 @@ query GetVaults(
   }
 }
 
-query GetVault($termId: numeric!, $curveId: numeric!) {
+query GetVault($termId: String!, $curveId: numeric!) {
   vault(term_id: $termId, curve_id: $curveId) {
     ...VaultDetails
   }

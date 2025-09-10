@@ -1,6 +1,6 @@
 query GetFollowingPositions(
-  $subjectId: numeric!
-  $predicateId: numeric!
+  $subjectId: String!
+  $predicateId: String!
   $address: String!
   $limit: Int
   $offset: Int
@@ -69,9 +69,9 @@ query GetFollowingPositions(
 }
 
 query GetFollowerPositions(
-  $subjectId: numeric!
-  $predicateId: numeric!
-  $objectId: numeric!
+  $subjectId: String!
+  $predicateId: String!
+  $objectId: String!
   $positionsLimit: Int
   $positionsOffset: Int
   $positionsOrderBy: [positions_order_by!]
@@ -128,9 +128,9 @@ query GetFollowerPositions(
 
 # Combined query to get following and followers
 query GetConnections(
-  $subjectId: numeric!
-  $predicateId: numeric!
-  $objectId: numeric!
+  $subjectId: String!
+  $predicateId: String!
+  $objectId: String!
   $addresses: [String!]
   $positionsLimit: Int
   $positionsOffset: Int
@@ -191,9 +191,9 @@ query GetConnections(
 }
 
 query GetConnectionsCount(
-  $subjectId: numeric!
-  $predicateId: numeric!
-  $objectId: numeric!
+  $subjectId: String!
+  $predicateId: String!
+  $objectId: String!
   $address: String!
 ) {
   # Following count
