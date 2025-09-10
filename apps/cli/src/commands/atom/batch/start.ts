@@ -256,7 +256,7 @@ export default class BatchStart extends Command {
     for (let j = 0; j < allRows.length && idx < batch.length; j++) {
       const row = allRows[j]
       if ((!row.vaultId || row.vaultId.trim() === '') && row.address && batchInput.includes(getAddress(row.address))) {
-        row.vaultId = state[idx]?.vaultId?.toString?.() || ''
+        row.vaultId = state[idx]?.termId?.toString?.() || ''
         vaultIds.push(row.vaultId)
         this.log(chalk.green(`✅ Created atom for address: ${row.address} (VaultId: ${row.vaultId})`))
         idx++
@@ -300,7 +300,7 @@ export default class BatchStart extends Command {
     for (let j = 0; j < allRows.length && idx < batch.length; j++) {
       const row = allRows[j]
       if ((!row.vaultId || row.vaultId.trim() === '') && row.ipfsUri && batchInput.includes(row.ipfsUri)) {
-        row.vaultId = state[idx]?.vaultId?.toString?.() || ''
+        row.vaultId = state[idx]?.termId?.toString?.() || ''
         vaultIds.push(row.vaultId)
         this.log(chalk.green(`✅ Created atom for IPFS URI: ${row.ipfsUri} (VaultId: ${row.vaultId})`))
         idx++
@@ -352,7 +352,7 @@ export default class BatchStart extends Command {
         row.chainId &&
         batchInput.some((input) => input.address === getAddress(row.address) && input.chainId === Number(row.chainId))
       ) {
-        row.vaultId = state[idx]?.vaultId?.toString?.() || ''
+        row.vaultId = state[idx]?.termId?.toString?.() || ''
         vaultIds.push(row.vaultId)
         this.log(
           chalk.green(
@@ -409,7 +409,7 @@ export default class BatchStart extends Command {
         row.name &&
         batchInput.some((input) => input.name === row.name)
       ) {
-        row.vaultId = state[idx]?.vaultId?.toString?.() || ''
+        row.vaultId = state[idx]?.termId?.toString?.() || ''
         if ('ipfsUri' in row && uris && uris[idx]) {
           row.ipfsUri = uris[idx]
         }
