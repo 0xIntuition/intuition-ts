@@ -5,7 +5,7 @@ import {
   type GetAtomQueryVariables,
 } from '@0xintuition/graphql'
 
-export async function getAtom(atomId: string) {
+export async function getAtomDetails(atomId: string) {
   try {
     const data = await fetcher<GetAtomQuery, GetAtomQueryVariables>(
       GetAtomDocument,

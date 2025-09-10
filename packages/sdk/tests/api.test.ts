@@ -1,15 +1,15 @@
 import { describe, expect, it } from 'vitest'
 
-import { getAtom, getTriple, pinThing } from '../src'
+import { getAtomDetails, getTripleDetails, pinThing } from '../src'
 
 describe('Reads', () => {
   it('atom', async () => {
-    const data = await getAtom('124862')
+    const data = await getAtomDetails('0xff89a9d8eed2bfc3ee6701935d0fbbd3f191b27b97ae980e0baa5185499e9be8')
     expect(data?.label).toEqual('Uniswap')
   })
 
   it('triple', async () => {
-    const data = await getTriple('54670')
+    const data = await getTripleDetails('0x18d0c323750e23ee400ea00519b0eb9374005f28527fcbd8dbfeeedda2bc0b1a')
     expect(data?.object.label).toEqual('Web3 Analytics Tool')
   }, 60000)
 })

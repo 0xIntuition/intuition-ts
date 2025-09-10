@@ -5,7 +5,7 @@ import {
   type GetTripleQueryVariables,
 } from '@0xintuition/graphql'
 
-export async function getTriple(id: string) {
+export async function getTripleDetails(id: string) {
   try {
     const data = await fetcher<GetTripleQuery, GetTripleQueryVariables>(
       GetTripleDocument,

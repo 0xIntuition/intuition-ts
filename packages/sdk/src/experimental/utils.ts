@@ -14,12 +14,12 @@ import {
   type SearchPositionsQueryVariables,
 } from '@0xintuition/graphql'
 import {
-  batchCreateAtom,
-  batchCreateTriple,
+  createAtoms,
+  createTriples,
   multiCallIntuitionConfigs,
 } from '@0xintuition/protocol'
 
-import { Address, PublicClient, toHex, WalletClient } from 'viem'
+import { Address, Hex, PublicClient, toHex, WalletClient } from 'viem'
 
 export async function search(
   searchFields: Array<Record<string, string>>,
@@ -194,10 +194,13 @@ export async function sync(
 
   // Create missing atoms
   if (nonExistingAtoms.length > 0) {
-    const txHash = await batchCreateAtom(config, {
-      args: [nonExistingAtoms.map((data) => toHex(data))],
-      value:
-        BigInt(multivaultConfig.min_deposit) * BigInt(nonExistingAtoms.length),
+    const assetsPerAtom = BigInt(multivaultConfig.atom_cost) + BigInt(multivaultConfig.min_deposit)
+    const txHash = await createAtoms(config, {
+      args: [
+        nonExistingAtoms.map((data) => toHex(data)),
+        nonExistingAtoms.map(() => assetsPerAtom),
+      ],
+      value: assetsPerAtom * BigInt(nonExistingAtoms.length),
     })
     // console.log(txHash)
     await wait(txHash)
@@ -212,7 +215,7 @@ export async function sync(
 
   // convert "text triples" into "atomId triples"
 
-  const triplesWithAtomIds: Array<Array<string>> = []
+  const triplesWithAtomIds: Array<Array<Hex>> = []
 
   for (let triple of triples.values()) {
     const subjectAtom = atomsWithIds.find((a: any) => a.data === triple[0])
@@ -240,15 +243,15 @@ export async function sync(
   // console.log({ tripleIds })
 
   // which triples are missing?
-  const missingTriples: Array<Array<string>> = []
+  const missingTriples: Array<Array<Hex>> = []
 
   for (let triple of triplesWithAtomIds) {
     if (
       !tripleIds.find(
         (t: any) =>
-          String(t.subject_id) === triple[0] &&
-          String(t.predicate_id) === triple[1] &&
-          String(t.object_id) === triple[2],
+          t.subject_id === triple[0] &&
+          t.predicate_id === triple[1] &&
+          t.object_id === triple[2],
       )
     ) {
       missingTriples.push(triple)
@@ -260,14 +263,16 @@ export async function sync(
   // create missing triples
 
   if (missingTriples.length > 0) {
-    const triple_tx_hash = await batchCreateTriple(config, {
+    const assetsPerTriple = BigInt(multivaultConfig.triple_cost) + BigInt(multivaultConfig.min_deposit)
+
+    const triple_tx_hash = await createTriples(config, {
       args: [
-        missingTriples.map((t) => BigInt(t[0])),
-        missingTriples.map((t) => BigInt(t[1])),
-        missingTriples.map((t) => BigInt(t[2])),
+        missingTriples.map((t) => t[0]),
+        missingTriples.map((t) => t[1]),
+        missingTriples.map((t) => t[2]),
+        missingTriples.map((t) => assetsPerTriple),
       ],
-      value:
-        BigInt(multivaultConfig.min_deposit) * BigInt(missingTriples.length),
+      value: assetsPerTriple * BigInt(missingTriples.length),
     })
 
     // console.log({ triple_tx_hash })

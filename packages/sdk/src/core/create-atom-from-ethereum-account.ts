@@ -33,11 +33,11 @@ export async function createAtomFromEthereumAccount(
     throw new Error('Failed to create atom onchain')
   }
 
-  const atomData = await eventParseAtomCreated(publicClient, txHash)
+  const events = await eventParseAtomCreated(publicClient, txHash)
 
   return {
     uri: uriRef,
     transactionHash: txHash,
-    state: atomData,
+    state: events[0].args,
   }
 }

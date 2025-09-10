@@ -1,3 +1,3 @@
-export * from './get-atom'
-export * from './get-triple'
+export * from './get-atom-details'
+export * from './get-triple-details'
 export * from './pin-thing'

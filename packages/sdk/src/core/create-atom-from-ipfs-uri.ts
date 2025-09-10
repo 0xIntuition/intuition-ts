@@ -1,7 +1,7 @@
 import {
   createAtoms,
   getAtomCost,
-  eventParseDeposited,
+  eventParseAtomCreated,
   type CreateAtomsConfig,
 } from '@0xintuition/protocol'
 
@@ -31,7 +31,7 @@ export async function createAtomFromIpfsUri(
     throw new Error('Failed to create atom onchain')
   }
 
-  const events = await eventParseDeposited(publicClient, txHash)
+  const events = await eventParseAtomCreated(publicClient, txHash)
 
   return {
     uri: data,
