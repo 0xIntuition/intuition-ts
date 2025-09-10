@@ -1,43 +1,34 @@
 import {defineChain} from 'viem'
 
-export const base = defineChain({
+export const intuitionTestnet = defineChain({
   blockExplorers: {
-    default: {name: 'Basescan', url: 'https://basescan.org'},
+    default: {
+      name: 'Intuition Explorer',
+      url: 'https://testnet.explorer.intuition.systems',
+    },
   },
-  id: 8453,
-  name: 'Base',
+  contracts: {
+    multicall3: {
+      address: '0x66bf587EdFbd5408121bDb125a1B6F9b830F64AD',
+    },
+  },
+  id: 13_579,
+  name: 'intuition-testnet',
   nativeCurrency: {
     decimals: 18,
-    name: 'Ether',
-    symbol: 'ETH',
+    name: 'Test Trust',
+    symbol: 'tTRUST',
   },
-  network: 'base',
   rpcUrls: {
-    default: {http: ['https://mainnet.base.org']},
-    public: {http: ['https://mainnet.base.org']},
+    default: {
+      http: ['https://testnet.rpc.intuition.systems/http'],
+      webSocket: ['wss://testnet.rpc.intuition.systems/ws'],
+    },
   },
 })
 
-export const baseSepolia = defineChain({
-  blockExplorers: {
-    default: {name: 'Basescan', url: 'https://sepolia.basescan.org'},
-  },
-  id: 84_532,
-  name: 'Base Sepolia',
-  nativeCurrency: {
-    decimals: 18,
-    name: 'Ether',
-    symbol: 'ETH',
-  },
-  network: 'base-sepolia',
-  rpcUrls: {
-    default: {http: ['https://sepolia.base.org']},
-    public: {http: ['https://sepolia.base.org']},
-  },
-})
-
-export const supportedNetworks = [base, baseSepolia]
+export const supportedNetworks = [intuitionTestnet]
 
 export function getNetworkByName(name: string) {
-  return supportedNetworks.find((n) => n.name.toLowerCase() === name.toLowerCase() || n.network === name.toLowerCase())
+  return supportedNetworks.find((n) => n.name.toLowerCase() === name.toLowerCase())
 }

@@ -9,7 +9,7 @@ import {privateKeyToAccount} from 'viem/accounts'
 import {z} from 'zod'
 
 import {getAccounts, getDefaultAccount, getDefaultNetwork} from '../../config.js'
-import {base, baseSepolia, getNetworkByName} from '../../networks.js'
+import {getNetworkByName, intuitionTestnet} from '../../networks.js'
 
 const AddressSchema = z.string().regex(/^0x[a-fA-F0-9]{40}$/, 'Invalid Ethereum address format')
 const IpfsUriSchema = z.string().regex(/^ipfs:\/\/[a-zA-Z0-9]+/, 'Invalid IPFS URI format (must start with ipfs://)')
@@ -57,7 +57,7 @@ export default class AtomCreate extends Command {
 
       // Create public and wallet clients
       const account = privateKeyToAccount(defaultAccount.privateKey as `0x${string}`)
-      const chain = network.id === 8453 ? base : baseSepolia
+      const chain = network.id === 13_579 ? intuitionTestnet : intuitionTestnet
       const walletClient = createWalletClient({
         account,
         chain,
@@ -72,7 +72,7 @@ export default class AtomCreate extends Command {
 
       // Get contract address
       const chainId = network.id
-      const contractAddress = intuitionDeployments.EthMultiVault?.[chainId]
+      const contractAddress = intuitionDeployments.MultiVault?.[chainId]
       if (!contractAddress) {
         this.log(chalk.red(`❌ No contract deployment found for network: ${network.name}`))
         return

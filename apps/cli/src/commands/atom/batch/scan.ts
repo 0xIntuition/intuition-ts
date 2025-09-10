@@ -8,7 +8,7 @@ import {createPublicClient, createWalletClient, http, type PublicClient, type Wa
 import {privateKeyToAccount} from 'viem/accounts'
 
 import {getAccounts, getDefaultAccount, getDefaultNetwork} from '../../../config.js'
-import {base, baseSepolia, getNetworkByName} from '../../../networks.js'
+import {getNetworkByName, intuitionTestnet} from '../../../networks.js'
 
 // Define types for clarity
 type CsvRow = Record<string, string>
@@ -149,7 +149,8 @@ export default class AtomBatchScan extends Command {
 
     // 3. Create Viem clients
     const account = privateKeyToAccount(defaultAccount.privateKey as `0x${string}`)
-    const chain = network.id === base.id ? base : baseSepolia
+    // FIXME after mainnet launch
+    const chain = network.id === intuitionTestnet.id ? intuitionTestnet : intuitionTestnet
     const walletClient = createWalletClient({
       account,
       chain,
@@ -158,7 +159,7 @@ export default class AtomBatchScan extends Command {
     const publicClient = createPublicClient({chain, transport: http()})
 
     // 4. Get contract address
-    const contractAddress = intuitionDeployments.EthMultiVault?.[network.id]
+    const contractAddress = intuitionDeployments.MultiVault?.[network.id]
     if (!contractAddress) {
       this.log(chalk.red(`❌ No contract deployment found for network: ${network.name}`))
       return

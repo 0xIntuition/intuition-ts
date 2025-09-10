@@ -7,11 +7,12 @@ import {getNetworkByName} from '../../networks.js'
 export default class ConfigDefaultNetwork extends Command {
   static override args = {
     network: Args.string({
-      description: 'Network to set as default (base or base-sepolia)',
+      description: 'Network to set as default (intuition or intuition-testnet)',
     }),
   }
-  static override description = 'Set or show the default network (base or base-sepolia). Default is base.'
-  static override examples = ['<%= config.bin %> <%= command.id %>', '<%= config.bin %> <%= command.id %> base']
+  static override description =
+    'Set or show the default network (intuition or intuition-testnet). Default is intuition.'
+  static override examples = ['<%= config.bin %> <%= command.id %>', '<%= config.bin %> <%= command.id %> intuition']
 
   public async run(): Promise<void> {
     const {args} = await this.parse(ConfigDefaultNetwork)
@@ -20,7 +21,7 @@ export default class ConfigDefaultNetwork extends Command {
     if (network) {
       const valid = getNetworkByName(network)
       if (!valid) {
-        this.log(chalk.red('❌ Invalid network. Must be "base" or "base-sepolia".'))
+        this.log(chalk.red('❌ Invalid network. Must be "intuition" or "intuition-testnet".'))
         return
       }
 

@@ -17,7 +17,7 @@ export const IntuitionCreateThingButton = ({
     if (!walletClient || !publicClient) {
       return
     }
-    const multiVaultAddress = intuitionDeployments.EthMultiVault[chainId]
+    const multiVaultAddress = intuitionDeployments.MultiVault[chainId]
     const data = await createAtomFromThing(
       { walletClient, publicClient, address: multiVaultAddress },
       {

@@ -19,7 +19,7 @@ import {createPublicClient, createWalletClient, getAddress, http, type PublicCli
 import {privateKeyToAccount} from 'viem/accounts'
 
 import {getAccounts, getDefaultAccount, getDefaultNetwork} from '../../../config.js'
-import {base, baseSepolia, getNetworkByName} from '../../../networks.js'
+import {getNetworkByName, intuitionTestnet} from '../../../networks.js'
 
 // Define types for clarity
 type CsvRow = Record<string, string>
@@ -100,11 +100,7 @@ export default class BatchStart extends Command {
       .split(',')
       .map((id) => id.trim())
       .filter(Boolean)
-    // @DEV: This is a very hacky way to assign the "has tag" atom.
-    // Base: The Atom ID is 4.
-    // Base Sepolia: The Atom ID is 3.
-    // @TODO: It gets the job done, but fragile. It should probably be a constant in the protocol module.
-    const hasTagIdFromNetwork = atomConfig.walletClient.chain?.id === base.id ? 4 : 3
+    const hasTagIdFromNetwork = '0x49487b1d5bf2734d497d6d9cfcd72cdfbaefb4d4f03ddc310398b24639173c9d'
     const hasTagId = Array.from({length: vaultIds.length}).fill(hasTagIdFromNetwork)
 
     for (const listIdValue of listIds) {
@@ -454,7 +450,7 @@ export default class BatchStart extends Command {
 
     // 3. Create Viem clients
     const account = privateKeyToAccount(defaultAccount.privateKey as `0x${string}`)
-    const chain = network.id === base.id ? base : baseSepolia
+    const chain = network.id === intuitionTestnet.id ? intuitionTestnet : intuitionTestnet
     const walletClient = createWalletClient({
       account,
       chain,
@@ -463,7 +459,7 @@ export default class BatchStart extends Command {
     const publicClient = createPublicClient({chain, transport: http()})
 
     // 4. Get contract address
-    const contractAddress = intuitionDeployments.EthMultiVault?.[network.id]
+    const contractAddress = intuitionDeployments.MultiVault?.[network.id]
     if (!contractAddress) {
       this.log(chalk.red(`❌ No contract deployment found for network: ${network.name}`))
       return
