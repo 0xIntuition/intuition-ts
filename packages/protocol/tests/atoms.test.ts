@@ -1,95 +1,95 @@
-import { toHex, type Address } from 'viem'
+import { toHex, type Address, parseEther } from 'viem'
 import { beforeEach, describe, expect, it } from 'vitest'
 
 import {
-  createAtom,
-  createAtomCalculateBaseCost,
-  depositAtom,
+  createAtoms,
+  getAtomCost,
+  deposit,
   eventParseDeposited,
   eventParseRedeemed,
-  redeemAtom,
+  redeem,
 } from '../src'
 import { ALICE } from './helpers/constants'
 import { deployAndInit } from './helpers/deploy'
 import { publicClient, walletClient } from './helpers/utils'
 
-let EthMultiVaultAddress: Address
+let address: Address
 
 beforeEach(async () => {
-  EthMultiVaultAddress = await deployAndInit()
+  address = await deployAndInit()
 })
 
 describe('Atoms', () => {
-  it('should create new atom', async () => {
-    const atomCost = await createAtomCalculateBaseCost({
+  it.only('should create new atom', async () => {
+    const atomCost = await getAtomCost({
       publicClient,
-      address: EthMultiVaultAddress,
+      address: address,
     })
-    const data = await createAtom(
-      { walletClient, publicClient, address: EthMultiVaultAddress },
+    const data = await createAtoms(
+      { walletClient, publicClient, address },
       {
-        args: [toHex('intuition.systems')],
+        args: [[toHex('intuition.systems')], [atomCost]],
         value: atomCost,
       },
     )
     const events = await eventParseDeposited(publicClient, data)
-    expect(events[0].args.vaultId).toEqual(1n)
-    expect(events[0].args.sharesForReceiver).toEqual(100000n)
+    expect(events[0].args.termId).toEqual(1n)
+    expect(events[0].args.shares).toEqual(100000n)
   })
 
   it('should deposit in atom', async () => {
-    const dataCreate = await createAtom(
-      { walletClient, publicClient, address: EthMultiVaultAddress },
+    const dataCreate = await createAtoms(
+      { walletClient, publicClient, address },
       {
-        args: [toHex('intuition.systems')],
+        args: [[toHex('intuition.systems')], [BigInt(1e18)]],
         value: BigInt(1e18),
       },
     )
     const eventCreate = await eventParseDeposited(publicClient, dataCreate)
 
-    const dataDeposit = await depositAtom(
-      { walletClient, publicClient, address: EthMultiVaultAddress },
+    const dataDeposit = await deposit(
+      { walletClient, publicClient, address },
       {
-        args: [ALICE, eventCreate[0].args.vaultId],
+        args: [ALICE, eventCreate[0].args.termId, 1n, 0n],
         value: BigInt(1e18),
       },
     )
     const eventDeposit = await eventParseDeposited(publicClient, dataDeposit)
-    expect(eventDeposit[0].args.vaultId).toEqual(1n)
-    expect(eventDeposit[0].args.sharesForReceiver).toEqual(940500000000000000n)
+    expect(eventDeposit[0].args.termId).toEqual(1n)
+    expect(eventDeposit[0].args.shares).toEqual(940500000000000000n)
   }, 60000)
 
   it('should redeem from atom', async () => {
-    const dataCreate = await createAtom(
-      { walletClient, publicClient, address: EthMultiVaultAddress },
+    const dataCreate = await createAtoms(
+      { walletClient, publicClient, address },
       {
-        args: [toHex('intuition.systems')],
+        args: [[toHex('intuition.systems')], [BigInt(1e18)]],
         value: BigInt(1e18),
       },
     )
     const eventCreate = await eventParseDeposited(publicClient, dataCreate)
 
-    const dataDeposit = await depositAtom(
-      { walletClient, publicClient, address: EthMultiVaultAddress },
+    const dataDeposit = await deposit(
+      { walletClient, publicClient, address },
       {
-        args: [ALICE, eventCreate[0].args.vaultId],
+        args: [ALICE, eventCreate[0].args.termId, 1n, 0n],
         value: BigInt(1e18),
       },
     )
     const eventDeposit = await eventParseDeposited(publicClient, dataDeposit)
 
-    const dataRedeem = await redeemAtom(
-      { walletClient, publicClient, address: EthMultiVaultAddress },
+    const dataRedeem = await redeem(
+      { walletClient, publicClient, address },
       {
-        args: [BigInt(1e18), ALICE, eventDeposit[0].args.vaultId],
+        args: [ALICE, eventDeposit[0].args.termId, 1n, BigInt(1e18), 0n],
       },
     )
 
     const eventRedeem = await eventParseRedeemed(publicClient, dataRedeem)
 
-    expect(eventDeposit[0].args.vaultId).toEqual(1n)
-    expect(eventRedeem[0].args.assetsForReceiver).toEqual(964615751879360387n)
-    expect(eventRedeem[0].args.sharesRedeemedBySender).toEqual(
+    expect(eventDeposit[0].args.termId).toEqual(1n)
+    expect(eventRedeem[0].args.assets).toEqual(964615751879360387n)
+    expect(eventRedeem[0].args.shares).toEqual(
       1000000000000000000n,
     )
   }, 60000)

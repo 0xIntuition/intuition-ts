@@ -1,4 +1,4 @@
-import type { Address, Hex, PublicClient, WalletClient } from 'viem'
+import type { Address, PublicClient, WalletClient, ContractFunctionArgs } from 'viem'
 import { MultiVaultAbi } from '../contracts'
 
 export type RedeemConfig = {
@@ -8,11 +8,10 @@ export type RedeemConfig = {
 }
 
 export type RedeemInputs = {
-  args: [Address, Hex, bigint, bigint, bigint]
-  value?: bigint
+  args: ContractFunctionArgs<typeof MultiVaultAbi, 'nonpayable', 'redeem'>
 }
 
-export async function redeemAtomCurve(
+export async function redeem(
   config: RedeemConfig,
   inputs: RedeemInputs,
 ) {

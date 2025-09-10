@@ -1,4 +1,4 @@
-import type { Address, Hex, PublicClient, WalletClient } from 'viem'
+import type { Address, ContractFunctionArgs, Hex, PublicClient, WalletClient } from 'viem'
 import { MultiVaultAbi } from '../contracts'
 
 export type CreateTriplesConfig = {
@@ -8,11 +8,11 @@ export type CreateTriplesConfig = {
 }
 
 export type CreateTriplesInputs = {
-  args: [Hex[], Hex[], Hex[], bigint[]]
+  args: ContractFunctionArgs<typeof MultiVaultAbi, 'payable', 'createTriples'>
   value?: bigint
 }
 
-export async function batchCreateTriple(
+export async function createTriples(
   config: CreateTriplesConfig,
   inputs: CreateTriplesInputs,
 ) {

@@ -1,4 +1,4 @@
-import type { Address, Hex, PublicClient, WalletClient } from 'viem'
+import type { Address, ContractFunctionArgs, Hex, PublicClient, WalletClient } from 'viem'
 import { MultiVaultAbi } from '../contracts'
 
 export type DepositBatchConfig = {
@@ -8,7 +8,7 @@ export type DepositBatchConfig = {
 }
 
 export type DepositBatchInputs = {
-  args: [Address, Hex[], bigint[], bigint[], bigint[]]
+  args: ContractFunctionArgs<typeof MultiVaultAbi, 'payable', 'depositBatch'>
   value: bigint
 }
 

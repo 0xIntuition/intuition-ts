@@ -1,10 +1,11 @@
+import { ContractFunctionArgs } from 'viem'
 import { MultiVaultAbi } from '../contracts'
 import type { ReadConfig } from '../types'
 
 export async function getAtom(
   config: ReadConfig,
   inputs: {
-    args: [`0x${string}`]
+    args: ContractFunctionArgs<typeof MultiVaultAbi, 'view', 'getAtom'>
   },
 ) {
   const { address, publicClient } = config
