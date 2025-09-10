@@ -1,14 +1,14 @@
 import {
-  createAtom,
-  createAtomCalculateBaseCost,
+  createAtoms,
+  getAtomCost,
   eventParseDeposited,
-  type CreateAtomConfig,
+  type CreateAtomsConfig,
 } from '@0xintuition/protocol'
 
 import { toHex } from 'viem'
 
 export async function createAtomFromString(
-  config: CreateAtomConfig,
+  config: CreateAtomsConfig,
   data: `${string}`,
   depositAmount?: bigint,
 ) {
@@ -17,14 +17,15 @@ export async function createAtomFromString(
   }
 
   const { address, publicClient } = config
-  const atomBaseCost = await createAtomCalculateBaseCost({
+  const atomBaseCost = await getAtomCost({
     publicClient,
     address,
   })
 
-  const txHash = await createAtom(config, {
-    args: [toHex(data)],
-    value: atomBaseCost + BigInt(depositAmount || 0),
+  const assets = atomBaseCost + BigInt(depositAmount || 0)
+  const txHash = await createAtoms(config, {
+    args: [[toHex(data)], [assets]],
+    value: assets,
   })
 
   if (!txHash) {

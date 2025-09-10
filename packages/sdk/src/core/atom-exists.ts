@@ -1,9 +1,9 @@
 import type { PinThingMutationVariables } from '@0xintuition/graphql'
 import {
-  createAtom,
-  createAtomCalculateBaseCost,
+  createAtoms,
+  getAtomCost,
   eventParseDeposited,
-  type CreateAtomConfig,
+  type CreateAtomsConfig,
 } from '@0xintuition/protocol'
 
 import { toHex } from 'viem'
@@ -11,7 +11,7 @@ import { toHex } from 'viem'
 import { pinThing } from '../api/pin-thing'
 
 export async function atomExists(
-  config: CreateAtomConfig,
+  config: CreateAtomsConfig,
   data: PinThingMutationVariables,
   depositAmount?: bigint,
 ) {
@@ -21,14 +21,15 @@ export async function atomExists(
   }
 
   const { address: ethMultiVaultAddress, publicClient } = config
-  const atomBaseCost = await createAtomCalculateBaseCost({
+  const atomBaseCost = await getAtomCost({
     publicClient,
     address: ethMultiVaultAddress,
   })
 
-  const txHash = await createAtom(config, {
-    args: [toHex(uriRef)],
-    value: atomBaseCost + BigInt(depositAmount || 0),
+  const assets = atomBaseCost + BigInt(depositAmount || 0)
+  const txHash = await createAtoms(config, {
+    args: [[toHex(uriRef)], [assets]],
+    value: assets,
   })
 
   if (!txHash) {

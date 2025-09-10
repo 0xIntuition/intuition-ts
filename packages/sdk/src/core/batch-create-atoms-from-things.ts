@@ -1,9 +1,9 @@
 import type { PinThingMutationVariables } from '@0xintuition/graphql'
 import {
-  batchCreateAtom,
-  createAtomCalculateBaseCost,
+  createAtoms,
+  getAtomCost,
   eventParseAtomCreated,
-  type CreateAtomConfig,
+  type CreateAtomsConfig,
 } from '@0xintuition/protocol'
 
 import { toHex } from 'viem'
@@ -11,15 +11,23 @@ import { toHex } from 'viem'
 import { pinThing } from '../api/pin-thing'
 
 export async function batchCreateAtomsFromThings(
-  config: CreateAtomConfig,
+  config: CreateAtomsConfig,
   data: PinThingMutationVariables[],
   depositAmount?: bigint,
 ) {
-  const { address: ethMultiVaultAddress, publicClient } = config
-  const atomBaseCost = await createAtomCalculateBaseCost({
+  const { address, publicClient } = config
+
+  const atomCost = await getAtomCost({
     publicClient,
-    address: ethMultiVaultAddress,
+    address,
   })
+
+  const depositAmountPerAtom = depositAmount
+    ? depositAmount
+    : 0n
+
+  const calculatedCost =
+    (atomCost + depositAmountPerAtom) * BigInt(data.length)
 
   // Pin each thing and collect their URIs
   const uris: string[] = []
@@ -34,15 +42,9 @@ export async function batchCreateAtomsFromThings(
   // Prepare the batch args
   const hexUris = uris.map((uri) => toHex(uri))
 
-  // Calculate total cost
-  const depositAmountTotal = depositAmount
-    ? depositAmount * BigInt(data.length)
-    : 0n
-  const calculatedCost = atomBaseCost * BigInt(data.length) + depositAmountTotal
-
   // Batch create atoms
-  const txHash = await batchCreateAtom(config, {
-    args: [hexUris],
+  const txHash = await createAtoms(config, {
+    args: [hexUris, hexUris.map(() => atomCost + depositAmountPerAtom)],
     value: calculatedCost,
   })
 

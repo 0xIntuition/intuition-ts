@@ -1,14 +1,14 @@
 import {
-  batchCreateAtom,
-  createAtomCalculateBaseCost,
+  createAtoms,
+  getAtomCost,
   eventParseAtomCreated,
-  type CreateAtomConfig,
+  type CreateAtomsConfig,
 } from '@0xintuition/protocol'
 
 import { getAddress, toHex, type Address } from 'viem'
 
 export async function batchCreateAtomsFromSmartContracts(
-  config: CreateAtomConfig,
+  config: CreateAtomsConfig,
   data: {
     address: Address
     chainId: number
@@ -16,10 +16,18 @@ export async function batchCreateAtomsFromSmartContracts(
   depositAmount?: bigint,
 ) {
   const { address, publicClient } = config
-  const atomBaseCost = await createAtomCalculateBaseCost({
+  const atomCost = await getAtomCost({
     publicClient,
     address,
   })
+
+  const depositAmountPerAtom = depositAmount
+    ? depositAmount
+    : 0n
+
+  const calculatedCost =
+    (atomCost + depositAmountPerAtom) * BigInt(data.length)
+
 
   const results: `0x${string}`[] = []
   for (const item of data) {
@@ -27,14 +35,8 @@ export async function batchCreateAtomsFromSmartContracts(
     results.push(toHex(uriRef))
   }
 
-  const depositAmountPerAccount = depositAmount
-    ? depositAmount * BigInt(data.length)
-    : 0n
-  const calculatedCost =
-    atomBaseCost * BigInt(data.length) + depositAmountPerAccount
-
-  const txHash = await batchCreateAtom(config, {
-    args: [results],
+  const txHash = await createAtoms(config, {
+    args: [results, data.map(() => atomCost + depositAmountPerAtom)],
     value: calculatedCost,
   })
 
