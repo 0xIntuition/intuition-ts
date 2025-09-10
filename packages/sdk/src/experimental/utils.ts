@@ -228,9 +228,9 @@ export async function sync(
     }
 
     triplesWithAtomIds.push([
-      subjectAtom.term_id,
-      predicateAtom.term_id,
-      objectAtom.term_id,
+      subjectAtom.term_id as Hex,
+      predicateAtom.term_id as Hex,
+      objectAtom.term_id as Hex,
     ])
   }
 
