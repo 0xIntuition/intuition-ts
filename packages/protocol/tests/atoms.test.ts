@@ -1,12 +1,13 @@
-import { toHex, type Address, parseEther } from 'viem'
+import { parseEther, toHex, type Address } from 'viem'
 import { beforeEach, describe, expect, it } from 'vitest'
 
 import {
   createAtoms,
-  getAtomCost,
   deposit,
   eventParseDeposited,
   eventParseRedeemed,
+  getAtomCost,
+  multiCallIntuitionConfigs,
   redeem,
 } from '../src'
 import { ALICE } from './helpers/constants'
@@ -20,7 +21,14 @@ beforeEach(async () => {
 })
 
 describe('Atoms', () => {
-  it.only('should create new atom', async () => {
+  it('should read config', async () => {
+    const config = await multiCallIntuitionConfigs({
+      publicClient,
+      address: address,
+    })
+    expect(config).toBeDefined()
+  })
+  it('should create new atom', async () => {
     const atomCost = await getAtomCost({
       publicClient,
       address: address,
@@ -89,8 +97,6 @@ describe('Atoms', () => {
 
     expect(eventDeposit[0].args.termId).toEqual(1n)
     expect(eventRedeem[0].args.assets).toEqual(964615751879360387n)
-    expect(eventRedeem[0].args.shares).toEqual(
-      1000000000000000000n,
-    )
+    expect(eventRedeem[0].args.shares).toEqual(1000000000000000000n)
   }, 60000)
 })
