@@ -1,11 +1,11 @@
 import {
   createAtoms,
-  getAtomCost,
   eventParseAtomCreated,
+  getAtomCost,
   type CreateAtomsConfig,
 } from '@0xintuition/protocol'
 
-import { getAddress, isAddress, type Address } from 'viem'
+import { getAddress, isAddress, toHex, type Address } from 'viem'
 
 export async function createAtomFromEthereumAccount(
   config: CreateAtomsConfig,
@@ -25,7 +25,7 @@ export async function createAtomFromEthereumAccount(
   const uriRef: Address = getAddress(data)
   const assets = atomBaseCost + BigInt(depositAmount || 0)
   const txHash = await createAtoms(config, {
-    args: [[uriRef], [assets]],
+    args: [[toHex(uriRef)], [assets]],
     value: assets,
   })
 
