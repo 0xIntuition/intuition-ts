@@ -28,7 +28,7 @@ export const IntuitionCreateThingButton = ({
       },
     )
 
-    alert(`Created Thing with ID: ${data.state.vaultId}`)
+    alert(`Created Thing with ID: ${data.state.termId}`)
   }
 
   return (
