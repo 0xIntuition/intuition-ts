@@ -11,7 +11,7 @@ const intuitionTestnet = defineChain({
   rpcUrls: {
     default: {
       http: ['https://testnet.rpc.intuition.systems/http'],
-      webSocket: ['wss://testnet.rpc.intuition.systems/ws']
+      webSocket: ['wss://testnet.rpc.intuition.systems/ws'],
     },
   },
   blockExplorers: {
@@ -22,7 +22,7 @@ const intuitionTestnet = defineChain({
   },
   contracts: {
     multicall3: {
-      address: '0x66bf587EdFbd5408121bDb125a1B6F9b830F64AD',
+      address: '0xcA11bde05977b3631167028862bE2a173976CA11',
     },
   },
 })
