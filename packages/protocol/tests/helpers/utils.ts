@@ -7,7 +7,7 @@ import {
 } from 'viem'
 import { mainnet } from 'viem/chains'
 
-import { ALICE } from './constants'
+import { ALICE, CAROL } from './constants'
 
 /**
  * The id of the current test worker.
@@ -46,6 +46,12 @@ export const publicClient = createPublicClient({
 
 export const walletClient = createWalletClient({
   chain: anvil,
-  transport: http(),
+  transport: http(undefined, { timeout: 360000 }),
   account: ALICE,
+})
+
+export const userWalletClient = createWalletClient({
+  chain: anvil,
+  transport: http(),
+  account: CAROL,
 })

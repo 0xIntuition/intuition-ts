@@ -1,4 +1,4 @@
-export const OffsetProgressiveCurveAbi = [
+export const LinearCurveAbi = [
   {
     type: 'constructor',
     inputs: [
@@ -7,31 +7,8 @@ export const OffsetProgressiveCurveAbi = [
         type: 'string',
         internalType: 'string',
       },
-      {
-        name: 'slope18',
-        type: 'uint256',
-        internalType: 'uint256',
-      },
-      {
-        name: 'offset18',
-        type: 'uint256',
-        internalType: 'uint256',
-      },
     ],
     stateMutability: 'nonpayable',
-  },
-  {
-    type: 'function',
-    name: 'HALF_SLOPE',
-    inputs: [],
-    outputs: [
-      {
-        name: '',
-        type: 'uint256',
-        internalType: 'UD60x18',
-      },
-    ],
-    stateMutability: 'view',
   },
   {
     type: 'function',
@@ -61,26 +38,13 @@ export const OffsetProgressiveCurveAbi = [
   },
   {
     type: 'function',
-    name: 'OFFSET',
+    name: 'ONE_SHARE',
     inputs: [],
     outputs: [
       {
         name: '',
         type: 'uint256',
-        internalType: 'UD60x18',
-      },
-    ],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    name: 'SLOPE',
-    inputs: [],
-    outputs: [
-      {
-        name: '',
-        type: 'uint256',
-        internalType: 'UD60x18',
+        internalType: 'uint256',
       },
     ],
     stateMutability: 'view',
@@ -100,7 +64,7 @@ export const OffsetProgressiveCurveAbi = [
         internalType: 'uint256',
       },
       {
-        name: '',
+        name: 'totalAssets',
         type: 'uint256',
         internalType: 'uint256',
       },
@@ -112,7 +76,7 @@ export const OffsetProgressiveCurveAbi = [
         internalType: 'uint256',
       },
     ],
-    stateMutability: 'view',
+    stateMutability: 'pure',
   },
   {
     type: 'function',
@@ -124,7 +88,7 @@ export const OffsetProgressiveCurveAbi = [
         internalType: 'uint256',
       },
       {
-        name: '',
+        name: 'totalAssets',
         type: 'uint256',
         internalType: 'uint256',
       },
@@ -141,7 +105,7 @@ export const OffsetProgressiveCurveAbi = [
         internalType: 'uint256',
       },
     ],
-    stateMutability: 'view',
+    stateMutability: 'pure',
   },
   {
     type: 'function',
@@ -149,6 +113,11 @@ export const OffsetProgressiveCurveAbi = [
     inputs: [
       {
         name: 'totalShares',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+      {
+        name: 'totalAssets',
         type: 'uint256',
         internalType: 'uint256',
       },
@@ -160,7 +129,26 @@ export const OffsetProgressiveCurveAbi = [
         internalType: 'uint256',
       },
     ],
-    stateMutability: 'view',
+    stateMutability: 'pure',
+  },
+  {
+    type: 'function',
+    name: 'currentPrice',
+    inputs: [
+      {
+        name: '',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
+    outputs: [
+      {
+        name: 'sharePrice',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
+    stateMutability: 'pure',
   },
   {
     type: 'function',
@@ -173,7 +161,7 @@ export const OffsetProgressiveCurveAbi = [
         internalType: 'uint256',
       },
     ],
-    stateMutability: 'view',
+    stateMutability: 'pure',
   },
   {
     type: 'function',
@@ -186,7 +174,7 @@ export const OffsetProgressiveCurveAbi = [
         internalType: 'uint256',
       },
     ],
-    stateMutability: 'view',
+    stateMutability: 'pure',
   },
   {
     type: 'function',
@@ -211,7 +199,7 @@ export const OffsetProgressiveCurveAbi = [
         internalType: 'uint256',
       },
       {
-        name: '',
+        name: 'totalAssets',
         type: 'uint256',
         internalType: 'uint256',
       },
@@ -228,7 +216,7 @@ export const OffsetProgressiveCurveAbi = [
         internalType: 'uint256',
       },
     ],
-    stateMutability: 'view',
+    stateMutability: 'pure',
   },
   {
     type: 'function',
@@ -245,7 +233,7 @@ export const OffsetProgressiveCurveAbi = [
         internalType: 'uint256',
       },
       {
-        name: '',
+        name: 'totalAssets',
         type: 'uint256',
         internalType: 'uint256',
       },
@@ -257,7 +245,7 @@ export const OffsetProgressiveCurveAbi = [
         internalType: 'uint256',
       },
     ],
-    stateMutability: 'view',
+    stateMutability: 'pure',
   },
   {
     type: 'function',
@@ -274,7 +262,7 @@ export const OffsetProgressiveCurveAbi = [
         internalType: 'uint256',
       },
       {
-        name: '',
+        name: 'totalAssets',
         type: 'uint256',
         internalType: 'uint256',
       },
@@ -286,7 +274,7 @@ export const OffsetProgressiveCurveAbi = [
         internalType: 'uint256',
       },
     ],
-    stateMutability: 'view',
+    stateMutability: 'pure',
   },
   {
     type: 'function',
@@ -298,7 +286,7 @@ export const OffsetProgressiveCurveAbi = [
         internalType: 'uint256',
       },
       {
-        name: '',
+        name: 'totalAssets',
         type: 'uint256',
         internalType: 'uint256',
       },
@@ -315,70 +303,11 @@ export const OffsetProgressiveCurveAbi = [
         internalType: 'uint256',
       },
     ],
-    stateMutability: 'view',
+    stateMutability: 'pure',
   },
   {
     type: 'error',
     name: 'BaseCurve_EmptyStringNotAllowed',
     inputs: [],
-  },
-  {
-    type: 'error',
-    name: 'PRBMath_MulDiv18_Overflow',
-    inputs: [
-      {
-        name: 'x',
-        type: 'uint256',
-        internalType: 'uint256',
-      },
-      {
-        name: 'y',
-        type: 'uint256',
-        internalType: 'uint256',
-      },
-    ],
-  },
-  {
-    type: 'error',
-    name: 'PRBMath_MulDiv_Overflow',
-    inputs: [
-      {
-        name: 'x',
-        type: 'uint256',
-        internalType: 'uint256',
-      },
-      {
-        name: 'y',
-        type: 'uint256',
-        internalType: 'uint256',
-      },
-      {
-        name: 'denominator',
-        type: 'uint256',
-        internalType: 'uint256',
-      },
-    ],
-  },
-  {
-    type: 'error',
-    name: 'PRBMath_UD60x18_Convert_Overflow',
-    inputs: [
-      {
-        name: 'x',
-        type: 'uint256',
-        internalType: 'uint256',
-      },
-    ],
-  },
-  {
-    type: 'error',
-    name: 'PRBMath_UD60x18_Sqrt_Overflow',
-    inputs: [
-      {
-        name: 'x',
-        type: 'uint256',
-        internalType: 'UD60x18',
-      },
-    ],
   },
 ] as const
