@@ -1,7 +1,7 @@
 {
   "name": "intuition-cli",
   "description": "A CLI for the Intuition protocol.",
-  "version": "1.0.0-alpha.0",
+  "version": "1.0.0-alpha.1",
   "author": "Intuition Systems",
   "bin": {
     "intu": "./bin/run.js"
