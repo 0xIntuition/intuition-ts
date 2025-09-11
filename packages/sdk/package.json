@@ -1,6 +1,6 @@
 {
   "name": "@0xintuition/sdk",
-  "version": "1.0.0-alpha.3",
+  "version": "2.0.0-alpha.0",
   "description": "Intuition SDK",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
