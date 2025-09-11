@@ -4,13 +4,17 @@ import { getAtomDetails, getTripleDetails, pinThing } from '../src'
 
 describe('Reads', () => {
   it('atom', async () => {
-    const data = await getAtomDetails('0xff89a9d8eed2bfc3ee6701935d0fbbd3f191b27b97ae980e0baa5185499e9be8')
+    const data = await getAtomDetails(
+      '0xff89a9d8eed2bfc3ee6701935d0fbbd3f191b27b97ae980e0baa5185499e9be8',
+    )
     expect(data?.label).toEqual('Uniswap')
   })
 
   it('triple', async () => {
-    const data = await getTripleDetails('0x18d0c323750e23ee400ea00519b0eb9374005f28527fcbd8dbfeeedda2bc0b1a')
-    expect(data?.object.label).toEqual('Web3 Analytics Tool')
+    const data = await getTripleDetails(
+      '0xf7265900bc05f17dc623d29c42ea84f502c4be66ad9b03b85ff944282df40462',
+    )
+    expect(data?.object.label).toEqual('chimneysweep')
   }, 60000)
 })
 

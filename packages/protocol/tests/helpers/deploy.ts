@@ -1,14 +1,4 @@
-import {
-  BaseError,
-  ContractFunctionRevertedError,
-  encodeFunctionData,
-  getContract,
-  isAddress,
-  parseEther,
-  parseUnits,
-  toHex,
-  type Address,
-} from 'viem'
+import { encodeFunctionData, isAddress, parseEther, type Address } from 'viem'
 import { expect } from 'vitest'
 
 import {
@@ -31,7 +21,7 @@ import {
   TrustBondingBytecode,
   TrustBytecode,
 } from '../../src/contracts/index.js'
-import { ALICE, BOB } from './constants.js'
+import { ALICE } from './constants.js'
 import { publicClient, walletClient } from './utils.js'
 
 // Add missing interface imports for proper configuration

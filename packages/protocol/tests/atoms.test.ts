@@ -1,5 +1,5 @@
-import { parseEther, toHex, type Address } from 'viem'
-import { beforeAll, beforeEach, describe, expect, it } from 'vitest'
+import { toHex, type Address } from 'viem'
+import { beforeAll, describe, expect, it } from 'vitest'
 
 import {
   createAtoms,
