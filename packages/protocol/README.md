@@ -8,186 +8,159 @@ Intuition Protocol is a TypeScript/JavaScript SDK and smart contract interface f
 ## Install
 
 ```sh-session
-npm install 0xintuition/protocol
+npm install viem 0xintuition/protocol
 ```
 
 ```sh-session
-pnpm install 0xintuition/protocol
+pnpm install viem 0xintuition/protocol
 ```
 
 ```sh-session
-bun install 0xintuition/protocol
+bun install viem 0xintuition/protocol
 ```
 
 # Usage
 
 The protocol SDK provides both core/functional and class based functions for interacting with the Intuition protocol.
 
-## Core Functions
-
-### Atom and Triple Creation
+## Setup
 
 ```typescript
 import {
-  batchCreateAtom,
-  batchCreateTriple,
-  createAtom,
-  createTriple,
-} from '@0xintuition/protocol/core'
+  getAtomCost,
+  getMultiVaultAddressFromChainId,
+  intuitionTestnet,
+} from '@0xintuition/protocol'
 
-// Create a single atom
-await createAtom(
-  { address, walletClient, publicClient },
-  { args: [atomUri], value },
-)
+import { createPublicClient, createWalletClient, http } from 'viem'
 
-// Create a triple
-await createTriple(
-  { address, walletClient, publicClient },
-  { args: [subjectId, predicateId, objectId], value },
-)
+const walletClient = createWalletClient({
+  chain: intuitionTestnet,
+  transport: http(),
+  account: account, // metamask, private key, etc
+})
 
-// Batch create atoms
-await batchCreateAtom(
-  { address, walletClient, publicClient },
-  { args: [[atomUri1, atomUri2]], value },
-)
+const publicClient = createPublicClient({
+  chain: intuitionTestnet,
+  transport: http(),
+})
 
-// Batch create triples
-await batchCreateTriple(
-  { address, walletClient, publicClient },
-  { args: [[subjectIds], [predicateIds], [objectIds]], value },
-)
-```
-
-### Deposits and Redemptions
-
-```typescript
-import {
-  depositAtom,
-  depositTriple,
-  redeemAtom,
-  redeemTriple,
-} from '@0xintuition/protocol/core'
-
-// Deposit into an atom
-await depositAtom(
-  { address, walletClient, publicClient },
-  { args: [receiver, atomId], value },
-)
-
-// Deposit into a triple
-await depositTriple(
-  { address, walletClient, publicClient },
-  { args: [receiver, tripleId], value },
-)
-
-// Redeem atom shares
-await redeemAtom(
-  { address, walletClient, publicClient },
-  { args: [shares, receiver, atomId] },
-)
-
-// Redeem triple shares
-await redeemTriple(
-  { address, walletClient, publicClient },
-  { args: [shares, receiver, tripleId] },
-)
-```
-
-### Curve Deposits and Redemptions
-
-```typescript
-import {
-  batchDepositCurve,
-  batchRedeemCurve,
-  depositAtomCurve,
-  depositTripleCurve,
-  redeemAtomCurve,
-  redeemTripleCurve,
-} from '@0xintuition/protocol/core'
-
-// Deposit into an atom using the curve
-await depositAtomCurve(
-  { address, walletClient, publicClient },
-  { args: [receiver, atomId, curveId], value },
-)
-
-// Deposit into a triple using the curve
-await depositTripleCurve(
-  { address, walletClient, publicClient },
-  { args: [receiver, tripleId, curveId], value },
-)
-
-// Batch deposit into atoms/triples using the curve
-await batchDepositCurve(
-  { address, walletClient, publicClient },
-  { args: [receiver, ids, curveIds, amounts], value },
-)
-
-// Redeem atom shares using the curve
-await redeemAtomCurve(
-  { address, walletClient, publicClient },
-  { args: [shares, receiver, atomId, curveId] },
-)
-
-// Redeem triple shares using the curve
-await redeemTripleCurve(
-  { address, walletClient, publicClient },
-  { args: [shares, receiver, tripleId, curveId] },
-)
-
-// Batch redeem shares from atoms/triples using the curve
-await batchRedeemCurve(
-  { address, walletClient, publicClient },
-  { args: [shares, receiver, ids, curveIds] },
-)
+const address = getMultiVaultAddressFromChainId(intuitionTestnet.id)
 ```
 
 ### Cost Calculation and Multicall
 
 ```typescript
 import {
-  createAtomCalculateBaseCost,
-  createTripleCalculateBaseCost,
-  multiCallIntuitionConfigs,
+  getAtomCost,
+  getTripleCost,
+  multicallIntuitionConfig,
 } from '@0xintuition/protocol/core'
 
 // Get atom creation cost
-const atomCost = await createAtomCalculateBaseCost({ address, publicClient })
+const atomCost = await getAtomCost({ address, publicClient })
 
 // Get triple creation cost
-const tripleCost = await createTripleCalculateBaseCost({
-  address,
-  publicClient,
-})
+const tripleCost = await getTripleCost({ address, publicClient })
 
 // Get multiple config values in one call
-const config = await multiCallIntuitionConfigs({ address, publicClient })
+const config = await multicallIntuitionConfig({ address, publicClient })
+```
+
+## Core Functions
+
+### Atom and Triple Creation
+
+```typescript
+import { createAtoms, createTriples } from '@0xintuition/protocol'
+
+// Create atoms (supports single or multiple)
+await createAtoms(
+  { address, walletClient, publicClient },
+  {
+    args: [
+      [atomUri1, atomUri2],
+      [atomCost, atomCost],
+    ],
+    value: atomCost + atomCost,
+  },
+)
+
+// Create triples (supports single or multiple)
+await createTriples(
+  { address, walletClient, publicClient },
+  {
+    args: [
+      [subjectId1, subjectId2],
+      [predicateId1, predicateId2],
+      [objectId1, objectId2],
+      [tripleCost, tripleCost],
+    ],
+    value: tripleCost + tripleCost,
+  },
+)
+```
+
+### Deposits and Redemptions
+
+```typescript
+import { deposit, redeem } from '@0xintuition/protocol'
+
+// Deposit into a vault (atom or triple)
+await deposit(
+  { address, walletClient, publicClient },
+  { args: [receiver, vaultId, curveId, minShares], value },
+)
+
+// Redeem shares from a vault
+await redeem(
+  { address, walletClient, publicClient },
+  { args: [receiver, vaultId, curveId, shares, minAssets] },
+)
+```
+
+### Batch Deposits and Redemptions
+
+```typescript
+import { depositBatch, redeemBatch } from '@0xintuition/protocol/core'
+
+// Batch deposit into multiple vaults
+await depositBatch(
+  { address, walletClient, publicClient },
+  { args: [receiver, termIds, curveIds, assets, minShares], value },
+)
+
+// Batch redeem shares from multiple vaults
+await redeemBatch(
+  { address, walletClient, publicClient },
+  { args: [shares, receiver, termIds, curveIds, minAssets] },
+)
 ```
 
 ### ABI Encoding Helpers
 
 ```typescript
 import {
-  createAtomEncode,
-  createTripleEncode,
-  batchCreateAtomEncode,
-  batchCreateTripleEncode,
-  depositAtomEncode,
-  depositTripleEncode,
-  redeemAtomEncode,
-  redeemTripleEncode,
-  initEncode,
+  createAtomsEncode,
+  createTriplesEncode,
+  depositEncode,
+  redeemEncode,
 } from '@0xintuition/protocol/core'
 
-// Encode a createAtom call
-const data = createAtomEncode(atomUri)
+// Encode a createAtoms call
+const data = createAtomsEncode([atomUri1, atomUri2], [assets1, assets2])
 
-// Encode a createTriple call
-const data = createTripleEncode(subjectId, predicateId, objectId)
+// Encode a createTriples call
+const data = createTriplesEncode(
+  [subjectId1, subjectId2],
+  [predicateId1, predicateId2],
+  [objectId1, objectId2],
+  [assets1, assets2]
+)
 
-// Encode batch and other calls similarly
+// Encode deposit and redeem calls
+const depositData = depositEncode(receiver, termId, curveId, assets, minShares)
+const redeemData = redeemEncode(receiver, termId, curveId, shares, minAssets)
 ```
 
 ## Event Parsing Utilities
@@ -195,8 +168,8 @@ const data = createTripleEncode(subjectId, predicateId, objectId)
 ```typescript
 import {
   eventParseAtomCreated,
-  eventParseDepositAtomTransaction,
-  eventParseRedeemAtomTransaction,
+  eventParseDeposited,
+  eventParseRedeemed,
   eventParseTripleCreated,
 } from '@0xintuition/protocol/events'
 
@@ -213,32 +186,79 @@ const redeemEvents = await eventParseRedeemed(publicClient, txHash)
 const tripleEvents = await eventParseTripleCreated(publicClient, txHash)
 ```
 
-## EthMultiVault
+## Using MultiVault contract directly
 
 ```typescript
-import { EthMultiVault } from '@0xintuition/protocol'
+import {
+  getMultiVaultAddressFromChainId,
+  intuitionTestnet,
+  MultiVaultAbi,
+} from '@0xintuition/protocol'
 
-import { Chain, createPublicClient, http, PublicClient, Transport } from 'viem'
-import { base } from 'viem/chains'
+import {
+  createPublicClient,
+  createWalletClient,
+  getContract,
+  http,
+  parseEventLogs,
+  toHex,
+} from 'viem'
+import { privateKeyToAccount } from 'viem/accounts'
 
-const publicClient = createPublicClient({
-  chain: base,
-  transport: http(),
-}) as PublicClient<Transport, Chain>
+// This should be the logged in account (Metamask, etc)
+export const account = privateKeyToAccount(
+  '0x6c25488133b8ca4ba754ea64886b1bfa4c4b05e7fea057c61f9951fe76f1d657',
+)
+console.log('Using account: ', account.address)
 
 const walletClient = createWalletClient({
-  chain: base,
-  transport: custom(window.ethereum!),
+  chain: intuitionTestnet,
+  transport: http(),
+  account: account,
 })
 
-const ethMultiVault = new EthMultiVault({
-  publicClient,
-  walletClient,
+const publicClient = createPublicClient({
+  chain: intuitionTestnet,
+  transport: http(),
 })
 
-const { vaultId, events } = await ethMultiVault.createAtom('hello')
+const multiVault = getContract({
+  abi: MultiVaultAbi,
+  address: getMultiVaultAddressFromChainId(intuitionTestnet.id),
+  client: {
+    public: publicClient,
+    wallet: walletClient,
+  },
+})
 
-console.log(events)
+async function main() {
+  const atomCost = await multiVault.read.getAtomCost()
+  const { minDeposit } = await multiVault.read.getGeneralConfig()
+  const hash = await multiVault.write.createAtoms(
+    [[toHex('hello world')], [atomCost + minDeposit]],
+    {
+      value: atomCost + minDeposit,
+    },
+  )
+
+  const { logs, status } = await publicClient.waitForTransactionReceipt({
+    hash,
+  })
+
+  if (status === 'reverted') {
+    throw new Error('Transaction reverted')
+  }
+
+  const events = parseEventLogs({
+    abi: MultiVaultAbi,
+    logs,
+    eventName: 'AtomCreated',
+  })
+
+  console.log('Atom created', events[0].args.termId)
+}
+
+main().catch(console.error)
 ```
 
 # Development

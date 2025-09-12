@@ -27,17 +27,21 @@ The SDK requires `viem@2.x.x` to execute reads and writes.
 
 ```ts
 import {
+  getMultiVaultAddressFromChainId,
+  intuitionTestnet,
+} from '@0xintuition/protocol'
+
+import {
   createPublicClient,
-  createTestClient,
   createWalletClient,
   http,
   privateKeyToAccount,
-  type Chain,
 } from 'viem'
-import { base } from 'viem/chains'
+
+export const address = getMultiVaultAddressFromChainId(intuitionTestnet.id)
 
 export const publicClient = createPublicClient({
-  chain: base,
+  chain: intuitionTestnet,
   transport: http(),
 })
 
@@ -45,7 +49,7 @@ const account = privateKeyToAccount(
   '0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80',
 )
 export const walletClient = createWalletClient({
-  chain: base,
+  chain: intuitionTestnet,
   transport: http(),
   account: account,
 })
@@ -54,11 +58,15 @@ export const walletClient = createWalletClient({
 ## Reads
 
 ```ts
-import { getAtom, getTriple } from '@0xintuition/sdk'
+import { getAtomDetails, getTripleDetails } from '@0xintuition/sdk'
 
-const atomData = await getAtom('124862')
+const atomData = await getAtomDetails(
+  '0x57d94c116a33bb460428eced262b7ae2ec6f865e7aceef6357cec3d034e8ea21',
+)
 
-const tripleData = await getTriple('54670')
+const tripleData = await getTripleDetails(
+  '0x4957d3f442acc301ad71e73f26efd6af78647f57dacf2b3a686d91fa773fe0b6',
+)
 ```
 
 ## Triples
@@ -68,22 +76,23 @@ import { createAtomFromString, createTripleStatement } from '@0xintuition/sdk'
 
 // Example of creating a triple statement with three atoms
 const atom1 = await createAtomFromString(
-  { walletClient, publicClient, address: multivaultAddress },
+  { walletClient, publicClient, address },
   'atom1',
 )
 const atom2 = await createAtomFromString(
-  { walletClient, publicClient, address: multivaultAddress },
+  { walletClient, publicClient, address },
   'atom2',
 )
 const atom3 = await createAtomFromString(
-  { walletClient, publicClient, address: multivaultAddress },
+  { walletClient, publicClient, address },
   'atom3',
 )
 
 const triple = await createTripleStatement(
-  { walletClient, publicClient, address: multivaultAddress },
+  { walletClient, publicClient, address },
   {
-    args: [atom1.state.vaultId, atom2.state.vaultId, atom3.state.vaultId],
+    args: [atom1.state.termId, atom2.state.termId, atom3.state.termId],
+    value: 1000000000000000000n, // 1 ETH in wei for deposit
   },
 )
 ```
@@ -93,44 +102,24 @@ const triple = await createTripleStatement(
 ### Create Atom from String
 
 ```ts
-import { createAtomFromString, getEthMultiVaultAddress } from '@0xintuition/sdk'
+import { createAtomFromString } from '@0xintuition/sdk'
 
-const ethMultiVaultAddress = getEthMultiVaultAddress(walletClient.chain.id)
 const data = await createAtomFromString(
-  { walletClient, publicClient, address: ethMultiVaultAddress },
+  { walletClient, publicClient, address },
   'is great',
-)
-```
-
-### Create Atom from IPFS URI
-
-```ts
-import {
-  createAtomFromIpfsUri,
-  getEthMultiVaultAddress,
-} from '@0xintuition/sdk'
-
-const ethMultiVaultAddress = getEthMultiVaultAddress(walletClient.chain.id)
-const data = await createAtomFromIpfsUri(
-  { walletClient, publicClient, address: ethMultiVaultAddress },
-  'ipfs://bafkreib7534cszxn2c6qwoviv43sqh244yfrxomjbealjdwntd6a7atq6u',
 )
 ```
 
 ### Create Atom from IPFS Upload
 
 ```ts
-import {
-  createAtomFromIpfsUpload,
-  getEthMultiVaultAddress,
-} from '@0xintuition/sdk'
+import { createAtomFromIpfsUpload } from '@0xintuition/sdk'
 
-const ethMultiVaultAddress = getEthMultiVaultAddress(walletClient.chain.id)
 const data = await createAtomFromIpfsUpload(
   {
     walletClient,
     publicClient,
-    address: ethMultiVaultAddress,
+    address,
     pinataApiKey: 'your-pinata-api-key',
   },
   {
@@ -148,11 +137,10 @@ const data = await createAtomFromIpfsUpload(
 ### Create a Thing
 
 ```ts
-import { createThing, getEthMultiVaultAddress } from '@0xintuition/sdk'
+import { createAtomFromThing } from '@0xintuition/sdk'
 
-const ethMultiVaultAddress = getEthMultiVaultAddress(walletClient.chain.id)
-const data = await createThing(
-  { walletClient, publicClient, address: ethMultiVaultAddress },
+const data = await createAtomFromThing(
+  { walletClient, publicClient, address },
   {
     url: 'https://www.intuition.systems/',
     name: 'Intuition',
@@ -165,14 +153,10 @@ const data = await createThing(
 ### Create an Ethereum Account
 
 ```ts
-import {
-  createEthereumAccount,
-  getEthMultiVaultAddress,
-} from '@0xintuition/sdk'
+import { createAtomFromEthereumAccount } from '@0xintuition/sdk'
 
-const ethMultiVaultAddress = getEthMultiVaultAddress(walletClient.chain.id)
-const data = await createEthereumAccount(
-  { walletClient, publicClient, address: ethMultivaultAddress },
+const data = await createAtomFromEthereumAccount(
+  { walletClient, publicClient, address },
   {
     address: '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045',
     chainId: 1, // Mainnet
@@ -187,15 +171,10 @@ const data: {
     uri: string
     transactionHash: `0x${string}`;
     state: {
-        sender: `0x${string}`;
-        receiver: `0x${string}`;
-        receiverTotalSharesInVault: bigint;
-        senderAssetsAfterTotalFees: bigint;
-        sharesForReceiver: bigint;
-        entryFee: bigint;
-        vaultId: bigint;
-        isTriple: boolean;
-        isAtomWallet: boolean;
+        creator: Address,
+        termId: Hex,
+        atomData: Hex,
+        atomWallet: Address
     };
 }
 ```
@@ -205,7 +184,10 @@ const data: {
 ```tsx
 import * as React from 'react'
 
-import { createThing, getEthMultiVaultAddress } from '@0xintuition/sdk'
+import {
+  createAtomFromThing,
+  getMultiVaultAddressFromChainId,
+} from '@0xintuition/sdk'
 
 import { useChainId, usePublicClient, useWalletClient } from 'wagmi'
 
@@ -217,9 +199,9 @@ const IntuitionButton = ({ children, className }: IntuitionButton) => {
   const { data: walletClient } = useWalletClient()
 
   const handleClick = async () => {
-    const ethMultiVaultAddress = getEthMultiVaultAddress(chainId)
-    const data = await createThing(
-      { walletClient, publicClient, address: ethMultiVaultAddress },
+    const multiVaultAddress = getMultiVaultAddressFromChainId(chainId)
+    const data = await createAtomFromThing(
+      { walletClient, publicClient, address: multiVaultAddress },
       {
         url: 'https://www.intuition.systems/',
         name: 'Intuition',

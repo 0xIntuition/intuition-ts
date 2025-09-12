@@ -1,11 +1,12 @@
 import { encodeFunctionData, type Address, type Hex } from 'viem'
+
 import { MultiVaultAbi } from '../contracts'
 
 export function redeemEncode(
-  shares: bigint,
   receiver: Address,
   termId: Hex,
   curveId: bigint,
+  shares: bigint,
   minAssets: bigint,
 ): Hex {
   return encodeFunctionData({
