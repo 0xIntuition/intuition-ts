@@ -1,6 +1,29 @@
 # Migration Guide: Intuition TypeScript SDK v2.0.0
 
-This guide helps you migrate your code from v1.x to v2.0.0-alpha.0 of the Intuition TypeScript packages. This is a **major version update** with significant breaking changes.
+This guide helps you migrate your code from v1.x to v2.0.0-alpha.0 of the Intuition TypeScript packages. This is a **major version update** with significant breaking changes due to the underlying contract migration from `EthMultiVault` to `MultiVault`.
+
+## Contract Migration Overview
+
+The core smart contract has been upgraded from `EthMultiVault` to `MultiVault`, introducing significant architectural changes that impact all TypeScript libraries built on top.
+
+### Key Contract Changes
+
+#### 1. **ID System Migration**
+
+- **EthMultiVault**: Uses `uint256` for atom/triple IDs
+- **MultiVault**: Uses `bytes32` for term IDs (atoms and triples are now "terms")
+
+#### 2. **Terminology Changes**
+
+- **EthMultiVault**: Atoms and Triples as separate entities
+- **MultiVault**: Unified "Terms" concept (atoms and triples are both terms)
+- **EthMultiVault**: Vault IDs
+- **MultiVault**: Term IDs with Curve IDs for bonding curves
+
+#### 3. **Bonding Curve Integration**
+
+- **EthMultiVault**: Limited bonding curve support
+- **MultiVault**: Full bonding curve integration with curve IDs for all operations
 
 ## Breaking Changes Overview
 
@@ -13,9 +36,71 @@ This guide helps you migrate your code from v1.x to v2.0.0-alpha.0 of the Intuit
 | `@0xintuition/graphql`  | `1.0.0-alpha.3`  | `2.0.0-alpha.0` |
 | `@0xintuition/cli`      | `0.0.2`          | `1.0.0-alpha.1` |
 
-## 1. Contract and Address Changes
+## 1. Contract Migration Impact
 
-### Contract Renaming: `EthMultiVault` → `MultiVault`
+### Contract Function Mapping
+
+The migration from `EthMultiVault` to `MultiVault` requires updating all contract interactions. Here's the complete function mapping:
+
+#### Core Creation Functions
+
+##### Atom Creation
+
+```solidity
+// EthMultiVault
+function createAtom(bytes atomUri) payable returns (uint256)
+function batchCreateAtom(bytes[] atomUris) payable returns (uint256[])
+
+// MultiVault
+function createAtoms(bytes[] data, uint256[] assets) payable returns (bytes32[])
+```
+
+##### Triple Creation
+
+```solidity
+// EthMultiVault
+function createTriple(uint256 subjectId, uint256 predicateId, uint256 objectId) payable returns (uint256)
+function batchCreateTriple(uint256[] subjectIds, uint256[] predicateIds, uint256[] objectIds) payable returns (uint256[])
+
+// MultiVault
+function createTriples(bytes32[] subjectIds, bytes32[] predicateIds, bytes32[] objectIds, uint256[] assets) payable returns (bytes32[])
+```
+
+#### Deposit Functions
+
+##### EthMultiVault
+
+```solidity
+function depositAtom(address receiver, uint256 id) payable returns (uint256)
+function depositTriple(address receiver, uint256 id) payable returns (uint256)
+function batchDeposit(address receiver, uint256[] termIds, uint256[] amounts) payable returns (uint256[])
+```
+
+##### MultiVault
+
+```solidity
+function deposit(address receiver, bytes32 termId, uint256 curveId, uint256 minShares) payable returns (uint256)
+function depositBatch(address receiver, bytes32[] termIds, uint256[] curveIds, uint256[] assets, uint256[] minShares) payable returns (uint256[])
+```
+
+#### Redeem Functions
+
+##### EthMultiVault
+
+```solidity
+function redeemAtom(uint256 shares, address receiver, uint256 id) returns (uint256)
+function redeemTriple(uint256 shares, address receiver, uint256 id) returns (uint256)
+function batchRedeem(uint256 percentage, address receiver, uint256[] ids) returns (uint256[])
+```
+
+##### MultiVault
+
+```solidity
+function redeem(address receiver, bytes32 termId, uint256 curveId, uint256 shares, uint256 minAssets) returns (uint256)
+function redeemBatch(address receiver, bytes32[] termIds, uint256[] curveIds, uint256[] shares, uint256[] minAssets) returns (uint256[])
+```
+
+### Contract Address Changes: `EthMultiVault` → `MultiVault`
 
 **Before:**
 
@@ -35,7 +120,102 @@ import { getMultiVaultAddressFromChainId } from '@0xintuition/sdk'
 const address = getMultiVaultAddressFromChainId(intuitionTestnet.id)
 ```
 
-## 2. Core Function Changes
+### Contract Event Changes
+
+#### EthMultiVault Events
+
+```solidity
+event AtomCreated(address indexed creator, address indexed atomWallet, bytes atomData, uint256 vaultId)
+event TripleCreated(address indexed creator, uint256 subjectId, uint256 predicateId, uint256 objectId, uint256 vaultId)
+```
+
+#### MultiVault Events
+
+```solidity
+event AtomCreated(address indexed creator, bytes32 indexed termId, bytes atomData, address atomWallet)
+event TripleCreated(address indexed creator, bytes32 indexed termId, bytes32 subjectId, bytes32 predicateId, bytes32 objectId)
+```
+
+### Data Structure Migration
+
+#### ID Handling Update
+
+```typescript
+// Before (EthMultiVault)
+const atomId: bigint = 123n;
+const tripleId: bigint = 456n;
+
+// After (MultiVault)
+const atomId: `0x${string}` = "0x1234..."; // 32-byte hash
+const tripleId: `0x${string}` = "0x5678..."; // 32-byte hash
+```
+
+#### Query Functions
+
+```solidity
+// EthMultiVault
+function atoms(uint256 atomId) view returns (bytes)
+function getTripleAtoms(uint256 id) view returns (uint256, uint256, uint256)
+
+// MultiVault
+function atom(bytes32 atomId) view returns (bytes)
+function getAtom(bytes32 atomId) view returns (bytes)
+function triple(bytes32 tripleId) view returns (bytes32, bytes32, bytes32)
+function getTriple(bytes32 tripleId) view returns (bytes32, bytes32, bytes32)
+```
+
+#### Share and Asset Conversions
+
+```solidity
+// EthMultiVault
+function convertToShares(uint256 assets, uint256 id) view returns (uint256)
+function convertToAssets(uint256 shares, uint256 id) view returns (uint256)
+
+// MultiVault
+function convertToShares(bytes32 termId, uint256 curveId, uint256 assets) view returns (uint256)
+function convertToAssets(bytes32 termId, uint256 curveId, uint256 shares) view returns (uint256)
+```
+
+### New MultiVault Features
+
+#### 1. **Utilization Tracking**
+
+```typescript
+const userUtilization = await multiVault.getUserUtilizationForEpoch(
+  userAddress,
+  epoch,
+)
+const totalUtilization = await multiVault.getTotalUtilizationForEpoch(epoch)
+```
+
+#### 2. **Epoch System**
+
+```typescript
+const currentEpoch = await multiVault.currentEpoch()
+const lastActiveEpoch = await multiVault.lastActiveEpoch(userAddress)
+```
+
+#### 3. **Enhanced Fee Management**
+
+```typescript
+// Atom wallet deposit fees
+const accumulatedFees =
+  await multiVault.accumulatedAtomWalletDepositFees(atomWallet)
+await multiVault.claimAtomWalletDepositFees(termId)
+
+// Protocol fees by epoch
+const protocolFees = await multiVault.accumulatedProtocolFees(epoch)
+```
+
+#### 4. **Improved Preview Functions**
+
+```typescript
+// Preview with different scenarios
+const [shares, assetsAfterFees] = await multiVault.previewDeposit(termId, curveId, assets);
+const [shares, assetsAfterFixedFees, assetsAfterFees] = await multiVault.previewAtomCreate(termId, curveId, assets);
+```
+
+## 2. TypeScript Library Changes
 
 ### Protocol Package (`@0xintuition/protocol`)
 
@@ -258,6 +438,55 @@ const result = await multiVault.createAtoms([['hello'], [atomCost]], {
 })
 ```
 
+### Bonding Curve Integration
+
+The new `MultiVault` contract requires curve IDs for all operations:
+
+```typescript
+// MultiVault requires curve ID for all operations
+const defaultCurveId = await multiVault.getBondingCurveConfig().defaultCurveId
+
+// Use in all deposit/redeem operations
+await multiVault.deposit(receiver, termId, defaultCurveId, minShares, {
+  value: assets,
+})
+```
+
+### Migration Steps
+
+#### Step 1: Update Function Calls
+
+##### Creating Atoms
+
+```typescript
+// Before
+const atomId = await ethMultiVault.createAtom(atomData, { value: fee });
+
+// After
+const atomIds = await multiVault.createAtoms([atomData], [assets], { value: totalValue });
+const atomId = atomIds[0];
+```
+
+##### Depositing
+
+```typescript
+// Before
+const shares = await ethMultiVault.depositAtom(receiver, atomId, { value: assets });
+
+// After
+const shares = await multiVault.deposit(receiver, termId, curveId, minShares, { value: assets });
+```
+
+##### Redeeming
+
+```typescript
+// Before
+const assets = await ethMultiVault.redeemAtom(shares, receiver, atomId);
+
+// After
+const assets = await multiVault.redeem(receiver, termId, curveId, shares, minAssets);
+```
+
 ## 3. SDK Package Changes (`@0xintuition/sdk`)
 
 ### API Function Renaming
@@ -313,7 +542,40 @@ const triple = await createTripleStatement(config, {
 })
 ```
 
-## 4. Removed Functions
+## 4. Configuration Changes
+
+### EthMultiVault Config
+
+```solidity
+struct GeneralConfig {
+    address admin;
+    address protocolMultisig;
+    uint256 feeDenominator;
+    uint256 minDeposit;
+    uint256 minShare;
+    uint256 atomUriMaxLength;
+    uint256 decimalPrecision;
+    uint256 minDelay;
+}
+```
+
+### MultiVault Config
+
+```solidity
+struct GeneralConfig {
+    address admin;
+    address protocolMultisig;
+    uint256 feeDenominator;
+    address trustBonding;      // New
+    uint256 minDeposit;
+    uint256 minShare;
+    uint256 atomDataMaxLength; // Renamed
+    uint256 decimalPrecision;
+    // minDelay removed
+}
+```
+
+## 5. Removed Functions
 
 The following functions have been removed and replaced:
 
@@ -338,15 +600,34 @@ The following functions have been removed and replaced:
 - `getAtom` → `getAtomDetails`
 - `getTriple` → `getTripleDetails`
 
+## 6. Breaking Changes Summary
+
+1. **All IDs changed from `uint256` to `bytes32`**
+2. **Curve ID parameter required for most operations**
+3. **Batch functions have different signatures**
+4. **Event structures updated**
+5. **Some functions renamed or merged**
+6. **New slippage protection with `minShares`/`minAssets` parameters**
+
+## 7. Best Practices
+
+1. **Always use the default curve ID** unless you have specific bonding curve requirements
+2. **Implement proper slippage protection** with min/max parameters
+3. **Handle the new epoch system** for utilization tracking
+4. **Update your event listeners** to match new event structures
+5. **Use preview functions** to estimate outcomes before transactions
+
 ## 📝 Summary
 
 This major version update consolidates and simplifies the API while adding new functionality. The main changes are:
 
+- **Contract Migration**: `EthMultiVault` → `MultiVault` with architectural improvements
+- **ID System**: Changed from `uint256` to `bytes32` for all term identifiers
+- **Bonding Curves**: Full integration requiring curve IDs for all operations
 - **Singular → Plural**: Functions now support batch operations by default
-- **Contract Renaming**: `EthMultiVault` → `MultiVault`
-- **Simplified APIs**: Unified deposit/redeem functions
-- **New Contracts**: Additional protocol contracts available
-- **Event Updates**: Improved event parsing with new events
+- **Unified APIs**: Simplified deposit/redeem functions for all vault types
+- **Enhanced Features**: New utilization tracking, epoch system, and preview functions
+- **Event Updates**: Improved event parsing with new event structures
 
 Take your time with the migration and test thoroughly. The new API is more powerful and consistent, providing a better developer experience.
 
