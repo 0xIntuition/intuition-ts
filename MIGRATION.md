@@ -349,3 +349,116 @@ This major version update consolidates and simplifies the API while adding new f
 - **Event Updates**: Improved event parsing with new events
 
 Take your time with the migration and test thoroughly. The new API is more powerful and consistent, providing a better developer experience.
+
+# GraphQL Schema Migration Guide
+
+## Overview
+
+## ⚠️ Breaking Changes
+
+### 1. ID Field Type Changes: Numeric → String
+
+**CRITICAL IMPACT** - All existing queries and mutations using these fields will break.
+
+#### Core Entity ID Changes
+
+| Entity        | Field             | Old Type   | New Type  |
+| ------------- | ----------------- | ---------- | --------- |
+| `accounts`    | `atom_id`         | `numeric`  | `String`  |
+| `atoms`       | `term_id`         | `numeric!` | `String!` |
+| `atoms`       | `value_id`        | `numeric`  | `String`  |
+| `atom_values` | `id`              | `numeric!` | `String!` |
+| `atom_values` | `book_id`         | `numeric`  | `String`  |
+| `atom_values` | `byte_object_id`  | `numeric`  | `String`  |
+| `atom_values` | `json_object_id`  | `numeric`  | `String`  |
+| `atom_values` | `organization_id` | `numeric`  | `String`  |
+| `atom_values` | `person_id`       | `numeric`  | `String`  |
+| `atom_values` | `text_object_id`  | `numeric`  | `String`  |
+| `atom_values` | `thing_id`        | `numeric`  | `String`  |
+| `vaults`      | `term_id`         | `numeric!` | `String!` |
+
+#### Entity Primary ID Changes
+
+All primary `id` fields changed from `numeric!` to `String!`:
+
+- `books`
+- `byte_object`
+- `caip10`
+- `json_objects`
+- `organizations`
+- `persons`
+- `text_objects`
+- `things`
+- `terms`
+
+### 2. Removed Aggregate Fields
+
+**MEDIUM IMPACT** - Statistical queries will break for entities with String IDs.
+
+Removed aggregate field types (no longer available for statistical operations):
+
+- `*_avg_fields` for: accounts, atom_values, books, byte_object, json_objects, organizations, persons, text_objects, things
+- `*_stddev_fields`, `*_stddev_pop_fields`, `*_stddev_samp_fields`
+- `*_sum_fields`, `*_var_pop_fields`, `*_var_samp_fields`, `*_variance_fields`
+
+## 🆕 New Features
+
+### 1. New Optional Fields
+
+#### atom_values
+
+- `caip10_id: String` - Link to CAIP-10 identifiers
+
+### 2. New Entity Types
+
+Statistics and analytics entities:
+
+- `statHours` - Hourly statistics aggregation
+- `term_total_state_changes` - Term state change tracking
+- `term_total_state_change_stats_daily` - Daily aggregated statistics
+- `term_total_state_change_stats_hourly` - Hourly aggregated statistics
+- `term_total_state_change_stats_monthly` - Monthly aggregated statistics
+- `term_total_state_change_stats_weekly` - Weekly aggregated statistics
+
+### 3. New Scalar Types
+
+- `atom_resolving_status` - Custom scalar for atom resolution states
+- `vault_type` - Custom scalar for vault type definitions
+
+## 🔧 Migration Checklist
+
+### Client Application Updates
+
+#### 1. Query/Mutation Updates
+
+- [ ] Update all numeric ID field references to String
+- [ ] Remove or update queries using deprecated aggregate fields
+- [ ] Test all existing GraphQL operations
+
+#### 2. Code Generation Updates
+
+- [ ] Regenerate TypeScript types
+- [ ] Update GraphQL codegen configuration
+- [ ] Verify generated types match new schema
+
+#### 3. Variable Updates
+
+```graphql
+# OLD
+query GetAtom($termId: numeric!) {
+  atoms(where: { term_id: { _eq: $termId } }) {
+    term_id
+    value_id
+  }
+}
+
+# NEW
+query GetAtom($termId: String!) {
+  atoms(where: { term_id: { _eq: $termId } }) {
+    term_id
+    value_id
+    raw_data
+    resolving_status
+  }
+}
+```
