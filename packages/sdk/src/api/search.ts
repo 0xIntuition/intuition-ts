@@ -6,10 +6,10 @@ import {
 } from '@0xintuition/graphql'
 
 export interface GlobalSearchOptions {
-  atomsLimit: number
-  accountsLimit: number
-  triplesLimit: number
-  collectionsLimit: number
+  atomsLimit?: number
+  accountsLimit?: number
+  triplesLimit?: number
+  collectionsLimit?: number
 }
 
 export async function globalSearch(
