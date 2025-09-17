@@ -20,7 +20,15 @@ import {
   multiCallIntuitionConfigs,
 } from '@0xintuition/protocol'
 
-import { Address, Hex, PublicClient, toHex, WalletClient } from 'viem'
+import {
+  Address,
+  formatEther,
+  Hex,
+  keccak256,
+  PublicClient,
+  toHex,
+  WalletClient,
+} from 'viem'
 
 // Constants
 const DEFAULT_POLLING_INTERVAL = 1000
@@ -88,14 +96,36 @@ export async function search(
 
 export async function findAtomIds(atoms: string[]): Promise<AtomWithId[]> {
   try {
-    const response = await fetcher<FindAtomIdsQuery, FindAtomIdsQueryVariables>(
-      FindAtomIdsDocument,
-      {
-        where: { data: { _in: atoms } },
-      },
-    )()
+    const batchSize = 100
+    const allAtoms: AtomWithId[] = []
 
-    return response.atoms as AtomWithId[]
+    // If we have 100 or fewer atoms, use the original approach
+    if (atoms.length <= batchSize) {
+      const response = await fetcher<
+        FindAtomIdsQuery,
+        FindAtomIdsQueryVariables
+      >(FindAtomIdsDocument, {
+        where: { data: { _in: atoms } },
+        limit: batchSize,
+      })()
+      return response.atoms as AtomWithId[]
+    }
+
+    // For more than 100 atoms, process in batches
+    const atomChunks = chunkArray(atoms, batchSize)
+
+    for (const chunk of atomChunks) {
+      const response = await fetcher<
+        FindAtomIdsQuery,
+        FindAtomIdsQueryVariables
+      >(FindAtomIdsDocument, {
+        where: { data: { _in: chunk } },
+        limit: batchSize,
+      })()
+      allAtoms.push(...(response.atoms as AtomWithId[]))
+    }
+
+    return allAtoms
   } catch (error) {
     throw new Error(
       `Failed to find atom IDs: ${error instanceof Error ? error.message : 'Unknown error'}`,
@@ -177,9 +207,16 @@ export async function findTripleIds(
   triplesWithAtomIds: Array<Array<string>>,
 ): Promise<TripleWithIds[]> {
   try {
-    const response = await fetcher<FindTriplesQuery, FindTriplesQueryVariables>(
-      FindTriplesDocument,
-      {
+    const batchSize = 100
+    const allTriples: TripleWithIds[] = []
+
+    // If we have 100 or fewer triples, use the original approach
+    if (triplesWithAtomIds.length <= batchSize) {
+      const response = await fetcher<
+        FindTriplesQuery,
+        FindTriplesQueryVariables
+      >(FindTriplesDocument, {
+        limit: batchSize,
         address: address,
         where: {
           _or: triplesWithAtomIds.map((t) => ({
@@ -190,10 +227,34 @@ export async function findTripleIds(
             ],
           })),
         },
-      },
-    )()
+      })()
+      return response.triples as TripleWithIds[]
+    }
 
-    return response.triples as TripleWithIds[]
+    // For more than 100 triples, process in batches
+    const tripleChunks = chunkArray(triplesWithAtomIds, batchSize)
+
+    for (const chunk of tripleChunks) {
+      const response = await fetcher<
+        FindTriplesQuery,
+        FindTriplesQueryVariables
+      >(FindTriplesDocument, {
+        limit: batchSize,
+        address: address,
+        where: {
+          _or: chunk.map((t) => ({
+            _and: [
+              { subject_id: { _eq: t[0] } },
+              { predicate_id: { _eq: t[1] } },
+              { object_id: { _eq: t[2] } },
+            ],
+          })),
+        },
+      })()
+      allTriples.push(...(response.triples as TripleWithIds[]))
+    }
+
+    return allTriples
   } catch (error) {
     throw new Error(
       `Failed to find triple IDs: ${error instanceof Error ? error.message : 'Unknown error'}`,
@@ -207,6 +268,19 @@ interface SyncConfig {
   walletClient: WalletClient
   logger?: (message: string) => void
   batchSize?: number
+  dryRun?: boolean
+}
+
+interface CostEstimation {
+  totalCost: bigint
+  atomCost: bigint
+  tripleCost: bigint
+  depositCost: bigint
+  atomCount: number
+  tripleCount: number
+  depositCount: number
+  userBalance: bigint
+  hasSufficientBalance: boolean
 }
 
 function findAtomByData(
@@ -242,10 +316,17 @@ function chunkArray<T>(array: T[], size: number): T[][] {
   return chunks
 }
 
+async function getUserBalance(
+  publicClient: PublicClient,
+  address: Address,
+): Promise<bigint> {
+  return await publicClient.getBalance({ address })
+}
+
 export async function sync(
   config: SyncConfig,
   data: Record<string, Record<string, string | string[]>>,
-) {
+): Promise<boolean | CostEstimation> {
   if (!config.walletClient.account) {
     throw Error('Wallet client account is required')
   }
@@ -306,44 +387,67 @@ export async function sync(
 
   const multivaultConfig = await multiCallIntuitionConfigs(config)
 
+  // Calculate costs for atoms
+  const assetsPerAtom =
+    BigInt(multivaultConfig.atom_cost) + BigInt(multivaultConfig.min_deposit)
+  const atomCost = assetsPerAtom * BigInt(nonExistingAtoms.length)
+
   // Create missing atoms
   if (nonExistingAtoms.length > 0) {
-    const assetsPerAtom =
-      BigInt(multivaultConfig.atom_cost) + BigInt(multivaultConfig.min_deposit)
     const atomChunks = chunkArray(nonExistingAtoms, batchSize)
 
-    log(
-      `⚛️  Creating ${nonExistingAtoms.length} missing atoms in ${atomChunks.length} batches...`,
-    )
-
-    for (let i = 0; i < atomChunks.length; i++) {
-      const chunk = atomChunks[i]
+    if (config.dryRun) {
       log(
-        `⚛️  Creating atoms batch ${i + 1}/${atomChunks.length} (${chunk.length} atoms)...`,
+        `🔍 [DRY RUN] Would create ${nonExistingAtoms.length} missing atoms in ${atomChunks.length} batches...`,
       )
-
-      const txHash = await createAtoms(config, {
-        args: [
-          chunk.map((data) => toHex(data)),
-          chunk.map(() => assetsPerAtom),
-        ],
-        value: assetsPerAtom * BigInt(chunk.length),
-      })
-
-      log(`⏳ Waiting for atom creation transaction: ${txHash}`)
-      await wait(txHash)
-      await new Promise((resolve) =>
-        setTimeout(resolve, DEFAULT_POST_TRANSACTION_DELAY),
+    } else {
+      log(
+        `⚛️  Creating ${nonExistingAtoms.length} missing atoms in ${atomChunks.length} batches...`,
       )
     }
 
-    log('✅ Atoms created successfully')
+    if (!config.dryRun) {
+      for (let i = 0; i < atomChunks.length; i++) {
+        const chunk = atomChunks[i]
+        log(
+          `⚛️  Creating atoms batch ${i + 1}/${atomChunks.length} (${chunk.length} atoms)...`,
+        )
+
+        const txHash = await createAtoms(config, {
+          args: [
+            chunk.map((data) => toHex(data)),
+            chunk.map(() => assetsPerAtom),
+          ],
+          value: assetsPerAtom * BigInt(chunk.length),
+        })
+
+        log(`⏳ Waiting for atom creation transaction: ${txHash}`)
+        await wait(txHash)
+        await new Promise((resolve) =>
+          setTimeout(resolve, DEFAULT_POST_TRANSACTION_DELAY),
+        )
+      }
+    }
+
+    if (config.dryRun) {
+      log('🔍 [DRY RUN] Atoms would be created successfully')
+    } else {
+      log('✅ Atoms created successfully')
+    }
   } else {
     log('✅ All atoms already exist')
   }
 
   log('🔄 Fetching updated atom IDs...')
-  const atomsWithIds = await findAtomIds(Array.from(atoms))
+  const atomsWithIds = config.dryRun
+    ? [
+        ...searchResult,
+        ...nonExistingAtoms.map((data) => ({
+          data,
+          term_id: keccak256(toHex(data)),
+        })),
+      ]
+    : await findAtomIds(Array.from(atoms))
 
   const triplesWithAtomIds: Array<Array<Hex>> = []
 
@@ -391,47 +495,72 @@ export async function sync(
     `✅ Found ${tripleIds.length} existing triples, ${missingTriples.length} need to be created`,
   )
 
+  // Calculate costs for triples
+  const assetsPerTriple =
+    BigInt(multivaultConfig.triple_cost) + BigInt(multivaultConfig.min_deposit)
+  const tripleCost = assetsPerTriple * BigInt(missingTriples.length)
+
   if (missingTriples.length > 0) {
-    const assetsPerTriple =
-      BigInt(multivaultConfig.triple_cost) +
-      BigInt(multivaultConfig.min_deposit)
     const tripleChunks = chunkArray(missingTriples, batchSize)
 
-    log(
-      `🔗 Creating ${missingTriples.length} missing triples in ${tripleChunks.length} batches...`,
-    )
-
-    for (let i = 0; i < tripleChunks.length; i++) {
-      const chunk = tripleChunks[i]
+    if (config.dryRun) {
       log(
-        `🔗 Creating triples batch ${i + 1}/${tripleChunks.length} (${chunk.length} triples)...`,
+        `🔍 [DRY RUN] Would create ${missingTriples.length} missing triples in ${tripleChunks.length} batches...`,
       )
-
-      const triple_tx_hash = await createTriples(config, {
-        args: [
-          chunk.map((t) => t[0]),
-          chunk.map((t) => t[1]),
-          chunk.map((t) => t[2]),
-          chunk.map((t) => assetsPerTriple),
-        ],
-        value: assetsPerTriple * BigInt(chunk.length),
-      })
-
-      log(`⏳ Waiting for triple creation transaction: ${triple_tx_hash}`)
-      await wait(triple_tx_hash)
+    } else {
+      log(
+        `🔗 Creating ${missingTriples.length} missing triples in ${tripleChunks.length} batches...`,
+      )
     }
 
-    log('✅ Triples created successfully')
+    if (!config.dryRun) {
+      for (let i = 0; i < tripleChunks.length; i++) {
+        const chunk = tripleChunks[i]
+        log(
+          `🔗 Creating triples batch ${i + 1}/${tripleChunks.length} (${chunk.length} triples)...`,
+        )
+
+        const triple_tx_hash = await createTriples(config, {
+          args: [
+            chunk.map((t) => t[0]),
+            chunk.map((t) => t[1]),
+            chunk.map((t) => t[2]),
+            chunk.map((t) => assetsPerTriple),
+          ],
+          value: assetsPerTriple * BigInt(chunk.length),
+        })
+
+        log(`⏳ Waiting for triple creation transaction: ${triple_tx_hash}`)
+        await wait(triple_tx_hash)
+      }
+    }
+
+    if (config.dryRun) {
+      log('🔍 [DRY RUN] Triples would be created successfully')
+    } else {
+      log('✅ Triples created successfully')
+    }
   } else {
     log('✅ All triples already exist')
   }
 
   // Get all existing triple IDs after creation
   log('🔄 Fetching updated triple IDs...')
-  const allTripleIds = await findTripleIds(
-    config.walletClient.account.address,
-    triplesWithAtomIds,
-  )
+  const allTripleIds = config.dryRun
+    ? [
+        ...tripleIds,
+        ...missingTriples.map((triple, i) => ({
+          term_id: `${i}`,
+          subject_id: triple[0],
+          predicate_id: triple[1],
+          object_id: triple[2],
+          positions: [],
+        })),
+      ]
+    : await findTripleIds(
+        config.walletClient.account.address,
+        triplesWithAtomIds,
+      )
 
   // Find triples where user has no position or zero shares
   log('💰 Checking positions and deposits...')
@@ -444,43 +573,100 @@ export async function sync(
 
   log(`💼 Found ${triplesNeedingDeposit.length} triples needing deposits`)
 
+  // Calculate deposit costs
+  const minDeposit = BigInt(multivaultConfig.min_deposit)
+  const depositCost = minDeposit * BigInt(triplesNeedingDeposit.length)
+
   // Perform batch deposit for triples without positions
   if (triplesNeedingDeposit.length > 0) {
-    const minDeposit = BigInt(multivaultConfig.min_deposit)
     const depositChunks = chunkArray(triplesNeedingDeposit, batchSize)
 
-    log(
-      `💰 Making batch deposit for ${triplesNeedingDeposit.length} triples in ${depositChunks.length} batches...`,
-    )
-
-    for (let i = 0; i < depositChunks.length; i++) {
-      const chunk = depositChunks[i]
+    if (config.dryRun) {
       log(
-        `💰 Processing deposit batch ${i + 1}/${depositChunks.length} (${chunk.length} triples)...`,
+        `🔍 [DRY RUN] Would make batch deposit for ${triplesNeedingDeposit.length} triples in ${depositChunks.length} batches...`,
       )
-
-      const termIds = chunk.map((triple) => triple.term_id as Hex)
-
-      const depositTxHash = await depositBatch(config, {
-        args: [
-          config.walletClient.account.address, // receiver
-          termIds, // termIds
-          termIds.map(() => 1n), // curveIds (all 1 for default curve)
-          termIds.map(() => minDeposit), // assets
-          termIds.map(() => 0n), // minShares (0 to accept any amount of shares)
-        ],
-        value: minDeposit * BigInt(chunk.length),
-      })
-
-      log(`⏳ Waiting for deposit transaction: ${depositTxHash}`)
-      await wait(depositTxHash)
+    } else {
+      log(
+        `💰 Making batch deposit for ${triplesNeedingDeposit.length} triples in ${depositChunks.length} batches...`,
+      )
     }
 
-    log('✅ Deposits completed successfully')
+    if (!config.dryRun) {
+      for (let i = 0; i < depositChunks.length; i++) {
+        const chunk = depositChunks[i]
+        log(
+          `💰 Processing deposit batch ${i + 1}/${depositChunks.length} (${chunk.length} triples)...`,
+        )
+
+        const termIds = chunk.map((triple) => triple.term_id as Hex)
+
+        const depositTxHash = await depositBatch(config, {
+          args: [
+            config.walletClient.account.address, // receiver
+            termIds, // termIds
+            termIds.map(() => 1n), // curveIds (all 1 for default curve)
+            termIds.map(() => minDeposit), // assets
+            termIds.map(() => 0n), // minShares (0 to accept any amount of shares)
+          ],
+          value: minDeposit * BigInt(chunk.length),
+        })
+
+        log(`⏳ Waiting for deposit transaction: ${depositTxHash}`)
+        await wait(depositTxHash)
+      }
+    }
+
+    if (config.dryRun) {
+      log('🔍 [DRY RUN] Deposits would be completed successfully')
+    } else {
+      log('✅ Deposits completed successfully')
+    }
   } else {
     log('✅ All triples already have positions')
   }
 
+  // Calculate final costs and user balance
+  const userBalance = await getUserBalance(
+    config.publicClient,
+    config.walletClient.account.address,
+  )
+  const totalCost = atomCost + tripleCost + depositCost
+  const hasSufficientBalance = userBalance >= totalCost
+
+  const costEstimation: CostEstimation = {
+    totalCost,
+    atomCost,
+    tripleCost,
+    depositCost,
+    atomCount: nonExistingAtoms.length,
+    tripleCount: missingTriples.length,
+    depositCount: triplesNeedingDeposit.length,
+    userBalance,
+    hasSufficientBalance,
+  }
+
+  const currencySymbol =
+    config.publicClient.chain?.nativeCurrency.symbol || 'ETH'
+
+  log('💰 Cost estimation:')
+  log(`  User balance: ${formatEther(userBalance)} ${currencySymbol}`)
+  log(
+    `  Atoms: ${nonExistingAtoms.length} (cost: ${formatEther(atomCost)} ${currencySymbol})`,
+  )
+  log(
+    `  Triples: ${missingTriples.length} (cost: ${formatEther(tripleCost)} ${currencySymbol})`,
+  )
+  log(
+    `  Deposits: ${triplesNeedingDeposit.length} (cost: ${formatEther(depositCost)} ${currencySymbol})`,
+  )
+  log(`  Total cost: ${formatEther(totalCost)} ${currencySymbol}`)
+  log(`  Sufficient balance: ${hasSufficientBalance ? '✅ Yes' : '❌ No'}`)
+
+  if (config.dryRun) {
+    log('🔍 [DRY RUN] Sync would complete successfully!')
+    return costEstimation
+  }
+
   log('🎉 Sync completed successfully!')
-  return true
+  return costEstimation
 }

@@ -159,7 +159,15 @@ query GetAtomDetails($id: String!, $userPositionAddress: String!) {
         }
       }
     }
-    tags: as_subject_triples_aggregate(where: { predicate_id: { _in: ["0x49487b1d5bf2734d497d6d9cfcd72cdfbaefb4d4f03ddc310398b24639173c9d"] } }) {
+    tags: as_subject_triples_aggregate(
+      where: {
+        predicate_id: {
+          _in: [
+            "0x49487b1d5bf2734d497d6d9cfcd72cdfbaefb4d4f03ddc310398b24639173c9d"
+          ]
+        }
+      }
+    ) {
       nodes {
         object {
           label
@@ -178,8 +186,8 @@ query GetAtomDetails($id: String!, $userPositionAddress: String!) {
   }
 }
 
-query FindAtomIds($where: atoms_bool_exp = {}) {
-  atoms(where: $where) {
+query FindAtomIds($where: atoms_bool_exp = {}, $limit: Int = 100) {
+  atoms(where: $where, limit: $limit) {
     term_id
     data
   }

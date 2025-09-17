@@ -135,8 +135,12 @@ query GetTriplesWithPositions(
   }
 }
 
-query FindTriples($where: triples_bool_exp = {}, $address: String!) {
-  triples(where: $where) {
+query FindTriples(
+  $where: triples_bool_exp = {}
+  $address: String!
+  $limit: Int = 100
+) {
+  triples(where: $where, limit: $limit) {
     term_id
     subject_id
     predicate_id

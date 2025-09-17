@@ -14686,6 +14686,7 @@ export type GetAtomDetailsQuery = {
 
 export type FindAtomIdsQueryVariables = Exact<{
   where?: InputMaybe<Atoms_Bool_Exp>
+  limit?: InputMaybe<Scalars['Int']['input']>
 }>
 
 export type FindAtomIdsQuery = {
@@ -21004,6 +21005,7 @@ export type GetTriplesWithPositionsQuery = {
 export type FindTriplesQueryVariables = Exact<{
   where?: InputMaybe<Triples_Bool_Exp>
   address: Scalars['String']['input']
+  limit?: InputMaybe<Scalars['Int']['input']>
 }>
 
 export type FindTriplesQuery = {
@@ -23448,8 +23450,8 @@ useGetAtomDetailsQuery.fetcher = (
   )
 
 export const FindAtomIdsDocument = `
-    query FindAtomIds($where: atoms_bool_exp = {}) {
-  atoms(where: $where) {
+    query FindAtomIds($where: atoms_bool_exp = {}, $limit: Int = 100) {
+  atoms(where: $where, limit: $limit) {
     term_id
     data
   }
@@ -28021,8 +28023,8 @@ useGetTriplesWithPositionsQuery.fetcher = (
   )
 
 export const FindTriplesDocument = `
-    query FindTriples($where: triples_bool_exp = {}, $address: String!) {
-  triples(where: $where) {
+    query FindTriples($where: triples_bool_exp = {}, $address: String!, $limit: Int = 100) {
+  triples(where: $where, limit: $limit) {
     term_id
     subject_id
     predicate_id
@@ -41442,6 +41444,15 @@ export const FindAtomIds = {
           },
           defaultValue: { kind: 'ObjectValue', fields: [] },
         },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'limit' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+          defaultValue: { kind: 'IntValue', value: '100' },
+        },
       ],
       selectionSet: {
         kind: 'SelectionSet',
@@ -41456,6 +41467,14 @@ export const FindAtomIds = {
                 value: {
                   kind: 'Variable',
                   name: { kind: 'Name', value: 'where' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'limit' },
                 },
               },
             ],
@@ -62278,6 +62297,15 @@ export const FindTriples = {
             },
           },
         },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'limit' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+          defaultValue: { kind: 'IntValue', value: '100' },
+        },
       ],
       selectionSet: {
         kind: 'SelectionSet',
@@ -62292,6 +62320,14 @@ export const FindTriples = {
                 value: {
                   kind: 'Variable',
                   name: { kind: 'Name', value: 'where' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'limit' },
                 },
               },
             ],

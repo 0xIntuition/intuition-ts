@@ -1,7 +1,7 @@
 import {intuitionDeployments, sync} from '@0xintuition/sdk'
 import {Args, Command, Flags} from '@oclif/core'
 import chalk from 'chalk'
-import {createWalletClient, http} from 'viem'
+import {createWalletClient, formatEther, http} from 'viem'
 import {privateKeyToAccount} from 'viem/accounts'
 
 import {getAccounts, getDefaultAccount, getDefaultNetwork} from '../../config.js'
@@ -20,6 +20,11 @@ export default class Sync extends Command {
     'batch-size': Flags.integer({
       default: 50,
       description: 'Number of items to process in each batch',
+      required: false,
+    }),
+    'dry-run': Flags.boolean({
+      default: false,
+      description: 'Perform a dry run without executing transactions',
       required: false,
     }),
     network: Flags.string({
@@ -85,6 +90,7 @@ export default class Sync extends Command {
       const config = {
         address: contractAddress,
         batchSize: flags['batch-size'],
+        dryRun: flags['dry-run'],
         logger: this.log.bind(this),
         publicClient,
         walletClient,
@@ -96,7 +102,19 @@ export default class Sync extends Command {
 
       this.log(chalk.gray(`📄 Data loaded: ${Object.keys(data).length} subjects`))
 
-      await sync(config, data)
+      if (flags['dry-run']) {
+        this.log(chalk.yellow('🔍 Running in dry-run mode - no transactions will be executed'))
+      }
+
+      const result = await sync(config, data)
+
+      if (flags['dry-run'] && typeof result === 'object') {
+        const currencySymbol = publicClient.chain?.nativeCurrency.symbol || 'ETH'
+        this.log(chalk.cyan('\n📊 Dry Run Summary:'))
+        this.log(`  Total estimated cost: ${formatEther(result.totalCost)} ${currencySymbol}`)
+        this.log(`  Current balance: ${formatEther(result.userBalance)} ${currencySymbol}`)
+        this.log(`  Balance sufficient: ${result.hasSufficientBalance ? '✅' : '❌'}`)
+      }
     } catch (error: unknown) {
       this.error(error as Error)
     }
