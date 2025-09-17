@@ -31,10 +31,10 @@ The core smart contract has been upgraded from `EthMultiVault` to `MultiVault`, 
 
 | Package                 | Previous Version | New Version     |
 | ----------------------- | ---------------- | --------------- |
-| `@0xintuition/protocol` | `1.0.0-alpha.1`  | `2.0.0-alpha.0` |
-| `@0xintuition/sdk`      | `1.0.0-alpha.3`  | `2.0.0-alpha.0` |
-| `@0xintuition/graphql`  | `1.0.0-alpha.3`  | `2.0.0-alpha.0` |
-| `@0xintuition/cli`      | `0.0.2`          | `1.0.0-alpha.1` |
+| `@0xintuition/protocol` | `1.0.0-alpha.1`  | `2.0.0-alpha.2` |
+| `@0xintuition/sdk`      | `1.0.0-alpha.3`  | `2.0.0-alpha.2` |
+| `@0xintuition/graphql`  | `1.0.0-alpha.3`  | `2.0.0-alpha.2` |
+| `@0xintuition/cli`      | `0.0.2`          | `2.0.0-alpha.2` |
 
 ## 1. Contract Migration Impact
 
