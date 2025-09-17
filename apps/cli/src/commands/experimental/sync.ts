@@ -17,6 +17,11 @@ export default class Sync extends Command {
   }
   static override description = 'Sync data to intuition'
   static override flags = {
+    'batch-size': Flags.integer({
+      default: 50,
+      description: 'Number of items to process in each batch',
+      required: false,
+    }),
     network: Flags.string({
       description: 'Target network (intuition, intuition-testnet)',
       required: false,
@@ -79,6 +84,7 @@ export default class Sync extends Command {
 
       const config = {
         address: contractAddress,
+        batchSize: flags['batch-size'],
         logger: this.log.bind(this),
         publicClient,
         walletClient,

@@ -206,6 +206,7 @@ interface SyncConfig {
   publicClient: PublicClient
   walletClient: WalletClient
   logger?: (message: string) => void
+  batchSize?: number
 }
 
 function findAtomByData(
@@ -233,6 +234,14 @@ function validateHex(value: string): value is Hex {
   return /^0x[0-9a-fA-F]+$/.test(value)
 }
 
+function chunkArray<T>(array: T[], size: number): T[][] {
+  const chunks: T[][] = []
+  for (let i = 0; i < array.length; i += size) {
+    chunks.push(array.slice(i, i + size))
+  }
+  return chunks
+}
+
 export async function sync(
   config: SyncConfig,
   data: Record<string, Record<string, string | string[]>>,
@@ -242,6 +251,7 @@ export async function sync(
   }
 
   const log = config.logger || (() => {})
+  const batchSize = config.batchSize || 50
 
   const atoms = new Set<string>()
   const triples = new Map<string, Array<string>>()
@@ -298,21 +308,35 @@ export async function sync(
 
   // Create missing atoms
   if (nonExistingAtoms.length > 0) {
-    log(`⚛️  Creating ${nonExistingAtoms.length} missing atoms...`)
     const assetsPerAtom =
       BigInt(multivaultConfig.atom_cost) + BigInt(multivaultConfig.min_deposit)
-    const txHash = await createAtoms(config, {
-      args: [
-        nonExistingAtoms.map((data) => toHex(data)),
-        nonExistingAtoms.map(() => assetsPerAtom),
-      ],
-      value: assetsPerAtom * BigInt(nonExistingAtoms.length),
-    })
-    log(`⏳ Waiting for atom creation transaction: ${txHash}`)
-    await wait(txHash)
-    await new Promise((resolve) =>
-      setTimeout(resolve, DEFAULT_POST_TRANSACTION_DELAY),
+    const atomChunks = chunkArray(nonExistingAtoms, batchSize)
+
+    log(
+      `⚛️  Creating ${nonExistingAtoms.length} missing atoms in ${atomChunks.length} batches...`,
     )
+
+    for (let i = 0; i < atomChunks.length; i++) {
+      const chunk = atomChunks[i]
+      log(
+        `⚛️  Creating atoms batch ${i + 1}/${atomChunks.length} (${chunk.length} atoms)...`,
+      )
+
+      const txHash = await createAtoms(config, {
+        args: [
+          chunk.map((data) => toHex(data)),
+          chunk.map(() => assetsPerAtom),
+        ],
+        value: assetsPerAtom * BigInt(chunk.length),
+      })
+
+      log(`⏳ Waiting for atom creation transaction: ${txHash}`)
+      await wait(txHash)
+      await new Promise((resolve) =>
+        setTimeout(resolve, DEFAULT_POST_TRANSACTION_DELAY),
+      )
+    }
+
     log('✅ Atoms created successfully')
   } else {
     log('✅ All atoms already exist')
@@ -368,23 +392,35 @@ export async function sync(
   )
 
   if (missingTriples.length > 0) {
-    log(`🔗 Creating ${missingTriples.length} missing triples...`)
     const assetsPerTriple =
       BigInt(multivaultConfig.triple_cost) +
       BigInt(multivaultConfig.min_deposit)
+    const tripleChunks = chunkArray(missingTriples, batchSize)
 
-    const triple_tx_hash = await createTriples(config, {
-      args: [
-        missingTriples.map((t) => t[0]),
-        missingTriples.map((t) => t[1]),
-        missingTriples.map((t) => t[2]),
-        missingTriples.map((t) => assetsPerTriple),
-      ],
-      value: assetsPerTriple * BigInt(missingTriples.length),
-    })
+    log(
+      `🔗 Creating ${missingTriples.length} missing triples in ${tripleChunks.length} batches...`,
+    )
 
-    log(`⏳ Waiting for triple creation transaction: ${triple_tx_hash}`)
-    await wait(triple_tx_hash)
+    for (let i = 0; i < tripleChunks.length; i++) {
+      const chunk = tripleChunks[i]
+      log(
+        `🔗 Creating triples batch ${i + 1}/${tripleChunks.length} (${chunk.length} triples)...`,
+      )
+
+      const triple_tx_hash = await createTriples(config, {
+        args: [
+          chunk.map((t) => t[0]),
+          chunk.map((t) => t[1]),
+          chunk.map((t) => t[2]),
+          chunk.map((t) => assetsPerTriple),
+        ],
+        value: assetsPerTriple * BigInt(chunk.length),
+      })
+
+      log(`⏳ Waiting for triple creation transaction: ${triple_tx_hash}`)
+      await wait(triple_tx_hash)
+    }
+
     log('✅ Triples created successfully')
   } else {
     log('✅ All triples already exist')
@@ -410,25 +446,36 @@ export async function sync(
 
   // Perform batch deposit for triples without positions
   if (triplesNeedingDeposit.length > 0) {
-    log(
-      `💰 Making batch deposit for ${triplesNeedingDeposit.length} triples...`,
-    )
     const minDeposit = BigInt(multivaultConfig.min_deposit)
-    const termIds = triplesNeedingDeposit.map((triple) => triple.term_id as Hex)
+    const depositChunks = chunkArray(triplesNeedingDeposit, batchSize)
 
-    const depositTxHash = await depositBatch(config, {
-      args: [
-        config.walletClient.account.address, // receiver
-        termIds, // termIds
-        termIds.map(() => 1n), // curveIds (all 1 for default curve)
-        termIds.map(() => minDeposit), // assets
-        termIds.map(() => 0n), // minShares (0 to accept any amount of shares)
-      ],
-      value: minDeposit * BigInt(triplesNeedingDeposit.length),
-    })
+    log(
+      `💰 Making batch deposit for ${triplesNeedingDeposit.length} triples in ${depositChunks.length} batches...`,
+    )
 
-    log(`⏳ Waiting for deposit transaction: ${depositTxHash}`)
-    await wait(depositTxHash)
+    for (let i = 0; i < depositChunks.length; i++) {
+      const chunk = depositChunks[i]
+      log(
+        `💰 Processing deposit batch ${i + 1}/${depositChunks.length} (${chunk.length} triples)...`,
+      )
+
+      const termIds = chunk.map((triple) => triple.term_id as Hex)
+
+      const depositTxHash = await depositBatch(config, {
+        args: [
+          config.walletClient.account.address, // receiver
+          termIds, // termIds
+          termIds.map(() => 1n), // curveIds (all 1 for default curve)
+          termIds.map(() => minDeposit), // assets
+          termIds.map(() => 0n), // minShares (0 to accept any amount of shares)
+        ],
+        value: minDeposit * BigInt(chunk.length),
+      })
+
+      log(`⏳ Waiting for deposit transaction: ${depositTxHash}`)
+      await wait(depositTxHash)
+    }
+
     log('✅ Deposits completed successfully')
   } else {
     log('✅ All triples already have positions')
