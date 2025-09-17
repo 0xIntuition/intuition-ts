@@ -81,19 +81,24 @@ export default class Search extends Command {
       this.log()
 
       const results = await semanticSearch(query, {limit: 3})
-      for (const i of results.search_term) {
-        const name = i.atom?.value?.json_object?.name || i.atom?.value?.text_object?.data
-        this.log('•', chalk.bold(name))
-        if (i.atom?.value?.json_object?.description !== null) {
-          this.log(' ', i.atom?.value?.json_object?.description)
-        }
+      if (results?.search_term) {
+        for (const i of results.search_term) {
+          const name = i.atom?.value?.json_object?.name || i.atom?.value?.text_object?.data
+          this.log('•', chalk.bold(name))
+          if (i.atom?.value?.json_object?.description !== null) {
+            this.log(' ', i.atom?.value?.json_object?.description)
+          }
 
-        if (i.atom?.value?.json_object?.url !== null) {
-          this.log(' ', i.atom?.value?.json_object?.url)
-        }
+          if (i.atom?.value?.json_object?.url !== null) {
+            this.log(' ', i.atom?.value?.json_object?.url)
+          }
 
-        this.log(' ', chalk.gray('https://portal.intuition.systems/explore/atom/' + i.atom.term_id))
-        this.log()
+          if (i.atom?.term_id) {
+            this.log(' ', chalk.gray('https://portal.intuition.systems/explore/atom/' + i.atom.term_id))
+          }
+
+          this.log()
+        }
       }
     }
   }

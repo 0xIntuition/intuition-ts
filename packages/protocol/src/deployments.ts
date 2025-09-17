@@ -2,7 +2,7 @@ import { defineChain, type Address } from 'viem'
 
 const intuitionTestnet = defineChain({
   id: 13579,
-  name: 'Intuition testnet',
+  name: 'intuition-testnet',
   nativeCurrency: {
     decimals: 18,
     name: 'Test Trust',
@@ -16,7 +16,7 @@ const intuitionTestnet = defineChain({
   },
   blockExplorers: {
     default: {
-      name: 'Intuition Explorer',
+      name: 'Intuition Testnet Explorer',
       url: 'https://testnet.explorer.intuition.systems',
     },
   },

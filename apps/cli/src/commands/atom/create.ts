@@ -23,7 +23,7 @@ export default class AtomCreate extends Command {
       required: false,
     }),
     network: Flags.string({
-      description: 'Target network (base, base-sepolia)',
+      description: 'Target network (intuition, intuition-testnet)',
       required: false,
     }),
   }
@@ -32,11 +32,11 @@ export default class AtomCreate extends Command {
     const {flags} = await this.parse(AtomCreate)
     try {
       // Determine network
-      const networkName = flags.network || getDefaultNetwork() || 'base'
+      const networkName = flags.network || getDefaultNetwork() || 'intuition-testnet'
       const network = getNetworkByName(networkName)
       if (!network) {
         this.log(chalk.red(`❌ Unsupported network: ${networkName}`))
-        this.log(chalk.gray('Supported: base, base-sepolia'))
+        this.log(chalk.gray('Supported: intuition, intuition-testnet'))
         return
       }
 

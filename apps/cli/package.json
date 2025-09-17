@@ -71,6 +71,9 @@
       },
       "config": {
         "description": "Manage configurations."
+      },
+      "experimental": {
+        "description": "Experimental features"
       }
     }
   },
