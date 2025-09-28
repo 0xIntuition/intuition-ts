@@ -1,24 +1,52 @@
+import {globalSearch, semanticSearch} from '@0xintuition/sdk'
 import chalk from 'chalk'
 import {Box, Text, useApp, useInput} from 'ink'
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 
 import {Breadcrumbs} from './breadcrumbs.js'
 import {DetailView} from './detail-view.js'
 import {SearchResults} from './search-results.js'
 import {BreadcrumbItem, NavigationState, SearchResultItem} from './types.js'
+import {parseSearchResults} from './utils.js'
 
 interface SearchAppProps {
-  initialResults: SearchResultItem[]
   searchQuery: string
 }
 
-export const SearchApp: React.FC<SearchAppProps> = ({initialResults, searchQuery}) => {
+export const SearchApp: React.FC<SearchAppProps> = ({searchQuery}) => {
   const {exit} = useApp()
-  const [results] = useState<SearchResultItem[]>(initialResults)
+  const [results, setResults] = useState<SearchResultItem[]>([])
   const [selectedIndex, setSelectedIndex] = useState(0)
   const [navigationStack, setNavigationStack] = useState<NavigationState[]>([{type: 'search'}])
   const [currentView, setCurrentView] = useState<NavigationState>({type: 'search'})
   const [selectedItem, setSelectedItem] = useState<null | SearchResultItem>(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const [hasError, setHasError] = useState(false)
+
+  useEffect(() => {
+    const performSearch = async () => {
+      try {
+        const [globalResults, semanticResults] = await Promise.all([
+          globalSearch(`%${searchQuery}%`, {
+            accountsLimit: 10,
+            atomsLimit: 10,
+            collectionsLimit: 10,
+            triplesLimit: 10,
+          }),
+          semanticSearch(searchQuery, {limit: 5}),
+        ])
+
+        const searchResults = parseSearchResults(globalResults || {}, semanticResults || {})
+        setResults(searchResults)
+        setIsLoading(false)
+      } catch {
+        setHasError(true)
+        setIsLoading(false)
+      }
+    }
+
+    performSearch()
+  }, [searchQuery])
 
   const breadcrumbs: BreadcrumbItem[] = navigationStack.map((state) => {
     if (state.type === 'search') {
@@ -85,10 +113,24 @@ export const SearchApp: React.FC<SearchAppProps> = ({initialResults, searchQuery
   return (
     <Box flexDirection="column">
       <Box borderColor="cyan" borderStyle="round" marginBottom={1} paddingX={1}>
-        <Text bold>🔎 Intuition Search - {chalk.cyan(searchQuery)}</Text>
+        <Text bold>
+          {isLoading ? `🔎 Searching for "${searchQuery}"...` : `🔎 Intuition Search - ${chalk.cyan(searchQuery)}`}
+        </Text>
       </Box>
 
-      {currentView.type === 'search' && results.length > 0 && (
+      {currentView.type === 'search' && isLoading && (
+        <Box paddingX={2} paddingY={1}>
+          <Text color="cyan">Loading search results...</Text>
+        </Box>
+      )}
+
+      {currentView.type === 'search' && !isLoading && hasError && (
+        <Box paddingX={2} paddingY={1}>
+          <Text color="red">Error occurred while searching. Please try again.</Text>
+        </Box>
+      )}
+
+      {currentView.type === 'search' && !isLoading && !hasError && results.length > 0 && (
         <>
           <SearchResults items={results} maxDisplay={15} selectedIndex={selectedIndex} />
           <Box marginTop={1} paddingX={1}>
@@ -97,7 +139,7 @@ export const SearchApp: React.FC<SearchAppProps> = ({initialResults, searchQuery
         </>
       )}
 
-      {currentView.type === 'search' && results.length === 0 && (
+      {currentView.type === 'search' && !isLoading && !hasError && results.length === 0 && (
         <Box paddingX={2} paddingY={1}>
           <Text color="yellow">No results found for "{searchQuery}"</Text>
         </Box>

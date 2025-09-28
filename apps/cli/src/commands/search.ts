@@ -5,7 +5,6 @@ import {render} from 'ink'
 import React from 'react'
 
 import {SearchApp} from '../components/search/search-app.js'
-import {parseSearchResults} from '../components/search/utils.js'
 
 export default class Search extends Command {
   static override args = {
@@ -38,36 +37,25 @@ export default class Search extends Command {
     const {query} = args
     const useInteractive = flags.interactive && !flags.classic
 
-    this.log(chalk.green(`🔎 Searching for "${query}"...`))
-    this.log()
-
-    const [globalResults, semanticResults] = await Promise.all([
-      globalSearch(`%${query}%`, {
-        accountsLimit: 10,
-        atomsLimit: 10,
-        collectionsLimit: 10,
-        triplesLimit: 10,
-      }),
-      semanticSearch(query, {limit: 5}),
-    ])
-
     if (useInteractive) {
-      const results = parseSearchResults(globalResults || {}, semanticResults || {})
-
-      if (results.length === 0) {
-        this.log(chalk.yellow(`No results found for "${query}"`))
-        return
-      }
-
       const {waitUntilExit} = render(
         React.createElement(SearchApp, {
-          initialResults: results,
           searchQuery: query,
         }),
       )
 
       await waitUntilExit()
     } else {
+      const [globalResults, semanticResults] = await Promise.all([
+        globalSearch(`%${query}%`, {
+          accountsLimit: 10,
+          atomsLimit: 10,
+          collectionsLimit: 10,
+          triplesLimit: 10,
+        }),
+        semanticSearch(query, {limit: 5}),
+      ])
+
       this.renderClassicOutput(globalResults || {}, semanticResults || {})
     }
   }
