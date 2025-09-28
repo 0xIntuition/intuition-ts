@@ -6,7 +6,9 @@
     "outDir": "dist",
     "rootDir": "src",
     "strict": true,
-    "target": "ESNext"
+    "target": "ESNext",
+    "jsx": "react",
+    "esModuleInterop": true
   },
   "include": ["./src/**/*"],
   "ts-node": {
