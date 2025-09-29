@@ -89,9 +89,15 @@ export const SearchApp: React.FC<SearchAppProps> = ({searchQuery}) => {
       } else if (key.escape) {
         if (navigationStack.length > 1) {
           const newStack = navigationStack.slice(0, -1)
+          const newCurrentView = newStack.at(-1)!
           setNavigationStack(newStack)
-          setCurrentView(newStack.at(-1)!)
+          setCurrentView(newCurrentView)
           setSelectedItem(null)
+
+          // Reset selected index when going back to search view
+          if (newCurrentView.type === 'search') {
+            setSelectedIndex(0)
+          }
         } else {
           exit()
         }
@@ -100,9 +106,15 @@ export const SearchApp: React.FC<SearchAppProps> = ({searchQuery}) => {
       if (key.escape || input === 'b') {
         if (navigationStack.length > 1) {
           const newStack = navigationStack.slice(0, -1)
+          const newCurrentView = newStack.at(-1)!
           setNavigationStack(newStack)
-          setCurrentView(newStack.at(-1)!)
+          setCurrentView(newCurrentView)
           setSelectedItem(null)
+
+          // Reset selected index when going back to search view
+          if (newCurrentView.type === 'search') {
+            setSelectedIndex(0)
+          }
         }
       } else if (input === 'q') {
         exit()
@@ -111,7 +123,7 @@ export const SearchApp: React.FC<SearchAppProps> = ({searchQuery}) => {
   })
 
   return (
-    <Box flexDirection="column">
+    <Box flexDirection="column" key={`${currentView.type}-${currentView.item?.id || 'root'}`}>
       <Box borderColor="cyan" borderStyle="round" marginBottom={1} paddingX={1}>
         <Text bold>
           {isLoading ? `🔎 Searching for "${searchQuery}"...` : `🔎 Intuition Search - ${chalk.cyan(searchQuery)}`}
