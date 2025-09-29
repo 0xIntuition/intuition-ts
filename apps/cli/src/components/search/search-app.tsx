@@ -123,12 +123,8 @@ export const SearchApp: React.FC<SearchAppProps> = ({searchQuery}) => {
   })
 
   return (
-    <Box flexDirection="column" key={`${currentView.type}-${currentView.item?.id || 'root'}`}>
-      <Box borderColor="cyan" borderStyle="round" marginBottom={1} paddingX={1}>
-        <Text bold>
-          {isLoading ? `🔎 Searching for "${searchQuery}"...` : `🔎 Intuition Search - ${chalk.cyan(searchQuery)}`}
-        </Text>
-      </Box>
+    <Box flexDirection="column">
+      <Breadcrumbs items={breadcrumbs} />
 
       {currentView.type === 'search' && isLoading && (
         <Box paddingX={2} paddingY={1}>
@@ -177,10 +173,6 @@ export const SearchApp: React.FC<SearchAppProps> = ({searchQuery}) => {
           </Box>
         </>
       )}
-
-      <Box marginTop={1}>
-        <Breadcrumbs items={breadcrumbs} />
-      </Box>
     </Box>
   )
 }
