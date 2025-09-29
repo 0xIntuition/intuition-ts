@@ -161,9 +161,9 @@ const TripleDetails: React.FC<{details: any}> = ({details}) => (
 // Component for rendering related items list
 const RelatedItems: React.FC<{
   items: SearchResultItem[]
-  selectedIndex: number
   maxDisplay?: number
-}> = ({items, selectedIndex, maxDisplay = 15}) => {
+  selectedIndex: number
+}> = ({items, maxDisplay = 15, selectedIndex}) => {
   // Calculate visible window based on selected index
   const start = Math.max(0, Math.min(selectedIndex - Math.floor(maxDisplay / 2), items.length - maxDisplay))
   const end = Math.min(items.length, start + maxDisplay)
