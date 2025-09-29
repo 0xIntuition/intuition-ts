@@ -162,22 +162,35 @@ const TripleDetails: React.FC<{details: any}> = ({details}) => (
 const RelatedItems: React.FC<{
   items: SearchResultItem[]
   selectedIndex: number
-}> = ({items, selectedIndex}) => (
-  <Box flexDirection="column" marginTop={1}>
-    <Text bold color="magenta">
-      Related Items:
-    </Text>
-    {items.map((relItem, index) => (
-      <Text key={`${relItem.type}-${relItem.id}`}>
-        {index === selectedIndex ? chalk.cyan('▶ ') : '  '}
-        {getItemIcon(relItem.type)} {relItem.label}
+  maxDisplay?: number
+}> = ({items, selectedIndex, maxDisplay = 15}) => {
+  // Calculate visible window based on selected index
+  const start = Math.max(0, Math.min(selectedIndex - Math.floor(maxDisplay / 2), items.length - maxDisplay))
+  const end = Math.min(items.length, start + maxDisplay)
+  const visibleItems = items.slice(start, end)
+
+  return (
+    <Box flexDirection="column" marginTop={1}>
+      <Text bold color="magenta">
+        Related Items:
       </Text>
-    ))}
-    <Box marginTop={1}>
-      <Text color="gray">↑/↓/j/k: Select | Enter: Navigate to selected item</Text>
+      {start > 0 && <Text color="gray">↑ {start} more items above...</Text>}
+      {visibleItems.map((relItem, index) => {
+        const actualIndex = start + index
+        return (
+          <Text key={`${relItem.type}-${relItem.id}`}>
+            {actualIndex === selectedIndex ? chalk.cyan('▶ ') : '  '}
+            {getItemIcon(relItem.type)} {relItem.label}
+          </Text>
+        )
+      })}
+      {end < items.length && <Text color="gray">↓ {items.length - end} more items below...</Text>}
+      <Box marginTop={1}>
+        <Text color="gray">↑/↓/j/k: Select | Enter: Navigate to selected item</Text>
+      </Box>
     </Box>
-  </Box>
-)
+  )
+}
 
 interface DetailViewProps {
   item: SearchResultItem
