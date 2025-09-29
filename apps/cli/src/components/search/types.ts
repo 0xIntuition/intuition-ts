@@ -19,6 +19,7 @@ export interface SearchResultsGroup {
 export interface NavigationState {
   item?: SearchResultItem
   parentItem?: SearchResultItem
+  selectedIndex?: number // For search view: tracks selected result, for detail view: tracks selected related item
   type: 'detail' | 'search'
 }
 

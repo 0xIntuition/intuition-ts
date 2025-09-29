@@ -229,23 +229,31 @@ const RelatedItems: React.FC<{
 interface DetailViewProps {
   item: SearchResultItem
   onNavigate?: (_item: SearchResultItem) => void
+  onUpdateSelectedIndex?: (_index: number) => void
+  selectedRelatedIndex?: number
 }
 
-export const DetailView: React.FC<DetailViewProps> = ({item, onNavigate}) => {
+export const DetailView: React.FC<DetailViewProps> = ({
+  item,
+  onNavigate,
+  onUpdateSelectedIndex,
+  selectedRelatedIndex = 0,
+}) => {
   const [loading, setLoading] = useState(true)
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [details, setDetails] = useState<any>(null)
   const [relatedItems, setRelatedItems] = useState<SearchResultItem[]>([])
-  const [selectedRelatedIndex, setSelectedRelatedIndex] = useState(0)
 
   // Handle keyboard input for related items navigation
   useInput((input, key) => {
     if (relatedItems.length === 0) return
 
     if (key.upArrow || input === 'k') {
-      setSelectedRelatedIndex((prev) => Math.max(0, prev - 1))
+      const newIndex = Math.max(0, selectedRelatedIndex - 1)
+      onUpdateSelectedIndex?.(newIndex)
     } else if (key.downArrow || input === 'j') {
-      setSelectedRelatedIndex((prev) => Math.min(relatedItems.length - 1, prev + 1))
+      const newIndex = Math.min(relatedItems.length - 1, selectedRelatedIndex + 1)
+      onUpdateSelectedIndex?.(newIndex)
     } else if (key.return && onNavigate) {
       const selectedItem = relatedItems[selectedRelatedIndex]
       if (selectedItem) {
@@ -263,7 +271,6 @@ export const DetailView: React.FC<DetailViewProps> = ({item, onNavigate}) => {
         const {data, related} = await fetchItemDetails(item)
         setDetails(data)
         setRelatedItems(related)
-        setSelectedRelatedIndex(0) // Reset selection when related items change
       } catch (error) {
         console.error('Error fetching details:', error)
       } finally {

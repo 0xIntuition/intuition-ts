@@ -16,12 +16,14 @@ interface SearchAppProps {
 export const SearchApp: React.FC<SearchAppProps> = ({searchQuery}) => {
   const {exit} = useApp()
   const [results, setResults] = useState<SearchResultItem[]>([])
-  const [selectedIndex, setSelectedIndex] = useState(0)
-  const [navigationStack, setNavigationStack] = useState<NavigationState[]>([{type: 'search'}])
-  const [currentView, setCurrentView] = useState<NavigationState>({type: 'search'})
+  const [navigationStack, setNavigationStack] = useState<NavigationState[]>([{selectedIndex: 0, type: 'search'}])
+  const [currentView, setCurrentView] = useState<NavigationState>({selectedIndex: 0, type: 'search'})
   const [selectedItem, setSelectedItem] = useState<null | SearchResultItem>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [hasError, setHasError] = useState(false)
+
+  // Derived state from currentView
+  const selectedIndex = currentView.selectedIndex ?? 0
 
   useEffect(() => {
     const performSearch = async () => {
@@ -71,9 +73,21 @@ export const SearchApp: React.FC<SearchAppProps> = ({searchQuery}) => {
 
     if (currentView.type === 'search') {
       if (key.upArrow || input === 'k') {
-        setSelectedIndex((prev) => Math.max(0, prev - 1))
+        const newIndex = Math.max(0, selectedIndex - 1)
+        const updatedView = {...currentView, selectedIndex: newIndex}
+        setCurrentView(updatedView)
+        // Update the current view in the stack as well
+        const updatedStack = [...navigationStack]
+        updatedStack[updatedStack.length - 1] = updatedView
+        setNavigationStack(updatedStack)
       } else if (key.downArrow || input === 'j') {
-        setSelectedIndex((prev) => Math.min(results.length - 1, prev + 1))
+        const newIndex = Math.min(results.length - 1, selectedIndex + 1)
+        const updatedView = {...currentView, selectedIndex: newIndex}
+        setCurrentView(updatedView)
+        // Update the current view in the stack as well
+        const updatedStack = [...navigationStack]
+        updatedStack[updatedStack.length - 1] = updatedView
+        setNavigationStack(updatedStack)
       } else if (key.return) {
         const item = results[selectedIndex]
         if (item) {
@@ -81,6 +95,7 @@ export const SearchApp: React.FC<SearchAppProps> = ({searchQuery}) => {
           const newState: NavigationState = {
             item,
             parentItem: currentView.item,
+            selectedIndex: 0, // Start with first related item selected
             type: 'detail',
           }
           setNavigationStack([...navigationStack, newState])
@@ -92,12 +107,7 @@ export const SearchApp: React.FC<SearchAppProps> = ({searchQuery}) => {
           const newCurrentView = newStack.at(-1)!
           setNavigationStack(newStack)
           setCurrentView(newCurrentView)
-          setSelectedItem(null)
-
-          // Reset selected index when going back to search view
-          if (newCurrentView.type === 'search') {
-            setSelectedIndex(0)
-          }
+          setSelectedItem(newCurrentView.item || null)
         } else {
           exit()
         }
@@ -109,12 +119,7 @@ export const SearchApp: React.FC<SearchAppProps> = ({searchQuery}) => {
           const newCurrentView = newStack.at(-1)!
           setNavigationStack(newStack)
           setCurrentView(newCurrentView)
-          setSelectedItem(null)
-
-          // Reset selected index when going back to search view
-          if (newCurrentView.type === 'search') {
-            setSelectedIndex(0)
-          }
+          setSelectedItem(newCurrentView.item || null)
         }
       } else if (input === 'q') {
         exit()
@@ -160,11 +165,21 @@ export const SearchApp: React.FC<SearchAppProps> = ({searchQuery}) => {
               const newState: NavigationState = {
                 item,
                 parentItem: currentView.item,
+                selectedIndex: 0, // Start with first related item selected
                 type: 'detail',
               }
               setNavigationStack([...navigationStack, newState])
               setCurrentView(newState)
             }}
+            onUpdateSelectedIndex={(index) => {
+              const updatedView = {...currentView, selectedIndex: index}
+              setCurrentView(updatedView)
+              // Update the current view in the stack as well
+              const updatedStack = [...navigationStack]
+              updatedStack[updatedStack.length - 1] = updatedView
+              setNavigationStack(updatedStack)
+            }}
+            selectedRelatedIndex={selectedIndex}
           />
           <Box marginTop={1} paddingX={1}>
             <Text color="gray">{chalk.bold('Controls:')} Esc/b: Back | q: Exit</Text>
