@@ -1,16 +1,48 @@
-import {Box, Text} from 'ink'
-import React from 'react'
+import {Box, Text, useStdout} from 'ink'
+import React, {useEffect, useState} from 'react'
 
 import {SearchResultItem} from './types.js'
 import {formatItem, getItemColor} from './utils.js'
 
 interface SearchResultsProps {
   items: SearchResultItem[]
-  maxDisplay?: number
   selectedIndex: number
 }
 
-export const SearchResults: React.FC<SearchResultsProps> = ({items, maxDisplay = 15, selectedIndex}) => {
+export const SearchResults: React.FC<SearchResultsProps> = ({items, selectedIndex}) => {
+  const {stdout} = useStdout()
+  const [maxDisplay, setMaxDisplay] = useState(15)
+
+  useEffect(() => {
+    const calculateMaxDisplay = () => {
+      if (!stdout) return
+
+      // Reserve lines for:
+      // - Breadcrumbs with border: 3 lines
+      // - Controls footer: 1 line
+      // - Padding/margins: 6 lines
+      const reservedLines = 10
+      const availableHeight = Math.max(5, stdout.rows - reservedLines)
+      setMaxDisplay(availableHeight)
+    }
+
+    calculateMaxDisplay()
+
+    // Listen for terminal resize events
+    const handleResize = () => {
+      calculateMaxDisplay()
+    }
+
+    if (stdout) {
+      stdout.on('resize', handleResize)
+    }
+
+    return () => {
+      if (stdout) {
+        stdout.off('resize', handleResize)
+      }
+    }
+  }, [stdout])
   if (items.length === 0) {
     return (
       <Box paddingX={1} paddingY={1}>

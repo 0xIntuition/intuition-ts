@@ -1,6 +1,6 @@
 import {getAccountDetails, getAtomDetails, getTripleDetails} from '@0xintuition/sdk'
 import chalk from 'chalk'
-import {Box, Text, useInput} from 'ink'
+import {Box, Text, useInput, useStdout} from 'ink'
 import Spinner from 'ink-spinner'
 import React, {useEffect, useState} from 'react'
 
@@ -161,9 +161,43 @@ const TripleDetails: React.FC<{details: any}> = ({details}) => (
 // Component for rendering related items list
 const RelatedItems: React.FC<{
   items: SearchResultItem[]
-  maxDisplay?: number
   selectedIndex: number
-}> = ({items, maxDisplay = 15, selectedIndex}) => {
+}> = ({items, selectedIndex}) => {
+  const {stdout} = useStdout()
+  const [maxDisplay, setMaxDisplay] = useState(15)
+
+  useEffect(() => {
+    const calculateMaxDisplay = () => {
+      if (!stdout) return
+
+      // Reserve lines for:
+      // - Main item details: ~8 lines
+      // - Related items header and controls: 3 lines
+      // - Breadcrumbs and controls footer: 3 lines
+      // - Padding/margins: 2 lines
+      const reservedLines = 16
+      const availableHeight = Math.max(5, stdout.rows - reservedLines)
+      setMaxDisplay(availableHeight)
+    }
+
+    calculateMaxDisplay()
+
+    // Listen for terminal resize events
+    const handleResize = () => {
+      calculateMaxDisplay()
+    }
+
+    if (stdout) {
+      stdout.on('resize', handleResize)
+    }
+
+    return () => {
+      if (stdout) {
+        stdout.off('resize', handleResize)
+      }
+    }
+  }, [stdout])
+
   // Calculate visible window based on selected index
   const start = Math.max(0, Math.min(selectedIndex - Math.floor(maxDisplay / 2), items.length - maxDisplay))
   const end = Math.min(items.length, start + maxDisplay)
@@ -260,7 +294,7 @@ export const DetailView: React.FC<DetailViewProps> = ({item, onNavigate}) => {
 
   return (
     <Box flexDirection="column" paddingX={1}>
-      <Box borderColor="cyan" borderStyle="double" marginBottom={1} paddingX={1}>
+      <Box borderBottom={true} borderColor="cyan" borderStyle="single" borderTop={true} marginBottom={1} paddingX={1}>
         <Text>
           {getItemIcon(item.type)} <Text bold>{item.label}</Text>
         </Text>

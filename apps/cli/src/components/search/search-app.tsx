@@ -124,8 +124,6 @@ export const SearchApp: React.FC<SearchAppProps> = ({searchQuery}) => {
 
   return (
     <Box flexDirection="column">
-      <Breadcrumbs items={breadcrumbs} />
-
       {currentView.type === 'search' && isLoading && (
         <Box paddingX={2} paddingY={1}>
           <Text color="cyan">Loading search results...</Text>
@@ -140,7 +138,7 @@ export const SearchApp: React.FC<SearchAppProps> = ({searchQuery}) => {
 
       {currentView.type === 'search' && !isLoading && !hasError && results.length > 0 && (
         <>
-          <SearchResults items={results} maxDisplay={15} selectedIndex={selectedIndex} />
+          <SearchResults items={results} selectedIndex={selectedIndex} />
           <Box marginTop={1} paddingX={1}>
             <Text color="gray">{chalk.bold('Controls:')} ↑/↓/j/k: Navigate | Enter: View Details | q/Esc: Exit</Text>
           </Box>
@@ -173,6 +171,8 @@ export const SearchApp: React.FC<SearchAppProps> = ({searchQuery}) => {
           </Box>
         </>
       )}
+
+      <Breadcrumbs items={breadcrumbs} />
     </Box>
   )
 }
