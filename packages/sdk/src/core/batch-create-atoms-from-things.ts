@@ -1,9 +1,9 @@
 import type { PinThingMutationVariables } from '@0xintuition/graphql'
 import {
   createAtoms,
-  getAtomCost,
   eventParseAtomCreated,
-  type CreateAtomsConfig,
+  getAtomCost,
+  type WriteConfig,
 } from '@0xintuition/protocol'
 
 import { toHex } from 'viem'
@@ -11,7 +11,7 @@ import { toHex } from 'viem'
 import { pinThing } from '../api/pin-thing'
 
 export async function batchCreateAtomsFromThings(
-  config: CreateAtomsConfig,
+  config: WriteConfig,
   data: PinThingMutationVariables[],
   depositAmount?: bigint,
 ) {
@@ -22,12 +22,9 @@ export async function batchCreateAtomsFromThings(
     address,
   })
 
-  const depositAmountPerAtom = depositAmount
-    ? depositAmount
-    : 0n
+  const depositAmountPerAtom = depositAmount ? depositAmount : 0n
 
-  const calculatedCost =
-    (atomCost + depositAmountPerAtom) * BigInt(data.length)
+  const calculatedCost = (atomCost + depositAmountPerAtom) * BigInt(data.length)
 
   // Pin each thing and collect their URIs
   const uris: string[] = []

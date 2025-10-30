@@ -6,19 +6,6 @@ export const TrustAbi = [
   },
   {
     type: 'function',
-    name: 'CONTROLLER_ROLE',
-    inputs: [],
-    outputs: [
-      {
-        name: '',
-        type: 'bytes32',
-        internalType: 'bytes32',
-      },
-    ],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
     name: 'DEFAULT_ADMIN_ROLE',
     inputs: [],
     outputs: [
@@ -26,19 +13,6 @@ export const TrustAbi = [
         name: '',
         type: 'bytes32',
         internalType: 'bytes32',
-      },
-    ],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    name: 'INITIAL_ADMIN',
-    inputs: [],
-    outputs: [
-      {
-        name: '',
-        type: 'address',
-        internalType: 'address',
       },
     ],
     stateMutability: 'view',
@@ -151,13 +125,21 @@ export const TrustAbi = [
   },
   {
     type: 'function',
-    name: 'burn',
-    inputs: [
+    name: 'baseEmissionsController',
+    inputs: [],
+    outputs: [
       {
-        name: 'from',
+        name: '',
         type: 'address',
         internalType: 'address',
       },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'burn',
+    inputs: [
       {
         name: 'amount',
         type: 'uint256',
@@ -356,7 +338,7 @@ export const TrustAbi = [
         internalType: 'address',
       },
       {
-        name: '_controller',
+        name: '_baseEmissionsController',
         type: 'address',
         internalType: 'address',
       },
@@ -393,6 +375,19 @@ export const TrustAbi = [
       },
       {
         name: 'account',
+        type: 'address',
+        internalType: 'address',
+      },
+    ],
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    name: 'setBaseEmissionsController',
+    inputs: [
+      {
+        name: 'newBaseEmissionsController',
         type: 'address',
         internalType: 'address',
       },
@@ -538,6 +533,19 @@ export const TrustAbi = [
   },
   {
     type: 'event',
+    name: 'BaseEmissionsControllerSet',
+    inputs: [
+      {
+        name: 'newBaseEmissionsController',
+        type: 'address',
+        indexed: true,
+        internalType: 'address',
+      },
+    ],
+    anonymous: false,
+  },
+  {
+    type: 'event',
     name: 'Initialized',
     inputs: [
       {
@@ -666,7 +674,7 @@ export const TrustAbi = [
   },
   {
     type: 'error',
-    name: 'Trust_OnlyInitialAdmin',
+    name: 'Trust_OnlyBaseEmissionsController',
     inputs: [],
   },
   {

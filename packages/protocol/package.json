@@ -1,6 +1,6 @@
 {
   "name": "@0xintuition/protocol",
-  "version": "2.0.0-alpha.0",
+  "version": "2.0.0-alpha.2",
   "description": "Intuition Protocol",
   "sideEffects": false,
   "main": "./dist/index.js",

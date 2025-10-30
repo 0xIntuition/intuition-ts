@@ -1,11 +1,7 @@
-import type { Address, ContractFunctionArgs, PublicClient, WalletClient } from 'viem'
-import { MultiVaultAbi } from '../contracts'
+import type { ContractFunctionArgs } from 'viem'
 
-export type CreateAtomsConfig = {
-  address: Address
-  walletClient: WalletClient
-  publicClient: PublicClient
-}
+import { MultiVaultAbi } from '../contracts'
+import { WriteConfig } from '../types'
 
 export type CreateAtomsInputs = {
   args: ContractFunctionArgs<typeof MultiVaultAbi, 'payable', 'createAtoms'>
@@ -13,7 +9,7 @@ export type CreateAtomsInputs = {
 }
 
 export async function createAtoms(
-  config: CreateAtomsConfig,
+  config: WriteConfig,
   inputs: CreateAtomsInputs,
 ) {
   const { address, walletClient, publicClient } = config

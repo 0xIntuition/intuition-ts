@@ -83,12 +83,6 @@ export async function multiCallIntuitionConfigs(
     18,
   )
 
-  const atomDepositFractionForTriple = resp[3]?.result?.[2] as bigint
-  const formattedAtomDepositFractionForTriple = formatUnits(
-    atomDepositFractionForTriple,
-    18,
-  )
-
   const entryFee = resp[4]?.result?.[0] as bigint
   const formattedEntryFee = formatUnits(entryFee, 18)
 
@@ -121,9 +115,6 @@ export async function multiCallIntuitionConfigs(
       atomDepositFractionOnTripleCreation.toString(),
     formatted_atom_deposit_fraction_on_triple_creation:
       formattedAtomDepositFractionOnTripleCreation,
-    atom_deposit_fraction_for_triple: atomDepositFractionForTriple.toString(),
-    formatted_atom_deposit_fraction_for_triple:
-      formattedAtomDepositFractionForTriple,
     entry_fee: entryFee.toString(),
     formatted_entry_fee: formattedEntryFee,
     exit_fee: exitFee.toString(),

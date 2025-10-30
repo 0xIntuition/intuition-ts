@@ -2,13 +2,13 @@ import {
   createAtoms,
   eventParseAtomCreated,
   getAtomCost,
-  type CreateAtomsConfig,
+  type WriteConfig,
 } from '@0xintuition/protocol'
 
 import { getAddress, isAddress, toHex, type Address } from 'viem'
 
 export async function createAtomFromEthereumAccount(
-  config: CreateAtomsConfig,
+  config: WriteConfig,
   data: Address,
   depositAmount?: bigint,
 ) {

@@ -1,7 +1,11 @@
 import { parseEventLogs, type Hex, type PublicClient } from 'viem'
-import { MultiVaultAbi } from '../contracts/MultiVault-abi.js'
 
-export async function eventParseTripleCreated(client: PublicClient, hash: Hex) {
+import { MultiVaultAbi } from '../../contracts/MultiVault-abi.js'
+
+export async function eventParseSharePriceChanged(
+  client: PublicClient,
+  hash: Hex,
+) {
   const { logs, status } = await client.waitForTransactionReceipt({ hash })
 
   if (status === 'reverted') {
@@ -11,7 +15,7 @@ export async function eventParseTripleCreated(client: PublicClient, hash: Hex) {
   const events = parseEventLogs({
     abi: MultiVaultAbi,
     logs,
-    eventName: 'TripleCreated',
+    eventName: 'SharePriceChanged',
   })
 
   return events

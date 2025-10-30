@@ -1,11 +1,7 @@
-import type { Address, ContractFunctionArgs, Hex, PublicClient, WalletClient } from 'viem'
-import { MultiVaultAbi } from '../contracts'
+import type { ContractFunctionArgs } from 'viem'
 
-export type DepositBatchConfig = {
-  address: Address
-  walletClient: WalletClient
-  publicClient: PublicClient
-}
+import { MultiVaultAbi } from '../contracts'
+import { WriteConfig } from '../types'
 
 export type DepositBatchInputs = {
   args: ContractFunctionArgs<typeof MultiVaultAbi, 'payable', 'depositBatch'>
@@ -13,7 +9,7 @@ export type DepositBatchInputs = {
 }
 
 export async function depositBatch(
-  config: DepositBatchConfig,
+  config: WriteConfig,
   inputs: DepositBatchInputs,
 ) {
   const { address, walletClient, publicClient } = config

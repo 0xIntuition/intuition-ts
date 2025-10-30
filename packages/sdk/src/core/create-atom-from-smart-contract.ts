@@ -1,14 +1,14 @@
 import {
   createAtoms,
-  getAtomCost,
   eventParseAtomCreated,
-  type CreateAtomsConfig,
+  getAtomCost,
+  type WriteConfig,
 } from '@0xintuition/protocol'
 
 import { getAddress, isAddress, toHex, type Address } from 'viem'
 
 export async function createAtomFromSmartContract(
-  config: CreateAtomsConfig,
+  config: WriteConfig,
   data: {
     address: Address
     chainId: number

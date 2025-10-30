@@ -61,34 +61,17 @@ const atomData = await getAtom('124862')
 const tripleData = await getTriple('54670')
 ```
 
-## Triples
+## Atoms
+
+### Calculate Atom ID
 
 ```ts
-import { createAtomFromString, createTripleStatement } from '@0xintuition/sdk'
+import { calculateAtomId } from '@0xintuition/sdk'
 
-// Example of creating a triple statement with three atoms
-const atom1 = await createAtomFromString(
-  { walletClient, publicClient, address: multivaultAddress },
-  'atom1',
-)
-const atom2 = await createAtomFromString(
-  { walletClient, publicClient, address: multivaultAddress },
-  'atom2',
-)
-const atom3 = await createAtomFromString(
-  { walletClient, publicClient, address: multivaultAddress },
-  'atom3',
-)
-
-const triple = await createTripleStatement(
-  { walletClient, publicClient, address: multivaultAddress },
-  {
-    args: [atom1.state.vaultId, atom2.state.vaultId, atom3.state.vaultId],
-  },
+const atomId = calculateAtomId(
+  'ipfs://bafkreib7534cszxn2c6qwoviv43sqh244yfrxomjbealjdwntd6a7atq6u',
 )
 ```
-
-## Atoms
 
 ### Create Atom from String
 
@@ -200,7 +183,56 @@ const data: {
 }
 ```
 
-## Examples
+## Triples
+
+### Calculate Triple ID
+
+```ts
+import { calculateTripleId } from '@0xintuition/sdk'
+
+const tripleId = calculateTripleId('0x1234', '0x5678', '0x9abc')
+```
+
+### Calculate Counter Triple ID
+
+```ts
+import { calculateCounterTripleId, calculateTripleId } from '@0xintuition/sdk'
+
+// First, calculate the original triple ID
+const tripleId = calculateTripleId('0x1234', '0x5678', '0x9abc')
+
+// Then, calculate the counter triple ID using the original triple ID
+const counterTripleId = calculateCounterTripleId(tripleId)
+```
+
+### Create Triple Statement
+
+```ts
+import { createAtomFromString, createTripleStatement } from '@0xintuition/sdk'
+
+// Example of creating a triple statement with three atoms
+const atom1 = await createAtomFromString(
+  { walletClient, publicClient, address: multivaultAddress },
+  'atom1',
+)
+const atom2 = await createAtomFromString(
+  { walletClient, publicClient, address: multivaultAddress },
+  'atom2',
+)
+const atom3 = await createAtomFromString(
+  { walletClient, publicClient, address: multivaultAddress },
+  'atom3',
+)
+
+const triple = await createTripleStatement(
+  { walletClient, publicClient, address: multivaultAddress },
+  {
+    args: [atom1.state.vaultId, atom2.state.vaultId, atom3.state.vaultId],
+  },
+)
+```
+
+## React Example
 
 ```tsx
 import * as React from 'react'

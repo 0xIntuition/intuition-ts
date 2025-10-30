@@ -1,18 +1,14 @@
-import type { Address, ContractFunctionArgs, PublicClient, WalletClient } from 'viem'
-import { MultiVaultAbi } from '../contracts'
+import type { ContractFunctionArgs } from 'viem'
 
-export type PreviewRedeemCurveConfig = {
-  address: Address
-  walletClient: WalletClient
-  publicClient: PublicClient
-}
+import { MultiVaultAbi } from '../contracts'
+import { WriteConfig } from '../types'
 
 export type PreviewRedeemCurveInputs = {
   args: ContractFunctionArgs<typeof MultiVaultAbi, 'view', 'previewRedeem'>
 }
 
 export async function previewRedeem(
-  config: PreviewRedeemCurveConfig,
+  config: WriteConfig,
   inputs: PreviewRedeemCurveInputs,
 ) {
   const { address, walletClient, publicClient } = config

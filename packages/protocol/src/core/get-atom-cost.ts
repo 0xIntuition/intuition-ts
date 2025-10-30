@@ -1,14 +1,7 @@
-import type { Address, PublicClient } from 'viem'
 import { MultiVaultAbi } from '../contracts'
+import { ReadConfig } from '../types'
 
-export type GetAtomCostConfig = {
-  address: Address
-  publicClient: PublicClient
-}
-
-export async function getAtomCost(
-  config: GetAtomCostConfig,
-) {
+export async function getAtomCost(config: ReadConfig) {
   const { address, publicClient } = config
 
   return await publicClient.readContract({

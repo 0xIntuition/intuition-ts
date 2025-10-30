@@ -1,11 +1,7 @@
-import type { Address, ContractFunctionArgs, Hex, PublicClient, WalletClient } from 'viem'
-import { MultiVaultAbi } from '../contracts'
+import type { ContractFunctionArgs } from 'viem'
 
-export type CreateTriplesConfig = {
-  address: Address
-  walletClient: WalletClient
-  publicClient: PublicClient
-}
+import { MultiVaultAbi } from '../contracts'
+import { WriteConfig } from '../types'
 
 export type CreateTriplesInputs = {
   args: ContractFunctionArgs<typeof MultiVaultAbi, 'payable', 'createTriples'>
@@ -13,7 +9,7 @@ export type CreateTriplesInputs = {
 }
 
 export async function createTriples(
-  config: CreateTriplesConfig,
+  config: WriteConfig,
   inputs: CreateTriplesInputs,
 ) {
   if (

@@ -1,2954 +1,3212 @@
 export const MultiVaultAbi = [
   {
-    "type": "constructor",
-    "inputs": [],
-    "stateMutability": "nonpayable"
+    type: 'constructor',
+    inputs: [],
+    stateMutability: 'nonpayable',
   },
   {
-    "type": "function",
-    "name": "BURN_ADDRESS",
-    "inputs": [],
-    "outputs": [
+    type: 'function',
+    name: 'ATOM_SALT',
+    inputs: [],
+    outputs: [
       {
-        "name": "",
-        "type": "address",
-        "internalType": "address"
-      }
+        name: '',
+        type: 'bytes32',
+        internalType: 'bytes32',
+      },
     ],
-    "stateMutability": "view"
+    stateMutability: 'view',
   },
   {
-    "type": "function",
-    "name": "COUNTER_SALT",
-    "inputs": [],
-    "outputs": [
+    type: 'function',
+    name: 'BURN_ADDRESS',
+    inputs: [],
+    outputs: [
       {
-        "name": "",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      }
+        name: '',
+        type: 'address',
+        internalType: 'address',
+      },
     ],
-    "stateMutability": "view"
+    stateMutability: 'view',
   },
   {
-    "type": "function",
-    "name": "DEFAULT_ADMIN_ROLE",
-    "inputs": [],
-    "outputs": [
+    type: 'function',
+    name: 'COUNTER_SALT',
+    inputs: [],
+    outputs: [
       {
-        "name": "",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      }
+        name: '',
+        type: 'bytes32',
+        internalType: 'bytes32',
+      },
     ],
-    "stateMutability": "view"
+    stateMutability: 'view',
   },
   {
-    "type": "function",
-    "name": "MAX_BATCH_SIZE",
-    "inputs": [],
-    "outputs": [
+    type: 'function',
+    name: 'DEFAULT_ADMIN_ROLE',
+    inputs: [],
+    outputs: [
       {
-        "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
+        name: '',
+        type: 'bytes32',
+        internalType: 'bytes32',
+      },
     ],
-    "stateMutability": "view"
+    stateMutability: 'view',
   },
   {
-    "type": "function",
-    "name": "ONE_SHARE",
-    "inputs": [],
-    "outputs": [
+    type: 'function',
+    name: 'MAX_BATCH_SIZE',
+    inputs: [],
+    outputs: [
       {
-        "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
+        name: '',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
     ],
-    "stateMutability": "view"
+    stateMutability: 'view',
   },
   {
-    "type": "function",
-    "name": "accumulatedAtomWalletDepositFees",
-    "inputs": [
+    type: 'function',
+    name: 'TRIPLE_SALT',
+    inputs: [],
+    outputs: [
       {
-        "name": "atomWallet",
-        "type": "address",
-        "internalType": "address"
-      }
+        name: '',
+        type: 'bytes32',
+        internalType: 'bytes32',
+      },
     ],
-    "outputs": [
-      {
-        "name": "accumulatedFees",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "stateMutability": "view"
+    stateMutability: 'view',
   },
   {
-    "type": "function",
-    "name": "accumulatedProtocolFees",
-    "inputs": [
+    type: 'function',
+    name: 'accumulatedAtomWalletDepositFees',
+    inputs: [
       {
-        "name": "epoch",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
+        name: 'atomWallet',
+        type: 'address',
+        internalType: 'address',
+      },
     ],
-    "outputs": [
+    outputs: [
       {
-        "name": "accumulatedFees",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
+        name: 'accumulatedFees',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
     ],
-    "stateMutability": "view"
+    stateMutability: 'view',
   },
   {
-    "type": "function",
-    "name": "approve",
-    "inputs": [
+    type: 'function',
+    name: 'accumulatedProtocolFees',
+    inputs: [
       {
-        "name": "sender",
-        "type": "address",
-        "internalType": "address"
+        name: 'epoch',
+        type: 'uint256',
+        internalType: 'uint256',
       },
-      {
-        "name": "approvalType",
-        "type": "uint8",
-        "internalType": "enum IMultiVault.ApprovalTypes"
-      }
     ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
+    outputs: [
+      {
+        name: 'accumulatedFees',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
   },
   {
-    "type": "function",
-    "name": "atom",
-    "inputs": [
+    type: 'function',
+    name: 'approve',
+    inputs: [
       {
-        "name": "atomId",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      }
-    ],
-    "outputs": [
+        name: 'sender',
+        type: 'address',
+        internalType: 'address',
+      },
       {
-        "name": "data",
-        "type": "bytes",
-        "internalType": "bytes"
-      }
+        name: 'approvalType',
+        type: 'uint8',
+        internalType: 'enum ApprovalTypes',
+      },
     ],
-    "stateMutability": "view"
+    outputs: [],
+    stateMutability: 'nonpayable',
   },
   {
-    "type": "function",
-    "name": "atomConfig",
-    "inputs": [],
-    "outputs": [
+    type: 'function',
+    name: 'atom',
+    inputs: [
       {
-        "name": "atomCreationProtocolFee",
-        "type": "uint256",
-        "internalType": "uint256"
+        name: 'atomId',
+        type: 'bytes32',
+        internalType: 'bytes32',
       },
-      {
-        "name": "atomWalletDepositFee",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
     ],
-    "stateMutability": "view"
+    outputs: [
+      {
+        name: 'data',
+        type: 'bytes',
+        internalType: 'bytes',
+      },
+    ],
+    stateMutability: 'view',
   },
   {
-    "type": "function",
-    "name": "atomDepositFractionAmount",
-    "inputs": [
+    type: 'function',
+    name: 'atomConfig',
+    inputs: [],
+    outputs: [
       {
-        "name": "assets",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "outputs": [
+        name: 'atomCreationProtocolFee',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
       {
-        "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
+        name: 'atomWalletDepositFee',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
     ],
-    "stateMutability": "view"
+    stateMutability: 'view',
   },
   {
-    "type": "function",
-    "name": "bondingCurveConfig",
-    "inputs": [],
-    "outputs": [
+    type: 'function',
+    name: 'atomDepositFractionAmount',
+    inputs: [
       {
-        "name": "registry",
-        "type": "address",
-        "internalType": "address"
+        name: 'assets',
+        type: 'uint256',
+        internalType: 'uint256',
       },
-      {
-        "name": "defaultCurveId",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
     ],
-    "stateMutability": "view"
+    outputs: [
+      {
+        name: '',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
   },
   {
-    "type": "function",
-    "name": "calculateAtomId",
-    "inputs": [
+    type: 'function',
+    name: 'bondingCurveConfig',
+    inputs: [],
+    outputs: [
       {
-        "name": "data",
-        "type": "bytes",
-        "internalType": "bytes"
-      }
-    ],
-    "outputs": [
+        name: 'registry',
+        type: 'address',
+        internalType: 'address',
+      },
       {
-        "name": "id",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      }
+        name: 'defaultCurveId',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
     ],
-    "stateMutability": "pure"
+    stateMutability: 'view',
   },
   {
-    "type": "function",
-    "name": "calculateCounterTripleId",
-    "inputs": [
+    type: 'function',
+    name: 'calculateAtomId',
+    inputs: [
       {
-        "name": "subjectId",
-        "type": "bytes32",
-        "internalType": "bytes32"
+        name: 'data',
+        type: 'bytes',
+        internalType: 'bytes',
       },
+    ],
+    outputs: [
       {
-        "name": "predicateId",
-        "type": "bytes32",
-        "internalType": "bytes32"
+        name: 'id',
+        type: 'bytes32',
+        internalType: 'bytes32',
       },
-      {
-        "name": "objectId",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      }
     ],
-    "outputs": [
-      {
-        "name": "",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      }
-    ],
-    "stateMutability": "pure"
+    stateMutability: 'pure',
   },
   {
-    "type": "function",
-    "name": "calculateTripleId",
-    "inputs": [
+    type: 'function',
+    name: 'calculateCounterTripleId',
+    inputs: [
       {
-        "name": "subjectId",
-        "type": "bytes32",
-        "internalType": "bytes32"
+        name: 'subjectId',
+        type: 'bytes32',
+        internalType: 'bytes32',
       },
       {
-        "name": "predicateId",
-        "type": "bytes32",
-        "internalType": "bytes32"
+        name: 'predicateId',
+        type: 'bytes32',
+        internalType: 'bytes32',
       },
       {
-        "name": "objectId",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      }
+        name: 'objectId',
+        type: 'bytes32',
+        internalType: 'bytes32',
+      },
     ],
-    "outputs": [
+    outputs: [
       {
-        "name": "",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      }
+        name: '',
+        type: 'bytes32',
+        internalType: 'bytes32',
+      },
     ],
-    "stateMutability": "pure"
+    stateMutability: 'pure',
   },
   {
-    "type": "function",
-    "name": "claimAtomWalletDepositFees",
-    "inputs": [
+    type: 'function',
+    name: 'calculateTripleId',
+    inputs: [
       {
-        "name": "termId",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      }
+        name: 'subjectId',
+        type: 'bytes32',
+        internalType: 'bytes32',
+      },
+      {
+        name: 'predicateId',
+        type: 'bytes32',
+        internalType: 'bytes32',
+      },
+      {
+        name: 'objectId',
+        type: 'bytes32',
+        internalType: 'bytes32',
+      },
     ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
+    outputs: [
+      {
+        name: '',
+        type: 'bytes32',
+        internalType: 'bytes32',
+      },
+    ],
+    stateMutability: 'pure',
   },
   {
-    "type": "function",
-    "name": "computeAtomWalletAddr",
-    "inputs": [
+    type: 'function',
+    name: 'claimAtomWalletDepositFees',
+    inputs: [
       {
-        "name": "atomId",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      }
+        name: 'termId',
+        type: 'bytes32',
+        internalType: 'bytes32',
+      },
     ],
-    "outputs": [
-      {
-        "name": "",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "stateMutability": "view"
+    outputs: [],
+    stateMutability: 'nonpayable',
   },
   {
-    "type": "function",
-    "name": "convertToAssets",
-    "inputs": [
+    type: 'function',
+    name: 'computeAtomWalletAddr',
+    inputs: [
       {
-        "name": "termId",
-        "type": "bytes32",
-        "internalType": "bytes32"
+        name: 'atomId',
+        type: 'bytes32',
+        internalType: 'bytes32',
       },
+    ],
+    outputs: [
       {
-        "name": "curveId",
-        "type": "uint256",
-        "internalType": "uint256"
+        name: '',
+        type: 'address',
+        internalType: 'address',
       },
-      {
-        "name": "shares",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
     ],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "stateMutability": "view"
+    stateMutability: 'view',
   },
   {
-    "type": "function",
-    "name": "convertToShares",
-    "inputs": [
+    type: 'function',
+    name: 'convertToAssets',
+    inputs: [
       {
-        "name": "termId",
-        "type": "bytes32",
-        "internalType": "bytes32"
+        name: 'termId',
+        type: 'bytes32',
+        internalType: 'bytes32',
       },
       {
-        "name": "curveId",
-        "type": "uint256",
-        "internalType": "uint256"
+        name: 'curveId',
+        type: 'uint256',
+        internalType: 'uint256',
       },
       {
-        "name": "assets",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
+        name: 'shares',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
     ],
-    "outputs": [
+    outputs: [
       {
-        "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
+        name: '',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
     ],
-    "stateMutability": "view"
+    stateMutability: 'view',
   },
   {
-    "type": "function",
-    "name": "createAtoms",
-    "inputs": [
+    type: 'function',
+    name: 'convertToShares',
+    inputs: [
       {
-        "name": "data",
-        "type": "bytes[]",
-        "internalType": "bytes[]"
+        name: 'termId',
+        type: 'bytes32',
+        internalType: 'bytes32',
       },
       {
-        "name": "assets",
-        "type": "uint256[]",
-        "internalType": "uint256[]"
-      }
-    ],
-    "outputs": [
+        name: 'curveId',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
       {
-        "name": "",
-        "type": "bytes32[]",
-        "internalType": "bytes32[]"
-      }
+        name: 'assets',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
     ],
-    "stateMutability": "payable"
+    outputs: [
+      {
+        name: '',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
   },
   {
-    "type": "function",
-    "name": "createTriples",
-    "inputs": [
+    type: 'function',
+    name: 'createAtoms',
+    inputs: [
       {
-        "name": "subjectIds",
-        "type": "bytes32[]",
-        "internalType": "bytes32[]"
+        name: 'data',
+        type: 'bytes[]',
+        internalType: 'bytes[]',
       },
       {
-        "name": "predicateIds",
-        "type": "bytes32[]",
-        "internalType": "bytes32[]"
+        name: 'assets',
+        type: 'uint256[]',
+        internalType: 'uint256[]',
       },
-      {
-        "name": "objectIds",
-        "type": "bytes32[]",
-        "internalType": "bytes32[]"
-      },
-      {
-        "name": "assets",
-        "type": "uint256[]",
-        "internalType": "uint256[]"
-      }
     ],
-    "outputs": [
+    outputs: [
       {
-        "name": "",
-        "type": "bytes32[]",
-        "internalType": "bytes32[]"
-      }
+        name: '',
+        type: 'bytes32[]',
+        internalType: 'bytes32[]',
+      },
     ],
-    "stateMutability": "payable"
+    stateMutability: 'payable',
   },
   {
-    "type": "function",
-    "name": "currentEpoch",
-    "inputs": [],
-    "outputs": [
+    type: 'function',
+    name: 'createTriples',
+    inputs: [
       {
-        "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
+        name: 'subjectIds',
+        type: 'bytes32[]',
+        internalType: 'bytes32[]',
+      },
+      {
+        name: 'predicateIds',
+        type: 'bytes32[]',
+        internalType: 'bytes32[]',
+      },
+      {
+        name: 'objectIds',
+        type: 'bytes32[]',
+        internalType: 'bytes32[]',
+      },
+      {
+        name: 'assets',
+        type: 'uint256[]',
+        internalType: 'uint256[]',
+      },
     ],
-    "stateMutability": "view"
+    outputs: [
+      {
+        name: '',
+        type: 'bytes32[]',
+        internalType: 'bytes32[]',
+      },
+    ],
+    stateMutability: 'payable',
   },
   {
-    "type": "function",
-    "name": "currentSharePrice",
-    "inputs": [
+    type: 'function',
+    name: 'currentEpoch',
+    inputs: [],
+    outputs: [
       {
-        "name": "termId",
-        "type": "bytes32",
-        "internalType": "bytes32"
+        name: '',
+        type: 'uint256',
+        internalType: 'uint256',
       },
-      {
-        "name": "curveId",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
     ],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "stateMutability": "view"
+    stateMutability: 'view',
   },
   {
-    "type": "function",
-    "name": "deposit",
-    "inputs": [
+    type: 'function',
+    name: 'currentSharePrice',
+    inputs: [
       {
-        "name": "receiver",
-        "type": "address",
-        "internalType": "address"
+        name: 'termId',
+        type: 'bytes32',
+        internalType: 'bytes32',
       },
       {
-        "name": "termId",
-        "type": "bytes32",
-        "internalType": "bytes32"
+        name: 'curveId',
+        type: 'uint256',
+        internalType: 'uint256',
       },
-      {
-        "name": "curveId",
-        "type": "uint256",
-        "internalType": "uint256"
-      },
-      {
-        "name": "minShares",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
     ],
-    "outputs": [
+    outputs: [
       {
-        "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
+        name: '',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
     ],
-    "stateMutability": "payable"
+    stateMutability: 'view',
   },
   {
-    "type": "function",
-    "name": "depositBatch",
-    "inputs": [
+    type: 'function',
+    name: 'deposit',
+    inputs: [
       {
-        "name": "receiver",
-        "type": "address",
-        "internalType": "address"
+        name: 'receiver',
+        type: 'address',
+        internalType: 'address',
       },
       {
-        "name": "termIds",
-        "type": "bytes32[]",
-        "internalType": "bytes32[]"
+        name: 'termId',
+        type: 'bytes32',
+        internalType: 'bytes32',
       },
       {
-        "name": "curveIds",
-        "type": "uint256[]",
-        "internalType": "uint256[]"
+        name: 'curveId',
+        type: 'uint256',
+        internalType: 'uint256',
       },
       {
-        "name": "assets",
-        "type": "uint256[]",
-        "internalType": "uint256[]"
+        name: 'minShares',
+        type: 'uint256',
+        internalType: 'uint256',
       },
-      {
-        "name": "minShares",
-        "type": "uint256[]",
-        "internalType": "uint256[]"
-      }
     ],
-    "outputs": [
+    outputs: [
       {
-        "name": "shares",
-        "type": "uint256[]",
-        "internalType": "uint256[]"
-      }
+        name: '',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
     ],
-    "stateMutability": "payable"
+    stateMutability: 'payable',
   },
   {
-    "type": "function",
-    "name": "entryFeeAmount",
-    "inputs": [
+    type: 'function',
+    name: 'depositBatch',
+    inputs: [
       {
-        "name": "assets",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "outputs": [
+        name: 'receiver',
+        type: 'address',
+        internalType: 'address',
+      },
       {
-        "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
+        name: 'termIds',
+        type: 'bytes32[]',
+        internalType: 'bytes32[]',
+      },
+      {
+        name: 'curveIds',
+        type: 'uint256[]',
+        internalType: 'uint256[]',
+      },
+      {
+        name: 'assets',
+        type: 'uint256[]',
+        internalType: 'uint256[]',
+      },
+      {
+        name: 'minShares',
+        type: 'uint256[]',
+        internalType: 'uint256[]',
+      },
     ],
-    "stateMutability": "view"
+    outputs: [
+      {
+        name: 'shares',
+        type: 'uint256[]',
+        internalType: 'uint256[]',
+      },
+    ],
+    stateMutability: 'payable',
   },
   {
-    "type": "function",
-    "name": "exitFeeAmount",
-    "inputs": [
+    type: 'function',
+    name: 'entryFeeAmount',
+    inputs: [
       {
-        "name": "assets",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
+        name: 'assets',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
     ],
-    "outputs": [
+    outputs: [
       {
-        "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
+        name: '',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
     ],
-    "stateMutability": "view"
+    stateMutability: 'view',
   },
   {
-    "type": "function",
-    "name": "generalConfig",
-    "inputs": [],
-    "outputs": [
+    type: 'function',
+    name: 'exitFeeAmount',
+    inputs: [
       {
-        "name": "admin",
-        "type": "address",
-        "internalType": "address"
+        name: 'assets',
+        type: 'uint256',
+        internalType: 'uint256',
       },
-      {
-        "name": "protocolMultisig",
-        "type": "address",
-        "internalType": "address"
-      },
-      {
-        "name": "feeDenominator",
-        "type": "uint256",
-        "internalType": "uint256"
-      },
-      {
-        "name": "trustBonding",
-        "type": "address",
-        "internalType": "address"
-      },
-      {
-        "name": "minDeposit",
-        "type": "uint256",
-        "internalType": "uint256"
-      },
-      {
-        "name": "minShare",
-        "type": "uint256",
-        "internalType": "uint256"
-      },
-      {
-        "name": "atomDataMaxLength",
-        "type": "uint256",
-        "internalType": "uint256"
-      },
-      {
-        "name": "decimalPrecision",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
     ],
-    "stateMutability": "view"
+    outputs: [
+      {
+        name: '',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
   },
   {
-    "type": "function",
-    "name": "getAtom",
-    "inputs": [
+    type: 'function',
+    name: 'generalConfig',
+    inputs: [],
+    outputs: [
       {
-        "name": "atomId",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      }
-    ],
-    "outputs": [
+        name: 'admin',
+        type: 'address',
+        internalType: 'address',
+      },
       {
-        "name": "data",
-        "type": "bytes",
-        "internalType": "bytes"
-      }
+        name: 'protocolMultisig',
+        type: 'address',
+        internalType: 'address',
+      },
+      {
+        name: 'feeDenominator',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+      {
+        name: 'trustBonding',
+        type: 'address',
+        internalType: 'address',
+      },
+      {
+        name: 'minDeposit',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+      {
+        name: 'minShare',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+      {
+        name: 'atomDataMaxLength',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+      {
+        name: 'feeThreshold',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
     ],
-    "stateMutability": "view"
+    stateMutability: 'view',
   },
   {
-    "type": "function",
-    "name": "getAtomConfig",
-    "inputs": [],
-    "outputs": [
+    type: 'function',
+    name: 'getAtom',
+    inputs: [
       {
-        "name": "",
-        "type": "tuple",
-        "internalType": "struct AtomConfig",
-        "components": [
+        name: 'atomId',
+        type: 'bytes32',
+        internalType: 'bytes32',
+      },
+    ],
+    outputs: [
+      {
+        name: 'data',
+        type: 'bytes',
+        internalType: 'bytes',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'getAtomConfig',
+    inputs: [],
+    outputs: [
+      {
+        name: '',
+        type: 'tuple',
+        internalType: 'struct AtomConfig',
+        components: [
           {
-            "name": "atomCreationProtocolFee",
-            "type": "uint256",
-            "internalType": "uint256"
+            name: 'atomCreationProtocolFee',
+            type: 'uint256',
+            internalType: 'uint256',
           },
           {
-            "name": "atomWalletDepositFee",
-            "type": "uint256",
-            "internalType": "uint256"
-          }
-        ]
-      }
+            name: 'atomWalletDepositFee',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+        ],
+      },
     ],
-    "stateMutability": "view"
+    stateMutability: 'view',
   },
   {
-    "type": "function",
-    "name": "getAtomCost",
-    "inputs": [],
-    "outputs": [
+    type: 'function',
+    name: 'getAtomCost',
+    inputs: [],
+    outputs: [
       {
-        "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
+        name: '',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
     ],
-    "stateMutability": "view"
+    stateMutability: 'view',
   },
   {
-    "type": "function",
-    "name": "getAtomWarden",
-    "inputs": [],
-    "outputs": [
+    type: 'function',
+    name: 'getAtomWarden',
+    inputs: [],
+    outputs: [
       {
-        "name": "",
-        "type": "address",
-        "internalType": "address"
-      }
+        name: '',
+        type: 'address',
+        internalType: 'address',
+      },
     ],
-    "stateMutability": "view"
+    stateMutability: 'view',
   },
   {
-    "type": "function",
-    "name": "getBondingCurveConfig",
-    "inputs": [],
-    "outputs": [
+    type: 'function',
+    name: 'getBondingCurveConfig',
+    inputs: [],
+    outputs: [
       {
-        "name": "",
-        "type": "tuple",
-        "internalType": "struct BondingCurveConfig",
-        "components": [
+        name: '',
+        type: 'tuple',
+        internalType: 'struct BondingCurveConfig',
+        components: [
           {
-            "name": "registry",
-            "type": "address",
-            "internalType": "address"
+            name: 'registry',
+            type: 'address',
+            internalType: 'address',
           },
           {
-            "name": "defaultCurveId",
-            "type": "uint256",
-            "internalType": "uint256"
-          }
-        ]
-      }
+            name: 'defaultCurveId',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+        ],
+      },
     ],
-    "stateMutability": "view"
+    stateMutability: 'view',
   },
   {
-    "type": "function",
-    "name": "getCounterIdFromTripleId",
-    "inputs": [
+    type: 'function',
+    name: 'getCounterIdFromTripleId',
+    inputs: [
       {
-        "name": "tripleId",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      }
+        name: 'tripleId',
+        type: 'bytes32',
+        internalType: 'bytes32',
+      },
     ],
-    "outputs": [
+    outputs: [
       {
-        "name": "",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      }
+        name: '',
+        type: 'bytes32',
+        internalType: 'bytes32',
+      },
     ],
-    "stateMutability": "pure"
+    stateMutability: 'pure',
   },
   {
-    "type": "function",
-    "name": "getGeneralConfig",
-    "inputs": [],
-    "outputs": [
+    type: 'function',
+    name: 'getGeneralConfig',
+    inputs: [],
+    outputs: [
       {
-        "name": "",
-        "type": "tuple",
-        "internalType": "struct GeneralConfig",
-        "components": [
+        name: '',
+        type: 'tuple',
+        internalType: 'struct GeneralConfig',
+        components: [
           {
-            "name": "admin",
-            "type": "address",
-            "internalType": "address"
+            name: 'admin',
+            type: 'address',
+            internalType: 'address',
           },
           {
-            "name": "protocolMultisig",
-            "type": "address",
-            "internalType": "address"
+            name: 'protocolMultisig',
+            type: 'address',
+            internalType: 'address',
           },
           {
-            "name": "feeDenominator",
-            "type": "uint256",
-            "internalType": "uint256"
+            name: 'feeDenominator',
+            type: 'uint256',
+            internalType: 'uint256',
           },
           {
-            "name": "trustBonding",
-            "type": "address",
-            "internalType": "address"
+            name: 'trustBonding',
+            type: 'address',
+            internalType: 'address',
           },
           {
-            "name": "minDeposit",
-            "type": "uint256",
-            "internalType": "uint256"
+            name: 'minDeposit',
+            type: 'uint256',
+            internalType: 'uint256',
           },
           {
-            "name": "minShare",
-            "type": "uint256",
-            "internalType": "uint256"
+            name: 'minShare',
+            type: 'uint256',
+            internalType: 'uint256',
           },
           {
-            "name": "atomDataMaxLength",
-            "type": "uint256",
-            "internalType": "uint256"
+            name: 'atomDataMaxLength',
+            type: 'uint256',
+            internalType: 'uint256',
           },
           {
-            "name": "decimalPrecision",
-            "type": "uint256",
-            "internalType": "uint256"
-          }
-        ]
-      }
+            name: 'feeThreshold',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+        ],
+      },
     ],
-    "stateMutability": "view"
+    stateMutability: 'view',
   },
   {
-    "type": "function",
-    "name": "getRoleAdmin",
-    "inputs": [
+    type: 'function',
+    name: 'getInverseTripleId',
+    inputs: [
       {
-        "name": "role",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      }
+        name: 'tripleId',
+        type: 'bytes32',
+        internalType: 'bytes32',
+      },
     ],
-    "outputs": [
+    outputs: [
       {
-        "name": "",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      }
+        name: '',
+        type: 'bytes32',
+        internalType: 'bytes32',
+      },
     ],
-    "stateMutability": "view"
+    stateMutability: 'view',
   },
   {
-    "type": "function",
-    "name": "getShares",
-    "inputs": [
+    type: 'function',
+    name: 'getRoleAdmin',
+    inputs: [
       {
-        "name": "account",
-        "type": "address",
-        "internalType": "address"
+        name: 'role',
+        type: 'bytes32',
+        internalType: 'bytes32',
+      },
+    ],
+    outputs: [
+      {
+        name: '',
+        type: 'bytes32',
+        internalType: 'bytes32',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'getShares',
+    inputs: [
+      {
+        name: 'account',
+        type: 'address',
+        internalType: 'address',
       },
       {
-        "name": "termId",
-        "type": "bytes32",
-        "internalType": "bytes32"
+        name: 'termId',
+        type: 'bytes32',
+        internalType: 'bytes32',
       },
       {
-        "name": "curveId",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
+        name: 'curveId',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
     ],
-    "outputs": [
+    outputs: [
       {
-        "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
+        name: '',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
     ],
-    "stateMutability": "view"
+    stateMutability: 'view',
   },
   {
-    "type": "function",
-    "name": "getTotalUtilizationForEpoch",
-    "inputs": [
+    type: 'function',
+    name: 'getTotalUtilizationForEpoch',
+    inputs: [
       {
-        "name": "epoch",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
+        name: 'epoch',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
     ],
-    "outputs": [
+    outputs: [
       {
-        "name": "",
-        "type": "int256",
-        "internalType": "int256"
-      }
+        name: '',
+        type: 'int256',
+        internalType: 'int256',
+      },
     ],
-    "stateMutability": "view"
+    stateMutability: 'view',
   },
   {
-    "type": "function",
-    "name": "getTriple",
-    "inputs": [
+    type: 'function',
+    name: 'getTriple',
+    inputs: [
       {
-        "name": "tripleId",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      }
+        name: 'tripleId',
+        type: 'bytes32',
+        internalType: 'bytes32',
+      },
     ],
-    "outputs": [
+    outputs: [
       {
-        "name": "",
-        "type": "bytes32",
-        "internalType": "bytes32"
+        name: '',
+        type: 'bytes32',
+        internalType: 'bytes32',
       },
       {
-        "name": "",
-        "type": "bytes32",
-        "internalType": "bytes32"
+        name: '',
+        type: 'bytes32',
+        internalType: 'bytes32',
       },
       {
-        "name": "",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      }
+        name: '',
+        type: 'bytes32',
+        internalType: 'bytes32',
+      },
     ],
-    "stateMutability": "view"
+    stateMutability: 'view',
   },
   {
-    "type": "function",
-    "name": "getTripleConfig",
-    "inputs": [],
-    "outputs": [
+    type: 'function',
+    name: 'getTripleConfig',
+    inputs: [],
+    outputs: [
       {
-        "name": "",
-        "type": "tuple",
-        "internalType": "struct TripleConfig",
-        "components": [
+        name: '',
+        type: 'tuple',
+        internalType: 'struct TripleConfig',
+        components: [
           {
-            "name": "tripleCreationProtocolFee",
-            "type": "uint256",
-            "internalType": "uint256"
+            name: 'tripleCreationProtocolFee',
+            type: 'uint256',
+            internalType: 'uint256',
           },
           {
-            "name": "totalAtomDepositsOnTripleCreation",
-            "type": "uint256",
-            "internalType": "uint256"
+            name: 'atomDepositFractionForTriple',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'getTripleCost',
+    inputs: [],
+    outputs: [
+      {
+        name: '',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'getTripleIdFromCounterId',
+    inputs: [
+      {
+        name: 'counterId',
+        type: 'bytes32',
+        internalType: 'bytes32',
+      },
+    ],
+    outputs: [
+      {
+        name: '',
+        type: 'bytes32',
+        internalType: 'bytes32',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'getUserLastActiveEpoch',
+    inputs: [
+      {
+        name: 'user',
+        type: 'address',
+        internalType: 'address',
+      },
+    ],
+    outputs: [
+      {
+        name: '',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'getUserUtilizationForEpoch',
+    inputs: [
+      {
+        name: 'user',
+        type: 'address',
+        internalType: 'address',
+      },
+      {
+        name: 'epoch',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
+    outputs: [
+      {
+        name: '',
+        type: 'int256',
+        internalType: 'int256',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'getUserUtilizationInEpoch',
+    inputs: [
+      {
+        name: 'user',
+        type: 'address',
+        internalType: 'address',
+      },
+      {
+        name: 'epoch',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
+    outputs: [
+      {
+        name: '',
+        type: 'int256',
+        internalType: 'int256',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'getVault',
+    inputs: [
+      {
+        name: 'termId',
+        type: 'bytes32',
+        internalType: 'bytes32',
+      },
+      {
+        name: 'curveId',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
+    outputs: [
+      {
+        name: '',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+      {
+        name: '',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'getVaultFees',
+    inputs: [],
+    outputs: [
+      {
+        name: '',
+        type: 'tuple',
+        internalType: 'struct VaultFees',
+        components: [
+          {
+            name: 'entryFee',
+            type: 'uint256',
+            internalType: 'uint256',
           },
           {
-            "name": "atomDepositFractionForTriple",
-            "type": "uint256",
-            "internalType": "uint256"
-          }
-        ]
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "getTripleCost",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "getTripleIdFromCounterId",
-    "inputs": [
-      {
-        "name": "counterId",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "getUserUtilizationForEpoch",
-    "inputs": [
-      {
-        "name": "user",
-        "type": "address",
-        "internalType": "address"
-      },
-      {
-        "name": "epoch",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "",
-        "type": "int256",
-        "internalType": "int256"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "getVault",
-    "inputs": [
-      {
-        "name": "termId",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      },
-      {
-        "name": "curveId",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
-      },
-      {
-        "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "getVaultFees",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "tuple",
-        "internalType": "struct VaultFees",
-        "components": [
-          {
-            "name": "entryFee",
-            "type": "uint256",
-            "internalType": "uint256"
+            name: 'exitFee',
+            type: 'uint256',
+            internalType: 'uint256',
           },
           {
-            "name": "exitFee",
-            "type": "uint256",
-            "internalType": "uint256"
+            name: 'protocolFee',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'getVaultType',
+    inputs: [
+      {
+        name: 'termId',
+        type: 'bytes32',
+        internalType: 'bytes32',
+      },
+    ],
+    outputs: [
+      {
+        name: '',
+        type: 'uint8',
+        internalType: 'enum VaultType',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'getWalletConfig',
+    inputs: [],
+    outputs: [
+      {
+        name: '',
+        type: 'tuple',
+        internalType: 'struct WalletConfig',
+        components: [
+          {
+            name: 'entryPoint',
+            type: 'address',
+            internalType: 'address',
           },
           {
-            "name": "protocolFee",
-            "type": "uint256",
-            "internalType": "uint256"
-          }
-        ]
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "getVaultType",
-    "inputs": [
-      {
-        "name": "termId",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint8",
-        "internalType": "enum IMultiVault.VaultType"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "getWalletConfig",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "tuple",
-        "internalType": "struct WalletConfig",
-        "components": [
-          {
-            "name": "permit2",
-            "type": "address",
-            "internalType": "contract IPermit2"
+            name: 'atomWarden',
+            type: 'address',
+            internalType: 'address',
           },
           {
-            "name": "entryPoint",
-            "type": "address",
-            "internalType": "address"
+            name: 'atomWalletBeacon',
+            type: 'address',
+            internalType: 'address',
           },
           {
-            "name": "atomWarden",
-            "type": "address",
-            "internalType": "address"
+            name: 'atomWalletFactory',
+            type: 'address',
+            internalType: 'address',
+          },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'grantRole',
+    inputs: [
+      {
+        name: 'role',
+        type: 'bytes32',
+        internalType: 'bytes32',
+      },
+      {
+        name: 'account',
+        type: 'address',
+        internalType: 'address',
+      },
+    ],
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    name: 'hasRole',
+    inputs: [
+      {
+        name: 'role',
+        type: 'bytes32',
+        internalType: 'bytes32',
+      },
+      {
+        name: 'account',
+        type: 'address',
+        internalType: 'address',
+      },
+    ],
+    outputs: [
+      {
+        name: '',
+        type: 'bool',
+        internalType: 'bool',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'initialize',
+    inputs: [
+      {
+        name: '_generalConfig',
+        type: 'tuple',
+        internalType: 'struct GeneralConfig',
+        components: [
+          {
+            name: 'admin',
+            type: 'address',
+            internalType: 'address',
           },
           {
-            "name": "atomWalletBeacon",
-            "type": "address",
-            "internalType": "address"
+            name: 'protocolMultisig',
+            type: 'address',
+            internalType: 'address',
           },
           {
-            "name": "atomWalletFactory",
-            "type": "address",
-            "internalType": "address"
-          }
-        ]
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "grantRole",
-    "inputs": [
-      {
-        "name": "role",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      },
-      {
-        "name": "account",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "hasRole",
-    "inputs": [
-      {
-        "name": "role",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      },
-      {
-        "name": "account",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "",
-        "type": "bool",
-        "internalType": "bool"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "initialize",
-    "inputs": [
-      {
-        "name": "_generalConfig",
-        "type": "tuple",
-        "internalType": "struct GeneralConfig",
-        "components": [
-          {
-            "name": "admin",
-            "type": "address",
-            "internalType": "address"
+            name: 'feeDenominator',
+            type: 'uint256',
+            internalType: 'uint256',
           },
           {
-            "name": "protocolMultisig",
-            "type": "address",
-            "internalType": "address"
+            name: 'trustBonding',
+            type: 'address',
+            internalType: 'address',
           },
           {
-            "name": "feeDenominator",
-            "type": "uint256",
-            "internalType": "uint256"
+            name: 'minDeposit',
+            type: 'uint256',
+            internalType: 'uint256',
           },
           {
-            "name": "trustBonding",
-            "type": "address",
-            "internalType": "address"
+            name: 'minShare',
+            type: 'uint256',
+            internalType: 'uint256',
           },
           {
-            "name": "minDeposit",
-            "type": "uint256",
-            "internalType": "uint256"
+            name: 'atomDataMaxLength',
+            type: 'uint256',
+            internalType: 'uint256',
           },
           {
-            "name": "minShare",
-            "type": "uint256",
-            "internalType": "uint256"
+            name: 'feeThreshold',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+        ],
+      },
+      {
+        name: '_atomConfig',
+        type: 'tuple',
+        internalType: 'struct AtomConfig',
+        components: [
+          {
+            name: 'atomCreationProtocolFee',
+            type: 'uint256',
+            internalType: 'uint256',
           },
           {
-            "name": "atomDataMaxLength",
-            "type": "uint256",
-            "internalType": "uint256"
+            name: 'atomWalletDepositFee',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+        ],
+      },
+      {
+        name: '_tripleConfig',
+        type: 'tuple',
+        internalType: 'struct TripleConfig',
+        components: [
+          {
+            name: 'tripleCreationProtocolFee',
+            type: 'uint256',
+            internalType: 'uint256',
           },
           {
-            "name": "decimalPrecision",
-            "type": "uint256",
-            "internalType": "uint256"
-          }
-        ]
+            name: 'atomDepositFractionForTriple',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+        ],
       },
       {
-        "name": "_atomConfig",
-        "type": "tuple",
-        "internalType": "struct AtomConfig",
-        "components": [
+        name: '_walletConfig',
+        type: 'tuple',
+        internalType: 'struct WalletConfig',
+        components: [
           {
-            "name": "atomCreationProtocolFee",
-            "type": "uint256",
-            "internalType": "uint256"
+            name: 'entryPoint',
+            type: 'address',
+            internalType: 'address',
           },
           {
-            "name": "atomWalletDepositFee",
-            "type": "uint256",
-            "internalType": "uint256"
-          }
-        ]
-      },
-      {
-        "name": "_tripleConfig",
-        "type": "tuple",
-        "internalType": "struct TripleConfig",
-        "components": [
-          {
-            "name": "tripleCreationProtocolFee",
-            "type": "uint256",
-            "internalType": "uint256"
+            name: 'atomWarden',
+            type: 'address',
+            internalType: 'address',
           },
           {
-            "name": "totalAtomDepositsOnTripleCreation",
-            "type": "uint256",
-            "internalType": "uint256"
+            name: 'atomWalletBeacon',
+            type: 'address',
+            internalType: 'address',
           },
           {
-            "name": "atomDepositFractionForTriple",
-            "type": "uint256",
-            "internalType": "uint256"
-          }
-        ]
+            name: 'atomWalletFactory',
+            type: 'address',
+            internalType: 'address',
+          },
+        ],
       },
       {
-        "name": "_walletConfig",
-        "type": "tuple",
-        "internalType": "struct WalletConfig",
-        "components": [
+        name: '_vaultFees',
+        type: 'tuple',
+        internalType: 'struct VaultFees',
+        components: [
           {
-            "name": "permit2",
-            "type": "address",
-            "internalType": "contract IPermit2"
+            name: 'entryFee',
+            type: 'uint256',
+            internalType: 'uint256',
           },
           {
-            "name": "entryPoint",
-            "type": "address",
-            "internalType": "address"
+            name: 'exitFee',
+            type: 'uint256',
+            internalType: 'uint256',
           },
           {
-            "name": "atomWarden",
-            "type": "address",
-            "internalType": "address"
+            name: 'protocolFee',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+        ],
+      },
+      {
+        name: '_bondingCurveConfig',
+        type: 'tuple',
+        internalType: 'struct BondingCurveConfig',
+        components: [
+          {
+            name: 'registry',
+            type: 'address',
+            internalType: 'address',
           },
           {
-            "name": "atomWalletBeacon",
-            "type": "address",
-            "internalType": "address"
+            name: 'defaultCurveId',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+        ],
+      },
+    ],
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    name: 'isAtom',
+    inputs: [
+      {
+        name: 'atomId',
+        type: 'bytes32',
+        internalType: 'bytes32',
+      },
+    ],
+    outputs: [
+      {
+        name: '',
+        type: 'bool',
+        internalType: 'bool',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'isCounterTriple',
+    inputs: [
+      {
+        name: 'termId',
+        type: 'bytes32',
+        internalType: 'bytes32',
+      },
+    ],
+    outputs: [
+      {
+        name: '',
+        type: 'bool',
+        internalType: 'bool',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'isTermCreated',
+    inputs: [
+      {
+        name: 'id',
+        type: 'bytes32',
+        internalType: 'bytes32',
+      },
+    ],
+    outputs: [
+      {
+        name: '',
+        type: 'bool',
+        internalType: 'bool',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'isTriple',
+    inputs: [
+      {
+        name: 'termId',
+        type: 'bytes32',
+        internalType: 'bytes32',
+      },
+    ],
+    outputs: [
+      {
+        name: '',
+        type: 'bool',
+        internalType: 'bool',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'maxRedeem',
+    inputs: [
+      {
+        name: 'sender',
+        type: 'address',
+        internalType: 'address',
+      },
+      {
+        name: 'termId',
+        type: 'bytes32',
+        internalType: 'bytes32',
+      },
+      {
+        name: 'curveId',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
+    outputs: [
+      {
+        name: '',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'pause',
+    inputs: [],
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    name: 'paused',
+    inputs: [],
+    outputs: [
+      {
+        name: '',
+        type: 'bool',
+        internalType: 'bool',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'personalUtilization',
+    inputs: [
+      {
+        name: 'user',
+        type: 'address',
+        internalType: 'address',
+      },
+      {
+        name: 'epoch',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
+    outputs: [
+      {
+        name: 'utilizationAmount',
+        type: 'int256',
+        internalType: 'int256',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'previewAtomCreate',
+    inputs: [
+      {
+        name: 'termId',
+        type: 'bytes32',
+        internalType: 'bytes32',
+      },
+      {
+        name: 'assets',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
+    outputs: [
+      {
+        name: 'shares',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+      {
+        name: 'assetsAfterFixedFees',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+      {
+        name: 'assetsAfterFees',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'previewDeposit',
+    inputs: [
+      {
+        name: 'termId',
+        type: 'bytes32',
+        internalType: 'bytes32',
+      },
+      {
+        name: 'curveId',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+      {
+        name: 'assets',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
+    outputs: [
+      {
+        name: 'shares',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+      {
+        name: 'assetsAfterFees',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'previewRedeem',
+    inputs: [
+      {
+        name: 'termId',
+        type: 'bytes32',
+        internalType: 'bytes32',
+      },
+      {
+        name: 'curveId',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+      {
+        name: 'shares',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
+    outputs: [
+      {
+        name: 'assetsAfterFees',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+      {
+        name: 'sharesUsed',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'previewTripleCreate',
+    inputs: [
+      {
+        name: 'termId',
+        type: 'bytes32',
+        internalType: 'bytes32',
+      },
+      {
+        name: 'assets',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
+    outputs: [
+      {
+        name: 'shares',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+      {
+        name: 'assetsAfterFixedFees',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+      {
+        name: 'assetsAfterFees',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'protocolFeeAmount',
+    inputs: [
+      {
+        name: 'assets',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
+    outputs: [
+      {
+        name: '',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'redeem',
+    inputs: [
+      {
+        name: 'receiver',
+        type: 'address',
+        internalType: 'address',
+      },
+      {
+        name: 'termId',
+        type: 'bytes32',
+        internalType: 'bytes32',
+      },
+      {
+        name: 'curveId',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+      {
+        name: 'shares',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+      {
+        name: 'minAssets',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
+    outputs: [
+      {
+        name: '',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    name: 'redeemBatch',
+    inputs: [
+      {
+        name: 'receiver',
+        type: 'address',
+        internalType: 'address',
+      },
+      {
+        name: 'termIds',
+        type: 'bytes32[]',
+        internalType: 'bytes32[]',
+      },
+      {
+        name: 'curveIds',
+        type: 'uint256[]',
+        internalType: 'uint256[]',
+      },
+      {
+        name: 'shares',
+        type: 'uint256[]',
+        internalType: 'uint256[]',
+      },
+      {
+        name: 'minAssets',
+        type: 'uint256[]',
+        internalType: 'uint256[]',
+      },
+    ],
+    outputs: [
+      {
+        name: 'received',
+        type: 'uint256[]',
+        internalType: 'uint256[]',
+      },
+    ],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    name: 'renounceRole',
+    inputs: [
+      {
+        name: 'role',
+        type: 'bytes32',
+        internalType: 'bytes32',
+      },
+      {
+        name: 'callerConfirmation',
+        type: 'address',
+        internalType: 'address',
+      },
+    ],
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    name: 'revokeRole',
+    inputs: [
+      {
+        name: 'role',
+        type: 'bytes32',
+        internalType: 'bytes32',
+      },
+      {
+        name: 'account',
+        type: 'address',
+        internalType: 'address',
+      },
+    ],
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    name: 'setAtomConfig',
+    inputs: [
+      {
+        name: '_atomConfig',
+        type: 'tuple',
+        internalType: 'struct AtomConfig',
+        components: [
+          {
+            name: 'atomCreationProtocolFee',
+            type: 'uint256',
+            internalType: 'uint256',
           },
           {
-            "name": "atomWalletFactory",
-            "type": "address",
-            "internalType": "address"
-          }
-        ]
+            name: 'atomWalletDepositFee',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+        ],
       },
+    ],
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    name: 'setBondingCurveConfig',
+    inputs: [
       {
-        "name": "_vaultFees",
-        "type": "tuple",
-        "internalType": "struct VaultFees",
-        "components": [
+        name: '_bondingCurveConfig',
+        type: 'tuple',
+        internalType: 'struct BondingCurveConfig',
+        components: [
           {
-            "name": "entryFee",
-            "type": "uint256",
-            "internalType": "uint256"
+            name: 'registry',
+            type: 'address',
+            internalType: 'address',
           },
           {
-            "name": "exitFee",
-            "type": "uint256",
-            "internalType": "uint256"
+            name: 'defaultCurveId',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+        ],
+      },
+    ],
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    name: 'setGeneralConfig',
+    inputs: [
+      {
+        name: '_generalConfig',
+        type: 'tuple',
+        internalType: 'struct GeneralConfig',
+        components: [
+          {
+            name: 'admin',
+            type: 'address',
+            internalType: 'address',
           },
           {
-            "name": "protocolFee",
-            "type": "uint256",
-            "internalType": "uint256"
-          }
-        ]
-      },
-      {
-        "name": "_bondingCurveConfig",
-        "type": "tuple",
-        "internalType": "struct BondingCurveConfig",
-        "components": [
-          {
-            "name": "registry",
-            "type": "address",
-            "internalType": "address"
+            name: 'protocolMultisig',
+            type: 'address',
+            internalType: 'address',
           },
           {
-            "name": "defaultCurveId",
-            "type": "uint256",
-            "internalType": "uint256"
-          }
-        ]
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "isAtom",
-    "inputs": [
-      {
-        "name": "atomId",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "",
-        "type": "bool",
-        "internalType": "bool"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "isCounterTriple",
-    "inputs": [
-      {
-        "name": "termId",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "",
-        "type": "bool",
-        "internalType": "bool"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "isTermCreated",
-    "inputs": [
-      {
-        "name": "id",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "",
-        "type": "bool",
-        "internalType": "bool"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "isTriple",
-    "inputs": [
-      {
-        "name": "termId",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "",
-        "type": "bool",
-        "internalType": "bool"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "lastActiveEpoch",
-    "inputs": [
-      {
-        "name": "user",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "epoch",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "maxRedeem",
-    "inputs": [
-      {
-        "name": "sender",
-        "type": "address",
-        "internalType": "address"
-      },
-      {
-        "name": "termId",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      },
-      {
-        "name": "curveId",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "pause",
-    "inputs": [],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "paused",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "bool",
-        "internalType": "bool"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "personalUtilization",
-    "inputs": [
-      {
-        "name": "user",
-        "type": "address",
-        "internalType": "address"
-      },
-      {
-        "name": "epoch",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "utilizationAmount",
-        "type": "int256",
-        "internalType": "int256"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "previewAtomCreate",
-    "inputs": [
-      {
-        "name": "termId",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      },
-      {
-        "name": "curveId",
-        "type": "uint256",
-        "internalType": "uint256"
-      },
-      {
-        "name": "assets",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "shares",
-        "type": "uint256",
-        "internalType": "uint256"
-      },
-      {
-        "name": "assetsAfterFixedFees",
-        "type": "uint256",
-        "internalType": "uint256"
-      },
-      {
-        "name": "assetsAfterFees",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "previewDeposit",
-    "inputs": [
-      {
-        "name": "termId",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      },
-      {
-        "name": "curveId",
-        "type": "uint256",
-        "internalType": "uint256"
-      },
-      {
-        "name": "assets",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "shares",
-        "type": "uint256",
-        "internalType": "uint256"
-      },
-      {
-        "name": "assetsAfterFees",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "previewRedeem",
-    "inputs": [
-      {
-        "name": "termId",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      },
-      {
-        "name": "curveId",
-        "type": "uint256",
-        "internalType": "uint256"
-      },
-      {
-        "name": "assets",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "shares",
-        "type": "uint256",
-        "internalType": "uint256"
-      },
-      {
-        "name": "assetsAfterFees",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "previewTripleCreate",
-    "inputs": [
-      {
-        "name": "termId",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      },
-      {
-        "name": "curveId",
-        "type": "uint256",
-        "internalType": "uint256"
-      },
-      {
-        "name": "assets",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "shares",
-        "type": "uint256",
-        "internalType": "uint256"
-      },
-      {
-        "name": "assetsAfterFixedFees",
-        "type": "uint256",
-        "internalType": "uint256"
-      },
-      {
-        "name": "assetsAfterFees",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "protocolFeeAmount",
-    "inputs": [
-      {
-        "name": "assets",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "redeem",
-    "inputs": [
-      {
-        "name": "receiver",
-        "type": "address",
-        "internalType": "address"
-      },
-      {
-        "name": "termId",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      },
-      {
-        "name": "curveId",
-        "type": "uint256",
-        "internalType": "uint256"
-      },
-      {
-        "name": "shares",
-        "type": "uint256",
-        "internalType": "uint256"
-      },
-      {
-        "name": "minAssets",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "redeemBatch",
-    "inputs": [
-      {
-        "name": "receiver",
-        "type": "address",
-        "internalType": "address"
-      },
-      {
-        "name": "termIds",
-        "type": "bytes32[]",
-        "internalType": "bytes32[]"
-      },
-      {
-        "name": "curveIds",
-        "type": "uint256[]",
-        "internalType": "uint256[]"
-      },
-      {
-        "name": "shares",
-        "type": "uint256[]",
-        "internalType": "uint256[]"
-      },
-      {
-        "name": "minAssets",
-        "type": "uint256[]",
-        "internalType": "uint256[]"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "received",
-        "type": "uint256[]",
-        "internalType": "uint256[]"
-      }
-    ],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "renounceRole",
-    "inputs": [
-      {
-        "name": "role",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      },
-      {
-        "name": "callerConfirmation",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "revokeRole",
-    "inputs": [
-      {
-        "name": "role",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      },
-      {
-        "name": "account",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "setAtomConfig",
-    "inputs": [
-      {
-        "name": "_atomConfig",
-        "type": "tuple",
-        "internalType": "struct AtomConfig",
-        "components": [
-          {
-            "name": "atomCreationProtocolFee",
-            "type": "uint256",
-            "internalType": "uint256"
+            name: 'feeDenominator',
+            type: 'uint256',
+            internalType: 'uint256',
           },
           {
-            "name": "atomWalletDepositFee",
-            "type": "uint256",
-            "internalType": "uint256"
-          }
-        ]
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "setBondingCurveConfig",
-    "inputs": [
-      {
-        "name": "_bondingCurveConfig",
-        "type": "tuple",
-        "internalType": "struct BondingCurveConfig",
-        "components": [
-          {
-            "name": "registry",
-            "type": "address",
-            "internalType": "address"
+            name: 'trustBonding',
+            type: 'address',
+            internalType: 'address',
           },
           {
-            "name": "defaultCurveId",
-            "type": "uint256",
-            "internalType": "uint256"
-          }
-        ]
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "setGeneralConfig",
-    "inputs": [
-      {
-        "name": "_generalConfig",
-        "type": "tuple",
-        "internalType": "struct GeneralConfig",
-        "components": [
-          {
-            "name": "admin",
-            "type": "address",
-            "internalType": "address"
+            name: 'minDeposit',
+            type: 'uint256',
+            internalType: 'uint256',
           },
           {
-            "name": "protocolMultisig",
-            "type": "address",
-            "internalType": "address"
+            name: 'minShare',
+            type: 'uint256',
+            internalType: 'uint256',
           },
           {
-            "name": "feeDenominator",
-            "type": "uint256",
-            "internalType": "uint256"
+            name: 'atomDataMaxLength',
+            type: 'uint256',
+            internalType: 'uint256',
           },
           {
-            "name": "trustBonding",
-            "type": "address",
-            "internalType": "address"
+            name: 'feeThreshold',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+        ],
+      },
+    ],
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    name: 'setTripleConfig',
+    inputs: [
+      {
+        name: '_tripleConfig',
+        type: 'tuple',
+        internalType: 'struct TripleConfig',
+        components: [
+          {
+            name: 'tripleCreationProtocolFee',
+            type: 'uint256',
+            internalType: 'uint256',
           },
           {
-            "name": "minDeposit",
-            "type": "uint256",
-            "internalType": "uint256"
+            name: 'atomDepositFractionForTriple',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+        ],
+      },
+    ],
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    name: 'setVaultFees',
+    inputs: [
+      {
+        name: '_vaultFees',
+        type: 'tuple',
+        internalType: 'struct VaultFees',
+        components: [
+          {
+            name: 'entryFee',
+            type: 'uint256',
+            internalType: 'uint256',
           },
           {
-            "name": "minShare",
-            "type": "uint256",
-            "internalType": "uint256"
+            name: 'exitFee',
+            type: 'uint256',
+            internalType: 'uint256',
           },
           {
-            "name": "atomDataMaxLength",
-            "type": "uint256",
-            "internalType": "uint256"
+            name: 'protocolFee',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+        ],
+      },
+    ],
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    name: 'setWalletConfig',
+    inputs: [
+      {
+        name: '_walletConfig',
+        type: 'tuple',
+        internalType: 'struct WalletConfig',
+        components: [
+          {
+            name: 'entryPoint',
+            type: 'address',
+            internalType: 'address',
           },
           {
-            "name": "decimalPrecision",
-            "type": "uint256",
-            "internalType": "uint256"
-          }
-        ]
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "setTripleConfig",
-    "inputs": [
-      {
-        "name": "_tripleConfig",
-        "type": "tuple",
-        "internalType": "struct TripleConfig",
-        "components": [
-          {
-            "name": "tripleCreationProtocolFee",
-            "type": "uint256",
-            "internalType": "uint256"
+            name: 'atomWarden',
+            type: 'address',
+            internalType: 'address',
           },
           {
-            "name": "totalAtomDepositsOnTripleCreation",
-            "type": "uint256",
-            "internalType": "uint256"
+            name: 'atomWalletBeacon',
+            type: 'address',
+            internalType: 'address',
           },
           {
-            "name": "atomDepositFractionForTriple",
-            "type": "uint256",
-            "internalType": "uint256"
-          }
-        ]
-      }
-    ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "setVaultFees",
-    "inputs": [
-      {
-        "name": "_vaultFees",
-        "type": "tuple",
-        "internalType": "struct VaultFees",
-        "components": [
-          {
-            "name": "entryFee",
-            "type": "uint256",
-            "internalType": "uint256"
+            name: 'atomWalletFactory',
+            type: 'address',
+            internalType: 'address',
           },
-          {
-            "name": "exitFee",
-            "type": "uint256",
-            "internalType": "uint256"
-          },
-          {
-            "name": "protocolFee",
-            "type": "uint256",
-            "internalType": "uint256"
-          }
-        ]
-      }
+        ],
+      },
     ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
+    outputs: [],
+    stateMutability: 'nonpayable',
   },
   {
-    "type": "function",
-    "name": "setWalletConfig",
-    "inputs": [
+    type: 'function',
+    name: 'supportsInterface',
+    inputs: [
       {
-        "name": "_walletConfig",
-        "type": "tuple",
-        "internalType": "struct WalletConfig",
-        "components": [
-          {
-            "name": "permit2",
-            "type": "address",
-            "internalType": "contract IPermit2"
-          },
-          {
-            "name": "entryPoint",
-            "type": "address",
-            "internalType": "address"
-          },
-          {
-            "name": "atomWarden",
-            "type": "address",
-            "internalType": "address"
-          },
-          {
-            "name": "atomWalletBeacon",
-            "type": "address",
-            "internalType": "address"
-          },
-          {
-            "name": "atomWalletFactory",
-            "type": "address",
-            "internalType": "address"
-          }
-        ]
-      }
+        name: 'interfaceId',
+        type: 'bytes4',
+        internalType: 'bytes4',
+      },
     ],
-    "outputs": [],
-    "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "supportsInterface",
-    "inputs": [
+    outputs: [
       {
-        "name": "interfaceId",
-        "type": "bytes4",
-        "internalType": "bytes4"
-      }
+        name: '',
+        type: 'bool',
+        internalType: 'bool',
+      },
     ],
-    "outputs": [
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'sweepAccumulatedProtocolFees',
+    inputs: [
       {
-        "name": "",
-        "type": "bool",
-        "internalType": "bool"
-      }
+        name: 'epoch',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
     ],
-    "stateMutability": "view"
+    outputs: [],
+    stateMutability: 'nonpayable',
   },
   {
-    "type": "function",
-    "name": "totalTermsCreated",
-    "inputs": [],
-    "outputs": [
+    type: 'function',
+    name: 'totalTermsCreated',
+    inputs: [],
+    outputs: [
       {
-        "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
+        name: '',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
     ],
-    "stateMutability": "view"
+    stateMutability: 'view',
   },
   {
-    "type": "function",
-    "name": "totalUtilization",
-    "inputs": [
+    type: 'function',
+    name: 'totalUtilization',
+    inputs: [
       {
-        "name": "epoch",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
+        name: 'epoch',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
     ],
-    "outputs": [
+    outputs: [
       {
-        "name": "utilizationAmount",
-        "type": "int256",
-        "internalType": "int256"
-      }
+        name: 'utilizationAmount',
+        type: 'int256',
+        internalType: 'int256',
+      },
     ],
-    "stateMutability": "view"
+    stateMutability: 'view',
   },
   {
-    "type": "function",
-    "name": "triple",
-    "inputs": [
+    type: 'function',
+    name: 'triple',
+    inputs: [
       {
-        "name": "tripleId",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      }
+        name: 'tripleId',
+        type: 'bytes32',
+        internalType: 'bytes32',
+      },
     ],
-    "outputs": [
+    outputs: [
       {
-        "name": "",
-        "type": "bytes32",
-        "internalType": "bytes32"
+        name: '',
+        type: 'bytes32',
+        internalType: 'bytes32',
       },
       {
-        "name": "",
-        "type": "bytes32",
-        "internalType": "bytes32"
+        name: '',
+        type: 'bytes32',
+        internalType: 'bytes32',
       },
       {
-        "name": "",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      }
+        name: '',
+        type: 'bytes32',
+        internalType: 'bytes32',
+      },
     ],
-    "stateMutability": "view"
+    stateMutability: 'view',
   },
   {
-    "type": "function",
-    "name": "tripleConfig",
-    "inputs": [],
-    "outputs": [
+    type: 'function',
+    name: 'tripleConfig',
+    inputs: [],
+    outputs: [
       {
-        "name": "tripleCreationProtocolFee",
-        "type": "uint256",
-        "internalType": "uint256"
+        name: 'tripleCreationProtocolFee',
+        type: 'uint256',
+        internalType: 'uint256',
       },
       {
-        "name": "totalAtomDepositsOnTripleCreation",
-        "type": "uint256",
-        "internalType": "uint256"
+        name: 'atomDepositFractionForTriple',
+        type: 'uint256',
+        internalType: 'uint256',
       },
-      {
-        "name": "atomDepositFractionForTriple",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
     ],
-    "stateMutability": "view"
+    stateMutability: 'view',
   },
   {
-    "type": "function",
-    "name": "unpause",
-    "inputs": [],
-    "outputs": [],
-    "stateMutability": "nonpayable"
+    type: 'function',
+    name: 'unpause',
+    inputs: [],
+    outputs: [],
+    stateMutability: 'nonpayable',
   },
   {
-    "type": "function",
-    "name": "vaultFees",
-    "inputs": [],
-    "outputs": [
+    type: 'function',
+    name: 'userEpochHistory',
+    inputs: [
       {
-        "name": "entryFee",
-        "type": "uint256",
-        "internalType": "uint256"
+        name: 'user',
+        type: 'address',
+        internalType: 'address',
       },
       {
-        "name": "exitFee",
-        "type": "uint256",
-        "internalType": "uint256"
+        name: '',
+        type: 'uint256',
+        internalType: 'uint256',
       },
-      {
-        "name": "protocolFee",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
     ],
-    "stateMutability": "view"
-  },
-  {
-    "type": "function",
-    "name": "walletConfig",
-    "inputs": [],
-    "outputs": [
+    outputs: [
       {
-        "name": "permit2",
-        "type": "address",
-        "internalType": "contract IPermit2"
+        name: 'epoch',
+        type: 'uint256',
+        internalType: 'uint256',
       },
-      {
-        "name": "entryPoint",
-        "type": "address",
-        "internalType": "address"
-      },
-      {
-        "name": "atomWarden",
-        "type": "address",
-        "internalType": "address"
-      },
-      {
-        "name": "atomWalletBeacon",
-        "type": "address",
-        "internalType": "address"
-      },
-      {
-        "name": "atomWalletFactory",
-        "type": "address",
-        "internalType": "address"
-      }
     ],
-    "stateMutability": "view"
+    stateMutability: 'view',
   },
   {
-    "type": "event",
-    "name": "ApprovalTypeUpdated",
-    "inputs": [
+    type: 'function',
+    name: 'vaultFees',
+    inputs: [],
+    outputs: [
       {
-        "name": "sender",
-        "type": "address",
-        "indexed": true,
-        "internalType": "address"
+        name: 'entryFee',
+        type: 'uint256',
+        internalType: 'uint256',
       },
       {
-        "name": "receiver",
-        "type": "address",
-        "indexed": true,
-        "internalType": "address"
+        name: 'exitFee',
+        type: 'uint256',
+        internalType: 'uint256',
       },
       {
-        "name": "approvalType",
-        "type": "uint8",
-        "indexed": false,
-        "internalType": "enum IMultiVault.ApprovalTypes"
-      }
+        name: 'protocolFee',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
     ],
-    "anonymous": false
+    stateMutability: 'view',
   },
   {
-    "type": "event",
-    "name": "AtomCreated",
-    "inputs": [
+    type: 'function',
+    name: 'walletConfig',
+    inputs: [],
+    outputs: [
       {
-        "name": "creator",
-        "type": "address",
-        "indexed": true,
-        "internalType": "address"
+        name: 'entryPoint',
+        type: 'address',
+        internalType: 'address',
       },
       {
-        "name": "termId",
-        "type": "bytes32",
-        "indexed": true,
-        "internalType": "bytes32"
+        name: 'atomWarden',
+        type: 'address',
+        internalType: 'address',
       },
       {
-        "name": "atomData",
-        "type": "bytes",
-        "indexed": false,
-        "internalType": "bytes"
+        name: 'atomWalletBeacon',
+        type: 'address',
+        internalType: 'address',
       },
       {
-        "name": "atomWallet",
-        "type": "address",
-        "indexed": false,
-        "internalType": "address"
-      }
+        name: 'atomWalletFactory',
+        type: 'address',
+        internalType: 'address',
+      },
     ],
-    "anonymous": false
+    stateMutability: 'view',
   },
   {
-    "type": "event",
-    "name": "AtomWalletDepositFeeCollected",
-    "inputs": [
+    type: 'event',
+    name: 'ApprovalTypeUpdated',
+    inputs: [
       {
-        "name": "termId",
-        "type": "bytes32",
-        "indexed": true,
-        "internalType": "bytes32"
+        name: 'sender',
+        type: 'address',
+        indexed: true,
+        internalType: 'address',
       },
       {
-        "name": "sender",
-        "type": "address",
-        "indexed": true,
-        "internalType": "address"
+        name: 'receiver',
+        type: 'address',
+        indexed: true,
+        internalType: 'address',
       },
       {
-        "name": "amount",
-        "type": "uint256",
-        "indexed": false,
-        "internalType": "uint256"
-      }
+        name: 'approvalType',
+        type: 'uint8',
+        indexed: false,
+        internalType: 'enum ApprovalTypes',
+      },
     ],
-    "anonymous": false
+    anonymous: false,
   },
   {
-    "type": "event",
-    "name": "AtomWalletDepositFeesClaimed",
-    "inputs": [
+    type: 'event',
+    name: 'AtomConfigUpdated',
+    inputs: [
       {
-        "name": "termId",
-        "type": "bytes32",
-        "indexed": true,
-        "internalType": "bytes32"
+        name: 'atomCreationProtocolFee',
+        type: 'uint256',
+        indexed: false,
+        internalType: 'uint256',
       },
       {
-        "name": "atomWalletOwner",
-        "type": "address",
-        "indexed": true,
-        "internalType": "address"
+        name: 'atomWalletDepositFee',
+        type: 'uint256',
+        indexed: false,
+        internalType: 'uint256',
       },
-      {
-        "name": "feesClaimed",
-        "type": "uint256",
-        "indexed": true,
-        "internalType": "uint256"
-      }
     ],
-    "anonymous": false
+    anonymous: false,
   },
   {
-    "type": "event",
-    "name": "Deposited",
-    "inputs": [
+    type: 'event',
+    name: 'AtomCreated',
+    inputs: [
       {
-        "name": "sender",
-        "type": "address",
-        "indexed": true,
-        "internalType": "address"
+        name: 'creator',
+        type: 'address',
+        indexed: true,
+        internalType: 'address',
       },
       {
-        "name": "receiver",
-        "type": "address",
-        "indexed": true,
-        "internalType": "address"
+        name: 'termId',
+        type: 'bytes32',
+        indexed: true,
+        internalType: 'bytes32',
       },
       {
-        "name": "termId",
-        "type": "bytes32",
-        "indexed": true,
-        "internalType": "bytes32"
+        name: 'atomData',
+        type: 'bytes',
+        indexed: false,
+        internalType: 'bytes',
       },
       {
-        "name": "curveId",
-        "type": "uint256",
-        "indexed": false,
-        "internalType": "uint256"
+        name: 'atomWallet',
+        type: 'address',
+        indexed: false,
+        internalType: 'address',
       },
-      {
-        "name": "assets",
-        "type": "uint256",
-        "indexed": false,
-        "internalType": "uint256"
-      },
-      {
-        "name": "assetsAfterFees",
-        "type": "uint256",
-        "indexed": false,
-        "internalType": "uint256"
-      },
-      {
-        "name": "shares",
-        "type": "uint256",
-        "indexed": false,
-        "internalType": "uint256"
-      },
-      {
-        "name": "totalShares",
-        "type": "uint256",
-        "indexed": false,
-        "internalType": "uint256"
-      },
-      {
-        "name": "vaultType",
-        "type": "uint8",
-        "indexed": false,
-        "internalType": "enum IMultiVault.VaultType"
-      }
     ],
-    "anonymous": false
+    anonymous: false,
   },
   {
-    "type": "event",
-    "name": "Initialized",
-    "inputs": [
+    type: 'event',
+    name: 'AtomWalletDepositFeeCollected',
+    inputs: [
       {
-        "name": "version",
-        "type": "uint64",
-        "indexed": false,
-        "internalType": "uint64"
-      }
+        name: 'termId',
+        type: 'bytes32',
+        indexed: true,
+        internalType: 'bytes32',
+      },
+      {
+        name: 'sender',
+        type: 'address',
+        indexed: true,
+        internalType: 'address',
+      },
+      {
+        name: 'amount',
+        type: 'uint256',
+        indexed: false,
+        internalType: 'uint256',
+      },
     ],
-    "anonymous": false
+    anonymous: false,
   },
   {
-    "type": "event",
-    "name": "Paused",
-    "inputs": [
+    type: 'event',
+    name: 'AtomWalletDepositFeesClaimed',
+    inputs: [
       {
-        "name": "account",
-        "type": "address",
-        "indexed": false,
-        "internalType": "address"
-      }
+        name: 'termId',
+        type: 'bytes32',
+        indexed: true,
+        internalType: 'bytes32',
+      },
+      {
+        name: 'atomWalletOwner',
+        type: 'address',
+        indexed: true,
+        internalType: 'address',
+      },
+      {
+        name: 'feesClaimed',
+        type: 'uint256',
+        indexed: true,
+        internalType: 'uint256',
+      },
     ],
-    "anonymous": false
+    anonymous: false,
   },
   {
-    "type": "event",
-    "name": "PersonalUtilizationAdded",
-    "inputs": [
+    type: 'event',
+    name: 'BondingCurveConfigUpdated',
+    inputs: [
       {
-        "name": "user",
-        "type": "address",
-        "indexed": true,
-        "internalType": "address"
+        name: 'registry',
+        type: 'address',
+        indexed: true,
+        internalType: 'address',
       },
       {
-        "name": "epoch",
-        "type": "uint256",
-        "indexed": true,
-        "internalType": "uint256"
+        name: 'defaultCurveId',
+        type: 'uint256',
+        indexed: false,
+        internalType: 'uint256',
       },
-      {
-        "name": "valueAdded",
-        "type": "int256",
-        "indexed": true,
-        "internalType": "int256"
-      },
-      {
-        "name": "personalUtilization",
-        "type": "int256",
-        "indexed": false,
-        "internalType": "int256"
-      }
     ],
-    "anonymous": false
+    anonymous: false,
   },
   {
-    "type": "event",
-    "name": "PersonalUtilizationRemoved",
-    "inputs": [
+    type: 'event',
+    name: 'Deposited',
+    inputs: [
       {
-        "name": "user",
-        "type": "address",
-        "indexed": true,
-        "internalType": "address"
+        name: 'sender',
+        type: 'address',
+        indexed: true,
+        internalType: 'address',
       },
       {
-        "name": "epoch",
-        "type": "uint256",
-        "indexed": true,
-        "internalType": "uint256"
+        name: 'receiver',
+        type: 'address',
+        indexed: true,
+        internalType: 'address',
       },
       {
-        "name": "valueRemoved",
-        "type": "int256",
-        "indexed": true,
-        "internalType": "int256"
+        name: 'termId',
+        type: 'bytes32',
+        indexed: true,
+        internalType: 'bytes32',
       },
       {
-        "name": "personalUtilization",
-        "type": "int256",
-        "indexed": false,
-        "internalType": "int256"
-      }
+        name: 'curveId',
+        type: 'uint256',
+        indexed: false,
+        internalType: 'uint256',
+      },
+      {
+        name: 'assets',
+        type: 'uint256',
+        indexed: false,
+        internalType: 'uint256',
+      },
+      {
+        name: 'assetsAfterFees',
+        type: 'uint256',
+        indexed: false,
+        internalType: 'uint256',
+      },
+      {
+        name: 'shares',
+        type: 'uint256',
+        indexed: false,
+        internalType: 'uint256',
+      },
+      {
+        name: 'totalShares',
+        type: 'uint256',
+        indexed: false,
+        internalType: 'uint256',
+      },
+      {
+        name: 'vaultType',
+        type: 'uint8',
+        indexed: false,
+        internalType: 'enum VaultType',
+      },
     ],
-    "anonymous": false
+    anonymous: false,
   },
   {
-    "type": "event",
-    "name": "ProtocolFeeAccrued",
-    "inputs": [
+    type: 'event',
+    name: 'GeneralConfigUpdated',
+    inputs: [
       {
-        "name": "epoch",
-        "type": "uint256",
-        "indexed": true,
-        "internalType": "uint256"
+        name: 'admin',
+        type: 'address',
+        indexed: true,
+        internalType: 'address',
       },
       {
-        "name": "amount",
-        "type": "uint256",
-        "indexed": false,
-        "internalType": "uint256"
-      }
+        name: 'protocolMultisig',
+        type: 'address',
+        indexed: true,
+        internalType: 'address',
+      },
+      {
+        name: 'feeDenominator',
+        type: 'uint256',
+        indexed: false,
+        internalType: 'uint256',
+      },
+      {
+        name: 'trustBonding',
+        type: 'address',
+        indexed: true,
+        internalType: 'address',
+      },
+      {
+        name: 'minDeposit',
+        type: 'uint256',
+        indexed: false,
+        internalType: 'uint256',
+      },
+      {
+        name: 'minShare',
+        type: 'uint256',
+        indexed: false,
+        internalType: 'uint256',
+      },
+      {
+        name: 'atomDataMaxLength',
+        type: 'uint256',
+        indexed: false,
+        internalType: 'uint256',
+      },
+      {
+        name: 'feeThreshold',
+        type: 'uint256',
+        indexed: false,
+        internalType: 'uint256',
+      },
     ],
-    "anonymous": false
+    anonymous: false,
   },
   {
-    "type": "event",
-    "name": "ProtocolFeeTransferred",
-    "inputs": [
+    type: 'event',
+    name: 'Initialized',
+    inputs: [
       {
-        "name": "epoch",
-        "type": "uint256",
-        "indexed": true,
-        "internalType": "uint256"
+        name: 'version',
+        type: 'uint64',
+        indexed: false,
+        internalType: 'uint64',
       },
-      {
-        "name": "destination",
-        "type": "address",
-        "indexed": true,
-        "internalType": "address"
-      },
-      {
-        "name": "amount",
-        "type": "uint256",
-        "indexed": false,
-        "internalType": "uint256"
-      }
     ],
-    "anonymous": false
+    anonymous: false,
   },
   {
-    "type": "event",
-    "name": "Redeemed",
-    "inputs": [
+    type: 'event',
+    name: 'Paused',
+    inputs: [
       {
-        "name": "sender",
-        "type": "address",
-        "indexed": true,
-        "internalType": "address"
+        name: 'account',
+        type: 'address',
+        indexed: false,
+        internalType: 'address',
       },
-      {
-        "name": "receiver",
-        "type": "address",
-        "indexed": true,
-        "internalType": "address"
-      },
-      {
-        "name": "termId",
-        "type": "bytes32",
-        "indexed": true,
-        "internalType": "bytes32"
-      },
-      {
-        "name": "curveId",
-        "type": "uint256",
-        "indexed": false,
-        "internalType": "uint256"
-      },
-      {
-        "name": "shares",
-        "type": "uint256",
-        "indexed": false,
-        "internalType": "uint256"
-      },
-      {
-        "name": "totalShares",
-        "type": "uint256",
-        "indexed": false,
-        "internalType": "uint256"
-      },
-      {
-        "name": "assets",
-        "type": "uint256",
-        "indexed": false,
-        "internalType": "uint256"
-      },
-      {
-        "name": "fees",
-        "type": "uint256",
-        "indexed": false,
-        "internalType": "uint256"
-      },
-      {
-        "name": "vaultType",
-        "type": "uint8",
-        "indexed": false,
-        "internalType": "enum IMultiVault.VaultType"
-      }
     ],
-    "anonymous": false
+    anonymous: false,
   },
   {
-    "type": "event",
-    "name": "RoleAdminChanged",
-    "inputs": [
+    type: 'event',
+    name: 'PersonalUtilizationAdded',
+    inputs: [
       {
-        "name": "role",
-        "type": "bytes32",
-        "indexed": true,
-        "internalType": "bytes32"
+        name: 'user',
+        type: 'address',
+        indexed: true,
+        internalType: 'address',
       },
       {
-        "name": "previousAdminRole",
-        "type": "bytes32",
-        "indexed": true,
-        "internalType": "bytes32"
+        name: 'epoch',
+        type: 'uint256',
+        indexed: true,
+        internalType: 'uint256',
       },
       {
-        "name": "newAdminRole",
-        "type": "bytes32",
-        "indexed": true,
-        "internalType": "bytes32"
-      }
+        name: 'valueAdded',
+        type: 'int256',
+        indexed: true,
+        internalType: 'int256',
+      },
+      {
+        name: 'personalUtilization',
+        type: 'int256',
+        indexed: false,
+        internalType: 'int256',
+      },
     ],
-    "anonymous": false
+    anonymous: false,
   },
   {
-    "type": "event",
-    "name": "RoleGranted",
-    "inputs": [
+    type: 'event',
+    name: 'PersonalUtilizationRemoved',
+    inputs: [
       {
-        "name": "role",
-        "type": "bytes32",
-        "indexed": true,
-        "internalType": "bytes32"
+        name: 'user',
+        type: 'address',
+        indexed: true,
+        internalType: 'address',
       },
       {
-        "name": "account",
-        "type": "address",
-        "indexed": true,
-        "internalType": "address"
+        name: 'epoch',
+        type: 'uint256',
+        indexed: true,
+        internalType: 'uint256',
       },
       {
-        "name": "sender",
-        "type": "address",
-        "indexed": true,
-        "internalType": "address"
-      }
+        name: 'valueRemoved',
+        type: 'int256',
+        indexed: true,
+        internalType: 'int256',
+      },
+      {
+        name: 'personalUtilization',
+        type: 'int256',
+        indexed: false,
+        internalType: 'int256',
+      },
     ],
-    "anonymous": false
+    anonymous: false,
   },
   {
-    "type": "event",
-    "name": "RoleRevoked",
-    "inputs": [
+    type: 'event',
+    name: 'ProtocolFeeAccrued',
+    inputs: [
       {
-        "name": "role",
-        "type": "bytes32",
-        "indexed": true,
-        "internalType": "bytes32"
+        name: 'epoch',
+        type: 'uint256',
+        indexed: true,
+        internalType: 'uint256',
       },
       {
-        "name": "account",
-        "type": "address",
-        "indexed": true,
-        "internalType": "address"
+        name: 'sender',
+        type: 'address',
+        indexed: true,
+        internalType: 'address',
       },
       {
-        "name": "sender",
-        "type": "address",
-        "indexed": true,
-        "internalType": "address"
-      }
+        name: 'amount',
+        type: 'uint256',
+        indexed: false,
+        internalType: 'uint256',
+      },
     ],
-    "anonymous": false
+    anonymous: false,
   },
   {
-    "type": "event",
-    "name": "SharePriceChanged",
-    "inputs": [
+    type: 'event',
+    name: 'ProtocolFeeTransferred',
+    inputs: [
       {
-        "name": "termId",
-        "type": "bytes32",
-        "indexed": true,
-        "internalType": "bytes32"
+        name: 'epoch',
+        type: 'uint256',
+        indexed: true,
+        internalType: 'uint256',
       },
       {
-        "name": "curveId",
-        "type": "uint256",
-        "indexed": true,
-        "internalType": "uint256"
+        name: 'destination',
+        type: 'address',
+        indexed: true,
+        internalType: 'address',
       },
       {
-        "name": "sharePrice",
-        "type": "uint256",
-        "indexed": false,
-        "internalType": "uint256"
+        name: 'amount',
+        type: 'uint256',
+        indexed: false,
+        internalType: 'uint256',
       },
-      {
-        "name": "totalAssets",
-        "type": "uint256",
-        "indexed": false,
-        "internalType": "uint256"
-      },
-      {
-        "name": "totalShares",
-        "type": "uint256",
-        "indexed": false,
-        "internalType": "uint256"
-      },
-      {
-        "name": "vaultType",
-        "type": "uint8",
-        "indexed": false,
-        "internalType": "enum IMultiVault.VaultType"
-      }
     ],
-    "anonymous": false
+    anonymous: false,
   },
   {
-    "type": "event",
-    "name": "TotalUtilizationAdded",
-    "inputs": [
+    type: 'event',
+    name: 'Redeemed',
+    inputs: [
       {
-        "name": "epoch",
-        "type": "uint256",
-        "indexed": true,
-        "internalType": "uint256"
+        name: 'sender',
+        type: 'address',
+        indexed: true,
+        internalType: 'address',
       },
       {
-        "name": "valueAdded",
-        "type": "int256",
-        "indexed": true,
-        "internalType": "int256"
+        name: 'receiver',
+        type: 'address',
+        indexed: true,
+        internalType: 'address',
       },
       {
-        "name": "totalUtilization",
-        "type": "int256",
-        "indexed": true,
-        "internalType": "int256"
-      }
+        name: 'termId',
+        type: 'bytes32',
+        indexed: true,
+        internalType: 'bytes32',
+      },
+      {
+        name: 'curveId',
+        type: 'uint256',
+        indexed: false,
+        internalType: 'uint256',
+      },
+      {
+        name: 'shares',
+        type: 'uint256',
+        indexed: false,
+        internalType: 'uint256',
+      },
+      {
+        name: 'totalShares',
+        type: 'uint256',
+        indexed: false,
+        internalType: 'uint256',
+      },
+      {
+        name: 'assets',
+        type: 'uint256',
+        indexed: false,
+        internalType: 'uint256',
+      },
+      {
+        name: 'fees',
+        type: 'uint256',
+        indexed: false,
+        internalType: 'uint256',
+      },
+      {
+        name: 'vaultType',
+        type: 'uint8',
+        indexed: false,
+        internalType: 'enum VaultType',
+      },
     ],
-    "anonymous": false
+    anonymous: false,
   },
   {
-    "type": "event",
-    "name": "TotalUtilizationRemoved",
-    "inputs": [
+    type: 'event',
+    name: 'RoleAdminChanged',
+    inputs: [
       {
-        "name": "epoch",
-        "type": "uint256",
-        "indexed": true,
-        "internalType": "uint256"
+        name: 'role',
+        type: 'bytes32',
+        indexed: true,
+        internalType: 'bytes32',
       },
       {
-        "name": "valueRemoved",
-        "type": "int256",
-        "indexed": true,
-        "internalType": "int256"
+        name: 'previousAdminRole',
+        type: 'bytes32',
+        indexed: true,
+        internalType: 'bytes32',
       },
       {
-        "name": "totalUtilization",
-        "type": "int256",
-        "indexed": true,
-        "internalType": "int256"
-      }
+        name: 'newAdminRole',
+        type: 'bytes32',
+        indexed: true,
+        internalType: 'bytes32',
+      },
     ],
-    "anonymous": false
+    anonymous: false,
   },
   {
-    "type": "event",
-    "name": "TripleCreated",
-    "inputs": [
+    type: 'event',
+    name: 'RoleGranted',
+    inputs: [
       {
-        "name": "creator",
-        "type": "address",
-        "indexed": true,
-        "internalType": "address"
+        name: 'role',
+        type: 'bytes32',
+        indexed: true,
+        internalType: 'bytes32',
       },
       {
-        "name": "termId",
-        "type": "bytes32",
-        "indexed": true,
-        "internalType": "bytes32"
+        name: 'account',
+        type: 'address',
+        indexed: true,
+        internalType: 'address',
       },
       {
-        "name": "subjectId",
-        "type": "bytes32",
-        "indexed": false,
-        "internalType": "bytes32"
+        name: 'sender',
+        type: 'address',
+        indexed: true,
+        internalType: 'address',
       },
-      {
-        "name": "predicateId",
-        "type": "bytes32",
-        "indexed": false,
-        "internalType": "bytes32"
-      },
-      {
-        "name": "objectId",
-        "type": "bytes32",
-        "indexed": false,
-        "internalType": "bytes32"
-      }
     ],
-    "anonymous": false
+    anonymous: false,
   },
   {
-    "type": "event",
-    "name": "Unpaused",
-    "inputs": [
+    type: 'event',
+    name: 'RoleRevoked',
+    inputs: [
       {
-        "name": "account",
-        "type": "address",
-        "indexed": false,
-        "internalType": "address"
-      }
+        name: 'role',
+        type: 'bytes32',
+        indexed: true,
+        internalType: 'bytes32',
+      },
+      {
+        name: 'account',
+        type: 'address',
+        indexed: true,
+        internalType: 'address',
+      },
+      {
+        name: 'sender',
+        type: 'address',
+        indexed: true,
+        internalType: 'address',
+      },
     ],
-    "anonymous": false
+    anonymous: false,
   },
   {
-    "type": "error",
-    "name": "AccessControlBadConfirmation",
-    "inputs": []
-  },
-  {
-    "type": "error",
-    "name": "AccessControlUnauthorizedAccount",
-    "inputs": [
+    type: 'event',
+    name: 'SharePriceChanged',
+    inputs: [
       {
-        "name": "account",
-        "type": "address",
-        "internalType": "address"
+        name: 'termId',
+        type: 'bytes32',
+        indexed: true,
+        internalType: 'bytes32',
       },
       {
-        "name": "neededRole",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      }
-    ]
-  },
-  {
-    "type": "error",
-    "name": "AtomDoesNotExist",
-    "inputs": [
-      {
-        "name": "termId",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      }
-    ]
-  },
-  {
-    "type": "error",
-    "name": "EnforcedPause",
-    "inputs": []
-  },
-  {
-    "type": "error",
-    "name": "ExpectedPause",
-    "inputs": []
-  },
-  {
-    "type": "error",
-    "name": "FailedCall",
-    "inputs": []
-  },
-  {
-    "type": "error",
-    "name": "InsufficientBalance",
-    "inputs": [
-      {
-        "name": "balance",
-        "type": "uint256",
-        "internalType": "uint256"
+        name: 'curveId',
+        type: 'uint256',
+        indexed: true,
+        internalType: 'uint256',
       },
       {
-        "name": "needed",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ]
-  },
-  {
-    "type": "error",
-    "name": "InvalidInitialization",
-    "inputs": []
-  },
-  {
-    "type": "error",
-    "name": "MultiVault_ActionExceedsMaxAssets",
-    "inputs": []
-  },
-  {
-    "type": "error",
-    "name": "MultiVault_ArraysNotSameLength",
-    "inputs": []
-  },
-  {
-    "type": "error",
-    "name": "MultiVault_AtomDataTooLong",
-    "inputs": []
-  },
-  {
-    "type": "error",
-    "name": "MultiVault_AtomDoesNotExist",
-    "inputs": [
-      {
-        "name": "atomId",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      }
-    ]
-  },
-  {
-    "type": "error",
-    "name": "MultiVault_AtomExists",
-    "inputs": [
-      {
-        "name": "atomData",
-        "type": "bytes",
-        "internalType": "bytes"
-      }
-    ]
-  },
-  {
-    "type": "error",
-    "name": "MultiVault_BurnFromZeroAddress",
-    "inputs": []
-  },
-  {
-    "type": "error",
-    "name": "MultiVault_BurnInsufficientBalance",
-    "inputs": []
-  },
-  {
-    "type": "error",
-    "name": "MultiVault_CannotApproveOrRevokeSelf",
-    "inputs": []
-  },
-  {
-    "type": "error",
-    "name": "MultiVault_DepositBelowMinimumDeposit",
-    "inputs": []
-  },
-  {
-    "type": "error",
-    "name": "MultiVault_DepositOrRedeemZeroShares",
-    "inputs": []
-  },
-  {
-    "type": "error",
-    "name": "MultiVault_HasCounterStake",
-    "inputs": []
-  },
-  {
-    "type": "error",
-    "name": "MultiVault_InsufficientAssets",
-    "inputs": []
-  },
-  {
-    "type": "error",
-    "name": "MultiVault_InsufficientBalance",
-    "inputs": []
-  },
-  {
-    "type": "error",
-    "name": "MultiVault_InsufficientRemainingSharesInVault",
-    "inputs": [
-      {
-        "name": "remainingShares",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ]
-  },
-  {
-    "type": "error",
-    "name": "MultiVault_InsufficientSharesInVault",
-    "inputs": []
-  },
-  {
-    "type": "error",
-    "name": "MultiVault_InvalidArrayLength",
-    "inputs": []
-  },
-  {
-    "type": "error",
-    "name": "MultiVault_NoAtomDataProvided",
-    "inputs": []
-  },
-  {
-    "type": "error",
-    "name": "MultiVault_OnlyAssociatedAtomWallet",
-    "inputs": []
-  },
-  {
-    "type": "error",
-    "name": "MultiVault_RedeemerNotApproved",
-    "inputs": []
-  },
-  {
-    "type": "error",
-    "name": "MultiVault_SenderNotApproved",
-    "inputs": []
-  },
-  {
-    "type": "error",
-    "name": "MultiVault_SlippageExceeded",
-    "inputs": []
-  },
-  {
-    "type": "error",
-    "name": "MultiVault_TermDoesNotExist",
-    "inputs": []
-  },
-  {
-    "type": "error",
-    "name": "MultiVault_TermNotTriple",
-    "inputs": []
-  },
-  {
-    "type": "error",
-    "name": "MultiVault_TripleExists",
-    "inputs": [
-      {
-        "name": "termId",
-        "type": "bytes32",
-        "internalType": "bytes32"
+        name: 'sharePrice',
+        type: 'uint256',
+        indexed: false,
+        internalType: 'uint256',
       },
       {
-        "name": "subjectId",
-        "type": "bytes32",
-        "internalType": "bytes32"
+        name: 'totalAssets',
+        type: 'uint256',
+        indexed: false,
+        internalType: 'uint256',
       },
       {
-        "name": "predicateId",
-        "type": "bytes32",
-        "internalType": "bytes32"
+        name: 'totalShares',
+        type: 'uint256',
+        indexed: false,
+        internalType: 'uint256',
       },
       {
-        "name": "objectId",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      }
-    ]
+        name: 'vaultType',
+        type: 'uint8',
+        indexed: false,
+        internalType: 'enum VaultType',
+      },
+    ],
+    anonymous: false,
   },
   {
-    "type": "error",
-    "name": "NotInitializing",
-    "inputs": []
-  },
-  {
-    "type": "error",
-    "name": "ReentrancyGuardReentrantCall",
-    "inputs": []
-  },
-  {
-    "type": "error",
-    "name": "TermDoesNotExist",
-    "inputs": [
+    type: 'event',
+    name: 'TotalUtilizationAdded',
+    inputs: [
       {
-        "name": "termId",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      }
-    ]
+        name: 'epoch',
+        type: 'uint256',
+        indexed: true,
+        internalType: 'uint256',
+      },
+      {
+        name: 'valueAdded',
+        type: 'int256',
+        indexed: true,
+        internalType: 'int256',
+      },
+      {
+        name: 'totalUtilization',
+        type: 'int256',
+        indexed: true,
+        internalType: 'int256',
+      },
+    ],
+    anonymous: false,
   },
   {
-    "type": "error",
-    "name": "TripleDoesNotExist",
-    "inputs": [
+    type: 'event',
+    name: 'TotalUtilizationRemoved',
+    inputs: [
       {
-        "name": "termId",
-        "type": "bytes32",
-        "internalType": "bytes32"
-      }
-    ]
-  }
+        name: 'epoch',
+        type: 'uint256',
+        indexed: true,
+        internalType: 'uint256',
+      },
+      {
+        name: 'valueRemoved',
+        type: 'int256',
+        indexed: true,
+        internalType: 'int256',
+      },
+      {
+        name: 'totalUtilization',
+        type: 'int256',
+        indexed: true,
+        internalType: 'int256',
+      },
+    ],
+    anonymous: false,
+  },
+  {
+    type: 'event',
+    name: 'TripleConfigUpdated',
+    inputs: [
+      {
+        name: 'tripleCreationProtocolFee',
+        type: 'uint256',
+        indexed: false,
+        internalType: 'uint256',
+      },
+      {
+        name: 'atomDepositFractionForTriple',
+        type: 'uint256',
+        indexed: false,
+        internalType: 'uint256',
+      },
+    ],
+    anonymous: false,
+  },
+  {
+    type: 'event',
+    name: 'TripleCreated',
+    inputs: [
+      {
+        name: 'creator',
+        type: 'address',
+        indexed: true,
+        internalType: 'address',
+      },
+      {
+        name: 'termId',
+        type: 'bytes32',
+        indexed: true,
+        internalType: 'bytes32',
+      },
+      {
+        name: 'subjectId',
+        type: 'bytes32',
+        indexed: false,
+        internalType: 'bytes32',
+      },
+      {
+        name: 'predicateId',
+        type: 'bytes32',
+        indexed: false,
+        internalType: 'bytes32',
+      },
+      {
+        name: 'objectId',
+        type: 'bytes32',
+        indexed: false,
+        internalType: 'bytes32',
+      },
+    ],
+    anonymous: false,
+  },
+  {
+    type: 'event',
+    name: 'Unpaused',
+    inputs: [
+      {
+        name: 'account',
+        type: 'address',
+        indexed: false,
+        internalType: 'address',
+      },
+    ],
+    anonymous: false,
+  },
+  {
+    type: 'event',
+    name: 'VaultFeesUpdated',
+    inputs: [
+      {
+        name: 'entryFee',
+        type: 'uint256',
+        indexed: false,
+        internalType: 'uint256',
+      },
+      {
+        name: 'exitFee',
+        type: 'uint256',
+        indexed: false,
+        internalType: 'uint256',
+      },
+      {
+        name: 'protocolFee',
+        type: 'uint256',
+        indexed: false,
+        internalType: 'uint256',
+      },
+    ],
+    anonymous: false,
+  },
+  {
+    type: 'event',
+    name: 'WalletConfigUpdated',
+    inputs: [
+      {
+        name: 'entryPoint',
+        type: 'address',
+        indexed: true,
+        internalType: 'address',
+      },
+      {
+        name: 'atomWarden',
+        type: 'address',
+        indexed: true,
+        internalType: 'address',
+      },
+      {
+        name: 'atomWalletBeacon',
+        type: 'address',
+        indexed: true,
+        internalType: 'address',
+      },
+      {
+        name: 'atomWalletFactory',
+        type: 'address',
+        indexed: false,
+        internalType: 'address',
+      },
+    ],
+    anonymous: false,
+  },
+  {
+    type: 'error',
+    name: 'AccessControlBadConfirmation',
+    inputs: [],
+  },
+  {
+    type: 'error',
+    name: 'AccessControlUnauthorizedAccount',
+    inputs: [
+      {
+        name: 'account',
+        type: 'address',
+        internalType: 'address',
+      },
+      {
+        name: 'neededRole',
+        type: 'bytes32',
+        internalType: 'bytes32',
+      },
+    ],
+  },
+  {
+    type: 'error',
+    name: 'EnforcedPause',
+    inputs: [],
+  },
+  {
+    type: 'error',
+    name: 'ExpectedPause',
+    inputs: [],
+  },
+  {
+    type: 'error',
+    name: 'FailedCall',
+    inputs: [],
+  },
+  {
+    type: 'error',
+    name: 'InsufficientBalance',
+    inputs: [
+      {
+        name: 'balance',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+      {
+        name: 'needed',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
+  },
+  {
+    type: 'error',
+    name: 'InvalidInitialization',
+    inputs: [],
+  },
+  {
+    type: 'error',
+    name: 'MultiVaultCore_AtomDoesNotExist',
+    inputs: [
+      {
+        name: 'termId',
+        type: 'bytes32',
+        internalType: 'bytes32',
+      },
+    ],
+  },
+  {
+    type: 'error',
+    name: 'MultiVaultCore_InvalidAdmin',
+    inputs: [],
+  },
+  {
+    type: 'error',
+    name: 'MultiVaultCore_TermDoesNotExist',
+    inputs: [
+      {
+        name: 'termId',
+        type: 'bytes32',
+        internalType: 'bytes32',
+      },
+    ],
+  },
+  {
+    type: 'error',
+    name: 'MultiVaultCore_TripleDoesNotExist',
+    inputs: [
+      {
+        name: 'termId',
+        type: 'bytes32',
+        internalType: 'bytes32',
+      },
+    ],
+  },
+  {
+    type: 'error',
+    name: 'MultiVault_ActionExceedsMaxAssets',
+    inputs: [],
+  },
+  {
+    type: 'error',
+    name: 'MultiVault_ActionExceedsMaxShares',
+    inputs: [],
+  },
+  {
+    type: 'error',
+    name: 'MultiVault_ArraysNotSameLength',
+    inputs: [],
+  },
+  {
+    type: 'error',
+    name: 'MultiVault_AtomDataTooLong',
+    inputs: [],
+  },
+  {
+    type: 'error',
+    name: 'MultiVault_AtomDoesNotExist',
+    inputs: [
+      {
+        name: 'atomId',
+        type: 'bytes32',
+        internalType: 'bytes32',
+      },
+    ],
+  },
+  {
+    type: 'error',
+    name: 'MultiVault_AtomExists',
+    inputs: [
+      {
+        name: 'atomData',
+        type: 'bytes',
+        internalType: 'bytes',
+      },
+    ],
+  },
+  {
+    type: 'error',
+    name: 'MultiVault_BurnFromZeroAddress',
+    inputs: [],
+  },
+  {
+    type: 'error',
+    name: 'MultiVault_BurnInsufficientBalance',
+    inputs: [],
+  },
+  {
+    type: 'error',
+    name: 'MultiVault_CannotApproveOrRevokeSelf',
+    inputs: [],
+  },
+  {
+    type: 'error',
+    name: 'MultiVault_CannotDirectlyInitializeCounterTriple',
+    inputs: [],
+  },
+  {
+    type: 'error',
+    name: 'MultiVault_DefaultCurveMustBeInitializedViaCreatePaths',
+    inputs: [],
+  },
+  {
+    type: 'error',
+    name: 'MultiVault_DepositBelowMinimumDeposit',
+    inputs: [],
+  },
+  {
+    type: 'error',
+    name: 'MultiVault_DepositOrRedeemZeroShares',
+    inputs: [],
+  },
+  {
+    type: 'error',
+    name: 'MultiVault_DepositTooSmallToCoverMinShares',
+    inputs: [],
+  },
+  {
+    type: 'error',
+    name: 'MultiVault_EpochNotTracked',
+    inputs: [],
+  },
+  {
+    type: 'error',
+    name: 'MultiVault_HasCounterStake',
+    inputs: [],
+  },
+  {
+    type: 'error',
+    name: 'MultiVault_InsufficientAssets',
+    inputs: [],
+  },
+  {
+    type: 'error',
+    name: 'MultiVault_InsufficientBalance',
+    inputs: [],
+  },
+  {
+    type: 'error',
+    name: 'MultiVault_InsufficientRemainingSharesInVault',
+    inputs: [
+      {
+        name: 'remainingShares',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
+  },
+  {
+    type: 'error',
+    name: 'MultiVault_InsufficientSharesInVault',
+    inputs: [],
+  },
+  {
+    type: 'error',
+    name: 'MultiVault_InvalidArrayLength',
+    inputs: [],
+  },
+  {
+    type: 'error',
+    name: 'MultiVault_InvalidEpoch',
+    inputs: [],
+  },
+  {
+    type: 'error',
+    name: 'MultiVault_NoAtomDataProvided',
+    inputs: [],
+  },
+  {
+    type: 'error',
+    name: 'MultiVault_OnlyAssociatedAtomWallet',
+    inputs: [],
+  },
+  {
+    type: 'error',
+    name: 'MultiVault_RedeemerNotApproved',
+    inputs: [],
+  },
+  {
+    type: 'error',
+    name: 'MultiVault_SenderNotApproved',
+    inputs: [],
+  },
+  {
+    type: 'error',
+    name: 'MultiVault_SlippageExceeded',
+    inputs: [],
+  },
+  {
+    type: 'error',
+    name: 'MultiVault_TermDoesNotExist',
+    inputs: [
+      {
+        name: 'termId',
+        type: 'bytes32',
+        internalType: 'bytes32',
+      },
+    ],
+  },
+  {
+    type: 'error',
+    name: 'MultiVault_TermNotTriple',
+    inputs: [],
+  },
+  {
+    type: 'error',
+    name: 'MultiVault_TripleExists',
+    inputs: [
+      {
+        name: 'termId',
+        type: 'bytes32',
+        internalType: 'bytes32',
+      },
+      {
+        name: 'subjectId',
+        type: 'bytes32',
+        internalType: 'bytes32',
+      },
+      {
+        name: 'predicateId',
+        type: 'bytes32',
+        internalType: 'bytes32',
+      },
+      {
+        name: 'objectId',
+        type: 'bytes32',
+        internalType: 'bytes32',
+      },
+    ],
+  },
+  {
+    type: 'error',
+    name: 'NotInitializing',
+    inputs: [],
+  },
+  {
+    type: 'error',
+    name: 'ReentrancyGuardReentrantCall',
+    inputs: [],
+  },
 ] as const

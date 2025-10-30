@@ -1,13 +1,7 @@
 export const BondingCurveRegistryAbi = [
   {
     type: 'constructor',
-    inputs: [
-      {
-        name: '_admin',
-        type: 'address',
-        internalType: 'address',
-      },
-    ],
+    inputs: [],
     stateMutability: 'nonpayable',
   },
   {
@@ -116,12 +110,17 @@ export const BondingCurveRegistryAbi = [
     name: 'currentPrice',
     inputs: [
       {
+        name: 'id',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+      {
         name: 'totalShares',
         type: 'uint256',
         internalType: 'uint256',
       },
       {
-        name: 'id',
+        name: 'totalAssets',
         type: 'uint256',
         internalType: 'uint256',
       },
@@ -140,14 +139,14 @@ export const BondingCurveRegistryAbi = [
     name: 'curveAddresses',
     inputs: [
       {
-        name: '',
+        name: 'curveId',
         type: 'uint256',
         internalType: 'uint256',
       },
     ],
     outputs: [
       {
-        name: '',
+        name: 'curveAddress',
         type: 'address',
         internalType: 'address',
       },
@@ -159,14 +158,14 @@ export const BondingCurveRegistryAbi = [
     name: 'curveIds',
     inputs: [
       {
-        name: '',
+        name: 'curveAddress',
         type: 'address',
         internalType: 'address',
       },
     ],
     outputs: [
       {
-        name: '',
+        name: 'curveId',
         type: 'uint256',
         internalType: 'uint256',
       },
@@ -226,6 +225,38 @@ export const BondingCurveRegistryAbi = [
         name: 'name',
         type: 'string',
         internalType: 'string',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'initialize',
+    inputs: [
+      {
+        name: '_admin',
+        type: 'address',
+        internalType: 'address',
+      },
+    ],
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    name: 'isCurveIdValid',
+    inputs: [
+      {
+        name: 'id',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
+    outputs: [
+      {
+        name: 'valid',
+        type: 'bool',
+        internalType: 'bool',
       },
     ],
     stateMutability: 'view',
@@ -397,14 +428,14 @@ export const BondingCurveRegistryAbi = [
     name: 'registeredCurveNames',
     inputs: [
       {
-        name: '',
+        name: 'curveName',
         type: 'string',
         internalType: 'string',
       },
     ],
     outputs: [
       {
-        name: '',
+        name: 'registered',
         type: 'bool',
         internalType: 'bool',
       },
@@ -452,6 +483,19 @@ export const BondingCurveRegistryAbi = [
         type: 'string',
         indexed: true,
         internalType: 'string',
+      },
+    ],
+    anonymous: false,
+  },
+  {
+    type: 'event',
+    name: 'Initialized',
+    inputs: [
+      {
+        name: 'version',
+        type: 'uint64',
+        indexed: false,
+        internalType: 'uint64',
       },
     ],
     anonymous: false,
@@ -511,7 +555,22 @@ export const BondingCurveRegistryAbi = [
   },
   {
     type: 'error',
+    name: 'BondingCurveRegistry_InvalidCurveId',
+    inputs: [],
+  },
+  {
+    type: 'error',
     name: 'BondingCurveRegistry_ZeroAddress',
+    inputs: [],
+  },
+  {
+    type: 'error',
+    name: 'InvalidInitialization',
+    inputs: [],
+  },
+  {
+    type: 'error',
+    name: 'NotInitializing',
     inputs: [],
   },
   {

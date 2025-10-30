@@ -1,18 +1,14 @@
-import type { Address, ContractFunctionArgs, PublicClient, WalletClient } from 'viem'
-import { MultiVaultAbi } from '../contracts'
+import type { ContractFunctionArgs } from 'viem'
 
-export type RedeemBatchConfig = {
-  address: Address
-  walletClient: WalletClient
-  publicClient: PublicClient
-}
+import { MultiVaultAbi } from '../contracts'
+import { WriteConfig } from '../types'
 
 export type RedeemBatchInputs = {
   args: ContractFunctionArgs<typeof MultiVaultAbi, 'nonpayable', 'redeemBatch'>
 }
 
 export async function redeemBatch(
-  config: RedeemBatchConfig,
+  config: WriteConfig,
   inputs: RedeemBatchInputs,
 ) {
   const { address, walletClient, publicClient } = config
@@ -28,5 +24,3 @@ export async function redeemBatch(
 
   return await walletClient.writeContract(request)
 }
-
-

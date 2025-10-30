@@ -42,7 +42,7 @@ interface CoreEmissionsControllerInit {
 }
 
 export async function deployAndInit(): Promise<Address> {
-  // Deploy Trust token first (needed for TrustBonding initialization)
+  // Deploy TRUST token first (needed for TrustBonding initialization)
   // Deploy Trust implementation
   const hashTrustImpl = await walletClient.deployContract({
     abi: TrustAbi,

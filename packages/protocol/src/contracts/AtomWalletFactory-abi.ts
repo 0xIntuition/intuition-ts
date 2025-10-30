@@ -63,7 +63,7 @@ export const AtomWalletFactoryAbi = [
       {
         name: '',
         type: 'address',
-        internalType: 'contract IMultiVault',
+        internalType: 'address',
       },
     ],
     stateMutability: 'view',
@@ -107,17 +107,22 @@ export const AtomWalletFactoryAbi = [
   },
   {
     type: 'error',
+    name: 'AtomWalletFactory_TermDoesNotExist',
+    inputs: [],
+  },
+  {
+    type: 'error',
+    name: 'AtomWalletFactory_TermNotAtom',
+    inputs: [],
+  },
+  {
+    type: 'error',
     name: 'AtomWalletFactory_ZeroAddress',
     inputs: [],
   },
   {
     type: 'error',
     name: 'InvalidInitialization',
-    inputs: [],
-  },
-  {
-    type: 'error',
-    name: 'MultiVault_TermDoesNotExist',
     inputs: [],
   },
   {

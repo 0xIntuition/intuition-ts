@@ -1,6 +1,6 @@
 export * from './contracts'
 export * from './core'
 export * from './deployments'
-export * from './events'
+export * from './events/multivault'
 export * from './types'
 export * from './utils'

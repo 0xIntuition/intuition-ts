@@ -97,33 +97,7 @@ export const TrustBondingAbi = [
   },
   {
     type: 'function',
-    name: 'TIMELOCK_ROLE',
-    inputs: [],
-    outputs: [
-      {
-        name: '',
-        type: 'bytes32',
-        internalType: 'bytes32',
-      },
-    ],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
     name: 'YEAR',
-    inputs: [],
-    outputs: [
-      {
-        name: '',
-        type: 'uint256',
-        internalType: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    name: '_epochsPerYear',
     inputs: [],
     outputs: [
       {
@@ -343,12 +317,12 @@ export const TrustBondingAbi = [
   },
   {
     type: 'function',
-    name: 'eligibleRewards',
+    name: 'emissionsForEpoch',
     inputs: [
       {
-        name: 'account',
-        type: 'address',
-        internalType: 'address',
+        name: 'epoch',
+        type: 'uint256',
+        internalType: 'uint256',
       },
     ],
     outputs: [
@@ -439,25 +413,6 @@ export const TrustBondingAbi = [
   },
   {
     type: 'function',
-    name: 'getAprAtEpoch',
-    inputs: [
-      {
-        name: 'epoch',
-        type: 'uint256',
-        internalType: 'uint256',
-      },
-    ],
-    outputs: [
-      {
-        name: '',
-        type: 'uint256',
-        internalType: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
     name: 'getPersonalUtilizationRatio',
     inputs: [
       {
@@ -501,6 +456,24 @@ export const TrustBondingAbi = [
   },
   {
     type: 'function',
+    name: 'getSystemApy',
+    inputs: [],
+    outputs: [
+      {
+        name: 'currentApy',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+      {
+        name: 'maxApy',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
     name: 'getSystemUtilizationRatio',
     inputs: [
       {
@@ -529,6 +502,129 @@ export const TrustBondingAbi = [
       },
     ],
     outputs: [
+      {
+        name: '',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'getUserApy',
+    inputs: [
+      {
+        name: 'account',
+        type: 'address',
+        internalType: 'address',
+      },
+    ],
+    outputs: [
+      {
+        name: 'currentApy',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+      {
+        name: 'maxApy',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'getUserCurrentClaimableRewards',
+    inputs: [
+      {
+        name: 'account',
+        type: 'address',
+        internalType: 'address',
+      },
+    ],
+    outputs: [
+      {
+        name: '',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'getUserInfo',
+    inputs: [
+      {
+        name: 'account',
+        type: 'address',
+        internalType: 'address',
+      },
+    ],
+    outputs: [
+      {
+        name: '',
+        type: 'tuple',
+        internalType: 'struct UserInfo',
+        components: [
+          {
+            name: 'personalUtilization',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+          {
+            name: 'eligibleRewards',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+          {
+            name: 'maxRewards',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+          {
+            name: 'lockedAmount',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+          {
+            name: 'lockEnd',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+          {
+            name: 'bondedBalance',
+            type: 'uint256',
+            internalType: 'uint256',
+          },
+        ],
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'getUserRewardsForEpoch',
+    inputs: [
+      {
+        name: 'account',
+        type: 'address',
+        internalType: 'address',
+      },
+      {
+        name: 'epoch',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
+    outputs: [
+      {
+        name: '',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
       {
         name: '',
         type: 'uint256',
@@ -676,6 +772,11 @@ export const TrustBondingAbi = [
         internalType: 'address',
       },
       {
+        name: '_timelock',
+        type: 'address',
+        internalType: 'address',
+      },
+      {
         name: '_trustToken',
         type: 'address',
         internalType: 'address',
@@ -684,11 +785,6 @@ export const TrustBondingAbi = [
         name: '_epochLength',
         type: 'uint256',
         internalType: 'uint256',
-      },
-      {
-        name: '_multiVault',
-        type: 'address',
-        internalType: 'address',
       },
       {
         name: '_satelliteEmissionsController',
@@ -746,38 +842,6 @@ export const TrustBondingAbi = [
     outputs: [
       {
         name: '',
-        type: 'uint256',
-        internalType: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    name: 'maxAnnualEmission',
-    inputs: [],
-    outputs: [
-      {
-        name: '',
-        type: 'uint256',
-        internalType: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    name: 'maxClaimableProtocolFeesForEpoch',
-    inputs: [
-      {
-        name: 'epoch',
-        type: 'uint256',
-        internalType: 'uint256',
-      },
-    ],
-    outputs: [
-      {
-        name: 'totalClaimableProtocolFees',
         type: 'uint256',
         internalType: 'uint256',
       },
@@ -967,6 +1031,19 @@ export const TrustBondingAbi = [
   },
   {
     type: 'function',
+    name: 'setTimelock',
+    inputs: [
+      {
+        name: '_timelock',
+        type: 'address',
+        internalType: 'address',
+      },
+    ],
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
     name: 'slope_changes',
     inputs: [
       {
@@ -1038,6 +1115,19 @@ export const TrustBondingAbi = [
         name: '',
         type: 'uint256',
         internalType: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'timelock',
+    inputs: [],
+    outputs: [
+      {
+        name: '',
+        type: 'address',
+        internalType: 'address',
       },
     ],
     stateMutability: 'view',
@@ -1179,25 +1269,6 @@ export const TrustBondingAbi = [
         name: '',
         type: 'bool',
         internalType: 'bool',
-      },
-    ],
-    stateMutability: 'view',
-  },
-  {
-    type: 'function',
-    name: 'trustPerEpoch',
-    inputs: [
-      {
-        name: 'epoch',
-        type: 'uint256',
-        internalType: 'uint256',
-      },
-    ],
-    outputs: [
-      {
-        name: '',
-        type: 'uint256',
-        internalType: 'uint256',
       },
     ],
     stateMutability: 'view',
@@ -1512,6 +1583,19 @@ export const TrustBondingAbi = [
   },
   {
     type: 'event',
+    name: 'MinTimeSet',
+    inputs: [
+      {
+        name: 'min_time',
+        type: 'uint256',
+        indexed: false,
+        internalType: 'uint256',
+      },
+    ],
+    anonymous: false,
+  },
+  {
+    type: 'event',
     name: 'MultiVaultSet',
     inputs: [
       {
@@ -1696,6 +1780,32 @@ export const TrustBondingAbi = [
   },
   {
     type: 'event',
+    name: 'TimelockSet',
+    inputs: [
+      {
+        name: 'timelock',
+        type: 'address',
+        indexed: true,
+        internalType: 'address',
+      },
+    ],
+    anonymous: false,
+  },
+  {
+    type: 'event',
+    name: 'TokenSet',
+    inputs: [
+      {
+        name: 'token',
+        type: 'address',
+        indexed: false,
+        internalType: 'address',
+      },
+    ],
+    anonymous: false,
+  },
+  {
+    type: 'event',
     name: 'Unpaused',
     inputs: [
       {
@@ -1817,6 +1927,11 @@ export const TrustBondingAbi = [
   {
     type: 'error',
     name: 'TrustBonding_NoRewardsToClaim',
+    inputs: [],
+  },
+  {
+    type: 'error',
+    name: 'TrustBonding_OnlyTimelock',
     inputs: [],
   },
   {

@@ -1,14 +1,14 @@
 import {
   createAtoms,
-  getAtomCost,
   eventParseAtomCreated,
-  type CreateAtomsConfig,
+  getAtomCost,
+  type WriteConfig,
 } from '@0xintuition/protocol'
 
 import { toHex } from 'viem'
 
 export async function createAtomFromString(
-  config: CreateAtomsConfig,
+  config: WriteConfig,
   data: `${string}`,
   depositAmount?: bigint,
 ) {

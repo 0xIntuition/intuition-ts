@@ -1,14 +1,14 @@
 import {
   createAtoms,
-  getAtomCost,
   eventParseAtomCreated,
-  type CreateAtomsConfig,
+  getAtomCost,
+  type WriteConfig,
 } from '@0xintuition/protocol'
 
 import { getAddress, toHex, type Address } from 'viem'
 
 export async function batchCreateAtomsFromSmartContracts(
-  config: CreateAtomsConfig,
+  config: WriteConfig,
   data: {
     address: Address
     chainId: number
@@ -21,13 +21,9 @@ export async function batchCreateAtomsFromSmartContracts(
     address,
   })
 
-  const depositAmountPerAtom = depositAmount
-    ? depositAmount
-    : 0n
+  const depositAmountPerAtom = depositAmount ? depositAmount : 0n
 
-  const calculatedCost =
-    (atomCost + depositAmountPerAtom) * BigInt(data.length)
-
+  const calculatedCost = (atomCost + depositAmountPerAtom) * BigInt(data.length)
 
   const results: `0x${string}`[] = []
   for (const item of data) {

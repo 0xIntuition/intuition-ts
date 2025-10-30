@@ -49,7 +49,20 @@ export const SatelliteEmissionsControllerAbi = [
   },
   {
     type: 'function',
-    name: 'bridgeUnclaimedRewards',
+    name: 'OPERATOR_ROLE',
+    inputs: [],
+    outputs: [
+      {
+        name: '',
+        type: 'bytes32',
+        internalType: 'bytes32',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'bridgeUnclaimedEmissions',
     inputs: [
       {
         name: 'epoch',
@@ -59,6 +72,19 @@ export const SatelliteEmissionsControllerAbi = [
     ],
     outputs: [],
     stateMutability: 'payable',
+  },
+  {
+    type: 'function',
+    name: 'getBaseEmissionsController',
+    inputs: [],
+    outputs: [
+      {
+        name: '',
+        type: 'address',
+        internalType: 'address',
+      },
+    ],
+    stateMutability: 'view',
   },
   {
     type: 'function',
@@ -261,6 +287,25 @@ export const SatelliteEmissionsControllerAbi = [
   },
   {
     type: 'function',
+    name: 'getReclaimedEmissions',
+    inputs: [
+      {
+        name: 'epoch',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
+    outputs: [
+      {
+        name: '',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
     name: 'getRoleAdmin',
     inputs: [
       {
@@ -287,6 +332,19 @@ export const SatelliteEmissionsControllerAbi = [
         name: '',
         type: 'uint256',
         internalType: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'getTrustBonding',
+    inputs: [],
+    outputs: [
+      {
+        name: '',
+        type: 'address',
+        internalType: 'address',
       },
     ],
     stateMutability: 'view',
@@ -343,11 +401,6 @@ export const SatelliteEmissionsControllerAbi = [
         internalType: 'address',
       },
       {
-        name: 'trustBonding',
-        type: 'address',
-        internalType: 'address',
-      },
-      {
         name: 'baseEmissionsController',
         type: 'address',
         internalType: 'address',
@@ -366,11 +419,6 @@ export const SatelliteEmissionsControllerAbi = [
             name: 'recipientDomain',
             type: 'uint32',
             internalType: 'uint32',
-          },
-          {
-            name: 'recipientAddress',
-            type: 'address',
-            internalType: 'address',
           },
           {
             name: 'gasLimit',
@@ -422,6 +470,30 @@ export const SatelliteEmissionsControllerAbi = [
   },
   {
     type: 'function',
+    name: 'quoteGasPayment',
+    inputs: [
+      {
+        name: 'domain',
+        type: 'uint32',
+        internalType: 'uint32',
+      },
+      {
+        name: 'gasLimit',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
+    outputs: [
+      {
+        name: '',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
     name: 'renounceRole',
     inputs: [
       {
@@ -449,6 +521,19 @@ export const SatelliteEmissionsControllerAbi = [
       },
       {
         name: 'account',
+        type: 'address',
+        internalType: 'address',
+      },
+    ],
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    name: 'setBaseEmissionsController',
+    inputs: [
+      {
+        name: 'newBaseEmissionsController',
         type: 'address',
         internalType: 'address',
       },
@@ -510,6 +595,19 @@ export const SatelliteEmissionsControllerAbi = [
   },
   {
     type: 'function',
+    name: 'setTrustBonding',
+    inputs: [
+      {
+        name: 'newTrustBonding',
+        type: 'address',
+        internalType: 'address',
+      },
+    ],
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
     name: 'supportsInterface',
     inputs: [
       {
@@ -544,6 +642,37 @@ export const SatelliteEmissionsControllerAbi = [
     ],
     outputs: [],
     stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    name: 'withdrawUnclaimedEmissions',
+    inputs: [
+      {
+        name: 'epoch',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+      {
+        name: 'recipient',
+        type: 'address',
+        internalType: 'address',
+      },
+    ],
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'event',
+    name: 'BaseEmissionsControllerUpdated',
+    inputs: [
+      {
+        name: 'newBaseEmissionsController',
+        type: 'address',
+        indexed: true,
+        internalType: 'address',
+      },
+    ],
+    anonymous: false,
   },
   {
     type: 'event',
@@ -630,6 +759,25 @@ export const SatelliteEmissionsControllerAbi = [
         type: 'address',
         indexed: false,
         internalType: 'address',
+      },
+    ],
+    anonymous: false,
+  },
+  {
+    type: 'event',
+    name: 'NativeTokenTransferred',
+    inputs: [
+      {
+        name: 'recipient',
+        type: 'address',
+        indexed: true,
+        internalType: 'address',
+      },
+      {
+        name: 'amount',
+        type: 'uint256',
+        indexed: false,
+        internalType: 'uint256',
       },
     ],
     anonymous: false,
@@ -723,6 +871,63 @@ export const SatelliteEmissionsControllerAbi = [
     anonymous: false,
   },
   {
+    type: 'event',
+    name: 'TrustBondingUpdated',
+    inputs: [
+      {
+        name: 'newTrustBonding',
+        type: 'address',
+        indexed: true,
+        internalType: 'address',
+      },
+    ],
+    anonymous: false,
+  },
+  {
+    type: 'event',
+    name: 'UnclaimedEmissionsBridged',
+    inputs: [
+      {
+        name: 'epoch',
+        type: 'uint256',
+        indexed: true,
+        internalType: 'uint256',
+      },
+      {
+        name: 'amount',
+        type: 'uint256',
+        indexed: false,
+        internalType: 'uint256',
+      },
+    ],
+    anonymous: false,
+  },
+  {
+    type: 'event',
+    name: 'UnclaimedEmissionsWithdrawn',
+    inputs: [
+      {
+        name: 'epoch',
+        type: 'uint256',
+        indexed: true,
+        internalType: 'uint256',
+      },
+      {
+        name: 'recipient',
+        type: 'address',
+        indexed: true,
+        internalType: 'address',
+      },
+      {
+        name: 'amount',
+        type: 'uint256',
+        indexed: false,
+        internalType: 'uint256',
+      },
+    ],
+    anonymous: false,
+  },
+  {
     type: 'error',
     name: 'AccessControlBadConfirmation',
     inputs: [],
@@ -791,6 +996,11 @@ export const SatelliteEmissionsControllerAbi = [
   },
   {
     type: 'error',
+    name: 'MetaERC20Dispatcher_InvalidAddress',
+    inputs: [],
+  },
+  {
+    type: 'error',
     name: 'NotInitializing',
     inputs: [],
   },
@@ -826,7 +1036,17 @@ export const SatelliteEmissionsControllerAbi = [
   },
   {
     type: 'error',
-    name: 'SatelliteEmissionsController_PreviouslyBridgedUnclaimedRewards',
+    name: 'SatelliteEmissionsController_InvalidWithdrawAmount',
+    inputs: [],
+  },
+  {
+    type: 'error',
+    name: 'SatelliteEmissionsController_PreviouslyBridgedUnclaimedEmissions',
+    inputs: [],
+  },
+  {
+    type: 'error',
+    name: 'SatelliteEmissionsController_TrustBondingNotSet',
     inputs: [],
   },
 ] as const

@@ -1,12 +1,12 @@
 import {
   createTriples,
   eventParseTripleCreated,
-  type CreateTriplesConfig,
   type CreateTriplesInputs,
+  type WriteConfig,
 } from '@0xintuition/protocol'
 
 export async function createTripleStatement(
-  config: CreateTriplesConfig,
+  config: WriteConfig,
   data: {
     args: CreateTriplesInputs['args']
     value: bigint
@@ -17,7 +17,7 @@ export async function createTripleStatement(
   const { args, value } = data
   const txHash = await createTriples(config, {
     args,
-    value: value
+    value: value,
   })
 
   if (!txHash) {

@@ -1,13 +1,13 @@
 import {
   createTriples,
-  getTripleCost,
   eventParseTripleCreated,
-  type CreateTriplesConfig,
+  getTripleCost,
   type CreateTriplesInputs,
+  type WriteConfig,
 } from '@0xintuition/protocol'
 
 export async function batchCreateTripleStatements(
-  config: CreateTriplesConfig,
+  config: WriteConfig,
   data: CreateTriplesInputs['args'],
   depositAmount?: bigint,
 ) {

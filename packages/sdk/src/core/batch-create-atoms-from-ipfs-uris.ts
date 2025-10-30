@@ -1,14 +1,14 @@
 import {
   createAtoms,
-  getAtomCost,
   eventParseAtomCreated,
-  type CreateAtomsConfig,
+  getAtomCost,
+  type WriteConfig,
 } from '@0xintuition/protocol'
 
 import { toHex } from 'viem'
 
 export async function batchCreateAtomsFromIpfsUris(
-  config: CreateAtomsConfig,
+  config: WriteConfig,
   data: string[],
   depositAmount?: bigint,
 ) {
@@ -18,13 +18,9 @@ export async function batchCreateAtomsFromIpfsUris(
     address,
   })
 
-  const depositAmountPerAtom = depositAmount
-    ? depositAmount
-    : 0n
+  const depositAmountPerAtom = depositAmount ? depositAmount : 0n
 
-  const calculatedCost =
-    (atomCost + depositAmountPerAtom) * BigInt(data.length)
-
+  const calculatedCost = (atomCost + depositAmountPerAtom) * BigInt(data.length)
 
   const dataFormatted = data.map((i) => toHex(i))
 

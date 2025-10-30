@@ -1,9 +1,9 @@
 import type { PinThingMutationVariables } from '@0xintuition/graphql'
 import {
   createAtoms,
-  getAtomCost,
   eventParseAtomCreated,
-  type CreateAtomsConfig,
+  getAtomCost,
+  type WriteConfig,
 } from '@0xintuition/protocol'
 
 import { toHex } from 'viem'
@@ -11,7 +11,7 @@ import { toHex } from 'viem'
 import { pinThing } from '../api/pin-thing'
 
 export async function createAtomFromThing(
-  config: CreateAtomsConfig,
+  config: WriteConfig,
   data: PinThingMutationVariables,
   depositAmount?: bigint,
 ) {

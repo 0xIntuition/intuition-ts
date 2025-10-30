@@ -1,15 +1,15 @@
 import {
   createAtoms,
-  getAtomCost,
   eventParseDeposited,
-  type CreateAtomsConfig,
+  getAtomCost,
+  type WriteConfig,
 } from '@0xintuition/protocol'
 
 import { toHex } from 'viem'
 
 import { uploadJsonToPinata } from '../external'
 
-type CreateAtomConfigWithIpfs = CreateAtomsConfig & {
+type CreateAtomConfigWithIpfs = WriteConfig & {
   pinataApiJWT: string
 }
 
