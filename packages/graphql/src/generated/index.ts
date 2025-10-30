@@ -555,7 +555,7 @@ export type Atom_Values = {
   account?: Maybe<Accounts>
   account_id?: Maybe<Scalars['String']['output']>
   /** An object relationship */
-  atom: Atoms
+  atom?: Maybe<Atoms>
   /** An object relationship */
   book?: Maybe<Books>
   book_id?: Maybe<Scalars['String']['output']>
@@ -763,7 +763,7 @@ export type Atoms = {
   controller?: Maybe<Accounts>
   created_at: Scalars['timestamptz']['output']
   /** An object relationship */
-  creator: Accounts
+  creator?: Maybe<Accounts>
   creator_id: Scalars['String']['output']
   data?: Maybe<Scalars['String']['output']>
   emoji?: Maybe<Scalars['String']['output']>
@@ -781,7 +781,7 @@ export type Atoms = {
   /** An aggregate relationship */
   signals_aggregate: Signals_Aggregate
   /** An object relationship */
-  term: Terms
+  term?: Maybe<Terms>
   term_id: Scalars['String']['output']
   transaction_hash: Scalars['String']['output']
   type: Scalars['atom_type']['output']
@@ -1813,14 +1813,14 @@ export type Deposits = {
   id: Scalars['String']['output']
   log_index: Scalars['bigint']['output']
   /** An object relationship */
-  receiver: Accounts
+  receiver?: Maybe<Accounts>
   receiver_id: Scalars['String']['output']
   /** An object relationship */
   sender?: Maybe<Accounts>
   sender_id: Scalars['String']['output']
   shares: Scalars['numeric']['output']
   /** An object relationship */
-  term: Terms
+  term?: Maybe<Terms>
   term_id: Scalars['String']['output']
   total_shares: Scalars['numeric']['output']
   transaction_hash: Scalars['String']['output']
@@ -2460,7 +2460,7 @@ export type Fee_Transfers = {
   created_at: Scalars['timestamptz']['output']
   id: Scalars['String']['output']
   /** An object relationship */
-  receiver: Accounts
+  receiver?: Maybe<Accounts>
   receiver_id: Scalars['String']['output']
   /** An object relationship */
   sender?: Maybe<Accounts>
@@ -3172,7 +3172,7 @@ export type Positions = {
   log_index: Scalars['bigint']['output']
   shares: Scalars['numeric']['output']
   /** An object relationship */
-  term: Terms
+  term?: Maybe<Terms>
   term_id: Scalars['String']['output']
   total_deposit_assets_after_total_fees: Scalars['numeric']['output']
   total_redeem_assets_for_receiver: Scalars['numeric']['output']
@@ -3598,14 +3598,37 @@ export type Positions_Variance_Order_By = {
 /** columns and relationships of "predicate_object" */
 export type Predicate_Objects = {
   __typename?: 'predicate_objects'
-  id: Scalars['String']['output']
   /** An object relationship */
-  object: Atoms
+  object?: Maybe<Atoms>
   object_id: Scalars['String']['output']
   /** An object relationship */
-  predicate: Atoms
+  predicate?: Maybe<Atoms>
   predicate_id: Scalars['String']['output']
+  total_market_cap: Scalars['numeric']['output']
+  total_position_count: Scalars['Int']['output']
   triple_count: Scalars['Int']['output']
+  /** An array relationship */
+  triples: Array<Triples>
+  /** An aggregate relationship */
+  triples_aggregate: Triples_Aggregate
+}
+
+/** columns and relationships of "predicate_object" */
+export type Predicate_ObjectsTriplesArgs = {
+  distinct_on?: InputMaybe<Array<Triples_Select_Column>>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  order_by?: InputMaybe<Array<Triples_Order_By>>
+  where?: InputMaybe<Triples_Bool_Exp>
+}
+
+/** columns and relationships of "predicate_object" */
+export type Predicate_ObjectsTriples_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Triples_Select_Column>>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  order_by?: InputMaybe<Array<Triples_Order_By>>
+  where?: InputMaybe<Triples_Bool_Exp>
 }
 
 /** aggregated selection of "predicate_object" */
@@ -3666,11 +3689,15 @@ export type Predicate_Objects_Aggregate_Order_By = {
 /** aggregate avg on columns */
 export type Predicate_Objects_Avg_Fields = {
   __typename?: 'predicate_objects_avg_fields'
+  total_market_cap?: Maybe<Scalars['Float']['output']>
+  total_position_count?: Maybe<Scalars['Float']['output']>
   triple_count?: Maybe<Scalars['Float']['output']>
 }
 
 /** order by avg() on columns of table "predicate_object" */
 export type Predicate_Objects_Avg_Order_By = {
+  total_market_cap?: InputMaybe<Order_By>
+  total_position_count?: InputMaybe<Order_By>
   triple_count?: InputMaybe<Order_By>
 }
 
@@ -3679,99 +3706,122 @@ export type Predicate_Objects_Bool_Exp = {
   _and?: InputMaybe<Array<Predicate_Objects_Bool_Exp>>
   _not?: InputMaybe<Predicate_Objects_Bool_Exp>
   _or?: InputMaybe<Array<Predicate_Objects_Bool_Exp>>
-  id?: InputMaybe<String_Comparison_Exp>
   object?: InputMaybe<Atoms_Bool_Exp>
   object_id?: InputMaybe<String_Comparison_Exp>
   predicate?: InputMaybe<Atoms_Bool_Exp>
   predicate_id?: InputMaybe<String_Comparison_Exp>
+  total_market_cap?: InputMaybe<Numeric_Comparison_Exp>
+  total_position_count?: InputMaybe<Int_Comparison_Exp>
   triple_count?: InputMaybe<Int_Comparison_Exp>
+  triples?: InputMaybe<Triples_Bool_Exp>
+  triples_aggregate?: InputMaybe<Triples_Aggregate_Bool_Exp>
 }
 
 /** aggregate max on columns */
 export type Predicate_Objects_Max_Fields = {
   __typename?: 'predicate_objects_max_fields'
-  id?: Maybe<Scalars['String']['output']>
   object_id?: Maybe<Scalars['String']['output']>
   predicate_id?: Maybe<Scalars['String']['output']>
+  total_market_cap?: Maybe<Scalars['numeric']['output']>
+  total_position_count?: Maybe<Scalars['Int']['output']>
   triple_count?: Maybe<Scalars['Int']['output']>
 }
 
 /** order by max() on columns of table "predicate_object" */
 export type Predicate_Objects_Max_Order_By = {
-  id?: InputMaybe<Order_By>
   object_id?: InputMaybe<Order_By>
   predicate_id?: InputMaybe<Order_By>
+  total_market_cap?: InputMaybe<Order_By>
+  total_position_count?: InputMaybe<Order_By>
   triple_count?: InputMaybe<Order_By>
 }
 
 /** aggregate min on columns */
 export type Predicate_Objects_Min_Fields = {
   __typename?: 'predicate_objects_min_fields'
-  id?: Maybe<Scalars['String']['output']>
   object_id?: Maybe<Scalars['String']['output']>
   predicate_id?: Maybe<Scalars['String']['output']>
+  total_market_cap?: Maybe<Scalars['numeric']['output']>
+  total_position_count?: Maybe<Scalars['Int']['output']>
   triple_count?: Maybe<Scalars['Int']['output']>
 }
 
 /** order by min() on columns of table "predicate_object" */
 export type Predicate_Objects_Min_Order_By = {
-  id?: InputMaybe<Order_By>
   object_id?: InputMaybe<Order_By>
   predicate_id?: InputMaybe<Order_By>
+  total_market_cap?: InputMaybe<Order_By>
+  total_position_count?: InputMaybe<Order_By>
   triple_count?: InputMaybe<Order_By>
 }
 
 /** Ordering options when selecting data from "predicate_object". */
 export type Predicate_Objects_Order_By = {
-  id?: InputMaybe<Order_By>
   object?: InputMaybe<Atoms_Order_By>
   object_id?: InputMaybe<Order_By>
   predicate?: InputMaybe<Atoms_Order_By>
   predicate_id?: InputMaybe<Order_By>
+  total_market_cap?: InputMaybe<Order_By>
+  total_position_count?: InputMaybe<Order_By>
   triple_count?: InputMaybe<Order_By>
+  triples_aggregate?: InputMaybe<Triples_Aggregate_Order_By>
 }
 
 /** select columns of table "predicate_object" */
 export type Predicate_Objects_Select_Column =
   /** column name */
-  | 'id'
-  /** column name */
   | 'object_id'
   /** column name */
   | 'predicate_id'
+  /** column name */
+  | 'total_market_cap'
+  /** column name */
+  | 'total_position_count'
   /** column name */
   | 'triple_count'
 
 /** aggregate stddev on columns */
 export type Predicate_Objects_Stddev_Fields = {
   __typename?: 'predicate_objects_stddev_fields'
+  total_market_cap?: Maybe<Scalars['Float']['output']>
+  total_position_count?: Maybe<Scalars['Float']['output']>
   triple_count?: Maybe<Scalars['Float']['output']>
 }
 
 /** order by stddev() on columns of table "predicate_object" */
 export type Predicate_Objects_Stddev_Order_By = {
+  total_market_cap?: InputMaybe<Order_By>
+  total_position_count?: InputMaybe<Order_By>
   triple_count?: InputMaybe<Order_By>
 }
 
 /** aggregate stddev_pop on columns */
 export type Predicate_Objects_Stddev_Pop_Fields = {
   __typename?: 'predicate_objects_stddev_pop_fields'
+  total_market_cap?: Maybe<Scalars['Float']['output']>
+  total_position_count?: Maybe<Scalars['Float']['output']>
   triple_count?: Maybe<Scalars['Float']['output']>
 }
 
 /** order by stddev_pop() on columns of table "predicate_object" */
 export type Predicate_Objects_Stddev_Pop_Order_By = {
+  total_market_cap?: InputMaybe<Order_By>
+  total_position_count?: InputMaybe<Order_By>
   triple_count?: InputMaybe<Order_By>
 }
 
 /** aggregate stddev_samp on columns */
 export type Predicate_Objects_Stddev_Samp_Fields = {
   __typename?: 'predicate_objects_stddev_samp_fields'
+  total_market_cap?: Maybe<Scalars['Float']['output']>
+  total_position_count?: Maybe<Scalars['Float']['output']>
   triple_count?: Maybe<Scalars['Float']['output']>
 }
 
 /** order by stddev_samp() on columns of table "predicate_object" */
 export type Predicate_Objects_Stddev_Samp_Order_By = {
+  total_market_cap?: InputMaybe<Order_By>
+  total_position_count?: InputMaybe<Order_By>
   triple_count?: InputMaybe<Order_By>
 }
 
@@ -3785,53 +3835,70 @@ export type Predicate_Objects_Stream_Cursor_Input = {
 
 /** Initial value of the column from where the streaming should start */
 export type Predicate_Objects_Stream_Cursor_Value_Input = {
-  id?: InputMaybe<Scalars['String']['input']>
   object_id?: InputMaybe<Scalars['String']['input']>
   predicate_id?: InputMaybe<Scalars['String']['input']>
+  total_market_cap?: InputMaybe<Scalars['numeric']['input']>
+  total_position_count?: InputMaybe<Scalars['Int']['input']>
   triple_count?: InputMaybe<Scalars['Int']['input']>
 }
 
 /** aggregate sum on columns */
 export type Predicate_Objects_Sum_Fields = {
   __typename?: 'predicate_objects_sum_fields'
+  total_market_cap?: Maybe<Scalars['numeric']['output']>
+  total_position_count?: Maybe<Scalars['Int']['output']>
   triple_count?: Maybe<Scalars['Int']['output']>
 }
 
 /** order by sum() on columns of table "predicate_object" */
 export type Predicate_Objects_Sum_Order_By = {
+  total_market_cap?: InputMaybe<Order_By>
+  total_position_count?: InputMaybe<Order_By>
   triple_count?: InputMaybe<Order_By>
 }
 
 /** aggregate var_pop on columns */
 export type Predicate_Objects_Var_Pop_Fields = {
   __typename?: 'predicate_objects_var_pop_fields'
+  total_market_cap?: Maybe<Scalars['Float']['output']>
+  total_position_count?: Maybe<Scalars['Float']['output']>
   triple_count?: Maybe<Scalars['Float']['output']>
 }
 
 /** order by var_pop() on columns of table "predicate_object" */
 export type Predicate_Objects_Var_Pop_Order_By = {
+  total_market_cap?: InputMaybe<Order_By>
+  total_position_count?: InputMaybe<Order_By>
   triple_count?: InputMaybe<Order_By>
 }
 
 /** aggregate var_samp on columns */
 export type Predicate_Objects_Var_Samp_Fields = {
   __typename?: 'predicate_objects_var_samp_fields'
+  total_market_cap?: Maybe<Scalars['Float']['output']>
+  total_position_count?: Maybe<Scalars['Float']['output']>
   triple_count?: Maybe<Scalars['Float']['output']>
 }
 
 /** order by var_samp() on columns of table "predicate_object" */
 export type Predicate_Objects_Var_Samp_Order_By = {
+  total_market_cap?: InputMaybe<Order_By>
+  total_position_count?: InputMaybe<Order_By>
   triple_count?: InputMaybe<Order_By>
 }
 
 /** aggregate variance on columns */
 export type Predicate_Objects_Variance_Fields = {
   __typename?: 'predicate_objects_variance_fields'
+  total_market_cap?: Maybe<Scalars['Float']['output']>
+  total_position_count?: Maybe<Scalars['Float']['output']>
   triple_count?: Maybe<Scalars['Float']['output']>
 }
 
 /** order by variance() on columns of table "predicate_object" */
 export type Predicate_Objects_Variance_Order_By = {
+  total_market_cap?: InputMaybe<Order_By>
+  total_position_count?: InputMaybe<Order_By>
   triple_count?: InputMaybe<Order_By>
 }
 
@@ -3993,6 +4060,12 @@ export type Query_Root = {
   stats: Array<Stats>
   /** fetch aggregated fields from the table: "stats" */
   stats_aggregate: Stats_Aggregate
+  /** fetch data from the table: "subject_predicate" */
+  subject_predicates: Array<Subject_Predicates>
+  /** fetch aggregated fields from the table: "subject_predicate" */
+  subject_predicates_aggregate: Subject_Predicates_Aggregate
+  /** fetch data from the table: "subject_predicate" using primary key columns */
+  subject_predicates_by_pk?: Maybe<Subject_Predicates>
   /** fetch data from the table: "term" using primary key columns */
   term?: Maybe<Terms>
   /** fetch data from the table: "term_total_state_change_stats_daily" */
@@ -4380,7 +4453,8 @@ export type Query_RootPredicate_Objects_AggregateArgs = {
 }
 
 export type Query_RootPredicate_Objects_By_PkArgs = {
-  id: Scalars['String']['input']
+  object_id: Scalars['String']['input']
+  predicate_id: Scalars['String']['input']
 }
 
 export type Query_RootRedemptionArgs = {
@@ -4605,6 +4679,27 @@ export type Query_RootStats_AggregateArgs = {
   where?: InputMaybe<Stats_Bool_Exp>
 }
 
+export type Query_RootSubject_PredicatesArgs = {
+  distinct_on?: InputMaybe<Array<Subject_Predicates_Select_Column>>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  order_by?: InputMaybe<Array<Subject_Predicates_Order_By>>
+  where?: InputMaybe<Subject_Predicates_Bool_Exp>
+}
+
+export type Query_RootSubject_Predicates_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Subject_Predicates_Select_Column>>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  order_by?: InputMaybe<Array<Subject_Predicates_Order_By>>
+  where?: InputMaybe<Subject_Predicates_Bool_Exp>
+}
+
+export type Query_RootSubject_Predicates_By_PkArgs = {
+  predicate_id: Scalars['String']['input']
+  subject_id: Scalars['String']['input']
+}
+
 export type Query_RootTermArgs = {
   id: Scalars['String']['input']
 }
@@ -4790,14 +4885,14 @@ export type Redemptions = {
   id: Scalars['String']['output']
   log_index: Scalars['bigint']['output']
   /** An object relationship */
-  receiver: Accounts
+  receiver?: Maybe<Accounts>
   receiver_id: Scalars['String']['output']
   /** An object relationship */
   sender?: Maybe<Accounts>
   sender_id: Scalars['String']['output']
   shares: Scalars['numeric']['output']
   /** An object relationship */
-  term: Terms
+  term?: Maybe<Terms>
   term_id: Scalars['String']['output']
   total_shares: Scalars['numeric']['output']
   transaction_hash: Scalars['String']['output']
@@ -5991,7 +6086,7 @@ export type Share_Price_Changes = {
   log_index: Scalars['bigint']['output']
   share_price: Scalars['numeric']['output']
   /** An object relationship */
-  term: Terms
+  term?: Maybe<Terms>
   term_id: Scalars['String']['output']
   total_assets: Scalars['numeric']['output']
   total_shares: Scalars['numeric']['output']
@@ -6692,7 +6787,7 @@ export type Signals = {
   redemption?: Maybe<Redemptions>
   redemption_id?: Maybe<Scalars['String']['output']>
   /** An object relationship */
-  term: Terms
+  term?: Maybe<Terms>
   term_id: Scalars['String']['output']
   transaction_hash: Scalars['String']['output']
   triple_id?: Maybe<Scalars['String']['output']>
@@ -7396,6 +7491,213 @@ export type Stats_Variance_Fields = {
   total_triples?: Maybe<Scalars['Float']['output']>
 }
 
+/** columns and relationships of "subject_predicate" */
+export type Subject_Predicates = {
+  __typename?: 'subject_predicates'
+  /** An object relationship */
+  predicate?: Maybe<Atoms>
+  predicate_id: Scalars['String']['output']
+  /** An object relationship */
+  subject?: Maybe<Atoms>
+  subject_id: Scalars['String']['output']
+  total_market_cap: Scalars['numeric']['output']
+  total_position_count: Scalars['Int']['output']
+  triple_count: Scalars['Int']['output']
+  /** An array relationship */
+  triples: Array<Triples>
+  /** An aggregate relationship */
+  triples_aggregate: Triples_Aggregate
+}
+
+/** columns and relationships of "subject_predicate" */
+export type Subject_PredicatesTriplesArgs = {
+  distinct_on?: InputMaybe<Array<Triples_Select_Column>>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  order_by?: InputMaybe<Array<Triples_Order_By>>
+  where?: InputMaybe<Triples_Bool_Exp>
+}
+
+/** columns and relationships of "subject_predicate" */
+export type Subject_PredicatesTriples_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Triples_Select_Column>>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  order_by?: InputMaybe<Array<Triples_Order_By>>
+  where?: InputMaybe<Triples_Bool_Exp>
+}
+
+/** aggregated selection of "subject_predicate" */
+export type Subject_Predicates_Aggregate = {
+  __typename?: 'subject_predicates_aggregate'
+  aggregate?: Maybe<Subject_Predicates_Aggregate_Fields>
+  nodes: Array<Subject_Predicates>
+}
+
+/** aggregate fields of "subject_predicate" */
+export type Subject_Predicates_Aggregate_Fields = {
+  __typename?: 'subject_predicates_aggregate_fields'
+  avg?: Maybe<Subject_Predicates_Avg_Fields>
+  count: Scalars['Int']['output']
+  max?: Maybe<Subject_Predicates_Max_Fields>
+  min?: Maybe<Subject_Predicates_Min_Fields>
+  stddev?: Maybe<Subject_Predicates_Stddev_Fields>
+  stddev_pop?: Maybe<Subject_Predicates_Stddev_Pop_Fields>
+  stddev_samp?: Maybe<Subject_Predicates_Stddev_Samp_Fields>
+  sum?: Maybe<Subject_Predicates_Sum_Fields>
+  var_pop?: Maybe<Subject_Predicates_Var_Pop_Fields>
+  var_samp?: Maybe<Subject_Predicates_Var_Samp_Fields>
+  variance?: Maybe<Subject_Predicates_Variance_Fields>
+}
+
+/** aggregate fields of "subject_predicate" */
+export type Subject_Predicates_Aggregate_FieldsCountArgs = {
+  columns?: InputMaybe<Array<Subject_Predicates_Select_Column>>
+  distinct?: InputMaybe<Scalars['Boolean']['input']>
+}
+
+/** aggregate avg on columns */
+export type Subject_Predicates_Avg_Fields = {
+  __typename?: 'subject_predicates_avg_fields'
+  total_market_cap?: Maybe<Scalars['Float']['output']>
+  total_position_count?: Maybe<Scalars['Float']['output']>
+  triple_count?: Maybe<Scalars['Float']['output']>
+}
+
+/** Boolean expression to filter rows from the table "subject_predicate". All fields are combined with a logical 'AND'. */
+export type Subject_Predicates_Bool_Exp = {
+  _and?: InputMaybe<Array<Subject_Predicates_Bool_Exp>>
+  _not?: InputMaybe<Subject_Predicates_Bool_Exp>
+  _or?: InputMaybe<Array<Subject_Predicates_Bool_Exp>>
+  predicate?: InputMaybe<Atoms_Bool_Exp>
+  predicate_id?: InputMaybe<String_Comparison_Exp>
+  subject?: InputMaybe<Atoms_Bool_Exp>
+  subject_id?: InputMaybe<String_Comparison_Exp>
+  total_market_cap?: InputMaybe<Numeric_Comparison_Exp>
+  total_position_count?: InputMaybe<Int_Comparison_Exp>
+  triple_count?: InputMaybe<Int_Comparison_Exp>
+  triples?: InputMaybe<Triples_Bool_Exp>
+  triples_aggregate?: InputMaybe<Triples_Aggregate_Bool_Exp>
+}
+
+/** aggregate max on columns */
+export type Subject_Predicates_Max_Fields = {
+  __typename?: 'subject_predicates_max_fields'
+  predicate_id?: Maybe<Scalars['String']['output']>
+  subject_id?: Maybe<Scalars['String']['output']>
+  total_market_cap?: Maybe<Scalars['numeric']['output']>
+  total_position_count?: Maybe<Scalars['Int']['output']>
+  triple_count?: Maybe<Scalars['Int']['output']>
+}
+
+/** aggregate min on columns */
+export type Subject_Predicates_Min_Fields = {
+  __typename?: 'subject_predicates_min_fields'
+  predicate_id?: Maybe<Scalars['String']['output']>
+  subject_id?: Maybe<Scalars['String']['output']>
+  total_market_cap?: Maybe<Scalars['numeric']['output']>
+  total_position_count?: Maybe<Scalars['Int']['output']>
+  triple_count?: Maybe<Scalars['Int']['output']>
+}
+
+/** Ordering options when selecting data from "subject_predicate". */
+export type Subject_Predicates_Order_By = {
+  predicate?: InputMaybe<Atoms_Order_By>
+  predicate_id?: InputMaybe<Order_By>
+  subject?: InputMaybe<Atoms_Order_By>
+  subject_id?: InputMaybe<Order_By>
+  total_market_cap?: InputMaybe<Order_By>
+  total_position_count?: InputMaybe<Order_By>
+  triple_count?: InputMaybe<Order_By>
+  triples_aggregate?: InputMaybe<Triples_Aggregate_Order_By>
+}
+
+/** select columns of table "subject_predicate" */
+export type Subject_Predicates_Select_Column =
+  /** column name */
+  | 'predicate_id'
+  /** column name */
+  | 'subject_id'
+  /** column name */
+  | 'total_market_cap'
+  /** column name */
+  | 'total_position_count'
+  /** column name */
+  | 'triple_count'
+
+/** aggregate stddev on columns */
+export type Subject_Predicates_Stddev_Fields = {
+  __typename?: 'subject_predicates_stddev_fields'
+  total_market_cap?: Maybe<Scalars['Float']['output']>
+  total_position_count?: Maybe<Scalars['Float']['output']>
+  triple_count?: Maybe<Scalars['Float']['output']>
+}
+
+/** aggregate stddev_pop on columns */
+export type Subject_Predicates_Stddev_Pop_Fields = {
+  __typename?: 'subject_predicates_stddev_pop_fields'
+  total_market_cap?: Maybe<Scalars['Float']['output']>
+  total_position_count?: Maybe<Scalars['Float']['output']>
+  triple_count?: Maybe<Scalars['Float']['output']>
+}
+
+/** aggregate stddev_samp on columns */
+export type Subject_Predicates_Stddev_Samp_Fields = {
+  __typename?: 'subject_predicates_stddev_samp_fields'
+  total_market_cap?: Maybe<Scalars['Float']['output']>
+  total_position_count?: Maybe<Scalars['Float']['output']>
+  triple_count?: Maybe<Scalars['Float']['output']>
+}
+
+/** Streaming cursor of the table "subject_predicates" */
+export type Subject_Predicates_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Subject_Predicates_Stream_Cursor_Value_Input
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>
+}
+
+/** Initial value of the column from where the streaming should start */
+export type Subject_Predicates_Stream_Cursor_Value_Input = {
+  predicate_id?: InputMaybe<Scalars['String']['input']>
+  subject_id?: InputMaybe<Scalars['String']['input']>
+  total_market_cap?: InputMaybe<Scalars['numeric']['input']>
+  total_position_count?: InputMaybe<Scalars['Int']['input']>
+  triple_count?: InputMaybe<Scalars['Int']['input']>
+}
+
+/** aggregate sum on columns */
+export type Subject_Predicates_Sum_Fields = {
+  __typename?: 'subject_predicates_sum_fields'
+  total_market_cap?: Maybe<Scalars['numeric']['output']>
+  total_position_count?: Maybe<Scalars['Int']['output']>
+  triple_count?: Maybe<Scalars['Int']['output']>
+}
+
+/** aggregate var_pop on columns */
+export type Subject_Predicates_Var_Pop_Fields = {
+  __typename?: 'subject_predicates_var_pop_fields'
+  total_market_cap?: Maybe<Scalars['Float']['output']>
+  total_position_count?: Maybe<Scalars['Float']['output']>
+  triple_count?: Maybe<Scalars['Float']['output']>
+}
+
+/** aggregate var_samp on columns */
+export type Subject_Predicates_Var_Samp_Fields = {
+  __typename?: 'subject_predicates_var_samp_fields'
+  total_market_cap?: Maybe<Scalars['Float']['output']>
+  total_position_count?: Maybe<Scalars['Float']['output']>
+  triple_count?: Maybe<Scalars['Float']['output']>
+}
+
+/** aggregate variance on columns */
+export type Subject_Predicates_Variance_Fields = {
+  __typename?: 'subject_predicates_variance_fields'
+  total_market_cap?: Maybe<Scalars['Float']['output']>
+  total_position_count?: Maybe<Scalars['Float']['output']>
+  triple_count?: Maybe<Scalars['Float']['output']>
+}
+
 export type Subscription_Root = {
   __typename?: 'subscription_root'
   /** fetch data from the table: "account" using primary key columns */
@@ -7612,6 +7914,14 @@ export type Subscription_Root = {
   stats_aggregate: Stats_Aggregate
   /** fetch data from the table in a streaming manner: "stats" */
   stats_stream: Array<Stats>
+  /** fetch data from the table: "subject_predicate" */
+  subject_predicates: Array<Subject_Predicates>
+  /** fetch aggregated fields from the table: "subject_predicate" */
+  subject_predicates_aggregate: Subject_Predicates_Aggregate
+  /** fetch data from the table: "subject_predicate" using primary key columns */
+  subject_predicates_by_pk?: Maybe<Subject_Predicates>
+  /** fetch data from the table in a streaming manner: "subject_predicate" */
+  subject_predicates_stream: Array<Subject_Predicates>
   /** fetch data from the table: "term" using primary key columns */
   term?: Maybe<Terms>
   /** fetch data from the table: "term_total_state_change_stats_daily" */
@@ -8113,7 +8423,8 @@ export type Subscription_RootPredicate_Objects_AggregateArgs = {
 }
 
 export type Subscription_RootPredicate_Objects_By_PkArgs = {
-  id: Scalars['String']['input']
+  object_id: Scalars['String']['input']
+  predicate_id: Scalars['String']['input']
 }
 
 export type Subscription_RootPredicate_Objects_StreamArgs = {
@@ -8422,6 +8733,33 @@ export type Subscription_RootStats_StreamArgs = {
   batch_size: Scalars['Int']['input']
   cursor: Array<InputMaybe<Stats_Stream_Cursor_Input>>
   where?: InputMaybe<Stats_Bool_Exp>
+}
+
+export type Subscription_RootSubject_PredicatesArgs = {
+  distinct_on?: InputMaybe<Array<Subject_Predicates_Select_Column>>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  order_by?: InputMaybe<Array<Subject_Predicates_Order_By>>
+  where?: InputMaybe<Subject_Predicates_Bool_Exp>
+}
+
+export type Subscription_RootSubject_Predicates_AggregateArgs = {
+  distinct_on?: InputMaybe<Array<Subject_Predicates_Select_Column>>
+  limit?: InputMaybe<Scalars['Int']['input']>
+  offset?: InputMaybe<Scalars['Int']['input']>
+  order_by?: InputMaybe<Array<Subject_Predicates_Order_By>>
+  where?: InputMaybe<Subject_Predicates_Bool_Exp>
+}
+
+export type Subscription_RootSubject_Predicates_By_PkArgs = {
+  predicate_id: Scalars['String']['input']
+  subject_id: Scalars['String']['input']
+}
+
+export type Subscription_RootSubject_Predicates_StreamArgs = {
+  batch_size: Scalars['Int']['input']
+  cursor: Array<InputMaybe<Subject_Predicates_Stream_Cursor_Input>>
+  where?: InputMaybe<Subject_Predicates_Bool_Exp>
 }
 
 export type Subscription_RootTermArgs = {
@@ -9434,6 +9772,7 @@ export type Terms = {
   /** An object relationship */
   atomById?: Maybe<Atoms>
   atom_id?: Maybe<Scalars['String']['output']>
+  created_at: Scalars['timestamptz']['output']
   /** An array relationship */
   deposits: Array<Deposits>
   /** An aggregate relationship */
@@ -9730,6 +10069,7 @@ export type Terms_Bool_Exp = {
   atom?: InputMaybe<Atoms_Bool_Exp>
   atomById?: InputMaybe<Atoms_Bool_Exp>
   atom_id?: InputMaybe<String_Comparison_Exp>
+  created_at?: InputMaybe<Timestamptz_Comparison_Exp>
   deposits?: InputMaybe<Deposits_Bool_Exp>
   deposits_aggregate?: InputMaybe<Deposits_Aggregate_Bool_Exp>
   id?: InputMaybe<String_Comparison_Exp>
@@ -9765,6 +10105,7 @@ export type Terms_Bool_Exp = {
 export type Terms_Max_Fields = {
   __typename?: 'terms_max_fields'
   atom_id?: Maybe<Scalars['String']['output']>
+  created_at?: Maybe<Scalars['timestamptz']['output']>
   id?: Maybe<Scalars['String']['output']>
   total_assets?: Maybe<Scalars['numeric']['output']>
   total_market_cap?: Maybe<Scalars['numeric']['output']>
@@ -9777,6 +10118,7 @@ export type Terms_Max_Fields = {
 export type Terms_Min_Fields = {
   __typename?: 'terms_min_fields'
   atom_id?: Maybe<Scalars['String']['output']>
+  created_at?: Maybe<Scalars['timestamptz']['output']>
   id?: Maybe<Scalars['String']['output']>
   total_assets?: Maybe<Scalars['numeric']['output']>
   total_market_cap?: Maybe<Scalars['numeric']['output']>
@@ -9790,6 +10132,7 @@ export type Terms_Order_By = {
   atom?: InputMaybe<Atoms_Order_By>
   atomById?: InputMaybe<Atoms_Order_By>
   atom_id?: InputMaybe<Order_By>
+  created_at?: InputMaybe<Order_By>
   deposits_aggregate?: InputMaybe<Deposits_Aggregate_Order_By>
   id?: InputMaybe<Order_By>
   positions_aggregate?: InputMaybe<Positions_Aggregate_Order_By>
@@ -9819,6 +10162,8 @@ export type Terms_Order_By = {
 export type Terms_Select_Column =
   /** column name */
   | 'atom_id'
+  /** column name */
+  | 'created_at'
   /** column name */
   | 'id'
   /** column name */
@@ -9864,6 +10209,7 @@ export type Terms_Stream_Cursor_Input = {
 /** Initial value of the column from where the streaming should start */
 export type Terms_Stream_Cursor_Value_Input = {
   atom_id?: InputMaybe<Scalars['String']['input']>
+  created_at?: InputMaybe<Scalars['timestamptz']['input']>
   id?: InputMaybe<Scalars['String']['input']>
   total_assets?: InputMaybe<Scalars['numeric']['input']>
   total_market_cap?: InputMaybe<Scalars['numeric']['input']>
@@ -10106,10 +10452,10 @@ export type Timestamptz_Comparison_Exp = {
 export type Triple_Term = {
   __typename?: 'triple_term'
   /** An object relationship */
-  counter_term: Terms
+  counter_term?: Maybe<Terms>
   counter_term_id: Scalars['String']['output']
   /** An object relationship */
-  term: Terms
+  term?: Maybe<Terms>
   term_id: Scalars['String']['output']
   total_assets: Scalars['numeric']['output']
   total_market_cap: Scalars['numeric']['output']
@@ -10292,17 +10638,17 @@ export type Triples = {
   creator?: Maybe<Accounts>
   creator_id: Scalars['String']['output']
   /** An object relationship */
-  object: Atoms
+  object?: Maybe<Atoms>
   object_id: Scalars['String']['output']
   /** An array relationship */
   positions: Array<Positions>
   /** An aggregate relationship */
   positions_aggregate: Positions_Aggregate
   /** An object relationship */
-  predicate: Atoms
+  predicate?: Maybe<Atoms>
   predicate_id: Scalars['String']['output']
   /** An object relationship */
-  subject: Atoms
+  subject?: Maybe<Atoms>
   subject_id: Scalars['String']['output']
   /** An object relationship */
   term?: Maybe<Terms>
@@ -10692,7 +11038,7 @@ export type Vaults = {
   /** An aggregate relationship */
   signals_aggregate: Signals_Aggregate
   /** An object relationship */
-  term: Terms
+  term?: Maybe<Terms>
   term_id: Scalars['String']['output']
   total_assets: Scalars['numeric']['output']
   total_shares: Scalars['numeric']['output']
@@ -11286,7 +11632,7 @@ export type AccountPositionsAggregateFragment = {
         term_id: string
         total_shares: any
         current_share_price: any
-        term: {
+        term?: {
           __typename?: 'terms'
           atom?: {
             __typename?: 'atoms'
@@ -11294,7 +11640,7 @@ export type AccountPositionsAggregateFragment = {
             label?: string | null
           } | null
           triple?: { __typename?: 'triples'; term_id: string } | null
-        }
+        } | null
       } | null
     }>
   }
@@ -11311,7 +11657,7 @@ export type AccountPositionsFragment = {
       term_id: string
       total_shares: any
       current_share_price: any
-      term: {
+      term?: {
         __typename?: 'terms'
         atom?: {
           __typename?: 'atoms'
@@ -11319,7 +11665,7 @@ export type AccountPositionsFragment = {
           label?: string | null
         } | null
         triple?: { __typename?: 'triples'; term_id: string } | null
-      }
+      } | null
     } | null
   }>
 }
@@ -11331,7 +11677,7 @@ export type AccountAtomsFragment = {
     term_id: string
     label?: string | null
     data?: string | null
-    term: {
+    term?: {
       __typename?: 'terms'
       vaults: Array<{
         __typename?: 'vaults'
@@ -11345,7 +11691,7 @@ export type AccountAtomsFragment = {
           }>
         }
       }>
-    }
+    } | null
   }>
 }
 
@@ -11359,7 +11705,7 @@ export type AccountAtomsAggregateFragment = {
       term_id: string
       label?: string | null
       data?: string | null
-      term: {
+      term?: {
         __typename?: 'terms'
         vaults: Array<{
           __typename?: 'vaults'
@@ -11373,7 +11719,7 @@ export type AccountAtomsAggregateFragment = {
             }>
           }
         }>
-      }
+      } | null
     }>
   }
 }
@@ -11389,13 +11735,21 @@ export type AccountTriplesFragment = {
     nodes: Array<{
       __typename?: 'triples'
       term_id: string
-      subject: { __typename?: 'atoms'; term_id: string; label?: string | null }
-      predicate: {
+      subject?: {
         __typename?: 'atoms'
         term_id: string
         label?: string | null
-      }
-      object: { __typename?: 'atoms'; term_id: string; label?: string | null }
+      } | null
+      predicate?: {
+        __typename?: 'atoms'
+        term_id: string
+        label?: string | null
+      } | null
+      object?: {
+        __typename?: 'atoms'
+        term_id: string
+        label?: string | null
+      } | null
     }>
   }
 }
@@ -11411,13 +11765,21 @@ export type AccountTriplesAggregateFragment = {
     nodes: Array<{
       __typename?: 'triples'
       term_id: string
-      subject: { __typename?: 'atoms'; term_id: string; label?: string | null }
-      predicate: {
+      subject?: {
         __typename?: 'atoms'
         term_id: string
         label?: string | null
-      }
-      object: { __typename?: 'atoms'; term_id: string; label?: string | null }
+      } | null
+      predicate?: {
+        __typename?: 'atoms'
+        term_id: string
+        label?: string | null
+      } | null
+      object?: {
+        __typename?: 'atoms'
+        term_id: string
+        label?: string | null
+      } | null
     }>
   }
 }
@@ -11465,12 +11827,12 @@ export type AtomMetadataFragment = {
   emoji?: string | null
   type: any
   wallet_id: string
-  creator: {
+  creator?: {
     __typename?: 'accounts'
     id: string
     label: string
     image?: string | null
-  }
+  } | null
   value?: {
     __typename?: 'atom_values'
     person?: {
@@ -11515,7 +11877,7 @@ export type AtomVaultDetailsFragment = {
   __typename?: 'atoms'
   term_id: string
   wallet_id: string
-  term: {
+  term?: {
     __typename?: 'terms'
     vaults: Array<{
       __typename?: 'vaults'
@@ -11540,7 +11902,7 @@ export type AtomVaultDetailsFragment = {
         account?: { __typename?: 'accounts'; label: string; id: string } | null
       }>
     }>
-  }
+  } | null
 }
 
 export type AtomTripleFragment = {
@@ -11548,7 +11910,7 @@ export type AtomTripleFragment = {
   as_subject_triples: Array<{
     __typename?: 'triples'
     term_id: string
-    object: {
+    object?: {
       __typename?: 'atoms'
       data?: string | null
       term_id: string
@@ -11556,16 +11918,16 @@ export type AtomTripleFragment = {
       label?: string | null
       emoji?: string | null
       type: any
-      creator: {
+      creator?: {
         __typename?: 'accounts'
         label: string
         image?: string | null
         id: string
         atom_id?: string | null
         type: any
-      }
-    }
-    predicate: {
+      } | null
+    } | null
+    predicate?: {
       __typename?: 'atoms'
       data?: string | null
       term_id: string
@@ -11573,20 +11935,20 @@ export type AtomTripleFragment = {
       label?: string | null
       emoji?: string | null
       type: any
-      creator: {
+      creator?: {
         __typename?: 'accounts'
         label: string
         image?: string | null
         id: string
         atom_id?: string | null
         type: any
-      }
-    }
+      } | null
+    } | null
   }>
   as_predicate_triples: Array<{
     __typename?: 'triples'
     term_id: string
-    subject: {
+    subject?: {
       __typename?: 'atoms'
       data?: string | null
       term_id: string
@@ -11594,16 +11956,16 @@ export type AtomTripleFragment = {
       label?: string | null
       emoji?: string | null
       type: any
-      creator: {
+      creator?: {
         __typename?: 'accounts'
         label: string
         image?: string | null
         id: string
         atom_id?: string | null
         type: any
-      }
-    }
-    object: {
+      } | null
+    } | null
+    object?: {
       __typename?: 'atoms'
       data?: string | null
       term_id: string
@@ -11611,20 +11973,20 @@ export type AtomTripleFragment = {
       label?: string | null
       emoji?: string | null
       type: any
-      creator: {
+      creator?: {
         __typename?: 'accounts'
         label: string
         image?: string | null
         id: string
         atom_id?: string | null
         type: any
-      }
-    }
+      } | null
+    } | null
   }>
   as_object_triples: Array<{
     __typename?: 'triples'
     term_id: string
-    subject: {
+    subject?: {
       __typename?: 'atoms'
       data?: string | null
       term_id: string
@@ -11632,16 +11994,16 @@ export type AtomTripleFragment = {
       label?: string | null
       emoji?: string | null
       type: any
-      creator: {
+      creator?: {
         __typename?: 'accounts'
         label: string
         image?: string | null
         id: string
         atom_id?: string | null
         type: any
-      }
-    }
-    predicate: {
+      } | null
+    } | null
+    predicate?: {
       __typename?: 'atoms'
       data?: string | null
       term_id: string
@@ -11649,21 +12011,21 @@ export type AtomTripleFragment = {
       label?: string | null
       emoji?: string | null
       type: any
-      creator: {
+      creator?: {
         __typename?: 'accounts'
         label: string
         image?: string | null
         id: string
         atom_id?: string | null
         type: any
-      }
-    }
+      } | null
+    } | null
   }>
 }
 
 export type AtomVaultDetailsWithPositionsFragment = {
   __typename?: 'atoms'
-  term: {
+  term?: {
     __typename?: 'terms'
     vaults: Array<{
       __typename?: 'vaults'
@@ -11685,7 +12047,7 @@ export type AtomVaultDetailsWithPositionsFragment = {
         }>
       }
     }>
-  }
+  } | null
 }
 
 export type DepositEventFragmentFragment = {
@@ -11696,7 +12058,7 @@ export type DepositEventFragmentFragment = {
     curve_id: any
     assets_after_fees: any
     shares: any
-    receiver: { __typename?: 'accounts'; id: string }
+    receiver?: { __typename?: 'accounts'; id: string } | null
     sender?: { __typename?: 'accounts'; id: string } | null
   } | null
 }
@@ -11720,7 +12082,7 @@ export type EventDetailsFragment = {
     emoji?: string | null
     type: any
     wallet_id: string
-    term: {
+    term?: {
       __typename?: 'terms'
       vaults: Array<{
         __typename?: 'vaults'
@@ -11738,13 +12100,13 @@ export type EventDetailsFragment = {
           } | null
         }>
       }>
-    }
-    creator: {
+    } | null
+    creator?: {
       __typename?: 'accounts'
       id: string
       label: string
       image?: string | null
-    }
+    } | null
     value?: {
       __typename?: 'atom_values'
       person?: {
@@ -11856,7 +12218,7 @@ export type EventDetailsFragment = {
         }
       }>
     } | null
-    subject: {
+    subject?: {
       __typename?: 'atoms'
       data?: string | null
       term_id: string
@@ -11864,14 +12226,14 @@ export type EventDetailsFragment = {
       label?: string | null
       emoji?: string | null
       type: any
-      creator: {
+      creator?: {
         __typename?: 'accounts'
         label: string
         image?: string | null
         id: string
         atom_id?: string | null
         type: any
-      }
+      } | null
       value?: {
         __typename?: 'atom_values'
         person?: {
@@ -11902,8 +12264,8 @@ export type EventDetailsFragment = {
           image?: string | null
         } | null
       } | null
-    }
-    predicate: {
+    } | null
+    predicate?: {
       __typename?: 'atoms'
       data?: string | null
       term_id: string
@@ -11911,14 +12273,14 @@ export type EventDetailsFragment = {
       label?: string | null
       emoji?: string | null
       type: any
-      creator: {
+      creator?: {
         __typename?: 'accounts'
         label: string
         image?: string | null
         id: string
         atom_id?: string | null
         type: any
-      }
+      } | null
       value?: {
         __typename?: 'atom_values'
         person?: {
@@ -11949,8 +12311,8 @@ export type EventDetailsFragment = {
           image?: string | null
         } | null
       } | null
-    }
-    object: {
+    } | null
+    object?: {
       __typename?: 'atoms'
       data?: string | null
       term_id: string
@@ -11958,14 +12320,14 @@ export type EventDetailsFragment = {
       label?: string | null
       emoji?: string | null
       type: any
-      creator: {
+      creator?: {
         __typename?: 'accounts'
         label: string
         image?: string | null
         id: string
         atom_id?: string | null
         type: any
-      }
+      } | null
       value?: {
         __typename?: 'atom_values'
         person?: {
@@ -11996,7 +12358,7 @@ export type EventDetailsFragment = {
           image?: string | null
         } | null
       } | null
-    }
+    } | null
   } | null
   deposit?: {
     __typename?: 'deposits'
@@ -12004,7 +12366,7 @@ export type EventDetailsFragment = {
     curve_id: any
     assets_after_fees: any
     shares: any
-    receiver: { __typename?: 'accounts'; id: string }
+    receiver?: { __typename?: 'accounts'; id: string } | null
     sender?: { __typename?: 'accounts'; id: string } | null
   } | null
   redemption?: {
@@ -12020,9 +12382,21 @@ export type EventDetailsFragment = {
 export type FollowMetadataFragment = {
   __typename?: 'triples'
   term_id: string
-  subject: { __typename?: 'atoms'; term_id: string; label?: string | null }
-  predicate: { __typename?: 'atoms'; term_id: string; label?: string | null }
-  object: { __typename?: 'atoms'; term_id: string; label?: string | null }
+  subject?: {
+    __typename?: 'atoms'
+    term_id: string
+    label?: string | null
+  } | null
+  predicate?: {
+    __typename?: 'atoms'
+    term_id: string
+    label?: string | null
+  } | null
+  object?: {
+    __typename?: 'atoms'
+    term_id: string
+    label?: string | null
+  } | null
   term?: {
     __typename?: 'terms'
     vaults: Array<{
@@ -12070,7 +12444,7 @@ export type PositionDetailsFragment = {
   vault?: {
     __typename?: 'vaults'
     term_id: string
-    term: {
+    term?: {
       __typename?: 'terms'
       atom?: {
         __typename?: 'atoms'
@@ -12117,7 +12491,7 @@ export type PositionDetailsFragment = {
             }
           }>
         } | null
-        subject: {
+        subject?: {
           __typename?: 'atoms'
           data?: string | null
           term_id: string
@@ -12125,14 +12499,14 @@ export type PositionDetailsFragment = {
           image?: string | null
           emoji?: string | null
           type: any
-          creator: {
+          creator?: {
             __typename?: 'accounts'
             label: string
             image?: string | null
             id: string
             atom_id?: string | null
             type: any
-          }
+          } | null
           value?: {
             __typename?: 'atom_values'
             person?: {
@@ -12163,8 +12537,8 @@ export type PositionDetailsFragment = {
               image?: string | null
             } | null
           } | null
-        }
-        predicate: {
+        } | null
+        predicate?: {
           __typename?: 'atoms'
           data?: string | null
           term_id: string
@@ -12172,14 +12546,14 @@ export type PositionDetailsFragment = {
           image?: string | null
           emoji?: string | null
           type: any
-          creator: {
+          creator?: {
             __typename?: 'accounts'
             label: string
             image?: string | null
             id: string
             atom_id?: string | null
             type: any
-          }
+          } | null
           value?: {
             __typename?: 'atom_values'
             person?: {
@@ -12210,8 +12584,8 @@ export type PositionDetailsFragment = {
               image?: string | null
             } | null
           } | null
-        }
-        object: {
+        } | null
+        object?: {
           __typename?: 'atoms'
           data?: string | null
           term_id: string
@@ -12219,14 +12593,14 @@ export type PositionDetailsFragment = {
           image?: string | null
           emoji?: string | null
           type: any
-          creator: {
+          creator?: {
             __typename?: 'accounts'
             label: string
             image?: string | null
             id: string
             atom_id?: string | null
             type: any
-          }
+          } | null
           value?: {
             __typename?: 'atom_values'
             person?: {
@@ -12257,9 +12631,9 @@ export type PositionDetailsFragment = {
               image?: string | null
             } | null
           } | null
-        }
+        } | null
       } | null
-    }
+    } | null
   } | null
 }
 
@@ -12313,7 +12687,7 @@ export type TripleMetadataFragment = {
   subject_id: string
   predicate_id: string
   object_id: string
-  subject: {
+  subject?: {
     __typename?: 'atoms'
     data?: string | null
     term_id: string
@@ -12321,14 +12695,14 @@ export type TripleMetadataFragment = {
     label?: string | null
     emoji?: string | null
     type: any
-    creator: {
+    creator?: {
       __typename?: 'accounts'
       label: string
       image?: string | null
       id: string
       atom_id?: string | null
       type: any
-    }
+    } | null
     value?: {
       __typename?: 'atom_values'
       person?: {
@@ -12359,8 +12733,8 @@ export type TripleMetadataFragment = {
         image?: string | null
       } | null
     } | null
-  }
-  predicate: {
+  } | null
+  predicate?: {
     __typename?: 'atoms'
     data?: string | null
     term_id: string
@@ -12368,14 +12742,14 @@ export type TripleMetadataFragment = {
     label?: string | null
     emoji?: string | null
     type: any
-    creator: {
+    creator?: {
       __typename?: 'accounts'
       label: string
       image?: string | null
       id: string
       atom_id?: string | null
       type: any
-    }
+    } | null
     value?: {
       __typename?: 'atom_values'
       person?: {
@@ -12406,8 +12780,8 @@ export type TripleMetadataFragment = {
         image?: string | null
       } | null
     } | null
-  }
-  object: {
+  } | null
+  object?: {
     __typename?: 'atoms'
     data?: string | null
     term_id: string
@@ -12415,14 +12789,14 @@ export type TripleMetadataFragment = {
     label?: string | null
     emoji?: string | null
     type: any
-    creator: {
+    creator?: {
       __typename?: 'accounts'
       label: string
       image?: string | null
       id: string
       atom_id?: string | null
       type: any
-    }
+    } | null
     value?: {
       __typename?: 'atom_values'
       person?: {
@@ -12453,7 +12827,7 @@ export type TripleMetadataFragment = {
         image?: string | null
       } | null
     } | null
-  }
+  } | null
   term?: {
     __typename?: 'terms'
     vaults: Array<{
@@ -12547,7 +12921,7 @@ export type TripleVaultDetailsFragment = {
         vault?: {
           __typename?: 'vaults'
           term_id: string
-          term: {
+          term?: {
             __typename?: 'terms'
             atom?: {
               __typename?: 'atoms'
@@ -12594,7 +12968,7 @@ export type TripleVaultDetailsFragment = {
                   }
                 }>
               } | null
-              subject: {
+              subject?: {
                 __typename?: 'atoms'
                 data?: string | null
                 term_id: string
@@ -12602,14 +12976,14 @@ export type TripleVaultDetailsFragment = {
                 image?: string | null
                 emoji?: string | null
                 type: any
-                creator: {
+                creator?: {
                   __typename?: 'accounts'
                   label: string
                   image?: string | null
                   id: string
                   atom_id?: string | null
                   type: any
-                }
+                } | null
                 value?: {
                   __typename?: 'atom_values'
                   person?: {
@@ -12640,8 +13014,8 @@ export type TripleVaultDetailsFragment = {
                     image?: string | null
                   } | null
                 } | null
-              }
-              predicate: {
+              } | null
+              predicate?: {
                 __typename?: 'atoms'
                 data?: string | null
                 term_id: string
@@ -12649,14 +13023,14 @@ export type TripleVaultDetailsFragment = {
                 image?: string | null
                 emoji?: string | null
                 type: any
-                creator: {
+                creator?: {
                   __typename?: 'accounts'
                   label: string
                   image?: string | null
                   id: string
                   atom_id?: string | null
                   type: any
-                }
+                } | null
                 value?: {
                   __typename?: 'atom_values'
                   person?: {
@@ -12687,8 +13061,8 @@ export type TripleVaultDetailsFragment = {
                     image?: string | null
                   } | null
                 } | null
-              }
-              object: {
+              } | null
+              object?: {
                 __typename?: 'atoms'
                 data?: string | null
                 term_id: string
@@ -12696,14 +13070,14 @@ export type TripleVaultDetailsFragment = {
                 image?: string | null
                 emoji?: string | null
                 type: any
-                creator: {
+                creator?: {
                   __typename?: 'accounts'
                   label: string
                   image?: string | null
                   id: string
                   atom_id?: string | null
                   type: any
-                }
+                } | null
                 value?: {
                   __typename?: 'atom_values'
                   person?: {
@@ -12734,9 +13108,9 @@ export type TripleVaultDetailsFragment = {
                     image?: string | null
                   } | null
                 } | null
-              }
+              } | null
             } | null
-          }
+          } | null
         } | null
       }>
     }>
@@ -12760,7 +13134,7 @@ export type TripleVaultDetailsFragment = {
         vault?: {
           __typename?: 'vaults'
           term_id: string
-          term: {
+          term?: {
             __typename?: 'terms'
             atom?: {
               __typename?: 'atoms'
@@ -12807,7 +13181,7 @@ export type TripleVaultDetailsFragment = {
                   }
                 }>
               } | null
-              subject: {
+              subject?: {
                 __typename?: 'atoms'
                 data?: string | null
                 term_id: string
@@ -12815,14 +13189,14 @@ export type TripleVaultDetailsFragment = {
                 image?: string | null
                 emoji?: string | null
                 type: any
-                creator: {
+                creator?: {
                   __typename?: 'accounts'
                   label: string
                   image?: string | null
                   id: string
                   atom_id?: string | null
                   type: any
-                }
+                } | null
                 value?: {
                   __typename?: 'atom_values'
                   person?: {
@@ -12853,8 +13227,8 @@ export type TripleVaultDetailsFragment = {
                     image?: string | null
                   } | null
                 } | null
-              }
-              predicate: {
+              } | null
+              predicate?: {
                 __typename?: 'atoms'
                 data?: string | null
                 term_id: string
@@ -12862,14 +13236,14 @@ export type TripleVaultDetailsFragment = {
                 image?: string | null
                 emoji?: string | null
                 type: any
-                creator: {
+                creator?: {
                   __typename?: 'accounts'
                   label: string
                   image?: string | null
                   id: string
                   atom_id?: string | null
                   type: any
-                }
+                } | null
                 value?: {
                   __typename?: 'atom_values'
                   person?: {
@@ -12900,8 +13274,8 @@ export type TripleVaultDetailsFragment = {
                     image?: string | null
                   } | null
                 } | null
-              }
-              object: {
+              } | null
+              object?: {
                 __typename?: 'atoms'
                 data?: string | null
                 term_id: string
@@ -12909,14 +13283,14 @@ export type TripleVaultDetailsFragment = {
                 image?: string | null
                 emoji?: string | null
                 type: any
-                creator: {
+                creator?: {
                   __typename?: 'accounts'
                   label: string
                   image?: string | null
                   id: string
                   atom_id?: string | null
                   type: any
-                }
+                } | null
                 value?: {
                   __typename?: 'atom_values'
                   person?: {
@@ -12947,9 +13321,9 @@ export type TripleVaultDetailsFragment = {
                     image?: string | null
                   } | null
                 } | null
-              }
+              } | null
             } | null
-          }
+          } | null
         } | null
       }>
     }>
@@ -12968,7 +13342,7 @@ export type TripleVaultCouterVaultDetailsWithPositionsFragment = {
       curve_id: any
       current_share_price: any
       total_shares: any
-      term: {
+      term?: {
         __typename?: 'terms'
         atom?: {
           __typename?: 'atoms'
@@ -12978,23 +13352,23 @@ export type TripleVaultCouterVaultDetailsWithPositionsFragment = {
         triple?: {
           __typename?: 'triples'
           term_id: string
-          subject: {
+          subject?: {
             __typename?: 'atoms'
             term_id: string
             label?: string | null
-          }
-          predicate: {
+          } | null
+          predicate?: {
             __typename?: 'atoms'
             term_id: string
             label?: string | null
-          }
-          object: {
+          } | null
+          object?: {
             __typename?: 'atoms'
             term_id: string
             label?: string | null
-          }
+          } | null
         } | null
-      }
+      } | null
       positions: Array<{
         __typename?: 'positions'
         shares: any
@@ -13016,7 +13390,7 @@ export type TripleVaultCouterVaultDetailsWithPositionsFragment = {
       curve_id: any
       current_share_price: any
       total_shares: any
-      term: {
+      term?: {
         __typename?: 'terms'
         atom?: {
           __typename?: 'atoms'
@@ -13026,23 +13400,23 @@ export type TripleVaultCouterVaultDetailsWithPositionsFragment = {
         triple?: {
           __typename?: 'triples'
           term_id: string
-          subject: {
+          subject?: {
             __typename?: 'atoms'
             term_id: string
             label?: string | null
-          }
-          predicate: {
+          } | null
+          predicate?: {
             __typename?: 'atoms'
             term_id: string
             label?: string | null
-          }
-          object: {
+          } | null
+          object?: {
             __typename?: 'atoms'
             term_id: string
             label?: string | null
-          }
+          } | null
         } | null
-      }
+      } | null
       positions: Array<{
         __typename?: 'positions'
         shares: any
@@ -13064,7 +13438,7 @@ export type VaultBasicDetailsFragment = {
   curve_id: any
   current_share_price: any
   total_shares: any
-  term: {
+  term?: {
     __typename?: 'terms'
     atom?: {
       __typename?: 'atoms'
@@ -13074,15 +13448,23 @@ export type VaultBasicDetailsFragment = {
     triple?: {
       __typename?: 'triples'
       term_id: string
-      subject: { __typename?: 'atoms'; term_id: string; label?: string | null }
-      predicate: {
+      subject?: {
         __typename?: 'atoms'
         term_id: string
         label?: string | null
-      }
-      object: { __typename?: 'atoms'; term_id: string; label?: string | null }
+      } | null
+      predicate?: {
+        __typename?: 'atoms'
+        term_id: string
+        label?: string | null
+      } | null
+      object?: {
+        __typename?: 'atoms'
+        term_id: string
+        label?: string | null
+      } | null
     } | null
-  }
+  } | null
 }
 
 export type VaultPositionsAggregateFragment = {
@@ -13133,7 +13515,7 @@ export type VaultDetailsFragment = {
   curve_id: any
   current_share_price: any
   total_shares: any
-  term: {
+  term?: {
     __typename?: 'terms'
     atom?: {
       __typename?: 'atoms'
@@ -13143,15 +13525,23 @@ export type VaultDetailsFragment = {
     triple?: {
       __typename?: 'triples'
       term_id: string
-      subject: { __typename?: 'atoms'; term_id: string; label?: string | null }
-      predicate: {
+      subject?: {
         __typename?: 'atoms'
         term_id: string
         label?: string | null
-      }
-      object: { __typename?: 'atoms'; term_id: string; label?: string | null }
+      } | null
+      predicate?: {
+        __typename?: 'atoms'
+        term_id: string
+        label?: string | null
+      } | null
+      object?: {
+        __typename?: 'atoms'
+        term_id: string
+        label?: string | null
+      } | null
     } | null
-  }
+  } | null
 }
 
 export type VaultDetailsWithFilteredPositionsFragment = {
@@ -13160,7 +13550,7 @@ export type VaultDetailsWithFilteredPositionsFragment = {
   curve_id: any
   current_share_price: any
   total_shares: any
-  term: {
+  term?: {
     __typename?: 'terms'
     atom?: {
       __typename?: 'atoms'
@@ -13170,15 +13560,23 @@ export type VaultDetailsWithFilteredPositionsFragment = {
     triple?: {
       __typename?: 'triples'
       term_id: string
-      subject: { __typename?: 'atoms'; term_id: string; label?: string | null }
-      predicate: {
+      subject?: {
         __typename?: 'atoms'
         term_id: string
         label?: string | null
-      }
-      object: { __typename?: 'atoms'; term_id: string; label?: string | null }
+      } | null
+      predicate?: {
+        __typename?: 'atoms'
+        term_id: string
+        label?: string | null
+      } | null
+      object?: {
+        __typename?: 'atoms'
+        term_id: string
+        label?: string | null
+      } | null
     } | null
-  }
+  } | null
   positions: Array<{
     __typename?: 'positions'
     shares: any
@@ -13252,7 +13650,7 @@ export type GetAccountsQuery = {
       __typename?: 'atoms'
       term_id: string
       wallet_id: string
-      term: {
+      term?: {
         __typename?: 'terms'
         vaults: Array<{
           __typename?: 'vaults'
@@ -13280,7 +13678,7 @@ export type GetAccountsQuery = {
             } | null
           }>
         }>
-      }
+      } | null
     } | null
     positions: Array<{
       __typename?: 'positions'
@@ -13291,7 +13689,7 @@ export type GetAccountsQuery = {
         term_id: string
         total_shares: any
         current_share_price: any
-        term: {
+        term?: {
           __typename?: 'terms'
           atom?: {
             __typename?: 'atoms'
@@ -13299,7 +13697,7 @@ export type GetAccountsQuery = {
             label?: string | null
           } | null
           triple?: { __typename?: 'triples'; term_id: string } | null
-        }
+        } | null
       } | null
     }>
   }>
@@ -13343,7 +13741,7 @@ export type GetAccountsWithAggregatesQuery = {
           term_id: string
           total_shares: any
           current_share_price: any
-          term: {
+          term?: {
             __typename?: 'terms'
             atom?: {
               __typename?: 'atoms'
@@ -13351,7 +13749,7 @@ export type GetAccountsWithAggregatesQuery = {
               label?: string | null
             } | null
             triple?: { __typename?: 'triples'; term_id: string } | null
-          }
+          } | null
         } | null
       }>
     }>
@@ -13406,13 +13804,13 @@ export type GetAccountQuery = {
       emoji?: string | null
       type: any
       wallet_id: string
-      creator: {
+      creator?: {
         __typename?: 'accounts'
         id: string
         label: string
         image?: string | null
-      }
-      term: {
+      } | null
+      term?: {
         __typename?: 'terms'
         vaults: Array<{
           __typename?: 'vaults'
@@ -13441,7 +13839,7 @@ export type GetAccountQuery = {
             } | null
           }>
         }>
-      }
+      } | null
       value?: {
         __typename?: 'atom_values'
         person?: {
@@ -13482,7 +13880,7 @@ export type GetAccountQuery = {
         term_id: string
         total_shares: any
         current_share_price: any
-        term: {
+        term?: {
           __typename?: 'terms'
           atom?: {
             __typename?: 'atoms'
@@ -13490,7 +13888,7 @@ export type GetAccountQuery = {
             label?: string | null
           } | null
           triple?: { __typename?: 'triples'; term_id: string } | null
-        }
+        } | null
       } | null
     }>
     atoms: Array<{
@@ -13498,7 +13896,7 @@ export type GetAccountQuery = {
       term_id: string
       label?: string | null
       data?: string | null
-      term: {
+      term?: {
         __typename?: 'terms'
         vaults: Array<{
           __typename?: 'vaults'
@@ -13512,7 +13910,7 @@ export type GetAccountQuery = {
             }>
           }
         }>
-      }
+      } | null
     }>
     triples_aggregate: {
       __typename?: 'triples_aggregate'
@@ -13523,17 +13921,21 @@ export type GetAccountQuery = {
       nodes: Array<{
         __typename?: 'triples'
         term_id: string
-        subject: {
+        subject?: {
           __typename?: 'atoms'
           term_id: string
           label?: string | null
-        }
-        predicate: {
+        } | null
+        predicate?: {
           __typename?: 'atoms'
           term_id: string
           label?: string | null
-        }
-        object: { __typename?: 'atoms'; term_id: string; label?: string | null }
+        } | null
+        object?: {
+          __typename?: 'atoms'
+          term_id: string
+          label?: string | null
+        } | null
       }>
     }
   } | null
@@ -13573,7 +13975,7 @@ export type GetAccountWithPaginatedRelationsQuery = {
         term_id: string
         total_shares: any
         current_share_price: any
-        term: {
+        term?: {
           __typename?: 'terms'
           atom?: {
             __typename?: 'atoms'
@@ -13581,7 +13983,7 @@ export type GetAccountWithPaginatedRelationsQuery = {
             label?: string | null
           } | null
           triple?: { __typename?: 'triples'; term_id: string } | null
-        }
+        } | null
       } | null
     }>
     atoms: Array<{
@@ -13589,7 +13991,7 @@ export type GetAccountWithPaginatedRelationsQuery = {
       term_id: string
       label?: string | null
       data?: string | null
-      term: {
+      term?: {
         __typename?: 'terms'
         vaults: Array<{
           __typename?: 'vaults'
@@ -13603,7 +14005,7 @@ export type GetAccountWithPaginatedRelationsQuery = {
             }>
           }
         }>
-      }
+      } | null
     }>
     triples_aggregate: {
       __typename?: 'triples_aggregate'
@@ -13614,17 +14016,21 @@ export type GetAccountWithPaginatedRelationsQuery = {
       nodes: Array<{
         __typename?: 'triples'
         term_id: string
-        subject: {
+        subject?: {
           __typename?: 'atoms'
           term_id: string
           label?: string | null
-        }
-        predicate: {
+        } | null
+        predicate?: {
           __typename?: 'atoms'
           term_id: string
           label?: string | null
-        }
-        object: { __typename?: 'atoms'; term_id: string; label?: string | null }
+        } | null
+        object?: {
+          __typename?: 'atoms'
+          term_id: string
+          label?: string | null
+        } | null
       }>
     }
   } | null
@@ -13669,7 +14075,7 @@ export type GetAccountWithAggregatesQuery = {
           term_id: string
           total_shares: any
           current_share_price: any
-          term: {
+          term?: {
             __typename?: 'terms'
             atom?: {
               __typename?: 'atoms'
@@ -13677,7 +14083,7 @@ export type GetAccountWithAggregatesQuery = {
               label?: string | null
             } | null
             triple?: { __typename?: 'triples'; term_id: string } | null
-          }
+          } | null
         } | null
       }>
     }
@@ -13692,7 +14098,7 @@ export type GetAccountWithAggregatesQuery = {
         term_id: string
         label?: string | null
         data?: string | null
-        term: {
+        term?: {
           __typename?: 'terms'
           vaults: Array<{
             __typename?: 'vaults'
@@ -13706,7 +14112,7 @@ export type GetAccountWithAggregatesQuery = {
               }>
             }
           }>
-        }
+        } | null
       }>
     }
     triples_aggregate: {
@@ -13718,17 +14124,21 @@ export type GetAccountWithAggregatesQuery = {
       nodes: Array<{
         __typename?: 'triples'
         term_id: string
-        subject: {
+        subject?: {
           __typename?: 'atoms'
           term_id: string
           label?: string | null
-        }
-        predicate: {
+        } | null
+        predicate?: {
           __typename?: 'atoms'
           term_id: string
           label?: string | null
-        }
-        object: { __typename?: 'atoms'; term_id: string; label?: string | null }
+        } | null
+        object?: {
+          __typename?: 'atoms'
+          term_id: string
+          label?: string | null
+        } | null
       }>
     }
   } | null
@@ -13756,12 +14166,12 @@ export type GetAccountMetadataQuery = {
       emoji?: string | null
       type: any
       wallet_id: string
-      creator: {
+      creator?: {
         __typename?: 'accounts'
         id: string
         label: string
         image?: string | null
-      }
+      } | null
       value?: {
         __typename?: 'atom_values'
         person?: {
@@ -13822,15 +14232,15 @@ export type GetAtomsQuery = {
     created_at: any
     transaction_hash: string
     creator_id: string
-    creator: {
+    creator?: {
       __typename?: 'accounts'
       id: string
       label: string
       image?: string | null
       atom_id?: string | null
       type: any
-    }
-    term: {
+    } | null
+    term?: {
       __typename?: 'terms'
       vaults: Array<{
         __typename?: 'vaults'
@@ -13859,11 +14269,11 @@ export type GetAtomsQuery = {
           } | null
         }>
       }>
-    }
+    } | null
     as_subject_triples: Array<{
       __typename?: 'triples'
       term_id: string
-      object: {
+      object?: {
         __typename?: 'atoms'
         data?: string | null
         term_id: string
@@ -13871,16 +14281,16 @@ export type GetAtomsQuery = {
         label?: string | null
         emoji?: string | null
         type: any
-        creator: {
+        creator?: {
           __typename?: 'accounts'
           label: string
           image?: string | null
           id: string
           atom_id?: string | null
           type: any
-        }
-      }
-      predicate: {
+        } | null
+      } | null
+      predicate?: {
         __typename?: 'atoms'
         data?: string | null
         term_id: string
@@ -13888,20 +14298,20 @@ export type GetAtomsQuery = {
         label?: string | null
         emoji?: string | null
         type: any
-        creator: {
+        creator?: {
           __typename?: 'accounts'
           label: string
           image?: string | null
           id: string
           atom_id?: string | null
           type: any
-        }
-      }
+        } | null
+      } | null
     }>
     as_predicate_triples: Array<{
       __typename?: 'triples'
       term_id: string
-      subject: {
+      subject?: {
         __typename?: 'atoms'
         data?: string | null
         term_id: string
@@ -13909,16 +14319,16 @@ export type GetAtomsQuery = {
         label?: string | null
         emoji?: string | null
         type: any
-        creator: {
+        creator?: {
           __typename?: 'accounts'
           label: string
           image?: string | null
           id: string
           atom_id?: string | null
           type: any
-        }
-      }
-      object: {
+        } | null
+      } | null
+      object?: {
         __typename?: 'atoms'
         data?: string | null
         term_id: string
@@ -13926,20 +14336,20 @@ export type GetAtomsQuery = {
         label?: string | null
         emoji?: string | null
         type: any
-        creator: {
+        creator?: {
           __typename?: 'accounts'
           label: string
           image?: string | null
           id: string
           atom_id?: string | null
           type: any
-        }
-      }
+        } | null
+      } | null
     }>
     as_object_triples: Array<{
       __typename?: 'triples'
       term_id: string
-      subject: {
+      subject?: {
         __typename?: 'atoms'
         data?: string | null
         term_id: string
@@ -13947,16 +14357,16 @@ export type GetAtomsQuery = {
         label?: string | null
         emoji?: string | null
         type: any
-        creator: {
+        creator?: {
           __typename?: 'accounts'
           label: string
           image?: string | null
           id: string
           atom_id?: string | null
           type: any
-        }
-      }
-      predicate: {
+        } | null
+      } | null
+      predicate?: {
         __typename?: 'atoms'
         data?: string | null
         term_id: string
@@ -13964,15 +14374,15 @@ export type GetAtomsQuery = {
         label?: string | null
         emoji?: string | null
         type: any
-        creator: {
+        creator?: {
           __typename?: 'accounts'
           label: string
           image?: string | null
           id: string
           atom_id?: string | null
           type: any
-        }
-      }
+        } | null
+      } | null
     }>
     value?: {
       __typename?: 'atom_values'
@@ -14034,7 +14444,7 @@ export type GetAtomsWithPositionsQuery = {
     created_at: any
     transaction_hash: string
     creator_id: string
-    term: {
+    term?: {
       __typename?: 'terms'
       vaults: Array<{
         __typename?: 'vaults'
@@ -14063,15 +14473,15 @@ export type GetAtomsWithPositionsQuery = {
           } | null
         }>
       }>
-    }
-    creator: {
+    } | null
+    creator?: {
       __typename?: 'accounts'
       id: string
       label: string
       image?: string | null
       atom_id?: string | null
       type: any
-    }
+    } | null
     value?: {
       __typename?: 'atom_values'
       person?: {
@@ -14130,15 +14540,15 @@ export type GetAtomsWithAggregatesQuery = {
       created_at: any
       transaction_hash: string
       creator_id: string
-      creator: {
+      creator?: {
         __typename?: 'accounts'
         id: string
         label: string
         image?: string | null
         atom_id?: string | null
         type: any
-      }
-      term: {
+      } | null
+      term?: {
         __typename?: 'terms'
         vaults: Array<{
           __typename?: 'vaults'
@@ -14167,7 +14577,7 @@ export type GetAtomsWithAggregatesQuery = {
             } | null
           }>
         }>
-      }
+      } | null
       value?: {
         __typename?: 'atom_values'
         person?: {
@@ -14233,15 +14643,15 @@ export type GetAtomQuery = {
     created_at: any
     transaction_hash: string
     creator_id: string
-    creator: {
+    creator?: {
       __typename?: 'accounts'
       id: string
       label: string
       image?: string | null
       atom_id?: string | null
       type: any
-    }
-    term: {
+    } | null
+    term?: {
       __typename?: 'terms'
       vaults: Array<{
         __typename?: 'vaults'
@@ -14270,11 +14680,11 @@ export type GetAtomQuery = {
           } | null
         }>
       }>
-    }
+    } | null
     as_subject_triples: Array<{
       __typename?: 'triples'
       term_id: string
-      object: {
+      object?: {
         __typename?: 'atoms'
         data?: string | null
         term_id: string
@@ -14282,16 +14692,16 @@ export type GetAtomQuery = {
         label?: string | null
         emoji?: string | null
         type: any
-        creator: {
+        creator?: {
           __typename?: 'accounts'
           label: string
           image?: string | null
           id: string
           atom_id?: string | null
           type: any
-        }
-      }
-      predicate: {
+        } | null
+      } | null
+      predicate?: {
         __typename?: 'atoms'
         data?: string | null
         term_id: string
@@ -14299,20 +14709,20 @@ export type GetAtomQuery = {
         label?: string | null
         emoji?: string | null
         type: any
-        creator: {
+        creator?: {
           __typename?: 'accounts'
           label: string
           image?: string | null
           id: string
           atom_id?: string | null
           type: any
-        }
-      }
+        } | null
+      } | null
     }>
     as_predicate_triples: Array<{
       __typename?: 'triples'
       term_id: string
-      subject: {
+      subject?: {
         __typename?: 'atoms'
         data?: string | null
         term_id: string
@@ -14320,16 +14730,16 @@ export type GetAtomQuery = {
         label?: string | null
         emoji?: string | null
         type: any
-        creator: {
+        creator?: {
           __typename?: 'accounts'
           label: string
           image?: string | null
           id: string
           atom_id?: string | null
           type: any
-        }
-      }
-      object: {
+        } | null
+      } | null
+      object?: {
         __typename?: 'atoms'
         data?: string | null
         term_id: string
@@ -14337,20 +14747,20 @@ export type GetAtomQuery = {
         label?: string | null
         emoji?: string | null
         type: any
-        creator: {
+        creator?: {
           __typename?: 'accounts'
           label: string
           image?: string | null
           id: string
           atom_id?: string | null
           type: any
-        }
-      }
+        } | null
+      } | null
     }>
     as_object_triples: Array<{
       __typename?: 'triples'
       term_id: string
-      subject: {
+      subject?: {
         __typename?: 'atoms'
         data?: string | null
         term_id: string
@@ -14358,16 +14768,16 @@ export type GetAtomQuery = {
         label?: string | null
         emoji?: string | null
         type: any
-        creator: {
+        creator?: {
           __typename?: 'accounts'
           label: string
           image?: string | null
           id: string
           atom_id?: string | null
           type: any
-        }
-      }
-      predicate: {
+        } | null
+      } | null
+      predicate?: {
         __typename?: 'atoms'
         data?: string | null
         term_id: string
@@ -14375,15 +14785,15 @@ export type GetAtomQuery = {
         label?: string | null
         emoji?: string | null
         type: any
-        creator: {
+        creator?: {
           __typename?: 'accounts'
           label: string
           image?: string | null
           id: string
           atom_id?: string | null
           type: any
-        }
-      }
+        } | null
+      } | null
     }>
     value?: {
       __typename?: 'atom_values'
@@ -14437,15 +14847,15 @@ export type GetAtomByDataQuery = {
     created_at: any
     transaction_hash: string
     creator_id: string
-    creator: {
+    creator?: {
       __typename?: 'accounts'
       id: string
       label: string
       image?: string | null
       atom_id?: string | null
       type: any
-    }
-    term: {
+    } | null
+    term?: {
       __typename?: 'terms'
       vaults: Array<{
         __typename?: 'vaults'
@@ -14474,11 +14884,11 @@ export type GetAtomByDataQuery = {
           } | null
         }>
       }>
-    }
+    } | null
     as_subject_triples: Array<{
       __typename?: 'triples'
       term_id: string
-      object: {
+      object?: {
         __typename?: 'atoms'
         data?: string | null
         term_id: string
@@ -14486,16 +14896,16 @@ export type GetAtomByDataQuery = {
         label?: string | null
         emoji?: string | null
         type: any
-        creator: {
+        creator?: {
           __typename?: 'accounts'
           label: string
           image?: string | null
           id: string
           atom_id?: string | null
           type: any
-        }
-      }
-      predicate: {
+        } | null
+      } | null
+      predicate?: {
         __typename?: 'atoms'
         data?: string | null
         term_id: string
@@ -14503,20 +14913,20 @@ export type GetAtomByDataQuery = {
         label?: string | null
         emoji?: string | null
         type: any
-        creator: {
+        creator?: {
           __typename?: 'accounts'
           label: string
           image?: string | null
           id: string
           atom_id?: string | null
           type: any
-        }
-      }
+        } | null
+      } | null
     }>
     as_predicate_triples: Array<{
       __typename?: 'triples'
       term_id: string
-      subject: {
+      subject?: {
         __typename?: 'atoms'
         data?: string | null
         term_id: string
@@ -14524,16 +14934,16 @@ export type GetAtomByDataQuery = {
         label?: string | null
         emoji?: string | null
         type: any
-        creator: {
+        creator?: {
           __typename?: 'accounts'
           label: string
           image?: string | null
           id: string
           atom_id?: string | null
           type: any
-        }
-      }
-      object: {
+        } | null
+      } | null
+      object?: {
         __typename?: 'atoms'
         data?: string | null
         term_id: string
@@ -14541,20 +14951,20 @@ export type GetAtomByDataQuery = {
         label?: string | null
         emoji?: string | null
         type: any
-        creator: {
+        creator?: {
           __typename?: 'accounts'
           label: string
           image?: string | null
           id: string
           atom_id?: string | null
           type: any
-        }
-      }
+        } | null
+      } | null
     }>
     as_object_triples: Array<{
       __typename?: 'triples'
       term_id: string
-      subject: {
+      subject?: {
         __typename?: 'atoms'
         data?: string | null
         term_id: string
@@ -14562,16 +14972,16 @@ export type GetAtomByDataQuery = {
         label?: string | null
         emoji?: string | null
         type: any
-        creator: {
+        creator?: {
           __typename?: 'accounts'
           label: string
           image?: string | null
           id: string
           atom_id?: string | null
           type: any
-        }
-      }
-      predicate: {
+        } | null
+      } | null
+      predicate?: {
         __typename?: 'atoms'
         data?: string | null
         term_id: string
@@ -14579,15 +14989,15 @@ export type GetAtomByDataQuery = {
         label?: string | null
         emoji?: string | null
         type: any
-        creator: {
+        creator?: {
           __typename?: 'accounts'
           label: string
           image?: string | null
           id: string
           atom_id?: string | null
           type: any
-        }
-      }
+        } | null
+      } | null
     }>
     value?: {
       __typename?: 'atom_values'
@@ -14638,7 +15048,7 @@ export type GetAtomDetailsQuery = {
     type: any
     created_at: any
     data?: string | null
-    creator: { __typename?: 'accounts'; id: string }
+    creator?: { __typename?: 'accounts'; id: string } | null
     value?: {
       __typename?: 'atom_values'
       thing?: {
@@ -14648,7 +15058,7 @@ export type GetAtomDetailsQuery = {
         url?: string | null
       } | null
     } | null
-    term: {
+    term?: {
       __typename?: 'terms'
       vaults: Array<{
         __typename?: 'vaults'
@@ -14661,20 +15071,20 @@ export type GetAtomDetailsQuery = {
           account_id: string
         }>
       }>
-    }
+    } | null
     tags: {
       __typename?: 'triples_aggregate'
       nodes: Array<{
         __typename?: 'triples'
         predicate_id: string
-        object: {
+        object?: {
           __typename?: 'atoms'
           label?: string | null
-          term: {
+          term?: {
             __typename?: 'terms'
             vaults: Array<{ __typename?: 'vaults'; term_id: string }>
-          }
-        }
+          } | null
+        } | null
       }>
       aggregate?: {
         __typename?: 'triples_aggregate_fields'
@@ -14686,6 +15096,7 @@ export type GetAtomDetailsQuery = {
 
 export type FindAtomIdsQueryVariables = Exact<{
   where?: InputMaybe<Atoms_Bool_Exp>
+  limit?: InputMaybe<Scalars['Int']['input']>
 }>
 
 export type FindAtomIdsQuery = {
@@ -14729,7 +15140,7 @@ export type GetEventsQuery = {
       emoji?: string | null
       type: any
       wallet_id: string
-      term: {
+      term?: {
         __typename?: 'terms'
         vaults: Array<{
           __typename?: 'vaults'
@@ -14747,13 +15158,13 @@ export type GetEventsQuery = {
             } | null
           }>
         }>
-      }
-      creator: {
+      } | null
+      creator?: {
         __typename?: 'accounts'
         id: string
         label: string
         image?: string | null
-      }
+      } | null
       value?: {
         __typename?: 'atom_values'
         person?: {
@@ -14796,7 +15207,7 @@ export type GetEventsQuery = {
         atom_id?: string | null
         type: any
       } | null
-      subject: {
+      subject?: {
         __typename?: 'atoms'
         data?: string | null
         term_id: string
@@ -14804,14 +15215,14 @@ export type GetEventsQuery = {
         label?: string | null
         emoji?: string | null
         type: any
-        creator: {
+        creator?: {
           __typename?: 'accounts'
           label: string
           image?: string | null
           id: string
           atom_id?: string | null
           type: any
-        }
+        } | null
         value?: {
           __typename?: 'atom_values'
           person?: {
@@ -14842,8 +15253,8 @@ export type GetEventsQuery = {
             image?: string | null
           } | null
         } | null
-      }
-      predicate: {
+      } | null
+      predicate?: {
         __typename?: 'atoms'
         data?: string | null
         term_id: string
@@ -14851,14 +15262,14 @@ export type GetEventsQuery = {
         label?: string | null
         emoji?: string | null
         type: any
-        creator: {
+        creator?: {
           __typename?: 'accounts'
           label: string
           image?: string | null
           id: string
           atom_id?: string | null
           type: any
-        }
+        } | null
         value?: {
           __typename?: 'atom_values'
           person?: {
@@ -14889,8 +15300,8 @@ export type GetEventsQuery = {
             image?: string | null
           } | null
         } | null
-      }
-      object: {
+      } | null
+      object?: {
         __typename?: 'atoms'
         data?: string | null
         term_id: string
@@ -14898,14 +15309,14 @@ export type GetEventsQuery = {
         label?: string | null
         emoji?: string | null
         type: any
-        creator: {
+        creator?: {
           __typename?: 'accounts'
           label: string
           image?: string | null
           id: string
           atom_id?: string | null
           type: any
-        }
+        } | null
         value?: {
           __typename?: 'atom_values'
           person?: {
@@ -14936,7 +15347,7 @@ export type GetEventsQuery = {
             image?: string | null
           } | null
         } | null
-      }
+      } | null
       term?: {
         __typename?: 'terms'
         vaults: Array<{
@@ -15054,7 +15465,7 @@ export type GetEventsWithAggregatesQuery = {
         emoji?: string | null
         type: any
         wallet_id: string
-        term: {
+        term?: {
           __typename?: 'terms'
           vaults: Array<{
             __typename?: 'vaults'
@@ -15072,13 +15483,13 @@ export type GetEventsWithAggregatesQuery = {
               } | null
             }>
           }>
-        }
-        creator: {
+        } | null
+        creator?: {
           __typename?: 'accounts'
           id: string
           label: string
           image?: string | null
-        }
+        } | null
         value?: {
           __typename?: 'atom_values'
           person?: {
@@ -15190,7 +15601,7 @@ export type GetEventsWithAggregatesQuery = {
             }
           }>
         } | null
-        subject: {
+        subject?: {
           __typename?: 'atoms'
           data?: string | null
           term_id: string
@@ -15198,14 +15609,14 @@ export type GetEventsWithAggregatesQuery = {
           label?: string | null
           emoji?: string | null
           type: any
-          creator: {
+          creator?: {
             __typename?: 'accounts'
             label: string
             image?: string | null
             id: string
             atom_id?: string | null
             type: any
-          }
+          } | null
           value?: {
             __typename?: 'atom_values'
             person?: {
@@ -15236,8 +15647,8 @@ export type GetEventsWithAggregatesQuery = {
               image?: string | null
             } | null
           } | null
-        }
-        predicate: {
+        } | null
+        predicate?: {
           __typename?: 'atoms'
           data?: string | null
           term_id: string
@@ -15245,14 +15656,14 @@ export type GetEventsWithAggregatesQuery = {
           label?: string | null
           emoji?: string | null
           type: any
-          creator: {
+          creator?: {
             __typename?: 'accounts'
             label: string
             image?: string | null
             id: string
             atom_id?: string | null
             type: any
-          }
+          } | null
           value?: {
             __typename?: 'atom_values'
             person?: {
@@ -15283,8 +15694,8 @@ export type GetEventsWithAggregatesQuery = {
               image?: string | null
             } | null
           } | null
-        }
-        object: {
+        } | null
+        object?: {
           __typename?: 'atoms'
           data?: string | null
           term_id: string
@@ -15292,14 +15703,14 @@ export type GetEventsWithAggregatesQuery = {
           label?: string | null
           emoji?: string | null
           type: any
-          creator: {
+          creator?: {
             __typename?: 'accounts'
             label: string
             image?: string | null
             id: string
             atom_id?: string | null
             type: any
-          }
+          } | null
           value?: {
             __typename?: 'atom_values'
             person?: {
@@ -15330,7 +15741,7 @@ export type GetEventsWithAggregatesQuery = {
               image?: string | null
             } | null
           } | null
-        }
+        } | null
       } | null
       deposit?: {
         __typename?: 'deposits'
@@ -15338,7 +15749,7 @@ export type GetEventsWithAggregatesQuery = {
         curve_id: any
         assets_after_fees: any
         shares: any
-        receiver: { __typename?: 'accounts'; id: string }
+        receiver?: { __typename?: 'accounts'; id: string } | null
         sender?: { __typename?: 'accounts'; id: string } | null
       } | null
       redemption?: {
@@ -15407,14 +15818,14 @@ export type GetDebugEventsQuery = {
     id: string
     atom?: {
       __typename?: 'atoms'
-      term: {
+      term?: {
         __typename?: 'terms'
         positions: Array<{
           __typename?: 'positions'
           account_id: string
           shares: any
         }>
-      }
+      } | null
     } | null
   }>
 }
@@ -15449,7 +15860,7 @@ export type GetFollowingPositionsQuery = {
   triples: Array<{
     __typename?: 'triples'
     term_id: string
-    subject: {
+    subject?: {
       __typename?: 'atoms'
       term_id: string
       data?: string | null
@@ -15458,12 +15869,12 @@ export type GetFollowingPositionsQuery = {
       emoji?: string | null
       type: any
       wallet_id: string
-      creator: {
+      creator?: {
         __typename?: 'accounts'
         id: string
         label: string
         image?: string | null
-      }
+      } | null
       value?: {
         __typename?: 'atom_values'
         person?: {
@@ -15494,8 +15905,8 @@ export type GetFollowingPositionsQuery = {
           image?: string | null
         } | null
       } | null
-    }
-    predicate: {
+    } | null
+    predicate?: {
       __typename?: 'atoms'
       term_id: string
       data?: string | null
@@ -15504,12 +15915,12 @@ export type GetFollowingPositionsQuery = {
       emoji?: string | null
       type: any
       wallet_id: string
-      creator: {
+      creator?: {
         __typename?: 'accounts'
         id: string
         label: string
         image?: string | null
-      }
+      } | null
       value?: {
         __typename?: 'atom_values'
         person?: {
@@ -15540,8 +15951,8 @@ export type GetFollowingPositionsQuery = {
           image?: string | null
         } | null
       } | null
-    }
-    object: {
+    } | null
+    object?: {
       __typename?: 'atoms'
       term_id: string
       data?: string | null
@@ -15550,12 +15961,12 @@ export type GetFollowingPositionsQuery = {
       emoji?: string | null
       type: any
       wallet_id: string
-      creator: {
+      creator?: {
         __typename?: 'accounts'
         id: string
         label: string
         image?: string | null
-      }
+      } | null
       value?: {
         __typename?: 'atom_values'
         person?: {
@@ -15586,7 +15997,7 @@ export type GetFollowingPositionsQuery = {
           image?: string | null
         } | null
       } | null
-    }
+    } | null
     term?: {
       __typename?: 'terms'
       vaults: Array<{
@@ -15634,7 +16045,7 @@ export type GetFollowerPositionsQuery = {
   triples: Array<{
     __typename?: 'triples'
     term_id: string
-    subject: {
+    subject?: {
       __typename?: 'atoms'
       term_id: string
       data?: string | null
@@ -15643,12 +16054,12 @@ export type GetFollowerPositionsQuery = {
       emoji?: string | null
       type: any
       wallet_id: string
-      creator: {
+      creator?: {
         __typename?: 'accounts'
         id: string
         label: string
         image?: string | null
-      }
+      } | null
       value?: {
         __typename?: 'atom_values'
         person?: {
@@ -15679,8 +16090,8 @@ export type GetFollowerPositionsQuery = {
           image?: string | null
         } | null
       } | null
-    }
-    predicate: {
+    } | null
+    predicate?: {
       __typename?: 'atoms'
       term_id: string
       data?: string | null
@@ -15689,12 +16100,12 @@ export type GetFollowerPositionsQuery = {
       emoji?: string | null
       type: any
       wallet_id: string
-      creator: {
+      creator?: {
         __typename?: 'accounts'
         id: string
         label: string
         image?: string | null
-      }
+      } | null
       value?: {
         __typename?: 'atom_values'
         person?: {
@@ -15725,8 +16136,8 @@ export type GetFollowerPositionsQuery = {
           image?: string | null
         } | null
       } | null
-    }
-    object: {
+    } | null
+    object?: {
       __typename?: 'atoms'
       term_id: string
       data?: string | null
@@ -15735,12 +16146,12 @@ export type GetFollowerPositionsQuery = {
       emoji?: string | null
       type: any
       wallet_id: string
-      creator: {
+      creator?: {
         __typename?: 'accounts'
         id: string
         label: string
         image?: string | null
-      }
+      } | null
       value?: {
         __typename?: 'atom_values'
         person?: {
@@ -15771,7 +16182,7 @@ export type GetFollowerPositionsQuery = {
           image?: string | null
         } | null
       } | null
-    }
+    } | null
     term?: {
       __typename?: 'terms'
       vaults: Array<{
@@ -15829,9 +16240,21 @@ export type GetConnectionsQuery = {
   following: Array<{
     __typename?: 'triples'
     term_id: string
-    subject: { __typename?: 'atoms'; term_id: string; label?: string | null }
-    predicate: { __typename?: 'atoms'; term_id: string; label?: string | null }
-    object: { __typename?: 'atoms'; term_id: string; label?: string | null }
+    subject?: {
+      __typename?: 'atoms'
+      term_id: string
+      label?: string | null
+    } | null
+    predicate?: {
+      __typename?: 'atoms'
+      term_id: string
+      label?: string | null
+    } | null
+    object?: {
+      __typename?: 'atoms'
+      term_id: string
+      label?: string | null
+    } | null
     term?: {
       __typename?: 'terms'
       vaults: Array<{
@@ -15872,9 +16295,21 @@ export type GetConnectionsQuery = {
   followers: Array<{
     __typename?: 'triples'
     term_id: string
-    subject: { __typename?: 'atoms'; term_id: string; label?: string | null }
-    predicate: { __typename?: 'atoms'; term_id: string; label?: string | null }
-    object: { __typename?: 'atoms'; term_id: string; label?: string | null }
+    subject?: {
+      __typename?: 'atoms'
+      term_id: string
+      label?: string | null
+    } | null
+    predicate?: {
+      __typename?: 'atoms'
+      term_id: string
+      label?: string | null
+    } | null
+    object?: {
+      __typename?: 'atoms'
+      term_id: string
+      label?: string | null
+    } | null
     term?: {
       __typename?: 'terms'
       vaults: Array<{
@@ -15960,14 +16395,13 @@ export type GetListsQuery = {
   }
   predicate_objects: Array<{
     __typename?: 'predicate_objects'
-    id: string
     triple_count: number
-    object: {
+    object?: {
       __typename?: 'atoms'
       term_id: string
       label?: string | null
       image?: string | null
-    }
+    } | null
   }>
 }
 
@@ -16007,7 +16441,7 @@ export type GetListItemsQuery = {
             vault?: {
               __typename?: 'vaults'
               term_id: string
-              term: {
+              term?: {
                 __typename?: 'terms'
                 atom?: {
                   __typename?: 'atoms'
@@ -16054,7 +16488,7 @@ export type GetListItemsQuery = {
                       }
                     }>
                   } | null
-                  subject: {
+                  subject?: {
                     __typename?: 'atoms'
                     data?: string | null
                     term_id: string
@@ -16062,14 +16496,14 @@ export type GetListItemsQuery = {
                     image?: string | null
                     emoji?: string | null
                     type: any
-                    creator: {
+                    creator?: {
                       __typename?: 'accounts'
                       label: string
                       image?: string | null
                       id: string
                       atom_id?: string | null
                       type: any
-                    }
+                    } | null
                     value?: {
                       __typename?: 'atom_values'
                       person?: {
@@ -16100,8 +16534,8 @@ export type GetListItemsQuery = {
                         image?: string | null
                       } | null
                     } | null
-                  }
-                  predicate: {
+                  } | null
+                  predicate?: {
                     __typename?: 'atoms'
                     data?: string | null
                     term_id: string
@@ -16109,14 +16543,14 @@ export type GetListItemsQuery = {
                     image?: string | null
                     emoji?: string | null
                     type: any
-                    creator: {
+                    creator?: {
                       __typename?: 'accounts'
                       label: string
                       image?: string | null
                       id: string
                       atom_id?: string | null
                       type: any
-                    }
+                    } | null
                     value?: {
                       __typename?: 'atom_values'
                       person?: {
@@ -16147,8 +16581,8 @@ export type GetListItemsQuery = {
                         image?: string | null
                       } | null
                     } | null
-                  }
-                  object: {
+                  } | null
+                  object?: {
                     __typename?: 'atoms'
                     data?: string | null
                     term_id: string
@@ -16156,14 +16590,14 @@ export type GetListItemsQuery = {
                     image?: string | null
                     emoji?: string | null
                     type: any
-                    creator: {
+                    creator?: {
                       __typename?: 'accounts'
                       label: string
                       image?: string | null
                       id: string
                       atom_id?: string | null
                       type: any
-                    }
+                    } | null
                     value?: {
                       __typename?: 'atom_values'
                       person?: {
@@ -16194,9 +16628,9 @@ export type GetListItemsQuery = {
                         image?: string | null
                       } | null
                     } | null
-                  }
+                  } | null
                 } | null
-              }
+              } | null
             } | null
           }>
         }>
@@ -16220,7 +16654,7 @@ export type GetListItemsQuery = {
             vault?: {
               __typename?: 'vaults'
               term_id: string
-              term: {
+              term?: {
                 __typename?: 'terms'
                 atom?: {
                   __typename?: 'atoms'
@@ -16267,7 +16701,7 @@ export type GetListItemsQuery = {
                       }
                     }>
                   } | null
-                  subject: {
+                  subject?: {
                     __typename?: 'atoms'
                     data?: string | null
                     term_id: string
@@ -16275,14 +16709,14 @@ export type GetListItemsQuery = {
                     image?: string | null
                     emoji?: string | null
                     type: any
-                    creator: {
+                    creator?: {
                       __typename?: 'accounts'
                       label: string
                       image?: string | null
                       id: string
                       atom_id?: string | null
                       type: any
-                    }
+                    } | null
                     value?: {
                       __typename?: 'atom_values'
                       person?: {
@@ -16313,8 +16747,8 @@ export type GetListItemsQuery = {
                         image?: string | null
                       } | null
                     } | null
-                  }
-                  predicate: {
+                  } | null
+                  predicate?: {
                     __typename?: 'atoms'
                     data?: string | null
                     term_id: string
@@ -16322,14 +16756,14 @@ export type GetListItemsQuery = {
                     image?: string | null
                     emoji?: string | null
                     type: any
-                    creator: {
+                    creator?: {
                       __typename?: 'accounts'
                       label: string
                       image?: string | null
                       id: string
                       atom_id?: string | null
                       type: any
-                    }
+                    } | null
                     value?: {
                       __typename?: 'atom_values'
                       person?: {
@@ -16360,8 +16794,8 @@ export type GetListItemsQuery = {
                         image?: string | null
                       } | null
                     } | null
-                  }
-                  object: {
+                  } | null
+                  object?: {
                     __typename?: 'atoms'
                     data?: string | null
                     term_id: string
@@ -16369,14 +16803,14 @@ export type GetListItemsQuery = {
                     image?: string | null
                     emoji?: string | null
                     type: any
-                    creator: {
+                    creator?: {
                       __typename?: 'accounts'
                       label: string
                       image?: string | null
                       id: string
                       atom_id?: string | null
                       type: any
-                    }
+                    } | null
                     value?: {
                       __typename?: 'atom_values'
                       person?: {
@@ -16407,9 +16841,9 @@ export type GetListItemsQuery = {
                         image?: string | null
                       } | null
                     } | null
-                  }
+                  } | null
                 } | null
-              }
+              } | null
             } | null
           }>
         }>
@@ -16439,22 +16873,22 @@ export type GetListDetailsQuery = {
     __typename?: 'triples'
     term_id: string
     counter_term_id: string
-    subject: {
+    subject?: {
       __typename?: 'atoms'
       term_id: string
       label?: string | null
       wallet_id: string
       image?: string | null
       type: any
-      term: {
+      term?: {
         __typename?: 'terms'
         vaults: Array<{ __typename?: 'vaults'; position_count: number }>
-      }
+      } | null
       tags: {
         __typename?: 'triples_aggregate'
         nodes: Array<{
           __typename?: 'triples'
-          object: {
+          object?: {
             __typename?: 'atoms'
             label?: string | null
             term_id: string
@@ -16463,41 +16897,41 @@ export type GetListDetailsQuery = {
               nodes: Array<{
                 __typename?: 'triples'
                 term_id: string
-                subject: {
+                subject?: {
                   __typename?: 'atoms'
                   label?: string | null
                   term_id: string
-                }
+                } | null
               }>
               aggregate?: {
                 __typename?: 'triples_aggregate_fields'
                 count: number
               } | null
             }
-          }
+          } | null
         }>
         aggregate?: {
           __typename?: 'triples_aggregate_fields'
           count: number
         } | null
       }
-    }
-    object: {
+    } | null
+    object?: {
       __typename?: 'atoms'
       term_id: string
       label?: string | null
       wallet_id: string
       image?: string | null
       type: any
-    }
-    predicate: {
+    } | null
+    predicate?: {
       __typename?: 'atoms'
       term_id: string
       label?: string | null
       wallet_id: string
       image?: string | null
       type: any
-    }
+    } | null
     term?: {
       __typename?: 'terms'
       vaults: Array<{
@@ -16541,7 +16975,7 @@ export type GetListDetailsWithPositionQuery = {
     __typename?: 'triples'
     term_id: string
     counter_term_id: string
-    subject: {
+    subject?: {
       __typename?: 'atoms'
       term_id: string
       label?: string | null
@@ -16552,7 +16986,7 @@ export type GetListDetailsWithPositionQuery = {
         __typename?: 'triples_aggregate'
         nodes: Array<{
           __typename?: 'triples'
-          object: {
+          object?: {
             __typename?: 'atoms'
             label?: string | null
             term_id: string
@@ -16561,41 +16995,41 @@ export type GetListDetailsWithPositionQuery = {
               nodes: Array<{
                 __typename?: 'triples'
                 term_id: string
-                subject: {
+                subject?: {
                   __typename?: 'atoms'
                   label?: string | null
                   term_id: string
-                }
+                } | null
               }>
               aggregate?: {
                 __typename?: 'triples_aggregate_fields'
                 count: number
               } | null
             }
-          }
+          } | null
         }>
         aggregate?: {
           __typename?: 'triples_aggregate_fields'
           count: number
         } | null
       }
-    }
-    object: {
+    } | null
+    object?: {
       __typename?: 'atoms'
       term_id: string
       label?: string | null
       wallet_id: string
       image?: string | null
       type: any
-    }
-    predicate: {
+    } | null
+    predicate?: {
       __typename?: 'atoms'
       term_id: string
       label?: string | null
       wallet_id: string
       image?: string | null
       type: any
-    }
+    } | null
     term?: {
       __typename?: 'terms'
       vaults: Array<{
@@ -16660,7 +17094,7 @@ export type GetListDetailsWithUserQuery = {
     __typename?: 'triples'
     term_id: string
     counter_term_id: string
-    subject: {
+    subject?: {
       __typename?: 'atoms'
       term_id: string
       label?: string | null
@@ -16671,7 +17105,7 @@ export type GetListDetailsWithUserQuery = {
         __typename?: 'triples_aggregate'
         nodes: Array<{
           __typename?: 'triples'
-          object: {
+          object?: {
             __typename?: 'atoms'
             label?: string | null
             term_id: string
@@ -16680,41 +17114,41 @@ export type GetListDetailsWithUserQuery = {
               nodes: Array<{
                 __typename?: 'triples'
                 term_id: string
-                subject: {
+                subject?: {
                   __typename?: 'atoms'
                   label?: string | null
                   term_id: string
-                }
+                } | null
               }>
               aggregate?: {
                 __typename?: 'triples_aggregate_fields'
                 count: number
               } | null
             }
-          }
+          } | null
         }>
         aggregate?: {
           __typename?: 'triples_aggregate_fields'
           count: number
         } | null
       }
-    }
-    object: {
+    } | null
+    object?: {
       __typename?: 'atoms'
       term_id: string
       label?: string | null
       wallet_id: string
       image?: string | null
       type: any
-    }
-    predicate: {
+    } | null
+    predicate?: {
       __typename?: 'atoms'
       term_id: string
       label?: string | null
       wallet_id: string
       image?: string | null
       type: any
-    }
+    } | null
     term?: {
       __typename?: 'terms'
       vaults: Array<{
@@ -16765,7 +17199,7 @@ export type GetListDetailsWithUserQuery = {
     __typename?: 'triples'
     term_id: string
     counter_term_id: string
-    subject: {
+    subject?: {
       __typename?: 'atoms'
       term_id: string
       label?: string | null
@@ -16776,7 +17210,7 @@ export type GetListDetailsWithUserQuery = {
         __typename?: 'triples_aggregate'
         nodes: Array<{
           __typename?: 'triples'
-          object: {
+          object?: {
             __typename?: 'atoms'
             label?: string | null
             term_id: string
@@ -16785,41 +17219,41 @@ export type GetListDetailsWithUserQuery = {
               nodes: Array<{
                 __typename?: 'triples'
                 term_id: string
-                subject: {
+                subject?: {
                   __typename?: 'atoms'
                   label?: string | null
                   term_id: string
-                }
+                } | null
               }>
               aggregate?: {
                 __typename?: 'triples_aggregate_fields'
                 count: number
               } | null
             }
-          }
+          } | null
         }>
         aggregate?: {
           __typename?: 'triples_aggregate_fields'
           count: number
         } | null
       }
-    }
-    object: {
+    } | null
+    object?: {
       __typename?: 'atoms'
       term_id: string
       label?: string | null
       wallet_id: string
       image?: string | null
       type: any
-    }
-    predicate: {
+    } | null
+    predicate?: {
       __typename?: 'atoms'
       term_id: string
       label?: string | null
       wallet_id: string
       image?: string | null
       type: any
-    }
+    } | null
     term?: {
       __typename?: 'terms'
       vaults: Array<{
@@ -16882,14 +17316,14 @@ export type GetListDetailsSimplifiedQuery = {
     __typename?: 'triples'
     term_id: string
     counter_term_id: string
-    subject: {
+    subject?: {
       __typename?: 'atoms'
       term_id: string
       label?: string | null
       wallet_id: string
       image?: string | null
       type: any
-      term: {
+      term?: {
         __typename?: 'terms'
         vaults: Array<{
           __typename?: 'vaults'
@@ -16897,24 +17331,24 @@ export type GetListDetailsSimplifiedQuery = {
           position_count: number
           total_shares: any
         }>
-      }
-    }
-    object: {
+      } | null
+    } | null
+    object?: {
       __typename?: 'atoms'
       term_id: string
       label?: string | null
       wallet_id: string
       image?: string | null
       type: any
-    }
-    predicate: {
+    } | null
+    predicate?: {
       __typename?: 'atoms'
       term_id: string
       label?: string | null
       wallet_id: string
       image?: string | null
       type: any
-    }
+    } | null
     term?: {
       __typename?: 'terms'
       vaults: Array<{
@@ -17017,7 +17451,7 @@ export type GetPositionsQuery = {
     vault?: {
       __typename?: 'vaults'
       term_id: string
-      term: {
+      term?: {
         __typename?: 'terms'
         atom?: {
           __typename?: 'atoms'
@@ -17064,7 +17498,7 @@ export type GetPositionsQuery = {
               }
             }>
           } | null
-          subject: {
+          subject?: {
             __typename?: 'atoms'
             data?: string | null
             term_id: string
@@ -17072,14 +17506,14 @@ export type GetPositionsQuery = {
             image?: string | null
             emoji?: string | null
             type: any
-            creator: {
+            creator?: {
               __typename?: 'accounts'
               label: string
               image?: string | null
               id: string
               atom_id?: string | null
               type: any
-            }
+            } | null
             value?: {
               __typename?: 'atom_values'
               person?: {
@@ -17110,8 +17544,8 @@ export type GetPositionsQuery = {
                 image?: string | null
               } | null
             } | null
-          }
-          predicate: {
+          } | null
+          predicate?: {
             __typename?: 'atoms'
             data?: string | null
             term_id: string
@@ -17119,14 +17553,14 @@ export type GetPositionsQuery = {
             image?: string | null
             emoji?: string | null
             type: any
-            creator: {
+            creator?: {
               __typename?: 'accounts'
               label: string
               image?: string | null
               id: string
               atom_id?: string | null
               type: any
-            }
+            } | null
             value?: {
               __typename?: 'atom_values'
               person?: {
@@ -17157,8 +17591,8 @@ export type GetPositionsQuery = {
                 image?: string | null
               } | null
             } | null
-          }
-          object: {
+          } | null
+          object?: {
             __typename?: 'atoms'
             data?: string | null
             term_id: string
@@ -17166,14 +17600,14 @@ export type GetPositionsQuery = {
             image?: string | null
             emoji?: string | null
             type: any
-            creator: {
+            creator?: {
               __typename?: 'accounts'
               label: string
               image?: string | null
               id: string
               atom_id?: string | null
               type: any
-            }
+            } | null
             value?: {
               __typename?: 'atom_values'
               person?: {
@@ -17204,9 +17638,9 @@ export type GetPositionsQuery = {
                 image?: string | null
               } | null
             } | null
-          }
+          } | null
         } | null
-      }
+      } | null
     } | null
   }>
 }
@@ -17238,7 +17672,7 @@ export type GetTriplePositionsByAddressQuery = {
     vault?: {
       __typename?: 'vaults'
       term_id: string
-      term: {
+      term?: {
         __typename?: 'terms'
         triple?: {
           __typename?: 'triples'
@@ -17299,7 +17733,7 @@ export type GetTriplePositionsByAddressQuery = {
               }
             }>
           } | null
-          subject: {
+          subject?: {
             __typename?: 'atoms'
             data?: string | null
             term_id: string
@@ -17307,14 +17741,14 @@ export type GetTriplePositionsByAddressQuery = {
             image?: string | null
             emoji?: string | null
             type: any
-            creator: {
+            creator?: {
               __typename?: 'accounts'
               label: string
               image?: string | null
               id: string
               atom_id?: string | null
               type: any
-            }
+            } | null
             value?: {
               __typename?: 'atom_values'
               person?: {
@@ -17345,8 +17779,8 @@ export type GetTriplePositionsByAddressQuery = {
                 image?: string | null
               } | null
             } | null
-          }
-          predicate: {
+          } | null
+          predicate?: {
             __typename?: 'atoms'
             data?: string | null
             term_id: string
@@ -17354,14 +17788,14 @@ export type GetTriplePositionsByAddressQuery = {
             image?: string | null
             emoji?: string | null
             type: any
-            creator: {
+            creator?: {
               __typename?: 'accounts'
               label: string
               image?: string | null
               id: string
               atom_id?: string | null
               type: any
-            }
+            } | null
             value?: {
               __typename?: 'atom_values'
               person?: {
@@ -17392,8 +17826,8 @@ export type GetTriplePositionsByAddressQuery = {
                 image?: string | null
               } | null
             } | null
-          }
-          object: {
+          } | null
+          object?: {
             __typename?: 'atoms'
             data?: string | null
             term_id: string
@@ -17401,14 +17835,14 @@ export type GetTriplePositionsByAddressQuery = {
             image?: string | null
             emoji?: string | null
             type: any
-            creator: {
+            creator?: {
               __typename?: 'accounts'
               label: string
               image?: string | null
               id: string
               atom_id?: string | null
               type: any
-            }
+            } | null
             value?: {
               __typename?: 'atom_values'
               person?: {
@@ -17439,7 +17873,7 @@ export type GetTriplePositionsByAddressQuery = {
                 image?: string | null
               } | null
             } | null
-          }
+          } | null
         } | null
         atom?: {
           __typename?: 'atoms'
@@ -17447,7 +17881,7 @@ export type GetTriplePositionsByAddressQuery = {
           label?: string | null
           image?: string | null
         } | null
-      }
+      } | null
     } | null
     account?: {
       __typename?: 'accounts'
@@ -17488,7 +17922,7 @@ export type GetPositionsWithAggregatesQuery = {
       vault?: {
         __typename?: 'vaults'
         term_id: string
-        term: {
+        term?: {
           __typename?: 'terms'
           atom?: {
             __typename?: 'atoms'
@@ -17535,7 +17969,7 @@ export type GetPositionsWithAggregatesQuery = {
                 }
               }>
             } | null
-            subject: {
+            subject?: {
               __typename?: 'atoms'
               data?: string | null
               term_id: string
@@ -17543,14 +17977,14 @@ export type GetPositionsWithAggregatesQuery = {
               image?: string | null
               emoji?: string | null
               type: any
-              creator: {
+              creator?: {
                 __typename?: 'accounts'
                 label: string
                 image?: string | null
                 id: string
                 atom_id?: string | null
                 type: any
-              }
+              } | null
               value?: {
                 __typename?: 'atom_values'
                 person?: {
@@ -17581,8 +18015,8 @@ export type GetPositionsWithAggregatesQuery = {
                   image?: string | null
                 } | null
               } | null
-            }
-            predicate: {
+            } | null
+            predicate?: {
               __typename?: 'atoms'
               data?: string | null
               term_id: string
@@ -17590,14 +18024,14 @@ export type GetPositionsWithAggregatesQuery = {
               image?: string | null
               emoji?: string | null
               type: any
-              creator: {
+              creator?: {
                 __typename?: 'accounts'
                 label: string
                 image?: string | null
                 id: string
                 atom_id?: string | null
                 type: any
-              }
+              } | null
               value?: {
                 __typename?: 'atom_values'
                 person?: {
@@ -17628,8 +18062,8 @@ export type GetPositionsWithAggregatesQuery = {
                   image?: string | null
                 } | null
               } | null
-            }
-            object: {
+            } | null
+            object?: {
               __typename?: 'atoms'
               data?: string | null
               term_id: string
@@ -17637,14 +18071,14 @@ export type GetPositionsWithAggregatesQuery = {
               image?: string | null
               emoji?: string | null
               type: any
-              creator: {
+              creator?: {
                 __typename?: 'accounts'
                 label: string
                 image?: string | null
                 id: string
                 atom_id?: string | null
                 type: any
-              }
+              } | null
               value?: {
                 __typename?: 'atom_values'
                 person?: {
@@ -17675,9 +18109,9 @@ export type GetPositionsWithAggregatesQuery = {
                   image?: string | null
                 } | null
               } | null
-            }
+            } | null
           } | null
-        }
+        } | null
       } | null
     }>
   }
@@ -17720,7 +18154,7 @@ export type GetPositionQuery = {
     vault?: {
       __typename?: 'vaults'
       term_id: string
-      term: {
+      term?: {
         __typename?: 'terms'
         atom?: {
           __typename?: 'atoms'
@@ -17767,7 +18201,7 @@ export type GetPositionQuery = {
               }
             }>
           } | null
-          subject: {
+          subject?: {
             __typename?: 'atoms'
             data?: string | null
             term_id: string
@@ -17775,14 +18209,14 @@ export type GetPositionQuery = {
             image?: string | null
             emoji?: string | null
             type: any
-            creator: {
+            creator?: {
               __typename?: 'accounts'
               label: string
               image?: string | null
               id: string
               atom_id?: string | null
               type: any
-            }
+            } | null
             value?: {
               __typename?: 'atom_values'
               person?: {
@@ -17813,8 +18247,8 @@ export type GetPositionQuery = {
                 image?: string | null
               } | null
             } | null
-          }
-          predicate: {
+          } | null
+          predicate?: {
             __typename?: 'atoms'
             data?: string | null
             term_id: string
@@ -17822,14 +18256,14 @@ export type GetPositionQuery = {
             image?: string | null
             emoji?: string | null
             type: any
-            creator: {
+            creator?: {
               __typename?: 'accounts'
               label: string
               image?: string | null
               id: string
               atom_id?: string | null
               type: any
-            }
+            } | null
             value?: {
               __typename?: 'atom_values'
               person?: {
@@ -17860,8 +18294,8 @@ export type GetPositionQuery = {
                 image?: string | null
               } | null
             } | null
-          }
-          object: {
+          } | null
+          object?: {
             __typename?: 'atoms'
             data?: string | null
             term_id: string
@@ -17869,14 +18303,14 @@ export type GetPositionQuery = {
             image?: string | null
             emoji?: string | null
             type: any
-            creator: {
+            creator?: {
               __typename?: 'accounts'
               label: string
               image?: string | null
               id: string
               atom_id?: string | null
               type: any
-            }
+            } | null
             value?: {
               __typename?: 'atom_values'
               person?: {
@@ -17907,9 +18341,9 @@ export type GetPositionQuery = {
                 image?: string | null
               } | null
             } | null
-          }
+          } | null
         } | null
-      }
+      } | null
     } | null
   } | null
 }
@@ -17943,15 +18377,208 @@ export type SearchPositionsQuery = {
   __typename?: 'query_root'
   positions: Array<{
     __typename?: 'positions'
-    term: {
+    term?: {
       __typename?: 'terms'
       triple?: {
         __typename?: 'triples'
-        subject: { __typename?: 'atoms'; data?: string | null }
-        predicate: { __typename?: 'atoms'; data?: string | null }
-        object: { __typename?: 'atoms'; data?: string | null }
+        subject?: { __typename?: 'atoms'; data?: string | null } | null
+        predicate?: { __typename?: 'atoms'; data?: string | null } | null
+        object?: { __typename?: 'atoms'; data?: string | null } | null
+      } | null
+    } | null
+  }>
+}
+
+export type GlobalSearchQueryVariables = Exact<{
+  likeStr?: InputMaybe<Scalars['String']['input']>
+  accountsLimit?: InputMaybe<Scalars['Int']['input']>
+  atomsLimit?: InputMaybe<Scalars['Int']['input']>
+  triplesLimit?: InputMaybe<Scalars['Int']['input']>
+  collectionsLimit?: InputMaybe<Scalars['Int']['input']>
+}>
+
+export type GlobalSearchQuery = {
+  __typename?: 'query_root'
+  accounts: Array<{
+    __typename?: 'accounts'
+    id: string
+    atom_id?: string | null
+    label: string
+    image?: string | null
+    triples_aggregate: {
+      __typename?: 'triples_aggregate'
+      aggregate?: {
+        __typename?: 'triples_aggregate_fields'
+        count: number
       } | null
     }
+    signals_aggregate: {
+      __typename?: 'signals_aggregate'
+      aggregate?: {
+        __typename?: 'signals_aggregate_fields'
+        count: number
+      } | null
+    }
+    cached_image?: {
+      __typename?: 'cached_images_cached_image'
+      safe: boolean
+      url: string
+    } | null
+  }>
+  atoms: Array<{
+    __typename?: 'atoms'
+    term_id: string
+    image?: string | null
+    type: any
+    label?: string | null
+    created_at: any
+    creator?: {
+      __typename?: 'accounts'
+      id: string
+      label: string
+      image?: string | null
+      cached_image?: {
+        __typename?: 'cached_images_cached_image'
+        safe: boolean
+        url: string
+      } | null
+    } | null
+    value?: {
+      __typename?: 'atom_values'
+      account?: { __typename?: 'accounts'; id: string; label: string } | null
+      person?: {
+        __typename?: 'persons'
+        name?: string | null
+        description?: string | null
+        email?: string | null
+        url?: string | null
+        identifier?: string | null
+      } | null
+      thing?: {
+        __typename?: 'things'
+        url?: string | null
+        name?: string | null
+        description?: string | null
+      } | null
+      organization?: {
+        __typename?: 'organizations'
+        name?: string | null
+        email?: string | null
+        description?: string | null
+        url?: string | null
+      } | null
+    } | null
+    term?: {
+      __typename?: 'terms'
+      vaults: Array<{
+        __typename?: 'vaults'
+        curve_id: any
+        term_id: string
+        position_count: number
+        current_share_price: any
+        total_shares: any
+        total_assets: any
+        market_cap: any
+      }>
+    } | null
+  }>
+  triples: Array<{
+    __typename?: 'triples'
+    term_id: string
+    object?: {
+      __typename?: 'atoms'
+      term_id: string
+      label?: string | null
+      image?: string | null
+      type: any
+    } | null
+    predicate?: {
+      __typename?: 'atoms'
+      term_id: string
+      label?: string | null
+      image?: string | null
+      type: any
+    } | null
+    subject?: {
+      __typename?: 'atoms'
+      term_id: string
+      label?: string | null
+      image?: string | null
+      type: any
+    } | null
+    counter_term?: {
+      __typename?: 'terms'
+      vaults: Array<{
+        __typename?: 'vaults'
+        curve_id: any
+        term_id: string
+        position_count: number
+        current_share_price: any
+        total_shares: any
+        total_assets: any
+        market_cap: any
+      }>
+    } | null
+    term?: {
+      __typename?: 'terms'
+      vaults: Array<{
+        __typename?: 'vaults'
+        curve_id: any
+        term_id: string
+        position_count: number
+        current_share_price: any
+        total_shares: any
+        total_assets: any
+        market_cap: any
+      }>
+    } | null
+  }>
+  collections: Array<{
+    __typename?: 'predicate_objects'
+    triple_count: number
+    object?: {
+      __typename?: 'atoms'
+      label?: string | null
+      term_id: string
+      image?: string | null
+      value?: {
+        __typename?: 'atom_values'
+        thing?: { __typename?: 'things'; description?: string | null } | null
+      } | null
+      cached_image?: {
+        __typename?: 'cached_images_cached_image'
+        safe: boolean
+        url: string
+      } | null
+    } | null
+  }>
+}
+
+export type SemanticSearchQueryVariables = Exact<{
+  query: Scalars['String']['input']
+  limit?: InputMaybe<Scalars['Int']['input']>
+}>
+
+export type SemanticSearchQuery = {
+  __typename?: 'query_root'
+  search_term: Array<{
+    __typename?: 'terms'
+    atom?: {
+      __typename?: 'atoms'
+      term_id: string
+      type: any
+      value?: {
+        __typename?: 'atom_values'
+        text_object?: { __typename?: 'text_objects'; data: string } | null
+        json_object?: {
+          __typename?: 'json_objects'
+          name: any
+          description: any
+          image: any
+          url: any
+        } | null
+      } | null
+    } | null
   }>
 }
 
@@ -17980,7 +18607,7 @@ export type GetSignalsQuery = {
     triple_id?: string | null
     deposit_id?: string | null
     redemption_id?: string | null
-    term: {
+    term?: {
       __typename?: 'terms'
       atom?: {
         __typename?: 'atoms'
@@ -17991,7 +18618,7 @@ export type GetSignalsQuery = {
         emoji?: string | null
         type: any
         wallet_id: string
-        term: {
+        term?: {
           __typename?: 'terms'
           vaults: Array<{
             __typename?: 'vaults'
@@ -18009,13 +18636,13 @@ export type GetSignalsQuery = {
               } | null
             }>
           }>
-        }
-        creator: {
+        } | null
+        creator?: {
           __typename?: 'accounts'
           id: string
           label: string
           image?: string | null
-        }
+        } | null
         value?: {
           __typename?: 'atom_values'
           person?: {
@@ -18058,7 +18685,7 @@ export type GetSignalsQuery = {
           atom_id?: string | null
           type: any
         } | null
-        subject: {
+        subject?: {
           __typename?: 'atoms'
           data?: string | null
           term_id: string
@@ -18066,14 +18693,14 @@ export type GetSignalsQuery = {
           label?: string | null
           emoji?: string | null
           type: any
-          creator: {
+          creator?: {
             __typename?: 'accounts'
             label: string
             image?: string | null
             id: string
             atom_id?: string | null
             type: any
-          }
+          } | null
           value?: {
             __typename?: 'atom_values'
             person?: {
@@ -18104,8 +18731,8 @@ export type GetSignalsQuery = {
               image?: string | null
             } | null
           } | null
-        }
-        predicate: {
+        } | null
+        predicate?: {
           __typename?: 'atoms'
           data?: string | null
           term_id: string
@@ -18113,14 +18740,14 @@ export type GetSignalsQuery = {
           label?: string | null
           emoji?: string | null
           type: any
-          creator: {
+          creator?: {
             __typename?: 'accounts'
             label: string
             image?: string | null
             id: string
             atom_id?: string | null
             type: any
-          }
+          } | null
           value?: {
             __typename?: 'atom_values'
             person?: {
@@ -18151,8 +18778,8 @@ export type GetSignalsQuery = {
               image?: string | null
             } | null
           } | null
-        }
-        object: {
+        } | null
+        object?: {
           __typename?: 'atoms'
           data?: string | null
           term_id: string
@@ -18160,14 +18787,14 @@ export type GetSignalsQuery = {
           label?: string | null
           emoji?: string | null
           type: any
-          creator: {
+          creator?: {
             __typename?: 'accounts'
             label: string
             image?: string | null
             id: string
             atom_id?: string | null
             type: any
-          }
+          } | null
           value?: {
             __typename?: 'atom_values'
             person?: {
@@ -18198,7 +18825,7 @@ export type GetSignalsQuery = {
               image?: string | null
             } | null
           } | null
-        }
+        } | null
         term?: {
           __typename?: 'terms'
           vaults: Array<{
@@ -18238,7 +18865,7 @@ export type GetSignalsQuery = {
           }>
         } | null
       } | null
-    }
+    } | null
     deposit?: {
       __typename?: 'deposits'
       sender_id: string
@@ -18251,12 +18878,12 @@ export type GetSignalsQuery = {
         label: string
         image?: string | null
       } | null
-      receiver: {
+      receiver?: {
         __typename?: 'accounts'
         id: string
         label: string
         image?: string | null
-      }
+      } | null
       vault?: {
         __typename?: 'vaults'
         total_shares: any
@@ -18286,12 +18913,12 @@ export type GetSignalsQuery = {
         label: string
         image?: string | null
       } | null
-      receiver: {
+      receiver?: {
         __typename?: 'accounts'
         id: string
         label: string
         image?: string | null
-      }
+      } | null
     } | null
   }>
 }
@@ -18305,12 +18932,12 @@ export type AtomMetadataMaybedeletethisFragment = {
   emoji?: string | null
   type: any
   wallet_id: string
-  creator: {
+  creator?: {
     __typename?: 'accounts'
     id: string
     label: string
     image?: string | null
-  }
+  } | null
   value?: {
     __typename?: 'atom_values'
     person?: {
@@ -18372,7 +18999,7 @@ export type GetTagsQuery = {
     subject_id: string
     predicate_id: string
     object_id: string
-    subject: {
+    subject?: {
       __typename?: 'atoms'
       data?: string | null
       term_id: string
@@ -18380,14 +19007,14 @@ export type GetTagsQuery = {
       label?: string | null
       emoji?: string | null
       type: any
-      creator: {
+      creator?: {
         __typename?: 'accounts'
         label: string
         image?: string | null
         id: string
         atom_id?: string | null
         type: any
-      }
+      } | null
       value?: {
         __typename?: 'atom_values'
         person?: {
@@ -18418,8 +19045,8 @@ export type GetTagsQuery = {
           image?: string | null
         } | null
       } | null
-    }
-    predicate: {
+    } | null
+    predicate?: {
       __typename?: 'atoms'
       data?: string | null
       term_id: string
@@ -18427,14 +19054,14 @@ export type GetTagsQuery = {
       label?: string | null
       emoji?: string | null
       type: any
-      creator: {
+      creator?: {
         __typename?: 'accounts'
         label: string
         image?: string | null
         id: string
         atom_id?: string | null
         type: any
-      }
+      } | null
       value?: {
         __typename?: 'atom_values'
         person?: {
@@ -18465,8 +19092,8 @@ export type GetTagsQuery = {
           image?: string | null
         } | null
       } | null
-    }
-    object: {
+    } | null
+    object?: {
       __typename?: 'atoms'
       data?: string | null
       term_id: string
@@ -18474,14 +19101,14 @@ export type GetTagsQuery = {
       label?: string | null
       emoji?: string | null
       type: any
-      creator: {
+      creator?: {
         __typename?: 'accounts'
         label: string
         image?: string | null
         id: string
         atom_id?: string | null
         type: any
-      }
+      } | null
       value?: {
         __typename?: 'atom_values'
         person?: {
@@ -18512,7 +19139,7 @@ export type GetTagsQuery = {
           image?: string | null
         } | null
       } | null
-    }
+    } | null
     term?: {
       __typename?: 'terms'
       vaults: Array<{
@@ -18596,7 +19223,7 @@ export type GetTagsCustomQuery = {
     subject_id: string
     predicate_id: string
     object_id: string
-    subject: {
+    subject?: {
       __typename?: 'atoms'
       data?: string | null
       term_id: string
@@ -18604,14 +19231,14 @@ export type GetTagsCustomQuery = {
       label?: string | null
       emoji?: string | null
       type: any
-      creator: {
+      creator?: {
         __typename?: 'accounts'
         label: string
         image?: string | null
         id: string
         atom_id?: string | null
         type: any
-      }
+      } | null
       value?: {
         __typename?: 'atom_values'
         person?: {
@@ -18642,8 +19269,8 @@ export type GetTagsCustomQuery = {
           image?: string | null
         } | null
       } | null
-    }
-    predicate: {
+    } | null
+    predicate?: {
       __typename?: 'atoms'
       data?: string | null
       term_id: string
@@ -18651,14 +19278,14 @@ export type GetTagsCustomQuery = {
       label?: string | null
       emoji?: string | null
       type: any
-      creator: {
+      creator?: {
         __typename?: 'accounts'
         label: string
         image?: string | null
         id: string
         atom_id?: string | null
         type: any
-      }
+      } | null
       value?: {
         __typename?: 'atom_values'
         person?: {
@@ -18689,8 +19316,8 @@ export type GetTagsCustomQuery = {
           image?: string | null
         } | null
       } | null
-    }
-    object: {
+    } | null
+    object?: {
       __typename?: 'atoms'
       data?: string | null
       term_id: string
@@ -18698,14 +19325,14 @@ export type GetTagsCustomQuery = {
       label?: string | null
       emoji?: string | null
       type: any
-      creator: {
+      creator?: {
         __typename?: 'accounts'
         label: string
         image?: string | null
         id: string
         atom_id?: string | null
         type: any
-      }
+      } | null
       value?: {
         __typename?: 'atom_values'
         person?: {
@@ -18736,7 +19363,7 @@ export type GetTagsCustomQuery = {
           image?: string | null
         } | null
       } | null
-    }
+    } | null
     term?: {
       __typename?: 'terms'
       vaults: Array<{
@@ -18843,7 +19470,7 @@ export type GetTriplesQuery = {
       atom_id?: string | null
       type: any
     } | null
-    subject: {
+    subject?: {
       __typename?: 'atoms'
       data?: string | null
       term_id: string
@@ -18851,14 +19478,14 @@ export type GetTriplesQuery = {
       label?: string | null
       emoji?: string | null
       type: any
-      creator: {
+      creator?: {
         __typename?: 'accounts'
         label: string
         image?: string | null
         id: string
         atom_id?: string | null
         type: any
-      }
+      } | null
       value?: {
         __typename?: 'atom_values'
         person?: {
@@ -18889,8 +19516,8 @@ export type GetTriplesQuery = {
           image?: string | null
         } | null
       } | null
-    }
-    predicate: {
+    } | null
+    predicate?: {
       __typename?: 'atoms'
       data?: string | null
       term_id: string
@@ -18898,14 +19525,14 @@ export type GetTriplesQuery = {
       label?: string | null
       emoji?: string | null
       type: any
-      creator: {
+      creator?: {
         __typename?: 'accounts'
         label: string
         image?: string | null
         id: string
         atom_id?: string | null
         type: any
-      }
+      } | null
       value?: {
         __typename?: 'atom_values'
         person?: {
@@ -18936,8 +19563,8 @@ export type GetTriplesQuery = {
           image?: string | null
         } | null
       } | null
-    }
-    object: {
+    } | null
+    object?: {
       __typename?: 'atoms'
       data?: string | null
       term_id: string
@@ -18945,14 +19572,14 @@ export type GetTriplesQuery = {
       label?: string | null
       emoji?: string | null
       type: any
-      creator: {
+      creator?: {
         __typename?: 'accounts'
         label: string
         image?: string | null
         id: string
         atom_id?: string | null
         type: any
-      }
+      } | null
       value?: {
         __typename?: 'atom_values'
         person?: {
@@ -18983,7 +19610,7 @@ export type GetTriplesQuery = {
           image?: string | null
         } | null
       } | null
-    }
+    } | null
     term?: {
       __typename?: 'terms'
       vaults: Array<{
@@ -19018,7 +19645,7 @@ export type GetTriplesQuery = {
             term_id: string
             total_shares: any
             current_share_price: any
-            term: {
+            term?: {
               __typename?: 'terms'
               atom?: {
                 __typename?: 'atoms'
@@ -19065,7 +19692,7 @@ export type GetTriplesQuery = {
                     }
                   }>
                 } | null
-                subject: {
+                subject?: {
                   __typename?: 'atoms'
                   data?: string | null
                   term_id: string
@@ -19073,14 +19700,14 @@ export type GetTriplesQuery = {
                   image?: string | null
                   emoji?: string | null
                   type: any
-                  creator: {
+                  creator?: {
                     __typename?: 'accounts'
                     label: string
                     image?: string | null
                     id: string
                     atom_id?: string | null
                     type: any
-                  }
+                  } | null
                   value?: {
                     __typename?: 'atom_values'
                     person?: {
@@ -19111,8 +19738,8 @@ export type GetTriplesQuery = {
                       image?: string | null
                     } | null
                   } | null
-                }
-                predicate: {
+                } | null
+                predicate?: {
                   __typename?: 'atoms'
                   data?: string | null
                   term_id: string
@@ -19120,14 +19747,14 @@ export type GetTriplesQuery = {
                   image?: string | null
                   emoji?: string | null
                   type: any
-                  creator: {
+                  creator?: {
                     __typename?: 'accounts'
                     label: string
                     image?: string | null
                     id: string
                     atom_id?: string | null
                     type: any
-                  }
+                  } | null
                   value?: {
                     __typename?: 'atom_values'
                     person?: {
@@ -19158,8 +19785,8 @@ export type GetTriplesQuery = {
                       image?: string | null
                     } | null
                   } | null
-                }
-                object: {
+                } | null
+                object?: {
                   __typename?: 'atoms'
                   data?: string | null
                   term_id: string
@@ -19167,14 +19794,14 @@ export type GetTriplesQuery = {
                   image?: string | null
                   emoji?: string | null
                   type: any
-                  creator: {
+                  creator?: {
                     __typename?: 'accounts'
                     label: string
                     image?: string | null
                     id: string
                     atom_id?: string | null
                     type: any
-                  }
+                  } | null
                   value?: {
                     __typename?: 'atom_values'
                     person?: {
@@ -19205,9 +19832,9 @@ export type GetTriplesQuery = {
                       image?: string | null
                     } | null
                   } | null
-                }
+                } | null
               } | null
-            }
+            } | null
           } | null
         }>
       }>
@@ -19246,7 +19873,7 @@ export type GetTriplesQuery = {
             term_id: string
             total_shares: any
             current_share_price: any
-            term: {
+            term?: {
               __typename?: 'terms'
               atom?: {
                 __typename?: 'atoms'
@@ -19293,7 +19920,7 @@ export type GetTriplesQuery = {
                     }
                   }>
                 } | null
-                subject: {
+                subject?: {
                   __typename?: 'atoms'
                   data?: string | null
                   term_id: string
@@ -19301,14 +19928,14 @@ export type GetTriplesQuery = {
                   image?: string | null
                   emoji?: string | null
                   type: any
-                  creator: {
+                  creator?: {
                     __typename?: 'accounts'
                     label: string
                     image?: string | null
                     id: string
                     atom_id?: string | null
                     type: any
-                  }
+                  } | null
                   value?: {
                     __typename?: 'atom_values'
                     person?: {
@@ -19339,8 +19966,8 @@ export type GetTriplesQuery = {
                       image?: string | null
                     } | null
                   } | null
-                }
-                predicate: {
+                } | null
+                predicate?: {
                   __typename?: 'atoms'
                   data?: string | null
                   term_id: string
@@ -19348,14 +19975,14 @@ export type GetTriplesQuery = {
                   image?: string | null
                   emoji?: string | null
                   type: any
-                  creator: {
+                  creator?: {
                     __typename?: 'accounts'
                     label: string
                     image?: string | null
                     id: string
                     atom_id?: string | null
                     type: any
-                  }
+                  } | null
                   value?: {
                     __typename?: 'atom_values'
                     person?: {
@@ -19386,8 +20013,8 @@ export type GetTriplesQuery = {
                       image?: string | null
                     } | null
                   } | null
-                }
-                object: {
+                } | null
+                object?: {
                   __typename?: 'atoms'
                   data?: string | null
                   term_id: string
@@ -19395,14 +20022,14 @@ export type GetTriplesQuery = {
                   image?: string | null
                   emoji?: string | null
                   type: any
-                  creator: {
+                  creator?: {
                     __typename?: 'accounts'
                     label: string
                     image?: string | null
                     id: string
                     atom_id?: string | null
                     type: any
-                  }
+                  } | null
                   value?: {
                     __typename?: 'atom_values'
                     person?: {
@@ -19433,9 +20060,9 @@ export type GetTriplesQuery = {
                       image?: string | null
                     } | null
                   } | null
-                }
+                } | null
               } | null
-            }
+            } | null
           } | null
         }>
       }>
@@ -19477,7 +20104,7 @@ export type GetTriplesWithAggregatesQuery = {
         atom_id?: string | null
         type: any
       } | null
-      subject: {
+      subject?: {
         __typename?: 'atoms'
         data?: string | null
         term_id: string
@@ -19485,14 +20112,14 @@ export type GetTriplesWithAggregatesQuery = {
         label?: string | null
         emoji?: string | null
         type: any
-        creator: {
+        creator?: {
           __typename?: 'accounts'
           label: string
           image?: string | null
           id: string
           atom_id?: string | null
           type: any
-        }
+        } | null
         value?: {
           __typename?: 'atom_values'
           person?: {
@@ -19523,8 +20150,8 @@ export type GetTriplesWithAggregatesQuery = {
             image?: string | null
           } | null
         } | null
-      }
-      predicate: {
+      } | null
+      predicate?: {
         __typename?: 'atoms'
         data?: string | null
         term_id: string
@@ -19532,14 +20159,14 @@ export type GetTriplesWithAggregatesQuery = {
         label?: string | null
         emoji?: string | null
         type: any
-        creator: {
+        creator?: {
           __typename?: 'accounts'
           label: string
           image?: string | null
           id: string
           atom_id?: string | null
           type: any
-        }
+        } | null
         value?: {
           __typename?: 'atom_values'
           person?: {
@@ -19570,8 +20197,8 @@ export type GetTriplesWithAggregatesQuery = {
             image?: string | null
           } | null
         } | null
-      }
-      object: {
+      } | null
+      object?: {
         __typename?: 'atoms'
         data?: string | null
         term_id: string
@@ -19579,14 +20206,14 @@ export type GetTriplesWithAggregatesQuery = {
         label?: string | null
         emoji?: string | null
         type: any
-        creator: {
+        creator?: {
           __typename?: 'accounts'
           label: string
           image?: string | null
           id: string
           atom_id?: string | null
           type: any
-        }
+        } | null
         value?: {
           __typename?: 'atom_values'
           person?: {
@@ -19617,7 +20244,7 @@ export type GetTriplesWithAggregatesQuery = {
             image?: string | null
           } | null
         } | null
-      }
+      } | null
       term?: {
         __typename?: 'terms'
         vaults: Array<{
@@ -19652,7 +20279,7 @@ export type GetTriplesWithAggregatesQuery = {
               term_id: string
               total_shares: any
               current_share_price: any
-              term: {
+              term?: {
                 __typename?: 'terms'
                 atom?: {
                   __typename?: 'atoms'
@@ -19699,7 +20326,7 @@ export type GetTriplesWithAggregatesQuery = {
                       }
                     }>
                   } | null
-                  subject: {
+                  subject?: {
                     __typename?: 'atoms'
                     data?: string | null
                     term_id: string
@@ -19707,14 +20334,14 @@ export type GetTriplesWithAggregatesQuery = {
                     image?: string | null
                     emoji?: string | null
                     type: any
-                    creator: {
+                    creator?: {
                       __typename?: 'accounts'
                       label: string
                       image?: string | null
                       id: string
                       atom_id?: string | null
                       type: any
-                    }
+                    } | null
                     value?: {
                       __typename?: 'atom_values'
                       person?: {
@@ -19745,8 +20372,8 @@ export type GetTriplesWithAggregatesQuery = {
                         image?: string | null
                       } | null
                     } | null
-                  }
-                  predicate: {
+                  } | null
+                  predicate?: {
                     __typename?: 'atoms'
                     data?: string | null
                     term_id: string
@@ -19754,14 +20381,14 @@ export type GetTriplesWithAggregatesQuery = {
                     image?: string | null
                     emoji?: string | null
                     type: any
-                    creator: {
+                    creator?: {
                       __typename?: 'accounts'
                       label: string
                       image?: string | null
                       id: string
                       atom_id?: string | null
                       type: any
-                    }
+                    } | null
                     value?: {
                       __typename?: 'atom_values'
                       person?: {
@@ -19792,8 +20419,8 @@ export type GetTriplesWithAggregatesQuery = {
                         image?: string | null
                       } | null
                     } | null
-                  }
-                  object: {
+                  } | null
+                  object?: {
                     __typename?: 'atoms'
                     data?: string | null
                     term_id: string
@@ -19801,14 +20428,14 @@ export type GetTriplesWithAggregatesQuery = {
                     image?: string | null
                     emoji?: string | null
                     type: any
-                    creator: {
+                    creator?: {
                       __typename?: 'accounts'
                       label: string
                       image?: string | null
                       id: string
                       atom_id?: string | null
                       type: any
-                    }
+                    } | null
                     value?: {
                       __typename?: 'atom_values'
                       person?: {
@@ -19839,9 +20466,9 @@ export type GetTriplesWithAggregatesQuery = {
                         image?: string | null
                       } | null
                     } | null
-                  }
+                  } | null
                 } | null
-              }
+              } | null
             } | null
           }>
         }>
@@ -19880,7 +20507,7 @@ export type GetTriplesWithAggregatesQuery = {
               term_id: string
               total_shares: any
               current_share_price: any
-              term: {
+              term?: {
                 __typename?: 'terms'
                 atom?: {
                   __typename?: 'atoms'
@@ -19927,7 +20554,7 @@ export type GetTriplesWithAggregatesQuery = {
                       }
                     }>
                   } | null
-                  subject: {
+                  subject?: {
                     __typename?: 'atoms'
                     data?: string | null
                     term_id: string
@@ -19935,14 +20562,14 @@ export type GetTriplesWithAggregatesQuery = {
                     image?: string | null
                     emoji?: string | null
                     type: any
-                    creator: {
+                    creator?: {
                       __typename?: 'accounts'
                       label: string
                       image?: string | null
                       id: string
                       atom_id?: string | null
                       type: any
-                    }
+                    } | null
                     value?: {
                       __typename?: 'atom_values'
                       person?: {
@@ -19973,8 +20600,8 @@ export type GetTriplesWithAggregatesQuery = {
                         image?: string | null
                       } | null
                     } | null
-                  }
-                  predicate: {
+                  } | null
+                  predicate?: {
                     __typename?: 'atoms'
                     data?: string | null
                     term_id: string
@@ -19982,14 +20609,14 @@ export type GetTriplesWithAggregatesQuery = {
                     image?: string | null
                     emoji?: string | null
                     type: any
-                    creator: {
+                    creator?: {
                       __typename?: 'accounts'
                       label: string
                       image?: string | null
                       id: string
                       atom_id?: string | null
                       type: any
-                    }
+                    } | null
                     value?: {
                       __typename?: 'atom_values'
                       person?: {
@@ -20020,8 +20647,8 @@ export type GetTriplesWithAggregatesQuery = {
                         image?: string | null
                       } | null
                     } | null
-                  }
-                  object: {
+                  } | null
+                  object?: {
                     __typename?: 'atoms'
                     data?: string | null
                     term_id: string
@@ -20029,14 +20656,14 @@ export type GetTriplesWithAggregatesQuery = {
                     image?: string | null
                     emoji?: string | null
                     type: any
-                    creator: {
+                    creator?: {
                       __typename?: 'accounts'
                       label: string
                       image?: string | null
                       id: string
                       atom_id?: string | null
                       type: any
-                    }
+                    } | null
                     value?: {
                       __typename?: 'atom_values'
                       person?: {
@@ -20067,9 +20694,9 @@ export type GetTriplesWithAggregatesQuery = {
                         image?: string | null
                       } | null
                     } | null
-                  }
+                  } | null
                 } | null
-              }
+              } | null
             } | null
           }>
         }>
@@ -20115,7 +20742,7 @@ export type GetTripleQuery = {
       atom_id?: string | null
       type: any
     } | null
-    subject: {
+    subject?: {
       __typename?: 'atoms'
       data?: string | null
       term_id: string
@@ -20123,14 +20750,14 @@ export type GetTripleQuery = {
       label?: string | null
       emoji?: string | null
       type: any
-      creator: {
+      creator?: {
         __typename?: 'accounts'
         label: string
         image?: string | null
         id: string
         atom_id?: string | null
         type: any
-      }
+      } | null
       value?: {
         __typename?: 'atom_values'
         person?: {
@@ -20161,8 +20788,8 @@ export type GetTripleQuery = {
           image?: string | null
         } | null
       } | null
-    }
-    predicate: {
+    } | null
+    predicate?: {
       __typename?: 'atoms'
       data?: string | null
       term_id: string
@@ -20170,14 +20797,14 @@ export type GetTripleQuery = {
       label?: string | null
       emoji?: string | null
       type: any
-      creator: {
+      creator?: {
         __typename?: 'accounts'
         label: string
         image?: string | null
         id: string
         atom_id?: string | null
         type: any
-      }
+      } | null
       value?: {
         __typename?: 'atom_values'
         person?: {
@@ -20208,8 +20835,8 @@ export type GetTripleQuery = {
           image?: string | null
         } | null
       } | null
-    }
-    object: {
+    } | null
+    object?: {
       __typename?: 'atoms'
       data?: string | null
       term_id: string
@@ -20217,14 +20844,14 @@ export type GetTripleQuery = {
       label?: string | null
       emoji?: string | null
       type: any
-      creator: {
+      creator?: {
         __typename?: 'accounts'
         label: string
         image?: string | null
         id: string
         atom_id?: string | null
         type: any
-      }
+      } | null
       value?: {
         __typename?: 'atom_values'
         person?: {
@@ -20255,7 +20882,7 @@ export type GetTripleQuery = {
           image?: string | null
         } | null
       } | null
-    }
+    } | null
     term?: {
       __typename?: 'terms'
       vaults: Array<{
@@ -20290,7 +20917,7 @@ export type GetTripleQuery = {
             term_id: string
             total_shares: any
             current_share_price: any
-            term: {
+            term?: {
               __typename?: 'terms'
               atom?: {
                 __typename?: 'atoms'
@@ -20337,7 +20964,7 @@ export type GetTripleQuery = {
                     }
                   }>
                 } | null
-                subject: {
+                subject?: {
                   __typename?: 'atoms'
                   data?: string | null
                   term_id: string
@@ -20345,14 +20972,14 @@ export type GetTripleQuery = {
                   image?: string | null
                   emoji?: string | null
                   type: any
-                  creator: {
+                  creator?: {
                     __typename?: 'accounts'
                     label: string
                     image?: string | null
                     id: string
                     atom_id?: string | null
                     type: any
-                  }
+                  } | null
                   value?: {
                     __typename?: 'atom_values'
                     person?: {
@@ -20383,8 +21010,8 @@ export type GetTripleQuery = {
                       image?: string | null
                     } | null
                   } | null
-                }
-                predicate: {
+                } | null
+                predicate?: {
                   __typename?: 'atoms'
                   data?: string | null
                   term_id: string
@@ -20392,14 +21019,14 @@ export type GetTripleQuery = {
                   image?: string | null
                   emoji?: string | null
                   type: any
-                  creator: {
+                  creator?: {
                     __typename?: 'accounts'
                     label: string
                     image?: string | null
                     id: string
                     atom_id?: string | null
                     type: any
-                  }
+                  } | null
                   value?: {
                     __typename?: 'atom_values'
                     person?: {
@@ -20430,8 +21057,8 @@ export type GetTripleQuery = {
                       image?: string | null
                     } | null
                   } | null
-                }
-                object: {
+                } | null
+                object?: {
                   __typename?: 'atoms'
                   data?: string | null
                   term_id: string
@@ -20439,14 +21066,14 @@ export type GetTripleQuery = {
                   image?: string | null
                   emoji?: string | null
                   type: any
-                  creator: {
+                  creator?: {
                     __typename?: 'accounts'
                     label: string
                     image?: string | null
                     id: string
                     atom_id?: string | null
                     type: any
-                  }
+                  } | null
                   value?: {
                     __typename?: 'atom_values'
                     person?: {
@@ -20477,9 +21104,9 @@ export type GetTripleQuery = {
                       image?: string | null
                     } | null
                   } | null
-                }
+                } | null
               } | null
-            }
+            } | null
           } | null
         }>
       }>
@@ -20518,7 +21145,7 @@ export type GetTripleQuery = {
             term_id: string
             total_shares: any
             current_share_price: any
-            term: {
+            term?: {
               __typename?: 'terms'
               atom?: {
                 __typename?: 'atoms'
@@ -20565,7 +21192,7 @@ export type GetTripleQuery = {
                     }
                   }>
                 } | null
-                subject: {
+                subject?: {
                   __typename?: 'atoms'
                   data?: string | null
                   term_id: string
@@ -20573,14 +21200,14 @@ export type GetTripleQuery = {
                   image?: string | null
                   emoji?: string | null
                   type: any
-                  creator: {
+                  creator?: {
                     __typename?: 'accounts'
                     label: string
                     image?: string | null
                     id: string
                     atom_id?: string | null
                     type: any
-                  }
+                  } | null
                   value?: {
                     __typename?: 'atom_values'
                     person?: {
@@ -20611,8 +21238,8 @@ export type GetTripleQuery = {
                       image?: string | null
                     } | null
                   } | null
-                }
-                predicate: {
+                } | null
+                predicate?: {
                   __typename?: 'atoms'
                   data?: string | null
                   term_id: string
@@ -20620,14 +21247,14 @@ export type GetTripleQuery = {
                   image?: string | null
                   emoji?: string | null
                   type: any
-                  creator: {
+                  creator?: {
                     __typename?: 'accounts'
                     label: string
                     image?: string | null
                     id: string
                     atom_id?: string | null
                     type: any
-                  }
+                  } | null
                   value?: {
                     __typename?: 'atom_values'
                     person?: {
@@ -20658,8 +21285,8 @@ export type GetTripleQuery = {
                       image?: string | null
                     } | null
                   } | null
-                }
-                object: {
+                } | null
+                object?: {
                   __typename?: 'atoms'
                   data?: string | null
                   term_id: string
@@ -20667,14 +21294,14 @@ export type GetTripleQuery = {
                   image?: string | null
                   emoji?: string | null
                   type: any
-                  creator: {
+                  creator?: {
                     __typename?: 'accounts'
                     label: string
                     image?: string | null
                     id: string
                     atom_id?: string | null
                     type: any
-                  }
+                  } | null
                   value?: {
                     __typename?: 'atom_values'
                     person?: {
@@ -20705,9 +21332,9 @@ export type GetTripleQuery = {
                       image?: string | null
                     } | null
                   } | null
-                }
+                } | null
               } | null
-            }
+            } | null
           } | null
         }>
       }>
@@ -20751,24 +21378,24 @@ export type GetTriplesWithPositionsQuery = {
     __typename?: 'triples'
     term_id: string
     counter_term_id: string
-    subject: {
+    subject?: {
       __typename?: 'atoms'
       term_id: string
       label?: string | null
       image?: string | null
-    }
-    predicate: {
+    } | null
+    predicate?: {
       __typename?: 'atoms'
       term_id: string
       label?: string | null
       image?: string | null
-    }
-    object: {
+    } | null
+    object?: {
       __typename?: 'atoms'
       term_id: string
       label?: string | null
       image?: string | null
-    }
+    } | null
     term?: {
       __typename?: 'terms'
       vaults: Array<{
@@ -20811,6 +21438,7 @@ export type GetTriplesWithPositionsQuery = {
 export type FindTriplesQueryVariables = Exact<{
   where?: InputMaybe<Triples_Bool_Exp>
   address: Scalars['String']['input']
+  limit?: InputMaybe<Scalars['Int']['input']>
 }>
 
 export type FindTriplesQuery = {
@@ -20842,7 +21470,7 @@ export type GetVaultsQuery = {
       term_id: string
       current_share_price: any
       total_shares: any
-      term: {
+      term?: {
         __typename?: 'terms'
         atom?: {
           __typename?: 'atoms'
@@ -20852,23 +21480,23 @@ export type GetVaultsQuery = {
         triple?: {
           __typename?: 'triples'
           term_id: string
-          subject: {
+          subject?: {
             __typename?: 'atoms'
             term_id: string
             label?: string | null
-          }
-          predicate: {
+          } | null
+          predicate?: {
             __typename?: 'atoms'
             term_id: string
             label?: string | null
-          }
-          object: {
+          } | null
+          object?: {
             __typename?: 'atoms'
             term_id: string
             label?: string | null
-          }
+          } | null
         } | null
-      }
+      } | null
       positions_aggregate: {
         __typename?: 'positions_aggregate'
         nodes: Array<{
@@ -20898,7 +21526,7 @@ export type GetVaultQuery = {
     curve_id: any
     current_share_price: any
     total_shares: any
-    term: {
+    term?: {
       __typename?: 'terms'
       atom?: {
         __typename?: 'atoms'
@@ -20908,19 +21536,23 @@ export type GetVaultQuery = {
       triple?: {
         __typename?: 'triples'
         term_id: string
-        subject: {
+        subject?: {
           __typename?: 'atoms'
           term_id: string
           label?: string | null
-        }
-        predicate: {
+        } | null
+        predicate?: {
           __typename?: 'atoms'
           term_id: string
           label?: string | null
-        }
-        object: { __typename?: 'atoms'; term_id: string; label?: string | null }
+        } | null
+        object?: {
+          __typename?: 'atoms'
+          term_id: string
+          label?: string | null
+        } | null
       } | null
-    }
+    } | null
   } | null
 }
 
@@ -23158,7 +23790,7 @@ export const GetAtomDetailsDocument = `
       }
     }
     tags: as_subject_triples_aggregate(
-      where: {predicate_id: {_in: ["0x49487b1d5bf2734d497d6d9cfcd72cdfbaefb4d4f03ddc310398b24639173c9d"]}}
+      where: {predicate_id: {_in: ["0x7ec36d201c842dc787b45cb5bb753bea4cf849be3908fb1b0a7d067c3c3cc1f5"]}}
     ) {
       nodes {
         object {
@@ -23255,8 +23887,8 @@ useGetAtomDetailsQuery.fetcher = (
   )
 
 export const FindAtomIdsDocument = `
-    query FindAtomIds($where: atoms_bool_exp = {}) {
-  atoms(where: $where) {
+    query FindAtomIds($where: atoms_bool_exp = {}, $limit: Int = 100) {
+  atoms(where: $where, limit: $limit) {
     term_id
     data
   }
@@ -24549,7 +25181,6 @@ export const GetListsDocument = `
     }
   }
   predicate_objects(where: $where, order_by: [{triple_count: desc}]) {
-    id
     triple_count
     object {
       term_id
@@ -26359,6 +26990,334 @@ useSearchPositionsQuery.fetcher = (
     options,
   )
 
+export const GlobalSearchDocument = `
+    query GlobalSearch($likeStr: String, $accountsLimit: Int, $atomsLimit: Int, $triplesLimit: Int, $collectionsLimit: Int) {
+  accounts(
+    limit: $accountsLimit
+    where: {type: {_eq: Default}, atom_id: {_is_null: false}, _or: [{label: {_ilike: $likeStr}}, {atom: {data: {_ilike: $likeStr}}}]}
+  ) {
+    id
+    atom_id
+    label
+    image
+    triples_aggregate {
+      aggregate {
+        count
+      }
+    }
+    signals_aggregate {
+      aggregate {
+        count
+      }
+    }
+    cached_image {
+      safe
+      url
+    }
+  }
+  atoms(
+    order_by: {term: {triple: {term: {total_market_cap: desc}}}}
+    limit: $atomsLimit
+    where: {_or: [{data: {_ilike: $likeStr}}, {value: {text_object: {data: {_ilike: $likeStr}}}}, {value: {thing: {url: {_ilike: $likeStr}}}}, {value: {thing: {name: {_ilike: $likeStr}}}}, {value: {thing: {description: {_ilike: $likeStr}}}}, {value: {person: {url: {_ilike: $likeStr}}}}, {value: {person: {name: {_ilike: $likeStr}}}}, {value: {person: {description: {_ilike: $likeStr}}}}, {value: {organization: {url: {_ilike: $likeStr}}}}, {value: {organization: {name: {_ilike: $likeStr}}}}, {value: {organization: {description: {_ilike: $likeStr}}}}]}
+  ) {
+    term_id
+    image
+    type
+    label
+    created_at
+    creator {
+      id
+      label
+      image
+      cached_image {
+        safe
+        url
+      }
+    }
+    value {
+      account {
+        id
+        label
+      }
+      person {
+        name
+        description
+        email
+        url
+        identifier
+      }
+      thing {
+        url
+        name
+        description
+      }
+      organization {
+        name
+        email
+        description
+        url
+      }
+    }
+    term {
+      vaults(where: {curve_id: {_eq: "1"}}, order_by: {curve_id: asc}) {
+        curve_id
+        term_id
+        position_count
+        current_share_price
+        total_shares
+        total_assets
+        market_cap
+      }
+    }
+  }
+  triples(
+    limit: $triplesLimit
+    where: {_and: [{_or: [{term: {vaults: {position_count: {_gt: 0}, curve_id: {_eq: "1"}}}}, {counter_term: {vaults: {position_count: {_gt: 0}, curve_id: {_eq: "1"}}}}]}, {_or: [{subject: {label: {_ilike: $likeStr}}}, {predicate: {label: {_like: $likeStr}}}, {object: {label: {_like: $likeStr}}}]}]}
+    order_by: {term: {total_market_cap: desc}}
+  ) {
+    term_id
+    object {
+      term_id
+      label
+      image
+      type
+    }
+    predicate {
+      term_id
+      label
+      image
+      type
+    }
+    subject {
+      term_id
+      label
+      image
+      type
+    }
+    counter_term {
+      vaults(where: {curve_id: {_eq: "1"}}, order_by: {curve_id: asc}) {
+        curve_id
+        term_id
+        position_count
+        current_share_price
+        total_shares
+        total_assets
+        market_cap
+      }
+    }
+    term {
+      vaults(where: {curve_id: {_eq: "1"}}, order_by: {curve_id: asc}) {
+        curve_id
+        term_id
+        position_count
+        current_share_price
+        total_shares
+        total_assets
+        market_cap
+      }
+    }
+  }
+  collections: predicate_objects(
+    where: {predicate: {type: {_eq: Keywords}}, object: {label: {_ilike: $likeStr}}}
+    order_by: [{triple_count: desc}]
+    limit: $collectionsLimit
+  ) {
+    triple_count
+    object {
+      label
+      term_id
+      image
+      value {
+        thing {
+          description
+        }
+      }
+      cached_image {
+        safe
+        url
+      }
+    }
+  }
+}
+    `
+
+export const useGlobalSearchQuery = <
+  TData = GlobalSearchQuery,
+  TError = unknown,
+>(
+  variables?: GlobalSearchQueryVariables,
+  options?: Omit<
+    UseQueryOptions<GlobalSearchQuery, TError, TData>,
+    'queryKey'
+  > & {
+    queryKey?: UseQueryOptions<GlobalSearchQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useQuery<GlobalSearchQuery, TError, TData>({
+    queryKey:
+      variables === undefined ? ['GlobalSearch'] : ['GlobalSearch', variables],
+    queryFn: fetcher<GlobalSearchQuery, GlobalSearchQueryVariables>(
+      GlobalSearchDocument,
+      variables,
+    ),
+    ...options,
+  })
+}
+
+useGlobalSearchQuery.document = GlobalSearchDocument
+
+useGlobalSearchQuery.getKey = (variables?: GlobalSearchQueryVariables) =>
+  variables === undefined ? ['GlobalSearch'] : ['GlobalSearch', variables]
+
+export const useInfiniteGlobalSearchQuery = <
+  TData = InfiniteData<GlobalSearchQuery>,
+  TError = unknown,
+>(
+  variables: GlobalSearchQueryVariables,
+  options: Omit<
+    UseInfiniteQueryOptions<GlobalSearchQuery, TError, TData>,
+    'queryKey'
+  > & {
+    queryKey?: UseInfiniteQueryOptions<
+      GlobalSearchQuery,
+      TError,
+      TData
+    >['queryKey']
+  },
+) => {
+  return useInfiniteQuery<GlobalSearchQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey:
+          optionsQueryKey ?? variables === undefined
+            ? ['GlobalSearch.infinite']
+            : ['GlobalSearch.infinite', variables],
+        queryFn: (metaData) =>
+          fetcher<GlobalSearchQuery, GlobalSearchQueryVariables>(
+            GlobalSearchDocument,
+            { ...variables, ...(metaData.pageParam ?? {}) },
+          )(),
+        ...restOptions,
+      }
+    })(),
+  )
+}
+
+useInfiniteGlobalSearchQuery.getKey = (
+  variables?: GlobalSearchQueryVariables,
+) =>
+  variables === undefined
+    ? ['GlobalSearch.infinite']
+    : ['GlobalSearch.infinite', variables]
+
+useGlobalSearchQuery.fetcher = (
+  variables?: GlobalSearchQueryVariables,
+  options?: RequestInit['headers'],
+) =>
+  fetcher<GlobalSearchQuery, GlobalSearchQueryVariables>(
+    GlobalSearchDocument,
+    variables,
+    options,
+  )
+
+export const SemanticSearchDocument = `
+    query SemanticSearch($query: String!, $limit: Int) {
+  search_term(args: {query: $query}, limit: $limit) {
+    atom {
+      term_id
+      type
+      value {
+        text_object {
+          data
+        }
+        json_object {
+          name: data(path: "name")
+          description: data(path: "description")
+          image: data(path: "image")
+          url: data(path: "url")
+        }
+      }
+    }
+  }
+}
+    `
+
+export const useSemanticSearchQuery = <
+  TData = SemanticSearchQuery,
+  TError = unknown,
+>(
+  variables: SemanticSearchQueryVariables,
+  options?: Omit<
+    UseQueryOptions<SemanticSearchQuery, TError, TData>,
+    'queryKey'
+  > & {
+    queryKey?: UseQueryOptions<SemanticSearchQuery, TError, TData>['queryKey']
+  },
+) => {
+  return useQuery<SemanticSearchQuery, TError, TData>({
+    queryKey: ['SemanticSearch', variables],
+    queryFn: fetcher<SemanticSearchQuery, SemanticSearchQueryVariables>(
+      SemanticSearchDocument,
+      variables,
+    ),
+    ...options,
+  })
+}
+
+useSemanticSearchQuery.document = SemanticSearchDocument
+
+useSemanticSearchQuery.getKey = (variables: SemanticSearchQueryVariables) => [
+  'SemanticSearch',
+  variables,
+]
+
+export const useInfiniteSemanticSearchQuery = <
+  TData = InfiniteData<SemanticSearchQuery>,
+  TError = unknown,
+>(
+  variables: SemanticSearchQueryVariables,
+  options: Omit<
+    UseInfiniteQueryOptions<SemanticSearchQuery, TError, TData>,
+    'queryKey'
+  > & {
+    queryKey?: UseInfiniteQueryOptions<
+      SemanticSearchQuery,
+      TError,
+      TData
+    >['queryKey']
+  },
+) => {
+  return useInfiniteQuery<SemanticSearchQuery, TError, TData>(
+    (() => {
+      const { queryKey: optionsQueryKey, ...restOptions } = options
+      return {
+        queryKey: optionsQueryKey ?? ['SemanticSearch.infinite', variables],
+        queryFn: (metaData) =>
+          fetcher<SemanticSearchQuery, SemanticSearchQueryVariables>(
+            SemanticSearchDocument,
+            { ...variables, ...(metaData.pageParam ?? {}) },
+          )(),
+        ...restOptions,
+      }
+    })(),
+  )
+}
+
+useInfiniteSemanticSearchQuery.getKey = (
+  variables: SemanticSearchQueryVariables,
+) => ['SemanticSearch.infinite', variables]
+
+useSemanticSearchQuery.fetcher = (
+  variables: SemanticSearchQueryVariables,
+  options?: RequestInit['headers'],
+) =>
+  fetcher<SemanticSearchQuery, SemanticSearchQueryVariables>(
+    SemanticSearchDocument,
+    variables,
+    options,
+  )
+
 export const GetSignalsDocument = `
     query GetSignals($limit: Int, $offset: Int, $orderBy: [signals_order_by!], $addresses: [String!]) {
   total: events_aggregate {
@@ -27500,8 +28459,8 @@ useGetTriplesWithPositionsQuery.fetcher = (
   )
 
 export const FindTriplesDocument = `
-    query FindTriples($where: triples_bool_exp = {}, $address: String!) {
-  triples(where: $where) {
+    query FindTriples($where: triples_bool_exp = {}, $address: String!, $limit: Int = 100) {
+  triples(where: $where, limit: $limit) {
     term_id
     subject_id
     predicate_id
@@ -40743,7 +41702,7 @@ export const GetAtomDetails = {
                                       {
                                         kind: 'StringValue',
                                         value:
-                                          '0x49487b1d5bf2734d497d6d9cfcd72cdfbaefb4d4f03ddc310398b24639173c9d',
+                                          '0x7ec36d201c842dc787b45cb5bb753bea4cf849be3908fb1b0a7d067c3c3cc1f5',
                                         block: false,
                                       },
                                     ],
@@ -40921,6 +41880,15 @@ export const FindAtomIds = {
           },
           defaultValue: { kind: 'ObjectValue', fields: [] },
         },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'limit' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+          defaultValue: { kind: 'IntValue', value: '100' },
+        },
       ],
       selectionSet: {
         kind: 'SelectionSet',
@@ -40935,6 +41903,14 @@ export const FindAtomIds = {
                 value: {
                   kind: 'Variable',
                   name: { kind: 'Name', value: 'where' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'limit' },
                 },
               },
             ],
@@ -46150,7 +47126,6 @@ export const GetLists = {
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
-                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                 {
                   kind: 'Field',
                   name: { kind: 'Name', value: 'triple_count' },
@@ -53263,6 +54238,2034 @@ export const SearchPositions = {
     },
   ],
 } as unknown as DocumentNode
+export const GlobalSearch = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'GlobalSearch' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'likeStr' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'accountsLimit' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'atomsLimit' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'triplesLimit' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'collectionsLimit' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'accounts' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'accountsLimit' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'type' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: '_eq' },
+                            value: { kind: 'EnumValue', value: 'Default' },
+                          },
+                        ],
+                      },
+                    },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'atom_id' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: '_is_null' },
+                            value: { kind: 'BooleanValue', value: false },
+                          },
+                        ],
+                      },
+                    },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: '_or' },
+                      value: {
+                        kind: 'ListValue',
+                        values: [
+                          {
+                            kind: 'ObjectValue',
+                            fields: [
+                              {
+                                kind: 'ObjectField',
+                                name: { kind: 'Name', value: 'label' },
+                                value: {
+                                  kind: 'ObjectValue',
+                                  fields: [
+                                    {
+                                      kind: 'ObjectField',
+                                      name: { kind: 'Name', value: '_ilike' },
+                                      value: {
+                                        kind: 'Variable',
+                                        name: {
+                                          kind: 'Name',
+                                          value: 'likeStr',
+                                        },
+                                      },
+                                    },
+                                  ],
+                                },
+                              },
+                            ],
+                          },
+                          {
+                            kind: 'ObjectValue',
+                            fields: [
+                              {
+                                kind: 'ObjectField',
+                                name: { kind: 'Name', value: 'atom' },
+                                value: {
+                                  kind: 'ObjectValue',
+                                  fields: [
+                                    {
+                                      kind: 'ObjectField',
+                                      name: { kind: 'Name', value: 'data' },
+                                      value: {
+                                        kind: 'ObjectValue',
+                                        fields: [
+                                          {
+                                            kind: 'ObjectField',
+                                            name: {
+                                              kind: 'Name',
+                                              value: '_ilike',
+                                            },
+                                            value: {
+                                              kind: 'Variable',
+                                              name: {
+                                                kind: 'Name',
+                                                value: 'likeStr',
+                                              },
+                                            },
+                                          },
+                                        ],
+                                      },
+                                    },
+                                  ],
+                                },
+                              },
+                            ],
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'atom_id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'triples_aggregate' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'aggregate' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'count' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'signals_aggregate' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'aggregate' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'count' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'cached_image' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'safe' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'atoms' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'order_by' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'term' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'triple' },
+                            value: {
+                              kind: 'ObjectValue',
+                              fields: [
+                                {
+                                  kind: 'ObjectField',
+                                  name: { kind: 'Name', value: 'term' },
+                                  value: {
+                                    kind: 'ObjectValue',
+                                    fields: [
+                                      {
+                                        kind: 'ObjectField',
+                                        name: {
+                                          kind: 'Name',
+                                          value: 'total_market_cap',
+                                        },
+                                        value: {
+                                          kind: 'EnumValue',
+                                          value: 'desc',
+                                        },
+                                      },
+                                    ],
+                                  },
+                                },
+                              ],
+                            },
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'atomsLimit' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: '_or' },
+                      value: {
+                        kind: 'ListValue',
+                        values: [
+                          {
+                            kind: 'ObjectValue',
+                            fields: [
+                              {
+                                kind: 'ObjectField',
+                                name: { kind: 'Name', value: 'data' },
+                                value: {
+                                  kind: 'ObjectValue',
+                                  fields: [
+                                    {
+                                      kind: 'ObjectField',
+                                      name: { kind: 'Name', value: '_ilike' },
+                                      value: {
+                                        kind: 'Variable',
+                                        name: {
+                                          kind: 'Name',
+                                          value: 'likeStr',
+                                        },
+                                      },
+                                    },
+                                  ],
+                                },
+                              },
+                            ],
+                          },
+                          {
+                            kind: 'ObjectValue',
+                            fields: [
+                              {
+                                kind: 'ObjectField',
+                                name: { kind: 'Name', value: 'value' },
+                                value: {
+                                  kind: 'ObjectValue',
+                                  fields: [
+                                    {
+                                      kind: 'ObjectField',
+                                      name: {
+                                        kind: 'Name',
+                                        value: 'text_object',
+                                      },
+                                      value: {
+                                        kind: 'ObjectValue',
+                                        fields: [
+                                          {
+                                            kind: 'ObjectField',
+                                            name: {
+                                              kind: 'Name',
+                                              value: 'data',
+                                            },
+                                            value: {
+                                              kind: 'ObjectValue',
+                                              fields: [
+                                                {
+                                                  kind: 'ObjectField',
+                                                  name: {
+                                                    kind: 'Name',
+                                                    value: '_ilike',
+                                                  },
+                                                  value: {
+                                                    kind: 'Variable',
+                                                    name: {
+                                                      kind: 'Name',
+                                                      value: 'likeStr',
+                                                    },
+                                                  },
+                                                },
+                                              ],
+                                            },
+                                          },
+                                        ],
+                                      },
+                                    },
+                                  ],
+                                },
+                              },
+                            ],
+                          },
+                          {
+                            kind: 'ObjectValue',
+                            fields: [
+                              {
+                                kind: 'ObjectField',
+                                name: { kind: 'Name', value: 'value' },
+                                value: {
+                                  kind: 'ObjectValue',
+                                  fields: [
+                                    {
+                                      kind: 'ObjectField',
+                                      name: { kind: 'Name', value: 'thing' },
+                                      value: {
+                                        kind: 'ObjectValue',
+                                        fields: [
+                                          {
+                                            kind: 'ObjectField',
+                                            name: {
+                                              kind: 'Name',
+                                              value: 'url',
+                                            },
+                                            value: {
+                                              kind: 'ObjectValue',
+                                              fields: [
+                                                {
+                                                  kind: 'ObjectField',
+                                                  name: {
+                                                    kind: 'Name',
+                                                    value: '_ilike',
+                                                  },
+                                                  value: {
+                                                    kind: 'Variable',
+                                                    name: {
+                                                      kind: 'Name',
+                                                      value: 'likeStr',
+                                                    },
+                                                  },
+                                                },
+                                              ],
+                                            },
+                                          },
+                                        ],
+                                      },
+                                    },
+                                  ],
+                                },
+                              },
+                            ],
+                          },
+                          {
+                            kind: 'ObjectValue',
+                            fields: [
+                              {
+                                kind: 'ObjectField',
+                                name: { kind: 'Name', value: 'value' },
+                                value: {
+                                  kind: 'ObjectValue',
+                                  fields: [
+                                    {
+                                      kind: 'ObjectField',
+                                      name: { kind: 'Name', value: 'thing' },
+                                      value: {
+                                        kind: 'ObjectValue',
+                                        fields: [
+                                          {
+                                            kind: 'ObjectField',
+                                            name: {
+                                              kind: 'Name',
+                                              value: 'name',
+                                            },
+                                            value: {
+                                              kind: 'ObjectValue',
+                                              fields: [
+                                                {
+                                                  kind: 'ObjectField',
+                                                  name: {
+                                                    kind: 'Name',
+                                                    value: '_ilike',
+                                                  },
+                                                  value: {
+                                                    kind: 'Variable',
+                                                    name: {
+                                                      kind: 'Name',
+                                                      value: 'likeStr',
+                                                    },
+                                                  },
+                                                },
+                                              ],
+                                            },
+                                          },
+                                        ],
+                                      },
+                                    },
+                                  ],
+                                },
+                              },
+                            ],
+                          },
+                          {
+                            kind: 'ObjectValue',
+                            fields: [
+                              {
+                                kind: 'ObjectField',
+                                name: { kind: 'Name', value: 'value' },
+                                value: {
+                                  kind: 'ObjectValue',
+                                  fields: [
+                                    {
+                                      kind: 'ObjectField',
+                                      name: { kind: 'Name', value: 'thing' },
+                                      value: {
+                                        kind: 'ObjectValue',
+                                        fields: [
+                                          {
+                                            kind: 'ObjectField',
+                                            name: {
+                                              kind: 'Name',
+                                              value: 'description',
+                                            },
+                                            value: {
+                                              kind: 'ObjectValue',
+                                              fields: [
+                                                {
+                                                  kind: 'ObjectField',
+                                                  name: {
+                                                    kind: 'Name',
+                                                    value: '_ilike',
+                                                  },
+                                                  value: {
+                                                    kind: 'Variable',
+                                                    name: {
+                                                      kind: 'Name',
+                                                      value: 'likeStr',
+                                                    },
+                                                  },
+                                                },
+                                              ],
+                                            },
+                                          },
+                                        ],
+                                      },
+                                    },
+                                  ],
+                                },
+                              },
+                            ],
+                          },
+                          {
+                            kind: 'ObjectValue',
+                            fields: [
+                              {
+                                kind: 'ObjectField',
+                                name: { kind: 'Name', value: 'value' },
+                                value: {
+                                  kind: 'ObjectValue',
+                                  fields: [
+                                    {
+                                      kind: 'ObjectField',
+                                      name: { kind: 'Name', value: 'person' },
+                                      value: {
+                                        kind: 'ObjectValue',
+                                        fields: [
+                                          {
+                                            kind: 'ObjectField',
+                                            name: {
+                                              kind: 'Name',
+                                              value: 'url',
+                                            },
+                                            value: {
+                                              kind: 'ObjectValue',
+                                              fields: [
+                                                {
+                                                  kind: 'ObjectField',
+                                                  name: {
+                                                    kind: 'Name',
+                                                    value: '_ilike',
+                                                  },
+                                                  value: {
+                                                    kind: 'Variable',
+                                                    name: {
+                                                      kind: 'Name',
+                                                      value: 'likeStr',
+                                                    },
+                                                  },
+                                                },
+                                              ],
+                                            },
+                                          },
+                                        ],
+                                      },
+                                    },
+                                  ],
+                                },
+                              },
+                            ],
+                          },
+                          {
+                            kind: 'ObjectValue',
+                            fields: [
+                              {
+                                kind: 'ObjectField',
+                                name: { kind: 'Name', value: 'value' },
+                                value: {
+                                  kind: 'ObjectValue',
+                                  fields: [
+                                    {
+                                      kind: 'ObjectField',
+                                      name: { kind: 'Name', value: 'person' },
+                                      value: {
+                                        kind: 'ObjectValue',
+                                        fields: [
+                                          {
+                                            kind: 'ObjectField',
+                                            name: {
+                                              kind: 'Name',
+                                              value: 'name',
+                                            },
+                                            value: {
+                                              kind: 'ObjectValue',
+                                              fields: [
+                                                {
+                                                  kind: 'ObjectField',
+                                                  name: {
+                                                    kind: 'Name',
+                                                    value: '_ilike',
+                                                  },
+                                                  value: {
+                                                    kind: 'Variable',
+                                                    name: {
+                                                      kind: 'Name',
+                                                      value: 'likeStr',
+                                                    },
+                                                  },
+                                                },
+                                              ],
+                                            },
+                                          },
+                                        ],
+                                      },
+                                    },
+                                  ],
+                                },
+                              },
+                            ],
+                          },
+                          {
+                            kind: 'ObjectValue',
+                            fields: [
+                              {
+                                kind: 'ObjectField',
+                                name: { kind: 'Name', value: 'value' },
+                                value: {
+                                  kind: 'ObjectValue',
+                                  fields: [
+                                    {
+                                      kind: 'ObjectField',
+                                      name: { kind: 'Name', value: 'person' },
+                                      value: {
+                                        kind: 'ObjectValue',
+                                        fields: [
+                                          {
+                                            kind: 'ObjectField',
+                                            name: {
+                                              kind: 'Name',
+                                              value: 'description',
+                                            },
+                                            value: {
+                                              kind: 'ObjectValue',
+                                              fields: [
+                                                {
+                                                  kind: 'ObjectField',
+                                                  name: {
+                                                    kind: 'Name',
+                                                    value: '_ilike',
+                                                  },
+                                                  value: {
+                                                    kind: 'Variable',
+                                                    name: {
+                                                      kind: 'Name',
+                                                      value: 'likeStr',
+                                                    },
+                                                  },
+                                                },
+                                              ],
+                                            },
+                                          },
+                                        ],
+                                      },
+                                    },
+                                  ],
+                                },
+                              },
+                            ],
+                          },
+                          {
+                            kind: 'ObjectValue',
+                            fields: [
+                              {
+                                kind: 'ObjectField',
+                                name: { kind: 'Name', value: 'value' },
+                                value: {
+                                  kind: 'ObjectValue',
+                                  fields: [
+                                    {
+                                      kind: 'ObjectField',
+                                      name: {
+                                        kind: 'Name',
+                                        value: 'organization',
+                                      },
+                                      value: {
+                                        kind: 'ObjectValue',
+                                        fields: [
+                                          {
+                                            kind: 'ObjectField',
+                                            name: {
+                                              kind: 'Name',
+                                              value: 'url',
+                                            },
+                                            value: {
+                                              kind: 'ObjectValue',
+                                              fields: [
+                                                {
+                                                  kind: 'ObjectField',
+                                                  name: {
+                                                    kind: 'Name',
+                                                    value: '_ilike',
+                                                  },
+                                                  value: {
+                                                    kind: 'Variable',
+                                                    name: {
+                                                      kind: 'Name',
+                                                      value: 'likeStr',
+                                                    },
+                                                  },
+                                                },
+                                              ],
+                                            },
+                                          },
+                                        ],
+                                      },
+                                    },
+                                  ],
+                                },
+                              },
+                            ],
+                          },
+                          {
+                            kind: 'ObjectValue',
+                            fields: [
+                              {
+                                kind: 'ObjectField',
+                                name: { kind: 'Name', value: 'value' },
+                                value: {
+                                  kind: 'ObjectValue',
+                                  fields: [
+                                    {
+                                      kind: 'ObjectField',
+                                      name: {
+                                        kind: 'Name',
+                                        value: 'organization',
+                                      },
+                                      value: {
+                                        kind: 'ObjectValue',
+                                        fields: [
+                                          {
+                                            kind: 'ObjectField',
+                                            name: {
+                                              kind: 'Name',
+                                              value: 'name',
+                                            },
+                                            value: {
+                                              kind: 'ObjectValue',
+                                              fields: [
+                                                {
+                                                  kind: 'ObjectField',
+                                                  name: {
+                                                    kind: 'Name',
+                                                    value: '_ilike',
+                                                  },
+                                                  value: {
+                                                    kind: 'Variable',
+                                                    name: {
+                                                      kind: 'Name',
+                                                      value: 'likeStr',
+                                                    },
+                                                  },
+                                                },
+                                              ],
+                                            },
+                                          },
+                                        ],
+                                      },
+                                    },
+                                  ],
+                                },
+                              },
+                            ],
+                          },
+                          {
+                            kind: 'ObjectValue',
+                            fields: [
+                              {
+                                kind: 'ObjectField',
+                                name: { kind: 'Name', value: 'value' },
+                                value: {
+                                  kind: 'ObjectValue',
+                                  fields: [
+                                    {
+                                      kind: 'ObjectField',
+                                      name: {
+                                        kind: 'Name',
+                                        value: 'organization',
+                                      },
+                                      value: {
+                                        kind: 'ObjectValue',
+                                        fields: [
+                                          {
+                                            kind: 'ObjectField',
+                                            name: {
+                                              kind: 'Name',
+                                              value: 'description',
+                                            },
+                                            value: {
+                                              kind: 'ObjectValue',
+                                              fields: [
+                                                {
+                                                  kind: 'ObjectField',
+                                                  name: {
+                                                    kind: 'Name',
+                                                    value: '_ilike',
+                                                  },
+                                                  value: {
+                                                    kind: 'Variable',
+                                                    name: {
+                                                      kind: 'Name',
+                                                      value: 'likeStr',
+                                                    },
+                                                  },
+                                                },
+                                              ],
+                                            },
+                                          },
+                                        ],
+                                      },
+                                    },
+                                  ],
+                                },
+                              },
+                            ],
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'term_id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'created_at' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'creator' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'cached_image' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'safe' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'url' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'value' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'account' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'id' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'label' },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'person' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'name' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'description' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'email' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'url' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'identifier' },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'thing' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'url' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'name' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'description' },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'organization' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'name' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'email' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'description' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'url' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'term' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'vaults' },
+                        arguments: [
+                          {
+                            kind: 'Argument',
+                            name: { kind: 'Name', value: 'where' },
+                            value: {
+                              kind: 'ObjectValue',
+                              fields: [
+                                {
+                                  kind: 'ObjectField',
+                                  name: { kind: 'Name', value: 'curve_id' },
+                                  value: {
+                                    kind: 'ObjectValue',
+                                    fields: [
+                                      {
+                                        kind: 'ObjectField',
+                                        name: { kind: 'Name', value: '_eq' },
+                                        value: {
+                                          kind: 'StringValue',
+                                          value: '1',
+                                          block: false,
+                                        },
+                                      },
+                                    ],
+                                  },
+                                },
+                              ],
+                            },
+                          },
+                          {
+                            kind: 'Argument',
+                            name: { kind: 'Name', value: 'order_by' },
+                            value: {
+                              kind: 'ObjectValue',
+                              fields: [
+                                {
+                                  kind: 'ObjectField',
+                                  name: { kind: 'Name', value: 'curve_id' },
+                                  value: { kind: 'EnumValue', value: 'asc' },
+                                },
+                              ],
+                            },
+                          },
+                        ],
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'curve_id' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'term_id' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'position_count' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: {
+                                kind: 'Name',
+                                value: 'current_share_price',
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'total_shares' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'total_assets' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'market_cap' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'triples' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'triplesLimit' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: '_and' },
+                      value: {
+                        kind: 'ListValue',
+                        values: [
+                          {
+                            kind: 'ObjectValue',
+                            fields: [
+                              {
+                                kind: 'ObjectField',
+                                name: { kind: 'Name', value: '_or' },
+                                value: {
+                                  kind: 'ListValue',
+                                  values: [
+                                    {
+                                      kind: 'ObjectValue',
+                                      fields: [
+                                        {
+                                          kind: 'ObjectField',
+                                          name: { kind: 'Name', value: 'term' },
+                                          value: {
+                                            kind: 'ObjectValue',
+                                            fields: [
+                                              {
+                                                kind: 'ObjectField',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'vaults',
+                                                },
+                                                value: {
+                                                  kind: 'ObjectValue',
+                                                  fields: [
+                                                    {
+                                                      kind: 'ObjectField',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: 'position_count',
+                                                      },
+                                                      value: {
+                                                        kind: 'ObjectValue',
+                                                        fields: [
+                                                          {
+                                                            kind: 'ObjectField',
+                                                            name: {
+                                                              kind: 'Name',
+                                                              value: '_gt',
+                                                            },
+                                                            value: {
+                                                              kind: 'IntValue',
+                                                              value: '0',
+                                                            },
+                                                          },
+                                                        ],
+                                                      },
+                                                    },
+                                                    {
+                                                      kind: 'ObjectField',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: 'curve_id',
+                                                      },
+                                                      value: {
+                                                        kind: 'ObjectValue',
+                                                        fields: [
+                                                          {
+                                                            kind: 'ObjectField',
+                                                            name: {
+                                                              kind: 'Name',
+                                                              value: '_eq',
+                                                            },
+                                                            value: {
+                                                              kind: 'StringValue',
+                                                              value: '1',
+                                                              block: false,
+                                                            },
+                                                          },
+                                                        ],
+                                                      },
+                                                    },
+                                                  ],
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                      ],
+                                    },
+                                    {
+                                      kind: 'ObjectValue',
+                                      fields: [
+                                        {
+                                          kind: 'ObjectField',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'counter_term',
+                                          },
+                                          value: {
+                                            kind: 'ObjectValue',
+                                            fields: [
+                                              {
+                                                kind: 'ObjectField',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'vaults',
+                                                },
+                                                value: {
+                                                  kind: 'ObjectValue',
+                                                  fields: [
+                                                    {
+                                                      kind: 'ObjectField',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: 'position_count',
+                                                      },
+                                                      value: {
+                                                        kind: 'ObjectValue',
+                                                        fields: [
+                                                          {
+                                                            kind: 'ObjectField',
+                                                            name: {
+                                                              kind: 'Name',
+                                                              value: '_gt',
+                                                            },
+                                                            value: {
+                                                              kind: 'IntValue',
+                                                              value: '0',
+                                                            },
+                                                          },
+                                                        ],
+                                                      },
+                                                    },
+                                                    {
+                                                      kind: 'ObjectField',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: 'curve_id',
+                                                      },
+                                                      value: {
+                                                        kind: 'ObjectValue',
+                                                        fields: [
+                                                          {
+                                                            kind: 'ObjectField',
+                                                            name: {
+                                                              kind: 'Name',
+                                                              value: '_eq',
+                                                            },
+                                                            value: {
+                                                              kind: 'StringValue',
+                                                              value: '1',
+                                                              block: false,
+                                                            },
+                                                          },
+                                                        ],
+                                                      },
+                                                    },
+                                                  ],
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  ],
+                                },
+                              },
+                            ],
+                          },
+                          {
+                            kind: 'ObjectValue',
+                            fields: [
+                              {
+                                kind: 'ObjectField',
+                                name: { kind: 'Name', value: '_or' },
+                                value: {
+                                  kind: 'ListValue',
+                                  values: [
+                                    {
+                                      kind: 'ObjectValue',
+                                      fields: [
+                                        {
+                                          kind: 'ObjectField',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'subject',
+                                          },
+                                          value: {
+                                            kind: 'ObjectValue',
+                                            fields: [
+                                              {
+                                                kind: 'ObjectField',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'label',
+                                                },
+                                                value: {
+                                                  kind: 'ObjectValue',
+                                                  fields: [
+                                                    {
+                                                      kind: 'ObjectField',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: '_ilike',
+                                                      },
+                                                      value: {
+                                                        kind: 'Variable',
+                                                        name: {
+                                                          kind: 'Name',
+                                                          value: 'likeStr',
+                                                        },
+                                                      },
+                                                    },
+                                                  ],
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                      ],
+                                    },
+                                    {
+                                      kind: 'ObjectValue',
+                                      fields: [
+                                        {
+                                          kind: 'ObjectField',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'predicate',
+                                          },
+                                          value: {
+                                            kind: 'ObjectValue',
+                                            fields: [
+                                              {
+                                                kind: 'ObjectField',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'label',
+                                                },
+                                                value: {
+                                                  kind: 'ObjectValue',
+                                                  fields: [
+                                                    {
+                                                      kind: 'ObjectField',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: '_like',
+                                                      },
+                                                      value: {
+                                                        kind: 'Variable',
+                                                        name: {
+                                                          kind: 'Name',
+                                                          value: 'likeStr',
+                                                        },
+                                                      },
+                                                    },
+                                                  ],
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                      ],
+                                    },
+                                    {
+                                      kind: 'ObjectValue',
+                                      fields: [
+                                        {
+                                          kind: 'ObjectField',
+                                          name: {
+                                            kind: 'Name',
+                                            value: 'object',
+                                          },
+                                          value: {
+                                            kind: 'ObjectValue',
+                                            fields: [
+                                              {
+                                                kind: 'ObjectField',
+                                                name: {
+                                                  kind: 'Name',
+                                                  value: 'label',
+                                                },
+                                                value: {
+                                                  kind: 'ObjectValue',
+                                                  fields: [
+                                                    {
+                                                      kind: 'ObjectField',
+                                                      name: {
+                                                        kind: 'Name',
+                                                        value: '_like',
+                                                      },
+                                                      value: {
+                                                        kind: 'Variable',
+                                                        name: {
+                                                          kind: 'Name',
+                                                          value: 'likeStr',
+                                                        },
+                                                      },
+                                                    },
+                                                  ],
+                                                },
+                                              },
+                                            ],
+                                          },
+                                        },
+                                      ],
+                                    },
+                                  ],
+                                },
+                              },
+                            ],
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'order_by' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'term' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'total_market_cap' },
+                            value: { kind: 'EnumValue', value: 'desc' },
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'term_id' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'object' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'term_id' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'predicate' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'term_id' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'subject' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'term_id' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'counter_term' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'vaults' },
+                        arguments: [
+                          {
+                            kind: 'Argument',
+                            name: { kind: 'Name', value: 'where' },
+                            value: {
+                              kind: 'ObjectValue',
+                              fields: [
+                                {
+                                  kind: 'ObjectField',
+                                  name: { kind: 'Name', value: 'curve_id' },
+                                  value: {
+                                    kind: 'ObjectValue',
+                                    fields: [
+                                      {
+                                        kind: 'ObjectField',
+                                        name: { kind: 'Name', value: '_eq' },
+                                        value: {
+                                          kind: 'StringValue',
+                                          value: '1',
+                                          block: false,
+                                        },
+                                      },
+                                    ],
+                                  },
+                                },
+                              ],
+                            },
+                          },
+                          {
+                            kind: 'Argument',
+                            name: { kind: 'Name', value: 'order_by' },
+                            value: {
+                              kind: 'ObjectValue',
+                              fields: [
+                                {
+                                  kind: 'ObjectField',
+                                  name: { kind: 'Name', value: 'curve_id' },
+                                  value: { kind: 'EnumValue', value: 'asc' },
+                                },
+                              ],
+                            },
+                          },
+                        ],
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'curve_id' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'term_id' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'position_count' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: {
+                                kind: 'Name',
+                                value: 'current_share_price',
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'total_shares' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'total_assets' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'market_cap' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'term' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'vaults' },
+                        arguments: [
+                          {
+                            kind: 'Argument',
+                            name: { kind: 'Name', value: 'where' },
+                            value: {
+                              kind: 'ObjectValue',
+                              fields: [
+                                {
+                                  kind: 'ObjectField',
+                                  name: { kind: 'Name', value: 'curve_id' },
+                                  value: {
+                                    kind: 'ObjectValue',
+                                    fields: [
+                                      {
+                                        kind: 'ObjectField',
+                                        name: { kind: 'Name', value: '_eq' },
+                                        value: {
+                                          kind: 'StringValue',
+                                          value: '1',
+                                          block: false,
+                                        },
+                                      },
+                                    ],
+                                  },
+                                },
+                              ],
+                            },
+                          },
+                          {
+                            kind: 'Argument',
+                            name: { kind: 'Name', value: 'order_by' },
+                            value: {
+                              kind: 'ObjectValue',
+                              fields: [
+                                {
+                                  kind: 'ObjectField',
+                                  name: { kind: 'Name', value: 'curve_id' },
+                                  value: { kind: 'EnumValue', value: 'asc' },
+                                },
+                              ],
+                            },
+                          },
+                        ],
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'curve_id' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'term_id' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'position_count' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: {
+                                kind: 'Name',
+                                value: 'current_share_price',
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'total_shares' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'total_assets' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'market_cap' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          {
+            kind: 'Field',
+            alias: { kind: 'Name', value: 'collections' },
+            name: { kind: 'Name', value: 'predicate_objects' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'where' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'predicate' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'type' },
+                            value: {
+                              kind: 'ObjectValue',
+                              fields: [
+                                {
+                                  kind: 'ObjectField',
+                                  name: { kind: 'Name', value: '_eq' },
+                                  value: {
+                                    kind: 'EnumValue',
+                                    value: 'Keywords',
+                                  },
+                                },
+                              ],
+                            },
+                          },
+                        ],
+                      },
+                    },
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'object' },
+                      value: {
+                        kind: 'ObjectValue',
+                        fields: [
+                          {
+                            kind: 'ObjectField',
+                            name: { kind: 'Name', value: 'label' },
+                            value: {
+                              kind: 'ObjectValue',
+                              fields: [
+                                {
+                                  kind: 'ObjectField',
+                                  name: { kind: 'Name', value: '_ilike' },
+                                  value: {
+                                    kind: 'Variable',
+                                    name: { kind: 'Name', value: 'likeStr' },
+                                  },
+                                },
+                              ],
+                            },
+                          },
+                        ],
+                      },
+                    },
+                  ],
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'order_by' },
+                value: {
+                  kind: 'ListValue',
+                  values: [
+                    {
+                      kind: 'ObjectValue',
+                      fields: [
+                        {
+                          kind: 'ObjectField',
+                          name: { kind: 'Name', value: 'triple_count' },
+                          value: { kind: 'EnumValue', value: 'desc' },
+                        },
+                      ],
+                    },
+                  ],
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'collectionsLimit' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'triple_count' },
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'object' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'label' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'term_id' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'image' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'value' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'thing' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: {
+                                      kind: 'Name',
+                                      value: 'description',
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'cached_image' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'safe' },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'url' },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
+export const SemanticSearch = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'SemanticSearch' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'query' },
+          },
+          type: {
+            kind: 'NonNullType',
+            type: {
+              kind: 'NamedType',
+              name: { kind: 'Name', value: 'String' },
+            },
+          },
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'limit' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+        },
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'search_term' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'args' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    {
+                      kind: 'ObjectField',
+                      name: { kind: 'Name', value: 'query' },
+                      value: {
+                        kind: 'Variable',
+                        name: { kind: 'Name', value: 'query' },
+                      },
+                    },
+                  ],
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'limit' },
+                },
+              },
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'atom' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'term_id' },
+                      },
+                      { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'value' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'text_object' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'data' },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'json_object' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  {
+                                    kind: 'Field',
+                                    alias: { kind: 'Name', value: 'name' },
+                                    name: { kind: 'Name', value: 'data' },
+                                    arguments: [
+                                      {
+                                        kind: 'Argument',
+                                        name: { kind: 'Name', value: 'path' },
+                                        value: {
+                                          kind: 'StringValue',
+                                          value: 'name',
+                                          block: false,
+                                        },
+                                      },
+                                    ],
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    alias: {
+                                      kind: 'Name',
+                                      value: 'description',
+                                    },
+                                    name: { kind: 'Name', value: 'data' },
+                                    arguments: [
+                                      {
+                                        kind: 'Argument',
+                                        name: { kind: 'Name', value: 'path' },
+                                        value: {
+                                          kind: 'StringValue',
+                                          value: 'description',
+                                          block: false,
+                                        },
+                                      },
+                                    ],
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    alias: { kind: 'Name', value: 'image' },
+                                    name: { kind: 'Name', value: 'data' },
+                                    arguments: [
+                                      {
+                                        kind: 'Argument',
+                                        name: { kind: 'Name', value: 'path' },
+                                        value: {
+                                          kind: 'StringValue',
+                                          value: 'image',
+                                          block: false,
+                                        },
+                                      },
+                                    ],
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    alias: { kind: 'Name', value: 'url' },
+                                    name: { kind: 'Name', value: 'data' },
+                                    arguments: [
+                                      {
+                                        kind: 'Argument',
+                                        name: { kind: 'Name', value: 'path' },
+                                        value: {
+                                          kind: 'StringValue',
+                                          value: 'url',
+                                          block: false,
+                                        },
+                                      },
+                                    ],
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  ],
+} as unknown as DocumentNode
 export const GetSignals = {
   kind: 'Document',
   definitions: [
@@ -59729,6 +62732,15 @@ export const FindTriples = {
             },
           },
         },
+        {
+          kind: 'VariableDefinition',
+          variable: {
+            kind: 'Variable',
+            name: { kind: 'Name', value: 'limit' },
+          },
+          type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } },
+          defaultValue: { kind: 'IntValue', value: '100' },
+        },
       ],
       selectionSet: {
         kind: 'SelectionSet',
@@ -59743,6 +62755,14 @@ export const FindTriples = {
                 value: {
                   kind: 'Variable',
                   name: { kind: 'Name', value: 'where' },
+                },
+              },
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'limit' },
+                value: {
+                  kind: 'Variable',
+                  name: { kind: 'Name', value: 'limit' },
                 },
               },
             ],

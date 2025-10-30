@@ -96,7 +96,7 @@ Atoms are the core of the Intuition protocol. You can create them one by one or 
   intu atom create [--network <NETWORK>] [--deposit <AMOUNT>]
   ```
   **Flags:**
-  - `--network <value>`: Target network (base, base-sepolia) (optional)
+  - `--network <value>`: Target network (intuition, intuition-testnet) (optional)
   - `--deposit <value>`: Deposit amount in ETH (optional)
 
 ## Batch Atom Creation
@@ -166,6 +166,51 @@ You can manage the CLI's configuration using the `config` commands.
   ```
   **Flags:**
   (No flags)
+
+## Experimental features
+
+### Sync
+
+```sh-session
+intu experimental sync ./data.json
+```
+
+Makes sure that current account has minimal position on triples. Creates missing atoms and triples.
+
+Input file example:
+
+```json
+{
+  "ipfs://QmVj1PW5khQLA9Dr9MqKpe2K1oaRkVTH7bj764jqb5KuKj": {
+    "https://schema.org/keywords": "ipfs://bafkreidz5oah73l7gacv4dmw5pu4sljbtejhvwptrc2mgfsgida2gaozqq"
+  },
+  "ipfs://bafkreiewmh2cajr5boy5r5lnfxhirgyvtnhazaexi2vy2jfyh3zajq5dca": {
+    "https://schema.org/keywords": "ipfs://bafkreidz5oah73l7gacv4dmw5pu4sljbtejhvwptrc2mgfsgida2gaozqq"
+  },
+  "ipfs://bafkreicwzlxcyrsmhqvclae76w74v3aogsre2jpo7mzf7oqcos2jewuq3a": {
+    "https://schema.org/keywords": "ipfs://bafkreidz5oah73l7gacv4dmw5pu4sljbtejhvwptrc2mgfsgida2gaozqq"
+  },
+  "did:example:abc": {
+    "type": "agent",
+    "name": "Claude",
+    "description": "Your ultimate ai assistant",
+    "url": "https://agent.example.com/a2a",
+    "capabilities": ["web_search"]
+  }
+}
+```
+
+### Search
+
+```sh-session
+intu experimental search ./query.json
+```
+
+Example input file:
+
+```json
+[{"type": "agent"}, {"capabilities": "web_search"}]
+```
 
 ## Contributing
 

@@ -124,11 +124,11 @@ export default class AtomBatchScan extends Command {
   // #region Private Helper Methods
   private async setupClients(networkFlag?: string): Promise<ClientSetup | undefined> {
     // 1. Determine and validate network
-    const networkName = networkFlag || getDefaultNetwork() || 'base'
+    const networkName = networkFlag || getDefaultNetwork() || 'intuition-testnet'
     const network = getNetworkByName(networkName)
     if (!network) {
       this.log(chalk.red(`❌ Unsupported network: ${networkName}`))
-      this.log(chalk.gray('Supported: base, base-sepolia'))
+      this.log(chalk.gray('Supported: intuition, intuition-testnet'))
       return
     }
 

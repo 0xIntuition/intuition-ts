@@ -8,7 +8,6 @@ query GetLists($where: predicate_objects_bool_exp) {
     }
   }
   predicate_objects(where: $where, order_by: [{ triple_count: desc }]) {
-    id
     triple_count
     object {
       term_id
@@ -20,7 +19,10 @@ query GetLists($where: predicate_objects_bool_exp) {
 
 query GetListItems($predicateId: String, $objectId: String) {
   triples_aggregate(
-    where: { predicate_id: { _eq: $predicateId }, object_id: { _eq: $objectId } }
+    where: {
+      predicate_id: { _eq: $predicateId }
+      object_id: { _eq: $objectId }
+    }
     order_by: [
       {
         term: { positions_aggregate: { count: desc } }

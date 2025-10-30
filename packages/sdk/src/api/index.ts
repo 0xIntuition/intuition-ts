@@ -1,3 +1,5 @@
 export * from './get-atom-details'
 export * from './get-triple-details'
 export * from './pin-thing'
+export * from './search'
+export * from './semantic-search'

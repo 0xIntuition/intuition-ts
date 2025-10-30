@@ -848,7 +848,7 @@ type atom_values {
   """
   An object relationship
   """
-  atom: atoms!
+  atom: atoms
   """
   An object relationship
   """
@@ -1386,7 +1386,7 @@ type atoms {
   """
   An object relationship
   """
-  creator: accounts!
+  creator: accounts
   creator_id: String!
   data: String
   emoji: String
@@ -1498,7 +1498,7 @@ type atoms {
   """
   An object relationship
   """
-  term: terms!
+  term: terms
   term_id: String!
   transaction_hash: String!
   type: atom_type!
@@ -2607,7 +2607,7 @@ type deposits {
   """
   An object relationship
   """
-  receiver: accounts!
+  receiver: accounts
   receiver_id: String!
   """
   An object relationship
@@ -2618,7 +2618,7 @@ type deposits {
   """
   An object relationship
   """
-  term: terms!
+  term: terms
   term_id: String!
   total_shares: numeric!
   transaction_hash: String!
@@ -3388,7 +3388,7 @@ type fee_transfers {
   """
   An object relationship
   """
-  receiver: accounts!
+  receiver: accounts
   receiver_id: String!
   """
   An object relationship
@@ -4271,7 +4271,7 @@ type positions {
   """
   An object relationship
   """
-  term: terms!
+  term: terms
   term_id: String!
   total_deposit_assets_after_total_fees: numeric!
   total_redeem_assets_for_receiver: numeric!
@@ -4767,18 +4767,69 @@ input positions_variance_order_by {
 columns and relationships of "predicate_object"
 """
 type predicate_objects {
-  id: String!
   """
   An object relationship
   """
-  object: atoms!
+  object: atoms
   object_id: String!
   """
   An object relationship
   """
-  predicate: atoms!
+  predicate: atoms
   predicate_id: String!
+  total_market_cap: numeric!
+  total_position_count: Int!
   triple_count: Int!
+  """
+  An array relationship
+  """
+  triples(
+    """
+    distinct select on columns
+    """
+    distinct_on: [triples_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [triples_order_by!]
+    """
+    filter the rows returned
+    """
+    where: triples_bool_exp
+  ): [triples!]!
+  """
+  An aggregate relationship
+  """
+  triples_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [triples_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [triples_order_by!]
+    """
+    filter the rows returned
+    """
+    where: triples_bool_exp
+  ): triples_aggregate!
 }
 
 """
@@ -4838,6 +4889,8 @@ input predicate_objects_aggregate_order_by {
 aggregate avg on columns
 """
 type predicate_objects_avg_fields {
+  total_market_cap: Float
+  total_position_count: Float
   triple_count: Float
 }
 
@@ -4845,6 +4898,8 @@ type predicate_objects_avg_fields {
 order by avg() on columns of table "predicate_object"
 """
 input predicate_objects_avg_order_by {
+  total_market_cap: order_by
+  total_position_count: order_by
   triple_count: order_by
 }
 
@@ -4855,21 +4910,25 @@ input predicate_objects_bool_exp {
   _and: [predicate_objects_bool_exp!]
   _not: predicate_objects_bool_exp
   _or: [predicate_objects_bool_exp!]
-  id: String_comparison_exp
   object: atoms_bool_exp
   object_id: String_comparison_exp
   predicate: atoms_bool_exp
   predicate_id: String_comparison_exp
+  total_market_cap: numeric_comparison_exp
+  total_position_count: Int_comparison_exp
   triple_count: Int_comparison_exp
+  triples: triples_bool_exp
+  triples_aggregate: triples_aggregate_bool_exp
 }
 
 """
 aggregate max on columns
 """
 type predicate_objects_max_fields {
-  id: String
   object_id: String
   predicate_id: String
+  total_market_cap: numeric
+  total_position_count: Int
   triple_count: Int
 }
 
@@ -4877,9 +4936,10 @@ type predicate_objects_max_fields {
 order by max() on columns of table "predicate_object"
 """
 input predicate_objects_max_order_by {
-  id: order_by
   object_id: order_by
   predicate_id: order_by
+  total_market_cap: order_by
+  total_position_count: order_by
   triple_count: order_by
 }
 
@@ -4887,9 +4947,10 @@ input predicate_objects_max_order_by {
 aggregate min on columns
 """
 type predicate_objects_min_fields {
-  id: String
   object_id: String
   predicate_id: String
+  total_market_cap: numeric
+  total_position_count: Int
   triple_count: Int
 }
 
@@ -4897,9 +4958,10 @@ type predicate_objects_min_fields {
 order by min() on columns of table "predicate_object"
 """
 input predicate_objects_min_order_by {
-  id: order_by
   object_id: order_by
   predicate_id: order_by
+  total_market_cap: order_by
+  total_position_count: order_by
   triple_count: order_by
 }
 
@@ -4907,22 +4969,20 @@ input predicate_objects_min_order_by {
 Ordering options when selecting data from "predicate_object".
 """
 input predicate_objects_order_by {
-  id: order_by
   object: atoms_order_by
   object_id: order_by
   predicate: atoms_order_by
   predicate_id: order_by
+  total_market_cap: order_by
+  total_position_count: order_by
   triple_count: order_by
+  triples_aggregate: triples_aggregate_order_by
 }
 
 """
 select columns of table "predicate_object"
 """
 enum predicate_objects_select_column {
-  """
-  column name
-  """
-  id
   """
   column name
   """
@@ -4934,6 +4994,14 @@ enum predicate_objects_select_column {
   """
   column name
   """
+  total_market_cap
+  """
+  column name
+  """
+  total_position_count
+  """
+  column name
+  """
   triple_count
 }
 
@@ -4941,6 +5009,8 @@ enum predicate_objects_select_column {
 aggregate stddev on columns
 """
 type predicate_objects_stddev_fields {
+  total_market_cap: Float
+  total_position_count: Float
   triple_count: Float
 }
 
@@ -4948,6 +5018,8 @@ type predicate_objects_stddev_fields {
 order by stddev() on columns of table "predicate_object"
 """
 input predicate_objects_stddev_order_by {
+  total_market_cap: order_by
+  total_position_count: order_by
   triple_count: order_by
 }
 
@@ -4955,6 +5027,8 @@ input predicate_objects_stddev_order_by {
 aggregate stddev_pop on columns
 """
 type predicate_objects_stddev_pop_fields {
+  total_market_cap: Float
+  total_position_count: Float
   triple_count: Float
 }
 
@@ -4962,6 +5036,8 @@ type predicate_objects_stddev_pop_fields {
 order by stddev_pop() on columns of table "predicate_object"
 """
 input predicate_objects_stddev_pop_order_by {
+  total_market_cap: order_by
+  total_position_count: order_by
   triple_count: order_by
 }
 
@@ -4969,6 +5045,8 @@ input predicate_objects_stddev_pop_order_by {
 aggregate stddev_samp on columns
 """
 type predicate_objects_stddev_samp_fields {
+  total_market_cap: Float
+  total_position_count: Float
   triple_count: Float
 }
 
@@ -4976,6 +5054,8 @@ type predicate_objects_stddev_samp_fields {
 order by stddev_samp() on columns of table "predicate_object"
 """
 input predicate_objects_stddev_samp_order_by {
+  total_market_cap: order_by
+  total_position_count: order_by
   triple_count: order_by
 }
 
@@ -4997,9 +5077,10 @@ input predicate_objects_stream_cursor_input {
 Initial value of the column from where the streaming should start
 """
 input predicate_objects_stream_cursor_value_input {
-  id: String
   object_id: String
   predicate_id: String
+  total_market_cap: numeric
+  total_position_count: Int
   triple_count: Int
 }
 
@@ -5007,6 +5088,8 @@ input predicate_objects_stream_cursor_value_input {
 aggregate sum on columns
 """
 type predicate_objects_sum_fields {
+  total_market_cap: numeric
+  total_position_count: Int
   triple_count: Int
 }
 
@@ -5014,6 +5097,8 @@ type predicate_objects_sum_fields {
 order by sum() on columns of table "predicate_object"
 """
 input predicate_objects_sum_order_by {
+  total_market_cap: order_by
+  total_position_count: order_by
   triple_count: order_by
 }
 
@@ -5021,6 +5106,8 @@ input predicate_objects_sum_order_by {
 aggregate var_pop on columns
 """
 type predicate_objects_var_pop_fields {
+  total_market_cap: Float
+  total_position_count: Float
   triple_count: Float
 }
 
@@ -5028,6 +5115,8 @@ type predicate_objects_var_pop_fields {
 order by var_pop() on columns of table "predicate_object"
 """
 input predicate_objects_var_pop_order_by {
+  total_market_cap: order_by
+  total_position_count: order_by
   triple_count: order_by
 }
 
@@ -5035,6 +5124,8 @@ input predicate_objects_var_pop_order_by {
 aggregate var_samp on columns
 """
 type predicate_objects_var_samp_fields {
+  total_market_cap: Float
+  total_position_count: Float
   triple_count: Float
 }
 
@@ -5042,6 +5133,8 @@ type predicate_objects_var_samp_fields {
 order by var_samp() on columns of table "predicate_object"
 """
 input predicate_objects_var_samp_order_by {
+  total_market_cap: order_by
+  total_position_count: order_by
   triple_count: order_by
 }
 
@@ -5049,6 +5142,8 @@ input predicate_objects_var_samp_order_by {
 aggregate variance on columns
 """
 type predicate_objects_variance_fields {
+  total_market_cap: Float
+  total_position_count: Float
   triple_count: Float
 }
 
@@ -5056,6 +5151,8 @@ type predicate_objects_variance_fields {
 order by variance() on columns of table "predicate_object"
 """
 input predicate_objects_variance_order_by {
+  total_market_cap: order_by
+  total_position_count: order_by
   triple_count: order_by
 }
 
@@ -5989,7 +6086,10 @@ type query_root {
   """
   fetch data from the table: "predicate_object" using primary key columns
   """
-  predicate_objects_by_pk(id: String!): predicate_objects
+  predicate_objects_by_pk(
+    object_id: String!
+    predicate_id: String!
+  ): predicate_objects
   """
   fetch data from the table: "redemption" using primary key columns
   """
@@ -6660,6 +6760,63 @@ type query_root {
     where: stats_bool_exp
   ): stats_aggregate!
   """
+  fetch data from the table: "subject_predicate"
+  """
+  subject_predicates(
+    """
+    distinct select on columns
+    """
+    distinct_on: [subject_predicates_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [subject_predicates_order_by!]
+    """
+    filter the rows returned
+    """
+    where: subject_predicates_bool_exp
+  ): [subject_predicates!]!
+  """
+  fetch aggregated fields from the table: "subject_predicate"
+  """
+  subject_predicates_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [subject_predicates_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [subject_predicates_order_by!]
+    """
+    filter the rows returned
+    """
+    where: subject_predicates_bool_exp
+  ): subject_predicates_aggregate!
+  """
+  fetch data from the table: "subject_predicate" using primary key columns
+  """
+  subject_predicates_by_pk(
+    predicate_id: String!
+    subject_id: String!
+  ): subject_predicates
+  """
   fetch data from the table: "term" using primary key columns
   """
   term(id: String!): terms
@@ -7128,7 +7285,7 @@ type redemptions {
   """
   An object relationship
   """
-  receiver: accounts!
+  receiver: accounts
   receiver_id: String!
   """
   An object relationship
@@ -7139,7 +7296,7 @@ type redemptions {
   """
   An object relationship
   """
-  term: terms!
+  term: terms
   term_id: String!
   total_shares: numeric!
   transaction_hash: String!
@@ -8625,7 +8782,7 @@ type share_price_changes {
   """
   An object relationship
   """
-  term: terms!
+  term: terms
   term_id: String!
   total_assets: numeric!
   total_shares: numeric!
@@ -9516,7 +9673,7 @@ type signals {
   """
   An object relationship
   """
-  term: terms!
+  term: terms
   term_id: String!
   transaction_hash: String!
   triple_id: String
@@ -10365,6 +10522,277 @@ type stats_variance_fields {
   total_positions: Float
   total_signals: Float
   total_triples: Float
+}
+
+"""
+columns and relationships of "subject_predicate"
+"""
+type subject_predicates {
+  """
+  An object relationship
+  """
+  predicate: atoms
+  predicate_id: String!
+  """
+  An object relationship
+  """
+  subject: atoms
+  subject_id: String!
+  total_market_cap: numeric!
+  total_position_count: Int!
+  triple_count: Int!
+  """
+  An array relationship
+  """
+  triples(
+    """
+    distinct select on columns
+    """
+    distinct_on: [triples_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [triples_order_by!]
+    """
+    filter the rows returned
+    """
+    where: triples_bool_exp
+  ): [triples!]!
+  """
+  An aggregate relationship
+  """
+  triples_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [triples_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [triples_order_by!]
+    """
+    filter the rows returned
+    """
+    where: triples_bool_exp
+  ): triples_aggregate!
+}
+
+"""
+aggregated selection of "subject_predicate"
+"""
+type subject_predicates_aggregate {
+  aggregate: subject_predicates_aggregate_fields
+  nodes: [subject_predicates!]!
+}
+
+"""
+aggregate fields of "subject_predicate"
+"""
+type subject_predicates_aggregate_fields {
+  avg: subject_predicates_avg_fields
+  count(columns: [subject_predicates_select_column!], distinct: Boolean): Int!
+  max: subject_predicates_max_fields
+  min: subject_predicates_min_fields
+  stddev: subject_predicates_stddev_fields
+  stddev_pop: subject_predicates_stddev_pop_fields
+  stddev_samp: subject_predicates_stddev_samp_fields
+  sum: subject_predicates_sum_fields
+  var_pop: subject_predicates_var_pop_fields
+  var_samp: subject_predicates_var_samp_fields
+  variance: subject_predicates_variance_fields
+}
+
+"""
+aggregate avg on columns
+"""
+type subject_predicates_avg_fields {
+  total_market_cap: Float
+  total_position_count: Float
+  triple_count: Float
+}
+
+"""
+Boolean expression to filter rows from the table "subject_predicate". All fields are combined with a logical 'AND'.
+"""
+input subject_predicates_bool_exp {
+  _and: [subject_predicates_bool_exp!]
+  _not: subject_predicates_bool_exp
+  _or: [subject_predicates_bool_exp!]
+  predicate: atoms_bool_exp
+  predicate_id: String_comparison_exp
+  subject: atoms_bool_exp
+  subject_id: String_comparison_exp
+  total_market_cap: numeric_comparison_exp
+  total_position_count: Int_comparison_exp
+  triple_count: Int_comparison_exp
+  triples: triples_bool_exp
+  triples_aggregate: triples_aggregate_bool_exp
+}
+
+"""
+aggregate max on columns
+"""
+type subject_predicates_max_fields {
+  predicate_id: String
+  subject_id: String
+  total_market_cap: numeric
+  total_position_count: Int
+  triple_count: Int
+}
+
+"""
+aggregate min on columns
+"""
+type subject_predicates_min_fields {
+  predicate_id: String
+  subject_id: String
+  total_market_cap: numeric
+  total_position_count: Int
+  triple_count: Int
+}
+
+"""
+Ordering options when selecting data from "subject_predicate".
+"""
+input subject_predicates_order_by {
+  predicate: atoms_order_by
+  predicate_id: order_by
+  subject: atoms_order_by
+  subject_id: order_by
+  total_market_cap: order_by
+  total_position_count: order_by
+  triple_count: order_by
+  triples_aggregate: triples_aggregate_order_by
+}
+
+"""
+select columns of table "subject_predicate"
+"""
+enum subject_predicates_select_column {
+  """
+  column name
+  """
+  predicate_id
+  """
+  column name
+  """
+  subject_id
+  """
+  column name
+  """
+  total_market_cap
+  """
+  column name
+  """
+  total_position_count
+  """
+  column name
+  """
+  triple_count
+}
+
+"""
+aggregate stddev on columns
+"""
+type subject_predicates_stddev_fields {
+  total_market_cap: Float
+  total_position_count: Float
+  triple_count: Float
+}
+
+"""
+aggregate stddev_pop on columns
+"""
+type subject_predicates_stddev_pop_fields {
+  total_market_cap: Float
+  total_position_count: Float
+  triple_count: Float
+}
+
+"""
+aggregate stddev_samp on columns
+"""
+type subject_predicates_stddev_samp_fields {
+  total_market_cap: Float
+  total_position_count: Float
+  triple_count: Float
+}
+
+"""
+Streaming cursor of the table "subject_predicates"
+"""
+input subject_predicates_stream_cursor_input {
+  """
+  Stream column input with initial value
+  """
+  initial_value: subject_predicates_stream_cursor_value_input!
+  """
+  cursor ordering
+  """
+  ordering: cursor_ordering
+}
+
+"""
+Initial value of the column from where the streaming should start
+"""
+input subject_predicates_stream_cursor_value_input {
+  predicate_id: String
+  subject_id: String
+  total_market_cap: numeric
+  total_position_count: Int
+  triple_count: Int
+}
+
+"""
+aggregate sum on columns
+"""
+type subject_predicates_sum_fields {
+  total_market_cap: numeric
+  total_position_count: Int
+  triple_count: Int
+}
+
+"""
+aggregate var_pop on columns
+"""
+type subject_predicates_var_pop_fields {
+  total_market_cap: Float
+  total_position_count: Float
+  triple_count: Float
+}
+
+"""
+aggregate var_samp on columns
+"""
+type subject_predicates_var_samp_fields {
+  total_market_cap: Float
+  total_position_count: Float
+  triple_count: Float
+}
+
+"""
+aggregate variance on columns
+"""
+type subject_predicates_variance_fields {
+  total_market_cap: Float
+  total_position_count: Float
+  triple_count: Float
 }
 
 type subscription_root {
@@ -11552,7 +11980,10 @@ type subscription_root {
   """
   fetch data from the table: "predicate_object" using primary key columns
   """
-  predicate_objects_by_pk(id: String!): predicate_objects
+  predicate_objects_by_pk(
+    object_id: String!
+    predicate_id: String!
+  ): predicate_objects
   """
   fetch data from the table in a streaming manner: "predicate_object"
   """
@@ -12460,6 +12891,80 @@ type subscription_root {
     """
     where: stats_bool_exp
   ): [stats!]!
+  """
+  fetch data from the table: "subject_predicate"
+  """
+  subject_predicates(
+    """
+    distinct select on columns
+    """
+    distinct_on: [subject_predicates_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [subject_predicates_order_by!]
+    """
+    filter the rows returned
+    """
+    where: subject_predicates_bool_exp
+  ): [subject_predicates!]!
+  """
+  fetch aggregated fields from the table: "subject_predicate"
+  """
+  subject_predicates_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [subject_predicates_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [subject_predicates_order_by!]
+    """
+    filter the rows returned
+    """
+    where: subject_predicates_bool_exp
+  ): subject_predicates_aggregate!
+  """
+  fetch data from the table: "subject_predicate" using primary key columns
+  """
+  subject_predicates_by_pk(
+    predicate_id: String!
+    subject_id: String!
+  ): subject_predicates
+  """
+  fetch data from the table in a streaming manner: "subject_predicate"
+  """
+  subject_predicates_stream(
+    """
+    maximum number of rows returned in a single batch
+    """
+    batch_size: Int!
+    """
+    cursor to stream the results returned by the query
+    """
+    cursor: [subject_predicates_stream_cursor_input]!
+    """
+    filter the rows returned
+    """
+    where: subject_predicates_bool_exp
+  ): [subject_predicates!]!
   """
   fetch data from the table: "term" using primary key columns
   """
@@ -14121,6 +14626,7 @@ type terms {
   """
   atomById: atoms
   atom_id: String
+  created_at: timestamptz!
   """
   An array relationship
   """
@@ -14702,6 +15208,7 @@ input terms_bool_exp {
   atom: atoms_bool_exp
   atomById: atoms_bool_exp
   atom_id: String_comparison_exp
+  created_at: timestamptz_comparison_exp
   deposits: deposits_bool_exp
   deposits_aggregate: deposits_aggregate_bool_exp
   id: String_comparison_exp
@@ -14738,6 +15245,7 @@ aggregate max on columns
 """
 type terms_max_fields {
   atom_id: String
+  created_at: timestamptz
   id: String
   total_assets: numeric
   total_market_cap: numeric
@@ -14751,6 +15259,7 @@ aggregate min on columns
 """
 type terms_min_fields {
   atom_id: String
+  created_at: timestamptz
   id: String
   total_assets: numeric
   total_market_cap: numeric
@@ -14766,6 +15275,7 @@ input terms_order_by {
   atom: atoms_order_by
   atomById: atoms_order_by
   atom_id: order_by
+  created_at: order_by
   deposits_aggregate: deposits_aggregate_order_by
   id: order_by
   positions_aggregate: positions_aggregate_order_by
@@ -14799,6 +15309,10 @@ enum terms_select_column {
   column name
   """
   atom_id
+  """
+  column name
+  """
+  created_at
   """
   column name
   """
@@ -14868,6 +15382,7 @@ Initial value of the column from where the streaming should start
 """
 input terms_stream_cursor_value_input {
   atom_id: String
+  created_at: timestamptz
   id: String
   total_assets: numeric
   total_market_cap: numeric
@@ -15167,12 +15682,12 @@ type triple_term {
   """
   An object relationship
   """
-  counter_term: terms!
+  counter_term: terms
   counter_term_id: String!
   """
   An object relationship
   """
-  term: terms!
+  term: terms
   term_id: String!
   total_assets: numeric!
   total_market_cap: numeric!
@@ -15475,7 +15990,7 @@ type triples {
   """
   An object relationship
   """
-  object: atoms!
+  object: atoms
   object_id: String!
   """
   An array relationship
@@ -15530,12 +16045,12 @@ type triples {
   """
   An object relationship
   """
-  predicate: atoms!
+  predicate: atoms
   predicate_id: String!
   """
   An object relationship
   """
-  subject: atoms!
+  subject: atoms
   subject_id: String!
   """
   An object relationship
@@ -16285,7 +16800,7 @@ type vaults {
   """
   An object relationship
   """
-  term: terms!
+  term: terms
   term_id: String!
   total_assets: numeric!
   total_shares: numeric!
