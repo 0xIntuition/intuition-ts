@@ -41,8 +41,8 @@
     "registry": "https://registry.npmjs.org/"
   },
   "dependencies": {
-    "@0xintuition/graphql": "2.0.0-alpha.3",
-    "@0xintuition/protocol": "2.0.0-alpha.3"
+    "@0xintuition/graphql": "workspace:*",
+    "@0xintuition/protocol": "workspace:*"
   },
   "peerDependencies": {
     "viem": "^2.0.0"
