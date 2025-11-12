@@ -76,15 +76,15 @@ const intuitionDeployments: {
     [intuitionMainnet.id]: '0x635bBD1367B66E7B16a21D6E5A63C812fFC00617',
   },
   BondingCurveRegistry: {
-    [intuitionTestnet.id]: '0x419fdc0d56c3fc27592bf887b5be3184effdfa73',
+    [intuitionTestnet.id]: '0x2AFC4949Dd3664219AA2c20133771658E93892A1',
     [intuitionMainnet.id]: '0xd0E488Fb32130232527eedEB72f8cE2BFC0F9930',
   },
   LinearCurve: {
-    [intuitionTestnet.id]: '0x006C022b854022C1646dA5094F1D77A17D3897AB',
+    [intuitionTestnet.id]: '0x6df5eecd9B14E31C98A027b8634876E4805F71B0',
     [intuitionMainnet.id]: '0xc3eFD5471dc63d74639725f381f9686e3F264366',
   },
   OffsetProgressiveCurve: {
-    [intuitionTestnet.id]: '0x778f87476f266817f1D715fC172E51C4B85FBb16',
+    [intuitionTestnet.id]: '0xE65EcaAF5964aC0d94459A66A59A8B9eBCE42CbB',
     [intuitionMainnet.id]: '0x23afF95153aa88D28B9B97Ba97629E05D5fD335d',
   },
 }
