@@ -1,23 +1,23 @@
 import {
-  batchCreateTriple,
-  createTripleCalculateBaseCost,
+  createTriples,
   eventParseTripleCreated,
-  type BatchCreateTripleConfig,
-  type BatchCreateTripleInputs,
+  getTripleCost,
+  type CreateTriplesInputs,
+  type WriteConfig,
 } from '@0xintuition/protocol'
 
 export async function batchCreateTripleStatements(
-  config: BatchCreateTripleConfig,
-  data: BatchCreateTripleInputs['args'],
+  config: WriteConfig,
+  data: CreateTriplesInputs['args'],
   depositAmount?: bigint,
 ) {
   const { address, publicClient } = config
-  const tripleBaseCost = await createTripleCalculateBaseCost({
+  const tripleBaseCost = await getTripleCost({
     publicClient,
     address,
   })
 
-  const txHash = await batchCreateTriple(config, {
+  const txHash = await createTriples(config, {
     args: data,
     value: tripleBaseCost + BigInt(depositAmount || 0),
   })

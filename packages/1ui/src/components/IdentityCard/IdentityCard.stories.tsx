@@ -78,7 +78,7 @@ export const Entity: Story = {
 
 const SmartIdentityCard = () => {
   const { data: atomData } = useGetAtomQuery({
-    id: 2,
+    id: '0x49487b1d5bf2734d497d6d9cfcd72cdfbaefb4d4f03ddc310398b24639173c9d',
   })
 
   return (
@@ -86,7 +86,7 @@ const SmartIdentityCard = () => {
       variant="non-user"
       avatarSrc={atomData?.atom?.image ?? ''}
       name={atomData?.atom?.label ?? ''}
-      value={atomData?.atom?.term.vaults[0].total_shares ?? 0}
+      value={atomData?.atom?.term?.vaults[0]?.total_shares ?? 0}
       currency="ETH"
       walletAddress={atomData?.atom?.wallet_id ?? ''}
     />

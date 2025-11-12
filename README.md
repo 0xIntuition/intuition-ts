@@ -37,6 +37,10 @@ Each package will have more detailed instructions, but you should clone the enti
 - Clone the monorepo from the root: `git@github.com:0xIntuition/intuition-ts.git`
 - Follow individual instructions for each app and package
 
+## Migration Guide
+
+If you're upgrading from v1.x to v2.0.0, please see the [Migration Guide](./MIGRATION.md) for detailed information about breaking changes and how to update your code.
+
 ## Contributing
 
 Please read the [contributing guide](./CONTRIBUTING.md).

@@ -66,6 +66,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## Support
 
 For assistance, please contact us through:
+
 - [Discord](https://discord.gg/8gW3h6w5)
 - [GitHub Issues](https://github.com/coinbase/onchainkit/issues)
 - X: [@onchainkit](https://x.com/onchainkit), [@zizzamia](https://x.com/zizzamia), [@fkpxls](https://x.com/fkpxls)

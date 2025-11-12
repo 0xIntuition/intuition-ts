@@ -1,168 +1,451 @@
 export const OffsetProgressiveCurveAbi = [
   {
-    inputs: [
-      { internalType: 'string', name: '_name', type: 'string' },
-      { internalType: 'uint256', name: 'slope18', type: 'uint256' },
-      { internalType: 'uint256', name: 'offset18', type: 'uint256' },
-    ],
-    stateMutability: 'nonpayable',
     type: 'constructor',
-  },
-  { inputs: [], name: 'BaseCurve_EmptyStringNotAllowed', type: 'error' },
-  {
-    inputs: [
-      { internalType: 'uint256', name: 'x', type: 'uint256' },
-      { internalType: 'uint256', name: 'y', type: 'uint256' },
-    ],
-    name: 'PRBMath_MulDiv18_Overflow',
-    type: 'error',
-  },
-  {
-    inputs: [
-      { internalType: 'uint256', name: 'x', type: 'uint256' },
-      { internalType: 'uint256', name: 'y', type: 'uint256' },
-      { internalType: 'uint256', name: 'denominator', type: 'uint256' },
-    ],
-    name: 'PRBMath_MulDiv_Overflow',
-    type: 'error',
-  },
-  {
-    inputs: [{ internalType: 'uint256', name: 'x', type: 'uint256' }],
-    name: 'PRBMath_UD60x18_Convert_Overflow',
-    type: 'error',
-  },
-  {
-    inputs: [{ internalType: 'UD60x18', name: 'x', type: 'uint256' }],
-    name: 'PRBMath_UD60x18_Sqrt_Overflow',
-    type: 'error',
-  },
-  {
     inputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
     name: 'HALF_SLOPE',
-    outputs: [{ internalType: 'UD60x18', name: '', type: 'uint256' }],
+    inputs: [],
+    outputs: [
+      {
+        name: '',
+        type: 'uint256',
+        internalType: 'UD60x18',
+      },
+    ],
     stateMutability: 'view',
-    type: 'function',
   },
   {
-    inputs: [],
+    type: 'function',
     name: 'MAX_ASSETS',
-    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+    inputs: [],
+    outputs: [
+      {
+        name: '',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
     stateMutability: 'view',
-    type: 'function',
   },
   {
-    inputs: [],
+    type: 'function',
     name: 'MAX_SHARES',
-    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+    inputs: [],
+    outputs: [
+      {
+        name: '',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
     stateMutability: 'view',
-    type: 'function',
   },
   {
-    inputs: [],
+    type: 'function',
     name: 'OFFSET',
-    outputs: [{ internalType: 'UD60x18', name: '', type: 'uint256' }],
+    inputs: [],
+    outputs: [
+      {
+        name: '',
+        type: 'uint256',
+        internalType: 'UD60x18',
+      },
+    ],
     stateMutability: 'view',
-    type: 'function',
   },
   {
-    inputs: [],
+    type: 'function',
     name: 'SLOPE',
-    outputs: [{ internalType: 'UD60x18', name: '', type: 'uint256' }],
+    inputs: [],
+    outputs: [
+      {
+        name: '',
+        type: 'uint256',
+        internalType: 'UD60x18',
+      },
+    ],
     stateMutability: 'view',
-    type: 'function',
   },
   {
-    inputs: [
-      { internalType: 'uint256', name: 'shares', type: 'uint256' },
-      { internalType: 'uint256', name: 'totalShares', type: 'uint256' },
-      { internalType: 'uint256', name: '', type: 'uint256' },
-    ],
+    type: 'function',
     name: 'convertToAssets',
-    outputs: [{ internalType: 'uint256', name: 'assets', type: 'uint256' }],
+    inputs: [
+      {
+        name: 'shares',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+      {
+        name: 'totalShares',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+      {
+        name: 'totalAssets',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
+    outputs: [
+      {
+        name: 'assets',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
     stateMutability: 'view',
-    type: 'function',
   },
   {
-    inputs: [
-      { internalType: 'uint256', name: 'assets', type: 'uint256' },
-      { internalType: 'uint256', name: '', type: 'uint256' },
-      { internalType: 'uint256', name: 'totalShares', type: 'uint256' },
-    ],
+    type: 'function',
     name: 'convertToShares',
-    outputs: [{ internalType: 'uint256', name: 'shares', type: 'uint256' }],
+    inputs: [
+      {
+        name: 'assets',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+      {
+        name: 'totalAssets',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+      {
+        name: 'totalShares',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
+    outputs: [
+      {
+        name: 'shares',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
     stateMutability: 'view',
-    type: 'function',
   },
   {
-    inputs: [{ internalType: 'uint256', name: 'totalShares', type: 'uint256' }],
+    type: 'function',
     name: 'currentPrice',
-    outputs: [{ internalType: 'uint256', name: 'sharePrice', type: 'uint256' }],
+    inputs: [
+      {
+        name: 'totalShares',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+      {
+        name: 'totalAssets',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
+    outputs: [
+      {
+        name: 'sharePrice',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
     stateMutability: 'view',
-    type: 'function',
   },
   {
-    inputs: [],
+    type: 'function',
+    name: 'initialize',
+    inputs: [
+      {
+        name: '_name',
+        type: 'string',
+        internalType: 'string',
+      },
+      {
+        name: 'slope18',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+      {
+        name: 'offset18',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
     name: 'maxAssets',
-    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
+    inputs: [],
+    outputs: [
+      {
+        name: '',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
     stateMutability: 'view',
-    type: 'function',
   },
   {
-    inputs: [],
+    type: 'function',
     name: 'maxShares',
-    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
     inputs: [],
+    outputs: [
+      {
+        name: '',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
     name: 'name',
-    outputs: [{ internalType: 'string', name: '', type: 'string' }],
+    inputs: [],
+    outputs: [
+      {
+        name: '',
+        type: 'string',
+        internalType: 'string',
+      },
+    ],
     stateMutability: 'view',
-    type: 'function',
   },
   {
-    inputs: [
-      { internalType: 'uint256', name: 'assets', type: 'uint256' },
-      { internalType: 'uint256', name: '', type: 'uint256' },
-      { internalType: 'uint256', name: 'totalShares', type: 'uint256' },
-    ],
+    type: 'function',
     name: 'previewDeposit',
-    outputs: [{ internalType: 'uint256', name: 'shares', type: 'uint256' }],
+    inputs: [
+      {
+        name: 'assets',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+      {
+        name: 'totalAssets',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+      {
+        name: 'totalShares',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
+    outputs: [
+      {
+        name: 'shares',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
     stateMutability: 'view',
-    type: 'function',
   },
   {
-    inputs: [
-      { internalType: 'uint256', name: 'shares', type: 'uint256' },
-      { internalType: 'uint256', name: 'totalShares', type: 'uint256' },
-      { internalType: 'uint256', name: '', type: 'uint256' },
-    ],
+    type: 'function',
     name: 'previewMint',
-    outputs: [{ internalType: 'uint256', name: 'assets', type: 'uint256' }],
+    inputs: [
+      {
+        name: 'shares',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+      {
+        name: 'totalShares',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+      {
+        name: 'totalAssets',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
+    outputs: [
+      {
+        name: 'assets',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
     stateMutability: 'view',
-    type: 'function',
   },
   {
-    inputs: [
-      { internalType: 'uint256', name: 'shares', type: 'uint256' },
-      { internalType: 'uint256', name: 'totalShares', type: 'uint256' },
-      { internalType: 'uint256', name: '', type: 'uint256' },
-    ],
+    type: 'function',
     name: 'previewRedeem',
-    outputs: [{ internalType: 'uint256', name: 'assets', type: 'uint256' }],
+    inputs: [
+      {
+        name: 'shares',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+      {
+        name: 'totalShares',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+      {
+        name: 'totalAssets',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
+    outputs: [
+      {
+        name: 'assets',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
     stateMutability: 'view',
-    type: 'function',
   },
   {
-    inputs: [
-      { internalType: 'uint256', name: 'assets', type: 'uint256' },
-      { internalType: 'uint256', name: '', type: 'uint256' },
-      { internalType: 'uint256', name: 'totalShares', type: 'uint256' },
-    ],
-    name: 'previewWithdraw',
-    outputs: [{ internalType: 'uint256', name: 'shares', type: 'uint256' }],
-    stateMutability: 'view',
     type: 'function',
+    name: 'previewWithdraw',
+    inputs: [
+      {
+        name: 'assets',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+      {
+        name: 'totalAssets',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+      {
+        name: 'totalShares',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
+    outputs: [
+      {
+        name: 'shares',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'event',
+    name: 'CurveNameSet',
+    inputs: [
+      {
+        name: 'name',
+        type: 'string',
+        indexed: false,
+        internalType: 'string',
+      },
+    ],
+    anonymous: false,
+  },
+  {
+    type: 'event',
+    name: 'Initialized',
+    inputs: [
+      {
+        name: 'version',
+        type: 'uint64',
+        indexed: false,
+        internalType: 'uint64',
+      },
+    ],
+    anonymous: false,
+  },
+  {
+    type: 'error',
+    name: 'BaseCurve_AssetsExceedTotalAssets',
+    inputs: [],
+  },
+  {
+    type: 'error',
+    name: 'BaseCurve_AssetsOverflowMax',
+    inputs: [],
+  },
+  {
+    type: 'error',
+    name: 'BaseCurve_DomainExceeded',
+    inputs: [],
+  },
+  {
+    type: 'error',
+    name: 'BaseCurve_EmptyStringNotAllowed',
+    inputs: [],
+  },
+  {
+    type: 'error',
+    name: 'BaseCurve_SharesExceedTotalShares',
+    inputs: [],
+  },
+  {
+    type: 'error',
+    name: 'BaseCurve_SharesOverflowMax',
+    inputs: [],
+  },
+  {
+    type: 'error',
+    name: 'InvalidInitialization',
+    inputs: [],
+  },
+  {
+    type: 'error',
+    name: 'NotInitializing',
+    inputs: [],
+  },
+  {
+    type: 'error',
+    name: 'OffsetProgressiveCurve_InvalidSlope',
+    inputs: [],
+  },
+  {
+    type: 'error',
+    name: 'PRBMath_MulDiv18_Overflow',
+    inputs: [
+      {
+        name: 'x',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+      {
+        name: 'y',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
+  },
+  {
+    type: 'error',
+    name: 'PRBMath_MulDiv_Overflow',
+    inputs: [
+      {
+        name: 'x',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+      {
+        name: 'y',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+      {
+        name: 'denominator',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
+  },
+  {
+    type: 'error',
+    name: 'PRBMath_UD60x18_Sqrt_Overflow',
+    inputs: [
+      {
+        name: 'x',
+        type: 'uint256',
+        internalType: 'UD60x18',
+      },
+    ],
   },
 ] as const

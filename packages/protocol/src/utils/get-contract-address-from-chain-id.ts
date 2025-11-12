@@ -3,7 +3,7 @@ import type { Address } from 'viem'
 import { intuitionDeployments } from '../deployments'
 
 export function getContractAddressFromChainId(
-  name: 'EthMultiVault' | 'BondingCurveRegistry' | 'OffsetProgressiveCurve',
+  name: 'MultiVault' | 'BondingCurveRegistry' | 'OffsetProgressiveCurve',
   chainId: number,
 ): Address {
   const address = intuitionDeployments[name]?.[chainId]

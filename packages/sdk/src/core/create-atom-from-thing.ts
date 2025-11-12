@@ -1,9 +1,9 @@
 import type { PinThingMutationVariables } from '@0xintuition/graphql'
 import {
-  createAtom,
-  createAtomCalculateBaseCost,
-  eventParseDeposited,
-  type CreateAtomConfig,
+  createAtoms,
+  eventParseAtomCreated,
+  getAtomCost,
+  type WriteConfig,
 } from '@0xintuition/protocol'
 
 import { toHex } from 'viem'
@@ -11,7 +11,7 @@ import { toHex } from 'viem'
 import { pinThing } from '../api/pin-thing'
 
 export async function createAtomFromThing(
-  config: CreateAtomConfig,
+  config: WriteConfig,
   data: PinThingMutationVariables,
   depositAmount?: bigint,
 ) {
@@ -21,21 +21,22 @@ export async function createAtomFromThing(
   }
 
   const { address: ethMultiVaultAddress, publicClient } = config
-  const atomBaseCost = await createAtomCalculateBaseCost({
+  const atomBaseCost = await getAtomCost({
     publicClient,
     address: ethMultiVaultAddress,
   })
 
-  const txHash = await createAtom(config, {
-    args: [toHex(uriRef)],
-    value: atomBaseCost + BigInt(depositAmount || 0),
+  const assets = atomBaseCost + BigInt(depositAmount || 0)
+  const txHash = await createAtoms(config, {
+    args: [[toHex(uriRef)], [assets]],
+    value: assets,
   })
 
   if (!txHash) {
     throw new Error('Failed to create atom onchain')
   }
 
-  const events = await eventParseDeposited(publicClient, txHash)
+  const events = await eventParseAtomCreated(publicClient, txHash)
 
   return {
     uri: uriRef,

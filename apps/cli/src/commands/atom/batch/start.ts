@@ -19,7 +19,7 @@ import {createPublicClient, createWalletClient, getAddress, http, type PublicCli
 import {privateKeyToAccount} from 'viem/accounts'
 
 import {getAccounts, getDefaultAccount, getDefaultNetwork} from '../../../config.js'
-import {base, baseSepolia, getNetworkByName} from '../../../networks.js'
+import {getNetworkByName, intuitionTestnet} from '../../../networks.js'
 
 // Define types for clarity
 type CsvRow = Record<string, string>
@@ -100,11 +100,7 @@ export default class BatchStart extends Command {
       .split(',')
       .map((id) => id.trim())
       .filter(Boolean)
-    // @DEV: This is a very hacky way to assign the "has tag" atom.
-    // Base: The Atom ID is 4.
-    // Base Sepolia: The Atom ID is 3.
-    // @TODO: It gets the job done, but fragile. It should probably be a constant in the protocol module.
-    const hasTagIdFromNetwork = atomConfig.walletClient.chain?.id === base.id ? 4 : 3
+    const hasTagIdFromNetwork = '0x49487b1d5bf2734d497d6d9cfcd72cdfbaefb4d4f03ddc310398b24639173c9d'
     const hasTagId = Array.from({length: vaultIds.length}).fill(hasTagIdFromNetwork)
 
     for (const listIdValue of listIds) {
@@ -256,7 +252,7 @@ export default class BatchStart extends Command {
     for (let j = 0; j < allRows.length && idx < batch.length; j++) {
       const row = allRows[j]
       if ((!row.vaultId || row.vaultId.trim() === '') && row.address && batchInput.includes(getAddress(row.address))) {
-        row.vaultId = state[idx]?.vaultId?.toString?.() || ''
+        row.vaultId = state[idx]?.termId?.toString?.() || ''
         vaultIds.push(row.vaultId)
         this.log(chalk.green(`✅ Created atom for address: ${row.address} (VaultId: ${row.vaultId})`))
         idx++
@@ -300,7 +296,7 @@ export default class BatchStart extends Command {
     for (let j = 0; j < allRows.length && idx < batch.length; j++) {
       const row = allRows[j]
       if ((!row.vaultId || row.vaultId.trim() === '') && row.ipfsUri && batchInput.includes(row.ipfsUri)) {
-        row.vaultId = state[idx]?.vaultId?.toString?.() || ''
+        row.vaultId = state[idx]?.termId?.toString?.() || ''
         vaultIds.push(row.vaultId)
         this.log(chalk.green(`✅ Created atom for IPFS URI: ${row.ipfsUri} (VaultId: ${row.vaultId})`))
         idx++
@@ -352,7 +348,7 @@ export default class BatchStart extends Command {
         row.chainId &&
         batchInput.some((input) => input.address === getAddress(row.address) && input.chainId === Number(row.chainId))
       ) {
-        row.vaultId = state[idx]?.vaultId?.toString?.() || ''
+        row.vaultId = state[idx]?.termId?.toString?.() || ''
         vaultIds.push(row.vaultId)
         this.log(
           chalk.green(
@@ -409,7 +405,7 @@ export default class BatchStart extends Command {
         row.name &&
         batchInput.some((input) => input.name === row.name)
       ) {
-        row.vaultId = state[idx]?.vaultId?.toString?.() || ''
+        row.vaultId = state[idx]?.termId?.toString?.() || ''
         if ('ipfsUri' in row && uris && uris[idx]) {
           row.ipfsUri = uris[idx]
         }
@@ -429,11 +425,11 @@ export default class BatchStart extends Command {
   // #region Private Helper Methods
   private async setupClients(networkFlag?: string): Promise<ClientSetup | undefined> {
     // 1. Determine and validate network
-    const networkName = networkFlag || getDefaultNetwork() || 'base'
+    const networkName = networkFlag || getDefaultNetwork() || 'intuition-testnet'
     const network = getNetworkByName(networkName)
     if (!network) {
       this.log(chalk.red(`❌ Unsupported network: ${networkName}`))
-      this.log(chalk.gray('Supported: base, base-sepolia'))
+      this.log(chalk.gray('Supported: intuition, intuition-testnet'))
       return
     }
 
@@ -454,7 +450,7 @@ export default class BatchStart extends Command {
 
     // 3. Create Viem clients
     const account = privateKeyToAccount(defaultAccount.privateKey as `0x${string}`)
-    const chain = network.id === base.id ? base : baseSepolia
+    const chain = network.id === intuitionTestnet.id ? intuitionTestnet : intuitionTestnet
     const walletClient = createWalletClient({
       account,
       chain,
@@ -463,7 +459,7 @@ export default class BatchStart extends Command {
     const publicClient = createPublicClient({chain, transport: http()})
 
     // 4. Get contract address
-    const contractAddress = intuitionDeployments.EthMultiVault?.[network.id]
+    const contractAddress = intuitionDeployments.MultiVault?.[network.id]
     if (!contractAddress) {
       this.log(chalk.red(`❌ No contract deployment found for network: ${network.name}`))
       return

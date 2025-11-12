@@ -1,16 +1,20 @@
 import { describe, expect, it } from 'vitest'
 
-import { getAtom, getTriple, pinThing } from '../src'
+import { getAtomDetails, getTripleDetails, pinThing } from '../src'
 
 describe('Reads', () => {
   it('atom', async () => {
-    const data = await getAtom('124862')
-    expect(data?.label).toEqual('Uniswap')
-  })
+    const data = await getAtomDetails(
+      '0x114fab7e1612bf18692e9c9ef913f149cbe9fb06ce6c236642f062180004bb29',
+    )
+    expect(data?.label).toEqual('Arbitrum Ecosystem')
+  }, 60000)
 
   it('triple', async () => {
-    const data = await getTriple('54670')
-    expect(data?.object.label).toEqual('Web3 Analytics Tool')
+    const data = await getTripleDetails(
+      '0x3ace992ee16ac3902c0ee6330165de2a1024b569e78bc96e0c413aa2a608e051',
+    )
+    expect(data?.object?.label).toEqual('Arbitrum Ecosystem')
   }, 60000)
 })
 

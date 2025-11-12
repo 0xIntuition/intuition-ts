@@ -26,5 +26,5 @@ export const PRIVATE_KEYS = [
 ] as const
 
 // Named accounts
-export const [ALICE, BOB] = ACCOUNTS
-export const [ALICE_PK, BOB_PK] = PRIVATE_KEYS
+export const [ALICE, BOB, CAROL] = ACCOUNTS
+export const [ALICE_PK, BOB_PK, CAROL_PK] = PRIVATE_KEYS

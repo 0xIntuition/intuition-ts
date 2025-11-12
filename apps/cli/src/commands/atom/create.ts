@@ -9,7 +9,7 @@ import {privateKeyToAccount} from 'viem/accounts'
 import {z} from 'zod'
 
 import {getAccounts, getDefaultAccount, getDefaultNetwork} from '../../config.js'
-import {base, baseSepolia, getNetworkByName} from '../../networks.js'
+import {getNetworkByName, intuitionTestnet} from '../../networks.js'
 
 const AddressSchema = z.string().regex(/^0x[a-fA-F0-9]{40}$/, 'Invalid Ethereum address format')
 const IpfsUriSchema = z.string().regex(/^ipfs:\/\/[a-zA-Z0-9]+/, 'Invalid IPFS URI format (must start with ipfs://)')
@@ -23,7 +23,7 @@ export default class AtomCreate extends Command {
       required: false,
     }),
     network: Flags.string({
-      description: 'Target network (base, base-sepolia)',
+      description: 'Target network (intuition, intuition-testnet)',
       required: false,
     }),
   }
@@ -32,11 +32,11 @@ export default class AtomCreate extends Command {
     const {flags} = await this.parse(AtomCreate)
     try {
       // Determine network
-      const networkName = flags.network || getDefaultNetwork() || 'base'
+      const networkName = flags.network || getDefaultNetwork() || 'intuition-testnet'
       const network = getNetworkByName(networkName)
       if (!network) {
         this.log(chalk.red(`❌ Unsupported network: ${networkName}`))
-        this.log(chalk.gray('Supported: base, base-sepolia'))
+        this.log(chalk.gray('Supported: intuition, intuition-testnet'))
         return
       }
 
@@ -57,7 +57,7 @@ export default class AtomCreate extends Command {
 
       // Create public and wallet clients
       const account = privateKeyToAccount(defaultAccount.privateKey as `0x${string}`)
-      const chain = network.id === 8453 ? base : baseSepolia
+      const chain = network.id === 13_579 ? intuitionTestnet : intuitionTestnet
       const walletClient = createWalletClient({
         account,
         chain,
@@ -72,7 +72,7 @@ export default class AtomCreate extends Command {
 
       // Get contract address
       const chainId = network.id
-      const contractAddress = intuitionDeployments.EthMultiVault?.[chainId]
+      const contractAddress = intuitionDeployments.MultiVault?.[chainId]
       if (!contractAddress) {
         this.log(chalk.red(`❌ No contract deployment found for network: ${network.name}`))
         return
@@ -132,9 +132,7 @@ export default class AtomCreate extends Command {
         this.log(chalk.cyan(`Transaction Hash: ${result.transactionHash}`))
         this.log(chalk.cyan(`URI: ${result.uri}`))
         if (result.state) {
-          this.log(chalk.cyan(`Vault ID: ${result.state[0].args.vaultId}`))
-          this.log(chalk.cyan(`Shares: ${result.state[0].args.sharesForReceiver}`))
-          this.log(chalk.cyan(`Entry Fee: ${result.state[0].args.entryFee}`))
+          this.log(chalk.cyan(`Term ID: ${result.state.termId}`))
         }
       } else if (atomType === 'ipfs-uri') {
         this.log(chalk.green('✅ Selected: IPFS URI'))
@@ -154,9 +152,7 @@ export default class AtomCreate extends Command {
         this.log(chalk.cyan(`Transaction Hash: ${result.transactionHash}`))
         this.log(chalk.cyan(`URI: ${result.uri}`))
         if (result.state) {
-          this.log(chalk.cyan(`Vault ID: ${result.state.vaultId}`))
-          this.log(chalk.cyan(`Shares: ${result.state.sharesForReceiver}`))
-          this.log(chalk.cyan(`Entry Fee: ${result.state.entryFee}`))
+          this.log(chalk.cyan(`Vault ID: ${result.state.termId}`))
         }
       }
     } catch (error) {

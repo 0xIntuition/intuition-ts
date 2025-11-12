@@ -1,31 +1,32 @@
 import {
-  batchCreateAtom,
-  createAtomCalculateBaseCost,
+  createAtoms,
   eventParseAtomCreated,
-  type CreateAtomConfig,
+  getAtomCost,
+  type WriteConfig,
 } from '@0xintuition/protocol'
 
-import type { Address } from 'viem'
+import { toHex, type Address } from 'viem'
 
 export async function batchCreateAtomsFromEthereumAccounts(
-  config: CreateAtomConfig,
+  config: WriteConfig,
   data: Address[],
   depositAmount?: bigint,
 ) {
   const { address, publicClient } = config
-  const atomBaseCost = await createAtomCalculateBaseCost({
+  const atomCost = await getAtomCost({
     publicClient,
     address,
   })
 
-  const depositAmountPerAccount = depositAmount
-    ? depositAmount * BigInt(data.length)
-    : 0n
-  const calculatedCost =
-    atomBaseCost * BigInt(data.length) + depositAmountPerAccount
+  const depositAmountPerAtom = depositAmount ? depositAmount : 0n
 
-  const txHash = await batchCreateAtom(config, {
-    args: [data],
+  const calculatedCost = (atomCost + depositAmountPerAtom) * BigInt(data.length)
+
+  const txHash = await createAtoms(config, {
+    args: [
+      data.map((i) => toHex(i)),
+      data.map(() => atomCost + depositAmountPerAtom),
+    ],
     value: calculatedCost,
   })
 

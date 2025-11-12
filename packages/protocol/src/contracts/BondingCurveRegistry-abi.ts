@@ -1,217 +1,598 @@
 export const BondingCurveRegistryAbi = [
   {
-    inputs: [{ internalType: 'address', name: '_admin', type: 'address' }],
-    stateMutability: 'nonpayable',
     type: 'constructor',
-  },
-  {
     inputs: [],
-    name: 'BondingCurveRegistry_CurveAlreadyExists',
-    type: 'error',
+    stateMutability: 'nonpayable',
   },
   {
+    type: 'function',
+    name: 'acceptOwnership',
     inputs: [],
-    name: 'BondingCurveRegistry_CurveNameNotUnique',
-    type: 'error',
+    outputs: [],
+    stateMutability: 'nonpayable',
   },
-  { inputs: [], name: 'BondingCurveRegistry_OnlyOwner', type: 'error' },
-  { inputs: [], name: 'BondingCurveRegistry_RequiresOwner', type: 'error' },
   {
-    anonymous: false,
+    type: 'function',
+    name: 'addBondingCurve',
     inputs: [
       {
-        indexed: true,
+        name: 'bondingCurve',
+        type: 'address',
+        internalType: 'address',
+      },
+    ],
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    name: 'convertToAssets',
+    inputs: [
+      {
+        name: 'shares',
+        type: 'uint256',
         internalType: 'uint256',
+      },
+      {
+        name: 'totalShares',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+      {
+        name: 'totalAssets',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+      {
+        name: 'id',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
+    outputs: [
+      {
+        name: 'assets',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'convertToShares',
+    inputs: [
+      {
+        name: 'assets',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+      {
+        name: 'totalAssets',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+      {
+        name: 'totalShares',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+      {
+        name: 'id',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
+    outputs: [
+      {
+        name: 'shares',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'count',
+    inputs: [],
+    outputs: [
+      {
+        name: '',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'currentPrice',
+    inputs: [
+      {
+        name: 'id',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+      {
+        name: 'totalShares',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+      {
+        name: 'totalAssets',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
+    outputs: [
+      {
+        name: 'sharePrice',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'curveAddresses',
+    inputs: [
+      {
         name: 'curveId',
         type: 'uint256',
+        internalType: 'uint256',
       },
+    ],
+    outputs: [
       {
-        indexed: true,
-        internalType: 'address',
         name: 'curveAddress',
         type: 'address',
+        internalType: 'address',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'curveIds',
+    inputs: [
+      {
+        name: 'curveAddress',
+        type: 'address',
+        internalType: 'address',
+      },
+    ],
+    outputs: [
+      {
+        name: 'curveId',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'getCurveMaxAssets',
+    inputs: [
+      {
+        name: 'id',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
+    outputs: [
+      {
+        name: 'maxAssets',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'getCurveMaxShares',
+    inputs: [
+      {
+        name: 'id',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
+    outputs: [
+      {
+        name: 'maxShares',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'getCurveName',
+    inputs: [
+      {
+        name: 'id',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
+    outputs: [
+      {
+        name: 'name',
+        type: 'string',
+        internalType: 'string',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'initialize',
+    inputs: [
+      {
+        name: '_admin',
+        type: 'address',
+        internalType: 'address',
+      },
+    ],
+    outputs: [],
+    stateMutability: 'nonpayable',
+  },
+  {
+    type: 'function',
+    name: 'isCurveIdValid',
+    inputs: [
+      {
+        name: 'id',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
+    outputs: [
+      {
+        name: 'valid',
+        type: 'bool',
+        internalType: 'bool',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'owner',
+    inputs: [],
+    outputs: [
+      {
+        name: '',
+        type: 'address',
+        internalType: 'address',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'pendingOwner',
+    inputs: [],
+    outputs: [
+      {
+        name: '',
+        type: 'address',
+        internalType: 'address',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'previewDeposit',
+    inputs: [
+      {
+        name: 'assets',
+        type: 'uint256',
+        internalType: 'uint256',
       },
       {
-        indexed: true,
-        internalType: 'string',
+        name: 'totalAssets',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+      {
+        name: 'totalShares',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+      {
+        name: 'id',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
+    outputs: [
+      {
+        name: 'shares',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'previewMint',
+    inputs: [
+      {
+        name: 'shares',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+      {
+        name: 'totalShares',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+      {
+        name: 'totalAssets',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+      {
+        name: 'id',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
+    outputs: [
+      {
+        name: 'assets',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'previewRedeem',
+    inputs: [
+      {
+        name: 'shares',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+      {
+        name: 'totalShares',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+      {
+        name: 'totalAssets',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+      {
+        name: 'id',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
+    outputs: [
+      {
+        name: 'assets',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'previewWithdraw',
+    inputs: [
+      {
+        name: 'assets',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+      {
+        name: 'totalAssets',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+      {
+        name: 'totalShares',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+      {
+        name: 'id',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
+    outputs: [
+      {
+        name: 'shares',
+        type: 'uint256',
+        internalType: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+  },
+  {
+    type: 'function',
+    name: 'registeredCurveNames',
+    inputs: [
+      {
         name: 'curveName',
         type: 'string',
+        internalType: 'string',
       },
     ],
-    name: 'BondingCurveAdded',
-    type: 'event',
+    outputs: [
+      {
+        name: 'registered',
+        type: 'bool',
+        internalType: 'bool',
+      },
+    ],
+    stateMutability: 'view',
   },
   {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: 'address',
-        name: 'oldAdmin',
-        type: 'address',
-      },
-      {
-        indexed: true,
-        internalType: 'address',
-        name: 'newAdmin',
-        type: 'address',
-      },
-    ],
-    name: 'OwnershipTransferred',
-    type: 'event',
-  },
-  {
-    inputs: [
-      { internalType: 'address', name: 'bondingCurve', type: 'address' },
-    ],
-    name: 'addBondingCurve',
+    type: 'function',
+    name: 'renounceOwnership',
+    inputs: [],
     outputs: [],
     stateMutability: 'nonpayable',
-    type: 'function',
   },
   {
-    inputs: [],
-    name: 'admin',
-    outputs: [{ internalType: 'address', name: '', type: 'address' }],
-    stateMutability: 'view',
     type: 'function',
-  },
-  {
-    inputs: [
-      { internalType: 'uint256', name: 'shares', type: 'uint256' },
-      { internalType: 'uint256', name: 'totalShares', type: 'uint256' },
-      { internalType: 'uint256', name: 'totalAssets', type: 'uint256' },
-      { internalType: 'uint256', name: 'id', type: 'uint256' },
-    ],
-    name: 'convertToAssets',
-    outputs: [{ internalType: 'uint256', name: 'assets', type: 'uint256' }],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      { internalType: 'uint256', name: 'assets', type: 'uint256' },
-      { internalType: 'uint256', name: 'totalAssets', type: 'uint256' },
-      { internalType: 'uint256', name: 'totalShares', type: 'uint256' },
-      { internalType: 'uint256', name: 'id', type: 'uint256' },
-    ],
-    name: 'convertToShares',
-    outputs: [{ internalType: 'uint256', name: 'shares', type: 'uint256' }],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'count',
-    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      { internalType: 'uint256', name: 'totalShares', type: 'uint256' },
-      { internalType: 'uint256', name: 'id', type: 'uint256' },
-    ],
-    name: 'currentPrice',
-    outputs: [{ internalType: 'uint256', name: 'sharePrice', type: 'uint256' }],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
-    name: 'curveAddresses',
-    outputs: [{ internalType: 'address', name: '', type: 'address' }],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [{ internalType: 'address', name: '', type: 'address' }],
-    name: 'curveIds',
-    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [{ internalType: 'uint256', name: 'id', type: 'uint256' }],
-    name: 'getCurveMaxAssets',
-    outputs: [{ internalType: 'uint256', name: 'maxAssets', type: 'uint256' }],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [{ internalType: 'uint256', name: 'id', type: 'uint256' }],
-    name: 'getCurveMaxShares',
-    outputs: [{ internalType: 'uint256', name: 'maxShares', type: 'uint256' }],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [{ internalType: 'uint256', name: 'id', type: 'uint256' }],
-    name: 'getCurveName',
-    outputs: [{ internalType: 'string', name: 'name', type: 'string' }],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      { internalType: 'uint256', name: 'assets', type: 'uint256' },
-      { internalType: 'uint256', name: 'totalAssets', type: 'uint256' },
-      { internalType: 'uint256', name: 'totalShares', type: 'uint256' },
-      { internalType: 'uint256', name: 'id', type: 'uint256' },
-    ],
-    name: 'previewDeposit',
-    outputs: [{ internalType: 'uint256', name: 'shares', type: 'uint256' }],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      { internalType: 'uint256', name: 'shares', type: 'uint256' },
-      { internalType: 'uint256', name: 'totalShares', type: 'uint256' },
-      { internalType: 'uint256', name: 'totalAssets', type: 'uint256' },
-      { internalType: 'uint256', name: 'id', type: 'uint256' },
-    ],
-    name: 'previewMint',
-    outputs: [{ internalType: 'uint256', name: 'assets', type: 'uint256' }],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      { internalType: 'uint256', name: 'shares', type: 'uint256' },
-      { internalType: 'uint256', name: 'totalShares', type: 'uint256' },
-      { internalType: 'uint256', name: 'totalAssets', type: 'uint256' },
-      { internalType: 'uint256', name: 'id', type: 'uint256' },
-    ],
-    name: 'previewRedeem',
-    outputs: [{ internalType: 'uint256', name: 'assets', type: 'uint256' }],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      { internalType: 'uint256', name: 'assets', type: 'uint256' },
-      { internalType: 'uint256', name: 'totalAssets', type: 'uint256' },
-      { internalType: 'uint256', name: 'totalShares', type: 'uint256' },
-      { internalType: 'uint256', name: 'id', type: 'uint256' },
-    ],
-    name: 'previewWithdraw',
-    outputs: [{ internalType: 'uint256', name: 'shares', type: 'uint256' }],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [{ internalType: 'string', name: '', type: 'string' }],
-    name: 'registeredCurveNames',
-    outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [{ internalType: 'address', name: 'newOwner', type: 'address' }],
     name: 'transferOwnership',
+    inputs: [
+      {
+        name: 'newOwner',
+        type: 'address',
+        internalType: 'address',
+      },
+    ],
     outputs: [],
     stateMutability: 'nonpayable',
-    type: 'function',
+  },
+  {
+    type: 'event',
+    name: 'BondingCurveAdded',
+    inputs: [
+      {
+        name: 'curveId',
+        type: 'uint256',
+        indexed: true,
+        internalType: 'uint256',
+      },
+      {
+        name: 'curveAddress',
+        type: 'address',
+        indexed: true,
+        internalType: 'address',
+      },
+      {
+        name: 'curveName',
+        type: 'string',
+        indexed: true,
+        internalType: 'string',
+      },
+    ],
+    anonymous: false,
+  },
+  {
+    type: 'event',
+    name: 'Initialized',
+    inputs: [
+      {
+        name: 'version',
+        type: 'uint64',
+        indexed: false,
+        internalType: 'uint64',
+      },
+    ],
+    anonymous: false,
+  },
+  {
+    type: 'event',
+    name: 'OwnershipTransferStarted',
+    inputs: [
+      {
+        name: 'previousOwner',
+        type: 'address',
+        indexed: true,
+        internalType: 'address',
+      },
+      {
+        name: 'newOwner',
+        type: 'address',
+        indexed: true,
+        internalType: 'address',
+      },
+    ],
+    anonymous: false,
+  },
+  {
+    type: 'event',
+    name: 'OwnershipTransferred',
+    inputs: [
+      {
+        name: 'previousOwner',
+        type: 'address',
+        indexed: true,
+        internalType: 'address',
+      },
+      {
+        name: 'newOwner',
+        type: 'address',
+        indexed: true,
+        internalType: 'address',
+      },
+    ],
+    anonymous: false,
+  },
+  {
+    type: 'error',
+    name: 'BondingCurveRegistry_CurveAlreadyExists',
+    inputs: [],
+  },
+  {
+    type: 'error',
+    name: 'BondingCurveRegistry_CurveNameNotUnique',
+    inputs: [],
+  },
+  {
+    type: 'error',
+    name: 'BondingCurveRegistry_EmptyCurveName',
+    inputs: [],
+  },
+  {
+    type: 'error',
+    name: 'BondingCurveRegistry_InvalidCurveId',
+    inputs: [],
+  },
+  {
+    type: 'error',
+    name: 'BondingCurveRegistry_ZeroAddress',
+    inputs: [],
+  },
+  {
+    type: 'error',
+    name: 'InvalidInitialization',
+    inputs: [],
+  },
+  {
+    type: 'error',
+    name: 'NotInitializing',
+    inputs: [],
+  },
+  {
+    type: 'error',
+    name: 'OwnableInvalidOwner',
+    inputs: [
+      {
+        name: 'owner',
+        type: 'address',
+        internalType: 'address',
+      },
+    ],
+  },
+  {
+    type: 'error',
+    name: 'OwnableUnauthorizedAccount',
+    inputs: [
+      {
+        name: 'account',
+        type: 'address',
+        internalType: 'address',
+      },
+    ],
   },
 ] as const

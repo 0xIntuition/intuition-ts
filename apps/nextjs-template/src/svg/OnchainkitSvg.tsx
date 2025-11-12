@@ -49,5 +49,5 @@ export default function OnchainkitSvg() {
         fill="black"
       />
     </svg>
-  );
+  )
 }

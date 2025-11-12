@@ -55,7 +55,7 @@ query GetTriplesCount($where: triples_bool_exp) {
   }
 }
 
-query GetTriple($tripleId: numeric!) {
+query GetTriple($tripleId: String!) {
   triple(term_id: $tripleId) {
     ...TripleMetadata
     ...TripleTxn
@@ -135,8 +135,12 @@ query GetTriplesWithPositions(
   }
 }
 
-query FindTriples($where: triples_bool_exp = {}, $address: String!) {
-  triples(where: $where) {
+query FindTriples(
+  $where: triples_bool_exp = {}
+  $address: String!
+  $limit: Int = 100
+) {
+  triples(where: $where, limit: $limit) {
     term_id
     subject_id
     predicate_id

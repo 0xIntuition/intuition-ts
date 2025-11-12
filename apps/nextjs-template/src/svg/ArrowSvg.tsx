@@ -14,5 +14,5 @@ export default function ArrowSvg() {
         fill="#0A0B0D"
       />
     </svg>
-  );
+  )
 }

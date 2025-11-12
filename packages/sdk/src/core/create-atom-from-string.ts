@@ -1,14 +1,14 @@
 import {
-  createAtom,
-  createAtomCalculateBaseCost,
-  eventParseDeposited,
-  type CreateAtomConfig,
+  createAtoms,
+  eventParseAtomCreated,
+  getAtomCost,
+  type WriteConfig,
 } from '@0xintuition/protocol'
 
 import { toHex } from 'viem'
 
 export async function createAtomFromString(
-  config: CreateAtomConfig,
+  config: WriteConfig,
   data: `${string}`,
   depositAmount?: bigint,
 ) {
@@ -17,21 +17,22 @@ export async function createAtomFromString(
   }
 
   const { address, publicClient } = config
-  const atomBaseCost = await createAtomCalculateBaseCost({
+  const atomBaseCost = await getAtomCost({
     publicClient,
     address,
   })
 
-  const txHash = await createAtom(config, {
-    args: [toHex(data)],
-    value: atomBaseCost + BigInt(depositAmount || 0),
+  const assets = atomBaseCost + BigInt(depositAmount || 0)
+  const txHash = await createAtoms(config, {
+    args: [[toHex(data)], [assets]],
+    value: assets,
   })
 
   if (!txHash) {
     throw new Error('Failed to create atom onchain')
   }
 
-  const events = await eventParseDeposited(publicClient, txHash)
+  const events = await eventParseAtomCreated(publicClient, txHash)
 
   return {
     uri: data,
