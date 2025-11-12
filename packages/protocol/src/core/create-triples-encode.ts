@@ -1,4 +1,5 @@
-import { Hex, encodeFunctionData } from 'viem'
+import { encodeFunctionData, Hex } from 'viem'
+
 import { MultiVaultAbi } from '../contracts'
 
 export function createTriplesEncode(

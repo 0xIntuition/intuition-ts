@@ -1,4 +1,5 @@
 import { encodeFunctionData, type Hex } from 'viem'
+
 import { MultiVaultAbi } from '../contracts'
 
 export function createAtomsEncode(data: Hex[], assets: bigint[]) {

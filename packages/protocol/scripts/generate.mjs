@@ -1,6 +1,7 @@
 import fs from 'fs'
 
 import obj from './EthMultiVault.json' assert { type: 'json' }
+
 const abi = obj.abi
 const bytecode = obj.bytecode.object
 

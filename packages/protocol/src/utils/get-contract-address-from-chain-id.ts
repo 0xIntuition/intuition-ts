@@ -1,4 +1,5 @@
 import type { Address } from 'viem'
+
 import { intuitionDeployments } from '../deployments'
 
 export function getContractAddressFromChainId(

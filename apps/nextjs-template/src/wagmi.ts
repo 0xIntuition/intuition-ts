@@ -1,21 +1,24 @@
-'use client';
-import { connectorsForWallets } from '@rainbow-me/rainbowkit';
+'use client'
+
+import { useMemo } from 'react'
+
+import { connectorsForWallets } from '@rainbow-me/rainbowkit'
 import {
   coinbaseWallet,
   metaMaskWallet,
   rainbowWallet,
-} from '@rainbow-me/rainbowkit/wallets';
-import { useMemo } from 'react';
-import { createConfig, http } from 'wagmi';
-import { base, baseSepolia } from 'wagmi/chains';
-import { NEXT_PUBLIC_WC_PROJECT_ID } from './config';
+} from '@rainbow-me/rainbowkit/wallets'
+import { createConfig, http } from 'wagmi'
+import { base, baseSepolia } from 'wagmi/chains'
+
+import { NEXT_PUBLIC_WC_PROJECT_ID } from './config'
 
 export function useWagmiConfig() {
-  const projectId = NEXT_PUBLIC_WC_PROJECT_ID ?? '';
+  const projectId = NEXT_PUBLIC_WC_PROJECT_ID ?? ''
   if (!projectId) {
     const providerErrMessage =
-      'To connect to all Wallets you need to provide a NEXT_PUBLIC_WC_PROJECT_ID env variable';
-    throw new Error(providerErrMessage);
+      'To connect to all Wallets you need to provide a NEXT_PUBLIC_WC_PROJECT_ID env variable'
+    throw new Error(providerErrMessage)
   }
 
   return useMemo(() => {
@@ -34,7 +37,7 @@ export function useWagmiConfig() {
         appName: 'Intuition Systems',
         projectId,
       },
-    );
+    )
 
     const wagmiConfig = createConfig({
       chains: [base, baseSepolia],
@@ -46,8 +49,8 @@ export function useWagmiConfig() {
         [base.id]: http(),
         [baseSepolia.id]: http(),
       },
-    });
+    })
 
-    return wagmiConfig;
-  }, [projectId]);
+    return wagmiConfig
+  }, [projectId])
 }
