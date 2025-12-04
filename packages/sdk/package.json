@@ -29,7 +29,8 @@
     "format": "prettier --check \"src/**/*.{ts,tsx,js,jsx,json,md}\"",
     "format:fix": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json,md}\"",
     "generate": "node ./scripts/generate.mjs",
-    "test": "vitest"
+    "test": "pnpm with-env vitest",
+    "with-env": "dotenv -e ../../.env --"
   },
   "repository": {
     "type": "git",
@@ -49,6 +50,7 @@
   },
   "devDependencies": {
     "@viem/anvil": "^0.0.10",
+    "dotenv": "^16.5.0",
     "tsup": "^6.7.0",
     "typescript": "^5.4.5",
     "viem": "^2.31.4",
