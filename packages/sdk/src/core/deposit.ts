@@ -1,23 +1,18 @@
 import {
   eventParseDeposited,
-  multiVaultDepositBatch,
-  type DepositBatchInputs,
+  multiVaultDeposit,
+  type DepositInputs,
   type WriteConfig,
 } from '@0xintuition/protocol'
 
-export async function batchDeposit(
+export async function deposit(
   config: WriteConfig,
-  data: DepositBatchInputs['args'],
+  data: DepositInputs['args'],
 ) {
   const { publicClient } = config
 
-  const txHash = await multiVaultDepositBatch(config, {
+  const txHash = await multiVaultDeposit(config, {
     args: data,
-    value: data[4].reduce(
-      (sum: number | bigint, item: number | bigint) =>
-        BigInt(sum) + BigInt(item),
-      0n,
-    ),
   })
 
   if (!txHash) {

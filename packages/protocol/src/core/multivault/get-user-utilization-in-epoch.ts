@@ -3,7 +3,7 @@ import type { ContractFunctionArgs } from 'viem'
 import { MultiVaultAbi } from '../../contracts'
 import type { ReadConfig } from '../../types'
 
-export async function getUserUtilizationInEpoch(
+export async function multiVaultGetUserUtilizationInEpoch(
   config: ReadConfig,
   inputs: {
     args: ContractFunctionArgs<

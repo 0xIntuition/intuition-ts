@@ -1,7 +1,7 @@
 import {
-  createAtoms,
   eventParseAtomCreated,
-  getAtomCost,
+  multiVaultCreateAtoms,
+  multiVaultGetAtomCost,
   type WriteConfig,
 } from '@0xintuition/protocol'
 
@@ -16,7 +16,7 @@ export async function batchCreateAtomsFromSmartContracts(
   depositAmount?: bigint,
 ) {
   const { address, publicClient } = config
-  const atomCost = await getAtomCost({
+  const atomCost = await multiVaultGetAtomCost({
     publicClient,
     address,
   })
@@ -31,7 +31,7 @@ export async function batchCreateAtomsFromSmartContracts(
     results.push(toHex(uriRef))
   }
 
-  const txHash = await createAtoms(config, {
+  const txHash = await multiVaultCreateAtoms(config, {
     args: [results, data.map(() => atomCost + depositAmountPerAtom)],
     value: calculatedCost,
   })

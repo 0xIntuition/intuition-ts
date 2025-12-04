@@ -1,7 +1,7 @@
 import { MultiVaultAbi } from '../../contracts'
 import type { ReadConfig } from '../../types'
 
-export async function getGeneralConfig(config: ReadConfig) {
+export async function multiVaultGetGeneralConfig(config: ReadConfig) {
   const { address, publicClient } = config
 
   return await publicClient.readContract({

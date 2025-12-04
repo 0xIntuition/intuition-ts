@@ -2,7 +2,7 @@ import { encodeFunctionData, Hex } from 'viem'
 
 import { MultiVaultAbi } from '../../contracts'
 
-export function createTriplesEncode(
+export function multiVaultCreateTriplesEncode(
   subjectIds: Hex[],
   predicateIds: Hex[],
   objectIds: Hex[],

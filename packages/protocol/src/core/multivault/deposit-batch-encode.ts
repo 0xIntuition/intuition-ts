@@ -2,7 +2,7 @@ import { encodeFunctionData, type Address, type Hex } from 'viem'
 
 import { MultiVaultAbi } from '../../contracts'
 
-export function depositBatchEncode(
+export function multiVaultDepositBatchEncode(
   receiver: Address,
   termId: Hex[],
   curveId: bigint[],

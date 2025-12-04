@@ -14,10 +14,10 @@ import {
   type SearchPositionsQueryVariables,
 } from '@0xintuition/graphql'
 import {
-  createAtoms,
-  createTriples,
-  depositBatch,
-  multiCallIntuitionConfigs,
+  multiVaultCreateAtoms,
+  multiVaultCreateTriples,
+  multiVaultDepositBatch,
+  multiVaultMultiCallIntuitionConfigs,
 } from '@0xintuition/protocol'
 
 import {
@@ -383,7 +383,7 @@ export async function sync(
     `✅ Found ${searchResult.length} existing atoms, ${nonExistingAtoms.length} need to be created`,
   )
 
-  const multivaultConfig = await multiCallIntuitionConfigs(config)
+  const multivaultConfig = await multiVaultMultiCallIntuitionConfigs(config)
 
   // Calculate costs for atoms
   const assetsPerAtom =
@@ -411,7 +411,7 @@ export async function sync(
           `⚛️  Creating atoms batch ${i + 1}/${atomChunks.length} (${chunk.length} atoms)...`,
         )
 
-        const txHash = await createAtoms(config, {
+        const txHash = await multiVaultCreateAtoms(config, {
           args: [
             chunk.map((data) => toHex(data)),
             chunk.map(() => assetsPerAtom),
@@ -518,7 +518,7 @@ export async function sync(
           `🔗 Creating triples batch ${i + 1}/${tripleChunks.length} (${chunk.length} triples)...`,
         )
 
-        const triple_tx_hash = await createTriples(config, {
+        const triple_tx_hash = await multiVaultCreateTriples(config, {
           args: [
             chunk.map((t) => t[0]),
             chunk.map((t) => t[1]),
@@ -598,7 +598,7 @@ export async function sync(
 
         const termIds = chunk.map((triple) => triple.term_id as Hex)
 
-        const depositTxHash = await depositBatch(config, {
+        const depositTxHash = await multiVaultDepositBatch(config, {
           args: [
             config.walletClient.account.address, // receiver
             termIds, // termIds

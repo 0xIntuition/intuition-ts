@@ -7,7 +7,7 @@ export type PreviewAtomCreateInputs = {
   args: ContractFunctionArgs<typeof MultiVaultAbi, 'view', 'previewAtomCreate'>
 }
 
-export async function previewAtomCreate(
+export async function multiVaultPreviewAtomCreate(
   config: WriteConfig,
   inputs: PreviewAtomCreateInputs,
 ) {

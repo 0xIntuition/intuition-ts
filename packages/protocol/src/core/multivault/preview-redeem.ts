@@ -7,7 +7,7 @@ export type PreviewRedeemCurveInputs = {
   args: ContractFunctionArgs<typeof MultiVaultAbi, 'view', 'previewRedeem'>
 }
 
-export async function previewRedeem(
+export async function multiVaultPreviewRedeem(
   config: WriteConfig,
   inputs: PreviewRedeemCurveInputs,
 ) {

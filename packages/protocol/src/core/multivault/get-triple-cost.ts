@@ -1,7 +1,7 @@
 import { MultiVaultAbi } from '../../contracts'
 import { ReadConfig } from '../../types'
 
-export async function getTripleCost(config: ReadConfig) {
+export async function multiVaultGetTripleCost(config: ReadConfig) {
   const { address, publicClient } = config
 
   return await publicClient.readContract({

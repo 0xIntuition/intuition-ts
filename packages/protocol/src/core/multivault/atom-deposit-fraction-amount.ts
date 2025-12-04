@@ -3,7 +3,7 @@ import type { ContractFunctionArgs } from 'viem'
 import { MultiVaultAbi } from '../../contracts'
 import type { ReadConfig } from '../../types'
 
-export async function atomDepositFractionAmount(
+export async function multiVaultAtomDepositFractionAmount(
   config: ReadConfig,
   inputs: {
     args: ContractFunctionArgs<

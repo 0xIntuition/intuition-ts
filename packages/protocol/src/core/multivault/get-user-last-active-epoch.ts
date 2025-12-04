@@ -3,7 +3,7 @@ import type { ContractFunctionArgs } from 'viem'
 import { MultiVaultAbi } from '../../contracts'
 import type { ReadConfig } from '../../types'
 
-export async function getUserLastActiveEpoch(
+export async function multiVaultGetUserLastActiveEpoch(
   config: ReadConfig,
   inputs: {
     args: ContractFunctionArgs<

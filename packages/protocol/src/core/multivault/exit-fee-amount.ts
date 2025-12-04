@@ -3,7 +3,7 @@ import type { ContractFunctionArgs } from 'viem'
 import { MultiVaultAbi } from '../../contracts'
 import type { ReadConfig } from '../../types'
 
-export async function exitFeeAmount(
+export async function multiVaultExitFeeAmount(
   config: ReadConfig,
   inputs: {
     args: ContractFunctionArgs<typeof MultiVaultAbi, 'view', 'exitFeeAmount'>

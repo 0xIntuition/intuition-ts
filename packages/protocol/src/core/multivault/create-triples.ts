@@ -8,7 +8,7 @@ export type CreateTriplesInputs = {
   value?: bigint
 }
 
-export async function createTriples(
+export async function multiVaultCreateTriples(
   config: WriteConfig,
   inputs: CreateTriplesInputs,
 ) {

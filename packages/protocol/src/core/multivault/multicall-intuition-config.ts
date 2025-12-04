@@ -8,7 +8,7 @@ export type MultiCallIntuitionConfigs = {
   publicClient: PublicClient
 }
 
-export async function multiCallIntuitionConfigs(
+export async function multiVaultMultiCallIntuitionConfigs(
   config: MultiCallIntuitionConfigs,
 ) {
   const { address, publicClient } = config

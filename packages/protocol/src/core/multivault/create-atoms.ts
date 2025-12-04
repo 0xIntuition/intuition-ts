@@ -8,7 +8,7 @@ export type CreateAtomsInputs = {
   value?: bigint
 }
 
-export async function createAtoms(
+export async function multiVaultCreateAtoms(
   config: WriteConfig,
   inputs: CreateAtomsInputs,
 ) {

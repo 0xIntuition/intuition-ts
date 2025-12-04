@@ -3,7 +3,7 @@ import type { ContractFunctionArgs } from 'viem'
 import { MultiVaultAbi } from '../../contracts'
 import type { ReadConfig } from '../../types'
 
-export async function isTriple(
+export async function multiVaultIsTriple(
   config: ReadConfig,
   inputs: {
     args: ContractFunctionArgs<typeof MultiVaultAbi, 'view', 'isTriple'>

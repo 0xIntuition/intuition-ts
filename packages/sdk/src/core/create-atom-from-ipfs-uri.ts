@@ -1,7 +1,7 @@
 import {
-  createAtoms,
   eventParseAtomCreated,
-  getAtomCost,
+  multiVaultCreateAtoms,
+  multiVaultGetAtomCost,
   type WriteConfig,
 } from '@0xintuition/protocol'
 
@@ -17,12 +17,12 @@ export async function createAtomFromIpfsUri(
   }
 
   const { address: multivaultAddress, publicClient } = config
-  const atomBaseCost = await getAtomCost({
+  const atomBaseCost = await multiVaultGetAtomCost({
     publicClient,
     address: multivaultAddress,
   })
   const assets = atomBaseCost + BigInt(depositAmount || 0)
-  const txHash = await createAtoms(config, {
+  const txHash = await multiVaultCreateAtoms(config, {
     args: [[toHex(data)], [assets]],
     value: assets,
   })

@@ -1,7 +1,7 @@
 import {
-  createAtoms,
   eventParseAtomCreated,
-  getAtomCost,
+  multiVaultCreateAtoms,
+  multiVaultGetAtomCost,
   type WriteConfig,
 } from '@0xintuition/protocol'
 
@@ -13,7 +13,7 @@ export async function batchCreateAtomsFromEthereumAccounts(
   depositAmount?: bigint,
 ) {
   const { address, publicClient } = config
-  const atomCost = await getAtomCost({
+  const atomCost = await multiVaultGetAtomCost({
     publicClient,
     address,
   })
@@ -22,7 +22,7 @@ export async function batchCreateAtomsFromEthereumAccounts(
 
   const calculatedCost = (atomCost + depositAmountPerAtom) * BigInt(data.length)
 
-  const txHash = await createAtoms(config, {
+  const txHash = await multiVaultCreateAtoms(config, {
     args: [
       data.map((i) => toHex(i)),
       data.map(() => atomCost + depositAmountPerAtom),

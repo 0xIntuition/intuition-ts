@@ -8,7 +8,10 @@ export type DepositInputs = {
   value?: bigint
 }
 
-export async function deposit(config: WriteConfig, inputs: DepositInputs) {
+export async function multiVaultDeposit(
+  config: WriteConfig,
+  inputs: DepositInputs,
+) {
   const { address, walletClient, publicClient } = config
   const { args, value } = inputs
 

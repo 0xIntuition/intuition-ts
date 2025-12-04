@@ -7,7 +7,7 @@ export type PreviewDepositCurveInputs = {
   args: ContractFunctionArgs<typeof MultiVaultAbi, 'view', 'previewDeposit'>
 }
 
-export async function previewDeposit(
+export async function multiVaultPreviewDeposit(
   config: WriteConfig,
   inputs: PreviewDepositCurveInputs,
 ) {

@@ -7,7 +7,7 @@ export type RedeemBatchInputs = {
   args: ContractFunctionArgs<typeof MultiVaultAbi, 'nonpayable', 'redeemBatch'>
 }
 
-export async function redeemBatch(
+export async function multiVaultRedeemBatch(
   config: WriteConfig,
   inputs: RedeemBatchInputs,
 ) {

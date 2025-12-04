@@ -8,7 +8,7 @@ export type DepositBatchInputs = {
   value: bigint
 }
 
-export async function depositBatch(
+export async function multiVaultDepositBatch(
   config: WriteConfig,
   inputs: DepositBatchInputs,
 ) {

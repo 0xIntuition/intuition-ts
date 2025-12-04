@@ -1,8 +1,8 @@
 import type { PinThingMutationVariables } from '@0xintuition/graphql'
 import {
-  createAtoms,
   eventParseAtomCreated,
-  getAtomCost,
+  multiVaultCreateAtoms,
+  multiVaultGetAtomCost,
   type WriteConfig,
 } from '@0xintuition/protocol'
 
@@ -21,13 +21,13 @@ export async function createAtomFromThing(
   }
 
   const { address: ethMultiVaultAddress, publicClient } = config
-  const atomBaseCost = await getAtomCost({
+  const atomBaseCost = await multiVaultGetAtomCost({
     publicClient,
     address: ethMultiVaultAddress,
   })
 
   const assets = atomBaseCost + BigInt(depositAmount || 0)
-  const txHash = await createAtoms(config, {
+  const txHash = await multiVaultCreateAtoms(config, {
     args: [[toHex(uriRef)], [assets]],
     value: assets,
   })

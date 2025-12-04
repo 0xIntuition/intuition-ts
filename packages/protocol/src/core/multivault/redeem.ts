@@ -17,7 +17,10 @@ export type RedeemInputs = {
   args: ContractFunctionArgs<typeof MultiVaultAbi, 'nonpayable', 'redeem'>
 }
 
-export async function redeem(config: RedeemConfig, inputs: RedeemInputs) {
+export async function multiVaultRedeem(
+  config: RedeemConfig,
+  inputs: RedeemInputs,
+) {
   const { address, walletClient, publicClient } = config
   const { args } = inputs
 

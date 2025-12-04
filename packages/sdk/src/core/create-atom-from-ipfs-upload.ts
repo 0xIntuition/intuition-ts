@@ -1,7 +1,7 @@
 import {
-  createAtoms,
   eventParseDeposited,
-  getAtomCost,
+  multiVaultCreateAtoms,
+  multiVaultGetAtomCost,
   type WriteConfig,
 } from '@0xintuition/protocol'
 
@@ -20,12 +20,12 @@ export async function createAtomFromIpfsUpload(
 ) {
   const dataIpfs = await uploadJsonToPinata(config.pinataApiJWT, data)
   const { address: multivaultAddress, publicClient } = config
-  const atomBaseCost = await getAtomCost({
+  const atomBaseCost = await multiVaultGetAtomCost({
     publicClient,
     address: multivaultAddress,
   })
   const assets = atomBaseCost + BigInt(depositAmount || 0)
-  const txHash = await createAtoms(config, {
+  const txHash = await multiVaultCreateAtoms(config, {
     args: [[toHex(dataIpfs.IpfsHash)], [assets]],
     value: assets,
   })

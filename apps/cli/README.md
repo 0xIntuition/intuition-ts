@@ -14,6 +14,12 @@ To get started, install the Intuition CLI globally using npm:
 npm install -g intuition-cli
 ```
 
+Updating the CLI
+
+```sh-session
+npm install -g intuition-cli@latest
+```
+
 ## Usage
 
 Once installed, you can use the `intu` command to access the CLI's features. To see a list of available commands, run:
@@ -96,7 +102,7 @@ Atoms are the core of the Intuition protocol. You can create them one by one or 
   intu atom create [--network <NETWORK>] [--deposit <AMOUNT>]
   ```
   **Flags:**
-  - `--network <value>`: Target network (intuition, intuition-testnet) (optional)
+  - `--network <value>`: Target network (intuition, testnet) (optional)
   - `--deposit <value>`: Deposit amount in ETH (optional)
 
 ## Batch Atom Creation

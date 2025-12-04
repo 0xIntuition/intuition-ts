@@ -3,7 +3,7 @@ import type { ContractFunctionArgs } from 'viem'
 import { MultiVaultAbi } from '../../contracts'
 import type { ReadConfig } from '../../types'
 
-export async function triple(
+export async function multiVaultTriple(
   config: ReadConfig,
   inputs: {
     args: ContractFunctionArgs<typeof MultiVaultAbi, 'view', 'triple'>
