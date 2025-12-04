@@ -2,9 +2,6 @@
   "mode": "pre",
   "tag": "alpha",
   "initialVersions": {
-    "@intution/graphql": "2.0.0",
-    "@intution/protocol": "2.0.0",
-    "@intution/sdk": "2.0.0",
     "intuition-cli": "2.0.0-alpha.2",
     "@0xintuition/nextjs-template": "0.0.0",
     "@0xintuition/graphql": "2.0.0-alpha.4",

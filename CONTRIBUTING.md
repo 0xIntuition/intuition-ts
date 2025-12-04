@@ -11,7 +11,6 @@ If you need any help, feel free to reach out to [@0xintuition](https://twitter.c
 This repository is a monorepo.
 
 - We use [pnpm](https://pnpm.io) and [`workspaces`](https://pnpm.io/workspaces) for development.
-- We use [Nx](https://nx.dev/getting-started/intro) as our build system.
 - We use [changesets](https://github.com/changesets/changesets) for managing releases.
 
 ## Structure
@@ -65,36 +64,6 @@ git checkout -b my-new-branch
 ```bash
 pnpm install
 ```
-
-### Run a workspace
-
-You can use the `pnpm [WORKSPACE]:dev` command to start the development process for a workspace.
-
-#### Examples
-
-1. To run the `portal` web app:
-
-```bash
-pnpm portal:dev
-```
-
-2. To run the `1ui` storybook:
-
-```bash
-pnpm 1ui:storybook
-```
-
-## Documentation
-
-The documentation for this project is located in the `docs` workspace. You can run the documentation locally by running the following command:
-
-```bash
-pnpm docs
-```
-
-## Requests for new components
-
-If you have a request for a new component, please open a discussion on GitHub. We'll be happy to help you out.
 
 ## Testing
 
