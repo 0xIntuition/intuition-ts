@@ -2,11 +2,11 @@ import { isHex, keccak256, parseEther, toHex, type Address } from 'viem'
 import { beforeAll, describe, expect, it } from 'vitest'
 
 import {
-  createAtoms,
-  createTriples,
-  createTriplesEncode,
-  getTriple,
-  getTripleCost,
+  multiVaultCreateAtoms,
+  multiVaultCreateTriples,
+  multiVaultCreateTriplesEncode,
+  multiVaultGetTriple,
+  multiVaultGetTripleCost,
 } from '../src'
 import { calculateAtomId, calculateTripleId } from './helpers/calculate'
 import { deployAndInit } from './helpers/deploy-multivault'
@@ -19,7 +19,7 @@ beforeAll(async () => {
 }, 30000)
 
 describe('Triples', () => {
-  describe('createTriples', () => {
+  describe('multiVaultCreateTriples', () => {
     it('should create a new triple with valid atoms', async () => {
       const value = parseEther('100')
 
@@ -31,7 +31,7 @@ describe('Triples', () => {
       const predicateAtomId = calculateAtomId(predicateData)
       const objectAtomId = calculateAtomId(objectData)
 
-      const atomTxHash = await createAtoms(
+      const atomTxHash = await multiVaultCreateAtoms(
         {
           walletClient,
           publicClient,
@@ -47,7 +47,7 @@ describe('Triples', () => {
       )
       await publicClient.waitForTransactionReceipt({ hash: atomTxHash })
 
-      const txHash = await createTriples(
+      const txHash = await multiVaultCreateTriples(
         {
           walletClient,
           publicClient,
@@ -86,7 +86,7 @@ describe('Triples', () => {
       const predicateAtomId2 = calculateAtomId(predicateData2)
       const objectAtomId2 = calculateAtomId(objectData2)
 
-      const atomTxHash = await createAtoms(
+      const atomTxHash = await multiVaultCreateAtoms(
         {
           walletClient,
           publicClient,
@@ -109,7 +109,7 @@ describe('Triples', () => {
       )
       await publicClient.waitForTransactionReceipt({ hash: atomTxHash })
 
-      const txHash = await createTriples(
+      const txHash = await multiVaultCreateTriples(
         {
           walletClient,
           publicClient,
@@ -138,7 +138,7 @@ describe('Triples', () => {
       const objectAtomId = keccak256(toHex(`object ${Math.random()}`))
 
       await expect(
-        createTriples(
+        multiVaultCreateTriples(
           {
             walletClient,
             publicClient,
@@ -164,7 +164,7 @@ describe('Triples', () => {
       const objectAtomId = keccak256(toHex(`object ${Math.random()}`))
 
       await expect(
-        createTriples(
+        multiVaultCreateTriples(
           {
             walletClient,
             publicClient,
@@ -190,7 +190,7 @@ describe('Triples', () => {
       const objectAtomId = keccak256(toHex(`object ${Math.random()}`))
 
       await expect(
-        createTriples(
+        multiVaultCreateTriples(
           {
             walletClient,
             publicClient,
@@ -210,14 +210,14 @@ describe('Triples', () => {
     })
   })
 
-  describe('createTriplesEncode', () => {
+  describe('multiVaultCreateTriplesEncode', () => {
     it('should encode single triple creation', () => {
       const value = parseEther('100')
       const subjectAtomId = keccak256(toHex(`subject ${Math.random()}`))
       const predicateAtomId = keccak256(toHex(`predicate ${Math.random()}`))
       const objectAtomId = keccak256(toHex(`object ${Math.random()}`))
 
-      const encoded = createTriplesEncode(
+      const encoded = multiVaultCreateTriplesEncode(
         [subjectAtomId],
         [predicateAtomId],
         [objectAtomId],
@@ -237,7 +237,7 @@ describe('Triples', () => {
       const predicateAtomId = keccak256(toHex(`predicate ${Math.random()}`))
       const objectAtomId = keccak256(toHex(`object ${Math.random()}`))
 
-      const encoded = createTriplesEncode(
+      const encoded = multiVaultCreateTriplesEncode(
         [subjectAtomId, subjectAtomId, subjectAtomId],
         [predicateAtomId, predicateAtomId, predicateAtomId],
         [objectAtomId, objectAtomId, objectAtomId],
@@ -250,14 +250,14 @@ describe('Triples', () => {
     })
 
     it('should encode empty arrays', () => {
-      const encoded = createTriplesEncode([], [], [], [])
+      const encoded = multiVaultCreateTriplesEncode([], [], [], [])
 
       expect(encoded).toBeDefined()
       expect(isHex(encoded)).toBe(true)
     })
   })
 
-  describe('getTriple', () => {
+  describe('multiVaultGetTriple', () => {
     it('should retrieve created triple by ID', async () => {
       // First create a triple
       const value = parseEther('100')
@@ -269,7 +269,7 @@ describe('Triples', () => {
       const predicateAtomId = calculateAtomId(predicateData)
       const objectAtomId = calculateAtomId(objectData)
 
-      const atomTxHash = await createAtoms(
+      const atomTxHash = await multiVaultCreateAtoms(
         {
           walletClient,
           publicClient,
@@ -285,7 +285,7 @@ describe('Triples', () => {
       )
       await publicClient.waitForTransactionReceipt({ hash: atomTxHash })
 
-      const txHash = await createTriples(
+      const txHash = await multiVaultCreateTriples(
         {
           walletClient,
           publicClient,
@@ -306,7 +306,7 @@ describe('Triples', () => {
       )
 
       // Now retrieve it
-      const triple = await getTriple(
+      const triple = await multiVaultGetTriple(
         {
           publicClient,
           address: address,
@@ -324,7 +324,7 @@ describe('Triples', () => {
       const nonExistentId = keccak256(toHex('non existent triple xyz123'))
 
       await expect(
-        getTriple(
+        multiVaultGetTriple(
           {
             publicClient,
             address: address,
@@ -337,9 +337,9 @@ describe('Triples', () => {
     })
   })
 
-  describe('getTripleCost', () => {
+  describe('multiVaultGetTripleCost', () => {
     it('should retrieve current triple creation cost', async () => {
-      const cost = await getTripleCost({
+      const cost = await multiVaultGetTripleCost({
         publicClient,
         address: address,
       })
@@ -350,12 +350,12 @@ describe('Triples', () => {
     })
 
     it('should return consistent cost across multiple calls', async () => {
-      const cost1 = await getTripleCost({
+      const cost1 = await multiVaultGetTripleCost({
         publicClient,
         address: address,
       })
 
-      const cost2 = await getTripleCost({
+      const cost2 = await multiVaultGetTripleCost({
         publicClient,
         address: address,
       })

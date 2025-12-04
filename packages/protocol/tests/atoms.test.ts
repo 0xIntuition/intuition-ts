@@ -2,11 +2,11 @@ import { isHex, keccak256, parseEther, toHex, type Address } from 'viem'
 import { beforeAll, describe, expect, it } from 'vitest'
 
 import {
-  createAtoms,
-  createAtomsEncode,
-  getAtom,
-  getAtomCost,
-  previewAtomCreate,
+  multiVaultCreateAtoms,
+  multiVaultCreateAtomsEncode,
+  multiVaultGetAtom,
+  multiVaultGetAtomCost,
+  multiVaultPreviewAtomCreate,
 } from '../src'
 import { calculateAtomId } from './helpers/calculate'
 import { deployAndInit } from './helpers/deploy-multivault'
@@ -19,11 +19,11 @@ beforeAll(async () => {
 }, 30000)
 
 describe('Atoms', () => {
-  describe('previewAtomCreate', () => {
+  describe('multiVaultPreviewAtomCreate', () => {
     it('should calculate atom create cost with valid value', async () => {
       const value = parseEther('100')
       const [shares, assetsAfterFixedFees, assetsAfterFees] =
-        await previewAtomCreate(
+        await multiVaultPreviewAtomCreate(
           {
             walletClient,
             publicClient,
@@ -48,7 +48,7 @@ describe('Atoms', () => {
     it('should calculate with minimum value', async () => {
       const value = parseEther('1')
       const [shares, assetsAfterFixedFees, assetsAfterFees] =
-        await previewAtomCreate(
+        await multiVaultPreviewAtomCreate(
           {
             walletClient,
             publicClient,
@@ -69,7 +69,7 @@ describe('Atoms', () => {
     it('should calculate with large value', async () => {
       const value = parseEther('10000')
       const [shares, assetsAfterFixedFees, assetsAfterFees] =
-        await previewAtomCreate(
+        await multiVaultPreviewAtomCreate(
           {
             walletClient,
             publicClient,
@@ -88,12 +88,12 @@ describe('Atoms', () => {
     })
   })
 
-  describe('createAtoms', () => {
+  describe('multiVaultCreateAtoms', () => {
     it('should create a new atom', async () => {
       const value = parseEther('100')
       const atomData = toHex(`test atom creation ${Math.random()}`)
 
-      const txHash = await createAtoms(
+      const txHash = await multiVaultCreateAtoms(
         {
           walletClient,
           publicClient,
@@ -114,7 +114,7 @@ describe('Atoms', () => {
       const atomData1 = toHex(`multi atom 1 ${Math.random()}`)
       const atomData2 = toHex(`multi atom 2 ${Math.random()}`)
 
-      const txHash = await createAtoms(
+      const txHash = await multiVaultCreateAtoms(
         {
           walletClient,
           publicClient,
@@ -137,7 +137,7 @@ describe('Atoms', () => {
       const atomData = toHex(`insufficient value atom ${Math.random()}`)
 
       await expect(
-        createAtoms(
+        multiVaultCreateAtoms(
           {
             walletClient,
             publicClient,
@@ -152,12 +152,12 @@ describe('Atoms', () => {
     })
   })
 
-  describe('createAtomsEncode', () => {
+  describe('multiVaultCreateAtomsEncode', () => {
     it('should encode single atom creation', () => {
       const atomData = toHex(`encode test atom ${Math.random()}`)
       const value = parseEther('100')
 
-      const encoded = createAtomsEncode([atomData], [value])
+      const encoded = multiVaultCreateAtomsEncode([atomData], [value])
 
       expect(encoded).toBeDefined()
       expect(isHex(encoded)).toBe(true)
@@ -172,7 +172,7 @@ describe('Atoms', () => {
       const value2 = parseEther('200')
       const value3 = parseEther('300')
 
-      const encoded = createAtomsEncode(
+      const encoded = multiVaultCreateAtomsEncode(
         [atomData1, atomData2, atomData3],
         [value1, value2, value3],
       )
@@ -183,20 +183,20 @@ describe('Atoms', () => {
     })
 
     it('should encode empty arrays', () => {
-      const encoded = createAtomsEncode([], [])
+      const encoded = multiVaultCreateAtomsEncode([], [])
 
       expect(encoded).toBeDefined()
       expect(isHex(encoded)).toBe(true)
     })
   })
 
-  describe('getAtom', () => {
+  describe('multiVaultGetAtom', () => {
     it('should retrieve created atom by ID', async () => {
       // First create an atom
       const value = parseEther('100')
       const atomData = toHex(`retrievable atom ${Math.random()}`)
 
-      await createAtoms(
+      await multiVaultCreateAtoms(
         {
           walletClient,
           publicClient,
@@ -211,7 +211,7 @@ describe('Atoms', () => {
       const atomId = calculateAtomId(atomData)
 
       // Now retrieve it
-      const atom = await getAtom(
+      const atom = await multiVaultGetAtom(
         {
           publicClient,
           address: address,
@@ -228,7 +228,7 @@ describe('Atoms', () => {
       const nonExistentId = keccak256(toHex('non existent atom xyz123'))
 
       await expect(
-        getAtom(
+        multiVaultGetAtom(
           {
             publicClient,
             address: address,
@@ -241,9 +241,9 @@ describe('Atoms', () => {
     })
   })
 
-  describe('getAtomCost', () => {
+  describe('multiVaultGetAtomCost', () => {
     it('should retrieve current atom creation cost', async () => {
-      const cost = await getAtomCost({
+      const cost = await multiVaultGetAtomCost({
         publicClient,
         address: address,
       })
@@ -254,12 +254,12 @@ describe('Atoms', () => {
     })
 
     it('should return consistent cost across multiple calls', async () => {
-      const cost1 = await getAtomCost({
+      const cost1 = await multiVaultGetAtomCost({
         publicClient,
         address: address,
       })
 
-      const cost2 = await getAtomCost({
+      const cost2 = await multiVaultGetAtomCost({
         publicClient,
         address: address,
       })
