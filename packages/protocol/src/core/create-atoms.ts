@@ -1,7 +1,7 @@
 import type { ContractFunctionArgs } from 'viem'
 
 import { MultiVaultAbi } from '../contracts'
-import { WriteConfig } from '../types'
+import type { WriteConfig } from '../types'
 
 export type CreateAtomsInputs = {
   args: ContractFunctionArgs<typeof MultiVaultAbi, 'payable', 'createAtoms'>

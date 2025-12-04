@@ -4,6 +4,7 @@ export type ReadConfig = {
   address: Address
   publicClient: PublicClient
 }
+
 export type WriteConfig = {
   address: Address
   walletClient: WalletClient

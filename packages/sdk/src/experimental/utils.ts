@@ -148,8 +148,6 @@ export async function wait(
     return
   }
 
-  console.log('Waiting for tx:', hash)
-
   const {
     pollingInterval = DEFAULT_POLLING_INTERVAL,
     timeout = DEFAULT_TIMEOUT_COUNT * DEFAULT_POLLING_INTERVAL,

@@ -8,6 +8,7 @@
     "build:packages": "turbo build --filter='./packages/**'",
     "codegen": "turbo codegen",
     "dev": "turbo dev --parallel",
+    "dev:packages": "turbo dev --parallel --filter='./packages/**'",
     "format": "turbo format",
     "format:fix": "turbo format:fix",
     "lint": "turbo lint",

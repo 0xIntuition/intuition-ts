@@ -3,13 +3,13 @@ import type { ContractFunctionArgs } from 'viem'
 import { MultiVaultAbi } from '../contracts'
 import type { WriteConfig } from '../types'
 
-export type PreviewRedeemCurveInputs = {
-  args: ContractFunctionArgs<typeof MultiVaultAbi, 'view', 'previewRedeem'>
+export type PreviewAtomCreateInputs = {
+  args: ContractFunctionArgs<typeof MultiVaultAbi, 'view', 'previewAtomCreate'>
 }
 
-export async function previewRedeem(
+export async function previewAtomCreate(
   config: WriteConfig,
-  inputs: PreviewRedeemCurveInputs,
+  inputs: PreviewAtomCreateInputs,
 ) {
   const { address, walletClient, publicClient } = config
   const { args } = inputs
@@ -18,7 +18,7 @@ export async function previewRedeem(
     account: walletClient.account,
     address,
     abi: MultiVaultAbi,
-    functionName: 'previewRedeem',
+    functionName: 'previewAtomCreate',
     args,
   })
 }

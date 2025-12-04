@@ -1,7 +1,12 @@
 import { fetchLogs } from '@viem/anvil'
-import { afterEach } from 'vitest'
+import { afterAll, afterEach } from 'vitest'
 
-import { pool } from './utils.js'
+import { pool, testClient } from './utils.js'
+
+afterAll(async () => {
+  // If you are using a fork, you can reset your anvil instance to the initial fork block.
+  // await testClient.reset();
+})
 
 afterEach(async (context) => {
   context.onTestFailed(async () => {
