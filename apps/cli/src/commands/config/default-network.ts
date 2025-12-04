@@ -2,12 +2,12 @@ import {Args, Command} from '@oclif/core'
 import chalk from 'chalk'
 
 import {getDefaultNetwork, setDefaultNetwork} from '../../config.js'
-import {getNetworkByName} from '../../networks.js'
+import {getNetworkByEnvironment} from '../../networks.js'
 
 export default class ConfigDefaultNetwork extends Command {
   static override args = {
     network: Args.string({
-      description: 'Network to set as default (intuition or intuition-testnet)',
+      description: 'Network to set as default (intuition or testnet)',
     }),
   }
   static override description =
@@ -19,9 +19,9 @@ export default class ConfigDefaultNetwork extends Command {
     const {network} = args
 
     if (network) {
-      const valid = getNetworkByName(network)
+      const valid = getNetworkByEnvironment(network)
       if (!valid) {
-        this.log(chalk.red('❌ Invalid network. Must be "intuition" or "intuition-testnet".'))
+        this.log(chalk.red('❌ Invalid network. Must be "intuition" or "testnet".'))
         return
       }
 

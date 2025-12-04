@@ -1,0 +1,55 @@
+import { defineChain } from 'viem'
+
+export const intuitionTestnet = defineChain({
+  id: 13579,
+  name: 'Intuition Testnet',
+  nativeCurrency: {
+    decimals: 18,
+    name: 'Test Trust',
+    symbol: 'tTRUST',
+  },
+  rpcUrls: {
+    default: {
+      http: ['https://testnet.rpc.intuition.systems/http'],
+      webSocket: ['wss://testnet.rpc.intuition.systems/ws'],
+    },
+  },
+  blockExplorers: {
+    default: {
+      name: 'Intuition Testnet Explorer',
+      url: 'https://testnet.explorer.intuition.systems',
+    },
+  },
+  contracts: {
+    multicall3: {
+      address: '0xcA11bde05977b3631167028862bE2a173976CA11',
+    },
+  },
+})
+
+export const intuitionMainnet = defineChain({
+  id: 1155,
+  name: 'Intuition',
+  nativeCurrency: {
+    decimals: 18,
+    name: 'Intuition',
+    symbol: 'TRUST',
+  },
+  rpcUrls: {
+    default: {
+      http: ['https://rpc.intuition.systems/http'],
+      webSocket: ['wss://rpc.intuition.systems/ws'],
+    },
+  },
+  blockExplorers: {
+    default: {
+      name: 'Intuition Explorer',
+      url: 'https://explorer.intuition.systems',
+    },
+  },
+  contracts: {
+    multicall3: {
+      address: '0xcA11bde05977b3631167028862bE2a173976CA11',
+    },
+  },
+})

@@ -15,6 +15,7 @@ export type IntuitionConfig = {
 const config = new Conf<IntuitionConfig>({
   defaults: {
     accounts: [],
+    defaultNetwork: 'intuition',
   },
   projectName: 'intuition-cli',
 })

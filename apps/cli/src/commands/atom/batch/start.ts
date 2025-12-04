@@ -1,6 +1,7 @@
 /* eslint-disable max-params */
 /* eslint-disable no-await-in-loop */
 
+import {intuitionMainnet} from '@0xintuition/protocol'
 import {
   batchCreateAtomsFromEthereumAccounts,
   batchCreateAtomsFromIpfsUris,
@@ -19,7 +20,7 @@ import {createPublicClient, createWalletClient, getAddress, http, type PublicCli
 import {privateKeyToAccount} from 'viem/accounts'
 
 import {getAccounts, getDefaultAccount, getDefaultNetwork} from '../../../config.js'
-import {getNetworkByName, intuitionTestnet} from '../../../networks.js'
+import {getNetworkByEnvironment, getNetworkByName, intuitionTestnet} from '../../../networks.js'
 
 // Define types for clarity
 type CsvRow = Record<string, string>
@@ -95,18 +96,26 @@ export default class BatchStart extends Command {
     this.log(chalk.green(`🎉 Done! ${processedCount} atoms processed and CSV updated.`))
   }
 
-  private async batchTagAtomsInList(atomConfig: CreateAtomConfig, vaultIds: string[], listFlag: string) {
+  private async batchTagAtomsInList(
+    atomConfig: CreateAtomConfig,
+    vaultIds: readonly `0x${string}`[],
+    listFlag: string,
+  ) {
     const listIds = listFlag
       .split(',')
       .map((id) => id.trim())
       .filter(Boolean)
     const hasTagIdFromNetwork = '0x49487b1d5bf2734d497d6d9cfcd72cdfbaefb4d4f03ddc310398b24639173c9d'
-    const hasTagId = Array.from({length: vaultIds.length}).fill(hasTagIdFromNetwork)
+    const hasTagId: readonly `0x${string}`[] = Array.from<`0x${string}`>({
+      length: vaultIds.length,
+    }).fill(hasTagIdFromNetwork)
 
     for (const listIdValue of listIds) {
-      const listIdArr = Array.from({length: vaultIds.length}).fill(listIdValue)
-      // @ts-expect-error SDK types need to be updated
-      await batchCreateTripleStatements(atomConfig, [vaultIds, hasTagId, listIdArr])
+      const listIdArr: readonly `0x${string}`[] = Array.from<`0x${string}`>({
+        length: vaultIds.length,
+      }).fill(listIdValue as `0x${string}`)
+
+      await batchCreateTripleStatements(atomConfig, [vaultIds, hasTagId, listIdArr, [BigInt(0)]])
       this.log(chalk.green(`✅ New atoms have been tagged in list ${listIdValue}`))
     }
   }
@@ -248,12 +257,12 @@ export default class BatchStart extends Command {
 
     // 4. Update allRows and collect vaultIds
     let idx = 0
-    const vaultIds: string[] = []
+    const vaultIds: `0x${string}`[] = []
     for (let j = 0; j < allRows.length && idx < batch.length; j++) {
       const row = allRows[j]
       if ((!row.vaultId || row.vaultId.trim() === '') && row.address && batchInput.includes(getAddress(row.address))) {
         row.vaultId = state[idx]?.termId?.toString?.() || ''
-        vaultIds.push(row.vaultId)
+        vaultIds.push(row.vaultId as `0x${string}`)
         this.log(chalk.green(`✅ Created atom for address: ${row.address} (VaultId: ${row.vaultId})`))
         idx++
       }
@@ -292,12 +301,12 @@ export default class BatchStart extends Command {
 
     // 4. Update allRows and collect vaultIds
     let idx = 0
-    const vaultIds: string[] = []
+    const vaultIds: `0x${string}`[] = []
     for (let j = 0; j < allRows.length && idx < batch.length; j++) {
       const row = allRows[j]
       if ((!row.vaultId || row.vaultId.trim() === '') && row.ipfsUri && batchInput.includes(row.ipfsUri)) {
         row.vaultId = state[idx]?.termId?.toString?.() || ''
-        vaultIds.push(row.vaultId)
+        vaultIds.push(row.vaultId as `0x${string}`)
         this.log(chalk.green(`✅ Created atom for IPFS URI: ${row.ipfsUri} (VaultId: ${row.vaultId})`))
         idx++
       }
@@ -339,7 +348,7 @@ export default class BatchStart extends Command {
 
     // 4. Update allRows and collect vaultIds
     let idx = 0
-    const vaultIds: string[] = []
+    const vaultIds: `0x${string}`[] = []
     for (let j = 0; j < allRows.length && idx < batch.length; j++) {
       const row = allRows[j]
       if (
@@ -349,7 +358,7 @@ export default class BatchStart extends Command {
         batchInput.some((input) => input.address === getAddress(row.address) && input.chainId === Number(row.chainId))
       ) {
         row.vaultId = state[idx]?.termId?.toString?.() || ''
-        vaultIds.push(row.vaultId)
+        vaultIds.push(row.vaultId as `0x${string}`)
         this.log(
           chalk.green(
             `✅ Created atom for smart contract: ${row.address} (ChainId: ${row.chainId}, VaultId: ${row.vaultId})`,
@@ -397,7 +406,7 @@ export default class BatchStart extends Command {
 
     // 4. Update allRows and collect vaultIds
     let idx = 0
-    const vaultIds: string[] = []
+    const vaultIds: `0x${string}`[] = []
     for (let j = 0; j < allRows.length && idx < batch.length; j++) {
       const row = allRows[j]
       if (
@@ -410,7 +419,7 @@ export default class BatchStart extends Command {
           row.ipfsUri = uris[idx]
         }
 
-        vaultIds.push(row.vaultId)
+        vaultIds.push(row.vaultId as `0x${string}`)
         this.log(chalk.green(`✅ Created atom for thing: ${row.name} (VaultId: ${row.vaultId})`))
         idx++
       }
@@ -424,9 +433,9 @@ export default class BatchStart extends Command {
 
   // #region Private Helper Methods
   private async setupClients(networkFlag?: string): Promise<ClientSetup | undefined> {
-    // 1. Determine and validate network
-    const networkName = networkFlag || getDefaultNetwork() || 'intuition-testnet'
-    const network = getNetworkByName(networkName)
+    // Determine network
+    const networkName = networkFlag || getDefaultNetwork() || 'intuition'
+    const network = getNetworkByEnvironment(networkName)
     if (!network) {
       this.log(chalk.red(`❌ Unsupported network: ${networkName}`))
       this.log(chalk.gray('Supported: intuition, intuition-testnet'))
@@ -450,7 +459,7 @@ export default class BatchStart extends Command {
 
     // 3. Create Viem clients
     const account = privateKeyToAccount(defaultAccount.privateKey as `0x${string}`)
-    const chain = network.id === intuitionTestnet.id ? intuitionTestnet : intuitionTestnet
+    const chain = network.id === intuitionMainnet.id ? intuitionMainnet : intuitionTestnet
     const walletClient = createWalletClient({
       account,
       chain,

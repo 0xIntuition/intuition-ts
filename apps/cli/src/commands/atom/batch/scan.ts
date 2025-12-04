@@ -1,3 +1,4 @@
+import {intuitionMainnet} from '@0xintuition/protocol'
 import {intuitionDeployments} from '@0xintuition/sdk'
 import select from '@inquirer/select'
 import {Command, Flags} from '@oclif/core'
@@ -8,7 +9,7 @@ import {createPublicClient, createWalletClient, http, type PublicClient, type Wa
 import {privateKeyToAccount} from 'viem/accounts'
 
 import {getAccounts, getDefaultAccount, getDefaultNetwork} from '../../../config.js'
-import {getNetworkByName, intuitionTestnet} from '../../../networks.js'
+import {getNetworkByEnvironment, getNetworkByName, intuitionTestnet} from '../../../networks.js'
 
 // Define types for clarity
 type CsvRow = Record<string, string>
@@ -124,8 +125,8 @@ export default class AtomBatchScan extends Command {
   // #region Private Helper Methods
   private async setupClients(networkFlag?: string): Promise<ClientSetup | undefined> {
     // 1. Determine and validate network
-    const networkName = networkFlag || getDefaultNetwork() || 'intuition-testnet'
-    const network = getNetworkByName(networkName)
+    const networkName = networkFlag || getDefaultNetwork() || 'intuition'
+    const network = getNetworkByEnvironment(networkName)
     if (!network) {
       this.log(chalk.red(`❌ Unsupported network: ${networkName}`))
       this.log(chalk.gray('Supported: intuition, intuition-testnet'))
@@ -150,7 +151,7 @@ export default class AtomBatchScan extends Command {
     // 3. Create Viem clients
     const account = privateKeyToAccount(defaultAccount.privateKey as `0x${string}`)
     // FIXME after mainnet launch
-    const chain = network.id === intuitionTestnet.id ? intuitionTestnet : intuitionTestnet
+    const chain = network.id === intuitionMainnet.id ? intuitionMainnet : intuitionTestnet
     const walletClient = createWalletClient({
       account,
       chain,
