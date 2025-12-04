@@ -2,6 +2,16 @@
 
 This project uses [Changesets](https://github.com/changesets/changesets) for version management and publishing.
 
+# TL;DR
+
+```bash
+pnpm changeset
+pnpm changeset version
+pnpm build
+pnpm release
+pnpm release:stable
+```
+
 ## Alpha Release Workflow
 
 # Enter prerelease mode for "alpha"
