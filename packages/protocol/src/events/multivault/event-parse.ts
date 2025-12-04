@@ -1,6 +1,6 @@
 import {
-  ContractEventName,
   parseEventLogs,
+  type ContractEventName,
   type Hex,
   type PublicClient,
 } from 'viem'

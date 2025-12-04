@@ -1,0 +1,10 @@
+{
+  "mode": "pre",
+  "tag": "alpha",
+  "initialVersions": {
+    "@intution/graphql": "2.0.0",
+    "@intution/protocol": "2.0.0",
+    "@intution/sdk": "2.0.0"
+  },
+  "changesets": []
+}

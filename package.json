@@ -6,6 +6,13 @@
   "scripts": {
     "build": "turbo build",
     "build:packages": "turbo build --filter='./packages/**'",
+    "changeset": "changeset",
+    "version": "changeset version",
+    "publish": "changeset publish",
+    "prepublish:fix": "bun run scripts/fix-workspace-deps.ts",
+    "postpublish:restore": "bun run scripts/fix-workspace-deps.ts --restore",
+    "release": "bun run prepublish:fix && bun changeset publish --tag alpha && bun run postpublish:restore",
+    "release:stable": "bun run prepublish:fix && bun changeset publish && bun run postpublish:restore",
     "codegen": "turbo codegen",
     "dev": "turbo dev --parallel",
     "dev:packages": "turbo dev --parallel --filter='./packages/**'",
@@ -27,6 +34,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@changesets/cli": "^2.29.8",
     "@hey-api/openapi-ts": "^0.44.0",
     "@ianvs/prettier-plugin-sort-imports": "^4.2.1",
     "@nrwl/eslint-plugin-nx": "19.1.0",
