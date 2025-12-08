@@ -1,5 +1,11 @@
 ## 2.1.3 (2025-10-30)
 
+## 2.0.1
+
+### Patch Changes
+
+- 68a7d43: Added new smart contract reads and writes to the protocol and sdk packages.
+
 ### Overview
 
 - **_apps/cli_** Upgrade to use Intuition V2 contracts
