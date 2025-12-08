@@ -457,11 +457,11 @@ importers:
   packages/sdk:
     dependencies:
       '@0xintuition/graphql':
-        specifier: ^2.0.0
-        version: 2.0.0(encoding@0.1.13)(react@18.3.1)
+        specifier: ^2.0.2
+        version: 2.0.2(encoding@0.1.13)(react@18.3.1)
       '@0xintuition/protocol':
-        specifier: ^2.0.0
-        version: 2.0.0(viem@2.31.4(bufferutil@4.0.8)(typescript@5.4.5)(utf-8-validate@6.0.4)(zod@3.25.67))
+        specifier: ^2.0.2
+        version: 2.0.2(viem@2.31.4(bufferutil@4.0.8)(typescript@5.4.5)(utf-8-validate@6.0.4)(zod@3.25.67))
     devDependencies:
       '@viem/anvil':
         specifier: ^0.0.10
@@ -501,11 +501,11 @@ packages:
       graphql: ^15.5.0 || ^16.0.0 || ^17.0.0
       typescript: ^5.0.0
 
-  '@0xintuition/graphql@2.0.0':
-    resolution: {integrity: sha512-L6YZ78OJdKCvRYsWuGnbwt29mRwZ33m3UwFyd+1ZP9+KPXWe8SeMl8YJq4F/n7Gz77gpkitKPpM4g6MIQdKBoQ==}
+  '@0xintuition/graphql@2.0.2':
+    resolution: {integrity: sha512-wWPZQWJoXyCPxk/8rusFVE0gp5+v5TyCJE8oI0aL+i36HwfMXhFsQtF0Idd75O2RObdpC629ZwaUbnYTVew7pw==}
 
-  '@0xintuition/protocol@2.0.0':
-    resolution: {integrity: sha512-UIXT1E6J/+MK+gmWJrvT8QNfaNBg9Z5cfYKqj+w5RzppVsK/Gd83fgW7U50OfdR6xLTaXwYyqe4hbhv0BpT+Nw==}
+  '@0xintuition/protocol@2.0.2':
+    resolution: {integrity: sha512-BjdBkskuTj5K7KyCd6/33gDkZLh1rEMSGMNfA6iD5jM5TU7OC32ySybBKZ2tQzicnvWGYTSUSh01muBAmILgPw==}
     peerDependencies:
       viem: 2.31.4
 
@@ -12586,7 +12586,7 @@ snapshots:
       graphql: 16.9.0
       typescript: 5.4.5
 
-  '@0xintuition/graphql@2.0.0(encoding@0.1.13)(react@18.3.1)':
+  '@0xintuition/graphql@2.0.2(encoding@0.1.13)(react@18.3.1)':
     dependencies:
       '@graphql-codegen/typescript-document-nodes': 4.0.11(encoding@0.1.13)(graphql@16.9.0)
       '@tanstack/react-query': 5.45.0(react@18.3.1)
@@ -12600,7 +12600,7 @@ snapshots:
       - react
       - supports-color
 
-  '@0xintuition/protocol@2.0.0(viem@2.31.4(bufferutil@4.0.8)(typescript@5.4.5)(utf-8-validate@6.0.4)(zod@3.25.67))':
+  '@0xintuition/protocol@2.0.2(viem@2.31.4(bufferutil@4.0.8)(typescript@5.4.5)(utf-8-validate@6.0.4)(zod@3.25.67))':
     dependencies:
       viem: 2.31.4(bufferutil@4.0.8)(typescript@5.4.5)(utf-8-validate@6.0.4)(zod@3.25.67)
 
@@ -13274,7 +13274,7 @@ snapshots:
       '@babel/core': 7.24.7(supports-color@9.4.0)
       '@babel/helper-compilation-targets': 7.24.7
       '@babel/helper-plugin-utils': 7.24.7
-      debug: 4.4.1(supports-color@9.4.0)
+      debug: 4.4.3(supports-color@9.4.0)
       lodash.debounce: 4.0.8
       resolve: 1.22.8
     transitivePeerDependencies:
@@ -16243,7 +16243,7 @@ snapshots:
       bufferutil: 4.0.8
       cross-fetch: 4.0.0(encoding@0.1.13)
       date-fns: 2.30.0
-      debug: 4.4.1(supports-color@9.4.0)
+      debug: 4.4.3(supports-color@9.4.0)
       eciesjs: 0.4.15
       eventemitter2: 6.4.9
       readable-stream: 3.6.2
@@ -16290,8 +16290,8 @@ snapshots:
     dependencies:
       '@ethereumjs/tx': 4.2.0
       '@types/debug': 4.1.12
-      debug: 4.4.1(supports-color@9.4.0)
-      semver: 7.7.2
+      debug: 4.4.3(supports-color@9.4.0)
+      semver: 7.7.3
       superstruct: 1.0.4
     transitivePeerDependencies:
       - supports-color
@@ -16303,9 +16303,9 @@ snapshots:
       '@noble/hashes': 1.8.0
       '@scure/base': 1.2.6
       '@types/debug': 4.1.12
-      debug: 4.4.1(supports-color@9.4.0)
+      debug: 4.4.3(supports-color@9.4.0)
       pony-cause: 2.1.11
-      semver: 7.7.2
+      semver: 7.7.3
       uuid: 9.0.1
     transitivePeerDependencies:
       - supports-color
@@ -16854,7 +16854,7 @@ snapshots:
     dependencies:
       '@oclif/core': 4.8.0
       ansis: 3.17.0
-      debug: 4.4.3(supports-color@8.1.1)
+      debug: 4.4.3(supports-color@9.4.0)
       http-call: 5.3.0
       lodash: 4.17.21
       registry-auth-token: 5.1.0
@@ -18534,11 +18534,11 @@ snapshots:
     dependencies:
       '@typescript-eslint/types': 7.13.0
       '@typescript-eslint/visitor-keys': 7.13.0
-      debug: 4.4.1(supports-color@9.4.0)
+      debug: 4.4.3(supports-color@9.4.0)
       globby: 11.1.0
       is-glob: 4.0.3
       minimatch: 9.0.5
-      semver: 7.7.2
+      semver: 7.7.3
       ts-api-utils: 1.3.0(typescript@5.4.5)
     optionalDependencies:
       typescript: 5.4.5
@@ -21009,6 +21009,12 @@ snapshots:
     optionalDependencies:
       supports-color: 8.1.1
 
+  debug@4.4.3(supports-color@9.4.0):
+    dependencies:
+      ms: 2.1.3
+    optionalDependencies:
+      supports-color: 9.4.0
+
   decamelize@1.2.0: {}
 
   decimal.js@10.4.3: {}
@@ -21118,7 +21124,7 @@ snapshots:
   detect-port@1.6.1:
     dependencies:
       address: 1.2.2
-      debug: 4.4.1(supports-color@9.4.0)
+      debug: 4.4.3(supports-color@9.4.0)
     transitivePeerDependencies:
       - supports-color
 
@@ -23098,7 +23104,7 @@ snapshots:
   http-call@5.3.0:
     dependencies:
       content-type: 1.0.5
-      debug: 4.4.3(supports-color@8.1.1)
+      debug: 4.4.3(supports-color@9.4.0)
       is-retry-allowed: 1.2.0
       is-stream: 2.0.1
       parse-json: 4.0.0
@@ -23611,7 +23617,7 @@ snapshots:
       '@babel/parser': 7.24.7
       '@istanbuljs/schema': 0.1.3
       istanbul-lib-coverage: 3.2.2
-      semver: 7.7.2
+      semver: 7.7.3
     transitivePeerDependencies:
       - supports-color
 
@@ -23623,7 +23629,7 @@ snapshots:
 
   istanbul-lib-source-maps@4.0.1(supports-color@9.4.0):
     dependencies:
-      debug: 4.4.1(supports-color@9.4.0)
+      debug: 4.4.3(supports-color@9.4.0)
       istanbul-lib-coverage: 3.2.2
       source-map: 0.6.1
     transitivePeerDependencies:
@@ -24886,7 +24892,7 @@ snapshots:
   micromark@3.2.0:
     dependencies:
       '@types/debug': 4.1.12
-      debug: 4.4.1(supports-color@9.4.0)
+      debug: 4.4.3(supports-color@9.4.0)
       decode-named-character-reference: 1.0.2
       micromark-core-commonmark: 1.1.0
       micromark-factory-space: 1.1.0
@@ -25181,7 +25187,7 @@ snapshots:
 
   npm-install-checks@6.3.0:
     dependencies:
-      semver: 7.7.2
+      semver: 7.7.3
 
   npm-normalize-package-bin@3.0.1: {}
 
@@ -25189,14 +25195,14 @@ snapshots:
     dependencies:
       hosted-git-info: 6.1.1
       proc-log: 3.0.0
-      semver: 7.7.2
+      semver: 7.7.3
       validate-npm-package-name: 5.0.1
 
   npm-package-arg@11.0.1:
     dependencies:
       hosted-git-info: 7.0.2
       proc-log: 3.0.0
-      semver: 7.7.2
+      semver: 7.7.3
       validate-npm-package-name: 5.0.1
 
   npm-package-arg@11.0.3:
@@ -25211,7 +25217,7 @@ snapshots:
       npm-install-checks: 6.3.0
       npm-normalize-package-bin: 3.0.1
       npm-package-arg: 10.1.0
-      semver: 7.7.2
+      semver: 7.7.3
 
   npm-run-path@2.0.2:
     dependencies:
@@ -25259,7 +25265,7 @@ snapshots:
       npm-run-path: 4.0.1
       open: 8.4.2
       ora: 5.3.0
-      semver: 7.7.2
+      semver: 7.7.3
       string-width: 4.2.3
       strong-log-transformer: 2.1.0
       tar-stream: 2.2.0
@@ -26516,7 +26522,7 @@ snapshots:
 
   semver-truncate@3.0.0:
     dependencies:
-      semver: 7.7.2
+      semver: 7.7.3
 
   semver@5.7.2: {}
 
