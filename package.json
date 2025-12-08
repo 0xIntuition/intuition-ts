@@ -6,8 +6,16 @@
   "scripts": {
     "build": "turbo build",
     "build:packages": "turbo build --filter='./packages/**'",
+    "changeset": "changeset",
+    "version": "changeset version",
+    "publish": "changeset publish",
+    "prepublish:fix": "bun run scripts/fix-workspace-deps.ts",
+    "postpublish:restore": "bun run scripts/fix-workspace-deps.ts --restore",
+    "release": "bun run prepublish:fix && bun changeset publish --tag alpha && bun run postpublish:restore",
+    "release:stable": "bun run prepublish:fix && bun changeset publish && bun run postpublish:restore",
     "codegen": "turbo codegen",
     "dev": "turbo dev --parallel",
+    "dev:packages": "turbo dev --parallel --filter='./packages/**'",
     "format": "turbo format",
     "format:fix": "turbo format:fix",
     "lint": "turbo lint",
@@ -26,6 +34,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@changesets/cli": "^2.29.8",
     "@hey-api/openapi-ts": "^0.44.0",
     "@ianvs/prettier-plugin-sort-imports": "^4.2.1",
     "@nrwl/eslint-plugin-nx": "19.1.0",
@@ -50,6 +59,7 @@
     "@vitejs/plugin-react": "^4.2.0",
     "@vitest/coverage-v8": "^1.0.4",
     "@vitest/ui": "^1.3.1",
+    "dotenv-cli": "^11.0.0",
     "eslint": "~8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-playwright": "^0.15.3",
@@ -72,6 +82,7 @@
     "vitest": "^1.3.1"
   },
   "dependencies": {
+    "@changesets/changelog-github": "^0.5.2",
     "@remix-run/node": "^2.8.1",
     "@remix-run/react": "^2.8.1",
     "@remix-run/serve": "^2.8.1",

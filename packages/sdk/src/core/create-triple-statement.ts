@@ -1,6 +1,6 @@
 import {
-  createTriples,
   eventParseTripleCreated,
+  multiVaultCreateTriples,
   type CreateTriplesInputs,
   type WriteConfig,
 } from '@0xintuition/protocol'
@@ -15,7 +15,7 @@ export async function createTripleStatement(
   const { publicClient } = config
 
   const { args, value } = data
-  const txHash = await createTriples(config, {
+  const txHash = await multiVaultCreateTriples(config, {
     args,
     value: value,
   })

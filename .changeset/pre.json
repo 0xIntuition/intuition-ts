@@ -1,0 +1,12 @@
+{
+  "mode": "pre",
+  "tag": "alpha",
+  "initialVersions": {
+    "intuition-cli": "2.0.0-alpha.2",
+    "@0xintuition/nextjs-template": "0.0.0",
+    "@0xintuition/graphql": "2.0.0-alpha.4",
+    "@0xintuition/protocol": "2.0.0-alpha.4",
+    "@0xintuition/sdk": "2.0.0-alpha.4"
+  },
+  "changesets": []
+}

@@ -1,0 +1,68 @@
+{
+  "description": "Project-wide Claude Code settings for Intuition Protocol",
+  "defaultAgent": "protocol-developer",
+  "tools": {
+    "bash": {
+      "enabled": true,
+      "timeout": 300000
+    },
+    "read": {
+      "enabled": true
+    },
+    "write": {
+      "enabled": true
+    },
+    "edit": {
+      "enabled": true
+    },
+    "grep": {
+      "enabled": true
+    },
+    "glob": {
+      "enabled": true
+    }
+  },
+  "solidity": {
+    "version": "0.8.29",
+    "evmVersion": "cancun",
+    "optimizer": {
+      "enabled": true,
+      "runs": 10000
+    },
+    "viaIR": false
+  },
+  "foundry": {
+    "testDirectory": "tests",
+    "srcDirectory": "src",
+    "libDirectory": "lib",
+    "outDirectory": "out",
+    "cacheDirectory": "cache"
+  },
+  "linting": {
+    "autoFormat": true,
+    "checkBeforeCommit": true,
+    "tools": ["forge fmt", "solhint", "prettier"]
+  },
+  "testing": {
+    "defaultCommand": "forge test",
+    "coverage": "forge coverage",
+    "gasReport": true,
+    "fuzzRuns": 10000
+  },
+  "security": {
+    "requireSecurityReview": true,
+    "checkForReentrancy": true,
+    "validateAccessControl": true,
+    "auditBeforeMainnet": true
+  },
+  "deployment": {
+    "networks": ["base_sepolia", "base"],
+    "verificationRequired": true,
+    "gasEstimation": true
+  },
+  "documentation": {
+    "requireNatSpec": true,
+    "generateDocs": true,
+    "includeGasReports": true
+  }
+}

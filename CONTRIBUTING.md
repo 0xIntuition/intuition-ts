@@ -11,7 +11,6 @@ If you need any help, feel free to reach out to [@0xintuition](https://twitter.c
 This repository is a monorepo.
 
 - We use [pnpm](https://pnpm.io) and [`workspaces`](https://pnpm.io/workspaces) for development.
-- We use [Nx](https://nx.dev/getting-started/intro) as our build system.
 - We use [changesets](https://github.com/changesets/changesets) for managing releases.
 
 ## Structure
@@ -20,25 +19,24 @@ This repository is structured as follows:
 
 ```
 apps
-└── portal
+└── cli
+└── nextjs-template
 packages
-├── 1ui
-└── api
+└── graphql
 └── protocol
 └── sdk
 ```
 
 | Path                | Description                                                |
 | ------------------- | ---------------------------------------------------------- |
-| `apps/portal`       | The Remix application for the playground                   |
-| `packages/1ui`      | Our design system.                                         |
-| `packages/api`      | backend interactions                                       |
-| `packages/protocol` | protocol SDK                                               |
-| `packages/sdk`      | high level logic that combines both on-chain and off-chain |
+| `apps/cli`          | CLI for interacting with the protocol                      |
+| `packages/graphql`  | Module containing GraphQL queries and mutations            |
+| `packages/protocol` | Module low-level smart contract interactions               |
+| `packages/sdk`      | High level logic that combines both on-chain and off-chain |
 
 ## Contributing To `0xIntuition` Packages
 
-Please read the corresponding `CONTIBUTING.md` file for the app/package you wish to contribute to:
+Please read the corresponding `CONTRIBUTING.md` file for the app/package you wish to contribute to:
 
 - [1ui - CONTRIBUTING.md](./packages/1ui/CONTRIBUTING.md)
 - [protocol - CONTRIBUTING.md](./packages/protocol/CONTRIBUTING.md)
@@ -66,38 +64,6 @@ git checkout -b my-new-branch
 ```bash
 pnpm install
 ```
-
-### Run a workspace
-
-You can use the `pnpm [WORKSPACE]:dev` command to start the development process for a workspace.
-
-#### Examples
-
-1. To run the `portal` web app:
-
-```bash
-pnpm portal:dev
-```
-
-2. To run the `1ui` storybook:
-
-```bash
-pnpm 1ui:storybook
-```
-
-## Documentation
-
-The documentation for this project is located in the `docs` workspace. You can run the documentation locally by running the following command:
-
-```bash
-pnpm docs
-```
-
-Documentation is written using [MDX](https://mdxjs.com). You can find the documentation files in the `docs` directory.
-
-## Requests for new components
-
-If you have a request for a new component, please open a discussion on GitHub. We'll be happy to help you out.
 
 ## Testing
 

@@ -9,7 +9,7 @@ import {privateKeyToAccount} from 'viem/accounts'
 import {z} from 'zod'
 
 import {getAccounts, getDefaultAccount, getDefaultNetwork} from '../../config.js'
-import {getNetworkByName, intuitionTestnet} from '../../networks.js'
+import {getNetworkByEnvironment, intuitionMainnet, intuitionTestnet} from '../../networks.js'
 
 const AddressSchema = z.string().regex(/^0x[a-fA-F0-9]{40}$/, 'Invalid Ethereum address format')
 const IpfsUriSchema = z.string().regex(/^ipfs:\/\/[a-zA-Z0-9]+/, 'Invalid IPFS URI format (must start with ipfs://)')
@@ -23,7 +23,7 @@ export default class AtomCreate extends Command {
       required: false,
     }),
     network: Flags.string({
-      description: 'Target network (intuition, intuition-testnet)',
+      description: 'Target network (intuition, testnet)',
       required: false,
     }),
   }
@@ -32,11 +32,11 @@ export default class AtomCreate extends Command {
     const {flags} = await this.parse(AtomCreate)
     try {
       // Determine network
-      const networkName = flags.network || getDefaultNetwork() || 'intuition-testnet'
-      const network = getNetworkByName(networkName)
+      const networkName = flags.network || getDefaultNetwork() || 'intuition'
+      const network = getNetworkByEnvironment(networkName)
       if (!network) {
         this.log(chalk.red(`❌ Unsupported network: ${networkName}`))
-        this.log(chalk.gray('Supported: intuition, intuition-testnet'))
+        this.log(chalk.gray('Supported: intuition, testnet'))
         return
       }
 
@@ -57,7 +57,7 @@ export default class AtomCreate extends Command {
 
       // Create public and wallet clients
       const account = privateKeyToAccount(defaultAccount.privateKey as `0x${string}`)
-      const chain = network.id === 13_579 ? intuitionTestnet : intuitionTestnet
+      const chain = network.id === 1155 ? intuitionMainnet : intuitionTestnet
       const walletClient = createWalletClient({
         account,
         chain,

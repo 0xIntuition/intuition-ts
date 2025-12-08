@@ -3,8 +3,36 @@
   "description": "A CLI for the Intuition protocol.",
   "version": "2.0.0-alpha.2",
   "author": "Intuition Systems",
+  "license": "MIT",
+  "types": "dist/index.d.ts",
+  "main": "dist/index.js",
+  "type": "module",
+  "homepage": "https://github.com/0xintuition/intuition-ts",
+  "repository": "0xintuition/intuition-ts",
+  "keywords": [
+    "intuition"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "files": [
+    "./bin",
+    "./dist",
+    "./oclif.manifest.json"
+  ],
   "bin": {
     "intu": "./bin/run.js"
+  },
+  "scripts": {
+    "build": "shx rm -rf dist && tsc -b && pnpm run copy-samples",
+    "copy-samples": "node ./scripts/copy-samples.js",
+    "lint": "eslint",
+    "lint:fix": "eslint --fix",
+    "postpack": "shx rm -f oclif.manifest.json",
+    "posttest": "pnpm run lint",
+    "prepack": "oclif manifest && oclif readme",
+    "version": "oclif readme && git add README.md",
+    "intu": "node bin/run.js"
   },
   "bugs": "https://github.com/0xintuition/intuition-ts/issues",
   "dependencies": {
@@ -39,21 +67,6 @@
     "typescript": "^5",
     "zod": "^3.25.67"
   },
-  "engines": {
-    "node": ">=18.0.0"
-  },
-  "files": [
-    "./bin",
-    "./dist",
-    "./oclif.manifest.json"
-  ],
-  "homepage": "https://github.com/0xintuition/intuition-ts",
-  "keywords": [
-    "intuition"
-  ],
-  "license": "MIT",
-  "main": "dist/index.js",
-  "type": "module",
   "oclif": {
     "bin": "intu",
     "dirname": "intu",
@@ -76,18 +89,5 @@
         "description": "Experimental features"
       }
     }
-  },
-  "repository": "0xintuition/intuition-ts",
-  "scripts": {
-    "build": "shx rm -rf dist && tsc -b && pnpm run copy-samples",
-    "copy-samples": "node ./scripts/copy-samples.js",
-    "lint": "eslint",
-    "lint:fix": "eslint --fix",
-    "postpack": "shx rm -f oclif.manifest.json",
-    "posttest": "pnpm run lint",
-    "prepack": "oclif manifest && oclif readme",
-    "version": "oclif readme && git add README.md",
-    "intu": "node bin/run.js"
-  },
-  "types": "dist/index.d.ts"
+  }
 }

@@ -1,61 +1,9 @@
-import { defineChain, type Address } from 'viem'
+import type { Address } from 'viem'
 import { base } from 'viem/chains'
 
-const intuitionTestnet = defineChain({
-  id: 13579,
-  name: 'intuition-testnet',
-  nativeCurrency: {
-    decimals: 18,
-    name: 'Test Trust',
-    symbol: 'tTRUST',
-  },
-  rpcUrls: {
-    default: {
-      http: ['https://testnet.rpc.intuition.systems/http'],
-      webSocket: ['wss://testnet.rpc.intuition.systems/ws'],
-    },
-  },
-  blockExplorers: {
-    default: {
-      name: 'Intuition Testnet Explorer',
-      url: 'https://testnet.explorer.intuition.systems',
-    },
-  },
-  contracts: {
-    multicall3: {
-      address: '0xcA11bde05977b3631167028862bE2a173976CA11',
-    },
-  },
-})
+import { intuitionMainnet, intuitionTestnet } from './networks'
 
-const intuitionMainnet = defineChain({
-  id: 1155,
-  name: 'Intuition Network',
-  nativeCurrency: {
-    decimals: 18,
-    name: 'Intuition',
-    symbol: 'TRUST',
-  },
-  rpcUrls: {
-    default: {
-      http: ['https://rpc.intuition.systems/http'],
-      webSocket: ['wss://rpc.intuition.systems/ws'],
-    },
-  },
-  blockExplorers: {
-    default: {
-      name: 'Intuition Explorer',
-      url: 'https://explorer.intuition.systems',
-    },
-  },
-  contracts: {
-    multicall3: {
-      address: '0xcA11bde05977b3631167028862bE2a173976CA11',
-    },
-  },
-})
-
-const intuitionDeployments: {
+export const intuitionDeployments: {
   [key: string]: {
     [chainId: number]: Address
   }
@@ -88,5 +36,3 @@ const intuitionDeployments: {
     [intuitionMainnet.id]: '0x23afF95153aa88D28B9B97Ba97629E05D5fD335d',
   },
 }
-
-export { intuitionDeployments, intuitionTestnet }

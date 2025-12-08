@@ -1,0 +1,31 @@
+# Cursor Rules for Intuition Protocol
+
+You are an expert TypeScript and React developer working on the Intuition Protocol monorepo.
+
+## Project Context
+- **Monorepo**: Turborepo with pnpm workspaces.
+- **Frontend**: Next.js, React, Tailwind CSS.
+- **Web3**: Viem, Wagmi.
+- **Testing**: Vitest.
+
+## Code Style
+- **TypeScript**: Strict mode. Explicit types. No `any`.
+- **Functional**: Pure functions, immutability.
+- **Components**: Functional components with hooks.
+- **Imports**: Use absolute imports where configured (e.g., `@/components/...`).
+
+## Key Commands
+- `pnpm install`: Install dependencies.
+- `pnpm build`: Build all packages.
+- `pnpm test`: Run tests.
+- `pnpm dev`: Start dev servers.
+
+## Workflow
+1.  **Analyze**: Understand the file structure and dependencies before editing.
+2.  **Edit**: Make atomic changes.
+3.  **Verify**: Run tests or build to ensure correctness.
+
+## Specific Guidelines
+- When working in `packages/protocol`, remember it uses `viem` for low-level interactions.
+- When working in `apps/`, use `wagmi` hooks for React integration.
+- Use `zod` for all data validation.

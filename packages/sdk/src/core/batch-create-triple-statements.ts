@@ -1,7 +1,7 @@
 import {
-  createTriples,
   eventParseTripleCreated,
-  getTripleCost,
+  multiVaultCreateTriples,
+  multiVaultGetTripleCost,
   type CreateTriplesInputs,
   type WriteConfig,
 } from '@0xintuition/protocol'
@@ -12,12 +12,12 @@ export async function batchCreateTripleStatements(
   depositAmount?: bigint,
 ) {
   const { address, publicClient } = config
-  const tripleBaseCost = await getTripleCost({
+  const tripleBaseCost = await multiVaultGetTripleCost({
     publicClient,
     address,
   })
 
-  const txHash = await createTriples(config, {
+  const txHash = await multiVaultCreateTriples(config, {
     args: data,
     value: tripleBaseCost + BigInt(depositAmount || 0),
   })

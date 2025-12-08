@@ -2,13 +2,28 @@ export const TransparentUpgradeableProxyAbi = [
   {
     type: 'constructor',
     inputs: [
-      { name: '_logic', type: 'address', internalType: 'address' },
-      { name: 'initialOwner', type: 'address', internalType: 'address' },
-      { name: '_data', type: 'bytes', internalType: 'bytes' },
+      {
+        name: '_logic',
+        type: 'address',
+        internalType: 'address',
+      },
+      {
+        name: 'initialOwner',
+        type: 'address',
+        internalType: 'address',
+      },
+      {
+        name: '_data',
+        type: 'bytes',
+        internalType: 'bytes',
+      },
     ],
     stateMutability: 'payable',
   },
-  { type: 'fallback', stateMutability: 'payable' },
+  {
+    type: 'fallback',
+    stateMutability: 'payable',
+  },
   {
     type: 'event',
     name: 'AdminChanged',
@@ -44,21 +59,49 @@ export const TransparentUpgradeableProxyAbi = [
   {
     type: 'error',
     name: 'AddressEmptyCode',
-    inputs: [{ name: 'target', type: 'address', internalType: 'address' }],
+    inputs: [
+      {
+        name: 'target',
+        type: 'address',
+        internalType: 'address',
+      },
+    ],
   },
   {
     type: 'error',
     name: 'ERC1967InvalidAdmin',
-    inputs: [{ name: 'admin', type: 'address', internalType: 'address' }],
+    inputs: [
+      {
+        name: 'admin',
+        type: 'address',
+        internalType: 'address',
+      },
+    ],
   },
   {
     type: 'error',
     name: 'ERC1967InvalidImplementation',
     inputs: [
-      { name: 'implementation', type: 'address', internalType: 'address' },
+      {
+        name: 'implementation',
+        type: 'address',
+        internalType: 'address',
+      },
     ],
   },
-  { type: 'error', name: 'ERC1967NonPayable', inputs: [] },
-  { type: 'error', name: 'FailedCall', inputs: [] },
-  { type: 'error', name: 'ProxyDeniedAdminAccess', inputs: [] },
-]
+  {
+    type: 'error',
+    name: 'ERC1967NonPayable',
+    inputs: [],
+  },
+  {
+    type: 'error',
+    name: 'FailedCall',
+    inputs: [],
+  },
+  {
+    type: 'error',
+    name: 'ProxyDeniedAdminAccess',
+    inputs: [],
+  },
+] as const
