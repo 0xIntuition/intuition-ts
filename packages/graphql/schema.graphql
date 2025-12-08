@@ -33,6 +33,15 @@ input Boolean_comparison_exp {
   _nin: [Boolean!]
 }
 
+type CachedImage {
+  created_at: timestamptz!
+  model: String
+  original_url: String!
+  safe: Boolean!
+  score: jsonb
+  url: String!
+}
+
 """
 Boolean expression to compare columns of type "Int". All fields are combined with logical 'AND'.
 """
@@ -129,6 +138,26 @@ input String_comparison_exp {
   does the column match the given SQL regular expression
   """
   _similar: String
+}
+
+input UploadImageFromUrlInput {
+  url: String!
+}
+
+type UploadImageFromUrlOutput {
+  images: [CachedImage!]!
+}
+
+input UploadImageInput {
+  contentType: String!
+  data: String!
+  filename: String!
+}
+
+type UploadJsonToIpfsOutput {
+  hash: String!
+  name: String!
+  size: String!
 }
 
 scalar _text
@@ -3909,6 +3938,18 @@ type mutation_root {
   Uploads and pins Thing to IPFS
   """
   pinThing(thing: PinThingInput!): PinOutput
+  """
+  Uploads and classifies an image file using image-guard. Accepts base64-encoded image data. Note: The original /upload endpoint requires multipart/form-data which Hasura actions cannot construct directly. This mutation uses upload_image_from_url with a data URL workaround. For direct file uploads, use the image-guard API directly or create a wrapper endpoint.
+  """
+  uploadImage(image: UploadImageInput!): UploadImageFromUrlOutput
+  """
+  Uploads and classifies an image from a URL using image-guard
+  """
+  uploadImageFromUrl(image: UploadImageFromUrlInput!): UploadImageFromUrlOutput
+  """
+  Uploads JSON to IPFS using image-guard
+  """
+  uploadJsonToIpfs(json: jsonb!): UploadJsonToIpfsOutput
 }
 
 scalar numeric
