@@ -1,7 +1,7 @@
 {
   "name": "intuition-cli",
   "description": "A CLI for the Intuition protocol.",
-  "version": "2.0.0-alpha.2",
+  "version": "2.0.1",
   "author": "Intuition Systems",
   "license": "MIT",
   "types": "dist/index.d.ts",
@@ -61,7 +61,7 @@
     "eslint": "^9",
     "eslint-config-oclif": "^6",
     "eslint-config-prettier": "^10",
-    "oclif": "^4",
+    "oclif": "4.22.50",
     "shx": "^0.3.3",
     "ts-node": "^10",
     "typescript": "^5",

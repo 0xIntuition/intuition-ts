@@ -66,6 +66,16 @@ export type Boolean_Comparison_Exp = {
   _nin?: InputMaybe<Array<Scalars['Boolean']['input']>>
 }
 
+export type CachedImage = {
+  __typename?: 'CachedImage'
+  created_at: Scalars['timestamptz']['output']
+  model?: Maybe<Scalars['String']['output']>
+  original_url: Scalars['String']['output']
+  safe: Scalars['Boolean']['output']
+  score?: Maybe<Scalars['jsonb']['output']>
+  url: Scalars['String']['output']
+}
+
 /** Boolean expression to compare columns of type "Int". All fields are combined with logical 'AND'. */
 export type Int_Comparison_Exp = {
   _eq?: InputMaybe<Scalars['Int']['input']>
@@ -139,6 +149,28 @@ export type String_Comparison_Exp = {
   _regex?: InputMaybe<Scalars['String']['input']>
   /** does the column match the given SQL regular expression */
   _similar?: InputMaybe<Scalars['String']['input']>
+}
+
+export type UploadImageFromUrlInput = {
+  url: Scalars['String']['input']
+}
+
+export type UploadImageFromUrlOutput = {
+  __typename?: 'UploadImageFromUrlOutput'
+  images: Array<CachedImage>
+}
+
+export type UploadImageInput = {
+  contentType: Scalars['String']['input']
+  data: Scalars['String']['input']
+  filename: Scalars['String']['input']
+}
+
+export type UploadJsonToIpfsOutput = {
+  __typename?: 'UploadJsonToIpfsOutput'
+  hash: Scalars['String']['output']
+  name: Scalars['String']['output']
+  size: Scalars['String']['output']
 }
 
 /** Boolean expression to compare columns of type "account_type". All fields are combined with logical 'AND'. */
@@ -2877,6 +2909,12 @@ export type Mutation_Root = {
   pinPerson?: Maybe<PinOutput>
   /** Uploads and pins Thing to IPFS */
   pinThing?: Maybe<PinOutput>
+  /** Uploads and classifies an image file using image-guard. Accepts base64-encoded image data. Note: The original /upload endpoint requires multipart/form-data which Hasura actions cannot construct directly. This mutation uses upload_image_from_url with a data URL workaround. For direct file uploads, use the image-guard API directly or create a wrapper endpoint. */
+  uploadImage?: Maybe<UploadImageFromUrlOutput>
+  /** Uploads and classifies an image from a URL using image-guard */
+  uploadImageFromUrl?: Maybe<UploadImageFromUrlOutput>
+  /** Uploads JSON to IPFS using image-guard */
+  uploadJsonToIpfs?: Maybe<UploadJsonToIpfsOutput>
 }
 
 /** mutation root */
@@ -2892,6 +2930,21 @@ export type Mutation_RootPinPersonArgs = {
 /** mutation root */
 export type Mutation_RootPinThingArgs = {
   thing: PinThingInput
+}
+
+/** mutation root */
+export type Mutation_RootUploadImageArgs = {
+  image: UploadImageInput
+}
+
+/** mutation root */
+export type Mutation_RootUploadImageFromUrlArgs = {
+  image: UploadImageFromUrlInput
+}
+
+/** mutation root */
+export type Mutation_RootUploadJsonToIpfsArgs = {
+  json: Scalars['jsonb']['input']
 }
 
 /** Boolean expression to compare columns of type "numeric". All fields are combined with logical 'AND'. */

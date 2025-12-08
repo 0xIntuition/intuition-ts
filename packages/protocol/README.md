@@ -27,9 +27,9 @@ The protocol SDK provides both core/functional and class based functions for int
 
 ```typescript
 import {
-  getAtomCost,
   getMultiVaultAddressFromChainId,
   intuitionTestnet,
+  multiVaultGetAtomCost,
 } from '@0xintuition/protocol'
 
 import { createPublicClient, createWalletClient, http } from 'viem'
@@ -52,16 +52,16 @@ const address = getMultiVaultAddressFromChainId(intuitionTestnet.id)
 
 ```typescript
 import {
-  getAtomCost,
-  getTripleCost,
   multicallIntuitionConfig,
+  multiVaultGetAtomCost,
+  multiVaultGetTripleCost,
 } from '@0xintuition/protocol/core'
 
 // Get atom creation cost
-const atomCost = await getAtomCost({ address, publicClient })
+const atomCost = await multiVaultGetAtomCost({ address, publicClient })
 
 // Get triple creation cost
-const tripleCost = await getTripleCost({ address, publicClient })
+const tripleCost = await multiVaultGetTripleCost({ address, publicClient })
 
 // Get multiple config values in one call
 const config = await multicallIntuitionConfig({ address, publicClient })
@@ -72,10 +72,13 @@ const config = await multicallIntuitionConfig({ address, publicClient })
 ### Atom and Triple Creation
 
 ```typescript
-import { createAtoms, createTriples } from '@0xintuition/protocol'
+import {
+  multiVaultCreateAtoms,
+  multiVaultCreateTriples,
+} from '@0xintuition/protocol'
 
 // Create atoms (supports single or multiple)
-await createAtoms(
+await multiVaultCreateAtoms(
   { address, walletClient, publicClient },
   {
     args: [
@@ -87,7 +90,7 @@ await createAtoms(
 )
 
 // Create triples (supports single or multiple)
-await createTriples(
+await multiVaultCreateTriples(
   { address, walletClient, publicClient },
   {
     args: [
@@ -104,16 +107,16 @@ await createTriples(
 ### Deposits and Redemptions
 
 ```typescript
-import { deposit, redeem } from '@0xintuition/protocol'
+import { multiVaultDeposit, multiVaultRedeem } from '@0xintuition/protocol'
 
 // Deposit into a vault (atom or triple)
-await deposit(
+await multiVaultDeposit(
   { address, walletClient, publicClient },
   { args: [receiver, vaultId, curveId, minShares], value },
 )
 
 // Redeem shares from a vault
-await redeem(
+await multiVaultRedeem(
   { address, walletClient, publicClient },
   { args: [receiver, vaultId, curveId, shares, minAssets] },
 )
@@ -122,16 +125,19 @@ await redeem(
 ### Batch Deposits and Redemptions
 
 ```typescript
-import { depositBatch, redeemBatch } from '@0xintuition/protocol/core'
+import {
+  multiVaultDepositBatch,
+  multiVaultRedeemBatch,
+} from '@0xintuition/protocol/core'
 
 // Batch deposit into multiple vaults
-await depositBatch(
+await multiVaultDepositBatch(
   { address, walletClient, publicClient },
   { args: [receiver, termIds, curveIds, assets, minShares], value },
 )
 
 // Batch redeem shares from multiple vaults
-await redeemBatch(
+await multiVaultRedeemBatch(
   { address, walletClient, publicClient },
   { args: [shares, receiver, termIds, curveIds, minAssets] },
 )
@@ -141,17 +147,17 @@ await redeemBatch(
 
 ```typescript
 import {
-  createAtomsEncode,
-  createTriplesEncode,
-  depositEncode,
-  redeemEncode,
+  multiVaultCreateAtomsEncode,
+  multiVaultCreateTriplesEncode,
+  multiVaultDepositEncode,
+  multiVaultRedeemEncode,
 } from '@0xintuition/protocol/core'
 
-// Encode a createAtoms call
-const data = createAtomsEncode([atomUri1, atomUri2], [assets1, assets2])
+// Encode a multiVaultCreateAtoms call
+const data = multiVaultCreateAtomsEncode([atomUri1, atomUri2], [assets1, assets2])
 
-// Encode a createTriples call
-const data = createTriplesEncode(
+// Encode a multiVaultCreateTriples call
+const data = multiVaultCreateTriplesEncode(
   [subjectId1, subjectId2],
   [predicateId1, predicateId2],
   [objectId1, objectId2],
@@ -159,8 +165,8 @@ const data = createTriplesEncode(
 )
 
 // Encode deposit and redeem calls
-const depositData = depositEncode(receiver, termId, curveId, assets, minShares)
-const redeemData = redeemEncode(receiver, termId, curveId, shares, minAssets)
+const depositData = multiVaultDepositEncode(receiver, termId, curveId, assets, minShares)
+const redeemData = multiVaultRedeemEncode(receiver, termId, curveId, shares, minAssets)
 ```
 
 ## Event Parsing Utilities
@@ -232,9 +238,9 @@ const multiVault = getContract({
 })
 
 async function main() {
-  const atomCost = await multiVault.read.getAtomCost()
+  const atomCost = await multiVault.read.multiVaultGetAtomCost()
   const { minDeposit } = await multiVault.read.getGeneralConfig()
-  const hash = await multiVault.write.createAtoms(
+  const hash = await multiVault.write.multiVaultCreateAtoms(
     [[toHex('hello world')], [atomCost + minDeposit]],
     {
       value: atomCost + minDeposit,
