@@ -1,5 +1,11 @@
 ## 2.0.1
 
+## 2.0.2
+
+### Patch Changes
+
+- Added TrustBonding and WrappedTrust read methods to the protocol package.
+
 ### Patch Changes
 
 - 68a7d43: Added new smart contract reads and writes to the protocol and sdk packages.

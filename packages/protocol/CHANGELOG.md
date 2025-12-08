@@ -1,5 +1,11 @@
 ## 2.1.3 (2025-10-30)
 
+## 2.0.2
+
+### Patch Changes
+
+- Added TrustBonding and WrappedTrust read methods to the protocol package.
+
 ## 2.0.1
 
 ### Patch Changes
