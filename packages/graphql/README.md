@@ -15,8 +15,11 @@ This package provides comprehensive documentation for querying the Intuition kno
 - [Getting Started](#getting-started)
 - [Schema Reference](#schema-reference)
 - [Common Query Patterns](#common-query-patterns)
+- [Mutations](#mutations)
+- [Subscriptions](#subscriptions)
 - [Best Practices](#best-practices)
 - [Example Queries](#example-queries)
+- [Advanced Examples](#advanced-examples)
 - [Code Generation](#code-generation)
 - [Anti-Patterns to Avoid](#anti-patterns-to-avoid)
 - [Resources](#resources)
@@ -702,6 +705,663 @@ query GetAtomsPage($limit: Int!, $offset: Int!) {
 
 This fetches page 3 (items 41-60) when using 20 items per page.
 
+### Database Functions
+
+The API provides backend functions for complex queries that would be inefficient to perform client-side.
+
+#### Following/Social Queries
+
+Get accounts a user follows:
+
+```graphql
+query GetFollowing($address: String!) {
+  following(args: { address: $address }) {
+    id
+    label
+    image
+    atom {
+      term_id
+      label
+    }
+  }
+
+  following_aggregate(args: { address: $address }) {
+    aggregate {
+      count
+    }
+  }
+}
+```
+
+**Variables**:
+```json
+{
+  "address": "0xd8da6bf26964af9d7eed9e03e53415d37aa96045"
+}
+```
+
+Get positions from accounts you follow:
+
+```graphql
+query GetPositionsFromFollowing(
+  $address: String!
+  $limit: Int!
+  $offset: Int!
+) {
+  positions_from_following(
+    args: { address: $address }
+    limit: $limit
+    offset: $offset
+    order_by: { shares: desc }
+  ) {
+    id
+    shares
+    account {
+      id
+      label
+    }
+    vault {
+      term_id
+      current_share_price
+    }
+  }
+}
+```
+
+Get signals from followed accounts:
+
+```graphql
+query GetSignalsFromFollowing($address: String!, $limit: Int!) {
+  signals_from_following(
+    args: { address: $address }
+    limit: $limit
+    order_by: { created_at: desc }
+  ) {
+    id
+    event_type
+    created_at
+    account {
+      id
+      label
+    }
+    atom {
+      term_id
+      label
+    }
+  }
+}
+```
+
+#### Advanced Position Search
+
+Search positions with complex filtering:
+
+```graphql
+query SearchPositions(
+  $addresses: _text!
+  $searchFields: jsonb!
+) {
+  search_positions_on_subject(
+    args: {
+      addresses: $addresses
+      search_fields: $searchFields
+    }
+  ) {
+    id
+    shares
+    account {
+      id
+      label
+    }
+    vault {
+      term_id
+      term {
+        atom {
+          label
+          image
+        }
+      }
+    }
+  }
+}
+```
+
+**Variables**:
+```json
+{
+  "addresses": "{0xabc..., 0xdef...}",
+  "searchFields": {
+    "min_shares": "1000000000000000000",
+    "term_type": "atom"
+  }
+}
+```
+
+#### Social Search
+
+Search terms within your social graph:
+
+```graphql
+query SearchTermsFromFollowing(
+  $address: String!
+  $query: String!
+  $limit: Int
+) {
+  search_term_from_following(
+    args: { address: $address, query: $query }
+    limit: $limit
+  ) {
+    atom {
+      term_id
+      label
+      type
+      image
+    }
+  }
+}
+```
+
+### Time-Series Analysis
+
+The API includes pre-computed time-series aggregations for efficient analytics.
+
+#### Price Trend Queries
+
+Daily price trends:
+
+```graphql
+query GetDailyPriceTrends(
+  $termId: String!
+  $curveId: numeric!
+  $limit: Int!
+) {
+  share_price_change_stats_daily(
+    where: {
+      term_id: { _eq: $termId }
+      curve_id: { _eq: $curveId }
+    }
+    order_by: { bucket: desc }
+    limit: $limit
+  ) {
+    bucket
+    first_share_price
+    last_share_price
+    difference
+    change_count
+  }
+}
+```
+
+**Variables**:
+```json
+{
+  "termId": "0x...",
+  "curveId": "1",
+  "limit": 30
+}
+```
+
+For different time granularities, use:
+- `share_price_change_stats_hourly` - Hourly aggregations
+- `share_price_change_stats_weekly` - Weekly aggregations
+- `share_price_change_stats_monthly` - Monthly aggregations
+
+#### Signal Statistics
+
+Query aggregated signal data over time:
+
+```graphql
+query GetSignalStats($limit: Int!) {
+  signal_stats_daily(
+    order_by: { bucket: desc }
+    limit: $limit
+  ) {
+    bucket
+    deposit_count
+    redemption_count
+    total_volume
+  }
+}
+```
+
+### Denormalized Tables
+
+#### Predicate-Object Aggregations
+
+Query pre-aggregated collections grouped by (predicate, object):
+
+```graphql
+query GetPopularCollections(
+  $predicateId: String!
+  $limit: Int!
+) {
+  predicate_objects(
+    where: { predicate_id: { _eq: $predicateId } }
+    order_by: { triple_count: desc }
+    limit: $limit
+  ) {
+    predicate_id
+    object_id
+    triple_count
+    total_market_cap
+    total_position_count
+    object {
+      term_id
+      label
+      image
+    }
+  }
+}
+```
+
+**Variables**:
+```json
+{
+  "predicateId": "0x...",
+  "limit": 20
+}
+```
+
+This is more efficient than manually aggregating triples with the same predicate and object.
+
+### Statistical Aggregations
+
+Beyond count and sum, the API supports advanced statistical aggregations:
+
+```graphql
+query GetPositionStatistics($accountId: String!) {
+  positions_aggregate(
+    where: { account_id: { _eq: $accountId } }
+  ) {
+    aggregate {
+      count
+      sum { shares }
+      avg { shares }
+      min { shares }
+      max { shares }
+      stddev { shares }
+      stddev_pop { shares }
+      stddev_samp { shares }
+      variance { shares }
+      var_pop { shares }
+      var_samp { shares }
+    }
+  }
+}
+```
+
+**Use cases**:
+- `stddev` - Identify outliers in share distributions
+- `variance` - Measure position concentration
+- `avg` - Calculate average position size
+
+---
+
+## Mutations
+
+The GraphQL API provides mutations for uploading and pinning content to IPFS. Note that blockchain state changes (creating atoms, triples, deposits, redemptions) are performed through direct smart contract transactions, not GraphQL mutations.
+
+### Pinning Metadata to IPFS
+
+#### Pin Thing
+
+Pin a "Thing" object (general entity) to IPFS:
+
+```graphql
+mutation PinThing($thing: PinThingInput!) {
+  pinThing(thing: $thing) {
+    hash
+    name
+    size
+  }
+}
+```
+
+**Variables**:
+```json
+{
+  "thing": {
+    "name": "TypeScript Programming Language",
+    "description": "A strongly typed programming language that builds on JavaScript",
+    "image": "ipfs://QmXnnyufdzAWL5CqZ2RnSNgPbvCc1ALT73s6epPrRnZ1Xy",
+    "url": "https://www.typescriptlang.org"
+  }
+}
+```
+
+**Response**:
+```json
+{
+  "data": {
+    "pinThing": {
+      "hash": "QmYx8...",
+      "name": "thing.json",
+      "size": 256
+    }
+  }
+}
+```
+
+#### Pin Person
+
+Pin a Person entity to IPFS:
+
+```graphql
+mutation PinPerson($person: PinPersonInput!) {
+  pinPerson(person: $person) {
+    hash
+    name
+    size
+  }
+}
+```
+
+**Variables**:
+```json
+{
+  "person": {
+    "name": "Vitalik Buterin",
+    "description": "Co-founder of Ethereum",
+    "email": "vitalik@ethereum.org",
+    "identifier": "vitalik.eth",
+    "image": "ipfs://QmXnnyufdzAWL5CqZ2RnSNgPbvCc1ALT73s6epPrRnZ1Xy",
+    "url": "https://vitalik.ca"
+  }
+}
+```
+
+#### Pin Organization
+
+Pin an Organization entity to IPFS:
+
+```graphql
+mutation PinOrganization($organization: PinOrganizationInput!) {
+  pinOrganization(organization: $organization) {
+    hash
+    name
+    size
+  }
+}
+```
+
+**Variables**:
+```json
+{
+  "organization": {
+    "name": "Ethereum Foundation",
+    "description": "Non-profit organization supporting Ethereum development",
+    "email": "info@ethereum.org",
+    "image": "ipfs://QmXnnyufdzAWL5CqZ2RnSNgPbvCc1ALT73s6epPrRnZ1Xy",
+    "url": "https://ethereum.foundation"
+  }
+}
+```
+
+### Uploading JSON to IPFS
+
+Pin arbitrary JSON data to IPFS:
+
+```graphql
+mutation UploadJson($json: jsonb!) {
+  uploadJsonToIpfs(json: $json) {
+    hash
+    name
+    size
+  }
+}
+```
+
+**Variables**:
+```json
+{
+  "json": {
+    "type": "custom_metadata",
+    "attributes": [
+      { "trait_type": "Category", "value": "DeFi" },
+      { "trait_type": "Chain", "value": "Base" }
+    ],
+    "version": "1.0"
+  }
+}
+```
+
+### Image Upload
+
+#### Upload Image (Base64)
+
+Upload an image from base64-encoded data:
+
+```graphql
+mutation UploadImage($image: UploadImageInput!) {
+  uploadImage(image: $image) {
+    url
+    classification
+  }
+}
+```
+
+**Variables**:
+```json
+{
+  "image": {
+    "contentType": "image/png",
+    "data": "iVBORw0KGgoAAAANSUhEUgAAAAUA...",
+    "filename": "avatar.png"
+  }
+}
+```
+
+**Response**:
+```json
+{
+  "data": {
+    "uploadImage": {
+      "url": "ipfs://QmXnnyufdzAWL5CqZ2RnSNgPbvCc1ALT73s6epPrRnZ1Xy",
+      "classification": "safe"
+    }
+  }
+}
+```
+
+The `classification` field indicates if the image passed content moderation.
+
+#### Upload Image from URL
+
+Upload an image from a public URL:
+
+```graphql
+mutation UploadImageFromUrl($image: UploadImageFromUrlInput!) {
+  uploadImageFromUrl(image: $image) {
+    url
+    classification
+  }
+}
+```
+
+**Variables**:
+```json
+{
+  "image": {
+    "url": "https://example.com/images/logo.png"
+  }
+}
+```
+
+### Mutation Workflow
+
+Typical workflow for creating an atom with pinned metadata:
+
+1. **Pin metadata** using `pinThing`, `pinPerson`, or `pinOrganization`
+2. **Get IPFS hash** from the mutation response
+3. **Create atom on-chain** via smart contract transaction using the IPFS hash
+4. **Query the GraphQL API** to fetch the newly created atom with resolved metadata
+
+---
+
+## Subscriptions
+
+The GraphQL API supports real-time subscriptions for live data updates using cursor-based streaming. All queryable entities support corresponding `_stream` subscriptions.
+
+### Basic Subscription Pattern
+
+Subscribe to new atoms:
+
+```graphql
+subscription WatchAtoms(
+  $cursor: [atoms_stream_cursor_input]!
+  $batchSize: Int!
+) {
+  atoms_stream(
+    cursor: $cursor
+    batch_size: $batchSize
+  ) {
+    term_id
+    label
+    image
+    created_at
+  }
+}
+```
+
+**Variables**:
+```json
+{
+  "cursor": [{
+    "initial_value": { "created_at": "2024-01-01T00:00:00Z" },
+    "ordering": "ASC"
+  }],
+  "batchSize": 10
+}
+```
+
+### Cursor-Based Streaming
+
+Subscriptions use cursors to enable resumable streams:
+
+#### Cursor Configuration
+
+- **`initial_value`**: Starting point for the stream (e.g., timestamp, ID)
+- **`ordering`**: Sort direction (`ASC` or `DESC`)
+- **`batch_size`**: Number of items per batch
+
+#### Resumable Stream Example
+
+```graphql
+subscription WatchPositions(
+  $cursor: [positions_stream_cursor_input]!
+) {
+  positions_stream(
+    cursor: $cursor
+    batch_size: 20
+    where: { shares: { _gt: "0" } }
+  ) {
+    id
+    shares
+    account {
+      id
+      label
+    }
+    vault {
+      term_id
+      current_share_price
+    }
+  }
+}
+```
+
+**Variables**:
+```json
+{
+  "cursor": [{
+    "initial_value": { "created_at": "2024-12-01T00:00:00Z" },
+    "ordering": "DESC"
+  }]
+}
+```
+
+To resume from where you left off, update `initial_value` to the last received item's cursor value.
+
+### Common Subscription Use Cases
+
+#### Monitor New Triples
+
+```graphql
+subscription WatchNewTriples($cursor: [triples_stream_cursor_input]!) {
+  triples_stream(
+    cursor: $cursor
+    batch_size: 5
+  ) {
+    term_id
+    created_at
+    subject { label }
+    predicate { label }
+    object { label }
+  }
+}
+```
+
+#### Track Price Changes
+
+```graphql
+subscription WatchPriceChanges(
+  $cursor: [share_price_changes_stream_cursor_input]!
+  $termId: String!
+) {
+  share_price_changes_stream(
+    cursor: $cursor
+    batch_size: 10
+    where: { term_id: { _eq: $termId } }
+  ) {
+    term_id
+    curve_id
+    old_price
+    new_price
+    price_change
+    created_at
+  }
+}
+```
+
+#### Live Signal Feed
+
+```graphql
+subscription WatchSignals(
+  $cursor: [deposits_stream_cursor_input, redemptions_stream_cursor_input]!
+) {
+  deposits_stream(cursor: $cursor, batch_size: 10) {
+    id
+    event_type
+    sender_id
+    receiver_id
+    assets_for_receiver
+    shares_for_receiver
+    created_at
+  }
+
+  redemptions_stream(cursor: $cursor, batch_size: 10) {
+    id
+    event_type
+    receiver_id
+    assets_for_receiver
+    shares_from_receiver
+    created_at
+  }
+}
+```
+
+### Subscription Best Practices
+
+**Use subscriptions when:**
+- Building real-time dashboards
+- Monitoring live protocol activity
+- Tracking position changes
+- Creating notification systems
+
+**Use polling when:**
+- Data updates infrequently
+- Real-time updates aren't critical
+- Minimizing server connections is important
+
 ---
 
 ## Best Practices
@@ -939,6 +1599,154 @@ query GetAllAtoms($limit: Int!, $offset: Int!) {
   }
 }
 ```
+
+### 9. Leverage Pre-Computed Statistics
+
+Use time-series aggregation tables instead of computing statistics client-side:
+
+❌ **Bad**: Computing trends from raw events
+
+```graphql
+query GetPriceHistory($termId: String!) {
+  # Fetching all price changes then computing daily aggregates in app
+  share_price_changes(
+    where: { term_id: { _eq: $termId } }
+    order_by: { created_at: asc }
+  ) {
+    created_at
+    old_price
+    new_price
+  }
+}
+```
+
+✅ **Good**: Using pre-computed daily statistics
+
+```graphql
+query GetDailyPriceStats($termId: String!, $curveId: numeric!) {
+  share_price_change_stats_daily(
+    where: {
+      term_id: { _eq: $termId }
+      curve_id: { _eq: $curveId }
+    }
+    order_by: { bucket: desc }
+    limit: 30
+  ) {
+    bucket
+    first_share_price
+    last_share_price
+    difference
+    change_count
+  }
+}
+```
+
+**When to use pre-computed tables**:
+- Building charts/graphs for analytics dashboards
+- Computing trends over time
+- Displaying aggregate metrics by time period
+
+**Available time-series tables**:
+- `share_price_change_stats_daily`, `_hourly`, `_weekly`, `_monthly`
+- `signal_stats_daily`, `_hourly`, `_monthly`
+
+### 10. Use Database Functions for Complex Queries
+
+Leverage backend functions instead of filtering large datasets client-side:
+
+❌ **Bad**: Manual filtering for social queries
+
+```graphql
+query GetFollowingManually($address: String!) {
+  # First get all positions for an address
+  my_positions: positions(where: { account_id: { _eq: $address } }) {
+    vault {
+      term {
+        triple {
+          # Check if it's a "follows" relationship...
+          # This is inefficient and complex
+        }
+      }
+    }
+  }
+
+  # Then filter in application code...
+}
+```
+
+✅ **Good**: Using database functions
+
+```graphql
+query GetFollowingEfficiently($address: String!) {
+  following(args: { address: $address }) {
+    id
+    label
+    atom {
+      term_id
+      label
+    }
+  }
+}
+```
+
+**Available database functions**:
+- `following` - Get accounts a user follows
+- `positions_from_following` - Social feed of positions
+- `search_positions_on_subject` - Complex position filtering
+- `search_term` - Full-text search
+- `search_term_from_following` - Search within social graph
+- `signals_from_following` - Activity from followed accounts
+
+**Benefits**:
+- Faster query execution (runs in database, not client)
+- Less data transferred over network
+- More maintainable code
+
+### 11. Choose Subscriptions vs Polling Appropriately
+
+Use subscriptions for real-time features, polling for everything else:
+
+✅ **Use subscriptions when:**
+- Building real-time dashboards
+- Monitoring live protocol activity (e.g., new positions, price changes)
+- Creating notification systems
+- User expects immediate updates
+- Data changes frequently (multiple times per minute)
+
+**Example subscription use cases**:
+```graphql
+subscription WatchMyPositions($cursor: [positions_stream_cursor_input]!) {
+  positions_stream(cursor: $cursor, batch_size: 10) {
+    id
+    shares
+    vault { current_share_price }
+  }
+}
+```
+
+✅ **Use polling when:**
+- Data updates infrequently (e.g., daily statistics)
+- Real-time updates aren't critical for UX
+- Minimizing server connections is important
+- Building static reports or analytics
+
+**Example polling pattern**:
+```graphql
+query GetStats {
+  stats {
+    total_accounts
+    total_atoms
+    total_triples
+  }
+}
+# Poll every 30 seconds or on user action
+```
+
+**Subscription cursor management**:
+- Always provide `initial_value` to start from a specific point
+- Use `batch_size` to control data flow (typically 10-50)
+- Store last received cursor to resume after disconnection
+- Use `ordering: ASC` for chronological updates
 
 ---
 
@@ -1226,6 +2034,500 @@ query GetVaultStats($termId: String!, $curveId: numeric!) {
 - Uses aggregates for statistics (count, sum, avg)
 - Limits top positions query
 - Uses aliases for clarity (`top_positions`)
+
+---
+
+## Advanced Examples
+
+The following examples demonstrate more complex use cases and advanced API features.
+
+### Example 6: Social Graph - Following Feed
+
+Build a social feed showing positions from accounts a user follows.
+
+```graphql
+query GetFollowingFeed(
+  $address: String!
+  $limit: Int!
+  $offset: Int!
+) {
+  # Get total follower count
+  following_count: following_aggregate(args: { address: $address }) {
+    aggregate {
+      count
+    }
+  }
+
+  # Get positions from followed accounts
+  feed: positions_from_following(
+    args: { address: $address }
+    limit: $limit
+    offset: $offset
+    order_by: { created_at: desc }
+  ) {
+    id
+    shares
+    created_at
+    account {
+      id
+      label
+      image
+    }
+    vault {
+      term_id
+      curve_id
+      current_share_price
+      total_shares
+      term {
+        atom {
+          term_id
+          label
+          image
+          type
+        }
+        triple {
+          term_id
+          subject { label image }
+          predicate { label }
+          object { label image }
+        }
+      }
+    }
+  }
+
+  # Also get signals (deposits/redemptions) from followed accounts
+  signals: signals_from_following(
+    args: { address: $address }
+    limit: $limit
+    order_by: { created_at: desc }
+  ) {
+    id
+    event_type
+    created_at
+    account {
+      id
+      label
+      image
+    }
+    atom {
+      term_id
+      label
+    }
+    triple {
+      term_id
+      subject { label }
+      predicate { label }
+      object { label }
+    }
+  }
+}
+```
+
+**Variables**:
+```json
+{
+  "address": "0xd8da6bf26964af9d7eed9e03e53415d37aa96045",
+  "limit": 20,
+  "offset": 0
+}
+```
+
+**Use Case**: Build a social activity feed showing what the accounts you follow are investing in, similar to Twitter/X feed but for protocol positions.
+
+**Best Practices Used**:
+- Uses database functions (`positions_from_following`, `signals_from_following`) instead of manual filtering
+- Combines multiple related queries in one request
+- Includes aggregate count for pagination UI
+- Handles both atoms and triples in vault term relationship
+
+---
+
+### Example 7: Time-Series Analytics - Price Trends
+
+Analyze price trends over time using pre-computed aggregations.
+
+```graphql
+query GetPriceTrendAnalysis(
+  $termId: String!
+  $curveId: numeric!
+  $days: Int!
+) {
+  # Get daily price changes for the last N days
+  daily_trends: share_price_change_stats_daily(
+    where: {
+      term_id: { _eq: $termId }
+      curve_id: { _eq: $curveId }
+    }
+    order_by: { bucket: desc }
+    limit: $days
+  ) {
+    bucket
+    first_share_price
+    last_share_price
+    difference
+    change_count
+  }
+
+  # Get hourly data for the last 24 hours for granular view
+  hourly_trends: share_price_change_stats_hourly(
+    where: {
+      term_id: { _eq: $termId }
+      curve_id: { _eq: $curveId }
+    }
+    order_by: { bucket: desc }
+    limit: 24
+  ) {
+    bucket
+    first_share_price
+    last_share_price
+    difference
+  }
+
+  # Get current vault state
+  current_state: vault(term_id: $termId, curve_id: $curveId) {
+    term_id
+    curve_id
+    current_share_price
+    total_shares
+    total_assets
+    position_count
+  }
+
+  # Get overall signal stats for context
+  signal_trends: signal_stats_daily(
+    where: {
+      term_id: { _eq: $termId }
+      curve_id: { _eq: $curveId }
+    }
+    order_by: { bucket: desc }
+    limit: $days
+  ) {
+    bucket
+    deposit_count
+    redemption_count
+    total_volume
+  }
+}
+```
+
+**Variables**:
+```json
+{
+  "termId": "0x57d94c116a33bb460428eced262b7ae2ec6f865e7aceef6357cec3d034e8ea21",
+  "curveId": "1",
+  "days": 30
+}
+```
+
+**Use Case**: Build analytics dashboards showing price trends, trading volume, and market activity over different time periods.
+
+**Best Practices Used**:
+- Leverages pre-computed time-series tables for performance
+- Combines multiple time granularities (daily, hourly) in one query
+- Includes current state for comparison
+- Uses variables for all dynamic values
+
+**Analysis Notes**:
+- Calculate percentage change: `(last_share_price - first_share_price) / first_share_price * 100`
+- `change_count` shows number of price changes in that time bucket
+- Weekly and monthly aggregations available via `share_price_change_stats_weekly` and `share_price_change_stats_monthly`
+
+---
+
+### Example 8: Advanced Search - Multi-Criteria Position Search
+
+Perform complex position searches with custom filtering criteria.
+
+```graphql
+query AdvancedPositionSearch(
+  $addresses: _text!
+  $searchFields: jsonb!
+  $limit: Int!
+) {
+  # Search positions with custom criteria
+  results: search_positions_on_subject(
+    args: {
+      addresses: $addresses
+      search_fields: $searchFields
+    }
+    limit: $limit
+  ) {
+    id
+    shares
+    created_at
+    account {
+      id
+      label
+      image
+    }
+    vault {
+      term_id
+      curve_id
+      current_share_price
+      total_shares
+      position_count
+      term {
+        atom {
+          term_id
+          label
+          image
+          type
+        }
+        triple {
+          term_id
+          subject {
+            term_id
+            label
+            image
+          }
+          predicate {
+            term_id
+            label
+          }
+          object {
+            term_id
+            label
+            image
+          }
+        }
+      }
+    }
+  }
+
+  # Get count for pagination
+  results_aggregate: search_positions_on_subject_aggregate(
+    args: {
+      addresses: $addresses
+      search_fields: $searchFields
+    }
+  ) {
+    aggregate {
+      count
+      sum {
+        shares
+      }
+    }
+  }
+}
+```
+
+**Variables**:
+```json
+{
+  "addresses": "{0xd8da6bf26964af9d7eed9e03e53415d37aa96045,0xabc123...}",
+  "searchFields": {
+    "min_shares": "1000000000000000000",
+    "term_type": "atom",
+    "atom_type": "Person"
+  },
+  "limit": 50
+}
+```
+
+**Use Case**: Build advanced search UIs where users can filter positions by:
+- Multiple wallet addresses
+- Minimum share amounts
+- Term type (atom vs triple)
+- Atom type (Person, Organization, Thing)
+- Other custom criteria in `search_fields`
+
+**Best Practices Used**:
+- Uses backend function for complex filtering (more efficient than client-side)
+- Includes aggregate variant for totals
+- Handles both atom and triple results
+- Uses `_text` type for array of addresses
+
+---
+
+### Example 9: Real-Time Updates - Subscription Pattern
+
+Build a live dashboard with real-time position updates.
+
+```graphql
+subscription LivePositionMonitor(
+  $cursor: [positions_stream_cursor_input]!
+  $accountId: String
+  $batchSize: Int!
+) {
+  # Stream position updates
+  positions_stream(
+    cursor: $cursor
+    batch_size: $batchSize
+    where: {
+      account_id: { _eq: $accountId }
+      shares: { _gt: "0" }
+    }
+  ) {
+    id
+    shares
+    created_at
+    account {
+      id
+      label
+    }
+    vault {
+      term_id
+      curve_id
+      current_share_price
+      term {
+        atom {
+          term_id
+          label
+          image
+        }
+        triple {
+          term_id
+          subject { label }
+          predicate { label }
+          object { label }
+        }
+      }
+    }
+  }
+}
+```
+
+**Variables (Initial)**:
+```json
+{
+  "cursor": [{
+    "initial_value": { "created_at": "2024-12-01T00:00:00Z" },
+    "ordering": "ASC"
+  }],
+  "accountId": "0xd8da6bf26964af9d7eed9e03e53415d37aa96045",
+  "batchSize": 10
+}
+```
+
+**Variables (Resuming)**:
+```json
+{
+  "cursor": [{
+    "initial_value": { "created_at": "2024-12-12T15:30:00Z" },
+    "ordering": "ASC"
+  }],
+  "accountId": "0xd8da6bf26964af9d7eed9e03e53415d37aa96045",
+  "batchSize": 10
+}
+```
+
+**Use Case**: Create real-time dashboards that update automatically when:
+- New positions are created
+- Existing positions change
+- User performs deposits or redemptions
+
+**Implementation Pattern**:
+1. Start subscription with initial cursor (e.g., last hour)
+2. Process incoming batches of updates
+3. Update UI state with new data
+4. If connection drops, resume from last received `created_at`
+
+**Best Practices Used**:
+- Filters for active positions (`shares > 0`)
+- Uses batch_size to control data flow
+- Cursor enables resumable streams after disconnection
+- Ascending order to get updates chronologically
+
+---
+
+### Example 10: Mutation Flow - Pinning Content to IPFS
+
+Complete workflow for creating an atom with metadata pinning.
+
+```graphql
+# Step 1: Pin person metadata to IPFS
+mutation PinPersonMetadata($person: PinPersonInput!) {
+  pinPerson(person: $person) {
+    hash
+    name
+    size
+  }
+}
+
+# Step 2: Query to verify atom after on-chain creation
+query GetCreatedAtom($termId: String!, $curveId: numeric!) {
+  atom(term_id: $termId) {
+    term_id
+    data
+    label
+    image
+    emoji
+    type
+    created_at
+    creator {
+      id
+      label
+    }
+    term {
+      vaults(where: { curve_id: { _eq: $curveId } }) {
+        term_id
+        curve_id
+        total_shares
+        total_assets
+        current_share_price
+        position_count
+      }
+    }
+  }
+}
+```
+
+**Step 1 Variables**:
+```json
+{
+  "person": {
+    "name": "Satoshi Nakamoto",
+    "description": "Creator of Bitcoin",
+    "identifier": "satoshi",
+    "image": "ipfs://QmPreviouslyUploadedImage...",
+    "url": "https://bitcoin.org"
+  }
+}
+```
+
+**Step 1 Response**:
+```json
+{
+  "data": {
+    "pinPerson": {
+      "hash": "QmYx8C3kNN1sFSx5b...",
+      "name": "person.json",
+      "size": 184
+    }
+  }
+}
+```
+
+**Step 2 Variables** (after blockchain transaction):
+```json
+{
+  "termId": "0x57d94c116a33bb460428eced262b7ae2ec6f865e7aceef6357cec3d034e8ea21",
+  "curveId": "1"
+}
+```
+
+**Complete Workflow**:
+
+1. **Prepare metadata** - Gather all person/thing/organization data
+2. **Upload image** (optional) - Use `uploadImageFromUrl` or `uploadImage` if needed
+3. **Pin metadata** - Use `pinPerson`, `pinThing`, or `pinOrganization`
+4. **Get IPFS hash** - Extract `hash` from mutation response
+5. **Create atom on-chain** - Call smart contract with IPFS hash (via [@0xintuition/protocol](../protocol/README.md))
+6. **Wait for indexing** - GraphQL API will index the new atom (usually < 30 seconds)
+7. **Query atom** - Fetch complete atom data with vault information
+8. **Cache metadata** - Store IPFS hash for future reference
+
+**Error Handling Considerations**:
+- Mutation may fail if image classification fails (inappropriate content)
+- IPFS pinning may timeout - implement retry logic
+- Blockchain transaction may fail - check gas and approval
+- Atom may not appear immediately - poll or subscribe for updates
+
+**Best Practices Used**:
+- Separates IPFS operations from blockchain operations
+- Uses appropriate mutation for entity type
+- Queries include vault data for immediate display
+- Workflow is idempotent (can retry safely)
 
 ---
 
