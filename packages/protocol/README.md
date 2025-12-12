@@ -514,11 +514,11 @@ import {
 } from '@0xintuition/protocol'
 
 const depositData = multiVaultDepositEncode(
-  receiver, vaultId, curveId, assets, minShares
+  receiver, termId, curveId, minShares
 )
 
 const redeemData = multiVaultRedeemEncode(
-  receiver, vaultId, curveId, shares, minAssets
+  receiver, termId, curveId, shares, minAssets
 )
 ```
 
@@ -533,17 +533,17 @@ import {
 
 const depositBatchData = multiVaultDepositBatchEncode(
   receiver,
-  [vaultId1, vaultId2],
+  [termId1, termId2],
   [curveId1, curveId2],
   [assets1, assets2],
   [minShares1, minShares2]
 )
 
 const redeemBatchData = multiVaultRedeemBatchEncode(
-  [shares1, shares2],
   receiver,
-  [vaultId1, vaultId2],
+  [termId1, termId2],
   [curveId1, curveId2],
+  [shares1, shares2],
   [minAssets1, minAssets2]
 )
 ```
@@ -1078,7 +1078,7 @@ import { wrappedTrustDeposit } from '@0xintuition/protocol'
 
 const txHash = await wrappedTrustDeposit(
   { address: wrappedTrustAddress, walletClient, publicClient },
-  { value: trustAmount }
+  { args: [], value: trustAmount }
 )
 ```
 
@@ -1146,7 +1146,7 @@ const events = await eventParseRedeemed(publicClient, txHash)
 
 ```typescript
 import {
-  eventParseAtomConfigUpdated,
+  eventParseAtomConfigUpdate,
   eventParseGeneralConfigUpdated,
   eventParseBondingCurveConfigUpdated,
   eventParseWalletConfigUpdated,
@@ -1159,8 +1159,8 @@ import {
 import {
   eventParseVaultFeesUpdated,
   eventParseProtocolFeeAccrued,
-  eventParseAtomWalletFeeCollected,
-  eventParseAtomWalletFeeClaimed,
+  eventParseAtomWalletDepositFeeCollected,
+  eventParseAtomWalletDepositFeesClaimed,
 } from '@0xintuition/protocol'
 ```
 
@@ -1271,10 +1271,10 @@ import {
 } from '@0xintuition/protocol'
 import { parseEther } from 'viem'
 
-// Assume we have atoms: Alice (ID: 1n), knows (ID: 2n), Bob (ID: 3n)
-const subjectId = 1n // Alice
-const predicateId = 2n // knows
-const objectId = 3n // Bob
+// Assume we have atoms: Alice, knows, Bob with their term IDs
+const subjectId = '0x1234567890123456789012345678901234567890123456789012345678901234' // Alice
+const predicateId = '0x2345678901234567890123456789012345678901234567890123456789012345' // knows
+const objectId = '0x3456789012345678901234567890123456789012345678901234567890123456' // Bob
 
 // 1. Get triple cost
 const tripleCost = await multiVaultGetTripleCost({ address, publicClient })
@@ -1327,8 +1327,8 @@ import {
 } from '@0xintuition/protocol'
 import { parseEther } from 'viem'
 
-const vaultId = 1n // Atom or triple ID
-const curveId = 0 // Curve ID (typically 0)
+const vaultId = '0x1234567890123456789012345678901234567890123456789012345678901234' // Atom or triple ID
+const curveId = 1 // Curve ID (1 = LinearCurve, 2 = OffsetProgressiveCurve)
 const depositAmount = parseEther('1')
 
 // 1. Preview deposit to see expected shares
@@ -1375,8 +1375,12 @@ import { parseEther } from 'viem'
 const { minDeposit } = await multiVaultGetGeneralConfig({ address, publicClient })
 
 // 2. Prepare batch deposit
-const vaults = [1n, 5n, 10n]
-const curves = [0, 0, 0]
+const vaults = [
+  '0x1234567890123456789012345678901234567890123456789012345678901234',
+  '0x2345678901234567890123456789012345678901234567890123456789012345',
+  '0x3456789012345678901234567890123456789012345678901234567890123456'
+]
+const curves = [1, 1, 2] // Mix of LinearCurve (1) and OffsetProgressiveCurve (2)
 const deposits = [parseEther('0.5'), parseEther('1'), parseEther('0.25')]
 const minShares = [0n, 0n, 0n] // Accept any amount (for simplicity)
 
@@ -1663,18 +1667,18 @@ The package exports ABIs and bytecodes for all protocol contracts:
 
 ```typescript
 import {
-  MultiVaultAbi,
-  TrustBondingAbi,
-  WrappedTrustAbi,
-  TrustAbi,
+  AtomWalletAbi,
+  AtomWalletFactoryAbi,
+  BaseEmissionsControllerAbi,
   BondingCurveRegistryAbi,
   LinearCurveAbi,
+  MultiVaultAbi,
   OffsetProgressiveCurveAbi,
-  AtomWalletFactoryAbi,
-  AtomWalletAbi,
-  BaseEmissionsControllerAbi,
   SatelliteEmissionsControllerAbi,
   TransparentUpgradeableProxyAbi,
+  TrustAbi,
+  TrustBondingAbi,
+  WrappedTrustAbi,
 } from '@0xintuition/protocol'
 ```
 
@@ -1692,8 +1696,8 @@ const multiVault = getContract({
 })
 
 // Use contract directly
-const atomCost = await multiVault.read.multiVaultGetAtomCost()
-const txHash = await multiVault.write.multiVaultCreateAtoms(
+const atomCost = await multiVault.read.getAtomCost()
+const txHash = await multiVault.write.createAtoms(
   [[toHex('example')], [atomCost]],
   { value: atomCost }
 )
