@@ -167,15 +167,65 @@ const testnetClient = createPublicClient({
 ```typescript
 import {
   getMultiVaultAddressFromChainId,
+  getContractAddressFromChainId,
   intuitionDeployments,
 } from '@0xintuition/protocol'
 
 // Get MultiVault address for a chain
 const address = getMultiVaultAddressFromChainId(chainId)
 
-// Or access all deployments
+// Get any contract address by name
+const trustBondingAddress = getContractAddressFromChainId('TrustBonding', chainId)
+
+// Or access all deployments directly
 const multiVaultAddress = intuitionDeployments.MultiVault?.[chainId]
-const trustBondingAddress = intuitionDeployments.TrustBonding?.[chainId]
+const wrappedTrustAddress = intuitionDeployments.WrappedTrust?.[chainId]
+```
+
+#### Available Contract Deployments
+
+The `intuitionDeployments` object contains addresses for:
+
+- **Trust** - Native token (deployed on Base: Chain ID 8453)
+- **WrappedTrust** - Wrapped version of Trust token
+- **MultiVault** - Main protocol contract for atoms, triples, and vaults
+- **TrustBonding** - Bonding rewards and epoch management
+- **BondingCurveRegistry** - Registry for bonding curves
+- **LinearCurve** - Linear bonding curve implementation
+- **OffsetProgressiveCurve** - Progressive/exponential bonding curve
+
+**Example: Complete deployment structure**
+
+```typescript
+const allDeployments = {
+  Trust: {
+    8453: '0x6cd905dF2Ed214b22e0d48FF17CD4200C1C6d8A3', // Base
+  },
+  WrappedTrust: {
+    13579: '0xDE80b6EE63f7D809427CA350e30093F436A0fe35', // Testnet
+    1155: '0x81cFb09cb44f7184Ad934C09F82000701A4bF672',  // Mainnet
+  },
+  MultiVault: {
+    13579: '0x2Ece8D4dEdcB9918A398528f3fa4688b1d2CAB91', // Testnet
+    1155: '0x6E35cF57A41fA15eA0EaE9C33e751b01A784Fe7e',  // Mainnet
+  },
+  TrustBonding: {
+    13579: '0x75dD32b522c89566265eA32ecb50b4Fc4d00ADc7', // Testnet
+    1155: '0x635bBD1367B66E7B16a21D6E5A63C812fFC00617',  // Mainnet
+  },
+  BondingCurveRegistry: {
+    13579: '0x2AFC4949Dd3664219AA2c20133771658E93892A1', // Testnet
+    1155: '0xd0E488Fb32130232527eedEB72f8cE2BFC0F9930',  // Mainnet
+  },
+  LinearCurve: {
+    13579: '0x6df5eecd9B14E31C98A027b8634876E4805F71B0', // Testnet
+    1155: '0xc3eFD5471dc63d74639725f381f9686e3F264366',  // Mainnet
+  },
+  OffsetProgressiveCurve: {
+    13579: '0xE65EcaAF5964aC0d94459A66A59A8B9eBCE42CbB', // Testnet
+    1155: '0x23afF95153aa88D28B9B97Ba97629E05D5fD335d',  // Mainnet
+  },
+}
 ```
 
 ---
@@ -469,6 +519,32 @@ const depositData = multiVaultDepositEncode(
 
 const redeemData = multiVaultRedeemEncode(
   receiver, vaultId, curveId, shares, minAssets
+)
+```
+
+##### `multiVaultDepositBatchEncode` / `multiVaultRedeemBatchEncode`
+Encode batch deposit/redeem call data.
+
+```typescript
+import {
+  multiVaultDepositBatchEncode,
+  multiVaultRedeemBatchEncode,
+} from '@0xintuition/protocol'
+
+const depositBatchData = multiVaultDepositBatchEncode(
+  receiver,
+  [vaultId1, vaultId2],
+  [curveId1, curveId2],
+  [assets1, assets2],
+  [minShares1, minShares2]
+)
+
+const redeemBatchData = multiVaultRedeemBatchEncode(
+  [shares1, shares2],
+  receiver,
+  [vaultId1, vaultId2],
+  [curveId1, curveId2],
+  [minAssets1, minAssets2]
 )
 ```
 
@@ -1457,7 +1533,7 @@ type MultivaultConfig = {
 ### Vault Types
 
 ```typescript
-import type { VaultDetailsType, IdentityVaultDetailsType } from '@0xintuition/protocol'
+import type { VaultDetailsType, IdentityVaultDetailsType, Vault } from '@0xintuition/protocol'
 
 type VaultDetailsType = {
   assets_sum: string
@@ -1475,7 +1551,40 @@ type VaultDetailsType = {
   formatted_against_assets_sum?: string
   against_conviction_sum?: string
   formatted_against_conviction_sum?: string
-  // ... fee and config fields
+  against_conviction_price?: string
+  formatted_against_conviction_price?: string
+  user_conviction_against?: string
+  formatted_user_conviction_against?: string
+  user_assets_against?: string
+  formatted_user_assets_against?: string
+  // Fee configuration
+  entry_fee: string
+  formatted_entry_fee: string
+  exit_fee: string
+  formatted_exit_fee: string
+  protocol_fee: string
+  formatted_protocol_fee: string
+  admin: string
+  protocol_vault: string
+  fee_denominator: string
+  min_deposit: string
+  formatted_min_deposit: string
+  min_share: string
+  formatted_min_share: string
+  // Atom/Triple specific fields
+  atom_cost?: string
+  formatted_atom_cost?: string
+  triple_cost?: string
+  formatted_triple_cost?: string
+  atom_creation_fee?: string
+  formatted_atom_creation_fee?: string
+  isTriple?: boolean
+  triple_creation_fee?: string
+  formatted_triple_creation_fee?: string
+  atom_deposit_fraction_on_triple_creation?: string
+  formatted_atom_deposit_fraction_on_triple_creation?: string
+  atom_deposit_fraction_for_triple?: string
+  formatted_atom_deposit_fraction_for_triple?: string
 }
 
 type IdentityVaultDetailsType = {
@@ -1486,7 +1595,44 @@ type IdentityVaultDetailsType = {
   formatted_conviction_sum: string
   conviction_price: string
   formatted_conviction_price: string
-  // ... additional identity-specific fields
+  entry_fee: string
+  formatted_entry_fee: string
+  exit_fee: string
+  formatted_exit_fee: string
+  protocol_fee: string
+  formatted_protocol_fee: string
+  admin: string
+  protocol_vault: string
+  fee_denominator: string
+  formatted_fee_denominator: string
+  min_deposit: string
+  formatted_min_deposit: string
+  min_share: string
+  formatted_min_share: string
+  atom_cost: string
+  formatted_atom_cost: string
+  atom_creation_fee: string
+  formatted_atom_creation_fee: string
+  user_conviction?: string
+  formatted_user_conviction?: string
+  user_assets?: string
+  formatted_user_assets?: string
+}
+
+type Vault = {
+  __typename?: 'vaults'
+  total_shares: string | number
+  current_share_price: string | number
+  min_deposit?: string | number
+  position_count?: number
+  allPositions?: {
+    aggregate?: {
+      count: number
+      sum?: {
+        shares: string | number
+      }
+    }
+  }
 }
 ```
 
@@ -1616,6 +1762,58 @@ const allDeployments = intuitionDeployments
 }
 */
 ```
+
+### Utility Functions
+
+The SDK provides helper functions to simplify contract address lookups across different chains.
+
+#### `getMultiVaultAddressFromChainId`
+
+Get the MultiVault contract address for a specific chain. This is the most commonly used utility since MultiVault is the main protocol contract.
+
+```typescript
+import { getMultiVaultAddressFromChainId, intuitionMainnet, intuitionTestnet } from '@0xintuition/protocol'
+
+// Get mainnet MultiVault address
+const mainnetAddress = getMultiVaultAddressFromChainId(intuitionMainnet.id) // 1155
+// Returns: '0x6E35cF57A41fA15eA0EaE9C33e751b01A784Fe7e'
+
+// Get testnet MultiVault address
+const testnetAddress = getMultiVaultAddressFromChainId(intuitionTestnet.id) // 13579
+// Returns: '0x2Ece8D4dEdcB9918A398528f3fa4688b1d2CAB91'
+```
+
+#### `getContractAddressFromChainId`
+
+Get any protocol contract address by name and chain ID. This is a more generic utility for accessing other contract addresses.
+
+```typescript
+import { getContractAddressFromChainId } from '@0xintuition/protocol'
+
+// Get TrustBonding contract address
+const trustBonding = getContractAddressFromChainId('TrustBonding', 1155)
+
+// Get WrappedTrust contract address
+const wrappedTrust = getContractAddressFromChainId('WrappedTrust', 13579)
+
+// Get bonding curve contracts
+const linearCurve = getContractAddressFromChainId('LinearCurve', 1155)
+const progressiveCurve = getContractAddressFromChainId('OffsetProgressiveCurve', 1155)
+```
+
+**Supported contract names:**
+- `'Trust'` - Native TRUST token (only on Base: 8453)
+- `'WrappedTrust'` - Wrapped TRUST token
+- `'MultiVault'` - Main protocol contract
+- `'TrustBonding'` - Bonding and rewards contract
+- `'BondingCurveRegistry'` - Curve registry
+- `'LinearCurve'` - Linear bonding curve
+- `'OffsetProgressiveCurve'` - Progressive bonding curve
+
+**When to use each utility:**
+- Use `getMultiVaultAddressFromChainId` for most protocol operations (atoms, triples, deposits, redeems)
+- Use `getContractAddressFromChainId` when interacting with TrustBonding, WrappedTrust, or bonding curves
+- For direct access without helper functions, use `intuitionDeployments` object
 
 ---
 
