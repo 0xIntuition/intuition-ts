@@ -20,6 +20,7 @@ A comprehensive, developer-friendly SDK for building on the Intuition protocol. 
   - [Triple Management](#triple-management)
   - [Vault Operations](#vault-operations)
   - [Search & Discovery](#search--discovery)
+  - [External Integrations](#external-integrations)
   - [Experimental Features](#experimental-features)
   - [Protocol Functions](#protocol-functions)
 - [Common Workflows](#common-workflows)
@@ -47,7 +48,7 @@ bun install @0xintuition/sdk viem
 **Peer Dependencies:** `viem ^2.0.0`
 
 **Optional Dependencies:**
-- Pinata API key for IPFS pinning (required for `createAtomFromThing` and related functions)
+- Pinata API JWT token for IPFS pinning (required for `createAtomFromIpfsUpload`)
 
 ---
 
@@ -187,7 +188,7 @@ const testnetClient = createPublicClient({
 
 ### Optional: Pinata Configuration
 
-For IPFS-related functions, you'll need a Pinata API key:
+For IPFS-related functions, you'll need a Pinata API JWT token:
 
 ```typescript
 import { createAtomFromIpfsUpload } from '@0xintuition/sdk'
@@ -195,7 +196,7 @@ import { createAtomFromIpfsUpload } from '@0xintuition/sdk'
 const atom = await createAtomFromIpfsUpload(
   {
     ...config,
-    pinataApiKey: 'your-pinata-api-key',
+    pinataApiJWT: 'your-pinata-jwt-token',
   },
   {
     name: 'Example',
@@ -265,12 +266,16 @@ import { createAtomFromEthereumAccount } from '@0xintuition/sdk'
 
 const atom = await createAtomFromEthereumAccount(
   { walletClient, publicClient, address },
-  {
-    address: '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045',
-    chainId: 1, // Ethereum Mainnet
-  }
+  '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045'
 )
-// URI format: ethereum:1:0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045
+
+// The function accepts a simple Ethereum address string
+// Returns:
+// {
+//   uri: '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045'
+//   transactionHash: `0x${string}`
+//   state: { creator, termId, atomData, atomWallet }
+// }
 ```
 
 ##### `createAtomFromSmartContract`
@@ -281,11 +286,11 @@ import { createAtomFromSmartContract } from '@0xintuition/sdk'
 
 const atom = await createAtomFromSmartContract(
   { walletClient, publicClient, address },
-  {
-    address: '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984',
-    chainId: 1, // Uniswap token on Mainnet
-  }
+  '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984'
 )
+
+// The function accepts a simple Ethereum address string
+// Returns the same structure as createAtomFromEthereumAccount
 ```
 
 ##### `createAtomFromIpfsUri`
@@ -311,7 +316,7 @@ const atom = await createAtomFromIpfsUpload(
     walletClient,
     publicClient,
     address,
-    pinataApiKey: 'your-pinata-api-key',
+    pinataApiJWT: 'your-pinata-jwt-token',
   },
   {
     name: 'My Project',
@@ -333,16 +338,16 @@ import { parseEther } from 'viem'
 const result = await batchCreateAtomsFromEthereumAccounts(
   { walletClient, publicClient, address },
   [
-    { address: '0x1234...', chainId: 1 },
-    { address: '0x5678...', chainId: 1 },
-    { address: '0x9abc...', chainId: 137 }, // Polygon
+    '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045',
+    '0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb',
+    '0x1234567890123456789012345678901234567890',
   ],
   parseEther('0.01') // deposit per atom (optional)
 )
 
 // Returns:
 // {
-//   uris: string[]
+//   uris: Address[]  // array of Ethereum addresses
 //   transactionHash: `0x${string}`
 //   state: Array<{ creator, termId, atomData, atomWallet }>
 // }
@@ -373,9 +378,9 @@ import { batchCreateAtomsFromSmartContracts } from '@0xintuition/sdk'
 const result = await batchCreateAtomsFromSmartContracts(
   { walletClient, publicClient, address },
   [
-    { address: '0xUniswap...', chainId: 1 },
-    { address: '0xAave...', chainId: 1 },
-    { address: '0xCompound...', chainId: 1 },
+    '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984', // Uniswap
+    '0x7Fc66500c84A76Ad7e9c93437bFc5Ac33E2DDaE9', // Aave
+    '0xc00e94Cb662C3520282E6f5717214004A7f26888', // Compound
   ]
 )
 ```
@@ -444,22 +449,31 @@ const objectId = '0x9abc...'     // Bob
 const triple = await createTripleStatement(
   { walletClient, publicClient, address },
   {
-    args: [subjectId, predicateId, objectId],
-    value: parseEther('0.1'), // initial deposit
+    args: [
+      [subjectId],              // subjects (array)
+      [predicateId],            // predicates (array)
+      [objectId],               // objects (array)
+      [parseEther('0.1')],      // deposits per triple (array)
+    ],
+    value: parseEther('0.1'),   // total value
   }
 )
 
 // Returns:
 // {
 //   transactionHash: `0x${string}`
-//   state: {
-//     tripleId: Hex
-//     subjectId: Hex
-//     predicateId: Hex
-//     objectId: Hex
-//     counterVaultId: Hex
+//   state: Array<{  // array of parsed event objects
+//     args: {
+//       tripleId: Hex
+//       subjectId: Hex
+//       predicateId: Hex
+//       objectId: Hex
+//       counterVaultId: Hex
+//       ...
+//     }
+//     eventName: 'TripleCreated'
 //     ...
-//   }
+//   }>
 // }
 ```
 
@@ -468,18 +482,16 @@ Create multiple triples in one transaction.
 
 ```typescript
 import { batchCreateTripleStatements } from '@0xintuition/sdk'
+import { parseEther } from 'viem'
 
 const result = await batchCreateTripleStatements(
   { walletClient, publicClient, address },
-  {
-    args: [
-      [subject1, subject2],   // subjects
-      [predicate1, predicate2], // predicates
-      [object1, object2],     // objects
-      [parseEther('0.1'), parseEther('0.1')], // deposits per triple
-    ],
-    value: parseEther('0.2'), // total value
-  }
+  [
+    [subject1, subject2],             // subjects
+    [predicate1, predicate2],         // predicates
+    [object1, object2],               // objects
+    [parseEther('0.1'), parseEther('0.1')], // deposits per triple
+  ]
 )
 ```
 
@@ -540,12 +552,17 @@ import { parseEther } from 'viem'
 
 const result = await deposit(
   { walletClient, publicClient, address },
-  {
-    receiver: walletClient.account.address,
-    id: vaultId,        // atom or triple ID
-    assets: parseEther('1'),
-  }
+  [
+    walletClient.account.address, // receiver
+    vaultId,                       // termId (atom or triple ID)
+    1n,                            // curveId (use 1 for default curve)
+    parseEther('1'),               // assets (amount to deposit)
+    0n,                            // minShares (minimum shares to receive)
+  ]
 )
+
+// Note: The SDK deposit function wraps multiVaultDeposit from @0xintuition/protocol
+// The transaction value is handled by the underlying multiVaultDeposit function
 ```
 
 ##### `batchDeposit`
@@ -553,14 +570,17 @@ Deposit into multiple vaults in one transaction.
 
 ```typescript
 import { batchDeposit } from '@0xintuition/sdk'
+import { parseEther } from 'viem'
 
 const result = await batchDeposit(
   { walletClient, publicClient, address },
-  {
-    receiver: walletClient.account.address,
-    ids: [vault1, vault2, vault3],
-    assetsForEach: [parseEther('1'), parseEther('0.5'), parseEther('2')],
-  }
+  [
+    walletClient.account.address,                          // receiver
+    [vault1, vault2, vault3],                              // termIds
+    [1n, 1n, 1n],                                          // curveIds (default curve for each)
+    [parseEther('1'), parseEther('0.5'), parseEther('2')], // assets for each vault
+    [0n, 0n, 0n],                                          // minShares for each
+  ]
 )
 ```
 
@@ -572,11 +592,13 @@ import { redeem } from '@0xintuition/sdk'
 
 const result = await redeem(
   { walletClient, publicClient, address },
-  {
-    receiver: walletClient.account.address,
-    id: vaultId,
-    shares: sharesToRedeem,
-  }
+  [
+    walletClient.account.address, // receiver
+    vaultId,                       // termId
+    1n,                            // curveId (use 1 for default curve)
+    sharesToRedeem,                // shares amount
+    0n,                            // minAssets (minimum assets to receive)
+  ]
 )
 ```
 
@@ -588,11 +610,13 @@ import { batchRedeem } from '@0xintuition/sdk'
 
 const result = await batchRedeem(
   { walletClient, publicClient, address },
-  {
-    receiver: walletClient.account.address,
-    ids: [vault1, vault2],
-    sharesForEach: [shares1, shares2],
-  }
+  [
+    walletClient.account.address, // receiver
+    [vault1, vault2],              // termIds
+    [1n, 1n],                      // curveIds (default curve for each)
+    [shares1, shares2],            // shares for each vault
+    [0n, 0n],                      // minAssets for each
+  ]
 )
 ```
 
@@ -607,10 +631,10 @@ Search across atoms, accounts, triples, and collections.
 import { globalSearch } from '@0xintuition/sdk'
 
 const results = await globalSearch('ethereum', {
-  atomsLimit: 10,
-  accountsLimit: 10,
-  triplesLimit: 10,
-  collectionsLimit: 5,
+  atomsLimit: 10,      // optional, default: 5
+  accountsLimit: 10,   // optional, default: 5
+  triplesLimit: 10,    // optional, default: 5
+  collectionsLimit: 5, // optional, default: 5
 })
 
 // Returns:
@@ -620,6 +644,7 @@ const results = await globalSearch('ethereum', {
 //   triples: [...],
 //   collections: [...]
 // }
+// Note: Returns null on error
 ```
 
 ##### `semanticSearch`
@@ -629,11 +654,10 @@ Semantic search using vector embeddings.
 import { semanticSearch } from '@0xintuition/sdk'
 
 const results = await semanticSearch('decentralized knowledge graph', {
-  limit: 20,
-  threshold: 0.7, // similarity threshold
+  limit: 20, // optional, default: 3
 })
 
-// Returns semantically similar atoms/triples
+// Returns semantically similar atoms/triples, or null on error
 ```
 
 ##### `findAtomIds`
@@ -687,6 +711,52 @@ const triplesWithIds = await findTripleIds(
 
 ---
 
+### External Integrations
+
+##### `pinThing`
+Pin a Thing object to IPFS via the Intuition API.
+
+```typescript
+import { pinThing, type PinThingMutationVariables } from '@0xintuition/sdk'
+
+const uri = await pinThing({
+  thing: {
+    url: 'https://example.com',
+    name: 'Example Project',
+    description: 'A great project',
+    image: 'https://example.com/logo.png',
+    tags: ['blockchain', 'defi'],
+  }
+})
+
+// Returns: 'ipfs://bafkreib...' or null on error
+```
+
+##### `uploadJsonToPinata`
+Upload JSON data to IPFS via Pinata (used internally by `createAtomFromIpfsUpload`).
+
+```typescript
+import { uploadJsonToPinata } from '@0xintuition/sdk'
+
+const result = await uploadJsonToPinata(
+  'your-pinata-jwt-token',
+  {
+    name: 'My Data',
+    description: 'Some JSON data',
+    // ... any JSON-serializable data
+  }
+)
+
+// Returns:
+// {
+//   IpfsHash: 'bafkreib...',
+//   PinSize: 123,
+//   Timestamp: '2024-01-01T00:00:00.000Z'
+// }
+```
+
+---
+
 ### Experimental Features
 
 These features are in active development and may change in future releases.
@@ -725,15 +795,17 @@ console.log('Cost estimation:', estimation)
 // {
 //   totalCost: 1500000000000000000n,
 //   atomCost: 800000000000000000n,
-//   tripleCost: 700000000000000000n,
+//   tripleCost: 600000000000000000n,
+//   depositCost: 100000000000000000n,
 //   atomCount: 6,
 //   tripleCount: 4,
+//   depositCount: 2,
 //   userBalance: 2000000000000000000n,
 //   hasSufficientBalance: true
 // }
 
 // Execute the sync
-await sync(
+const finalResult = await sync(
   {
     address,
     publicClient,
@@ -743,15 +815,18 @@ await sync(
   },
   data
 )
+
+// Returns final cost estimation even after execution
+console.log('Final result:', finalResult)
 ```
 
 **How `sync` works:**
 1. Analyzes data structure to identify atoms and triples
 2. Queries to find existing atoms and triples
-3. Creates missing atoms in batches
-4. Creates missing triples in batches
-5. Deposits into triples that lack positions
-6. Returns cost estimation in dry-run mode
+3. Creates missing atoms in batches (unless dryRun)
+4. Creates missing triples in batches (unless dryRun)
+5. Deposits into triples that lack positions (unless dryRun)
+6. Returns cost estimation (always, as CostEstimation type)
 
 **Configuration:**
 - `dryRun`: Estimate costs without executing transactions
@@ -766,15 +841,16 @@ import { wait } from '@0xintuition/sdk'
 
 // Wait for transaction to be indexed
 await wait(transactionHash, {
-  pollingInterval: 1000,        // poll every 1 second
-  timeout: 60000,               // timeout after 60 seconds
-  postTransactionDelay: 2000,   // wait 2s after found
+  pollingInterval: 1000,        // poll every 1 second (default: 1000)
+  timeout: 60000,               // timeout after 60 seconds (default: 3600000ms)
+  postTransactionDelay: 2000,   // wait 2s after found (default: 2000)
   onProgress: (attempt) => {
     console.log(`Polling attempt ${attempt}`)
   }
 })
 
 // Now safe to query the transaction data
+// Note: Returns void (Promise<void>), can accept null hash (will return immediately)
 ```
 
 ##### `search`
@@ -904,15 +980,16 @@ const triple = await createTripleStatement(
   { walletClient, publicClient, address },
   {
     args: [
-      alice.state.termId,
-      follows.state.termId,
-      bob.state.termId,
+      [alice.state.termId],       // subjects
+      [follows.state.termId],     // predicates
+      [bob.state.termId],         // objects
+      [parseEther('0.1')],        // deposits
     ],
     value: parseEther('0.1'),
   }
 )
 
-console.log('Triple created:', triple.state.tripleId)
+console.log('Triple created:', triple.state[0].args.tripleId)
 ```
 
 ### Example 3: Batch Create Ethereum Account Atoms
@@ -930,7 +1007,7 @@ const addresses = [
 
 const result = await batchCreateAtomsFromEthereumAccounts(
   { walletClient, publicClient, address },
-  addresses.map(addr => ({ address: addr, chainId: 1 })),
+  addresses,
   parseEther('0.01')
 )
 
@@ -961,7 +1038,7 @@ const depositAmount = parseEther('1')
 // Preview deposit to see expected shares
 const expectedShares = await multiVaultPreviewDeposit(
   { address, publicClient },
-  { args: [vaultId, 0, depositAmount] }
+  { args: [vaultId, 1n, depositAmount] }
 )
 
 console.log('Expected shares:', expectedShares)
@@ -969,11 +1046,13 @@ console.log('Expected shares:', expectedShares)
 // Execute deposit
 await deposit(
   { walletClient, publicClient, address },
-  {
-    receiver: walletClient.account.address,
-    id: vaultId,
-    assets: depositAmount,
-  }
+  [
+    walletClient.account.address, // receiver
+    vaultId,                       // termId
+    1n,                            // curveId (use 1 for default curve)
+    depositAmount,                 // assets (amount to deposit)
+    0n,                            // minShares (minimum shares to receive)
+  ]
 )
 
 // Check balance
@@ -1057,7 +1136,7 @@ console.log('- Sufficient balance:', estimation.hasSufficientBalance)
 // If costs are acceptable, execute the sync
 if (estimation.hasSufficientBalance) {
   console.log('\nExecuting sync...')
-  await sync(
+  const result = await sync(
     {
       address,
       publicClient,
@@ -1068,6 +1147,7 @@ if (estimation.hasSufficientBalance) {
     knowledgeGraph
   )
   console.log('Sync completed!')
+  console.log('Final cost estimation:', result)
 } else {
   console.log('Insufficient balance for sync operation')
 }
@@ -1155,7 +1235,7 @@ type WriteConfig = {
   address: Address
   publicClient: PublicClient
   walletClient: WalletClient
-  pinataApiKey?: string // optional, for IPFS operations
+  pinataApiJWT?: string // optional, for IPFS operations (createAtomFromIpfsUpload only)
 }
 
 // For read-only operations (from protocol)
@@ -1170,6 +1250,8 @@ type ReadConfig = {
 ```typescript
 import type { PinThingMutationVariables } from '@0xintuition/sdk'
 
+// Thing type is defined in @0xintuition/graphql (PinThingMutationVariables)
+// Example structure:
 type Thing = {
   url?: string
   name?: string
@@ -1185,15 +1267,15 @@ type Thing = {
 ### Ethereum Account & Smart Contract
 
 ```typescript
-type EthereumAccount = {
-  address: Address
-  chainId: number
-}
+// The SDK functions accept simple Address strings, not objects
+// Note: Address is imported from 'viem'
 
-type SmartContract = {
-  address: Address
-  chainId: number
-}
+import type { Address } from 'viem'
+
+// createAtomFromEthereumAccount accepts: Address
+// createAtomFromSmartContract accepts: Address
+// batchCreateAtomsFromEthereumAccounts accepts: Address[]
+// batchCreateAtomsFromSmartContracts accepts: Address[]
 ```
 
 ### Return Types
@@ -1226,47 +1308,51 @@ type BatchAtomCreationResult = {
 // Triple creation result
 type TripleCreationResult = {
   transactionHash: `0x${string}`
-  state: {
-    tripleId: Hex
-    subjectId: Hex
-    predicateId: Hex
-    objectId: Hex
-    counterVaultId: Hex
-    // ... additional event args
-  }
+  state: Array<{  // array of parsed event objects
+    args: {
+      tripleId: Hex
+      subjectId: Hex
+      predicateId: Hex
+      objectId: Hex
+      counterVaultId: Hex
+      // ... additional event args
+    }
+    eventName: 'TripleCreated'
+    // ... other event properties
+  }>
 }
 ```
 
 ### Search Types
 
 ```typescript
-import type { GlobalSearchOptions } from '@0xintuition/sdk'
+import type { GlobalSearchOptions, SemanticSearchOptions } from '@0xintuition/sdk'
 
-type GlobalSearchOptions = {
+// Exported interface from api/search.ts
+interface GlobalSearchOptions {
   atomsLimit?: number
   accountsLimit?: number
   triplesLimit?: number
   collectionsLimit?: number
 }
 
-type AtomWithId = {
-  data: string
-  term_id: string
+// Exported interface from api/semantic-search.ts
+interface SemanticSearchOptions {
+  limit?: number  // optional, defaults to 3
 }
 
-type TripleWithIds = {
-  term_id: string
-  subject_id: string
-  predicate_id: string
-  object_id: string
-  positions: Array<{ shares: string }>
-}
+// Note: AtomWithId and TripleWithIds are internal types used by
+// findAtomIds and findTripleIds but are not exported
 ```
 
 ### Experimental Types
 
 ```typescript
-type SyncConfig = {
+// Note: These types are defined in experimental/utils.ts but are NOT exported
+// They are shown here for reference when using the experimental functions
+
+// Used by sync() function
+interface SyncConfig {
   address: Address
   publicClient: PublicClient
   walletClient: WalletClient
@@ -1275,7 +1361,8 @@ type SyncConfig = {
   dryRun?: boolean
 }
 
-type CostEstimation = {
+// Returned by sync() function
+interface CostEstimation {
   totalCost: bigint
   atomCost: bigint
   tripleCost: bigint
@@ -1287,7 +1374,8 @@ type CostEstimation = {
   hasSufficientBalance: boolean
 }
 
-type WaitOptions = {
+// Used by wait() function
+interface WaitOptions {
   pollingInterval?: number
   timeout?: number
   postTransactionDelay?: number
@@ -1482,24 +1570,37 @@ packages/sdk/
 │   │   ├── get-triple-details.ts
 │   │   ├── search.ts
 │   │   ├── semantic-search.ts
-│   │   └── pin-thing.ts
+│   │   ├── pin-thing.ts
+│   │   └── index.ts
 │   ├── core/             # Blockchain transaction functions
 │   │   ├── create-atom-from-string.ts
 │   │   ├── create-atom-from-thing.ts
 │   │   ├── create-atom-from-ethereum-account.ts
+│   │   ├── create-atom-from-smart-contract.ts
+│   │   ├── create-atom-from-ipfs-uri.ts
+│   │   ├── create-atom-from-ipfs-upload.ts
 │   │   ├── create-triple-statement.ts
-│   │   ├── batch-create-*.ts
+│   │   ├── batch-create-atoms-from-ethereum-accounts.ts
+│   │   ├── batch-create-atoms-from-smart-contracts.ts
+│   │   ├── batch-create-atoms-from-ipfs-uris.ts
+│   │   ├── batch-create-atoms-from-things.ts
+│   │   ├── batch-create-triple-statements.ts
 │   │   ├── deposit.ts
-│   │   └── redeem.ts
+│   │   ├── redeem.ts
+│   │   ├── batch-deposit.ts
+│   │   ├── batch-redeem.ts
+│   │   └── index.ts
 │   ├── experimental/     # Experimental utilities
-│   │   └── utils.ts      # sync, wait, findAtomIds, etc.
+│   │   └── utils.ts      # sync, wait, findAtomIds, findTripleIds, search
 │   ├── external/         # External integrations
-│   │   └── upload-json-to-pinata.ts
+│   │   ├── upload-json-to-pinata.ts
+│   │   └── index.ts
 │   ├── utils/            # Calculation utilities
 │   │   ├── calculate-atom-id.ts
 │   │   ├── calculate-triple-id.ts
-│   │   └── calculate-counter-triple-id.ts
-│   └── index.ts          # Main exports
+│   │   ├── calculate-counter-triple-id.ts
+│   │   └── index.ts
+│   └── index.ts          # Main exports (re-exports all + @0xintuition/protocol)
 ├── tests/
 └── package.json
 ```
