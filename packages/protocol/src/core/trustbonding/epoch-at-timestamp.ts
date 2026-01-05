@@ -3,6 +3,12 @@ import type { ContractFunctionArgs } from 'viem'
 import { TrustBondingAbi } from '../../contracts'
 import type { ReadConfig } from '../../types'
 
+/**
+ * Reads the epoch index for a given timestamp from the TrustBonding contract.
+ * @param config Contract address and public client.
+ * @param inputs Function args for the timestamp lookup.
+ * @returns Epoch index as returned by the contract.
+ */
 export async function trustBondingEpochAtTimestamp(
   config: ReadConfig,
   inputs: {

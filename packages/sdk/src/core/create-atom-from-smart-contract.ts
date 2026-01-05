@@ -7,6 +7,13 @@ import {
 
 import { getAddress, isAddress, toHex, type Address } from 'viem'
 
+/**
+ * Creates an atom for a smart contract CAIP-10 address and returns the event state.
+ * @param config Contract address and viem clients.
+ * @param data Smart contract address and chain ID.
+ * @param depositAmount Optional additional deposit amount.
+ * @returns Created atom URI, transaction hash, and decoded event args.
+ */
 export async function createAtomFromSmartContract(
   config: WriteConfig,
   data: {

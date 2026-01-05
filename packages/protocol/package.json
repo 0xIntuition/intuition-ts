@@ -31,7 +31,8 @@
     "format:fix": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json,md}\"",
     "generate": "node ./scripts/generate.mjs",
     "test": "pnpm with-env vitest",
-    "with-env": "dotenv -e ../../.env --"
+    "with-env": "dotenv -e ../../.env --",
+    "docs": "typedoc --options typedoc.json"
   },
   "repository": {
     "type": "git",

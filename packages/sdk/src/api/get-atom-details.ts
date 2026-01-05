@@ -5,6 +5,11 @@ import {
   type GetAtomQueryVariables,
 } from '@0xintuition/graphql'
 
+/**
+ * Fetches atom details from the GraphQL API by atom ID.
+ * @param atomId Atom ID to look up.
+ * @returns Atom details or null if not found or on error.
+ */
 export async function getAtomDetails(atomId: string) {
   try {
     const data = await fetcher<GetAtomQuery, GetAtomQueryVariables>(

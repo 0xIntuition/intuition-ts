@@ -35,9 +35,9 @@ const DEFAULT_POLLING_INTERVAL = 1000
 const DEFAULT_POST_TRANSACTION_DELAY = 2000
 const DEFAULT_TIMEOUT_COUNT = 3600
 
-type SearchResult = Record<string, Record<string, string | string[]>>
-type AtomWithId = { data: string; term_id: string }
-type TripleWithIds = {
+export type SearchResult = Record<string, Record<string, string | string[]>>
+export type AtomWithId = { data: string; term_id: string }
+export type TripleWithIds = {
   term_id: string
   subject_id: string
   predicate_id: string
@@ -45,6 +45,12 @@ type TripleWithIds = {
   positions: Array<{ shares: string }>
 }
 
+/**
+ * Searches positions for the provided fields and aggregates results by subject.
+ * @param searchFields Array of field match objects for the GraphQL query.
+ * @param addresses Wallet addresses to search positions for.
+ * @returns Subject -> predicate -> object(s) mapping.
+ */
 export async function search(
   searchFields: Array<Record<string, string>>,
   addresses: Address[],
@@ -94,6 +100,11 @@ export async function search(
   }
 }
 
+/**
+ * Resolves atom IDs for a list of atom data strings, batching when needed.
+ * @param atoms Atom data strings to look up.
+ * @returns List of atoms with their term IDs.
+ */
 export async function findAtomIds(atoms: string[]): Promise<AtomWithId[]> {
   try {
     const batchSize = 100
@@ -133,13 +144,19 @@ export async function findAtomIds(atoms: string[]): Promise<AtomWithId[]> {
   }
 }
 
-interface WaitOptions {
+export interface WaitOptions {
   pollingInterval?: number
   timeout?: number
   postTransactionDelay?: number
   onProgress?: (attempt: number) => void
 }
 
+/**
+ * Polls the GraphQL API for transaction events until found or timed out.
+ * @param hash Transaction hash to poll for; null returns immediately.
+ * @param options Polling configuration and progress callback.
+ * @returns Resolves when events are found or after post-transaction delay.
+ */
 export async function wait(
   hash: string | null,
   options: WaitOptions = {},
@@ -200,6 +217,12 @@ export async function wait(
   })
 }
 
+/**
+ * Resolves triple IDs for subject/predicate/object atom IDs, batching when needed.
+ * @param address Wallet address used for the triples query.
+ * @param triplesWithAtomIds Triples expressed as subject/predicate/object IDs.
+ * @returns List of triples with IDs and position data.
+ */
 export async function findTripleIds(
   address: Address,
   triplesWithAtomIds: Array<Array<string>>,
@@ -260,7 +283,7 @@ export async function findTripleIds(
   }
 }
 
-interface SyncConfig {
+export interface SyncConfig {
   address: Address
   publicClient: PublicClient
   walletClient: WalletClient
@@ -269,7 +292,7 @@ interface SyncConfig {
   dryRun?: boolean
 }
 
-interface CostEstimation {
+export interface CostEstimation {
   totalCost: bigint
   atomCost: bigint
   tripleCost: bigint
@@ -281,6 +304,12 @@ interface CostEstimation {
   hasSufficientBalance: boolean
 }
 
+/**
+ * Finds an atom record by its data string.
+ * @param atoms Atom list to search.
+ * @param data Atom data string to match.
+ * @returns Matching atom record, if any.
+ */
 function findAtomByData(
   atoms: AtomWithId[],
   data: string,
@@ -288,6 +317,14 @@ function findAtomByData(
   return atoms.find((atom) => atom.data === data)
 }
 
+/**
+ * Finds a triple record by subject, predicate, and object IDs.
+ * @param triples Triple list to search.
+ * @param subjectId Subject atom ID.
+ * @param predicateId Predicate atom ID.
+ * @param objectId Object atom ID.
+ * @returns Matching triple record, if any.
+ */
 function findTripleByIds(
   triples: TripleWithIds[],
   subjectId: string,
@@ -302,10 +339,21 @@ function findTripleByIds(
   )
 }
 
+/**
+ * Checks whether a string is a valid hex value with 0x prefix.
+ * @param value String to validate.
+ * @returns True if the string is a hex value.
+ */
 function validateHex(value: string): value is Hex {
   return /^0x[0-9a-fA-F]+$/.test(value)
 }
 
+/**
+ * Splits an array into fixed-size chunks.
+ * @param array Source array to split.
+ * @param size Chunk size.
+ * @returns Chunked array.
+ */
 function chunkArray<T>(array: T[], size: number): T[][] {
   const chunks: T[][] = []
   for (let i = 0; i < array.length; i += size) {
@@ -314,6 +362,12 @@ function chunkArray<T>(array: T[], size: number): T[][] {
   return chunks
 }
 
+/**
+ * Reads the native token balance for an address.
+ * @param publicClient Viem public client.
+ * @param address Wallet address to query.
+ * @returns Balance as bigint.
+ */
 async function getUserBalance(
   publicClient: PublicClient,
   address: Address,
@@ -321,6 +375,12 @@ async function getUserBalance(
   return await publicClient.getBalance({ address })
 }
 
+/**
+ * Synchronizes data into atoms/triples and ensures deposits for missing positions.
+ * @param config Sync configuration including clients, logging, and batch options.
+ * @param data Subject/predicate/object data to sync.
+ * @returns Cost estimation details; in dry-run mode no transactions are sent.
+ */
 export async function sync(
   config: SyncConfig,
   data: Record<string, Record<string, string | string[]>>,

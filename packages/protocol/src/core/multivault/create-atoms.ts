@@ -8,6 +8,12 @@ export type CreateAtomsInputs = {
   value?: bigint
 }
 
+/**
+ * Simulates and submits a MultiVault `createAtoms` transaction.
+ * @param config Contract address and viem clients.
+ * @param inputs Function args and optional call value.
+ * @returns Transaction hash from the wallet client.
+ */
 export async function multiVaultCreateAtoms(
   config: WriteConfig,
   inputs: CreateAtomsInputs,

@@ -7,6 +7,13 @@ import {
 
 import { toHex } from 'viem'
 
+/**
+ * Creates atoms in batch from IPFS URIs and returns creation events.
+ * @param config Contract address and viem clients.
+ * @param data Array of IPFS URIs.
+ * @param depositAmount Optional additional deposit amount per atom.
+ * @returns Created atom URIs, transaction hash, and decoded event args.
+ */
 export async function batchCreateAtomsFromIpfsUris(
   config: WriteConfig,
   data: string[],

@@ -7,6 +7,13 @@ import {
 
 import { getAddress, toHex, type Address } from 'viem'
 
+/**
+ * Creates atoms in batch for smart contracts (CAIP-10) and returns events.
+ * @param config Contract address and viem clients.
+ * @param data Array of smart contract addresses with chain IDs.
+ * @param depositAmount Optional additional deposit amount per atom.
+ * @returns Hex-encoded CAIP-10 references, transaction hash, and decoded event args.
+ */
 export async function batchCreateAtomsFromSmartContracts(
   config: WriteConfig,
   data: {

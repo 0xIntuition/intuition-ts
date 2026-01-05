@@ -3,6 +3,11 @@ import type { ContractFunctionArgs } from 'viem'
 import { TrustBondingAbi } from '../../contracts'
 import type { ReadConfig } from '../../types'
 
+/**
+ * Reads the epoch length from the TrustBonding contract.
+ * @param config Contract address and public client.
+ * @returns Epoch length as returned by the contract.
+ */
 export async function trustBondingEpochLength(
   config: ReadConfig,
   inputs: {

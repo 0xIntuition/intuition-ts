@@ -7,6 +7,12 @@ export type PreviewRedeemCurveInputs = {
   args: ContractFunctionArgs<typeof MultiVaultAbi, 'view', 'previewRedeem'>
 }
 
+/**
+ * Previews the result of a redeem using the MultiVault `previewRedeem` view.
+ * @param config Contract address and viem clients (account used for simulation).
+ * @param inputs Function args for the preview call.
+ * @returns Previewed assets and fees as returned by the contract.
+ */
 export async function multiVaultPreviewRedeem(
   config: WriteConfig,
   inputs: PreviewRedeemCurveInputs,
