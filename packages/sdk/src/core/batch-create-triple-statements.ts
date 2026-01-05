@@ -6,6 +6,13 @@ import {
   type WriteConfig,
 } from '@0xintuition/protocol'
 
+/**
+ * Creates triples in batch and returns parsed TripleCreated events.
+ * @param config Contract address and viem clients.
+ * @param data CreateTriples arguments for the MultiVault contract.
+ * @param depositAmount Optional additional deposit amount.
+ * @returns Transaction hash and decoded event args.
+ */
 export async function batchCreateTripleStatements(
   config: WriteConfig,
   data: CreateTriplesInputs['args'],

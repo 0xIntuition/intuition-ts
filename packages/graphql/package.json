@@ -21,7 +21,7 @@
     "dev": "concurrently \"pnpm codegen:watch\" \"tsup --watch\"",
     "codegen": "NODE_ENV=production graphql-codegen --config codegen.ts",
     "codegen:watch": "NODE_ENV=development dotenv graphql-codegen --config codegen.ts",
-    "test": "vitest",
+    "test": "vitest run",
     "lint": "eslint",
     "lint:fix": "eslint --fix"
   },

@@ -5,6 +5,12 @@ import {
   type WriteConfig,
 } from '@0xintuition/protocol'
 
+/**
+ * Redeems shares for multiple terms and returns parsed Redeemed events.
+ * @param config Contract address and viem clients.
+ * @param data RedeemBatch arguments for the MultiVault contract.
+ * @returns Transaction hash and decoded event args.
+ */
 export async function batchRedeem(
   config: WriteConfig,
   data: RedeemBatchInputs['args'],

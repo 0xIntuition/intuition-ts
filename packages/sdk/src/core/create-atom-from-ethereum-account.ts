@@ -7,6 +7,13 @@ import {
 
 import { getAddress, isAddress, toHex, type Address } from 'viem'
 
+/**
+ * Creates an atom for an Ethereum account address and returns the event state.
+ * @param config Contract address and viem clients.
+ * @param data Ethereum account address.
+ * @param depositAmount Optional additional deposit amount.
+ * @returns Atom data address, transaction hash, and decoded event args.
+ */
 export async function createAtomFromEthereumAccount(
   config: WriteConfig,
   data: Address,

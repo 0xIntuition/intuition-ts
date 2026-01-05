@@ -5,6 +5,12 @@ import {
   type WriteConfig,
 } from '@0xintuition/protocol'
 
+/**
+ * Deposits assets for a term and returns parsed Deposited events.
+ * @param config Contract address and viem clients.
+ * @param data Deposit arguments for the MultiVault contract.
+ * @returns Transaction hash and decoded event args.
+ */
 export async function deposit(
   config: WriteConfig,
   data: DepositInputs['args'],

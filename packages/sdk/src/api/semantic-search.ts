@@ -9,6 +9,12 @@ export interface SemanticSearchOptions {
   limit: number
 }
 
+/**
+ * Runs a semantic search query against the GraphQL API.
+ * @param query Query string for semantic search.
+ * @param options Search options such as result limit.
+ * @returns GraphQL semantic search response data or null on error.
+ */
 export async function semanticSearch(
   query: string,
   { limit = 3 }: SemanticSearchOptions,

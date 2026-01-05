@@ -10,6 +10,13 @@ import { toHex } from 'viem'
 
 import { pinThing } from '../api/pin-thing'
 
+/**
+ * Pins a "thing" to IPFS, creates an atom on-chain, and returns the event state.
+ * @param config Contract address and viem clients.
+ * @param data PinThing mutation variables used to build the IPFS payload.
+ * @param depositAmount Optional additional deposit amount.
+ * @returns Created atom URI, transaction hash, and decoded event args.
+ */
 export async function createAtomFromThing(
   config: WriteConfig,
   data: PinThingMutationVariables,

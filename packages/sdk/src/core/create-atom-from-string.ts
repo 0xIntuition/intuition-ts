@@ -7,6 +7,13 @@ import {
 
 import { toHex } from 'viem'
 
+/**
+ * Creates an atom from a raw string payload and returns the event state.
+ * @param config Contract address and viem clients.
+ * @param data String payload to store as the atom.
+ * @param depositAmount Optional additional deposit amount.
+ * @returns Atom data string, transaction hash, and decoded event args.
+ */
 export async function createAtomFromString(
   config: WriteConfig,
   data: `${string}`,

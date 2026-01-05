@@ -17,6 +17,12 @@ export type RedeemInputs = {
   args: ContractFunctionArgs<typeof MultiVaultAbi, 'nonpayable', 'redeem'>
 }
 
+/**
+ * Simulates and submits a MultiVault `redeem` transaction.
+ * @param config Contract address and viem clients.
+ * @param inputs Function args for redeeming shares.
+ * @returns Transaction hash from the wallet client.
+ */
 export async function multiVaultRedeem(
   config: RedeemConfig,
   inputs: RedeemInputs,

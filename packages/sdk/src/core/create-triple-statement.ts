@@ -5,6 +5,12 @@ import {
   type WriteConfig,
 } from '@0xintuition/protocol'
 
+/**
+ * Creates a triple statement and returns the creation event.
+ * @param config Contract address and viem clients.
+ * @param data CreateTriples args and call value.
+ * @returns Transaction hash and decoded event args.
+ */
 export async function createTripleStatement(
   config: WriteConfig,
   data: {
