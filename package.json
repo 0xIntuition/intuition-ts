@@ -20,7 +20,7 @@
     "format:fix": "turbo format:fix",
     "lint": "turbo lint",
     "lint:fix": "turbo lint:fix",
-    "test": "turbo test",
+    "test": "turbo test --concurrency=1",
     "typecheck": "turbo typecheck",
     "start": "turbo start",
     "prettier": "prettier --write .",
