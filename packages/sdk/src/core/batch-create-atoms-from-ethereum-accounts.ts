@@ -7,6 +7,13 @@ import {
 
 import { toHex, type Address } from 'viem'
 
+/**
+ * Creates atoms in batch for Ethereum account addresses and returns events.
+ * @param config Contract address and viem clients.
+ * @param data Array of Ethereum account addresses.
+ * @param depositAmount Optional additional deposit amount per atom.
+ * @returns Atom data addresses, transaction hash, and decoded event args.
+ */
 export async function batchCreateAtomsFromEthereumAccounts(
   config: WriteConfig,
   data: Address[],

@@ -8,6 +8,12 @@ export type DepositBatchInputs = {
   value: bigint
 }
 
+/**
+ * Simulates and submits a MultiVault `depositBatch` transaction.
+ * @param config Contract address and viem clients.
+ * @param inputs Function args and call value.
+ * @returns Transaction hash from the wallet client.
+ */
 export async function multiVaultDepositBatch(
   config: WriteConfig,
   inputs: DepositBatchInputs,

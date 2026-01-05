@@ -8,6 +8,12 @@ export type CreateTriplesInputs = {
   value?: bigint
 }
 
+/**
+ * Simulates and submits a MultiVault `createTriples` transaction.
+ * @param config Contract address and viem clients.
+ * @param inputs Function args and optional call value.
+ * @returns Transaction hash from the wallet client.
+ */
 export async function multiVaultCreateTriples(
   config: WriteConfig,
   inputs: CreateTriplesInputs,

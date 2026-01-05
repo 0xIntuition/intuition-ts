@@ -8,6 +8,11 @@ export type MultiCallIntuitionConfigs = {
   publicClient: PublicClient
 }
 
+/**
+ * Fetches and formats multiple MultiVault configuration values via multicall.
+ * @param config Contract address and public client.
+ * @returns Aggregated configuration values with raw and formatted fields.
+ */
 export async function multiVaultMultiCallIntuitionConfigs(
   config: MultiCallIntuitionConfigs,
 ) {

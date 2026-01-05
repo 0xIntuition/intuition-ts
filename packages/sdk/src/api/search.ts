@@ -12,6 +12,12 @@ export interface GlobalSearchOptions {
   collectionsLimit?: number
 }
 
+/**
+ * Performs a global search across atoms, accounts, triples, and collections.
+ * @param query Search query string.
+ * @param options Result limits for each entity type.
+ * @returns GraphQL search response data or null on error.
+ */
 export async function globalSearch(
   query: string,
   {

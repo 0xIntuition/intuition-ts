@@ -7,6 +7,12 @@ export type PreviewAtomCreateInputs = {
   args: ContractFunctionArgs<typeof MultiVaultAbi, 'view', 'previewAtomCreate'>
 }
 
+/**
+ * Previews atom creation costs using the MultiVault `previewAtomCreate` view.
+ * @param config Contract address and viem clients (account used for simulation).
+ * @param inputs Function args for the preview call.
+ * @returns Previewed costs as returned by the contract.
+ */
 export async function multiVaultPreviewAtomCreate(
   config: WriteConfig,
   inputs: PreviewAtomCreateInputs,

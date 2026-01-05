@@ -7,6 +7,13 @@ import {
 
 import { toHex } from 'viem'
 
+/**
+ * Creates an atom from an IPFS URI and returns the creation event state.
+ * @param config Contract address and viem clients.
+ * @param data IPFS URI to store as the atom payload.
+ * @param depositAmount Optional additional deposit amount.
+ * @returns Created atom URI, transaction hash, and decoded event args.
+ */
 export async function createAtomFromIpfsUri(
   config: WriteConfig,
   data: `ipfs://${string}`,

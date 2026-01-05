@@ -7,6 +7,12 @@ export type WrappedTrustWithdrawInputs = {
   args: ContractFunctionArgs<typeof WrappedTrustAbi, 'nonpayable', 'withdraw'>
 }
 
+/**
+ * Simulates and submits a WrappedTrust `withdraw` transaction.
+ * @param config Contract address and viem clients.
+ * @param inputs Function args for the withdrawal.
+ * @returns Transaction hash from the wallet client.
+ */
 export async function wrappedTrustWithdraw(
   config: WriteConfig,
   inputs: WrappedTrustWithdrawInputs,

@@ -1,4 +1,4 @@
-type PinataPinResponse = {
+export type PinataPinResponse = {
   IpfsHash: string
   PinSize: number
   Timestamp: string // ISO date string
@@ -11,6 +11,13 @@ type PinataPinResponse = {
   isDuplicate: boolean
 }
 
+/**
+ * Uploads a JSON payload to Pinata's pinJSONToIPFS endpoint.
+ * @param apiToken Pinata JWT bearer token.
+ * @param jsonData JSON-serializable payload to upload.
+ * @returns Pinata response containing the IPFS hash and metadata.
+ * @throws Error when the upload fails or the response is not ok.
+ */
 export async function uploadJsonToPinata(
   apiToken: string,
   jsonData: unknown,

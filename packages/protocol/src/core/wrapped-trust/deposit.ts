@@ -7,6 +7,12 @@ export type WrappedTrustDepositInputs = {
   args: ContractFunctionArgs<typeof WrappedTrustAbi, 'payable', 'deposit'>
 }
 
+/**
+ * Simulates and submits a WrappedTrust `deposit` transaction.
+ * @param config Contract address and viem clients.
+ * @param inputs Function args for the deposit.
+ * @returns Transaction hash from the wallet client.
+ */
 export async function wrappedTrustDeposit(
   config: WriteConfig,
   inputs: WrappedTrustDepositInputs,

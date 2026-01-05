@@ -5,6 +5,12 @@ import {
   type WriteConfig,
 } from '@0xintuition/protocol'
 
+/**
+ * Redeems shares for a term and returns parsed Redeemed events.
+ * @param config Contract address and viem clients.
+ * @param data Redeem arguments for the MultiVault contract.
+ * @returns Transaction hash and decoded event args.
+ */
 export async function redeem(config: WriteConfig, data: RedeemInputs['args']) {
   const { publicClient } = config
 

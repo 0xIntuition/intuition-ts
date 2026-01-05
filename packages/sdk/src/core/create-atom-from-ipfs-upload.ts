@@ -9,10 +9,17 @@ import { toHex } from 'viem'
 
 import { uploadJsonToPinata } from '../external'
 
-type CreateAtomConfigWithIpfs = WriteConfig & {
+export type CreateAtomConfigWithIpfs = WriteConfig & {
   pinataApiJWT: string
 }
 
+/**
+ * Uploads JSON to Pinata, creates an atom on-chain, and returns the event state.
+ * @param config Contract address, viem clients, and Pinata API JWT.
+ * @param data JSON-serializable payload to upload.
+ * @param depositAmount Optional additional deposit amount.
+ * @returns Created atom URI, transaction hash, and decoded event args.
+ */
 export async function createAtomFromIpfsUpload(
   config: CreateAtomConfigWithIpfs,
   data: unknown,
