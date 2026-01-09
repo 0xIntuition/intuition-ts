@@ -3,22 +3,22 @@ import {
   eventParseAtomCreated,
   multiVaultCreateAtoms,
   multiVaultGetAtomCost,
-  type WriteConfig,
 } from '@0xintuition/protocol'
 
 import { toHex } from 'viem'
 
-import { pinThing } from '../api/pin-thing'
+import { uploadJsonToPinata } from '../external/upload-json-to-pinata'
+import type { CreateAtomConfigWithIpfs } from './create-atom-from-ipfs-upload'
 
 /**
  * Pins multiple "things", creates atoms in batch, and returns creation events.
- * @param config Contract address and viem clients.
+ * @param config Contract address, viem clients, and Pinata API JWT.
  * @param data Array of PinThing mutation variables.
  * @param depositAmount Optional additional deposit amount per atom.
  * @returns Created atom URIs, transaction hash, and decoded event args.
  */
 export async function batchCreateAtomsFromThings(
-  config: WriteConfig,
+  config: CreateAtomConfigWithIpfs,
   data: PinThingMutationVariables[],
   depositAmount?: bigint,
 ) {
@@ -36,10 +36,8 @@ export async function batchCreateAtomsFromThings(
   // Pin each thing and collect their URIs
   const uris: string[] = []
   for (const item of data) {
-    const uri = await pinThing(item)
-    if (!uri) {
-      throw new Error(`Failed to pin thing on IPFS: ${JSON.stringify(item)}`)
-    }
+    const dataIpfs = await uploadJsonToPinata(config.pinataApiJWT, item)
+    const uri = `ipfs://${dataIpfs.IpfsHash}`
     uris.push(uri)
   }
 

@@ -6,11 +6,13 @@
 
 # Function: pinThing()
 
+> **⚠️ DEPRECATED**: This function is deprecated. Use `uploadJsonToPinata` from the SDK instead. The SDK now supports direct Pinata uploads without requiring backend mediation. See `createAtomFromThing` and `batchCreateAtomsFromThings` for updated implementations.
+
 > **pinThing**(`variables`): `Promise`\<`string` \| `null`\>
 
-Defined in: [packages/sdk/src/api/pin-thing.ts:13](https://github.com/0xIntuition/intuition-ts/blob/205e10cc7cd6d3c4b27f907604b3b77c2d750145/packages/sdk/src/api/pin-thing.ts#L13)
+Defined in: [packages/sdk/src/api/pin-thing.ts:16](https://github.com/0xIntuition/intuition-ts/blob/main/packages/sdk/src/api/pin-thing.ts#L16)
 
-Pins a "thing" via the GraphQL API and returns the resulting URI.
+Pins a "thing" via the GraphQL API and returns the resulting URI (deprecated, backend-mediated).
 
 ## Parameters
 

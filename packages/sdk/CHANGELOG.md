@@ -1,5 +1,21 @@
 # @0xintuition/sdk
 
+## Unreleased
+
+### Breaking Changes
+
+- **BREAKING:** `createAtomFromThing` now requires `pinataApiJWT` in the config parameter. The function signature has changed from `config: WriteConfig` to `config: CreateAtomConfigWithIpfs` (which extends `WriteConfig` with `pinataApiJWT: string`).
+- **BREAKING:** `batchCreateAtomsFromThings` now requires `pinataApiJWT` in the config parameter. The function signature has changed from `config: WriteConfig` to `config: CreateAtomConfigWithIpfs`.
+
+### Deprecations
+
+- **DEPRECATED:** The `pinThing` function is now deprecated. Use `uploadJsonToPinata` for direct Pinata uploads instead. The SDK now supports client-side IPFS pinning without requiring backend mediation.
+
+### Improvements
+
+- Both `createAtomFromThing` and `batchCreateAtomsFromThings` now use direct Pinata uploads via `uploadJsonToPinata` instead of the backend-mediated GraphQL API, providing better performance and reliability.
+- Updated documentation and examples to reflect the new Pinata JWT requirement.
+
 ## 2.0.2
 
 ### Patch Changes

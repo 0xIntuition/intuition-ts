@@ -17,9 +17,19 @@ export const IntuitionCreateThingButton = ({
     if (!walletClient || !publicClient) {
       return
     }
+    const pinataApiJWT = process.env.NEXT_PUBLIC_PINATA_API_JWT
+    if (!pinataApiJWT) {
+      alert('Pinata API JWT not configured')
+      return
+    }
     const multiVaultAddress = intuitionDeployments.MultiVault[chainId]
     const data = await createAtomFromThing(
-      { walletClient, publicClient, address: multiVaultAddress },
+      {
+        walletClient,
+        publicClient,
+        address: multiVaultAddress,
+        pinataApiJWT,
+      },
       {
         url: 'https://www.intuition.systems/',
         name: 'Intuition',
