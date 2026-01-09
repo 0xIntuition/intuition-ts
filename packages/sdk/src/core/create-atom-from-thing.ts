@@ -23,6 +23,11 @@ export async function createAtomFromThing(
   depositAmount?: bigint,
 ) {
   const dataIpfs = await uploadJsonToPinata(config.pinataApiJWT, data)
+
+  if (!dataIpfs.IpfsHash || dataIpfs.IpfsHash.trim() === '') {
+    throw new Error('Invalid IPFS hash received from Pinata')
+  }
+
   const uriRef = `ipfs://${dataIpfs.IpfsHash}`
 
   const { address: ethMultiVaultAddress, publicClient } = config

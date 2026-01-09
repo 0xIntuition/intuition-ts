@@ -19,7 +19,6 @@ export async function pinThing(variables: PinThingMutationVariables) {
       PinThingDocument,
       variables,
     )()
-    data.pinThing?.uri
     if (data.pinThing?.uri) {
       return data.pinThing?.uri
     }

@@ -17,6 +17,10 @@ export const IntuitionCreateThingButton = ({
     if (!walletClient || !publicClient) {
       return
     }
+    // WARNING: NEXT_PUBLIC_* environment variables are exposed to the browser.
+    // This is INSECURE for production use as users can extract your API key.
+    // For production, use a backend API route to proxy Pinata uploads securely.
+    // Example: POST /api/upload-to-pinata with server-side JWT handling.
     const pinataApiJWT = process.env.NEXT_PUBLIC_PINATA_API_JWT
     if (!pinataApiJWT) {
       alert('Pinata API JWT not configured')
@@ -33,7 +37,7 @@ export const IntuitionCreateThingButton = ({
       {
         url: 'https://www.intuition.systems/',
         name: 'Intuition',
-        description: `'A decentralized trust protocol: ${new Date().toLocaleDateString()}`,
+        description: `A decentralized trust protocol: ${new Date().toLocaleDateString()}`,
         image: 'https://example.com/image.png',
       },
     )

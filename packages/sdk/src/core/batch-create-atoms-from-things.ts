@@ -33,13 +33,18 @@ export async function batchCreateAtomsFromThings(
 
   const calculatedCost = (atomCost + depositAmountPerAtom) * BigInt(data.length)
 
-  // Pin each thing and collect their URIs
-  const uris: string[] = []
-  for (const item of data) {
+  // Pin each thing in parallel and collect their URIs
+  const uploadPromises = data.map(async (item) => {
     const dataIpfs = await uploadJsonToPinata(config.pinataApiJWT, item)
-    const uri = `ipfs://${dataIpfs.IpfsHash}`
-    uris.push(uri)
-  }
+
+    if (!dataIpfs.IpfsHash || dataIpfs.IpfsHash.trim() === '') {
+      throw new Error('Invalid IPFS hash received from Pinata')
+    }
+
+    return `ipfs://${dataIpfs.IpfsHash}`
+  })
+
+  const uris = await Promise.all(uploadPromises)
 
   // Prepare the batch args
   const hexUris = uris.map((uri) => toHex(uri))
