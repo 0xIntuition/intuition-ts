@@ -1,3 +1,6 @@
+# @deprecated This mutation is deprecated. Use uploadJsonToPinata from @0xintuition/sdk instead.
+# The SDK now supports direct Pinata uploads without requiring backend mediation.
+# See: packages/sdk/src/external/upload-json-to-pinata.ts
 mutation pinThing(
   $name: String!
   $description: String

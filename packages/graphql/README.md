@@ -49,30 +49,39 @@ Explore the API interactively with Apollo Studio Sandbox:
 ## Core Concepts
 
 ### Atoms
+
 **Atoms** are the fundamental entities in the Intuition knowledge graph. Each atom represents an identity, concept, or piece of data (e.g., a person, organization, tag, or blockchain address).
 
 ### Triples
+
 **Triples** are statements that connect atoms in subject-predicate-object relationships. For example: `(Alice, knows, Bob)` or `(Document, hasTag, TypeScript)`.
 
 ### Vaults
+
 **Vaults** are asset pools associated with atoms and triples. Users deposit assets into vaults and receive shares based on bonding curves. See the [@0xintuition/protocol](../protocol/README.md) documentation for details on bonding curves and vault mechanics.
 
 ### Positions
+
 **Positions** represent user ownership (shares) in vaults. Each position tracks an account's shares in a specific vault.
 
 ### Accounts
+
 **Accounts** are blockchain addresses participating in the protocol, including:
+
 - User wallets
 - Atom wallets (smart contract wallets for atoms)
 - Protocol vaults
 
 ### Deposits & Redemptions
+
 **Deposits** are transactions where users add assets to vaults and receive shares. **Redemptions** are the reverse: users burn shares to withdraw assets.
 
 ### Events
+
 **Events** capture the complete on-chain event history, including deposits, redemptions, atom creation, triple creation, and more.
 
 ### Stats
+
 **Stats** provide protocol-wide statistics and aggregated metrics.
 
 ---
@@ -86,7 +95,7 @@ The Intuition GraphQL API works with any GraphQL client. Below are minimal examp
 **For JavaScript/TypeScript projects**: Instead of hardcoding API endpoints, import them from this package:
 
 ```typescript
-import { API_URL_PROD, API_URL_DEV } from '@0xintuition/graphql'
+import { API_URL_DEV, API_URL_PROD } from '@0xintuition/graphql'
 
 // API_URL_PROD = 'https://mainnet.intuition.sh/v1/graphql'
 // API_URL_DEV = 'https://testnet.intuition.sh/v1/graphql'
@@ -95,8 +104,9 @@ import { API_URL_PROD, API_URL_DEV } from '@0xintuition/graphql'
 #### graphql-request
 
 ```typescript
-import { GraphQLClient } from 'graphql-request'
 import { API_URL_PROD } from '@0xintuition/graphql'
+
+import { GraphQLClient } from 'graphql-request'
 
 const client = new GraphQLClient(API_URL_PROD)
 
@@ -118,12 +128,13 @@ const data = await client.request(query, { id: '0x...' })
 #### Apollo Client
 
 ```typescript
-import { ApolloClient, InMemoryCache, gql } from '@apollo/client'
 import { API_URL_PROD } from '@0xintuition/graphql'
+
+import { ApolloClient, gql, InMemoryCache } from '@apollo/client'
 
 const client = new ApolloClient({
   uri: API_URL_PROD,
-  cache: new InMemoryCache()
+  cache: new InMemoryCache(),
 })
 
 const { data } = await client.query({
@@ -135,7 +146,7 @@ const { data } = await client.query({
       }
     }
   `,
-  variables: { id: '0x...' }
+  variables: { id: '0x...' },
 })
 ```
 
@@ -144,11 +155,12 @@ const { data } = await client.query({
 #### urql
 
 ```typescript
-import { createClient } from 'urql'
 import { API_URL_PROD } from '@0xintuition/graphql'
 
+import { createClient } from 'urql'
+
 const client = createClient({
-  url: API_URL_PROD
+  url: API_URL_PROD,
 })
 
 const result = await client.query(query, { id: '0x...' }).toPromise()
@@ -166,8 +178,8 @@ const response = await fetch(API_URL_PROD, {
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({
     query: `query GetAtom($id: String!) { atom(term_id: $id) { term_id label } }`,
-    variables: { id: '0x...' }
-  })
+    variables: { id: '0x...' },
+  }),
 })
 
 const { data } = await response.json()
@@ -306,10 +318,7 @@ Use boolean expressions to filter results:
 ```graphql
 query GetRecentAtoms {
   atoms(
-    where: {
-      created_at: { _gte: "2024-01-01" }
-      type: { _eq: Person }
-    }
+    where: { created_at: { _gte: "2024-01-01" }, type: { _eq: Person } }
     limit: 10
   ) {
     term_id
@@ -319,6 +328,7 @@ query GetRecentAtoms {
 ```
 
 **Available operators**:
+
 - `_eq`, `_neq` - Equality
 - `_gt`, `_gte`, `_lt`, `_lte` - Comparisons
 - `_in`, `_nin` - Array membership
@@ -331,10 +341,7 @@ query GetRecentAtoms {
 ```graphql
 query GetTopAtoms {
   atoms(
-    order_by: [
-      { term: { total_market_cap: desc } }
-      { created_at: desc }
-    ]
+    order_by: [{ term: { total_market_cap: desc } }, { created_at: desc }]
     limit: 10
   ) {
     term_id
@@ -397,7 +404,8 @@ query GetAtomWithCreator($id: String!) {
 
 ```graphql
 query GetAtom($id: String!) {
-  atom(term_id: $id) {  # Direct lookup by primary key
+  atom(term_id: $id) {
+    # Direct lookup by primary key
     term_id
     label
   }
@@ -466,7 +474,6 @@ query GetAtomWithVault($id: String!, $curveId: numeric!) {
 }
 ```
 
-
 ### Querying Triples
 
 #### Get Single Triple
@@ -503,8 +510,12 @@ query GetTriplesBySubject($subjectId: String!, $limit: Int!) {
     limit: $limit
   ) {
     term_id
-    predicate { label }
-    object { label }
+    predicate {
+      label
+    }
+    object {
+      label
+    }
   }
 }
 ```
@@ -519,9 +530,15 @@ query GetTriplesWithPositions(
 ) {
   triples(where: $where, limit: $limit) {
     term_id
-    subject { label }
-    predicate { label }
-    object { label }
+    subject {
+      label
+    }
+    predicate {
+      label
+    }
+    object {
+      label
+    }
     term {
       vaults(where: { curve_id: { _eq: $curveId } }) {
         total_shares
@@ -651,9 +668,15 @@ query GlobalSearch(
     limit: $triplesLimit
   ) {
     term_id
-    subject { label }
-    predicate { label }
-    object { label }
+    subject {
+      label
+    }
+    predicate {
+      label
+    }
+    object {
+      label
+    }
   }
 }
 ```
@@ -683,11 +706,7 @@ query GetAtomsPage($limit: Int!, $offset: Int!) {
       count
     }
   }
-  atoms(
-    limit: $limit
-    offset: $offset
-    order_by: { created_at: desc }
-  ) {
+  atoms(limit: $limit, offset: $offset, order_by: { created_at: desc }) {
     term_id
     label
     created_at
@@ -696,6 +715,7 @@ query GetAtomsPage($limit: Int!, $offset: Int!) {
 ```
 
 **Variables**:
+
 ```json
 {
   "limit": 20,
@@ -734,6 +754,7 @@ query GetFollowing($address: String!) {
 ```
 
 **Variables**:
+
 ```json
 {
   "address": "0xd8da6bf26964af9d7eed9e03e53415d37aa96045"
@@ -797,15 +818,9 @@ query GetSignalsFromFollowing($address: String!, $limit: Int!) {
 Search positions with complex filtering:
 
 ```graphql
-query SearchPositions(
-  $addresses: _text!
-  $searchFields: jsonb!
-) {
+query SearchPositions($addresses: _text!, $searchFields: jsonb!) {
   search_positions_on_subject(
-    args: {
-      addresses: $addresses
-      search_fields: $searchFields
-    }
+    args: { addresses: $addresses, search_fields: $searchFields }
   ) {
     id
     shares
@@ -827,6 +842,7 @@ query SearchPositions(
 ```
 
 **Variables**:
+
 ```json
 {
   "addresses": "{0xabc..., 0xdef...}",
@@ -870,16 +886,9 @@ The API includes pre-computed time-series aggregations for efficient analytics.
 Daily price trends:
 
 ```graphql
-query GetDailyPriceTrends(
-  $termId: String!
-  $curveId: numeric!
-  $limit: Int!
-) {
+query GetDailyPriceTrends($termId: String!, $curveId: numeric!, $limit: Int!) {
   share_price_change_stats_daily(
-    where: {
-      term_id: { _eq: $termId }
-      curve_id: { _eq: $curveId }
-    }
+    where: { term_id: { _eq: $termId }, curve_id: { _eq: $curveId } }
     order_by: { bucket: desc }
     limit: $limit
   ) {
@@ -893,6 +902,7 @@ query GetDailyPriceTrends(
 ```
 
 **Variables**:
+
 ```json
 {
   "termId": "0x...",
@@ -902,6 +912,7 @@ query GetDailyPriceTrends(
 ```
 
 For different time granularities, use:
+
 - `share_price_change_stats_hourly` - Hourly aggregations
 - `share_price_change_stats_weekly` - Weekly aggregations
 - `share_price_change_stats_monthly` - Monthly aggregations
@@ -912,10 +923,7 @@ Query aggregated signal data over time:
 
 ```graphql
 query GetSignalStats($limit: Int!) {
-  signal_stats_daily(
-    order_by: { bucket: desc }
-    limit: $limit
-  ) {
+  signal_stats_daily(order_by: { bucket: desc }, limit: $limit) {
     bucket
     deposit_count
     redemption_count
@@ -931,10 +939,7 @@ query GetSignalStats($limit: Int!) {
 Query pre-aggregated collections grouped by (predicate, object):
 
 ```graphql
-query GetPopularCollections(
-  $predicateId: String!
-  $limit: Int!
-) {
+query GetPopularCollections($predicateId: String!, $limit: Int!) {
   predicate_objects(
     where: { predicate_id: { _eq: $predicateId } }
     order_by: { triple_count: desc }
@@ -955,6 +960,7 @@ query GetPopularCollections(
 ```
 
 **Variables**:
+
 ```json
 {
   "predicateId": "0x...",
@@ -970,27 +976,46 @@ Beyond count and sum, the API supports advanced statistical aggregations:
 
 ```graphql
 query GetPositionStatistics($accountId: String!) {
-  positions_aggregate(
-    where: { account_id: { _eq: $accountId } }
-  ) {
+  positions_aggregate(where: { account_id: { _eq: $accountId } }) {
     aggregate {
       count
-      sum { shares }
-      avg { shares }
-      min { shares }
-      max { shares }
-      stddev { shares }
-      stddev_pop { shares }
-      stddev_samp { shares }
-      variance { shares }
-      var_pop { shares }
-      var_samp { shares }
+      sum {
+        shares
+      }
+      avg {
+        shares
+      }
+      min {
+        shares
+      }
+      max {
+        shares
+      }
+      stddev {
+        shares
+      }
+      stddev_pop {
+        shares
+      }
+      stddev_samp {
+        shares
+      }
+      variance {
+        shares
+      }
+      var_pop {
+        shares
+      }
+      var_samp {
+        shares
+      }
     }
   }
 }
 ```
 
 **Use cases**:
+
 - `stddev` - Identify outliers in share distributions
 - `variance` - Measure position concentration
 - `avg` - Calculate average position size
@@ -1005,6 +1030,8 @@ The GraphQL API provides mutations for uploading and pinning content to IPFS. No
 
 #### Pin Thing
 
+> **⚠️ DEPRECATED**: This mutation is deprecated. Use `uploadJsonToPinata` from `@0xintuition/sdk` instead for direct Pinata uploads. The SDK now supports client-side IPFS pinning without requiring backend mediation. See the SDK documentation for updated implementations in `createAtomFromThing` and `batchCreateAtomsFromThings`.
+
 Pin a "Thing" object (general entity) to IPFS:
 
 ```graphql
@@ -1018,6 +1045,7 @@ mutation PinThing($thing: PinThingInput!) {
 ```
 
 **Variables**:
+
 ```json
 {
   "thing": {
@@ -1030,6 +1058,7 @@ mutation PinThing($thing: PinThingInput!) {
 ```
 
 **Response**:
+
 ```json
 {
   "data": {
@@ -1057,6 +1086,7 @@ mutation PinPerson($person: PinPersonInput!) {
 ```
 
 **Variables**:
+
 ```json
 {
   "person": {
@@ -1085,6 +1115,7 @@ mutation PinOrganization($organization: PinOrganizationInput!) {
 ```
 
 **Variables**:
+
 ```json
 {
   "organization": {
@@ -1112,6 +1143,7 @@ mutation UploadJson($json: jsonb!) {
 ```
 
 **Variables**:
+
 ```json
 {
   "json": {
@@ -1141,6 +1173,7 @@ mutation UploadImage($image: UploadImageInput!) {
 ```
 
 **Variables**:
+
 ```json
 {
   "image": {
@@ -1152,6 +1185,7 @@ mutation UploadImage($image: UploadImageInput!) {
 ```
 
 **Response**:
+
 ```json
 {
   "data": {
@@ -1179,6 +1213,7 @@ mutation UploadImageFromUrl($image: UploadImageFromUrlInput!) {
 ```
 
 **Variables**:
+
 ```json
 {
   "image": {
@@ -1211,10 +1246,7 @@ subscription WatchAtoms(
   $cursor: [atoms_stream_cursor_input]!
   $batchSize: Int!
 ) {
-  atoms_stream(
-    cursor: $cursor
-    batch_size: $batchSize
-  ) {
+  atoms_stream(cursor: $cursor, batch_size: $batchSize) {
     term_id
     label
     image
@@ -1224,12 +1256,15 @@ subscription WatchAtoms(
 ```
 
 **Variables**:
+
 ```json
 {
-  "cursor": [{
-    "initial_value": { "created_at": "2024-01-01T00:00:00Z" },
-    "ordering": "ASC"
-  }],
+  "cursor": [
+    {
+      "initial_value": { "created_at": "2024-01-01T00:00:00Z" },
+      "ordering": "ASC"
+    }
+  ],
   "batchSize": 10
 }
 ```
@@ -1247,9 +1282,7 @@ Subscriptions use cursors to enable resumable streams:
 #### Resumable Stream Example
 
 ```graphql
-subscription WatchPositions(
-  $cursor: [positions_stream_cursor_input]!
-) {
+subscription WatchPositions($cursor: [positions_stream_cursor_input]!) {
   positions_stream(
     cursor: $cursor
     batch_size: 20
@@ -1270,12 +1303,15 @@ subscription WatchPositions(
 ```
 
 **Variables**:
+
 ```json
 {
-  "cursor": [{
-    "initial_value": { "created_at": "2024-12-01T00:00:00Z" },
-    "ordering": "DESC"
-  }]
+  "cursor": [
+    {
+      "initial_value": { "created_at": "2024-12-01T00:00:00Z" },
+      "ordering": "DESC"
+    }
+  ]
 }
 ```
 
@@ -1287,15 +1323,18 @@ To resume from where you left off, update `initial_value` to the last received i
 
 ```graphql
 subscription WatchNewTriples($cursor: [triples_stream_cursor_input]!) {
-  triples_stream(
-    cursor: $cursor
-    batch_size: 5
-  ) {
+  triples_stream(cursor: $cursor, batch_size: 5) {
     term_id
     created_at
-    subject { label }
-    predicate { label }
-    object { label }
+    subject {
+      label
+    }
+    predicate {
+      label
+    }
+    object {
+      label
+    }
   }
 }
 ```
@@ -1352,12 +1391,14 @@ subscription WatchSignals(
 ### Subscription Best Practices
 
 **Use subscriptions when:**
+
 - Building real-time dashboards
 - Monitoring live protocol activity
 - Tracking position changes
 - Creating notification systems
 
 **Use polling when:**
+
 - Data updates infrequently
 - Real-time updates aren't critical
 - Minimizing server connections is important
@@ -1415,7 +1456,7 @@ query GetAtoms {
 ```graphql
 query CountPositions($accountId: String!) {
   positions(where: { account_id: { _eq: $accountId } }) {
-    id  # Fetching all data just to count
+    id # Fetching all data just to count
   }
 }
 ```
@@ -1437,11 +1478,7 @@ query CountPositions($accountId: String!) {
 ✅ **Efficient pattern**: Get both count and paginated data in one query
 
 ```graphql
-query GetPositionsWithCount(
-  $accountId: String!
-  $limit: Int!
-  $offset: Int!
-) {
+query GetPositionsWithCount($accountId: String!, $limit: Int!, $offset: Int!) {
   total: positions_aggregate(where: { account_id: { _eq: $accountId } }) {
     aggregate {
       count
@@ -1476,19 +1513,28 @@ query GetTriple($id: String!) {
       term_id
       label
       image
-      creator { id label }
+      creator {
+        id
+        label
+      }
     }
     predicate {
       term_id
       label
       image
-      creator { id label }
+      creator {
+        id
+        label
+      }
     }
     object {
       term_id
       label
       image
-      creator { id label }
+      creator {
+        id
+        label
+      }
     }
   }
 }
@@ -1509,9 +1555,15 @@ fragment AtomBasics on atoms {
 
 query GetTriple($id: String!) {
   triple(term_id: $id) {
-    subject { ...AtomBasics }
-    predicate { ...AtomBasics }
-    object { ...AtomBasics }
+    subject {
+      ...AtomBasics
+    }
+    predicate {
+      ...AtomBasics
+    }
+    object {
+      ...AtomBasics
+    }
   }
 }
 ```
@@ -1547,10 +1599,7 @@ query GetAtomsByType($type: atom_type!) {
 ```graphql
 query GetRecentPersonAtoms($since: timestamptz!) {
   atoms(
-    where: {
-      type: { _eq: Person }
-      created_at: { _gte: $since }
-    }
+    where: { type: { _eq: Person }, created_at: { _gte: $since } }
     limit: 100
   ) {
     term_id
@@ -1589,11 +1638,7 @@ Always use `limit` and `offset` for queries that could return many results:
 
 ```graphql
 query GetAllAtoms($limit: Int!, $offset: Int!) {
-  atoms(
-    limit: $limit
-    offset: $offset
-    order_by: { created_at: desc }
-  ) {
+  atoms(limit: $limit, offset: $offset, order_by: { created_at: desc }) {
     term_id
     label
   }
@@ -1625,10 +1670,7 @@ query GetPriceHistory($termId: String!) {
 ```graphql
 query GetDailyPriceStats($termId: String!, $curveId: numeric!) {
   share_price_change_stats_daily(
-    where: {
-      term_id: { _eq: $termId }
-      curve_id: { _eq: $curveId }
-    }
+    where: { term_id: { _eq: $termId }, curve_id: { _eq: $curveId } }
     order_by: { bucket: desc }
     limit: 30
   ) {
@@ -1642,11 +1684,13 @@ query GetDailyPriceStats($termId: String!, $curveId: numeric!) {
 ```
 
 **When to use pre-computed tables**:
+
 - Building charts/graphs for analytics dashboards
 - Computing trends over time
 - Displaying aggregate metrics by time period
 
 **Available time-series tables**:
+
 - `share_price_change_stats_daily`, `_hourly`, `_weekly`, `_monthly`
 - `signal_stats_daily`, `_hourly`, `_monthly`
 
@@ -1690,6 +1734,7 @@ query GetFollowingEfficiently($address: String!) {
 ```
 
 **Available database functions**:
+
 - `following` - Get accounts a user follows
 - `positions_from_following` - Social feed of positions
 - `search_positions_on_subject` - Complex position filtering
@@ -1698,6 +1743,7 @@ query GetFollowingEfficiently($address: String!) {
 - `signals_from_following` - Activity from followed accounts
 
 **Benefits**:
+
 - Faster query execution (runs in database, not client)
 - Less data transferred over network
 - More maintainable code
@@ -1707,6 +1753,7 @@ query GetFollowingEfficiently($address: String!) {
 Use subscriptions for real-time features, polling for everything else:
 
 ✅ **Use subscriptions when:**
+
 - Building real-time dashboards
 - Monitoring live protocol activity (e.g., new positions, price changes)
 - Creating notification systems
@@ -1714,23 +1761,28 @@ Use subscriptions for real-time features, polling for everything else:
 - Data changes frequently (multiple times per minute)
 
 **Example subscription use cases**:
+
 ```graphql
 subscription WatchMyPositions($cursor: [positions_stream_cursor_input]!) {
   positions_stream(cursor: $cursor, batch_size: 10) {
     id
     shares
-    vault { current_share_price }
+    vault {
+      current_share_price
+    }
   }
 }
 ```
 
 ✅ **Use polling when:**
+
 - Data updates infrequently (e.g., daily statistics)
 - Real-time updates aren't critical for UX
 - Minimizing server connections is important
 - Building static reports or analytics
 
 **Example polling pattern**:
+
 ```graphql
 query GetStats {
   stats {
@@ -1743,6 +1795,7 @@ query GetStats {
 ```
 
 **Subscription cursor management**:
+
 - Always provide `initial_value` to start from a specific point
 - Use `batch_size` to control data flow (typically 10-50)
 - Store last received cursor to resume after disconnection
@@ -1782,6 +1835,7 @@ query GetAtomWithVault($atomId: String!, $curveId: numeric!) {
 ```
 
 **Variables**:
+
 ```json
 {
   "atomId": "0x57d94c116a33bb460428eced262b7ae2ec6f865e7aceef6357cec3d034e8ea21",
@@ -1790,6 +1844,7 @@ query GetAtomWithVault($atomId: String!, $curveId: numeric!) {
 ```
 
 **Best Practices Used**:
+
 - Uses variables for dynamic values
 - Requests only needed fields
 - Filters vault by curve_id using a variable
@@ -1801,11 +1856,7 @@ query GetAtomWithVault($atomId: String!, $curveId: numeric!) {
 Get a paginated list of triples with total count.
 
 ```graphql
-query GetTriplesPage(
-  $limit: Int!
-  $offset: Int!
-  $where: triples_bool_exp
-) {
+query GetTriplesPage($limit: Int!, $offset: Int!, $where: triples_bool_exp) {
   total: triples_aggregate(where: $where) {
     aggregate {
       count
@@ -1838,6 +1889,7 @@ query GetTriplesPage(
 ```
 
 **Variables**:
+
 ```json
 {
   "limit": 20,
@@ -1851,6 +1903,7 @@ query GetTriplesPage(
 ```
 
 **Best Practices Used**:
+
 - Combines aggregate count with paginated nodes
 - Uses variables for all dynamic values
 - Includes ordering for consistent pagination
@@ -1893,9 +1946,15 @@ query GetUserPositions($accountId: String!, $limit: Int!, $offset: Int!) {
         }
         triple {
           term_id
-          subject { label }
-          predicate { label }
-          object { label }
+          subject {
+            label
+          }
+          predicate {
+            label
+          }
+          object {
+            label
+          }
         }
       }
     }
@@ -1904,6 +1963,7 @@ query GetUserPositions($accountId: String!, $limit: Int!, $offset: Int!) {
 ```
 
 **Variables**:
+
 ```json
 {
   "accountId": "0xd8da6bf26964af9d7eed9e03e53415d37aa96045",
@@ -1913,6 +1973,7 @@ query GetUserPositions($accountId: String!, $limit: Int!, $offset: Int!) {
 ```
 
 **Best Practices Used**:
+
 - Gets aggregate stats alongside paginated results
 - Uses relationship traversal to get atom/triple details
 - Aliases aggregate query as `stats` for clarity
@@ -1961,14 +2022,21 @@ query GlobalSearch($searchTerm: String!) {
     limit: 10
   ) {
     term_id
-    subject { label }
-    predicate { label }
-    object { label }
+    subject {
+      label
+    }
+    predicate {
+      label
+    }
+    object {
+      label
+    }
   }
 }
 ```
 
 **Variables**:
+
 ```json
 {
   "searchTerm": "%ethereum%"
@@ -1976,6 +2044,7 @@ query GlobalSearch($searchTerm: String!) {
 ```
 
 **Best Practices Used**:
+
 - Uses `_or` conditions for multi-field search
 - Limits results per type to avoid over-fetching
 - Uses `_ilike` appropriately for pattern matching
@@ -2008,10 +2077,7 @@ query GetVaultStats($termId: String!, $curveId: numeric!) {
       }
     }
 
-    top_positions: positions(
-      limit: 5
-      order_by: { shares: desc }
-    ) {
+    top_positions: positions(limit: 5, order_by: { shares: desc }) {
       account {
         id
         label
@@ -2023,6 +2089,7 @@ query GetVaultStats($termId: String!, $curveId: numeric!) {
 ```
 
 **Variables**:
+
 ```json
 {
   "termId": "0x...",
@@ -2031,6 +2098,7 @@ query GetVaultStats($termId: String!, $curveId: numeric!) {
 ```
 
 **Best Practices Used**:
+
 - Uses aggregates for statistics (count, sum, avg)
 - Limits top positions query
 - Uses aliases for clarity (`top_positions`)
@@ -2046,11 +2114,7 @@ The following examples demonstrate more complex use cases and advanced API featu
 Build a social feed showing positions from accounts a user follows.
 
 ```graphql
-query GetFollowingFeed(
-  $address: String!
-  $limit: Int!
-  $offset: Int!
-) {
+query GetFollowingFeed($address: String!, $limit: Int!, $offset: Int!) {
   # Get total follower count
   following_count: following_aggregate(args: { address: $address }) {
     aggregate {
@@ -2087,9 +2151,17 @@ query GetFollowingFeed(
         }
         triple {
           term_id
-          subject { label image }
-          predicate { label }
-          object { label image }
+          subject {
+            label
+            image
+          }
+          predicate {
+            label
+          }
+          object {
+            label
+            image
+          }
         }
       }
     }
@@ -2115,15 +2187,22 @@ query GetFollowingFeed(
     }
     triple {
       term_id
-      subject { label }
-      predicate { label }
-      object { label }
+      subject {
+        label
+      }
+      predicate {
+        label
+      }
+      object {
+        label
+      }
     }
   }
 }
 ```
 
 **Variables**:
+
 ```json
 {
   "address": "0xd8da6bf26964af9d7eed9e03e53415d37aa96045",
@@ -2135,6 +2214,7 @@ query GetFollowingFeed(
 **Use Case**: Build a social activity feed showing what the accounts you follow are investing in, similar to Twitter/X feed but for protocol positions.
 
 **Best Practices Used**:
+
 - Uses database functions (`positions_from_following`, `signals_from_following`) instead of manual filtering
 - Combines multiple related queries in one request
 - Includes aggregate count for pagination UI
@@ -2147,17 +2227,10 @@ query GetFollowingFeed(
 Analyze price trends over time using pre-computed aggregations.
 
 ```graphql
-query GetPriceTrendAnalysis(
-  $termId: String!
-  $curveId: numeric!
-  $days: Int!
-) {
+query GetPriceTrendAnalysis($termId: String!, $curveId: numeric!, $days: Int!) {
   # Get daily price changes for the last N days
   daily_trends: share_price_change_stats_daily(
-    where: {
-      term_id: { _eq: $termId }
-      curve_id: { _eq: $curveId }
-    }
+    where: { term_id: { _eq: $termId }, curve_id: { _eq: $curveId } }
     order_by: { bucket: desc }
     limit: $days
   ) {
@@ -2170,10 +2243,7 @@ query GetPriceTrendAnalysis(
 
   # Get hourly data for the last 24 hours for granular view
   hourly_trends: share_price_change_stats_hourly(
-    where: {
-      term_id: { _eq: $termId }
-      curve_id: { _eq: $curveId }
-    }
+    where: { term_id: { _eq: $termId }, curve_id: { _eq: $curveId } }
     order_by: { bucket: desc }
     limit: 24
   ) {
@@ -2195,10 +2265,7 @@ query GetPriceTrendAnalysis(
 
   # Get overall signal stats for context
   signal_trends: signal_stats_daily(
-    where: {
-      term_id: { _eq: $termId }
-      curve_id: { _eq: $curveId }
-    }
+    where: { term_id: { _eq: $termId }, curve_id: { _eq: $curveId } }
     order_by: { bucket: desc }
     limit: $days
   ) {
@@ -2211,6 +2278,7 @@ query GetPriceTrendAnalysis(
 ```
 
 **Variables**:
+
 ```json
 {
   "termId": "0x57d94c116a33bb460428eced262b7ae2ec6f865e7aceef6357cec3d034e8ea21",
@@ -2222,12 +2290,14 @@ query GetPriceTrendAnalysis(
 **Use Case**: Build analytics dashboards showing price trends, trading volume, and market activity over different time periods.
 
 **Best Practices Used**:
+
 - Leverages pre-computed time-series tables for performance
 - Combines multiple time granularities (daily, hourly) in one query
 - Includes current state for comparison
 - Uses variables for all dynamic values
 
 **Analysis Notes**:
+
 - Calculate percentage change: `(last_share_price - first_share_price) / first_share_price * 100`
 - `change_count` shows number of price changes in that time bucket
 - Weekly and monthly aggregations available via `share_price_change_stats_weekly` and `share_price_change_stats_monthly`
@@ -2246,10 +2316,7 @@ query AdvancedPositionSearch(
 ) {
   # Search positions with custom criteria
   results: search_positions_on_subject(
-    args: {
-      addresses: $addresses
-      search_fields: $searchFields
-    }
+    args: { addresses: $addresses, search_fields: $searchFields }
     limit: $limit
   ) {
     id
@@ -2296,10 +2363,7 @@ query AdvancedPositionSearch(
 
   # Get count for pagination
   results_aggregate: search_positions_on_subject_aggregate(
-    args: {
-      addresses: $addresses
-      search_fields: $searchFields
-    }
+    args: { addresses: $addresses, search_fields: $searchFields }
   ) {
     aggregate {
       count
@@ -2312,6 +2376,7 @@ query AdvancedPositionSearch(
 ```
 
 **Variables**:
+
 ```json
 {
   "addresses": "{0xd8da6bf26964af9d7eed9e03e53415d37aa96045,0xabc123...}",
@@ -2325,6 +2390,7 @@ query AdvancedPositionSearch(
 ```
 
 **Use Case**: Build advanced search UIs where users can filter positions by:
+
 - Multiple wallet addresses
 - Minimum share amounts
 - Term type (atom vs triple)
@@ -2332,6 +2398,7 @@ query AdvancedPositionSearch(
 - Other custom criteria in `search_fields`
 
 **Best Practices Used**:
+
 - Uses backend function for complex filtering (more efficient than client-side)
 - Includes aggregate variant for totals
 - Handles both atom and triple results
@@ -2353,10 +2420,7 @@ subscription LivePositionMonitor(
   positions_stream(
     cursor: $cursor
     batch_size: $batchSize
-    where: {
-      account_id: { _eq: $accountId }
-      shares: { _gt: "0" }
-    }
+    where: { account_id: { _eq: $accountId }, shares: { _gt: "0" } }
   ) {
     id
     shares
@@ -2377,9 +2441,15 @@ subscription LivePositionMonitor(
         }
         triple {
           term_id
-          subject { label }
-          predicate { label }
-          object { label }
+          subject {
+            label
+          }
+          predicate {
+            label
+          }
+          object {
+            label
+          }
         }
       }
     }
@@ -2388,41 +2458,50 @@ subscription LivePositionMonitor(
 ```
 
 **Variables (Initial)**:
+
 ```json
 {
-  "cursor": [{
-    "initial_value": { "created_at": "2024-12-01T00:00:00Z" },
-    "ordering": "ASC"
-  }],
+  "cursor": [
+    {
+      "initial_value": { "created_at": "2024-12-01T00:00:00Z" },
+      "ordering": "ASC"
+    }
+  ],
   "accountId": "0xd8da6bf26964af9d7eed9e03e53415d37aa96045",
   "batchSize": 10
 }
 ```
 
 **Variables (Resuming)**:
+
 ```json
 {
-  "cursor": [{
-    "initial_value": { "created_at": "2024-12-12T15:30:00Z" },
-    "ordering": "ASC"
-  }],
+  "cursor": [
+    {
+      "initial_value": { "created_at": "2024-12-12T15:30:00Z" },
+      "ordering": "ASC"
+    }
+  ],
   "accountId": "0xd8da6bf26964af9d7eed9e03e53415d37aa96045",
   "batchSize": 10
 }
 ```
 
 **Use Case**: Create real-time dashboards that update automatically when:
+
 - New positions are created
 - Existing positions change
 - User performs deposits or redemptions
 
 **Implementation Pattern**:
+
 1. Start subscription with initial cursor (e.g., last hour)
 2. Process incoming batches of updates
 3. Update UI state with new data
 4. If connection drops, resume from last received `created_at`
 
 **Best Practices Used**:
+
 - Filters for active positions (`shares > 0`)
 - Uses batch_size to control data flow
 - Cursor enables resumable streams after disconnection
@@ -2473,6 +2552,7 @@ query GetCreatedAtom($termId: String!, $curveId: numeric!) {
 ```
 
 **Step 1 Variables**:
+
 ```json
 {
   "person": {
@@ -2486,6 +2566,7 @@ query GetCreatedAtom($termId: String!, $curveId: numeric!) {
 ```
 
 **Step 1 Response**:
+
 ```json
 {
   "data": {
@@ -2499,6 +2580,7 @@ query GetCreatedAtom($termId: String!, $curveId: numeric!) {
 ```
 
 **Step 2 Variables** (after blockchain transaction):
+
 ```json
 {
   "termId": "0x57d94c116a33bb460428eced262b7ae2ec6f865e7aceef6357cec3d034e8ea21",
@@ -2518,12 +2600,14 @@ query GetCreatedAtom($termId: String!, $curveId: numeric!) {
 8. **Cache metadata** - Store IPFS hash for future reference
 
 **Error Handling Considerations**:
+
 - Mutation may fail if image classification fails (inappropriate content)
 - IPFS pinning may timeout - implement retry logic
 - Blockchain transaction may fail - check gas and approval
 - Atom may not appear immediately - poll or subscribe for updates
 
 **Best Practices Used**:
+
 - Separates IPFS operations from blockchain operations
 - Uses appropriate mutation for entity type
 - Queries include vault data for immediate display
@@ -2583,7 +2667,8 @@ Each tool has specific configuration requirements - refer to their official docu
 # BAD
 fragment VaultDetails on atoms {
   term {
-    vaults(where: { curve_id: { _eq: "1" } }) {  # ❌ Hardcoded!
+    vaults(where: { curve_id: { _eq: "1" } }) {
+      # ❌ Hardcoded!
       total_shares
     }
   }
@@ -2596,7 +2681,8 @@ fragment VaultDetails on atoms {
 # GOOD
 fragment VaultDetails on atoms {
   term {
-    vaults(where: { curve_id: { _eq: $curveId } }) {  # ✅ Variable
+    vaults(where: { curve_id: { _eq: $curveId } }) {
+      # ✅ Variable
       total_shares
     }
   }
@@ -2618,7 +2704,8 @@ query GetAtom($id: String!, $curveId: numeric!) {
 ```graphql
 # BAD
 query GetPositionCount($where: positions_bool_exp) {
-  positions(where: $where) {  # ❌ Fetches all data
+  positions(where: $where) {
+    # ❌ Fetches all data
     id
     shares
     account_id
@@ -2632,7 +2719,8 @@ query GetPositionCount($where: positions_bool_exp) {
 ```graphql
 # GOOD
 query GetPositionCount($where: positions_bool_exp) {
-  positions_aggregate(where: $where) {  # ✅ Only returns count
+  positions_aggregate(where: $where) {
+    # ✅ Only returns count
     aggregate {
       count
       sum {
@@ -2656,10 +2744,12 @@ query GetAtom($id: String!) {
     label
     creator {
       id
-      atoms {  # ❌ Fetching all creator's atoms when not needed
+      atoms {
+        # ❌ Fetching all creator's atoms when not needed
         term_id
         label
-        as_subject_triples {  # ❌ Even deeper unnecessary nesting
+        as_subject_triples {
+          # ❌ Even deeper unnecessary nesting
           term_id
         }
       }
@@ -2692,7 +2782,8 @@ query GetAtom($id: String!) {
 ```graphql
 # BAD
 query {
-  atoms(where: { type: { _eq: Person } }) {  # ❌ Hardcoded
+  atoms(where: { type: { _eq: Person } }) {
+    # ❌ Hardcoded
     term_id
     label
   }
@@ -2704,7 +2795,8 @@ query {
 ```graphql
 # GOOD
 query GetAtomsByType($type: atom_type!) {
-  atoms(where: { type: { _eq: $type } }) {  # ✅ Variable
+  atoms(where: { type: { _eq: $type } }) {
+    # ✅ Variable
     term_id
     label
   }
@@ -2724,17 +2816,26 @@ query GetTriple($id: String!) {
     subject {
       term_id
       label
-      creator { id label }  # ❌ Duplicated
+      creator {
+        id
+        label
+      } # ❌ Duplicated
     }
     predicate {
       term_id
       label
-      creator { id label }  # ❌ Duplicated
+      creator {
+        id
+        label
+      } # ❌ Duplicated
     }
     object {
       term_id
       label
-      creator { id label }  # ❌ Duplicated
+      creator {
+        id
+        label
+      } # ❌ Duplicated
     }
   }
 }
@@ -2755,9 +2856,15 @@ fragment AtomBasics on atoms {
 
 query GetTriple($id: String!) {
   triple(term_id: $id) {
-    subject { ...AtomBasics }  # ✅ Reusable
-    predicate { ...AtomBasics }
-    object { ...AtomBasics }
+    subject {
+      ...AtomBasics
+    } # ✅ Reusable
+    predicate {
+      ...AtomBasics
+    }
+    object {
+      ...AtomBasics
+    }
   }
 }
 ```
@@ -2771,7 +2878,8 @@ query GetTriple($id: String!) {
 ```graphql
 # BAD
 query GetAccount($address: String!) {
-  accounts(where: { id: { _ilike: $address } }) {  # ❌ Inefficient
+  accounts(where: { id: { _ilike: $address } }) {
+    # ❌ Inefficient
     id
     label
   }
@@ -2783,7 +2891,8 @@ query GetAccount($address: String!) {
 ```graphql
 # GOOD
 query GetAccount($address: String!) {
-  account(id: $address) {  # ✅ Primary key lookup
+  account(id: $address) {
+    # ✅ Primary key lookup
     id
     label
   }
@@ -2791,7 +2900,8 @@ query GetAccount($address: String!) {
 
 # Or with _eq
 query GetAccounts($address: String!) {
-  accounts(where: { id: { _eq: $address } }) {  # ✅ Exact match
+  accounts(where: { id: { _eq: $address } }) {
+    # ✅ Exact match
     id
     label
   }
@@ -2805,6 +2915,7 @@ query GetAccounts($address: String!) {
 **Problem**: Re-writing common field selections instead of using existing fragments.
 
 This package includes pre-built fragments in `src/fragments/`:
+
 - `atom.graphql` - Atom metadata, values, transactions, vault details
 - `triple.graphql` - Triple metadata, vault details
 - `position.graphql` - Position details and aggregates

@@ -1,3 +1,14 @@
+## Unreleased
+
+### Deprecations
+
+- **DEPRECATED:** The `pinThing` GraphQL mutation is now deprecated. Use `uploadJsonToPinata` from `@0xintuition/sdk` instead for direct Pinata uploads. The SDK now supports client-side IPFS pinning without requiring backend mediation.
+
+### Documentation
+
+- Added deprecation notices to the `pinThing` mutation documentation in README.md.
+- Updated mutation file with deprecation comments and migration guidance.
+
 ## 2.0.1
 
 ## 2.0.2
