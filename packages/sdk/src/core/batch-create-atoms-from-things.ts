@@ -34,14 +34,24 @@ export async function batchCreateAtomsFromThings(
   const calculatedCost = (atomCost + depositAmountPerAtom) * BigInt(data.length)
 
   // Pin each thing in parallel and collect their URIs
-  const uploadPromises = data.map(async (item) => {
-    const dataIpfs = await uploadJsonToPinata(config.pinataApiJWT, item)
+  const uploadPromises = data.map(async (item, index) => {
+    try {
+      const dataIpfs = await uploadJsonToPinata(config.pinataApiJWT, item)
 
-    if (!dataIpfs.IpfsHash || dataIpfs.IpfsHash.trim() === '') {
-      throw new Error('Invalid IPFS hash received from Pinata')
+      if (!dataIpfs.IpfsHash || dataIpfs.IpfsHash.trim() === '') {
+        const itemPreview = JSON.stringify(item).slice(0, 100)
+        throw new Error(
+          `Invalid IPFS hash received from Pinata for item at index ${index}: ${itemPreview}${JSON.stringify(item).length > 100 ? '...' : ''}`,
+        )
+      }
+
+      return `ipfs://${dataIpfs.IpfsHash}`
+    } catch (error) {
+      const itemPreview = JSON.stringify(item).slice(0, 100)
+      throw new Error(
+        `Failed to upload item at index ${index} to Pinata: ${itemPreview}${JSON.stringify(item).length > 100 ? '...' : ''}. ${error instanceof Error ? error.message : String(error)}`,
+      )
     }
-
-    return `ipfs://${dataIpfs.IpfsHash}`
   })
 
   const uris = await Promise.all(uploadPromises)

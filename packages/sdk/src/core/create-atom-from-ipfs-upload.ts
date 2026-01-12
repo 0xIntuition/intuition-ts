@@ -1,5 +1,5 @@
 import {
-  eventParseDeposited,
+  eventParseAtomCreated,
   multiVaultCreateAtoms,
   multiVaultGetAtomCost,
   type WriteConfig,
@@ -47,10 +47,7 @@ export async function createAtomFromIpfsUpload(
     throw new Error('Failed to create atom onchain')
   }
 
-  const events = await eventParseDeposited(
-    config.publicClient ?? config.walletClient,
-    txHash,
-  )
+  const events = await eventParseAtomCreated(publicClient, txHash)
 
   return {
     uri,
