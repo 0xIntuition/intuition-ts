@@ -1,5 +1,5 @@
 import {
-  eventParseDeposited,
+  eventParseAtomCreated,
   multiVaultCreateAtoms,
   multiVaultGetAtomCost,
   type WriteConfig,
@@ -26,6 +26,12 @@ export async function createAtomFromIpfsUpload(
   depositAmount?: bigint,
 ) {
   const dataIpfs = await uploadJsonToPinata(config.pinataApiJWT, data)
+
+  if (!dataIpfs.IpfsHash || dataIpfs.IpfsHash.trim() === '') {
+    throw new Error('Invalid IPFS hash received from Pinata')
+  }
+
+  const uri = `ipfs://${dataIpfs.IpfsHash}`
   const { address: multivaultAddress, publicClient } = config
   const atomBaseCost = await multiVaultGetAtomCost({
     publicClient,
@@ -33,7 +39,7 @@ export async function createAtomFromIpfsUpload(
   })
   const assets = atomBaseCost + BigInt(depositAmount || 0)
   const txHash = await multiVaultCreateAtoms(config, {
-    args: [[toHex(dataIpfs.IpfsHash)], [assets]],
+    args: [[toHex(uri)], [assets]],
     value: assets,
   })
 
@@ -41,13 +47,10 @@ export async function createAtomFromIpfsUpload(
     throw new Error('Failed to create atom onchain')
   }
 
-  const events = await eventParseDeposited(
-    config.publicClient ?? config.walletClient,
-    txHash,
-  )
+  const events = await eventParseAtomCreated(publicClient, txHash)
 
   return {
-    uri: `ipfs://${dataIpfs.IpfsHash}`,
+    uri,
     transactionHash: txHash,
     state: events[0].args,
   }

@@ -9,6 +9,9 @@ import {
  * Pins a "thing" via the GraphQL API and returns the resulting URI.
  * @param variables PinThing mutation variables.
  * @returns IPFS URI string or null if pinning fails.
+ * @deprecated This function is deprecated. Use `uploadJsonToPinata` from the SDK instead.
+ * The SDK now supports direct Pinata uploads without requiring backend mediation.
+ * See `createAtomFromThing` and `batchCreateAtomsFromThings` for updated implementations.
  */
 export async function pinThing(variables: PinThingMutationVariables) {
   try {
@@ -16,7 +19,6 @@ export async function pinThing(variables: PinThingMutationVariables) {
       PinThingDocument,
       variables,
     )()
-    data.pinThing?.uri
     if (data.pinThing?.uri) {
       return data.pinThing?.uri
     }
