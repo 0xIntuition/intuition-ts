@@ -18,6 +18,53 @@ directive @cached(
   ttl: Int! = 60
 ) on QUERY
 
+type AccountPnlChartOutput {
+  account_id: String!
+  count: Int!
+  data: [AccountPnlChartPoint!]!
+  interval: String!
+}
+
+type AccountPnlChartPoint {
+  equity_value: String!
+  net_invested: String!
+  pnl_pct: String!
+  timestamp: String!
+  total_assets_in: String!
+  total_assets_out: String!
+  total_pnl: String!
+  unrealized_pnl: String!
+}
+
+type AccountPnlRealizedEntry {
+  assets_out: String!
+  cost_basis: String!
+  curve_id: String!
+  realized_pnl: String!
+  realized_pnl_pct: String!
+  shares_redeemed: String!
+  term_id: String!
+  timestamp: String!
+}
+
+type AccountPnlRealizedOutput {
+  account_id: String!
+  count: Int!
+  data: [AccountPnlRealizedEntry!]!
+}
+
+type AccountPnlSnapshotOutput {
+  account_id: String!
+  equity_value: String!
+  net_invested: String!
+  pnl_pct: String!
+  timestamp: String!
+  total_assets_in: String!
+  total_assets_out: String!
+  total_pnl: String!
+  unrealized_pnl: String!
+}
+
 """
 Boolean expression to compare columns of type "Boolean". All fields are combined with logical 'AND'.
 """
@@ -40,6 +87,72 @@ type CachedImage {
   safe: Boolean!
   score: jsonb
   url: String!
+}
+
+type ChartDataOutput {
+  count: Int!
+  curve_id: String
+  data: [ChartDataPoint!]!
+  graph_type: String!
+  interval: String!
+  term_id: String!
+}
+
+type ChartDataPoint {
+  timestamp: String!
+  value: String!
+}
+
+type ChartSvgOutput {
+  svg: String!
+}
+
+input GetAccountPnlChartInput {
+  account_id: String!
+  end_time: String!
+  interval: String!
+  start_time: String!
+}
+
+input GetAccountPnlCurrentInput {
+  account_id: String!
+}
+
+input GetAccountPnlRealizedInput {
+  account_id: String!
+  end_time: String!
+  start_time: String!
+}
+
+input GetChartJsonInput {
+  curve_id: String!
+  end_time: String!
+  graph_type: String
+  interval: String!
+  start_time: String!
+  term_id: String!
+}
+
+input GetChartSvgInput {
+  background_color: String
+  curve_id: String!
+  end_time: String!
+  graph_type: String
+  height: Int
+  interval: String!
+  line_color: String
+  start_time: String!
+  term_id: String!
+  width: Int
+}
+
+input GetPositionPnlChartInput {
+  account_id: String!
+  curve_id: String!
+  end_time: String!
+  interval: String!
+  start_time: String!
+  term_id: String!
 }
 
 """
@@ -83,6 +196,28 @@ input PinThingInput {
   image: String
   name: String
   url: String
+}
+
+type PositionPnlChartOutput {
+  account_id: String!
+  count: Int!
+  curve_id: String!
+  data: [PositionPnlChartPoint!]!
+  interval: String!
+  term_id: String!
+}
+
+type PositionPnlChartPoint {
+  equity_value: String!
+  net_invested: String!
+  pnl_pct: String!
+  share_price: String!
+  shares_total: String!
+  timestamp: String!
+  total_assets_in: String!
+  total_assets_out: String!
+  total_pnl: String!
+  unrealized_pnl: String!
 }
 
 """
@@ -161,6 +296,312 @@ type UploadJsonToIpfsOutput {
 }
 
 scalar _text
+
+"""
+columns and relationships of "account_pnl_rank"
+"""
+type account_pnl_rank {
+  account_id: String
+  account_image: String
+  account_label: String
+  percentile: numeric
+  pnl_pct: numeric
+  rank: bigint
+  total_accounts: bigint
+  total_pnl: numeric
+  total_position_count: bigint
+  total_volume: numeric
+  win_rate: numeric
+}
+
+"""
+aggregated selection of "account_pnl_rank"
+"""
+type account_pnl_rank_aggregate {
+  aggregate: account_pnl_rank_aggregate_fields
+  nodes: [account_pnl_rank!]!
+}
+
+"""
+aggregate fields of "account_pnl_rank"
+"""
+type account_pnl_rank_aggregate_fields {
+  avg: account_pnl_rank_avg_fields
+  count(columns: [account_pnl_rank_select_column!], distinct: Boolean): Int!
+  max: account_pnl_rank_max_fields
+  min: account_pnl_rank_min_fields
+  stddev: account_pnl_rank_stddev_fields
+  stddev_pop: account_pnl_rank_stddev_pop_fields
+  stddev_samp: account_pnl_rank_stddev_samp_fields
+  sum: account_pnl_rank_sum_fields
+  var_pop: account_pnl_rank_var_pop_fields
+  var_samp: account_pnl_rank_var_samp_fields
+  variance: account_pnl_rank_variance_fields
+}
+
+"""
+aggregate avg on columns
+"""
+type account_pnl_rank_avg_fields {
+  percentile: Float
+  pnl_pct: Float
+  rank: Float
+  total_accounts: Float
+  total_pnl: Float
+  total_position_count: Float
+  total_volume: Float
+  win_rate: Float
+}
+
+"""
+Boolean expression to filter rows from the table "account_pnl_rank". All fields are combined with a logical 'AND'.
+"""
+input account_pnl_rank_bool_exp {
+  _and: [account_pnl_rank_bool_exp!]
+  _not: account_pnl_rank_bool_exp
+  _or: [account_pnl_rank_bool_exp!]
+  account_id: String_comparison_exp
+  account_image: String_comparison_exp
+  account_label: String_comparison_exp
+  percentile: numeric_comparison_exp
+  pnl_pct: numeric_comparison_exp
+  rank: bigint_comparison_exp
+  total_accounts: bigint_comparison_exp
+  total_pnl: numeric_comparison_exp
+  total_position_count: bigint_comparison_exp
+  total_volume: numeric_comparison_exp
+  win_rate: numeric_comparison_exp
+}
+
+"""
+aggregate max on columns
+"""
+type account_pnl_rank_max_fields {
+  account_id: String
+  account_image: String
+  account_label: String
+  percentile: numeric
+  pnl_pct: numeric
+  rank: bigint
+  total_accounts: bigint
+  total_pnl: numeric
+  total_position_count: bigint
+  total_volume: numeric
+  win_rate: numeric
+}
+
+"""
+aggregate min on columns
+"""
+type account_pnl_rank_min_fields {
+  account_id: String
+  account_image: String
+  account_label: String
+  percentile: numeric
+  pnl_pct: numeric
+  rank: bigint
+  total_accounts: bigint
+  total_pnl: numeric
+  total_position_count: bigint
+  total_volume: numeric
+  win_rate: numeric
+}
+
+"""
+Ordering options when selecting data from "account_pnl_rank".
+"""
+input account_pnl_rank_order_by {
+  account_id: order_by
+  account_image: order_by
+  account_label: order_by
+  percentile: order_by
+  pnl_pct: order_by
+  rank: order_by
+  total_accounts: order_by
+  total_pnl: order_by
+  total_position_count: order_by
+  total_volume: order_by
+  win_rate: order_by
+}
+
+"""
+select columns of table "account_pnl_rank"
+"""
+enum account_pnl_rank_select_column {
+  """
+  column name
+  """
+  account_id
+  """
+  column name
+  """
+  account_image
+  """
+  column name
+  """
+  account_label
+  """
+  column name
+  """
+  percentile
+  """
+  column name
+  """
+  pnl_pct
+  """
+  column name
+  """
+  rank
+  """
+  column name
+  """
+  total_accounts
+  """
+  column name
+  """
+  total_pnl
+  """
+  column name
+  """
+  total_position_count
+  """
+  column name
+  """
+  total_volume
+  """
+  column name
+  """
+  win_rate
+}
+
+"""
+aggregate stddev on columns
+"""
+type account_pnl_rank_stddev_fields {
+  percentile: Float
+  pnl_pct: Float
+  rank: Float
+  total_accounts: Float
+  total_pnl: Float
+  total_position_count: Float
+  total_volume: Float
+  win_rate: Float
+}
+
+"""
+aggregate stddev_pop on columns
+"""
+type account_pnl_rank_stddev_pop_fields {
+  percentile: Float
+  pnl_pct: Float
+  rank: Float
+  total_accounts: Float
+  total_pnl: Float
+  total_position_count: Float
+  total_volume: Float
+  win_rate: Float
+}
+
+"""
+aggregate stddev_samp on columns
+"""
+type account_pnl_rank_stddev_samp_fields {
+  percentile: Float
+  pnl_pct: Float
+  rank: Float
+  total_accounts: Float
+  total_pnl: Float
+  total_position_count: Float
+  total_volume: Float
+  win_rate: Float
+}
+
+"""
+Streaming cursor of the table "account_pnl_rank"
+"""
+input account_pnl_rank_stream_cursor_input {
+  """
+  Stream column input with initial value
+  """
+  initial_value: account_pnl_rank_stream_cursor_value_input!
+  """
+  cursor ordering
+  """
+  ordering: cursor_ordering
+}
+
+"""
+Initial value of the column from where the streaming should start
+"""
+input account_pnl_rank_stream_cursor_value_input {
+  account_id: String
+  account_image: String
+  account_label: String
+  percentile: numeric
+  pnl_pct: numeric
+  rank: bigint
+  total_accounts: bigint
+  total_pnl: numeric
+  total_position_count: bigint
+  total_volume: numeric
+  win_rate: numeric
+}
+
+"""
+aggregate sum on columns
+"""
+type account_pnl_rank_sum_fields {
+  percentile: numeric
+  pnl_pct: numeric
+  rank: bigint
+  total_accounts: bigint
+  total_pnl: numeric
+  total_position_count: bigint
+  total_volume: numeric
+  win_rate: numeric
+}
+
+"""
+aggregate var_pop on columns
+"""
+type account_pnl_rank_var_pop_fields {
+  percentile: Float
+  pnl_pct: Float
+  rank: Float
+  total_accounts: Float
+  total_pnl: Float
+  total_position_count: Float
+  total_volume: Float
+  win_rate: Float
+}
+
+"""
+aggregate var_samp on columns
+"""
+type account_pnl_rank_var_samp_fields {
+  percentile: Float
+  pnl_pct: Float
+  rank: Float
+  total_accounts: Float
+  total_pnl: Float
+  total_position_count: Float
+  total_volume: Float
+  win_rate: Float
+}
+
+"""
+aggregate variance on columns
+"""
+type account_pnl_rank_variance_fields {
+  percentile: Float
+  pnl_pct: Float
+  rank: Float
+  total_accounts: Float
+  total_pnl: Float
+  total_position_count: Float
+  total_volume: Float
+  win_rate: Float
+}
 
 scalar account_type
 
@@ -3161,6 +3602,11 @@ type events {
   """
   An object relationship
   """
+  protocol_fee_accrued: protocol_fee_accruals
+  protocol_fee_accrued_id: String
+  """
+  An object relationship
+  """
   redemption: redemptions
   redemption_id: String
   transaction_hash: String!
@@ -3220,6 +3666,8 @@ input events_bool_exp {
   fee_transfer: fee_transfers_bool_exp
   fee_transfer_id: String_comparison_exp
   id: String_comparison_exp
+  protocol_fee_accrued: protocol_fee_accruals_bool_exp
+  protocol_fee_accrued_id: String_comparison_exp
   redemption: redemptions_bool_exp
   redemption_id: String_comparison_exp
   transaction_hash: String_comparison_exp
@@ -3238,6 +3686,7 @@ type events_max_fields {
   deposit_id: String
   fee_transfer_id: String
   id: String
+  protocol_fee_accrued_id: String
   redemption_id: String
   transaction_hash: String
   triple_id: String
@@ -3254,6 +3703,7 @@ type events_min_fields {
   deposit_id: String
   fee_transfer_id: String
   id: String
+  protocol_fee_accrued_id: String
   redemption_id: String
   transaction_hash: String
   triple_id: String
@@ -3273,6 +3723,8 @@ input events_order_by {
   fee_transfer: fee_transfers_order_by
   fee_transfer_id: order_by
   id: order_by
+  protocol_fee_accrued: protocol_fee_accruals_order_by
+  protocol_fee_accrued_id: order_by
   redemption: redemptions_order_by
   redemption_id: order_by
   transaction_hash: order_by
@@ -3309,6 +3761,10 @@ enum events_select_column {
   column name
   """
   id
+  """
+  column name
+  """
+  protocol_fee_accrued_id
   """
   column name
   """
@@ -3372,6 +3828,7 @@ input events_stream_cursor_value_input {
   deposit_id: String
   fee_transfer_id: String
   id: String
+  protocol_fee_accrued_id: String
   redemption_id: String
   transaction_hash: String
   triple_id: String
@@ -3773,6 +4230,65 @@ input float8_comparison_exp {
 
 input following_args {
   address: String
+}
+
+input get_account_pnl_rank_args {
+  p_account_id: String
+  p_sort_by: String
+  p_term_id: String
+  p_time_filter: String
+}
+
+input get_pnl_leaderboard_args {
+  p_end_time: timestamptz
+  p_exclude_protocol_accounts: Boolean
+  p_limit: Int
+  p_min_positions: Int
+  p_min_volume: numeric
+  p_offset: Int
+  p_sort_by: String
+  p_sort_order: String
+  p_start_time: timestamptz
+  p_term_id: String
+  p_time_filter: String
+}
+
+input get_pnl_leaderboard_period_args {
+  p_end_date: timestamptz
+  p_exclude_protocol_accounts: Boolean
+  p_limit: Int
+  p_min_positions: Int
+  p_min_volume: numeric
+  p_offset: Int
+  p_sort_by: String
+  p_sort_order: String
+  p_start_date: timestamptz
+  p_term_id: String
+}
+
+input get_pnl_leaderboard_stats_args {
+  p_term_id: String
+  p_time_filter: String
+}
+
+input get_vault_leaderboard_args {
+  p_curve_id: numeric
+  p_limit: Int
+  p_offset: Int
+  p_sort_by: String
+  p_sort_order: String
+  p_term_id: String
+}
+
+input get_vault_leaderboard_period_args {
+  p_curve_id: numeric
+  p_end_date: timestamptz
+  p_limit: Int
+  p_offset: Int
+  p_sort_by: String
+  p_sort_order: String
+  p_start_date: timestamptz
+  p_term_id: String
 }
 
 """
@@ -4295,6 +4811,1598 @@ input persons_stream_cursor_value_input {
 }
 
 """
+columns and relationships of "pnl_leaderboard_entry"
+"""
+type pnl_leaderboard_entry {
+  account_id: String
+  account_image: String
+  account_label: String
+  active_position_count: bigint
+  best_trade_pnl_formatted: numeric
+  best_trade_pnl_raw: numeric
+  current_equity_value_formatted: numeric
+  current_equity_value_raw: numeric
+  first_position_at: timestamptz
+  last_activity_at: timestamptz
+  losing_positions: bigint
+  pnl_change_formatted: numeric
+  pnl_change_raw: numeric
+  pnl_pct: numeric
+  rank: bigint
+  realized_pnl_formatted: numeric
+  realized_pnl_raw: numeric
+  redeemable_assets_formatted: numeric
+  redeemable_assets_raw: numeric
+  total_deposits_formatted: numeric
+  total_deposits_raw: numeric
+  total_pnl_formatted: numeric
+  total_pnl_raw: numeric
+  total_position_count: bigint
+  total_redemptions_formatted: numeric
+  total_redemptions_raw: numeric
+  total_volume_formatted: numeric
+  total_volume_raw: numeric
+  unrealized_pnl_formatted: numeric
+  unrealized_pnl_raw: numeric
+  win_rate: numeric
+  winning_positions: bigint
+  worst_trade_pnl_formatted: numeric
+  worst_trade_pnl_raw: numeric
+}
+
+type pnl_leaderboard_entry_aggregate {
+  aggregate: pnl_leaderboard_entry_aggregate_fields
+  nodes: [pnl_leaderboard_entry!]!
+}
+
+"""
+aggregate fields of "pnl_leaderboard_entry"
+"""
+type pnl_leaderboard_entry_aggregate_fields {
+  avg: pnl_leaderboard_entry_avg_fields
+  count(
+    columns: [pnl_leaderboard_entry_select_column!]
+    distinct: Boolean
+  ): Int!
+  max: pnl_leaderboard_entry_max_fields
+  min: pnl_leaderboard_entry_min_fields
+  stddev: pnl_leaderboard_entry_stddev_fields
+  stddev_pop: pnl_leaderboard_entry_stddev_pop_fields
+  stddev_samp: pnl_leaderboard_entry_stddev_samp_fields
+  sum: pnl_leaderboard_entry_sum_fields
+  var_pop: pnl_leaderboard_entry_var_pop_fields
+  var_samp: pnl_leaderboard_entry_var_samp_fields
+  variance: pnl_leaderboard_entry_variance_fields
+}
+
+"""
+aggregate avg on columns
+"""
+type pnl_leaderboard_entry_avg_fields {
+  active_position_count: Float
+  best_trade_pnl_formatted: Float
+  best_trade_pnl_raw: Float
+  current_equity_value_formatted: Float
+  current_equity_value_raw: Float
+  losing_positions: Float
+  pnl_change_formatted: Float
+  pnl_change_raw: Float
+  pnl_pct: Float
+  rank: Float
+  realized_pnl_formatted: Float
+  realized_pnl_raw: Float
+  redeemable_assets_formatted: Float
+  redeemable_assets_raw: Float
+  total_deposits_formatted: Float
+  total_deposits_raw: Float
+  total_pnl_formatted: Float
+  total_pnl_raw: Float
+  total_position_count: Float
+  total_redemptions_formatted: Float
+  total_redemptions_raw: Float
+  total_volume_formatted: Float
+  total_volume_raw: Float
+  unrealized_pnl_formatted: Float
+  unrealized_pnl_raw: Float
+  win_rate: Float
+  winning_positions: Float
+  worst_trade_pnl_formatted: Float
+  worst_trade_pnl_raw: Float
+}
+
+"""
+Boolean expression to filter rows from the table "pnl_leaderboard_entry". All fields are combined with a logical 'AND'.
+"""
+input pnl_leaderboard_entry_bool_exp {
+  _and: [pnl_leaderboard_entry_bool_exp!]
+  _not: pnl_leaderboard_entry_bool_exp
+  _or: [pnl_leaderboard_entry_bool_exp!]
+  account_id: String_comparison_exp
+  account_image: String_comparison_exp
+  account_label: String_comparison_exp
+  active_position_count: bigint_comparison_exp
+  best_trade_pnl_formatted: numeric_comparison_exp
+  best_trade_pnl_raw: numeric_comparison_exp
+  current_equity_value_formatted: numeric_comparison_exp
+  current_equity_value_raw: numeric_comparison_exp
+  first_position_at: timestamptz_comparison_exp
+  last_activity_at: timestamptz_comparison_exp
+  losing_positions: bigint_comparison_exp
+  pnl_change_formatted: numeric_comparison_exp
+  pnl_change_raw: numeric_comparison_exp
+  pnl_pct: numeric_comparison_exp
+  rank: bigint_comparison_exp
+  realized_pnl_formatted: numeric_comparison_exp
+  realized_pnl_raw: numeric_comparison_exp
+  redeemable_assets_formatted: numeric_comparison_exp
+  redeemable_assets_raw: numeric_comparison_exp
+  total_deposits_formatted: numeric_comparison_exp
+  total_deposits_raw: numeric_comparison_exp
+  total_pnl_formatted: numeric_comparison_exp
+  total_pnl_raw: numeric_comparison_exp
+  total_position_count: bigint_comparison_exp
+  total_redemptions_formatted: numeric_comparison_exp
+  total_redemptions_raw: numeric_comparison_exp
+  total_volume_formatted: numeric_comparison_exp
+  total_volume_raw: numeric_comparison_exp
+  unrealized_pnl_formatted: numeric_comparison_exp
+  unrealized_pnl_raw: numeric_comparison_exp
+  win_rate: numeric_comparison_exp
+  winning_positions: bigint_comparison_exp
+  worst_trade_pnl_formatted: numeric_comparison_exp
+  worst_trade_pnl_raw: numeric_comparison_exp
+}
+
+"""
+aggregate max on columns
+"""
+type pnl_leaderboard_entry_max_fields {
+  account_id: String
+  account_image: String
+  account_label: String
+  active_position_count: bigint
+  best_trade_pnl_formatted: numeric
+  best_trade_pnl_raw: numeric
+  current_equity_value_formatted: numeric
+  current_equity_value_raw: numeric
+  first_position_at: timestamptz
+  last_activity_at: timestamptz
+  losing_positions: bigint
+  pnl_change_formatted: numeric
+  pnl_change_raw: numeric
+  pnl_pct: numeric
+  rank: bigint
+  realized_pnl_formatted: numeric
+  realized_pnl_raw: numeric
+  redeemable_assets_formatted: numeric
+  redeemable_assets_raw: numeric
+  total_deposits_formatted: numeric
+  total_deposits_raw: numeric
+  total_pnl_formatted: numeric
+  total_pnl_raw: numeric
+  total_position_count: bigint
+  total_redemptions_formatted: numeric
+  total_redemptions_raw: numeric
+  total_volume_formatted: numeric
+  total_volume_raw: numeric
+  unrealized_pnl_formatted: numeric
+  unrealized_pnl_raw: numeric
+  win_rate: numeric
+  winning_positions: bigint
+  worst_trade_pnl_formatted: numeric
+  worst_trade_pnl_raw: numeric
+}
+
+"""
+aggregate min on columns
+"""
+type pnl_leaderboard_entry_min_fields {
+  account_id: String
+  account_image: String
+  account_label: String
+  active_position_count: bigint
+  best_trade_pnl_formatted: numeric
+  best_trade_pnl_raw: numeric
+  current_equity_value_formatted: numeric
+  current_equity_value_raw: numeric
+  first_position_at: timestamptz
+  last_activity_at: timestamptz
+  losing_positions: bigint
+  pnl_change_formatted: numeric
+  pnl_change_raw: numeric
+  pnl_pct: numeric
+  rank: bigint
+  realized_pnl_formatted: numeric
+  realized_pnl_raw: numeric
+  redeemable_assets_formatted: numeric
+  redeemable_assets_raw: numeric
+  total_deposits_formatted: numeric
+  total_deposits_raw: numeric
+  total_pnl_formatted: numeric
+  total_pnl_raw: numeric
+  total_position_count: bigint
+  total_redemptions_formatted: numeric
+  total_redemptions_raw: numeric
+  total_volume_formatted: numeric
+  total_volume_raw: numeric
+  unrealized_pnl_formatted: numeric
+  unrealized_pnl_raw: numeric
+  win_rate: numeric
+  winning_positions: bigint
+  worst_trade_pnl_formatted: numeric
+  worst_trade_pnl_raw: numeric
+}
+
+"""
+Ordering options when selecting data from "pnl_leaderboard_entry".
+"""
+input pnl_leaderboard_entry_order_by {
+  account_id: order_by
+  account_image: order_by
+  account_label: order_by
+  active_position_count: order_by
+  best_trade_pnl_formatted: order_by
+  best_trade_pnl_raw: order_by
+  current_equity_value_formatted: order_by
+  current_equity_value_raw: order_by
+  first_position_at: order_by
+  last_activity_at: order_by
+  losing_positions: order_by
+  pnl_change_formatted: order_by
+  pnl_change_raw: order_by
+  pnl_pct: order_by
+  rank: order_by
+  realized_pnl_formatted: order_by
+  realized_pnl_raw: order_by
+  redeemable_assets_formatted: order_by
+  redeemable_assets_raw: order_by
+  total_deposits_formatted: order_by
+  total_deposits_raw: order_by
+  total_pnl_formatted: order_by
+  total_pnl_raw: order_by
+  total_position_count: order_by
+  total_redemptions_formatted: order_by
+  total_redemptions_raw: order_by
+  total_volume_formatted: order_by
+  total_volume_raw: order_by
+  unrealized_pnl_formatted: order_by
+  unrealized_pnl_raw: order_by
+  win_rate: order_by
+  winning_positions: order_by
+  worst_trade_pnl_formatted: order_by
+  worst_trade_pnl_raw: order_by
+}
+
+"""
+select columns of table "pnl_leaderboard_entry"
+"""
+enum pnl_leaderboard_entry_select_column {
+  """
+  column name
+  """
+  account_id
+  """
+  column name
+  """
+  account_image
+  """
+  column name
+  """
+  account_label
+  """
+  column name
+  """
+  active_position_count
+  """
+  column name
+  """
+  best_trade_pnl_formatted
+  """
+  column name
+  """
+  best_trade_pnl_raw
+  """
+  column name
+  """
+  current_equity_value_formatted
+  """
+  column name
+  """
+  current_equity_value_raw
+  """
+  column name
+  """
+  first_position_at
+  """
+  column name
+  """
+  last_activity_at
+  """
+  column name
+  """
+  losing_positions
+  """
+  column name
+  """
+  pnl_change_formatted
+  """
+  column name
+  """
+  pnl_change_raw
+  """
+  column name
+  """
+  pnl_pct
+  """
+  column name
+  """
+  rank
+  """
+  column name
+  """
+  realized_pnl_formatted
+  """
+  column name
+  """
+  realized_pnl_raw
+  """
+  column name
+  """
+  redeemable_assets_formatted
+  """
+  column name
+  """
+  redeemable_assets_raw
+  """
+  column name
+  """
+  total_deposits_formatted
+  """
+  column name
+  """
+  total_deposits_raw
+  """
+  column name
+  """
+  total_pnl_formatted
+  """
+  column name
+  """
+  total_pnl_raw
+  """
+  column name
+  """
+  total_position_count
+  """
+  column name
+  """
+  total_redemptions_formatted
+  """
+  column name
+  """
+  total_redemptions_raw
+  """
+  column name
+  """
+  total_volume_formatted
+  """
+  column name
+  """
+  total_volume_raw
+  """
+  column name
+  """
+  unrealized_pnl_formatted
+  """
+  column name
+  """
+  unrealized_pnl_raw
+  """
+  column name
+  """
+  win_rate
+  """
+  column name
+  """
+  winning_positions
+  """
+  column name
+  """
+  worst_trade_pnl_formatted
+  """
+  column name
+  """
+  worst_trade_pnl_raw
+}
+
+"""
+aggregate stddev on columns
+"""
+type pnl_leaderboard_entry_stddev_fields {
+  active_position_count: Float
+  best_trade_pnl_formatted: Float
+  best_trade_pnl_raw: Float
+  current_equity_value_formatted: Float
+  current_equity_value_raw: Float
+  losing_positions: Float
+  pnl_change_formatted: Float
+  pnl_change_raw: Float
+  pnl_pct: Float
+  rank: Float
+  realized_pnl_formatted: Float
+  realized_pnl_raw: Float
+  redeemable_assets_formatted: Float
+  redeemable_assets_raw: Float
+  total_deposits_formatted: Float
+  total_deposits_raw: Float
+  total_pnl_formatted: Float
+  total_pnl_raw: Float
+  total_position_count: Float
+  total_redemptions_formatted: Float
+  total_redemptions_raw: Float
+  total_volume_formatted: Float
+  total_volume_raw: Float
+  unrealized_pnl_formatted: Float
+  unrealized_pnl_raw: Float
+  win_rate: Float
+  winning_positions: Float
+  worst_trade_pnl_formatted: Float
+  worst_trade_pnl_raw: Float
+}
+
+"""
+aggregate stddev_pop on columns
+"""
+type pnl_leaderboard_entry_stddev_pop_fields {
+  active_position_count: Float
+  best_trade_pnl_formatted: Float
+  best_trade_pnl_raw: Float
+  current_equity_value_formatted: Float
+  current_equity_value_raw: Float
+  losing_positions: Float
+  pnl_change_formatted: Float
+  pnl_change_raw: Float
+  pnl_pct: Float
+  rank: Float
+  realized_pnl_formatted: Float
+  realized_pnl_raw: Float
+  redeemable_assets_formatted: Float
+  redeemable_assets_raw: Float
+  total_deposits_formatted: Float
+  total_deposits_raw: Float
+  total_pnl_formatted: Float
+  total_pnl_raw: Float
+  total_position_count: Float
+  total_redemptions_formatted: Float
+  total_redemptions_raw: Float
+  total_volume_formatted: Float
+  total_volume_raw: Float
+  unrealized_pnl_formatted: Float
+  unrealized_pnl_raw: Float
+  win_rate: Float
+  winning_positions: Float
+  worst_trade_pnl_formatted: Float
+  worst_trade_pnl_raw: Float
+}
+
+"""
+aggregate stddev_samp on columns
+"""
+type pnl_leaderboard_entry_stddev_samp_fields {
+  active_position_count: Float
+  best_trade_pnl_formatted: Float
+  best_trade_pnl_raw: Float
+  current_equity_value_formatted: Float
+  current_equity_value_raw: Float
+  losing_positions: Float
+  pnl_change_formatted: Float
+  pnl_change_raw: Float
+  pnl_pct: Float
+  rank: Float
+  realized_pnl_formatted: Float
+  realized_pnl_raw: Float
+  redeemable_assets_formatted: Float
+  redeemable_assets_raw: Float
+  total_deposits_formatted: Float
+  total_deposits_raw: Float
+  total_pnl_formatted: Float
+  total_pnl_raw: Float
+  total_position_count: Float
+  total_redemptions_formatted: Float
+  total_redemptions_raw: Float
+  total_volume_formatted: Float
+  total_volume_raw: Float
+  unrealized_pnl_formatted: Float
+  unrealized_pnl_raw: Float
+  win_rate: Float
+  winning_positions: Float
+  worst_trade_pnl_formatted: Float
+  worst_trade_pnl_raw: Float
+}
+
+"""
+Streaming cursor of the table "pnl_leaderboard_entry"
+"""
+input pnl_leaderboard_entry_stream_cursor_input {
+  """
+  Stream column input with initial value
+  """
+  initial_value: pnl_leaderboard_entry_stream_cursor_value_input!
+  """
+  cursor ordering
+  """
+  ordering: cursor_ordering
+}
+
+"""
+Initial value of the column from where the streaming should start
+"""
+input pnl_leaderboard_entry_stream_cursor_value_input {
+  account_id: String
+  account_image: String
+  account_label: String
+  active_position_count: bigint
+  best_trade_pnl_formatted: numeric
+  best_trade_pnl_raw: numeric
+  current_equity_value_formatted: numeric
+  current_equity_value_raw: numeric
+  first_position_at: timestamptz
+  last_activity_at: timestamptz
+  losing_positions: bigint
+  pnl_change_formatted: numeric
+  pnl_change_raw: numeric
+  pnl_pct: numeric
+  rank: bigint
+  realized_pnl_formatted: numeric
+  realized_pnl_raw: numeric
+  redeemable_assets_formatted: numeric
+  redeemable_assets_raw: numeric
+  total_deposits_formatted: numeric
+  total_deposits_raw: numeric
+  total_pnl_formatted: numeric
+  total_pnl_raw: numeric
+  total_position_count: bigint
+  total_redemptions_formatted: numeric
+  total_redemptions_raw: numeric
+  total_volume_formatted: numeric
+  total_volume_raw: numeric
+  unrealized_pnl_formatted: numeric
+  unrealized_pnl_raw: numeric
+  win_rate: numeric
+  winning_positions: bigint
+  worst_trade_pnl_formatted: numeric
+  worst_trade_pnl_raw: numeric
+}
+
+"""
+aggregate sum on columns
+"""
+type pnl_leaderboard_entry_sum_fields {
+  active_position_count: bigint
+  best_trade_pnl_formatted: numeric
+  best_trade_pnl_raw: numeric
+  current_equity_value_formatted: numeric
+  current_equity_value_raw: numeric
+  losing_positions: bigint
+  pnl_change_formatted: numeric
+  pnl_change_raw: numeric
+  pnl_pct: numeric
+  rank: bigint
+  realized_pnl_formatted: numeric
+  realized_pnl_raw: numeric
+  redeemable_assets_formatted: numeric
+  redeemable_assets_raw: numeric
+  total_deposits_formatted: numeric
+  total_deposits_raw: numeric
+  total_pnl_formatted: numeric
+  total_pnl_raw: numeric
+  total_position_count: bigint
+  total_redemptions_formatted: numeric
+  total_redemptions_raw: numeric
+  total_volume_formatted: numeric
+  total_volume_raw: numeric
+  unrealized_pnl_formatted: numeric
+  unrealized_pnl_raw: numeric
+  win_rate: numeric
+  winning_positions: bigint
+  worst_trade_pnl_formatted: numeric
+  worst_trade_pnl_raw: numeric
+}
+
+"""
+aggregate var_pop on columns
+"""
+type pnl_leaderboard_entry_var_pop_fields {
+  active_position_count: Float
+  best_trade_pnl_formatted: Float
+  best_trade_pnl_raw: Float
+  current_equity_value_formatted: Float
+  current_equity_value_raw: Float
+  losing_positions: Float
+  pnl_change_formatted: Float
+  pnl_change_raw: Float
+  pnl_pct: Float
+  rank: Float
+  realized_pnl_formatted: Float
+  realized_pnl_raw: Float
+  redeemable_assets_formatted: Float
+  redeemable_assets_raw: Float
+  total_deposits_formatted: Float
+  total_deposits_raw: Float
+  total_pnl_formatted: Float
+  total_pnl_raw: Float
+  total_position_count: Float
+  total_redemptions_formatted: Float
+  total_redemptions_raw: Float
+  total_volume_formatted: Float
+  total_volume_raw: Float
+  unrealized_pnl_formatted: Float
+  unrealized_pnl_raw: Float
+  win_rate: Float
+  winning_positions: Float
+  worst_trade_pnl_formatted: Float
+  worst_trade_pnl_raw: Float
+}
+
+"""
+aggregate var_samp on columns
+"""
+type pnl_leaderboard_entry_var_samp_fields {
+  active_position_count: Float
+  best_trade_pnl_formatted: Float
+  best_trade_pnl_raw: Float
+  current_equity_value_formatted: Float
+  current_equity_value_raw: Float
+  losing_positions: Float
+  pnl_change_formatted: Float
+  pnl_change_raw: Float
+  pnl_pct: Float
+  rank: Float
+  realized_pnl_formatted: Float
+  realized_pnl_raw: Float
+  redeemable_assets_formatted: Float
+  redeemable_assets_raw: Float
+  total_deposits_formatted: Float
+  total_deposits_raw: Float
+  total_pnl_formatted: Float
+  total_pnl_raw: Float
+  total_position_count: Float
+  total_redemptions_formatted: Float
+  total_redemptions_raw: Float
+  total_volume_formatted: Float
+  total_volume_raw: Float
+  unrealized_pnl_formatted: Float
+  unrealized_pnl_raw: Float
+  win_rate: Float
+  winning_positions: Float
+  worst_trade_pnl_formatted: Float
+  worst_trade_pnl_raw: Float
+}
+
+"""
+aggregate variance on columns
+"""
+type pnl_leaderboard_entry_variance_fields {
+  active_position_count: Float
+  best_trade_pnl_formatted: Float
+  best_trade_pnl_raw: Float
+  current_equity_value_formatted: Float
+  current_equity_value_raw: Float
+  losing_positions: Float
+  pnl_change_formatted: Float
+  pnl_change_raw: Float
+  pnl_pct: Float
+  rank: Float
+  realized_pnl_formatted: Float
+  realized_pnl_raw: Float
+  redeemable_assets_formatted: Float
+  redeemable_assets_raw: Float
+  total_deposits_formatted: Float
+  total_deposits_raw: Float
+  total_pnl_formatted: Float
+  total_pnl_raw: Float
+  total_position_count: Float
+  total_redemptions_formatted: Float
+  total_redemptions_raw: Float
+  total_volume_formatted: Float
+  total_volume_raw: Float
+  unrealized_pnl_formatted: Float
+  unrealized_pnl_raw: Float
+  win_rate: Float
+  winning_positions: Float
+  worst_trade_pnl_formatted: Float
+  worst_trade_pnl_raw: Float
+}
+
+"""
+columns and relationships of "pnl_leaderboard_stats"
+"""
+type pnl_leaderboard_stats {
+  avg_pnl: numeric
+  avg_volume: numeric
+  median_pnl: numeric
+  profitable_pct: numeric
+  profitable_traders: bigint
+  total_pnl_sum: numeric
+  total_traders: bigint
+  total_volume: numeric
+  unprofitable_traders: bigint
+}
+
+type pnl_leaderboard_stats_aggregate {
+  aggregate: pnl_leaderboard_stats_aggregate_fields
+  nodes: [pnl_leaderboard_stats!]!
+}
+
+"""
+aggregate fields of "pnl_leaderboard_stats"
+"""
+type pnl_leaderboard_stats_aggregate_fields {
+  avg: pnl_leaderboard_stats_avg_fields
+  count(
+    columns: [pnl_leaderboard_stats_select_column!]
+    distinct: Boolean
+  ): Int!
+  max: pnl_leaderboard_stats_max_fields
+  min: pnl_leaderboard_stats_min_fields
+  stddev: pnl_leaderboard_stats_stddev_fields
+  stddev_pop: pnl_leaderboard_stats_stddev_pop_fields
+  stddev_samp: pnl_leaderboard_stats_stddev_samp_fields
+  sum: pnl_leaderboard_stats_sum_fields
+  var_pop: pnl_leaderboard_stats_var_pop_fields
+  var_samp: pnl_leaderboard_stats_var_samp_fields
+  variance: pnl_leaderboard_stats_variance_fields
+}
+
+"""
+aggregate avg on columns
+"""
+type pnl_leaderboard_stats_avg_fields {
+  avg_pnl: Float
+  avg_volume: Float
+  median_pnl: Float
+  profitable_pct: Float
+  profitable_traders: Float
+  total_pnl_sum: Float
+  total_traders: Float
+  total_volume: Float
+  unprofitable_traders: Float
+}
+
+"""
+Boolean expression to filter rows from the table "pnl_leaderboard_stats". All fields are combined with a logical 'AND'.
+"""
+input pnl_leaderboard_stats_bool_exp {
+  _and: [pnl_leaderboard_stats_bool_exp!]
+  _not: pnl_leaderboard_stats_bool_exp
+  _or: [pnl_leaderboard_stats_bool_exp!]
+  avg_pnl: numeric_comparison_exp
+  avg_volume: numeric_comparison_exp
+  median_pnl: numeric_comparison_exp
+  profitable_pct: numeric_comparison_exp
+  profitable_traders: bigint_comparison_exp
+  total_pnl_sum: numeric_comparison_exp
+  total_traders: bigint_comparison_exp
+  total_volume: numeric_comparison_exp
+  unprofitable_traders: bigint_comparison_exp
+}
+
+"""
+aggregate max on columns
+"""
+type pnl_leaderboard_stats_max_fields {
+  avg_pnl: numeric
+  avg_volume: numeric
+  median_pnl: numeric
+  profitable_pct: numeric
+  profitable_traders: bigint
+  total_pnl_sum: numeric
+  total_traders: bigint
+  total_volume: numeric
+  unprofitable_traders: bigint
+}
+
+"""
+aggregate min on columns
+"""
+type pnl_leaderboard_stats_min_fields {
+  avg_pnl: numeric
+  avg_volume: numeric
+  median_pnl: numeric
+  profitable_pct: numeric
+  profitable_traders: bigint
+  total_pnl_sum: numeric
+  total_traders: bigint
+  total_volume: numeric
+  unprofitable_traders: bigint
+}
+
+"""
+Ordering options when selecting data from "pnl_leaderboard_stats".
+"""
+input pnl_leaderboard_stats_order_by {
+  avg_pnl: order_by
+  avg_volume: order_by
+  median_pnl: order_by
+  profitable_pct: order_by
+  profitable_traders: order_by
+  total_pnl_sum: order_by
+  total_traders: order_by
+  total_volume: order_by
+  unprofitable_traders: order_by
+}
+
+"""
+select columns of table "pnl_leaderboard_stats"
+"""
+enum pnl_leaderboard_stats_select_column {
+  """
+  column name
+  """
+  avg_pnl
+  """
+  column name
+  """
+  avg_volume
+  """
+  column name
+  """
+  median_pnl
+  """
+  column name
+  """
+  profitable_pct
+  """
+  column name
+  """
+  profitable_traders
+  """
+  column name
+  """
+  total_pnl_sum
+  """
+  column name
+  """
+  total_traders
+  """
+  column name
+  """
+  total_volume
+  """
+  column name
+  """
+  unprofitable_traders
+}
+
+"""
+aggregate stddev on columns
+"""
+type pnl_leaderboard_stats_stddev_fields {
+  avg_pnl: Float
+  avg_volume: Float
+  median_pnl: Float
+  profitable_pct: Float
+  profitable_traders: Float
+  total_pnl_sum: Float
+  total_traders: Float
+  total_volume: Float
+  unprofitable_traders: Float
+}
+
+"""
+aggregate stddev_pop on columns
+"""
+type pnl_leaderboard_stats_stddev_pop_fields {
+  avg_pnl: Float
+  avg_volume: Float
+  median_pnl: Float
+  profitable_pct: Float
+  profitable_traders: Float
+  total_pnl_sum: Float
+  total_traders: Float
+  total_volume: Float
+  unprofitable_traders: Float
+}
+
+"""
+aggregate stddev_samp on columns
+"""
+type pnl_leaderboard_stats_stddev_samp_fields {
+  avg_pnl: Float
+  avg_volume: Float
+  median_pnl: Float
+  profitable_pct: Float
+  profitable_traders: Float
+  total_pnl_sum: Float
+  total_traders: Float
+  total_volume: Float
+  unprofitable_traders: Float
+}
+
+"""
+Streaming cursor of the table "pnl_leaderboard_stats"
+"""
+input pnl_leaderboard_stats_stream_cursor_input {
+  """
+  Stream column input with initial value
+  """
+  initial_value: pnl_leaderboard_stats_stream_cursor_value_input!
+  """
+  cursor ordering
+  """
+  ordering: cursor_ordering
+}
+
+"""
+Initial value of the column from where the streaming should start
+"""
+input pnl_leaderboard_stats_stream_cursor_value_input {
+  avg_pnl: numeric
+  avg_volume: numeric
+  median_pnl: numeric
+  profitable_pct: numeric
+  profitable_traders: bigint
+  total_pnl_sum: numeric
+  total_traders: bigint
+  total_volume: numeric
+  unprofitable_traders: bigint
+}
+
+"""
+aggregate sum on columns
+"""
+type pnl_leaderboard_stats_sum_fields {
+  avg_pnl: numeric
+  avg_volume: numeric
+  median_pnl: numeric
+  profitable_pct: numeric
+  profitable_traders: bigint
+  total_pnl_sum: numeric
+  total_traders: bigint
+  total_volume: numeric
+  unprofitable_traders: bigint
+}
+
+"""
+aggregate var_pop on columns
+"""
+type pnl_leaderboard_stats_var_pop_fields {
+  avg_pnl: Float
+  avg_volume: Float
+  median_pnl: Float
+  profitable_pct: Float
+  profitable_traders: Float
+  total_pnl_sum: Float
+  total_traders: Float
+  total_volume: Float
+  unprofitable_traders: Float
+}
+
+"""
+aggregate var_samp on columns
+"""
+type pnl_leaderboard_stats_var_samp_fields {
+  avg_pnl: Float
+  avg_volume: Float
+  median_pnl: Float
+  profitable_pct: Float
+  profitable_traders: Float
+  total_pnl_sum: Float
+  total_traders: Float
+  total_volume: Float
+  unprofitable_traders: Float
+}
+
+"""
+aggregate variance on columns
+"""
+type pnl_leaderboard_stats_variance_fields {
+  avg_pnl: Float
+  avg_volume: Float
+  median_pnl: Float
+  profitable_pct: Float
+  profitable_traders: Float
+  total_pnl_sum: Float
+  total_traders: Float
+  total_volume: Float
+  unprofitable_traders: Float
+}
+
+"""
+columns and relationships of "position_change_daily"
+"""
+type position_change_daily {
+  """
+  An object relationship
+  """
+  account: accounts
+  account_id: String
+  assets_in_period: numeric
+  assets_out_period: numeric
+  bucket: timestamptz
+  curve_id: numeric
+  shares_delta_period: numeric
+  """
+  An object relationship
+  """
+  term: terms
+  term_id: String
+  transaction_count: numeric
+  """
+  An object relationship
+  """
+  vault: vaults
+}
+
+"""
+Boolean expression to filter rows from the table "position_change_daily". All fields are combined with a logical 'AND'.
+"""
+input position_change_daily_bool_exp {
+  _and: [position_change_daily_bool_exp!]
+  _not: position_change_daily_bool_exp
+  _or: [position_change_daily_bool_exp!]
+  account: accounts_bool_exp
+  account_id: String_comparison_exp
+  assets_in_period: numeric_comparison_exp
+  assets_out_period: numeric_comparison_exp
+  bucket: timestamptz_comparison_exp
+  curve_id: numeric_comparison_exp
+  shares_delta_period: numeric_comparison_exp
+  term: terms_bool_exp
+  term_id: String_comparison_exp
+  transaction_count: numeric_comparison_exp
+  vault: vaults_bool_exp
+}
+
+"""
+Ordering options when selecting data from "position_change_daily".
+"""
+input position_change_daily_order_by {
+  account: accounts_order_by
+  account_id: order_by
+  assets_in_period: order_by
+  assets_out_period: order_by
+  bucket: order_by
+  curve_id: order_by
+  shares_delta_period: order_by
+  term: terms_order_by
+  term_id: order_by
+  transaction_count: order_by
+  vault: vaults_order_by
+}
+
+"""
+select columns of table "position_change_daily"
+"""
+enum position_change_daily_select_column {
+  """
+  column name
+  """
+  account_id
+  """
+  column name
+  """
+  assets_in_period
+  """
+  column name
+  """
+  assets_out_period
+  """
+  column name
+  """
+  bucket
+  """
+  column name
+  """
+  curve_id
+  """
+  column name
+  """
+  shares_delta_period
+  """
+  column name
+  """
+  term_id
+  """
+  column name
+  """
+  transaction_count
+}
+
+"""
+Streaming cursor of the table "position_change_daily"
+"""
+input position_change_daily_stream_cursor_input {
+  """
+  Stream column input with initial value
+  """
+  initial_value: position_change_daily_stream_cursor_value_input!
+  """
+  cursor ordering
+  """
+  ordering: cursor_ordering
+}
+
+"""
+Initial value of the column from where the streaming should start
+"""
+input position_change_daily_stream_cursor_value_input {
+  account_id: String
+  assets_in_period: numeric
+  assets_out_period: numeric
+  bucket: timestamptz
+  curve_id: numeric
+  shares_delta_period: numeric
+  term_id: String
+  transaction_count: numeric
+}
+
+"""
+columns and relationships of "position_change_hourly"
+"""
+type position_change_hourly {
+  """
+  An object relationship
+  """
+  account: accounts
+  account_id: String
+  assets_in_period: numeric
+  assets_out_period: numeric
+  bucket: timestamptz
+  curve_id: numeric
+  shares_delta_period: numeric
+  """
+  An object relationship
+  """
+  term: terms
+  term_id: String
+  transaction_count: bigint
+  """
+  An object relationship
+  """
+  vault: vaults
+}
+
+"""
+Boolean expression to filter rows from the table "position_change_hourly". All fields are combined with a logical 'AND'.
+"""
+input position_change_hourly_bool_exp {
+  _and: [position_change_hourly_bool_exp!]
+  _not: position_change_hourly_bool_exp
+  _or: [position_change_hourly_bool_exp!]
+  account: accounts_bool_exp
+  account_id: String_comparison_exp
+  assets_in_period: numeric_comparison_exp
+  assets_out_period: numeric_comparison_exp
+  bucket: timestamptz_comparison_exp
+  curve_id: numeric_comparison_exp
+  shares_delta_period: numeric_comparison_exp
+  term: terms_bool_exp
+  term_id: String_comparison_exp
+  transaction_count: bigint_comparison_exp
+  vault: vaults_bool_exp
+}
+
+"""
+Ordering options when selecting data from "position_change_hourly".
+"""
+input position_change_hourly_order_by {
+  account: accounts_order_by
+  account_id: order_by
+  assets_in_period: order_by
+  assets_out_period: order_by
+  bucket: order_by
+  curve_id: order_by
+  shares_delta_period: order_by
+  term: terms_order_by
+  term_id: order_by
+  transaction_count: order_by
+  vault: vaults_order_by
+}
+
+"""
+select columns of table "position_change_hourly"
+"""
+enum position_change_hourly_select_column {
+  """
+  column name
+  """
+  account_id
+  """
+  column name
+  """
+  assets_in_period
+  """
+  column name
+  """
+  assets_out_period
+  """
+  column name
+  """
+  bucket
+  """
+  column name
+  """
+  curve_id
+  """
+  column name
+  """
+  shares_delta_period
+  """
+  column name
+  """
+  term_id
+  """
+  column name
+  """
+  transaction_count
+}
+
+"""
+Streaming cursor of the table "position_change_hourly"
+"""
+input position_change_hourly_stream_cursor_input {
+  """
+  Stream column input with initial value
+  """
+  initial_value: position_change_hourly_stream_cursor_value_input!
+  """
+  cursor ordering
+  """
+  ordering: cursor_ordering
+}
+
+"""
+Initial value of the column from where the streaming should start
+"""
+input position_change_hourly_stream_cursor_value_input {
+  account_id: String
+  assets_in_period: numeric
+  assets_out_period: numeric
+  bucket: timestamptz
+  curve_id: numeric
+  shares_delta_period: numeric
+  term_id: String
+  transaction_count: bigint
+}
+
+"""
+columns and relationships of "position_change"
+"""
+type position_changes {
+  """
+  An object relationship
+  """
+  account: accounts
+  account_id: String!
+  assets_in: numeric!
+  assets_out: numeric!
+  block_number: numeric!
+  created_at: timestamptz!
+  curve_id: numeric!
+  event_id: String!
+  event_type: String!
+  id: bigint!
+  log_index: bigint!
+  shares_delta: numeric!
+  """
+  An object relationship
+  """
+  term: terms
+  term_id: String!
+  transaction_hash: String!
+  """
+  An object relationship
+  """
+  vault: vaults
+}
+
+"""
+aggregated selection of "position_change"
+"""
+type position_changes_aggregate {
+  aggregate: position_changes_aggregate_fields
+  nodes: [position_changes!]!
+}
+
+"""
+aggregate fields of "position_change"
+"""
+type position_changes_aggregate_fields {
+  avg: position_changes_avg_fields
+  count(columns: [position_changes_select_column!], distinct: Boolean): Int!
+  max: position_changes_max_fields
+  min: position_changes_min_fields
+  stddev: position_changes_stddev_fields
+  stddev_pop: position_changes_stddev_pop_fields
+  stddev_samp: position_changes_stddev_samp_fields
+  sum: position_changes_sum_fields
+  var_pop: position_changes_var_pop_fields
+  var_samp: position_changes_var_samp_fields
+  variance: position_changes_variance_fields
+}
+
+"""
+aggregate avg on columns
+"""
+type position_changes_avg_fields {
+  assets_in: Float
+  assets_out: Float
+  block_number: Float
+  curve_id: Float
+  id: Float
+  log_index: Float
+  shares_delta: Float
+}
+
+"""
+Boolean expression to filter rows from the table "position_change". All fields are combined with a logical 'AND'.
+"""
+input position_changes_bool_exp {
+  _and: [position_changes_bool_exp!]
+  _not: position_changes_bool_exp
+  _or: [position_changes_bool_exp!]
+  account: accounts_bool_exp
+  account_id: String_comparison_exp
+  assets_in: numeric_comparison_exp
+  assets_out: numeric_comparison_exp
+  block_number: numeric_comparison_exp
+  created_at: timestamptz_comparison_exp
+  curve_id: numeric_comparison_exp
+  event_id: String_comparison_exp
+  event_type: String_comparison_exp
+  id: bigint_comparison_exp
+  log_index: bigint_comparison_exp
+  shares_delta: numeric_comparison_exp
+  term: terms_bool_exp
+  term_id: String_comparison_exp
+  transaction_hash: String_comparison_exp
+  vault: vaults_bool_exp
+}
+
+"""
+aggregate max on columns
+"""
+type position_changes_max_fields {
+  account_id: String
+  assets_in: numeric
+  assets_out: numeric
+  block_number: numeric
+  created_at: timestamptz
+  curve_id: numeric
+  event_id: String
+  event_type: String
+  id: bigint
+  log_index: bigint
+  shares_delta: numeric
+  term_id: String
+  transaction_hash: String
+}
+
+"""
+aggregate min on columns
+"""
+type position_changes_min_fields {
+  account_id: String
+  assets_in: numeric
+  assets_out: numeric
+  block_number: numeric
+  created_at: timestamptz
+  curve_id: numeric
+  event_id: String
+  event_type: String
+  id: bigint
+  log_index: bigint
+  shares_delta: numeric
+  term_id: String
+  transaction_hash: String
+}
+
+"""
+Ordering options when selecting data from "position_change".
+"""
+input position_changes_order_by {
+  account: accounts_order_by
+  account_id: order_by
+  assets_in: order_by
+  assets_out: order_by
+  block_number: order_by
+  created_at: order_by
+  curve_id: order_by
+  event_id: order_by
+  event_type: order_by
+  id: order_by
+  log_index: order_by
+  shares_delta: order_by
+  term: terms_order_by
+  term_id: order_by
+  transaction_hash: order_by
+  vault: vaults_order_by
+}
+
+"""
+select columns of table "position_change"
+"""
+enum position_changes_select_column {
+  """
+  column name
+  """
+  account_id
+  """
+  column name
+  """
+  assets_in
+  """
+  column name
+  """
+  assets_out
+  """
+  column name
+  """
+  block_number
+  """
+  column name
+  """
+  created_at
+  """
+  column name
+  """
+  curve_id
+  """
+  column name
+  """
+  event_id
+  """
+  column name
+  """
+  event_type
+  """
+  column name
+  """
+  id
+  """
+  column name
+  """
+  log_index
+  """
+  column name
+  """
+  shares_delta
+  """
+  column name
+  """
+  term_id
+  """
+  column name
+  """
+  transaction_hash
+}
+
+"""
+aggregate stddev on columns
+"""
+type position_changes_stddev_fields {
+  assets_in: Float
+  assets_out: Float
+  block_number: Float
+  curve_id: Float
+  id: Float
+  log_index: Float
+  shares_delta: Float
+}
+
+"""
+aggregate stddev_pop on columns
+"""
+type position_changes_stddev_pop_fields {
+  assets_in: Float
+  assets_out: Float
+  block_number: Float
+  curve_id: Float
+  id: Float
+  log_index: Float
+  shares_delta: Float
+}
+
+"""
+aggregate stddev_samp on columns
+"""
+type position_changes_stddev_samp_fields {
+  assets_in: Float
+  assets_out: Float
+  block_number: Float
+  curve_id: Float
+  id: Float
+  log_index: Float
+  shares_delta: Float
+}
+
+"""
+Streaming cursor of the table "position_changes"
+"""
+input position_changes_stream_cursor_input {
+  """
+  Stream column input with initial value
+  """
+  initial_value: position_changes_stream_cursor_value_input!
+  """
+  cursor ordering
+  """
+  ordering: cursor_ordering
+}
+
+"""
+Initial value of the column from where the streaming should start
+"""
+input position_changes_stream_cursor_value_input {
+  account_id: String
+  assets_in: numeric
+  assets_out: numeric
+  block_number: numeric
+  created_at: timestamptz
+  curve_id: numeric
+  event_id: String
+  event_type: String
+  id: bigint
+  log_index: bigint
+  shares_delta: numeric
+  term_id: String
+  transaction_hash: String
+}
+
+"""
+aggregate sum on columns
+"""
+type position_changes_sum_fields {
+  assets_in: numeric
+  assets_out: numeric
+  block_number: numeric
+  curve_id: numeric
+  id: bigint
+  log_index: bigint
+  shares_delta: numeric
+}
+
+"""
+aggregate var_pop on columns
+"""
+type position_changes_var_pop_fields {
+  assets_in: Float
+  assets_out: Float
+  block_number: Float
+  curve_id: Float
+  id: Float
+  log_index: Float
+  shares_delta: Float
+}
+
+"""
+aggregate var_samp on columns
+"""
+type position_changes_var_samp_fields {
+  assets_in: Float
+  assets_out: Float
+  block_number: Float
+  curve_id: Float
+  id: Float
+  log_index: Float
+  shares_delta: Float
+}
+
+"""
+aggregate variance on columns
+"""
+type position_changes_variance_fields {
+  assets_in: Float
+  assets_out: Float
+  block_number: Float
+  curve_id: Float
+  id: Float
+  log_index: Float
+  shares_delta: Float
+}
+
+"""
 columns and relationships of "position"
 """
 type positions {
@@ -4805,6 +6913,414 @@ input positions_variance_order_by {
 }
 
 """
+columns and relationships of "position_with_value"
+"""
+type positions_with_value {
+  """
+  An object relationship
+  """
+  account: accounts
+  account_id: String
+  block_number: bigint
+  created_at: timestamptz
+  curve_id: numeric
+  id: String
+  log_index: bigint
+  pnl: numeric
+  pnl_pct: numeric
+  redeemable_assets: numeric
+  shares: numeric
+  """
+  An object relationship
+  """
+  term: terms
+  term_id: String
+  theoretical_value: numeric
+  total_deposit_assets_after_total_fees: numeric
+  total_redeem_assets_for_receiver: numeric
+  transaction_hash: String
+  transaction_index: bigint
+  updated_at: timestamptz
+  """
+  An object relationship
+  """
+  vault: vaults
+}
+
+"""
+aggregated selection of "position_with_value"
+"""
+type positions_with_value_aggregate {
+  aggregate: positions_with_value_aggregate_fields
+  nodes: [positions_with_value!]!
+}
+
+"""
+aggregate fields of "position_with_value"
+"""
+type positions_with_value_aggregate_fields {
+  avg: positions_with_value_avg_fields
+  count(columns: [positions_with_value_select_column!], distinct: Boolean): Int!
+  max: positions_with_value_max_fields
+  min: positions_with_value_min_fields
+  stddev: positions_with_value_stddev_fields
+  stddev_pop: positions_with_value_stddev_pop_fields
+  stddev_samp: positions_with_value_stddev_samp_fields
+  sum: positions_with_value_sum_fields
+  var_pop: positions_with_value_var_pop_fields
+  var_samp: positions_with_value_var_samp_fields
+  variance: positions_with_value_variance_fields
+}
+
+"""
+aggregate avg on columns
+"""
+type positions_with_value_avg_fields {
+  block_number: Float
+  curve_id: Float
+  log_index: Float
+  pnl: Float
+  pnl_pct: Float
+  redeemable_assets: Float
+  shares: Float
+  theoretical_value: Float
+  total_deposit_assets_after_total_fees: Float
+  total_redeem_assets_for_receiver: Float
+  transaction_index: Float
+}
+
+"""
+Boolean expression to filter rows from the table "position_with_value". All fields are combined with a logical 'AND'.
+"""
+input positions_with_value_bool_exp {
+  _and: [positions_with_value_bool_exp!]
+  _not: positions_with_value_bool_exp
+  _or: [positions_with_value_bool_exp!]
+  account: accounts_bool_exp
+  account_id: String_comparison_exp
+  block_number: bigint_comparison_exp
+  created_at: timestamptz_comparison_exp
+  curve_id: numeric_comparison_exp
+  id: String_comparison_exp
+  log_index: bigint_comparison_exp
+  pnl: numeric_comparison_exp
+  pnl_pct: numeric_comparison_exp
+  redeemable_assets: numeric_comparison_exp
+  shares: numeric_comparison_exp
+  term: terms_bool_exp
+  term_id: String_comparison_exp
+  theoretical_value: numeric_comparison_exp
+  total_deposit_assets_after_total_fees: numeric_comparison_exp
+  total_redeem_assets_for_receiver: numeric_comparison_exp
+  transaction_hash: String_comparison_exp
+  transaction_index: bigint_comparison_exp
+  updated_at: timestamptz_comparison_exp
+  vault: vaults_bool_exp
+}
+
+"""
+aggregate max on columns
+"""
+type positions_with_value_max_fields {
+  account_id: String
+  block_number: bigint
+  created_at: timestamptz
+  curve_id: numeric
+  id: String
+  log_index: bigint
+  pnl: numeric
+  pnl_pct: numeric
+  redeemable_assets: numeric
+  shares: numeric
+  term_id: String
+  theoretical_value: numeric
+  total_deposit_assets_after_total_fees: numeric
+  total_redeem_assets_for_receiver: numeric
+  transaction_hash: String
+  transaction_index: bigint
+  updated_at: timestamptz
+}
+
+"""
+aggregate min on columns
+"""
+type positions_with_value_min_fields {
+  account_id: String
+  block_number: bigint
+  created_at: timestamptz
+  curve_id: numeric
+  id: String
+  log_index: bigint
+  pnl: numeric
+  pnl_pct: numeric
+  redeemable_assets: numeric
+  shares: numeric
+  term_id: String
+  theoretical_value: numeric
+  total_deposit_assets_after_total_fees: numeric
+  total_redeem_assets_for_receiver: numeric
+  transaction_hash: String
+  transaction_index: bigint
+  updated_at: timestamptz
+}
+
+"""
+Ordering options when selecting data from "position_with_value".
+"""
+input positions_with_value_order_by {
+  account: accounts_order_by
+  account_id: order_by
+  block_number: order_by
+  created_at: order_by
+  curve_id: order_by
+  id: order_by
+  log_index: order_by
+  pnl: order_by
+  pnl_pct: order_by
+  redeemable_assets: order_by
+  shares: order_by
+  term: terms_order_by
+  term_id: order_by
+  theoretical_value: order_by
+  total_deposit_assets_after_total_fees: order_by
+  total_redeem_assets_for_receiver: order_by
+  transaction_hash: order_by
+  transaction_index: order_by
+  updated_at: order_by
+  vault: vaults_order_by
+}
+
+"""
+select columns of table "position_with_value"
+"""
+enum positions_with_value_select_column {
+  """
+  column name
+  """
+  account_id
+  """
+  column name
+  """
+  block_number
+  """
+  column name
+  """
+  created_at
+  """
+  column name
+  """
+  curve_id
+  """
+  column name
+  """
+  id
+  """
+  column name
+  """
+  log_index
+  """
+  column name
+  """
+  pnl
+  """
+  column name
+  """
+  pnl_pct
+  """
+  column name
+  """
+  redeemable_assets
+  """
+  column name
+  """
+  shares
+  """
+  column name
+  """
+  term_id
+  """
+  column name
+  """
+  theoretical_value
+  """
+  column name
+  """
+  total_deposit_assets_after_total_fees
+  """
+  column name
+  """
+  total_redeem_assets_for_receiver
+  """
+  column name
+  """
+  transaction_hash
+  """
+  column name
+  """
+  transaction_index
+  """
+  column name
+  """
+  updated_at
+}
+
+"""
+aggregate stddev on columns
+"""
+type positions_with_value_stddev_fields {
+  block_number: Float
+  curve_id: Float
+  log_index: Float
+  pnl: Float
+  pnl_pct: Float
+  redeemable_assets: Float
+  shares: Float
+  theoretical_value: Float
+  total_deposit_assets_after_total_fees: Float
+  total_redeem_assets_for_receiver: Float
+  transaction_index: Float
+}
+
+"""
+aggregate stddev_pop on columns
+"""
+type positions_with_value_stddev_pop_fields {
+  block_number: Float
+  curve_id: Float
+  log_index: Float
+  pnl: Float
+  pnl_pct: Float
+  redeemable_assets: Float
+  shares: Float
+  theoretical_value: Float
+  total_deposit_assets_after_total_fees: Float
+  total_redeem_assets_for_receiver: Float
+  transaction_index: Float
+}
+
+"""
+aggregate stddev_samp on columns
+"""
+type positions_with_value_stddev_samp_fields {
+  block_number: Float
+  curve_id: Float
+  log_index: Float
+  pnl: Float
+  pnl_pct: Float
+  redeemable_assets: Float
+  shares: Float
+  theoretical_value: Float
+  total_deposit_assets_after_total_fees: Float
+  total_redeem_assets_for_receiver: Float
+  transaction_index: Float
+}
+
+"""
+Streaming cursor of the table "positions_with_value"
+"""
+input positions_with_value_stream_cursor_input {
+  """
+  Stream column input with initial value
+  """
+  initial_value: positions_with_value_stream_cursor_value_input!
+  """
+  cursor ordering
+  """
+  ordering: cursor_ordering
+}
+
+"""
+Initial value of the column from where the streaming should start
+"""
+input positions_with_value_stream_cursor_value_input {
+  account_id: String
+  block_number: bigint
+  created_at: timestamptz
+  curve_id: numeric
+  id: String
+  log_index: bigint
+  pnl: numeric
+  pnl_pct: numeric
+  redeemable_assets: numeric
+  shares: numeric
+  term_id: String
+  theoretical_value: numeric
+  total_deposit_assets_after_total_fees: numeric
+  total_redeem_assets_for_receiver: numeric
+  transaction_hash: String
+  transaction_index: bigint
+  updated_at: timestamptz
+}
+
+"""
+aggregate sum on columns
+"""
+type positions_with_value_sum_fields {
+  block_number: bigint
+  curve_id: numeric
+  log_index: bigint
+  pnl: numeric
+  pnl_pct: numeric
+  redeemable_assets: numeric
+  shares: numeric
+  theoretical_value: numeric
+  total_deposit_assets_after_total_fees: numeric
+  total_redeem_assets_for_receiver: numeric
+  transaction_index: bigint
+}
+
+"""
+aggregate var_pop on columns
+"""
+type positions_with_value_var_pop_fields {
+  block_number: Float
+  curve_id: Float
+  log_index: Float
+  pnl: Float
+  pnl_pct: Float
+  redeemable_assets: Float
+  shares: Float
+  theoretical_value: Float
+  total_deposit_assets_after_total_fees: Float
+  total_redeem_assets_for_receiver: Float
+  transaction_index: Float
+}
+
+"""
+aggregate var_samp on columns
+"""
+type positions_with_value_var_samp_fields {
+  block_number: Float
+  curve_id: Float
+  log_index: Float
+  pnl: Float
+  pnl_pct: Float
+  redeemable_assets: Float
+  shares: Float
+  theoretical_value: Float
+  total_deposit_assets_after_total_fees: Float
+  total_redeem_assets_for_receiver: Float
+  transaction_index: Float
+}
+
+"""
+aggregate variance on columns
+"""
+type positions_with_value_variance_fields {
+  block_number: Float
+  curve_id: Float
+  log_index: Float
+  pnl: Float
+  pnl_pct: Float
+  redeemable_assets: Float
+  shares: Float
+  theoretical_value: Float
+  total_deposit_assets_after_total_fees: Float
+  total_redeem_assets_for_receiver: Float
+  transaction_index: Float
+}
+
+"""
 columns and relationships of "predicate_object"
 """
 type predicate_objects {
@@ -5197,11 +7713,296 @@ input predicate_objects_variance_order_by {
   triple_count: order_by
 }
 
+"""
+columns and relationships of "protocol_fee_accrued"
+"""
+type protocol_fee_accruals {
+  amount: numeric!
+  block_number: numeric!
+  created_at: timestamptz!
+  epoch: numeric!
+  id: String!
+  """
+  An object relationship
+  """
+  sender: accounts
+  sender_id: String!
+  transaction_hash: String!
+}
+
+"""
+aggregated selection of "protocol_fee_accrued"
+"""
+type protocol_fee_accruals_aggregate {
+  aggregate: protocol_fee_accruals_aggregate_fields
+  nodes: [protocol_fee_accruals!]!
+}
+
+"""
+aggregate fields of "protocol_fee_accrued"
+"""
+type protocol_fee_accruals_aggregate_fields {
+  avg: protocol_fee_accruals_avg_fields
+  count(
+    columns: [protocol_fee_accruals_select_column!]
+    distinct: Boolean
+  ): Int!
+  max: protocol_fee_accruals_max_fields
+  min: protocol_fee_accruals_min_fields
+  stddev: protocol_fee_accruals_stddev_fields
+  stddev_pop: protocol_fee_accruals_stddev_pop_fields
+  stddev_samp: protocol_fee_accruals_stddev_samp_fields
+  sum: protocol_fee_accruals_sum_fields
+  var_pop: protocol_fee_accruals_var_pop_fields
+  var_samp: protocol_fee_accruals_var_samp_fields
+  variance: protocol_fee_accruals_variance_fields
+}
+
+"""
+aggregate avg on columns
+"""
+type protocol_fee_accruals_avg_fields {
+  amount: Float
+  block_number: Float
+  epoch: Float
+}
+
+"""
+Boolean expression to filter rows from the table "protocol_fee_accrued". All fields are combined with a logical 'AND'.
+"""
+input protocol_fee_accruals_bool_exp {
+  _and: [protocol_fee_accruals_bool_exp!]
+  _not: protocol_fee_accruals_bool_exp
+  _or: [protocol_fee_accruals_bool_exp!]
+  amount: numeric_comparison_exp
+  block_number: numeric_comparison_exp
+  created_at: timestamptz_comparison_exp
+  epoch: numeric_comparison_exp
+  id: String_comparison_exp
+  sender: accounts_bool_exp
+  sender_id: String_comparison_exp
+  transaction_hash: String_comparison_exp
+}
+
+"""
+aggregate max on columns
+"""
+type protocol_fee_accruals_max_fields {
+  amount: numeric
+  block_number: numeric
+  created_at: timestamptz
+  epoch: numeric
+  id: String
+  sender_id: String
+  transaction_hash: String
+}
+
+"""
+aggregate min on columns
+"""
+type protocol_fee_accruals_min_fields {
+  amount: numeric
+  block_number: numeric
+  created_at: timestamptz
+  epoch: numeric
+  id: String
+  sender_id: String
+  transaction_hash: String
+}
+
+"""
+Ordering options when selecting data from "protocol_fee_accrued".
+"""
+input protocol_fee_accruals_order_by {
+  amount: order_by
+  block_number: order_by
+  created_at: order_by
+  epoch: order_by
+  id: order_by
+  sender: accounts_order_by
+  sender_id: order_by
+  transaction_hash: order_by
+}
+
+"""
+select columns of table "protocol_fee_accrued"
+"""
+enum protocol_fee_accruals_select_column {
+  """
+  column name
+  """
+  amount
+  """
+  column name
+  """
+  block_number
+  """
+  column name
+  """
+  created_at
+  """
+  column name
+  """
+  epoch
+  """
+  column name
+  """
+  id
+  """
+  column name
+  """
+  sender_id
+  """
+  column name
+  """
+  transaction_hash
+}
+
+"""
+aggregate stddev on columns
+"""
+type protocol_fee_accruals_stddev_fields {
+  amount: Float
+  block_number: Float
+  epoch: Float
+}
+
+"""
+aggregate stddev_pop on columns
+"""
+type protocol_fee_accruals_stddev_pop_fields {
+  amount: Float
+  block_number: Float
+  epoch: Float
+}
+
+"""
+aggregate stddev_samp on columns
+"""
+type protocol_fee_accruals_stddev_samp_fields {
+  amount: Float
+  block_number: Float
+  epoch: Float
+}
+
+"""
+Streaming cursor of the table "protocol_fee_accruals"
+"""
+input protocol_fee_accruals_stream_cursor_input {
+  """
+  Stream column input with initial value
+  """
+  initial_value: protocol_fee_accruals_stream_cursor_value_input!
+  """
+  cursor ordering
+  """
+  ordering: cursor_ordering
+}
+
+"""
+Initial value of the column from where the streaming should start
+"""
+input protocol_fee_accruals_stream_cursor_value_input {
+  amount: numeric
+  block_number: numeric
+  created_at: timestamptz
+  epoch: numeric
+  id: String
+  sender_id: String
+  transaction_hash: String
+}
+
+"""
+aggregate sum on columns
+"""
+type protocol_fee_accruals_sum_fields {
+  amount: numeric
+  block_number: numeric
+  epoch: numeric
+}
+
+"""
+aggregate var_pop on columns
+"""
+type protocol_fee_accruals_var_pop_fields {
+  amount: Float
+  block_number: Float
+  epoch: Float
+}
+
+"""
+aggregate var_samp on columns
+"""
+type protocol_fee_accruals_var_samp_fields {
+  amount: Float
+  block_number: Float
+  epoch: Float
+}
+
+"""
+aggregate variance on columns
+"""
+type protocol_fee_accruals_variance_fields {
+  amount: Float
+  block_number: Float
+  epoch: Float
+}
+
 type query_root {
   """
   fetch data from the table: "account" using primary key columns
   """
   account(id: String!): accounts
+  """
+  fetch data from the table: "account_pnl_rank"
+  """
+  account_pnl_rank(
+    """
+    distinct select on columns
+    """
+    distinct_on: [account_pnl_rank_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [account_pnl_rank_order_by!]
+    """
+    filter the rows returned
+    """
+    where: account_pnl_rank_bool_exp
+  ): [account_pnl_rank!]!
+  """
+  fetch aggregated fields from the table: "account_pnl_rank"
+  """
+  account_pnl_rank_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [account_pnl_rank_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [account_pnl_rank_order_by!]
+    """
+    filter the rows returned
+    """
+    where: account_pnl_rank_bool_exp
+  ): account_pnl_rank_aggregate!
   """
   An array relationship
   """
@@ -5801,6 +8602,390 @@ type query_root {
     where: accounts_bool_exp
   ): accounts_aggregate!
   """
+  Fetches account-level PnL chart data
+  """
+  getAccountPnlChart(input: GetAccountPnlChartInput!): AccountPnlChartOutput
+  """
+  Fetches current account PnL snapshot
+  """
+  getAccountPnlCurrent(
+    input: GetAccountPnlCurrentInput!
+  ): AccountPnlSnapshotOutput
+  """
+  Fetches realized PnL breakdown for an account
+  """
+  getAccountPnlRealized(
+    input: GetAccountPnlRealizedInput!
+  ): AccountPnlRealizedOutput
+  """
+  Fetches chart data (JSON) for a term/curve combination
+  """
+  getChartJson(input: GetChartJsonInput!): ChartDataOutput
+  """
+  Fetches raw share price chart data (JSON) from share_price_change
+  """
+  getChartRawJson(input: GetChartJsonInput!): ChartDataOutput
+  """
+  Fetches raw share price chart SVG from share_price_change
+  """
+  getChartRawSvg(input: GetChartSvgInput!): ChartSvgOutput
+  """
+  Fetches chart SVG for a term/curve combination
+  """
+  getChartSvg(input: GetChartSvgInput!): ChartSvgOutput
+  """
+  Fetches position PnL chart data
+  """
+  getPositionPnlChart(input: GetPositionPnlChartInput!): PositionPnlChartOutput
+  """
+  execute function "get_account_pnl_rank" which returns "account_pnl_rank"
+  """
+  get_account_pnl_rank(
+    """
+    input parameters for function "get_account_pnl_rank"
+    """
+    args: get_account_pnl_rank_args!
+    """
+    distinct select on columns
+    """
+    distinct_on: [account_pnl_rank_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [account_pnl_rank_order_by!]
+    """
+    filter the rows returned
+    """
+    where: account_pnl_rank_bool_exp
+  ): [account_pnl_rank!]!
+  """
+  execute function "get_account_pnl_rank" and query aggregates on result of table type "account_pnl_rank"
+  """
+  get_account_pnl_rank_aggregate(
+    """
+    input parameters for function "get_account_pnl_rank_aggregate"
+    """
+    args: get_account_pnl_rank_args!
+    """
+    distinct select on columns
+    """
+    distinct_on: [account_pnl_rank_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [account_pnl_rank_order_by!]
+    """
+    filter the rows returned
+    """
+    where: account_pnl_rank_bool_exp
+  ): account_pnl_rank_aggregate!
+  """
+  execute function "get_pnl_leaderboard" which returns "pnl_leaderboard_entry"
+  """
+  get_pnl_leaderboard(
+    """
+    input parameters for function "get_pnl_leaderboard"
+    """
+    args: get_pnl_leaderboard_args
+    """
+    distinct select on columns
+    """
+    distinct_on: [pnl_leaderboard_entry_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [pnl_leaderboard_entry_order_by!]
+    """
+    filter the rows returned
+    """
+    where: pnl_leaderboard_entry_bool_exp
+  ): [pnl_leaderboard_entry!]!
+  """
+  execute function "get_pnl_leaderboard" and query aggregates on result of table type "pnl_leaderboard_entry"
+  """
+  get_pnl_leaderboard_aggregate(
+    """
+    input parameters for function "get_pnl_leaderboard_aggregate"
+    """
+    args: get_pnl_leaderboard_args
+    """
+    distinct select on columns
+    """
+    distinct_on: [pnl_leaderboard_entry_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [pnl_leaderboard_entry_order_by!]
+    """
+    filter the rows returned
+    """
+    where: pnl_leaderboard_entry_bool_exp
+  ): pnl_leaderboard_entry_aggregate!
+  """
+  execute function "get_pnl_leaderboard_period" which returns "pnl_leaderboard_entry"
+  """
+  get_pnl_leaderboard_period(
+    """
+    input parameters for function "get_pnl_leaderboard_period"
+    """
+    args: get_pnl_leaderboard_period_args!
+    """
+    distinct select on columns
+    """
+    distinct_on: [pnl_leaderboard_entry_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [pnl_leaderboard_entry_order_by!]
+    """
+    filter the rows returned
+    """
+    where: pnl_leaderboard_entry_bool_exp
+  ): [pnl_leaderboard_entry!]!
+  """
+  execute function "get_pnl_leaderboard_period" and query aggregates on result of table type "pnl_leaderboard_entry"
+  """
+  get_pnl_leaderboard_period_aggregate(
+    """
+    input parameters for function "get_pnl_leaderboard_period_aggregate"
+    """
+    args: get_pnl_leaderboard_period_args!
+    """
+    distinct select on columns
+    """
+    distinct_on: [pnl_leaderboard_entry_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [pnl_leaderboard_entry_order_by!]
+    """
+    filter the rows returned
+    """
+    where: pnl_leaderboard_entry_bool_exp
+  ): pnl_leaderboard_entry_aggregate!
+  """
+  execute function "get_pnl_leaderboard_stats" which returns "pnl_leaderboard_stats"
+  """
+  get_pnl_leaderboard_stats(
+    """
+    input parameters for function "get_pnl_leaderboard_stats"
+    """
+    args: get_pnl_leaderboard_stats_args
+    """
+    distinct select on columns
+    """
+    distinct_on: [pnl_leaderboard_stats_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [pnl_leaderboard_stats_order_by!]
+    """
+    filter the rows returned
+    """
+    where: pnl_leaderboard_stats_bool_exp
+  ): [pnl_leaderboard_stats!]!
+  """
+  execute function "get_pnl_leaderboard_stats" and query aggregates on result of table type "pnl_leaderboard_stats"
+  """
+  get_pnl_leaderboard_stats_aggregate(
+    """
+    input parameters for function "get_pnl_leaderboard_stats_aggregate"
+    """
+    args: get_pnl_leaderboard_stats_args
+    """
+    distinct select on columns
+    """
+    distinct_on: [pnl_leaderboard_stats_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [pnl_leaderboard_stats_order_by!]
+    """
+    filter the rows returned
+    """
+    where: pnl_leaderboard_stats_bool_exp
+  ): pnl_leaderboard_stats_aggregate!
+  """
+  execute function "get_vault_leaderboard" which returns "pnl_leaderboard_entry"
+  """
+  get_vault_leaderboard(
+    """
+    input parameters for function "get_vault_leaderboard"
+    """
+    args: get_vault_leaderboard_args!
+    """
+    distinct select on columns
+    """
+    distinct_on: [pnl_leaderboard_entry_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [pnl_leaderboard_entry_order_by!]
+    """
+    filter the rows returned
+    """
+    where: pnl_leaderboard_entry_bool_exp
+  ): [pnl_leaderboard_entry!]!
+  """
+  execute function "get_vault_leaderboard" and query aggregates on result of table type "pnl_leaderboard_entry"
+  """
+  get_vault_leaderboard_aggregate(
+    """
+    input parameters for function "get_vault_leaderboard_aggregate"
+    """
+    args: get_vault_leaderboard_args!
+    """
+    distinct select on columns
+    """
+    distinct_on: [pnl_leaderboard_entry_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [pnl_leaderboard_entry_order_by!]
+    """
+    filter the rows returned
+    """
+    where: pnl_leaderboard_entry_bool_exp
+  ): pnl_leaderboard_entry_aggregate!
+  """
+  execute function "get_vault_leaderboard_period" which returns "pnl_leaderboard_entry"
+  """
+  get_vault_leaderboard_period(
+    """
+    input parameters for function "get_vault_leaderboard_period"
+    """
+    args: get_vault_leaderboard_period_args!
+    """
+    distinct select on columns
+    """
+    distinct_on: [pnl_leaderboard_entry_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [pnl_leaderboard_entry_order_by!]
+    """
+    filter the rows returned
+    """
+    where: pnl_leaderboard_entry_bool_exp
+  ): [pnl_leaderboard_entry!]!
+  """
+  execute function "get_vault_leaderboard_period" and query aggregates on result of table type "pnl_leaderboard_entry"
+  """
+  get_vault_leaderboard_period_aggregate(
+    """
+    input parameters for function "get_vault_leaderboard_period_aggregate"
+    """
+    args: get_vault_leaderboard_period_args!
+    """
+    distinct select on columns
+    """
+    distinct_on: [pnl_leaderboard_entry_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [pnl_leaderboard_entry_order_by!]
+    """
+    filter the rows returned
+    """
+    where: pnl_leaderboard_entry_bool_exp
+  ): pnl_leaderboard_entry_aggregate!
+  """
   fetch data from the table: "json_object" using primary key columns
   """
   json_object(id: String!): json_objects
@@ -5963,9 +9148,209 @@ type query_root {
     where: persons_bool_exp
   ): persons_aggregate!
   """
+  fetch data from the table: "pnl_leaderboard_entry"
+  """
+  pnl_leaderboard_entry(
+    """
+    distinct select on columns
+    """
+    distinct_on: [pnl_leaderboard_entry_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [pnl_leaderboard_entry_order_by!]
+    """
+    filter the rows returned
+    """
+    where: pnl_leaderboard_entry_bool_exp
+  ): [pnl_leaderboard_entry!]!
+  """
+  fetch aggregated fields from the table: "pnl_leaderboard_entry"
+  """
+  pnl_leaderboard_entry_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [pnl_leaderboard_entry_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [pnl_leaderboard_entry_order_by!]
+    """
+    filter the rows returned
+    """
+    where: pnl_leaderboard_entry_bool_exp
+  ): pnl_leaderboard_entry_aggregate!
+  """
+  fetch data from the table: "pnl_leaderboard_stats"
+  """
+  pnl_leaderboard_stats(
+    """
+    distinct select on columns
+    """
+    distinct_on: [pnl_leaderboard_stats_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [pnl_leaderboard_stats_order_by!]
+    """
+    filter the rows returned
+    """
+    where: pnl_leaderboard_stats_bool_exp
+  ): [pnl_leaderboard_stats!]!
+  """
+  fetch aggregated fields from the table: "pnl_leaderboard_stats"
+  """
+  pnl_leaderboard_stats_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [pnl_leaderboard_stats_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [pnl_leaderboard_stats_order_by!]
+    """
+    filter the rows returned
+    """
+    where: pnl_leaderboard_stats_bool_exp
+  ): pnl_leaderboard_stats_aggregate!
+  """
   fetch data from the table: "position" using primary key columns
   """
   position(id: String!): positions
+  """
+  fetch data from the table: "position_change_daily"
+  """
+  position_change_daily(
+    """
+    distinct select on columns
+    """
+    distinct_on: [position_change_daily_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [position_change_daily_order_by!]
+    """
+    filter the rows returned
+    """
+    where: position_change_daily_bool_exp
+  ): [position_change_daily!]!
+  """
+  fetch data from the table: "position_change_hourly"
+  """
+  position_change_hourly(
+    """
+    distinct select on columns
+    """
+    distinct_on: [position_change_hourly_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [position_change_hourly_order_by!]
+    """
+    filter the rows returned
+    """
+    where: position_change_hourly_bool_exp
+  ): [position_change_hourly!]!
+  """
+  fetch data from the table: "position_change"
+  """
+  position_changes(
+    """
+    distinct select on columns
+    """
+    distinct_on: [position_changes_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [position_changes_order_by!]
+    """
+    filter the rows returned
+    """
+    where: position_changes_bool_exp
+  ): [position_changes!]!
+  """
+  fetch aggregated fields from the table: "position_change"
+  """
+  position_changes_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [position_changes_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [position_changes_order_by!]
+    """
+    filter the rows returned
+    """
+    where: position_changes_bool_exp
+  ): position_changes_aggregate!
   """
   An array relationship
   """
@@ -6075,6 +9460,56 @@ type query_root {
     where: positions_bool_exp
   ): positions_aggregate!
   """
+  fetch data from the table: "position_with_value"
+  """
+  positions_with_value(
+    """
+    distinct select on columns
+    """
+    distinct_on: [positions_with_value_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [positions_with_value_order_by!]
+    """
+    filter the rows returned
+    """
+    where: positions_with_value_bool_exp
+  ): [positions_with_value!]!
+  """
+  fetch aggregated fields from the table: "position_with_value"
+  """
+  positions_with_value_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [positions_with_value_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [positions_with_value_order_by!]
+    """
+    filter the rows returned
+    """
+    where: positions_with_value_bool_exp
+  ): positions_with_value_aggregate!
+  """
   fetch data from the table: "predicate_object"
   """
   predicate_objects(
@@ -6131,6 +9566,60 @@ type query_root {
     object_id: String!
     predicate_id: String!
   ): predicate_objects
+  """
+  fetch data from the table: "protocol_fee_accrued"
+  """
+  protocol_fee_accruals(
+    """
+    distinct select on columns
+    """
+    distinct_on: [protocol_fee_accruals_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [protocol_fee_accruals_order_by!]
+    """
+    filter the rows returned
+    """
+    where: protocol_fee_accruals_bool_exp
+  ): [protocol_fee_accruals!]!
+  """
+  fetch aggregated fields from the table: "protocol_fee_accrued"
+  """
+  protocol_fee_accruals_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [protocol_fee_accruals_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [protocol_fee_accruals_order_by!]
+    """
+    filter the rows returned
+    """
+    where: protocol_fee_accruals_bool_exp
+  ): protocol_fee_accruals_aggregate!
+  """
+  fetch data from the table: "protocol_fee_accrued" using primary key columns
+  """
+  protocol_fee_accrued(id: String!): protocol_fee_accruals
   """
   fetch data from the table: "redemption" using primary key columns
   """
@@ -6338,6 +9827,64 @@ type query_root {
     input parameters for function "search_term_from_following_aggregate"
     """
     args: search_term_from_following_args!
+    """
+    distinct select on columns
+    """
+    distinct_on: [terms_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [terms_order_by!]
+    """
+    filter the rows returned
+    """
+    where: terms_bool_exp
+  ): terms_aggregate!
+  """
+  execute function "search_term_tsvector" which returns "term"
+  """
+  search_term_tsvector(
+    """
+    input parameters for function "search_term_tsvector"
+    """
+    args: search_term_tsvector_args!
+    """
+    distinct select on columns
+    """
+    distinct_on: [terms_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [terms_order_by!]
+    """
+    filter the rows returned
+    """
+    where: terms_bool_exp
+  ): [terms!]!
+  """
+  execute function "search_term_tsvector" and query aggregates on result of table type "term"
+  """
+  search_term_tsvector_aggregate(
+    """
+    input parameters for function "search_term_tsvector_aggregate"
+    """
+    args: search_term_tsvector_args!
     """
     distinct select on columns
     """
@@ -7847,6 +11394,10 @@ input search_term_args {
 
 input search_term_from_following_args {
   address: String
+  query: String
+}
+
+input search_term_tsvector_args {
   query: String
 }
 
@@ -10842,6 +14393,73 @@ type subscription_root {
   """
   account(id: String!): accounts
   """
+  fetch data from the table: "account_pnl_rank"
+  """
+  account_pnl_rank(
+    """
+    distinct select on columns
+    """
+    distinct_on: [account_pnl_rank_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [account_pnl_rank_order_by!]
+    """
+    filter the rows returned
+    """
+    where: account_pnl_rank_bool_exp
+  ): [account_pnl_rank!]!
+  """
+  fetch aggregated fields from the table: "account_pnl_rank"
+  """
+  account_pnl_rank_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [account_pnl_rank_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [account_pnl_rank_order_by!]
+    """
+    filter the rows returned
+    """
+    where: account_pnl_rank_bool_exp
+  ): account_pnl_rank_aggregate!
+  """
+  fetch data from the table in a streaming manner: "account_pnl_rank"
+  """
+  account_pnl_rank_stream(
+    """
+    maximum number of rows returned in a single batch
+    """
+    batch_size: Int!
+    """
+    cursor to stream the results returned by the query
+    """
+    cursor: [account_pnl_rank_stream_cursor_input]!
+    """
+    filter the rows returned
+    """
+    where: account_pnl_rank_bool_exp
+  ): [account_pnl_rank!]!
+  """
   An array relationship
   """
   accounts(
@@ -11627,6 +15245,354 @@ type subscription_root {
     where: accounts_bool_exp
   ): accounts_aggregate!
   """
+  execute function "get_account_pnl_rank" which returns "account_pnl_rank"
+  """
+  get_account_pnl_rank(
+    """
+    input parameters for function "get_account_pnl_rank"
+    """
+    args: get_account_pnl_rank_args!
+    """
+    distinct select on columns
+    """
+    distinct_on: [account_pnl_rank_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [account_pnl_rank_order_by!]
+    """
+    filter the rows returned
+    """
+    where: account_pnl_rank_bool_exp
+  ): [account_pnl_rank!]!
+  """
+  execute function "get_account_pnl_rank" and query aggregates on result of table type "account_pnl_rank"
+  """
+  get_account_pnl_rank_aggregate(
+    """
+    input parameters for function "get_account_pnl_rank_aggregate"
+    """
+    args: get_account_pnl_rank_args!
+    """
+    distinct select on columns
+    """
+    distinct_on: [account_pnl_rank_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [account_pnl_rank_order_by!]
+    """
+    filter the rows returned
+    """
+    where: account_pnl_rank_bool_exp
+  ): account_pnl_rank_aggregate!
+  """
+  execute function "get_pnl_leaderboard" which returns "pnl_leaderboard_entry"
+  """
+  get_pnl_leaderboard(
+    """
+    input parameters for function "get_pnl_leaderboard"
+    """
+    args: get_pnl_leaderboard_args
+    """
+    distinct select on columns
+    """
+    distinct_on: [pnl_leaderboard_entry_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [pnl_leaderboard_entry_order_by!]
+    """
+    filter the rows returned
+    """
+    where: pnl_leaderboard_entry_bool_exp
+  ): [pnl_leaderboard_entry!]!
+  """
+  execute function "get_pnl_leaderboard" and query aggregates on result of table type "pnl_leaderboard_entry"
+  """
+  get_pnl_leaderboard_aggregate(
+    """
+    input parameters for function "get_pnl_leaderboard_aggregate"
+    """
+    args: get_pnl_leaderboard_args
+    """
+    distinct select on columns
+    """
+    distinct_on: [pnl_leaderboard_entry_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [pnl_leaderboard_entry_order_by!]
+    """
+    filter the rows returned
+    """
+    where: pnl_leaderboard_entry_bool_exp
+  ): pnl_leaderboard_entry_aggregate!
+  """
+  execute function "get_pnl_leaderboard_period" which returns "pnl_leaderboard_entry"
+  """
+  get_pnl_leaderboard_period(
+    """
+    input parameters for function "get_pnl_leaderboard_period"
+    """
+    args: get_pnl_leaderboard_period_args!
+    """
+    distinct select on columns
+    """
+    distinct_on: [pnl_leaderboard_entry_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [pnl_leaderboard_entry_order_by!]
+    """
+    filter the rows returned
+    """
+    where: pnl_leaderboard_entry_bool_exp
+  ): [pnl_leaderboard_entry!]!
+  """
+  execute function "get_pnl_leaderboard_period" and query aggregates on result of table type "pnl_leaderboard_entry"
+  """
+  get_pnl_leaderboard_period_aggregate(
+    """
+    input parameters for function "get_pnl_leaderboard_period_aggregate"
+    """
+    args: get_pnl_leaderboard_period_args!
+    """
+    distinct select on columns
+    """
+    distinct_on: [pnl_leaderboard_entry_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [pnl_leaderboard_entry_order_by!]
+    """
+    filter the rows returned
+    """
+    where: pnl_leaderboard_entry_bool_exp
+  ): pnl_leaderboard_entry_aggregate!
+  """
+  execute function "get_pnl_leaderboard_stats" which returns "pnl_leaderboard_stats"
+  """
+  get_pnl_leaderboard_stats(
+    """
+    input parameters for function "get_pnl_leaderboard_stats"
+    """
+    args: get_pnl_leaderboard_stats_args
+    """
+    distinct select on columns
+    """
+    distinct_on: [pnl_leaderboard_stats_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [pnl_leaderboard_stats_order_by!]
+    """
+    filter the rows returned
+    """
+    where: pnl_leaderboard_stats_bool_exp
+  ): [pnl_leaderboard_stats!]!
+  """
+  execute function "get_pnl_leaderboard_stats" and query aggregates on result of table type "pnl_leaderboard_stats"
+  """
+  get_pnl_leaderboard_stats_aggregate(
+    """
+    input parameters for function "get_pnl_leaderboard_stats_aggregate"
+    """
+    args: get_pnl_leaderboard_stats_args
+    """
+    distinct select on columns
+    """
+    distinct_on: [pnl_leaderboard_stats_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [pnl_leaderboard_stats_order_by!]
+    """
+    filter the rows returned
+    """
+    where: pnl_leaderboard_stats_bool_exp
+  ): pnl_leaderboard_stats_aggregate!
+  """
+  execute function "get_vault_leaderboard" which returns "pnl_leaderboard_entry"
+  """
+  get_vault_leaderboard(
+    """
+    input parameters for function "get_vault_leaderboard"
+    """
+    args: get_vault_leaderboard_args!
+    """
+    distinct select on columns
+    """
+    distinct_on: [pnl_leaderboard_entry_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [pnl_leaderboard_entry_order_by!]
+    """
+    filter the rows returned
+    """
+    where: pnl_leaderboard_entry_bool_exp
+  ): [pnl_leaderboard_entry!]!
+  """
+  execute function "get_vault_leaderboard" and query aggregates on result of table type "pnl_leaderboard_entry"
+  """
+  get_vault_leaderboard_aggregate(
+    """
+    input parameters for function "get_vault_leaderboard_aggregate"
+    """
+    args: get_vault_leaderboard_args!
+    """
+    distinct select on columns
+    """
+    distinct_on: [pnl_leaderboard_entry_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [pnl_leaderboard_entry_order_by!]
+    """
+    filter the rows returned
+    """
+    where: pnl_leaderboard_entry_bool_exp
+  ): pnl_leaderboard_entry_aggregate!
+  """
+  execute function "get_vault_leaderboard_period" which returns "pnl_leaderboard_entry"
+  """
+  get_vault_leaderboard_period(
+    """
+    input parameters for function "get_vault_leaderboard_period"
+    """
+    args: get_vault_leaderboard_period_args!
+    """
+    distinct select on columns
+    """
+    distinct_on: [pnl_leaderboard_entry_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [pnl_leaderboard_entry_order_by!]
+    """
+    filter the rows returned
+    """
+    where: pnl_leaderboard_entry_bool_exp
+  ): [pnl_leaderboard_entry!]!
+  """
+  execute function "get_vault_leaderboard_period" and query aggregates on result of table type "pnl_leaderboard_entry"
+  """
+  get_vault_leaderboard_period_aggregate(
+    """
+    input parameters for function "get_vault_leaderboard_period_aggregate"
+    """
+    args: get_vault_leaderboard_period_args!
+    """
+    distinct select on columns
+    """
+    distinct_on: [pnl_leaderboard_entry_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [pnl_leaderboard_entry_order_by!]
+    """
+    filter the rows returned
+    """
+    where: pnl_leaderboard_entry_bool_exp
+  ): pnl_leaderboard_entry_aggregate!
+  """
   fetch data from the table: "json_object" using primary key columns
   """
   json_object(id: String!): json_objects
@@ -11840,9 +15806,294 @@ type subscription_root {
     where: persons_bool_exp
   ): [persons!]!
   """
+  fetch data from the table: "pnl_leaderboard_entry"
+  """
+  pnl_leaderboard_entry(
+    """
+    distinct select on columns
+    """
+    distinct_on: [pnl_leaderboard_entry_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [pnl_leaderboard_entry_order_by!]
+    """
+    filter the rows returned
+    """
+    where: pnl_leaderboard_entry_bool_exp
+  ): [pnl_leaderboard_entry!]!
+  """
+  fetch aggregated fields from the table: "pnl_leaderboard_entry"
+  """
+  pnl_leaderboard_entry_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [pnl_leaderboard_entry_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [pnl_leaderboard_entry_order_by!]
+    """
+    filter the rows returned
+    """
+    where: pnl_leaderboard_entry_bool_exp
+  ): pnl_leaderboard_entry_aggregate!
+  """
+  fetch data from the table in a streaming manner: "pnl_leaderboard_entry"
+  """
+  pnl_leaderboard_entry_stream(
+    """
+    maximum number of rows returned in a single batch
+    """
+    batch_size: Int!
+    """
+    cursor to stream the results returned by the query
+    """
+    cursor: [pnl_leaderboard_entry_stream_cursor_input]!
+    """
+    filter the rows returned
+    """
+    where: pnl_leaderboard_entry_bool_exp
+  ): [pnl_leaderboard_entry!]!
+  """
+  fetch data from the table: "pnl_leaderboard_stats"
+  """
+  pnl_leaderboard_stats(
+    """
+    distinct select on columns
+    """
+    distinct_on: [pnl_leaderboard_stats_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [pnl_leaderboard_stats_order_by!]
+    """
+    filter the rows returned
+    """
+    where: pnl_leaderboard_stats_bool_exp
+  ): [pnl_leaderboard_stats!]!
+  """
+  fetch aggregated fields from the table: "pnl_leaderboard_stats"
+  """
+  pnl_leaderboard_stats_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [pnl_leaderboard_stats_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [pnl_leaderboard_stats_order_by!]
+    """
+    filter the rows returned
+    """
+    where: pnl_leaderboard_stats_bool_exp
+  ): pnl_leaderboard_stats_aggregate!
+  """
+  fetch data from the table in a streaming manner: "pnl_leaderboard_stats"
+  """
+  pnl_leaderboard_stats_stream(
+    """
+    maximum number of rows returned in a single batch
+    """
+    batch_size: Int!
+    """
+    cursor to stream the results returned by the query
+    """
+    cursor: [pnl_leaderboard_stats_stream_cursor_input]!
+    """
+    filter the rows returned
+    """
+    where: pnl_leaderboard_stats_bool_exp
+  ): [pnl_leaderboard_stats!]!
+  """
   fetch data from the table: "position" using primary key columns
   """
   position(id: String!): positions
+  """
+  fetch data from the table: "position_change_daily"
+  """
+  position_change_daily(
+    """
+    distinct select on columns
+    """
+    distinct_on: [position_change_daily_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [position_change_daily_order_by!]
+    """
+    filter the rows returned
+    """
+    where: position_change_daily_bool_exp
+  ): [position_change_daily!]!
+  """
+  fetch data from the table in a streaming manner: "position_change_daily"
+  """
+  position_change_daily_stream(
+    """
+    maximum number of rows returned in a single batch
+    """
+    batch_size: Int!
+    """
+    cursor to stream the results returned by the query
+    """
+    cursor: [position_change_daily_stream_cursor_input]!
+    """
+    filter the rows returned
+    """
+    where: position_change_daily_bool_exp
+  ): [position_change_daily!]!
+  """
+  fetch data from the table: "position_change_hourly"
+  """
+  position_change_hourly(
+    """
+    distinct select on columns
+    """
+    distinct_on: [position_change_hourly_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [position_change_hourly_order_by!]
+    """
+    filter the rows returned
+    """
+    where: position_change_hourly_bool_exp
+  ): [position_change_hourly!]!
+  """
+  fetch data from the table in a streaming manner: "position_change_hourly"
+  """
+  position_change_hourly_stream(
+    """
+    maximum number of rows returned in a single batch
+    """
+    batch_size: Int!
+    """
+    cursor to stream the results returned by the query
+    """
+    cursor: [position_change_hourly_stream_cursor_input]!
+    """
+    filter the rows returned
+    """
+    where: position_change_hourly_bool_exp
+  ): [position_change_hourly!]!
+  """
+  fetch data from the table: "position_change"
+  """
+  position_changes(
+    """
+    distinct select on columns
+    """
+    distinct_on: [position_changes_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [position_changes_order_by!]
+    """
+    filter the rows returned
+    """
+    where: position_changes_bool_exp
+  ): [position_changes!]!
+  """
+  fetch aggregated fields from the table: "position_change"
+  """
+  position_changes_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [position_changes_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [position_changes_order_by!]
+    """
+    filter the rows returned
+    """
+    where: position_changes_bool_exp
+  ): position_changes_aggregate!
+  """
+  fetch data from the table in a streaming manner: "position_change"
+  """
+  position_changes_stream(
+    """
+    maximum number of rows returned in a single batch
+    """
+    batch_size: Int!
+    """
+    cursor to stream the results returned by the query
+    """
+    cursor: [position_changes_stream_cursor_input]!
+    """
+    filter the rows returned
+    """
+    where: position_changes_bool_exp
+  ): [position_changes!]!
   """
   An array relationship
   """
@@ -11969,6 +16220,73 @@ type subscription_root {
     where: positions_bool_exp
   ): [positions!]!
   """
+  fetch data from the table: "position_with_value"
+  """
+  positions_with_value(
+    """
+    distinct select on columns
+    """
+    distinct_on: [positions_with_value_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [positions_with_value_order_by!]
+    """
+    filter the rows returned
+    """
+    where: positions_with_value_bool_exp
+  ): [positions_with_value!]!
+  """
+  fetch aggregated fields from the table: "position_with_value"
+  """
+  positions_with_value_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [positions_with_value_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [positions_with_value_order_by!]
+    """
+    filter the rows returned
+    """
+    where: positions_with_value_bool_exp
+  ): positions_with_value_aggregate!
+  """
+  fetch data from the table in a streaming manner: "position_with_value"
+  """
+  positions_with_value_stream(
+    """
+    maximum number of rows returned in a single batch
+    """
+    batch_size: Int!
+    """
+    cursor to stream the results returned by the query
+    """
+    cursor: [positions_with_value_stream_cursor_input]!
+    """
+    filter the rows returned
+    """
+    where: positions_with_value_bool_exp
+  ): [positions_with_value!]!
+  """
   fetch data from the table: "predicate_object"
   """
   predicate_objects(
@@ -12042,6 +16360,77 @@ type subscription_root {
     """
     where: predicate_objects_bool_exp
   ): [predicate_objects!]!
+  """
+  fetch data from the table: "protocol_fee_accrued"
+  """
+  protocol_fee_accruals(
+    """
+    distinct select on columns
+    """
+    distinct_on: [protocol_fee_accruals_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [protocol_fee_accruals_order_by!]
+    """
+    filter the rows returned
+    """
+    where: protocol_fee_accruals_bool_exp
+  ): [protocol_fee_accruals!]!
+  """
+  fetch aggregated fields from the table: "protocol_fee_accrued"
+  """
+  protocol_fee_accruals_aggregate(
+    """
+    distinct select on columns
+    """
+    distinct_on: [protocol_fee_accruals_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [protocol_fee_accruals_order_by!]
+    """
+    filter the rows returned
+    """
+    where: protocol_fee_accruals_bool_exp
+  ): protocol_fee_accruals_aggregate!
+  """
+  fetch data from the table in a streaming manner: "protocol_fee_accrued"
+  """
+  protocol_fee_accruals_stream(
+    """
+    maximum number of rows returned in a single batch
+    """
+    batch_size: Int!
+    """
+    cursor to stream the results returned by the query
+    """
+    cursor: [protocol_fee_accruals_stream_cursor_input]!
+    """
+    filter the rows returned
+    """
+    where: protocol_fee_accruals_bool_exp
+  ): [protocol_fee_accruals!]!
+  """
+  fetch data from the table: "protocol_fee_accrued" using primary key columns
+  """
+  protocol_fee_accrued(id: String!): protocol_fee_accruals
   """
   fetch data from the table: "redemption" using primary key columns
   """
@@ -12266,6 +16655,64 @@ type subscription_root {
     input parameters for function "search_term_from_following_aggregate"
     """
     args: search_term_from_following_args!
+    """
+    distinct select on columns
+    """
+    distinct_on: [terms_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [terms_order_by!]
+    """
+    filter the rows returned
+    """
+    where: terms_bool_exp
+  ): terms_aggregate!
+  """
+  execute function "search_term_tsvector" which returns "term"
+  """
+  search_term_tsvector(
+    """
+    input parameters for function "search_term_tsvector"
+    """
+    args: search_term_tsvector_args!
+    """
+    distinct select on columns
+    """
+    distinct_on: [terms_select_column!]
+    """
+    limit the number of rows returned
+    """
+    limit: Int
+    """
+    skip the first n rows. Use only with order_by
+    """
+    offset: Int
+    """
+    sort the rows by one or more columns
+    """
+    order_by: [terms_order_by!]
+    """
+    filter the rows returned
+    """
+    where: terms_bool_exp
+  ): [terms!]!
+  """
+  execute function "search_term_tsvector" and query aggregates on result of table type "term"
+  """
+  search_term_tsvector_aggregate(
+    """
+    input parameters for function "search_term_tsvector_aggregate"
+    """
+    args: search_term_tsvector_args!
     """
     distinct select on columns
     """
