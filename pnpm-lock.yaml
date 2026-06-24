@@ -464,8 +464,8 @@ importers:
   packages/sdk:
     dependencies:
       '@0xintuition/graphql':
-        specifier: ^2.0.2
-        version: 2.0.2(encoding@0.1.13)(react@18.3.1)
+        specifier: workspace:^
+        version: link:../graphql
       '@0xintuition/protocol':
         specifier: ^2.0.2
         version: 2.0.2(viem@2.31.4(bufferutil@4.0.8)(typescript@5.4.5)(utf-8-validate@6.0.4)(zod@3.25.67))
@@ -507,9 +507,6 @@ packages:
     peerDependencies:
       graphql: ^15.5.0 || ^16.0.0 || ^17.0.0
       typescript: ^5.0.0
-
-  '@0xintuition/graphql@2.0.2':
-    resolution: {integrity: sha512-wWPZQWJoXyCPxk/8rusFVE0gp5+v5TyCJE8oI0aL+i36HwfMXhFsQtF0Idd75O2RObdpC629ZwaUbnYTVew7pw==}
 
   '@0xintuition/protocol@2.0.2':
     resolution: {integrity: sha512-BjdBkskuTj5K7KyCd6/33gDkZLh1rEMSGMNfA6iD5jM5TU7OC32ySybBKZ2tQzicnvWGYTSUSh01muBAmILgPw==}
@@ -12651,20 +12648,6 @@ snapshots:
       '@gql.tada/internal': 1.0.8(graphql@16.9.0)(typescript@5.4.5)
       graphql: 16.9.0
       typescript: 5.4.5
-
-  '@0xintuition/graphql@2.0.2(encoding@0.1.13)(react@18.3.1)':
-    dependencies:
-      '@graphql-codegen/typescript-document-nodes': 4.0.11(encoding@0.1.13)(graphql@16.9.0)
-      '@tanstack/react-query': 5.45.0(react@18.3.1)
-      graphql: 16.9.0
-      graphql-request: 7.1.0(graphql@16.9.0)
-    transitivePeerDependencies:
-      - '@dprint/formatter'
-      - '@dprint/typescript'
-      - dprint
-      - encoding
-      - react
-      - supports-color
 
   '@0xintuition/protocol@2.0.2(viem@2.31.4(bufferutil@4.0.8)(typescript@5.4.5)(utf-8-validate@6.0.4)(zod@3.25.67))':
     dependencies:

@@ -1,8 +1,6 @@
 import type { CodegenConfig } from '@graphql-codegen/cli'
 import type { Types } from '@graphql-codegen/plugin-helpers'
 
-import { API_URL_PROD } from './src/constants'
-
 const commonGenerateOptions: Types.ConfiguredOutput = {
   config: {
     reactQueryVersion: 5,
@@ -36,14 +34,7 @@ const commonGenerateOptions: Types.ConfiguredOutput = {
 const config: CodegenConfig = {
   overwrite: true,
   hooks: { afterAllFileWrite: ['prettier --write'] },
-  schema: {
-    [API_URL_PROD]: {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    },
-  },
+  schema: './schema.graphql',
   ignoreNoDocuments: true,
   documents: ['**/*.graphql'],
   generates: {

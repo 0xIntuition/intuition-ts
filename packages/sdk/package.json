@@ -43,7 +43,7 @@
     "registry": "https://registry.npmjs.org/"
   },
   "dependencies": {
-    "@0xintuition/graphql": "^2.0.2",
+    "@0xintuition/graphql": "workspace:^",
     "@0xintuition/protocol": "^2.0.2"
   },
   "peerDependencies": {

@@ -8,20 +8,57 @@ import {
 
 import { toHex } from 'viem'
 
-import { pinThing } from '../api/pin-thing'
+import { pinThing, type PinThingOptions } from '../api/pin-thing'
+
+export type BatchCreateAtomsFromThingsOptions = PinThingOptions & {
+  depositAmount?: bigint
+}
+
+function normalizeOptions(
+  options?: bigint | BatchCreateAtomsFromThingsOptions,
+): BatchCreateAtomsFromThingsOptions {
+  if (typeof options === 'bigint') {
+    return { depositAmount: options }
+  }
+
+  return options ?? {}
+}
 
 /**
  * Pins multiple "things", creates atoms in batch, and returns creation events.
  * @param config Contract address and viem clients.
  * @param data Array of PinThing mutation variables.
- * @param depositAmount Optional additional deposit amount per atom.
+ * @param options Optional additional deposit amount per atom and pinning options.
  * @returns Created atom URIs, transaction hash, and decoded event args.
  */
 export async function batchCreateAtomsFromThings(
   config: WriteConfig,
   data: PinThingMutationVariables[],
   depositAmount?: bigint,
+): ReturnType<typeof batchCreateAtomsFromThingsWithOptions>
+export async function batchCreateAtomsFromThings(
+  config: WriteConfig,
+  data: PinThingMutationVariables[],
+  options?: BatchCreateAtomsFromThingsOptions,
+): ReturnType<typeof batchCreateAtomsFromThingsWithOptions>
+export async function batchCreateAtomsFromThings(
+  config: WriteConfig,
+  data: PinThingMutationVariables[],
+  options?: bigint | BatchCreateAtomsFromThingsOptions,
 ) {
+  return batchCreateAtomsFromThingsWithOptions(
+    config,
+    data,
+    normalizeOptions(options),
+  )
+}
+
+async function batchCreateAtomsFromThingsWithOptions(
+  config: WriteConfig,
+  data: PinThingMutationVariables[],
+  options: BatchCreateAtomsFromThingsOptions,
+) {
+  const { depositAmount, pinApiKey, pinApiUrl } = options
   const { address, publicClient } = config
 
   const atomCost = await multiVaultGetAtomCost({
@@ -36,10 +73,7 @@ export async function batchCreateAtomsFromThings(
   // Pin each thing and collect their URIs
   const uris: string[] = []
   for (const item of data) {
-    const uri = await pinThing(item)
-    if (!uri) {
-      throw new Error(`Failed to pin thing on IPFS: ${JSON.stringify(item)}`)
-    }
+    const uri = await pinThing(item, { pinApiKey, pinApiUrl })
     uris.push(uri)
   }
 
