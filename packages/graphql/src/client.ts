@@ -19,9 +19,22 @@ type PinRequestConfig = {
   pinApiKey?: string
 }
 
+type ExecuteRequestOptions = {
+  headers?: RequestInit['headers']
+  pinConfig?: PinRequestConfig
+  isPinning?: boolean
+}
+
+type GraphQLResponse<TData> = {
+  data?: TData
+  errors?: Array<{ message?: string }>
+  message?: string
+}
+
 const DEFAULT_API_URL = API_URL_PROD
 const DEFAULT_PIN_API_URL = PIN_API_URL
 
+// Keep in sync with mutations served by the gated pinning GraphQL endpoint.
 const PINNING_MUTATION_FIELDS = new Set([
   'pinOrganization',
   'pinPerson',
@@ -38,14 +51,6 @@ let globalConfig: ClientConfigInput = {
 
 export function configureClient(config: ClientConfigInput) {
   globalConfig = { ...globalConfig, ...config }
-}
-
-export function getPinConfig(): Required<Pick<ClientConfigInput, 'pinApiUrl'>> &
-  Pick<ClientConfigInput, 'pinApiKey'> {
-  return {
-    pinApiUrl: globalConfig.pinApiUrl ?? DEFAULT_PIN_API_URL,
-    pinApiKey: globalConfig.pinApiKey,
-  }
 }
 
 export function getClientConfig(token?: string): ClientConfig {
@@ -171,7 +176,18 @@ function getHeader(
   return headers[headerName.toLowerCase()]
 }
 
-async function parseJsonResponse(res: Response) {
+function withoutHeader(
+  headers: Record<string, string>,
+  headerName: string,
+): Record<string, string> {
+  const sanitizedHeaders = { ...headers }
+  delete sanitizedHeaders[headerName.toLowerCase()]
+  return sanitizedHeaders
+}
+
+async function parseJsonResponse<TData>(
+  res: Response,
+): Promise<GraphQLResponse<TData>> {
   try {
     return await res.json()
   } catch (error) {
@@ -183,14 +199,39 @@ async function parseJsonResponse(res: Response) {
   }
 }
 
-export async function executeGraphQLRequest<TData, TVariables>(
+async function parseErrorMessage(res: Response) {
+  const fallback = res.statusText || 'Unknown error'
+
+  try {
+    const body = await res.text()
+    if (!body) {
+      return fallback
+    }
+
+    try {
+      const json = JSON.parse(body) as GraphQLResponse<unknown>
+      return json.errors?.[0]?.message ?? json.message ?? fallback
+    } catch {
+      return fallback
+    }
+  } catch {
+    return fallback
+  }
+}
+
+async function executeRequest<TData, TVariables>(
   query: string,
   variables?: TVariables,
-  options?: RequestInit['headers'],
-  pinConfig?: PinRequestConfig,
+  options: ExecuteRequestOptions = {},
 ): Promise<TData> {
-  const isPinning = isPinningOperation(query)
-  const extraHeaders = toHeaderRecord(options)
+  const {
+    headers: headersInit,
+    pinConfig,
+    isPinning: isPinningOverride,
+  } = options
+  const isPinning = isPinningOverride ?? isPinningOperation(query)
+  const extraHeaders = toHeaderRecord(headersInit)
+  const requestHeaders = withoutHeader(extraHeaders, 'apikey')
   const baseHeaders = fetchParams().headers
 
   const apiUrl = globalConfig.apiUrl ?? DEFAULT_API_URL
@@ -211,29 +252,29 @@ export async function executeGraphQLRequest<TData, TVariables>(
     method: 'POST',
     headers: {
       ...baseHeaders,
-      ...extraHeaders,
+      ...requestHeaders,
       ...(isPinning && pinApiKey ? { apikey: pinApiKey } : {}),
     },
     body: JSON.stringify({ query, variables }),
   })
 
-  const json = await parseJsonResponse(res)
-
-  if (isPinning && !res.ok) {
-    const message =
-      json?.errors?.[0]?.message ??
-      json?.message ??
-      res.statusText ??
-      'Unknown error'
-    throw new Error(`Pinning request failed (${res.status}): ${message}`)
+  if (!res.ok) {
+    const message = await parseErrorMessage(res)
+    const requestType = isPinning ? 'Pinning request' : 'GraphQL request'
+    throw new Error(`${requestType} failed (${res.status}): ${message}`)
   }
+
+  const json = await parseJsonResponse<TData>(res)
 
   if (isPinning && json.errors?.length) {
     const { message } = json.errors[0]
     throw new Error(message)
   }
 
-  if (json.errors && (!json.data || Object.keys(json.data).length === 0)) {
+  if (
+    json.errors?.length &&
+    (!json.data || Object.keys(json.data).length === 0)
+  ) {
     const { message } = json.errors[0]
     throw new Error(message)
   }
@@ -241,20 +282,35 @@ export async function executeGraphQLRequest<TData, TVariables>(
   return json.data as TData
 }
 
+export async function executeGraphQLRequest<TData, TVariables>(
+  query: string,
+  variables?: TVariables,
+  options?: RequestInit['headers'],
+  pinConfig?: PinRequestConfig,
+): Promise<TData> {
+  return executeRequest(query, variables, {
+    headers: options,
+    pinConfig,
+  })
+}
+
 export function fetcher<TData, TVariables>(
   query: string,
   variables?: TVariables,
   options?: RequestInit['headers'],
 ) {
-  return async () => {
-    const isPinning = isPinningOperation(query)
+  const isPinning = isPinningOperation(query)
 
+  return async () => {
     if (!isPinning && !globalConfig.apiUrl) {
       throw new Error(
         'GraphQL API URL not configured. Call configureClient first.',
       )
     }
 
-    return executeGraphQLRequest<TData, TVariables>(query, variables, options)
+    return executeRequest<TData, TVariables>(query, variables, {
+      headers: options,
+      isPinning,
+    })
   }
 }

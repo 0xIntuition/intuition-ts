@@ -43,6 +43,11 @@ type CreateAtomConfig = {
   walletClient: WalletClient
 }
 
+type PinningOptions = {
+  pinApiKey?: string
+  pinApiUrl?: string
+}
+
 export default class BatchStart extends Command {
   static override description = 'Batch create atoms using a CSV file'
   static override examples = ['<%= config.bin %> <%= command.id %> --name my-batch.csv']
@@ -58,6 +63,12 @@ export default class BatchStart extends Command {
       description: 'Filename to load. Default is intuition-data.csv',
     }),
     network: Flags.string({description: 'Network to use.'}),
+    'pin-api-key': Flags.string({
+      description: 'Intuition pinning API key for Thing batches. Defaults to INTUITION_PIN_API_KEY.',
+    }),
+    'pin-api-url': Flags.string({
+      description: 'Override Intuition pinning API URL. Defaults to INTUITION_PIN_API_URL.',
+    }),
   }
 
   public async run(): Promise<void> {
@@ -70,6 +81,16 @@ export default class BatchStart extends Command {
 
     // 2. Select atom type
     const atomType = await this.getAtomType()
+    const pinningOptions: PinningOptions = {
+      pinApiKey: flags['pin-api-key'] || process.env.INTUITION_PIN_API_KEY,
+      pinApiUrl: flags['pin-api-url'] || process.env.INTUITION_PIN_API_URL,
+    }
+
+    if (atomType === 'thing' && !pinningOptions.pinApiKey) {
+      this.log(chalk.red('❌ Thing batch creation requires an Intuition pinning API key.'))
+      this.log(chalk.gray('Pass --pin-api-key or set INTUITION_PIN_API_KEY.'))
+      return
+    }
 
     // 3. Load and prepare CSV data
     const fileName = flags.name ?? 'intuition-data.csv'
@@ -91,7 +112,10 @@ export default class BatchStart extends Command {
       publicClient,
       walletClient,
     }
-    const processedCount = await this.processBatches({allRows, headers, unprocessedRows}, {atomConfig, atomType, flags})
+    const processedCount = await this.processBatches(
+      {allRows, headers, unprocessedRows},
+      {atomConfig, atomType, flags, pinningOptions},
+    )
 
     this.log(chalk.green(`🎉 Done! ${processedCount} atoms processed and CSV updated.`))
   }
@@ -171,10 +195,12 @@ export default class BatchStart extends Command {
       atomConfig,
       atomType,
       flags,
+      pinningOptions,
     }: {
       atomConfig: CreateAtomConfig
       atomType: string
       flags: Record<string, unknown>
+      pinningOptions: PinningOptions
     },
   ) {
     const {count, list, name: fileName} = flags as {count: string; list?: string; name?: string}
@@ -203,7 +229,14 @@ export default class BatchStart extends Command {
           }
 
           case 'thing': {
-            await this.processThingBatch(batch, allRows, headers, atomConfig, list as string | undefined)
+            await this.processThingBatch(
+              batch,
+              allRows,
+              headers,
+              atomConfig,
+              pinningOptions,
+              list as string | undefined,
+            )
             break
           }
 
@@ -379,6 +412,7 @@ export default class BatchStart extends Command {
     allRows: CsvRow[],
     headers: string[],
     atomConfig: CreateAtomConfig,
+    pinningOptions: PinningOptions,
     listFlag?: string,
   ) {
     // 1. Ensure required columns
@@ -401,7 +435,7 @@ export default class BatchStart extends Command {
     }))
 
     // 3. Call SDK batch function
-    const result = await batchCreateAtomsFromThings(atomConfig, batchInput)
+    const result = await batchCreateAtomsFromThings(atomConfig, batchInput, pinningOptions)
     const {state, uris} = result
 
     // 4. Update allRows and collect vaultIds

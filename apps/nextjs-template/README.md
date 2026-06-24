@@ -33,6 +33,12 @@ NEXT_PUBLIC_CDP_API_KEY="GET_FROM_COINBASE_DEVELOPER_PLATFORM"
 
 # Obtain from https://cloud.walletconnect.com
 NEXT_PUBLIC_WC_PROJECT_ID="GET_FROM_WALLET_CONNECT"
+
+# Server-only key for pinning Thing metadata before on-chain atom creation
+INTUITION_PIN_API_KEY="GET_FROM_INTUITION"
+
+# Optional override for the gated pinning GraphQL endpoint
+INTUITION_PIN_API_URL="https://pin.intuition.systems/v1/graphql"
 ```
 
 You can obtain the API key from the [Coinbase Developer Portal's OnchainKit page](https://portal.cdp.coinbase.com/products/onchainkit). If you don't have an account, you will need to create one.

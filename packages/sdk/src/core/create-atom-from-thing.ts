@@ -14,14 +14,10 @@ export type CreateAtomFromThingOptions = PinThingOptions & {
   depositAmount?: bigint
 }
 
-function normalizeOptions(
-  options?: bigint | CreateAtomFromThingOptions,
-): CreateAtomFromThingOptions {
-  if (typeof options === 'bigint') {
-    return { depositAmount: options }
-  }
-
-  return options ?? {}
+export type CreateAtomFromThingResult = {
+  uri: string
+  transactionHash: Awaited<ReturnType<typeof multiVaultCreateAtoms>>
+  state: Awaited<ReturnType<typeof eventParseAtomCreated>>[number]['args']
 }
 
 /**
@@ -35,25 +31,29 @@ export async function createAtomFromThing(
   config: WriteConfig,
   data: PinThingMutationVariables,
   depositAmount?: bigint,
-): ReturnType<typeof createAtomFromThingWithOptions>
+): Promise<CreateAtomFromThingResult>
 export async function createAtomFromThing(
   config: WriteConfig,
   data: PinThingMutationVariables,
   options?: CreateAtomFromThingOptions,
-): ReturnType<typeof createAtomFromThingWithOptions>
+): Promise<CreateAtomFromThingResult>
 export async function createAtomFromThing(
   config: WriteConfig,
   data: PinThingMutationVariables,
   options?: bigint | CreateAtomFromThingOptions,
 ) {
-  return createAtomFromThingWithOptions(config, data, normalizeOptions(options))
+  return createAtomFromThingWithOptions(
+    config,
+    data,
+    typeof options === 'bigint' ? { depositAmount: options } : options ?? {},
+  )
 }
 
 async function createAtomFromThingWithOptions(
   config: WriteConfig,
   data: PinThingMutationVariables,
   options: CreateAtomFromThingOptions,
-) {
+): Promise<CreateAtomFromThingResult> {
   const { depositAmount, pinApiKey, pinApiUrl } = options
   const uriRef = await pinThing(data, { pinApiKey, pinApiUrl })
 

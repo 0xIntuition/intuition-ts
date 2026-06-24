@@ -14,14 +14,12 @@ export type BatchCreateAtomsFromThingsOptions = PinThingOptions & {
   depositAmount?: bigint
 }
 
-function normalizeOptions(
-  options?: bigint | BatchCreateAtomsFromThingsOptions,
-): BatchCreateAtomsFromThingsOptions {
-  if (typeof options === 'bigint') {
-    return { depositAmount: options }
-  }
-
-  return options ?? {}
+export type BatchCreateAtomsFromThingsResult = {
+  uris: string[]
+  state: Array<
+    Awaited<ReturnType<typeof eventParseAtomCreated>>[number]['args']
+  >
+  transactionHash: Awaited<ReturnType<typeof multiVaultCreateAtoms>>
 }
 
 /**
@@ -35,12 +33,12 @@ export async function batchCreateAtomsFromThings(
   config: WriteConfig,
   data: PinThingMutationVariables[],
   depositAmount?: bigint,
-): ReturnType<typeof batchCreateAtomsFromThingsWithOptions>
+): Promise<BatchCreateAtomsFromThingsResult>
 export async function batchCreateAtomsFromThings(
   config: WriteConfig,
   data: PinThingMutationVariables[],
   options?: BatchCreateAtomsFromThingsOptions,
-): ReturnType<typeof batchCreateAtomsFromThingsWithOptions>
+): Promise<BatchCreateAtomsFromThingsResult>
 export async function batchCreateAtomsFromThings(
   config: WriteConfig,
   data: PinThingMutationVariables[],
@@ -49,7 +47,7 @@ export async function batchCreateAtomsFromThings(
   return batchCreateAtomsFromThingsWithOptions(
     config,
     data,
-    normalizeOptions(options),
+    typeof options === 'bigint' ? { depositAmount: options } : options ?? {},
   )
 }
 
@@ -57,7 +55,7 @@ async function batchCreateAtomsFromThingsWithOptions(
   config: WriteConfig,
   data: PinThingMutationVariables[],
   options: BatchCreateAtomsFromThingsOptions,
-) {
+): Promise<BatchCreateAtomsFromThingsResult> {
   const { depositAmount, pinApiKey, pinApiUrl } = options
   const { address, publicClient } = config
 
@@ -72,9 +70,16 @@ async function batchCreateAtomsFromThingsWithOptions(
 
   // Pin each thing and collect their URIs
   const uris: string[] = []
-  for (const item of data) {
-    const uri = await pinThing(item, { pinApiKey, pinApiUrl })
-    uris.push(uri)
+  for (const [index, item] of data.entries()) {
+    try {
+      const uri = await pinThing(item, { pinApiKey, pinApiUrl })
+      uris.push(uri)
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error)
+      throw new Error(
+        `Failed to pin item ${index + 1} of ${data.length}: ${message}`,
+      )
+    }
   }
 
   // Prepare the batch args

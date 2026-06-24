@@ -5,7 +5,6 @@ export {
   createServerClient,
   executeGraphQLRequest,
   fetcher,
-  getPinConfig,
   isPinningOperation,
 } from './client'
 export * from './constants'

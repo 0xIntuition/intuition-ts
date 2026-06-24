@@ -1034,6 +1034,8 @@ query GetPositionStatistics($accountId: String!) {
 
 The public GraphQL API is read-oriented. Pinning mutations are available through the gated pinning endpoint and require an Intuition pinning API key. Blockchain state changes (creating atoms, triples, deposits, redemptions) are performed through direct smart contract transactions, not GraphQL mutations.
 
+The gated pinning endpoint is used for `pinThing`, `pinPerson`, `pinOrganization`, `uploadJsonToIpfs`, `uploadImage`, and `uploadImageFromUrl`. Configure a key once with `configureClient({ pinApiKey })` or pass an `apikey` header per pinning request.
+
 ### Pinning Metadata to IPFS
 
 #### Pin Thing
@@ -1173,6 +1175,8 @@ mutation PinOrganization($organization: PinOrganizationInput!) {
 
 Pin arbitrary JSON data to IPFS:
 
+Requires the gated pinning endpoint and an Intuition pinning API key.
+
 ```graphql
 mutation UploadJson($json: jsonb!) {
   uploadJsonToIpfs(json: $json) {
@@ -1203,6 +1207,8 @@ mutation UploadJson($json: jsonb!) {
 #### Upload Image (Base64)
 
 Upload an image from base64-encoded data:
+
+Requires the gated pinning endpoint and an Intuition pinning API key.
 
 ```graphql
 mutation UploadImage($image: UploadImageInput!) {
@@ -1243,6 +1249,8 @@ The `classification` field indicates if the image passed content moderation.
 #### Upload Image from URL
 
 Upload an image from a public URL:
+
+Requires the gated pinning endpoint and an Intuition pinning API key.
 
 ```graphql
 mutation UploadImageFromUrl($image: UploadImageFromUrlInput!) {

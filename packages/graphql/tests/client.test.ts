@@ -60,11 +60,49 @@ const pinOrganizationDocument = `
   }
 `
 
+const uploadJsonToIpfsDocument = `
+  mutation UploadJson($json: jsonb!) {
+    uploadJsonToIpfs(json: $json) {
+      hash
+    }
+  }
+`
+
+const uploadImageDocument = `
+  mutation UploadImage($image: UploadImageInput!) {
+    uploadImage(image: $image) {
+      url
+    }
+  }
+`
+
+const uploadImageFromUrlDocument = `
+  mutation UploadImageFromUrl($image: UploadImageFromUrlInput!) {
+    uploadImageFromUrl(image: $image) {
+      url
+    }
+  }
+`
+
 function mockFetch(data: unknown, status = 200) {
   const fetchMock = vi.fn(async () => {
     return new Response(JSON.stringify(data), {
       status,
       headers: { 'Content-Type': 'application/json' },
+    })
+  })
+
+  vi.stubGlobal('fetch', fetchMock)
+
+  return fetchMock
+}
+
+function mockTextFetch(body: string, status: number, statusText: string) {
+  const fetchMock = vi.fn(async () => {
+    return new Response(body, {
+      status,
+      statusText,
+      headers: { 'Content-Type': 'text/html' },
     })
   })
 
@@ -111,6 +149,9 @@ describe('GraphQL Client', () => {
     expect(isPinningOperation(anonymousPinThingDocument)).toBe(true)
     expect(isPinningOperation(pinPersonDocument)).toBe(true)
     expect(isPinningOperation(pinOrganizationDocument)).toBe(true)
+    expect(isPinningOperation(uploadJsonToIpfsDocument)).toBe(true)
+    expect(isPinningOperation(uploadImageDocument)).toBe(true)
+    expect(isPinningOperation(uploadImageFromUrlDocument)).toBe(true)
     expect(isPinningOperation(readQueryNamedPinThingDocument)).toBe(false)
   })
 
@@ -222,5 +263,34 @@ describe('GraphQL Client', () => {
 
     expect(url).toBe(API_URL_PROD)
     expect(headers.get('apikey')).toBeNull()
+  })
+
+  it('strips caller-provided apikey headers from read fetchers', async () => {
+    const fetchMock = mockFetch({ data: { accounts: [] } })
+
+    await useGetAccountsQuery.fetcher({ limit: 1 }, { apikey: 'manual-key' })()
+
+    const [url, init] = fetchMock.mock.calls[0]
+    const headers = new Headers(init?.headers as HeadersInit)
+
+    expect(url).toBe(API_URL_PROD)
+    expect(headers.get('apikey')).toBeNull()
+  })
+
+  it('reports pinning HTTP status when the pin API returns non-JSON errors', async () => {
+    configureClient({ pinApiKey: 'test-pin-key' })
+    mockTextFetch('<html>temporarily unavailable</html>', 503, 'Unavailable')
+
+    await expect(usePinThingMutation.fetcher(thingVariables)()).rejects.toThrow(
+      'Pinning request failed (503): Unavailable',
+    )
+  })
+
+  it('does not crash when GraphQL errors is an empty array', async () => {
+    mockFetch({ errors: [] })
+
+    await expect(
+      fetcher<{ accounts: [] }, undefined>(readQueryNamedPinThingDocument)(),
+    ).resolves.toBeUndefined()
   })
 })

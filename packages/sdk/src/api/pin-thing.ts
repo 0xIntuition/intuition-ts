@@ -1,12 +1,10 @@
 import {
   requestPinThing,
   type PinThingMutationVariables,
+  type PinThingRequestOptions,
 } from '@0xintuition/graphql'
 
-export type PinThingOptions = {
-  pinApiKey?: string
-  pinApiUrl?: string
-}
+export type PinThingOptions = PinThingRequestOptions
 
 /**
  * Pins a "thing" via the GraphQL API and returns the resulting URI.
