@@ -47,7 +47,7 @@ bun install @0xintuition/sdk viem
 
 **Peer Dependencies:** `viem ^2.0.0`
 
-**Optional Dependencies:**
+**Optional Credentials:**
 
 - Intuition pinning API key for `pinThing`, `createAtomFromThing`, and `batchCreateAtomsFromThings`
 - Pinata API JWT token for direct Pinata uploads (required for `createAtomFromIpfsUpload`)
@@ -1276,7 +1276,6 @@ type SdkConfig = {
   apiUrl?: string
   pinApiUrl?: string
   pinApiKey?: string // for Intuition-hosted pinning operations
-  pinataApiJWT?: string // for direct Pinata uploads only
 }
 
 // For read-only operations (from protocol)

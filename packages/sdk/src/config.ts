@@ -4,7 +4,6 @@ export type SdkConfig = {
   apiUrl?: string
   pinApiUrl?: string
   pinApiKey?: string
-  pinataApiJWT?: string
 }
 
 let sdkConfig: SdkConfig = {}
