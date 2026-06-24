@@ -26,7 +26,7 @@ export type BatchCreateAtomsFromThingsResult = {
  * Pins multiple "things", creates atoms in batch, and returns creation events.
  * @param config Contract address and viem clients.
  * @param data Array of PinThing mutation variables.
- * @param options Optional additional deposit amount per atom and pinning options.
+ * @param depositAmount Optional additional deposit amount per atom.
  * @returns Created atom URIs, transaction hash, and decoded event args.
  */
 export async function batchCreateAtomsFromThings(
@@ -34,6 +34,13 @@ export async function batchCreateAtomsFromThings(
   data: PinThingMutationVariables[],
   depositAmount?: bigint,
 ): Promise<BatchCreateAtomsFromThingsResult>
+/**
+ * Pins multiple "things", creates atoms in batch, and returns creation events.
+ * @param config Contract address and viem clients.
+ * @param data Array of PinThing mutation variables.
+ * @param options Optional additional deposit amount per atom and pinning options.
+ * @returns Created atom URIs, transaction hash, and decoded event args.
+ */
 export async function batchCreateAtomsFromThings(
   config: WriteConfig,
   data: PinThingMutationVariables[],

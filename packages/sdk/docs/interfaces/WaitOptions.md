@@ -6,7 +6,7 @@
 
 # Interface: WaitOptions
 
-Defined in: [packages/sdk/src/experimental/utils.ts:147](https://github.com/0xIntuition/intuition-ts/blob/205e10cc7cd6d3c4b27f907604b3b77c2d750145/packages/sdk/src/experimental/utils.ts#L147)
+Defined in: [packages/sdk/src/experimental/utils.ts:147](https://github.com/0xIntuition/intuition-ts/blob/bce09de32d88cea435aa3e46e7756b0a862fcd9b/packages/sdk/src/experimental/utils.ts#L147)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [packages/sdk/src/experimental/utils.ts:147](https://github.com/0xIn
 
 > `optional` **onProgress**: (`attempt`) => `void`
 
-Defined in: [packages/sdk/src/experimental/utils.ts:151](https://github.com/0xIntuition/intuition-ts/blob/205e10cc7cd6d3c4b27f907604b3b77c2d750145/packages/sdk/src/experimental/utils.ts#L151)
+Defined in: [packages/sdk/src/experimental/utils.ts:151](https://github.com/0xIntuition/intuition-ts/blob/bce09de32d88cea435aa3e46e7756b0a862fcd9b/packages/sdk/src/experimental/utils.ts#L151)
 
 #### Parameters
 
@@ -32,7 +32,7 @@ Defined in: [packages/sdk/src/experimental/utils.ts:151](https://github.com/0xIn
 
 > `optional` **pollingInterval**: `number`
 
-Defined in: [packages/sdk/src/experimental/utils.ts:148](https://github.com/0xIntuition/intuition-ts/blob/205e10cc7cd6d3c4b27f907604b3b77c2d750145/packages/sdk/src/experimental/utils.ts#L148)
+Defined in: [packages/sdk/src/experimental/utils.ts:148](https://github.com/0xIntuition/intuition-ts/blob/bce09de32d88cea435aa3e46e7756b0a862fcd9b/packages/sdk/src/experimental/utils.ts#L148)
 
 ---
 
@@ -40,7 +40,7 @@ Defined in: [packages/sdk/src/experimental/utils.ts:148](https://github.com/0xIn
 
 > `optional` **postTransactionDelay**: `number`
 
-Defined in: [packages/sdk/src/experimental/utils.ts:150](https://github.com/0xIntuition/intuition-ts/blob/205e10cc7cd6d3c4b27f907604b3b77c2d750145/packages/sdk/src/experimental/utils.ts#L150)
+Defined in: [packages/sdk/src/experimental/utils.ts:150](https://github.com/0xIntuition/intuition-ts/blob/bce09de32d88cea435aa3e46e7756b0a862fcd9b/packages/sdk/src/experimental/utils.ts#L150)
 
 ---
 
@@ -48,4 +48,4 @@ Defined in: [packages/sdk/src/experimental/utils.ts:150](https://github.com/0xIn
 
 > `optional` **timeout**: `number`
 
-Defined in: [packages/sdk/src/experimental/utils.ts:149](https://github.com/0xIntuition/intuition-ts/blob/205e10cc7cd6d3c4b27f907604b3b77c2d750145/packages/sdk/src/experimental/utils.ts#L149)
+Defined in: [packages/sdk/src/experimental/utils.ts:149](https://github.com/0xIntuition/intuition-ts/blob/bce09de32d88cea435aa3e46e7756b0a862fcd9b/packages/sdk/src/experimental/utils.ts#L149)

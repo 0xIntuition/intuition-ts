@@ -6,9 +6,9 @@
 
 # Function: pinThing()
 
-> **pinThing**(`variables`): `Promise`\<`string` \| `null`\>
+> **pinThing**(`variables`, `options?`): `Promise`\<`string`\>
 
-Defined in: [packages/sdk/src/api/pin-thing.ts:13](https://github.com/0xIntuition/intuition-ts/blob/205e10cc7cd6d3c4b27f907604b3b77c2d750145/packages/sdk/src/api/pin-thing.ts#L13)
+Defined in: [packages/sdk/src/api/pin-thing.ts:15](https://github.com/0xIntuition/intuition-ts/blob/bce09de32d88cea435aa3e46e7756b0a862fcd9b/packages/sdk/src/api/pin-thing.ts#L15)
 
 Pins a "thing" via the GraphQL API and returns the resulting URI.
 
@@ -20,8 +20,14 @@ Pins a "thing" via the GraphQL API and returns the resulting URI.
 
 PinThing mutation variables.
 
+### options?
+
+`PinThingRequestOptions`
+
+Optional pinning endpoint and API key overrides.
+
 ## Returns
 
-`Promise`\<`string` \| `null`\>
+`Promise`\<`string`\>
 
-IPFS URI string or null if pinning fails.
+IPFS URI string.

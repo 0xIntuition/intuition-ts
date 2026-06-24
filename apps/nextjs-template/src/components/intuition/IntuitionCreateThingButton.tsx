@@ -23,7 +23,7 @@ export const IntuitionCreateThingButton = ({
       const thing = {
         url: 'https://www.intuition.systems/',
         name: 'Intuition',
-        description: `'A decentralized trust protocol: ${new Date().toLocaleDateString()}`,
+        description: `A decentralized trust protocol: ${new Date().toLocaleDateString()}`,
         image: 'https://example.com/image.png',
       }
       const pinResponse = await fetch('/api/intuition/pin-thing', {

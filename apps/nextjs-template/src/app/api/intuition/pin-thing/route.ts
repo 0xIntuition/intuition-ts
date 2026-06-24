@@ -68,11 +68,10 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ uri })
   } catch (error) {
+    console.error('Failed to pin Thing data.', error)
+
     return NextResponse.json(
-      {
-        error:
-          error instanceof Error ? error.message : 'Failed to pin Thing data.',
-      },
+      { error: 'Failed to pin Thing data.' },
       { status: 502 },
     )
   }

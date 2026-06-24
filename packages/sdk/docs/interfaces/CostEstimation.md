@@ -6,7 +6,7 @@
 
 # Interface: CostEstimation
 
-Defined in: [packages/sdk/src/experimental/utils.ts:295](https://github.com/0xIntuition/intuition-ts/blob/205e10cc7cd6d3c4b27f907604b3b77c2d750145/packages/sdk/src/experimental/utils.ts#L295)
+Defined in: [packages/sdk/src/experimental/utils.ts:295](https://github.com/0xIntuition/intuition-ts/blob/bce09de32d88cea435aa3e46e7756b0a862fcd9b/packages/sdk/src/experimental/utils.ts#L295)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [packages/sdk/src/experimental/utils.ts:295](https://github.com/0xIn
 
 > **atomCost**: `bigint`
 
-Defined in: [packages/sdk/src/experimental/utils.ts:297](https://github.com/0xIntuition/intuition-ts/blob/205e10cc7cd6d3c4b27f907604b3b77c2d750145/packages/sdk/src/experimental/utils.ts#L297)
+Defined in: [packages/sdk/src/experimental/utils.ts:297](https://github.com/0xIntuition/intuition-ts/blob/bce09de32d88cea435aa3e46e7756b0a862fcd9b/packages/sdk/src/experimental/utils.ts#L297)
 
 ---
 
@@ -22,7 +22,7 @@ Defined in: [packages/sdk/src/experimental/utils.ts:297](https://github.com/0xIn
 
 > **atomCount**: `number`
 
-Defined in: [packages/sdk/src/experimental/utils.ts:300](https://github.com/0xIntuition/intuition-ts/blob/205e10cc7cd6d3c4b27f907604b3b77c2d750145/packages/sdk/src/experimental/utils.ts#L300)
+Defined in: [packages/sdk/src/experimental/utils.ts:300](https://github.com/0xIntuition/intuition-ts/blob/bce09de32d88cea435aa3e46e7756b0a862fcd9b/packages/sdk/src/experimental/utils.ts#L300)
 
 ---
 
@@ -30,7 +30,7 @@ Defined in: [packages/sdk/src/experimental/utils.ts:300](https://github.com/0xIn
 
 > **depositCost**: `bigint`
 
-Defined in: [packages/sdk/src/experimental/utils.ts:299](https://github.com/0xIntuition/intuition-ts/blob/205e10cc7cd6d3c4b27f907604b3b77c2d750145/packages/sdk/src/experimental/utils.ts#L299)
+Defined in: [packages/sdk/src/experimental/utils.ts:299](https://github.com/0xIntuition/intuition-ts/blob/bce09de32d88cea435aa3e46e7756b0a862fcd9b/packages/sdk/src/experimental/utils.ts#L299)
 
 ---
 
@@ -38,7 +38,7 @@ Defined in: [packages/sdk/src/experimental/utils.ts:299](https://github.com/0xIn
 
 > **depositCount**: `number`
 
-Defined in: [packages/sdk/src/experimental/utils.ts:302](https://github.com/0xIntuition/intuition-ts/blob/205e10cc7cd6d3c4b27f907604b3b77c2d750145/packages/sdk/src/experimental/utils.ts#L302)
+Defined in: [packages/sdk/src/experimental/utils.ts:302](https://github.com/0xIntuition/intuition-ts/blob/bce09de32d88cea435aa3e46e7756b0a862fcd9b/packages/sdk/src/experimental/utils.ts#L302)
 
 ---
 
@@ -46,7 +46,7 @@ Defined in: [packages/sdk/src/experimental/utils.ts:302](https://github.com/0xIn
 
 > **hasSufficientBalance**: `boolean`
 
-Defined in: [packages/sdk/src/experimental/utils.ts:304](https://github.com/0xIntuition/intuition-ts/blob/205e10cc7cd6d3c4b27f907604b3b77c2d750145/packages/sdk/src/experimental/utils.ts#L304)
+Defined in: [packages/sdk/src/experimental/utils.ts:304](https://github.com/0xIntuition/intuition-ts/blob/bce09de32d88cea435aa3e46e7756b0a862fcd9b/packages/sdk/src/experimental/utils.ts#L304)
 
 ---
 
@@ -54,7 +54,7 @@ Defined in: [packages/sdk/src/experimental/utils.ts:304](https://github.com/0xIn
 
 > **totalCost**: `bigint`
 
-Defined in: [packages/sdk/src/experimental/utils.ts:296](https://github.com/0xIntuition/intuition-ts/blob/205e10cc7cd6d3c4b27f907604b3b77c2d750145/packages/sdk/src/experimental/utils.ts#L296)
+Defined in: [packages/sdk/src/experimental/utils.ts:296](https://github.com/0xIntuition/intuition-ts/blob/bce09de32d88cea435aa3e46e7756b0a862fcd9b/packages/sdk/src/experimental/utils.ts#L296)
 
 ---
 
@@ -62,7 +62,7 @@ Defined in: [packages/sdk/src/experimental/utils.ts:296](https://github.com/0xIn
 
 > **tripleCost**: `bigint`
 
-Defined in: [packages/sdk/src/experimental/utils.ts:298](https://github.com/0xIntuition/intuition-ts/blob/205e10cc7cd6d3c4b27f907604b3b77c2d750145/packages/sdk/src/experimental/utils.ts#L298)
+Defined in: [packages/sdk/src/experimental/utils.ts:298](https://github.com/0xIntuition/intuition-ts/blob/bce09de32d88cea435aa3e46e7756b0a862fcd9b/packages/sdk/src/experimental/utils.ts#L298)
 
 ---
 
@@ -70,7 +70,7 @@ Defined in: [packages/sdk/src/experimental/utils.ts:298](https://github.com/0xIn
 
 > **tripleCount**: `number`
 
-Defined in: [packages/sdk/src/experimental/utils.ts:301](https://github.com/0xIntuition/intuition-ts/blob/205e10cc7cd6d3c4b27f907604b3b77c2d750145/packages/sdk/src/experimental/utils.ts#L301)
+Defined in: [packages/sdk/src/experimental/utils.ts:301](https://github.com/0xIntuition/intuition-ts/blob/bce09de32d88cea435aa3e46e7756b0a862fcd9b/packages/sdk/src/experimental/utils.ts#L301)
 
 ---
 
@@ -78,4 +78,4 @@ Defined in: [packages/sdk/src/experimental/utils.ts:301](https://github.com/0xIn
 
 > **userBalance**: `bigint`
 
-Defined in: [packages/sdk/src/experimental/utils.ts:303](https://github.com/0xIntuition/intuition-ts/blob/205e10cc7cd6d3c4b27f907604b3b77c2d750145/packages/sdk/src/experimental/utils.ts#L303)
+Defined in: [packages/sdk/src/experimental/utils.ts:303](https://github.com/0xIntuition/intuition-ts/blob/bce09de32d88cea435aa3e46e7756b0a862fcd9b/packages/sdk/src/experimental/utils.ts#L303)

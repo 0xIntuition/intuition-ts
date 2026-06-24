@@ -286,6 +286,15 @@ describe('GraphQL Client', () => {
     )
   })
 
+  it('uses a fallback message when GraphQL errors omit message fields', async () => {
+    configureClient({ pinApiKey: 'test-pin-key' })
+    mockFetch({ errors: [{}] })
+
+    await expect(usePinThingMutation.fetcher(thingVariables)()).rejects.toThrow(
+      'Unknown GraphQL error',
+    )
+  })
+
   it('does not crash when GraphQL errors is an empty array', async () => {
     mockFetch({ errors: [] })
 
