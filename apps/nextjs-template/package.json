@@ -24,7 +24,8 @@
     "react-dom": "^18",
     "siwe": "^2.3.2",
     "viem": "^2.22.0",
-    "wagmi": "^2.5.20"
+    "wagmi": "^2.5.20",
+    "zod": "^4.1.13"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.8.0",

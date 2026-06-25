@@ -8,7 +8,7 @@
 
 > **uploadJsonToPinata**(`apiToken`, `jsonData`): `Promise`\<[`PinataPinResponse`](../type-aliases/PinataPinResponse.md)\>
 
-Defined in: [packages/sdk/src/external/upload-json-to-pinata.ts:21](https://github.com/0xIntuition/intuition-ts/blob/205e10cc7cd6d3c4b27f907604b3b77c2d750145/packages/sdk/src/external/upload-json-to-pinata.ts#L21)
+Defined in: [packages/sdk/src/external/upload-json-to-pinata.ts:21](https://github.com/0xIntuition/intuition-ts/blob/bce09de32d88cea435aa3e46e7756b0a862fcd9b/packages/sdk/src/external/upload-json-to-pinata.ts#L21)
 
 Uploads a JSON payload to Pinata's pinJSONToIPFS endpoint.
 

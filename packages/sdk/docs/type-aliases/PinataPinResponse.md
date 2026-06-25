@@ -8,7 +8,7 @@
 
 > **PinataPinResponse** = `object`
 
-Defined in: [packages/sdk/src/external/upload-json-to-pinata.ts:1](https://github.com/0xIntuition/intuition-ts/blob/205e10cc7cd6d3c4b27f907604b3b77c2d750145/packages/sdk/src/external/upload-json-to-pinata.ts#L1)
+Defined in: [packages/sdk/src/external/upload-json-to-pinata.ts:1](https://github.com/0xIntuition/intuition-ts/blob/bce09de32d88cea435aa3e46e7756b0a862fcd9b/packages/sdk/src/external/upload-json-to-pinata.ts#L1)
 
 ## Properties
 
@@ -16,7 +16,7 @@ Defined in: [packages/sdk/src/external/upload-json-to-pinata.ts:1](https://githu
 
 > **GroupId**: `string` \| `null`
 
-Defined in: [packages/sdk/src/external/upload-json-to-pinata.ts:9](https://github.com/0xIntuition/intuition-ts/blob/205e10cc7cd6d3c4b27f907604b3b77c2d750145/packages/sdk/src/external/upload-json-to-pinata.ts#L9)
+Defined in: [packages/sdk/src/external/upload-json-to-pinata.ts:9](https://github.com/0xIntuition/intuition-ts/blob/bce09de32d88cea435aa3e46e7756b0a862fcd9b/packages/sdk/src/external/upload-json-to-pinata.ts#L9)
 
 ---
 
@@ -24,7 +24,7 @@ Defined in: [packages/sdk/src/external/upload-json-to-pinata.ts:9](https://githu
 
 > **ID**: `string`
 
-Defined in: [packages/sdk/src/external/upload-json-to-pinata.ts:5](https://github.com/0xIntuition/intuition-ts/blob/205e10cc7cd6d3c4b27f907604b3b77c2d750145/packages/sdk/src/external/upload-json-to-pinata.ts#L5)
+Defined in: [packages/sdk/src/external/upload-json-to-pinata.ts:5](https://github.com/0xIntuition/intuition-ts/blob/bce09de32d88cea435aa3e46e7756b0a862fcd9b/packages/sdk/src/external/upload-json-to-pinata.ts#L5)
 
 ---
 
@@ -32,7 +32,7 @@ Defined in: [packages/sdk/src/external/upload-json-to-pinata.ts:5](https://githu
 
 > **IpfsHash**: `string`
 
-Defined in: [packages/sdk/src/external/upload-json-to-pinata.ts:2](https://github.com/0xIntuition/intuition-ts/blob/205e10cc7cd6d3c4b27f907604b3b77c2d750145/packages/sdk/src/external/upload-json-to-pinata.ts#L2)
+Defined in: [packages/sdk/src/external/upload-json-to-pinata.ts:2](https://github.com/0xIntuition/intuition-ts/blob/bce09de32d88cea435aa3e46e7756b0a862fcd9b/packages/sdk/src/external/upload-json-to-pinata.ts#L2)
 
 ---
 
@@ -40,7 +40,7 @@ Defined in: [packages/sdk/src/external/upload-json-to-pinata.ts:2](https://githu
 
 > **isDuplicate**: `boolean`
 
-Defined in: [packages/sdk/src/external/upload-json-to-pinata.ts:11](https://github.com/0xIntuition/intuition-ts/blob/205e10cc7cd6d3c4b27f907604b3b77c2d750145/packages/sdk/src/external/upload-json-to-pinata.ts#L11)
+Defined in: [packages/sdk/src/external/upload-json-to-pinata.ts:11](https://github.com/0xIntuition/intuition-ts/blob/bce09de32d88cea435aa3e46e7756b0a862fcd9b/packages/sdk/src/external/upload-json-to-pinata.ts#L11)
 
 ---
 
@@ -48,7 +48,7 @@ Defined in: [packages/sdk/src/external/upload-json-to-pinata.ts:11](https://gith
 
 > **Keyvalues**: `Record`\<`string`, `string`\> \| `null`
 
-Defined in: [packages/sdk/src/external/upload-json-to-pinata.ts:10](https://github.com/0xIntuition/intuition-ts/blob/205e10cc7cd6d3c4b27f907604b3b77c2d750145/packages/sdk/src/external/upload-json-to-pinata.ts#L10)
+Defined in: [packages/sdk/src/external/upload-json-to-pinata.ts:10](https://github.com/0xIntuition/intuition-ts/blob/bce09de32d88cea435aa3e46e7756b0a862fcd9b/packages/sdk/src/external/upload-json-to-pinata.ts#L10)
 
 ---
 
@@ -56,7 +56,7 @@ Defined in: [packages/sdk/src/external/upload-json-to-pinata.ts:10](https://gith
 
 > **MimeType**: `string`
 
-Defined in: [packages/sdk/src/external/upload-json-to-pinata.ts:8](https://github.com/0xIntuition/intuition-ts/blob/205e10cc7cd6d3c4b27f907604b3b77c2d750145/packages/sdk/src/external/upload-json-to-pinata.ts#L8)
+Defined in: [packages/sdk/src/external/upload-json-to-pinata.ts:8](https://github.com/0xIntuition/intuition-ts/blob/bce09de32d88cea435aa3e46e7756b0a862fcd9b/packages/sdk/src/external/upload-json-to-pinata.ts#L8)
 
 ---
 
@@ -64,7 +64,7 @@ Defined in: [packages/sdk/src/external/upload-json-to-pinata.ts:8](https://githu
 
 > **Name**: `string` \| `null`
 
-Defined in: [packages/sdk/src/external/upload-json-to-pinata.ts:6](https://github.com/0xIntuition/intuition-ts/blob/205e10cc7cd6d3c4b27f907604b3b77c2d750145/packages/sdk/src/external/upload-json-to-pinata.ts#L6)
+Defined in: [packages/sdk/src/external/upload-json-to-pinata.ts:6](https://github.com/0xIntuition/intuition-ts/blob/bce09de32d88cea435aa3e46e7756b0a862fcd9b/packages/sdk/src/external/upload-json-to-pinata.ts#L6)
 
 ---
 
@@ -72,7 +72,7 @@ Defined in: [packages/sdk/src/external/upload-json-to-pinata.ts:6](https://githu
 
 > **NumberOfFiles**: `number`
 
-Defined in: [packages/sdk/src/external/upload-json-to-pinata.ts:7](https://github.com/0xIntuition/intuition-ts/blob/205e10cc7cd6d3c4b27f907604b3b77c2d750145/packages/sdk/src/external/upload-json-to-pinata.ts#L7)
+Defined in: [packages/sdk/src/external/upload-json-to-pinata.ts:7](https://github.com/0xIntuition/intuition-ts/blob/bce09de32d88cea435aa3e46e7756b0a862fcd9b/packages/sdk/src/external/upload-json-to-pinata.ts#L7)
 
 ---
 
@@ -80,7 +80,7 @@ Defined in: [packages/sdk/src/external/upload-json-to-pinata.ts:7](https://githu
 
 > **PinSize**: `number`
 
-Defined in: [packages/sdk/src/external/upload-json-to-pinata.ts:3](https://github.com/0xIntuition/intuition-ts/blob/205e10cc7cd6d3c4b27f907604b3b77c2d750145/packages/sdk/src/external/upload-json-to-pinata.ts#L3)
+Defined in: [packages/sdk/src/external/upload-json-to-pinata.ts:3](https://github.com/0xIntuition/intuition-ts/blob/bce09de32d88cea435aa3e46e7756b0a862fcd9b/packages/sdk/src/external/upload-json-to-pinata.ts#L3)
 
 ---
 
@@ -88,4 +88,4 @@ Defined in: [packages/sdk/src/external/upload-json-to-pinata.ts:3](https://githu
 
 > **Timestamp**: `string`
 
-Defined in: [packages/sdk/src/external/upload-json-to-pinata.ts:4](https://github.com/0xIntuition/intuition-ts/blob/205e10cc7cd6d3c4b27f907604b3b77c2d750145/packages/sdk/src/external/upload-json-to-pinata.ts#L4)
+Defined in: [packages/sdk/src/external/upload-json-to-pinata.ts:4](https://github.com/0xIntuition/intuition-ts/blob/bce09de32d88cea435aa3e46e7756b0a862fcd9b/packages/sdk/src/external/upload-json-to-pinata.ts#L4)

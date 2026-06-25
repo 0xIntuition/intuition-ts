@@ -15,8 +15,14 @@
 ## Type Aliases
 
 - [AtomWithId](type-aliases/AtomWithId.md)
+- [BatchCreateAtomsFromThingsOptions](type-aliases/BatchCreateAtomsFromThingsOptions.md)
+- [BatchCreateAtomsFromThingsResult](type-aliases/BatchCreateAtomsFromThingsResult.md)
 - [CreateAtomConfigWithIpfs](type-aliases/CreateAtomConfigWithIpfs.md)
+- [CreateAtomFromThingOptions](type-aliases/CreateAtomFromThingOptions.md)
+- [CreateAtomFromThingResult](type-aliases/CreateAtomFromThingResult.md)
 - [PinataPinResponse](type-aliases/PinataPinResponse.md)
+- [PinThingOptions](type-aliases/PinThingOptions.md)
+- [SdkConfig](type-aliases/SdkConfig.md)
 - [SearchResult](type-aliases/SearchResult.md)
 - [TripleWithIds](type-aliases/TripleWithIds.md)
 
@@ -32,6 +38,7 @@
 - [calculateAtomId](functions/calculateAtomId.md)
 - [calculateCounterTripleId](functions/calculateCounterTripleId.md)
 - [calculateTripleId](functions/calculateTripleId.md)
+- [configureSdk](functions/configureSdk.md)
 - [createAtomFromEthereumAccount](functions/createAtomFromEthereumAccount.md)
 - [createAtomFromIpfsUpload](functions/createAtomFromIpfsUpload.md)
 - [createAtomFromIpfsUri](functions/createAtomFromIpfsUri.md)

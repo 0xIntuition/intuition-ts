@@ -8,7 +8,7 @@
 
 > **globalSearch**(`query`, `options`): `Promise`\<`GlobalSearchQuery` \| `null`\>
 
-Defined in: [packages/sdk/src/api/search.ts:21](https://github.com/0xIntuition/intuition-ts/blob/205e10cc7cd6d3c4b27f907604b3b77c2d750145/packages/sdk/src/api/search.ts#L21)
+Defined in: [packages/sdk/src/api/search.ts:21](https://github.com/0xIntuition/intuition-ts/blob/bce09de32d88cea435aa3e46e7756b0a862fcd9b/packages/sdk/src/api/search.ts#L21)
 
 Performs a global search across atoms, accounts, triples, and collections.
 

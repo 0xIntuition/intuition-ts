@@ -9,5 +9,5 @@ export default defineConfig({
   clean: true,
   external: ['react', 'graphql'],
   treeshake: true,
-  noExternal: ['./src/generated/**'],
+  noExternal: ['graphql-request', './src/generated/**'],
 })

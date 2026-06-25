@@ -136,7 +136,7 @@ For creating multiple Atoms at once, the batch functionality is recommended.
 2. ### **Start the batch creation:**
 
    ```sh-session
-   intu atom batch start [--name <FILENAME>.csv] [--count <NUMBER>] [--list <LIST_IDS>] [--network <NETWORK>]
+   intu atom batch start [--name <FILENAME>.csv] [--count <NUMBER>] [--list <LIST_IDS>] [--network <NETWORK>] [--pin-api-key <KEY>] [--pin-api-url <URL>]
    ```
 
    **Flags:**
@@ -145,6 +145,8 @@ For creating multiple Atoms at once, the batch functionality is recommended.
    - `-c, --count <value>`: Amount to batch together (default: 50)
    - `-l, --list <value>`: Add atoms to a list (comma-separated for multiple)
    - `--network <value>`: Network to use (optional)
+   - `--pin-api-key <value>`: Intuition pinning API key for Thing batches (or set `INTUITION_PIN_API_KEY`)
+   - `--pin-api-url <value>`: Override Intuition pinning API URL (or set `INTUITION_PIN_API_URL`)
 
    Once your CSV file is ready, you can start the batch creation process.
 

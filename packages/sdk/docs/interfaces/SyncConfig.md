@@ -6,7 +6,7 @@
 
 # Interface: SyncConfig
 
-Defined in: [packages/sdk/src/experimental/utils.ts:286](https://github.com/0xIntuition/intuition-ts/blob/205e10cc7cd6d3c4b27f907604b3b77c2d750145/packages/sdk/src/experimental/utils.ts#L286)
+Defined in: [packages/sdk/src/experimental/utils.ts:286](https://github.com/0xIntuition/intuition-ts/blob/bce09de32d88cea435aa3e46e7756b0a862fcd9b/packages/sdk/src/experimental/utils.ts#L286)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [packages/sdk/src/experimental/utils.ts:286](https://github.com/0xIn
 
 > **address**: `` `0x${string}` ``
 
-Defined in: [packages/sdk/src/experimental/utils.ts:287](https://github.com/0xIntuition/intuition-ts/blob/205e10cc7cd6d3c4b27f907604b3b77c2d750145/packages/sdk/src/experimental/utils.ts#L287)
+Defined in: [packages/sdk/src/experimental/utils.ts:287](https://github.com/0xIntuition/intuition-ts/blob/bce09de32d88cea435aa3e46e7756b0a862fcd9b/packages/sdk/src/experimental/utils.ts#L287)
 
 ---
 
@@ -22,7 +22,7 @@ Defined in: [packages/sdk/src/experimental/utils.ts:287](https://github.com/0xIn
 
 > `optional` **batchSize**: `number`
 
-Defined in: [packages/sdk/src/experimental/utils.ts:291](https://github.com/0xIntuition/intuition-ts/blob/205e10cc7cd6d3c4b27f907604b3b77c2d750145/packages/sdk/src/experimental/utils.ts#L291)
+Defined in: [packages/sdk/src/experimental/utils.ts:291](https://github.com/0xIntuition/intuition-ts/blob/bce09de32d88cea435aa3e46e7756b0a862fcd9b/packages/sdk/src/experimental/utils.ts#L291)
 
 ---
 
@@ -30,7 +30,7 @@ Defined in: [packages/sdk/src/experimental/utils.ts:291](https://github.com/0xIn
 
 > `optional` **dryRun**: `boolean`
 
-Defined in: [packages/sdk/src/experimental/utils.ts:292](https://github.com/0xIntuition/intuition-ts/blob/205e10cc7cd6d3c4b27f907604b3b77c2d750145/packages/sdk/src/experimental/utils.ts#L292)
+Defined in: [packages/sdk/src/experimental/utils.ts:292](https://github.com/0xIntuition/intuition-ts/blob/bce09de32d88cea435aa3e46e7756b0a862fcd9b/packages/sdk/src/experimental/utils.ts#L292)
 
 ---
 
@@ -38,7 +38,7 @@ Defined in: [packages/sdk/src/experimental/utils.ts:292](https://github.com/0xIn
 
 > `optional` **logger**: (`message`) => `void`
 
-Defined in: [packages/sdk/src/experimental/utils.ts:290](https://github.com/0xIntuition/intuition-ts/blob/205e10cc7cd6d3c4b27f907604b3b77c2d750145/packages/sdk/src/experimental/utils.ts#L290)
+Defined in: [packages/sdk/src/experimental/utils.ts:290](https://github.com/0xIntuition/intuition-ts/blob/bce09de32d88cea435aa3e46e7756b0a862fcd9b/packages/sdk/src/experimental/utils.ts#L290)
 
 #### Parameters
 
@@ -56,7 +56,7 @@ Defined in: [packages/sdk/src/experimental/utils.ts:290](https://github.com/0xIn
 
 > **publicClient**: `object`
 
-Defined in: [packages/sdk/src/experimental/utils.ts:288](https://github.com/0xIntuition/intuition-ts/blob/205e10cc7cd6d3c4b27f907604b3b77c2d750145/packages/sdk/src/experimental/utils.ts#L288)
+Defined in: [packages/sdk/src/experimental/utils.ts:288](https://github.com/0xIntuition/intuition-ts/blob/bce09de32d88cea435aa3e46e7756b0a862fcd9b/packages/sdk/src/experimental/utils.ts#L288)
 
 ---
 
@@ -64,4 +64,4 @@ Defined in: [packages/sdk/src/experimental/utils.ts:288](https://github.com/0xIn
 
 > **walletClient**: `object`
 
-Defined in: [packages/sdk/src/experimental/utils.ts:289](https://github.com/0xIntuition/intuition-ts/blob/205e10cc7cd6d3c4b27f907604b3b77c2d750145/packages/sdk/src/experimental/utils.ts#L289)
+Defined in: [packages/sdk/src/experimental/utils.ts:289](https://github.com/0xIntuition/intuition-ts/blob/bce09de32d88cea435aa3e46e7756b0a862fcd9b/packages/sdk/src/experimental/utils.ts#L289)

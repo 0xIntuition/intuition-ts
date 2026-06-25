@@ -6,7 +6,7 @@
 
 # Interface: GlobalSearchOptions
 
-Defined in: [packages/sdk/src/api/search.ts:8](https://github.com/0xIntuition/intuition-ts/blob/205e10cc7cd6d3c4b27f907604b3b77c2d750145/packages/sdk/src/api/search.ts#L8)
+Defined in: [packages/sdk/src/api/search.ts:8](https://github.com/0xIntuition/intuition-ts/blob/bce09de32d88cea435aa3e46e7756b0a862fcd9b/packages/sdk/src/api/search.ts#L8)
 
 ## Properties
 
@@ -14,7 +14,7 @@ Defined in: [packages/sdk/src/api/search.ts:8](https://github.com/0xIntuition/in
 
 > `optional` **accountsLimit**: `number`
 
-Defined in: [packages/sdk/src/api/search.ts:10](https://github.com/0xIntuition/intuition-ts/blob/205e10cc7cd6d3c4b27f907604b3b77c2d750145/packages/sdk/src/api/search.ts#L10)
+Defined in: [packages/sdk/src/api/search.ts:10](https://github.com/0xIntuition/intuition-ts/blob/bce09de32d88cea435aa3e46e7756b0a862fcd9b/packages/sdk/src/api/search.ts#L10)
 
 ---
 
@@ -22,7 +22,7 @@ Defined in: [packages/sdk/src/api/search.ts:10](https://github.com/0xIntuition/i
 
 > `optional` **atomsLimit**: `number`
 
-Defined in: [packages/sdk/src/api/search.ts:9](https://github.com/0xIntuition/intuition-ts/blob/205e10cc7cd6d3c4b27f907604b3b77c2d750145/packages/sdk/src/api/search.ts#L9)
+Defined in: [packages/sdk/src/api/search.ts:9](https://github.com/0xIntuition/intuition-ts/blob/bce09de32d88cea435aa3e46e7756b0a862fcd9b/packages/sdk/src/api/search.ts#L9)
 
 ---
 
@@ -30,7 +30,7 @@ Defined in: [packages/sdk/src/api/search.ts:9](https://github.com/0xIntuition/in
 
 > `optional` **collectionsLimit**: `number`
 
-Defined in: [packages/sdk/src/api/search.ts:12](https://github.com/0xIntuition/intuition-ts/blob/205e10cc7cd6d3c4b27f907604b3b77c2d750145/packages/sdk/src/api/search.ts#L12)
+Defined in: [packages/sdk/src/api/search.ts:12](https://github.com/0xIntuition/intuition-ts/blob/bce09de32d88cea435aa3e46e7756b0a862fcd9b/packages/sdk/src/api/search.ts#L12)
 
 ---
 
@@ -38,4 +38,4 @@ Defined in: [packages/sdk/src/api/search.ts:12](https://github.com/0xIntuition/i
 
 > `optional` **triplesLimit**: `number`
 
-Defined in: [packages/sdk/src/api/search.ts:11](https://github.com/0xIntuition/intuition-ts/blob/205e10cc7cd6d3c4b27f907604b3b77c2d750145/packages/sdk/src/api/search.ts#L11)
+Defined in: [packages/sdk/src/api/search.ts:11](https://github.com/0xIntuition/intuition-ts/blob/bce09de32d88cea435aa3e46e7756b0a862fcd9b/packages/sdk/src/api/search.ts#L11)

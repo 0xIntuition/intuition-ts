@@ -29,6 +29,7 @@
     "format": "prettier --check \"src/**/*.{ts,tsx,js,jsx,json,md}\"",
     "format:fix": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json,md}\"",
     "generate": "node ./scripts/generate.mjs",
+    "smoke:pinning-lifecycle": "pnpm --filter @0xintuition/graphql build && pnpm build && pnpm with-env node scripts/pinning-lifecycle-smoke.mjs",
     "test": "pnpm with-env vitest run",
     "with-env": "dotenv -e ../../.env --",
     "docs": "typedoc --options typedoc.json"
@@ -43,7 +44,7 @@
     "registry": "https://registry.npmjs.org/"
   },
   "dependencies": {
-    "@0xintuition/graphql": "^2.0.2",
+    "@0xintuition/graphql": "workspace:^",
     "@0xintuition/protocol": "^2.0.2"
   },
   "peerDependencies": {

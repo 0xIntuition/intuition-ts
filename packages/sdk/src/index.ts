@@ -1,5 +1,6 @@
 export * from '@0xintuition/protocol'
 export * from './api'
+export * from './config'
 export * from './core'
 export * from './experimental/utils'
 export * from './external'

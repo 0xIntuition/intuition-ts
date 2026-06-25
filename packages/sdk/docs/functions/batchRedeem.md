@@ -8,7 +8,7 @@
 
 > **batchRedeem**(`config`, `data`): `Promise`\<\{ `state`: `any`[]; `transactionHash`: `` `0x${string}` ``; \}\>
 
-Defined in: [packages/sdk/src/core/batch-redeem.ts:14](https://github.com/0xIntuition/intuition-ts/blob/205e10cc7cd6d3c4b27f907604b3b77c2d750145/packages/sdk/src/core/batch-redeem.ts#L14)
+Defined in: [packages/sdk/src/core/batch-redeem.ts:14](https://github.com/0xIntuition/intuition-ts/blob/bce09de32d88cea435aa3e46e7756b0a862fcd9b/packages/sdk/src/core/batch-redeem.ts#L14)
 
 Redeems shares for multiple terms and returns parsed Redeemed events.
 

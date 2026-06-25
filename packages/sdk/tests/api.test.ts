@@ -1,6 +1,11 @@
-import { describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 
-import { getAtomDetails, getTripleDetails, pinThing } from '../src'
+import {
+  configureSdk,
+  getAtomDetails,
+  getTripleDetails,
+  pinThing,
+} from '../src'
 
 describe('Reads', () => {
   it('atom', async () => {
@@ -19,7 +24,32 @@ describe('Reads', () => {
 })
 
 describe('Writes', () => {
+  afterEach(() => {
+    configureSdk({ pinApiKey: undefined, pinApiUrl: undefined })
+    vi.unstubAllGlobals()
+  })
+
   it('should pin thing', async () => {
+    configureSdk({ pinApiKey: 'test-pin-key' })
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => {
+        return new Response(
+          JSON.stringify({
+            data: {
+              pinThing: {
+                uri: 'ipfs://bafkreib7534cszxn2c6qwoviv43sqh244yfrxomjbealjdwntd6a7atq6u',
+              },
+            },
+          }),
+          {
+            status: 200,
+            headers: { 'Content-Type': 'application/json' },
+          },
+        )
+      }),
+    )
+
     const data = await pinThing({
       url: 'https://www.intuition.systems/',
       name: 'Intuition',
