@@ -197,12 +197,14 @@ const testnetClient = createPublicClient({
 For Intuition-hosted pinning functions, configure a pinning API key on the server:
 
 ```typescript
-import { configureSdk } from '@0xintuition/sdk'
+import { configureSdk, PIN_API_URL } from '@0xintuition/sdk'
 
 configureSdk({
   pinApiKey: process.env.INTUITION_PIN_API_KEY,
 })
 ```
+
+`PIN_API_URL` is exported for server code that needs the public gated pinning endpoint constant or an explicit `pinApiUrl` override. You usually only need to configure `pinApiKey`; the SDK defaults to `PIN_API_URL`.
 
 You can also pass the key per call:
 
@@ -760,7 +762,9 @@ const triplesWithIds = await findTripleIds(walletClient.account.address, [
 
 ##### `pinThing`
 
-Pin a Thing object to IPFS via the gated Intuition pinning API. Requires `configureSdk({ pinApiKey })` or a per-call `pinApiKey`.
+Pin a Thing object to IPFS via the public gated Intuition pinning API. Requires `configureSdk({ pinApiKey })` or a per-call `pinApiKey`.
+
+SDK helpers accept the Thing fields directly (`name`, `description`, `image`, `url`). Raw GraphQL mutation requests use the GraphQL `thing` input wrapper.
 
 ```typescript
 import { pinThing, type PinThingMutationVariables } from '@0xintuition/sdk'

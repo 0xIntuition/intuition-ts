@@ -37,9 +37,9 @@ No authentication required:
 - **Mainnet**: `https://mainnet.intuition.sh/v1/graphql`
 - **Testnet**: `https://testnet.intuition.sh/v1/graphql`
 
-### Gated Pinning Endpoint
+### Public Gated Pinning Endpoint
 
-Pinning mutations use a separate gated endpoint:
+Pinning mutations use a separate public gated endpoint:
 
 - **Pinning**: `https://pin.intuition.systems/v1/graphql`
 
@@ -1032,9 +1032,9 @@ query GetPositionStatistics($accountId: String!) {
 
 ## Mutations
 
-The public GraphQL API is read-oriented. Pinning mutations are available through the gated pinning endpoint and require an Intuition pinning API key. Blockchain state changes (creating atoms, triples, deposits, redemptions) are performed through direct smart contract transactions, not GraphQL mutations.
+The public GraphQL API is read-oriented. Pinning mutations are available through the public gated pinning endpoint and require an Intuition pinning API key. Blockchain state changes (creating atoms, triples, deposits, redemptions) are performed through direct smart contract transactions, not GraphQL mutations.
 
-The gated pinning endpoint is used for `pinThing`, `pinPerson`, `pinOrganization`, `uploadJsonToIpfs`, `uploadImage`, and `uploadImageFromUrl`. Configure a key once with `configureClient({ pinApiKey })` or pass an `apikey` header per pinning request.
+The public gated pinning endpoint is used for `pinThing`, `pinPerson`, `pinOrganization`, `uploadJsonToIpfs`, `uploadImage`, and `uploadImageFromUrl`. Configure a key once with `configureClient({ pinApiKey })` or pass an `apikey` header per pinning request.
 
 ### Pinning Metadata to IPFS
 
@@ -1179,7 +1179,7 @@ mutation PinOrganization($organization: PinOrganizationInput!) {
 
 Pin arbitrary JSON data to IPFS:
 
-Requires the gated pinning endpoint and an Intuition pinning API key.
+Requires the public gated pinning endpoint and an Intuition pinning API key.
 
 ```graphql
 mutation UploadJson($json: jsonb!) {
@@ -1212,7 +1212,7 @@ mutation UploadJson($json: jsonb!) {
 
 Upload an image from base64-encoded data:
 
-Requires the gated pinning endpoint and an Intuition pinning API key.
+Requires the public gated pinning endpoint and an Intuition pinning API key.
 
 ```graphql
 mutation UploadImage($image: UploadImageInput!) {
@@ -1254,7 +1254,7 @@ The `classification` field indicates if the image passed content moderation.
 
 Upload an image from a public URL:
 
-Requires the gated pinning endpoint and an Intuition pinning API key.
+Requires the public gated pinning endpoint and an Intuition pinning API key.
 
 ```graphql
 mutation UploadImageFromUrl($image: UploadImageFromUrlInput!) {
@@ -1279,7 +1279,7 @@ mutation UploadImageFromUrl($image: UploadImageFromUrlInput!) {
 
 Typical workflow for creating an atom with pinned metadata:
 
-1. **Pin metadata** using `pinThing`, `pinPerson`, or `pinOrganization` on the gated pinning endpoint
+1. **Pin metadata** using `pinThing`, `pinPerson`, or `pinOrganization` on the public gated pinning endpoint
 2. **Get IPFS URI** from the mutation response
 3. **Create atom on-chain** via smart contract transaction using the IPFS URI
 4. **Query the GraphQL API** to fetch the newly created atom with resolved metadata
@@ -2641,7 +2641,7 @@ query GetCreatedAtom($termId: String!, $curveId: numeric!) {
 
 1. **Prepare metadata** - Gather all person/thing/organization data
 2. **Upload image** (optional) - Use `uploadImageFromUrl` or `uploadImage` if needed
-3. **Pin metadata** - Use `pinPerson`, `pinThing`, or `pinOrganization` on the gated pinning endpoint
+3. **Pin metadata** - Use `pinPerson`, `pinThing`, or `pinOrganization` on the public gated pinning endpoint
 4. **Get IPFS URI** - Extract `uri` from mutation response
 5. **Create atom on-chain** - Call smart contract with IPFS URI (via [@0xintuition/protocol](../protocol/README.md))
 6. **Wait for indexing** - GraphQL API will index the new atom (usually < 30 seconds)

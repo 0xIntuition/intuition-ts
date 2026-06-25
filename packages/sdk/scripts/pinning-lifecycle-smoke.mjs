@@ -27,11 +27,11 @@ const usage = `Usage:
   pnpm --filter @0xintuition/sdk smoke:pinning-lifecycle
 
 Required, one of:
-  INTUITION_PIN_API_KEY              API key for the gated Intuition pinning endpoint
+  INTUITION_PIN_API_KEY              API key for the public gated Intuition pinning endpoint
   INTUITION_PIN_API_KEY_FILE         File containing INTUITION_PIN_API_KEY
 
 Optional:
-  INTUITION_PIN_API_URL              Override the gated pinning GraphQL endpoint
+  INTUITION_PIN_API_URL              Override the public gated pinning GraphQL endpoint
   PINATA_API_JWT                     Pinata JWT for direct Pinata upload smoke
   PINATA_API_JWT_FILE                File containing PINATA_API_JWT
   INTUITION_RUN_ONCHAIN=1            Submit a testnet createAtomFromThing transaction

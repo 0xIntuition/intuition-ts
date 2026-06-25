@@ -1,8 +1,8 @@
-import { PIN_API_URL } from '@0xintuition/graphql'
+import { PIN_API_URL as GRAPHQL_PIN_API_URL } from '@0xintuition/graphql'
 
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { configureSdk, pinThing } from '../src'
+import { configureSdk, PIN_API_URL, pinThing } from '../src'
 
 const thingVariables = {
   url: 'https://www.intuition.systems/',
@@ -31,6 +31,10 @@ describe('pinThing', () => {
 
   afterEach(() => {
     vi.unstubAllGlobals()
+  })
+
+  it('re-exports the public gated pinning endpoint URL', () => {
+    expect(PIN_API_URL).toBe(GRAPHQL_PIN_API_URL)
   })
 
   it('uses the configured SDK pinApiKey', async () => {

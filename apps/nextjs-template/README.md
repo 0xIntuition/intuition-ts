@@ -37,7 +37,7 @@ NEXT_PUBLIC_WC_PROJECT_ID="GET_FROM_WALLET_CONNECT"
 # Server-only key for pinning Thing metadata before on-chain atom creation
 INTUITION_PIN_API_KEY="GET_FROM_INTUITION"
 
-# Optional override for the gated pinning GraphQL endpoint
+# Optional override for the public gated pinning GraphQL endpoint
 INTUITION_PIN_API_URL="https://pin.intuition.systems/v1/graphql"
 ```
 

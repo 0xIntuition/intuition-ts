@@ -10,7 +10,7 @@
 
 Defined in: [packages/sdk/src/api/pin-thing.ts:15](https://github.com/0xIntuition/intuition-ts/blob/bce09de32d88cea435aa3e46e7756b0a862fcd9b/packages/sdk/src/api/pin-thing.ts#L15)
 
-Pins a "thing" via the GraphQL API and returns the resulting URI.
+Pins a "thing" via the public gated Intuition pinning endpoint and returns the resulting URI.
 
 ## Parameters
 

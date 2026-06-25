@@ -34,7 +34,7 @@ type GraphQLResponse<TData> = {
 const DEFAULT_API_URL = API_URL_PROD
 const DEFAULT_PIN_API_URL = PIN_API_URL
 
-// Keep in sync with mutations served by the gated pinning GraphQL endpoint.
+// Keep in sync with mutations served by the public gated pinning GraphQL endpoint.
 const PINNING_MUTATION_FIELDS = new Set([
   'pinOrganization',
   'pinPerson',

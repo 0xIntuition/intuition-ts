@@ -7,7 +7,7 @@ import {
 export type PinThingOptions = PinThingRequestOptions
 
 /**
- * Pins a "thing" via the GraphQL API and returns the resulting URI.
+ * Pins a "thing" via the public gated Intuition pinning endpoint and returns the resulting URI.
  * @param variables PinThing mutation variables.
  * @param options Optional pinning endpoint and API key overrides.
  * @returns IPFS URI string.
