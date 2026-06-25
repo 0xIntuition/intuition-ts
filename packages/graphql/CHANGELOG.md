@@ -19,12 +19,13 @@
 ### Patch Changes
 
 - Added TrustBonding and WrappedTrust read methods to the protocol package.
+- 68a7d43: Added new smart contract reads and writes to the protocol and sdk packages.
+
+## 2.0.1
 
 ### Patch Changes
 
-- 68a7d43: Added new smart contract reads and writes to the protocol and sdk packages.
-
-This was a version bump only for @0xintuition/graphql to align it with other projects, there were no code changes.
+- Version bump only for @0xintuition/graphql to align with other projects. No code changes.
 
 ## 0.2.0 (2024-06-04)
 
