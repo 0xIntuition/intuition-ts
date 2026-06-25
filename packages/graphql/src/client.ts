@@ -44,6 +44,8 @@ const PINNING_MUTATION_FIELDS = new Set([
   'uploadJsonToIpfs',
 ])
 
+const pinningOperationCache = new Map<string, boolean>()
+
 let globalConfig: ClientConfigInput = {
   apiUrl: DEFAULT_API_URL,
   pinApiUrl: DEFAULT_PIN_API_URL,
@@ -135,7 +137,7 @@ function selectionSetHasPinningMutationField(
   return false
 }
 
-export function isPinningOperation(query: string): boolean {
+function detectPinningOperation(query: string): boolean {
   try {
     const document = parse(query)
     const operation = document.definitions.find(
@@ -153,6 +155,17 @@ export function isPinningOperation(query: string): boolean {
   } catch {
     return false
   }
+}
+
+export function isPinningOperation(query: string): boolean {
+  const cached = pinningOperationCache.get(query)
+  if (cached !== undefined) {
+    return cached
+  }
+
+  const isPinning = detectPinningOperation(query)
+  pinningOperationCache.set(query, isPinning)
+  return isPinning
 }
 
 function toHeaderRecord(headers?: HeadersInit): Record<string, string> {
@@ -285,11 +298,11 @@ async function executeRequest<TData, TVariables>(
 export async function executeGraphQLRequest<TData, TVariables>(
   query: string,
   variables?: TVariables,
-  options?: RequestInit['headers'],
+  headers?: RequestInit['headers'],
   pinConfig?: PinRequestConfig,
 ): Promise<TData> {
   return executeRequest(query, variables, {
-    headers: options,
+    headers,
     pinConfig,
   })
 }

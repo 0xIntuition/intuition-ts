@@ -1103,6 +1103,10 @@ const data = await usePinThingMutation.fetcher({
 })()
 ```
 
+Use `requestPinThing` when you need a guaranteed URI string; it throws if the
+pinning response does not include one. Generated mutation fetchers return the raw
+GraphQL response payload.
+
 You can also pass a key per request:
 
 ```typescript

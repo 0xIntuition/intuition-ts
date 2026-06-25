@@ -87,9 +87,10 @@ export default class BatchStart extends Command {
     }
 
     if (atomType === 'thing' && !pinningOptions.pinApiKey) {
-      this.log(chalk.red('❌ Thing batch creation requires an Intuition pinning API key.'))
-      this.log(chalk.gray('Pass --pin-api-key or set INTUITION_PIN_API_KEY.'))
-      return
+      this.error(
+        'Thing batch creation requires an Intuition pinning API key. Pass --pin-api-key or set INTUITION_PIN_API_KEY.',
+        {exit: 1},
+      )
     }
 
     // 3. Load and prepare CSV data
