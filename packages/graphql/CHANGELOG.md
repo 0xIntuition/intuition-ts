@@ -20,7 +20,7 @@
 
 ### Patch Changes
 
-- Added generated GraphQL types for IPFS JSON and image upload mutations.
+- Added generated GraphQL types for `uploadJsonToIpfs`, `uploadImage`, and `uploadImageFromUrl` mutations.
 
 ## 2.0.1
 
