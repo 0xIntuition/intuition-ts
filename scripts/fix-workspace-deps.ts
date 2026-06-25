@@ -13,7 +13,9 @@ import { readdir, readFile, unlink, writeFile } from 'fs/promises'
 import { dirname, join } from 'path'
 
 const SCRIPT_DIR = dirname(new URL(import.meta.url).pathname)
-const PACKAGES_DIR = join(SCRIPT_DIR, '..', 'packages')
+const REPO_ROOT = join(SCRIPT_DIR, '..')
+const PACKAGES_DIR = join(REPO_ROOT, 'packages')
+const CLI_PACKAGE_DIR = join(REPO_ROOT, 'apps', 'cli')
 const BACKUP_SUFFIX = '.workspace-backup'
 
 interface PackageJson {
@@ -25,14 +27,27 @@ interface PackageJson {
   optionalDependencies?: Record<string, string>
 }
 
-async function getWorkspacePackages(): Promise<Map<string, string>> {
-  const packages = new Map<string, string>()
+async function getPublishPackageDirs(): Promise<string[]> {
+  const packageDirs: string[] = []
   const entries = await readdir(PACKAGES_DIR, { withFileTypes: true })
 
   for (const entry of entries) {
     if (!entry.isDirectory()) continue
 
-    const pkgPath = join(PACKAGES_DIR, entry.name, 'package.json')
+    packageDirs.push(join(PACKAGES_DIR, entry.name))
+  }
+
+  packageDirs.push(CLI_PACKAGE_DIR)
+
+  return packageDirs
+}
+
+async function getWorkspacePackages(): Promise<Map<string, string>> {
+  const packages = new Map<string, string>()
+  const packageDirs = await getPublishPackageDirs()
+
+  for (const packageDir of packageDirs) {
+    const pkgPath = join(packageDir, 'package.json')
     try {
       const content = await readFile(pkgPath, 'utf-8')
       const pkg: PackageJson = JSON.parse(content)
@@ -82,12 +97,10 @@ async function fixWorkspaceDeps(): Promise<void> {
   }
   console.log()
 
-  const entries = await readdir(PACKAGES_DIR, { withFileTypes: true })
+  const packageDirs = await getPublishPackageDirs()
 
-  for (const entry of entries) {
-    if (!entry.isDirectory()) continue
-
-    const pkgPath = join(PACKAGES_DIR, entry.name, 'package.json')
+  for (const packageDir of packageDirs) {
+    const pkgPath = join(packageDir, 'package.json')
     const backupPath = pkgPath + BACKUP_SUFFIX
 
     try {
@@ -132,19 +145,17 @@ async function fixWorkspaceDeps(): Promise<void> {
 async function restoreWorkspaceDeps(): Promise<void> {
   console.log('🔄 Restoring workspace dependencies...\n')
 
-  const entries = await readdir(PACKAGES_DIR, { withFileTypes: true })
+  const packageDirs = await getPublishPackageDirs()
 
-  for (const entry of entries) {
-    if (!entry.isDirectory()) continue
-
-    const pkgPath = join(PACKAGES_DIR, entry.name, 'package.json')
+  for (const packageDir of packageDirs) {
+    const pkgPath = join(packageDir, 'package.json')
     const backupPath = pkgPath + BACKUP_SUFFIX
 
     try {
       const backup = await readFile(backupPath, 'utf-8')
       await writeFile(pkgPath, backup)
       await unlink(backupPath)
-      console.log(`✅ Restored ${entry.name}/package.json`)
+      console.log(`✅ Restored ${pkgPath}`)
     } catch {
       // No backup to restore
     }
