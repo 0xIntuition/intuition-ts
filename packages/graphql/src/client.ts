@@ -33,6 +33,7 @@ type GraphQLResponse<TData> = {
 
 const DEFAULT_API_URL = API_URL_PROD
 const DEFAULT_PIN_API_URL = PIN_API_URL
+const MAX_PINNING_OPERATION_CACHE_SIZE = 500
 
 // Keep in sync with mutations served by the public gated pinning GraphQL endpoint.
 const PINNING_MUTATION_FIELDS = new Set([
@@ -53,6 +54,10 @@ let globalConfig: ClientConfigInput = {
 
 export function configureClient(config: ClientConfigInput) {
   globalConfig = { ...globalConfig, ...config }
+}
+
+export function clearPinningOperationCache() {
+  pinningOperationCache.clear()
 }
 
 export function getClientConfig(token?: string): ClientConfig {
@@ -164,6 +169,14 @@ export function isPinningOperation(query: string): boolean {
   }
 
   const isPinning = detectPinningOperation(query)
+
+  if (pinningOperationCache.size >= MAX_PINNING_OPERATION_CACHE_SIZE) {
+    const oldestQuery = pinningOperationCache.keys().next().value
+    if (oldestQuery !== undefined) {
+      pinningOperationCache.delete(oldestQuery)
+    }
+  }
+
   pinningOperationCache.set(query, isPinning)
   return isPinning
 }
@@ -278,15 +291,6 @@ async function executeRequest<TData, TVariables>(
   }
 
   const json = await parseJsonResponse<TData>(res)
-
-  if (
-    isPinning &&
-    json.errors?.length &&
-    (!json.data || Object.keys(json.data).length === 0)
-  ) {
-    const { message } = json.errors[0]
-    throw new Error(message ?? 'Unknown GraphQL error')
-  }
 
   if (
     json.errors?.length &&

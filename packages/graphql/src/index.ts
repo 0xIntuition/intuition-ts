@@ -1,6 +1,7 @@
 export {
   type ClientConfig,
   type ClientConfigInput,
+  clearPinningOperationCache,
   configureClient,
   createServerClient,
   executeGraphQLRequest,

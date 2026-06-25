@@ -10,4 +10,8 @@ Add GraphQL pinning configuration and a `requestPinThing` helper, and add SDK-le
 
 The public gated mutation set includes `pinThing`, `pinPerson`, `pinOrganization`, `uploadJsonToIpfs`, `uploadImage`, and `uploadImageFromUrl`.
 
+`pinThing` now throws on pinning failure instead of returning `null`; replace `null` guards with `try/catch`.
+
+Caller-provided `apikey` headers are only used for pinning operations and are stripped from non-pinning read requests.
+
 CLI Thing batch creation now requires an Intuition pinning API key via `--pin-api-key` or `INTUITION_PIN_API_KEY`.

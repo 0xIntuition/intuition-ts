@@ -1,44 +1,36 @@
 import { pinThing } from '@0xintuition/sdk'
 
 import { NextResponse } from 'next/server'
+import { z } from 'zod'
 
-type ThingPayload = {
-  name: string
-  description?: string
-  image?: string
-  url?: string
-}
+const optionalTrimmedString = (maxLength: number) =>
+  z.preprocess(
+    (value) =>
+      typeof value === 'string' && value.trim() === '' ? undefined : value,
+    z.string().trim().min(1).max(maxLength).optional(),
+  )
 
-function optionalString(value: unknown): string | undefined {
-  return typeof value === 'string' && value.trim() ? value : undefined
-}
+const optionalUrl = z.preprocess(
+  (value) =>
+    typeof value === 'string' && value.trim() === '' ? undefined : value,
+  z.string().trim().url().max(2048).optional(),
+)
 
-function parseThingPayload(value: unknown): ThingPayload | undefined {
-  if (!value || typeof value !== 'object') {
-    return undefined
-  }
-
-  const record = value as Record<string, unknown>
-  const name = optionalString(record.name)
-
-  if (!name) {
-    return undefined
-  }
-
-  return {
-    name,
-    description: optionalString(record.description),
-    image: optionalString(record.image),
-    url: optionalString(record.url),
-  }
-}
+const thingPayloadSchema = z.object({
+  name: z.string().trim().min(1).max(200),
+  description: optionalTrimmedString(2000),
+  image: optionalUrl,
+  url: optionalUrl,
+})
 
 export async function POST(request: Request) {
   const pinApiKey = process.env.INTUITION_PIN_API_KEY
 
   if (!pinApiKey) {
+    console.error('Server is missing INTUITION_PIN_API_KEY.')
+
     return NextResponse.json(
-      { error: 'Server is missing INTUITION_PIN_API_KEY.' },
+      { error: 'Server configuration error.' },
       { status: 500 },
     )
   }
@@ -51,17 +43,20 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Invalid JSON body.' }, { status: 400 })
   }
 
-  const thing = parseThingPayload(requestBody)
+  const parsedThing = thingPayloadSchema.safeParse(requestBody)
 
-  if (!thing) {
+  if (!parsedThing.success) {
     return NextResponse.json(
-      { error: 'Thing payload requires a non-empty name.' },
+      {
+        error:
+          'Thing payload requires a non-empty name and valid optional image/url values.',
+      },
       { status: 400 },
     )
   }
 
   try {
-    const uri = await pinThing(thing, {
+    const uri = await pinThing(parsedThing.data, {
       pinApiKey,
       pinApiUrl: process.env.INTUITION_PIN_API_URL,
     })

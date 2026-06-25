@@ -1,5 +1,10 @@
-import type { WriteConfig } from '@0xintuition/protocol'
+import {
+  eventParseAtomCreated,
+  multiVaultCreateAtoms,
+  type WriteConfig,
+} from '@0xintuition/protocol'
 
+import { toHex } from 'viem'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { createAtomFromThing } from '../src'
@@ -31,25 +36,65 @@ const thingVariables = {
   image: 'https://example.com/image.png',
 }
 
+const txHash =
+  '0x0000000000000000000000000000000000000000000000000000000000000001'
+
+const atomCreatedArgs = {
+  creator: '0x0000000000000000000000000000000000000002',
+  termId: '0x0000000000000000000000000000000000000000000000000000000000000003',
+  atomData: '0x1234',
+  atomWallet: '0x0000000000000000000000000000000000000004',
+} as const
+
+function mockPinThingFetch(uri: string) {
+  const fetchMock = vi.fn(async () => {
+    return new Response(
+      JSON.stringify({
+        data: { pinThing: { uri } },
+      }),
+      {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      },
+    )
+  })
+
+  vi.stubGlobal('fetch', fetchMock)
+
+  return fetchMock
+}
+
 describe('createAtomFromThing', () => {
   afterEach(() => {
+    vi.clearAllMocks()
     vi.unstubAllGlobals()
   })
 
-  it('throws a clear error when no AtomCreated event is parsed', async () => {
-    const fetchMock = vi.fn(async () => {
-      return new Response(
-        JSON.stringify({
-          data: { pinThing: { uri: 'ipfs://bafk-test' } },
-        }),
-        {
-          status: 200,
-          headers: { 'Content-Type': 'application/json' },
-        },
-      )
+  it('pins thing data, creates an atom, and returns the created event state', async () => {
+    const uri = 'ipfs://bafk-test'
+    const fetchMock = mockPinThingFetch(uri)
+    vi.mocked(eventParseAtomCreated).mockResolvedValueOnce([
+      { args: atomCreatedArgs },
+    ] as unknown as Awaited<ReturnType<typeof eventParseAtomCreated>>)
+
+    const result = await createAtomFromThing(writeConfig, thingVariables, {
+      pinApiKey: 'test-pin-key',
     })
 
-    vi.stubGlobal('fetch', fetchMock)
+    expect(result).toEqual({
+      uri,
+      transactionHash: txHash,
+      state: atomCreatedArgs,
+    })
+    expect(fetchMock).toHaveBeenCalledTimes(1)
+    expect(multiVaultCreateAtoms).toHaveBeenCalledWith(writeConfig, {
+      args: [[toHex(uri)], [1n]],
+      value: 1n,
+    })
+  })
+
+  it('throws a clear error when no AtomCreated event is parsed', async () => {
+    mockPinThingFetch('ipfs://bafk-test')
 
     await expect(
       createAtomFromThing(writeConfig, thingVariables, {

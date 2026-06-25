@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import {
+  clearPinningOperationCache,
   configureClient,
   createServerClient,
   fetcher,
@@ -114,6 +115,7 @@ function mockTextFetch(body: string, status: number, statusText: string) {
 // add userId back in when we need to add user auth for mutations
 describe('GraphQL Client', () => {
   beforeEach(() => {
+    clearPinningOperationCache()
     configureClient({
       apiUrl: API_URL_PROD,
       pinApiUrl: PIN_API_URL,
@@ -153,6 +155,14 @@ describe('GraphQL Client', () => {
     expect(isPinningOperation(uploadImageDocument)).toBe(true)
     expect(isPinningOperation(uploadImageFromUrlDocument)).toBe(true)
     expect(isPinningOperation(readQueryNamedPinThingDocument)).toBe(false)
+  })
+
+  it('allows the pinning operation cache to be reset', () => {
+    expect(isPinningOperation(PinThingDocument)).toBe(true)
+
+    clearPinningOperationCache()
+
+    expect(isPinningOperation(PinThingDocument)).toBe(true)
   })
 
   it('routes generated pinThing fetchers to the pin endpoint with an apikey', async () => {
