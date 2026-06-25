@@ -16,11 +16,15 @@
 
   CLI Thing batch creation now requires an Intuition pinning API key via `--pin-api-key` or `INTUITION_PIN_API_KEY`.
 
+### Notes
+
+- Historical correction: the published `2.0.2` GraphQL changelog entry describes protocol-package TrustBonding/WrappedTrust changes. The GraphQL package change in that release was generated types for `uploadJsonToIpfs`, `uploadImage`, and `uploadImageFromUrl`.
+
 ## 2.0.2
 
 ### Patch Changes
 
-- Added generated GraphQL types for `uploadJsonToIpfs`, `uploadImage`, and `uploadImageFromUrl` mutations.
+- Added TrustBonding and WrappedTrust read methods to the protocol package.
 
 ## 2.0.1
 
