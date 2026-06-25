@@ -73,4 +73,28 @@ describe('batchCreateAtomsFromThings', () => {
       }),
     ).rejects.toThrow('Failed to pin item 2 of 2: pin failed')
   })
+
+  it('throws a clear error when no AtomCreated events are parsed', async () => {
+    const fetchMock = vi.fn(async () => {
+      return new Response(
+        JSON.stringify({
+          data: { pinThing: { uri: 'ipfs://bafk-test' } },
+        }),
+        {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' },
+        },
+      )
+    })
+
+    vi.stubGlobal('fetch', fetchMock)
+
+    await expect(
+      batchCreateAtomsFromThings(writeConfig, thingVariables, {
+        pinApiKey: 'test-pin-key',
+      }),
+    ).rejects.toThrow(
+      'No AtomCreated events found for transaction 0x0000000000000000000000000000000000000000000000000000000000000001',
+    )
+  })
 })

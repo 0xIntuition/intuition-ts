@@ -279,7 +279,11 @@ async function executeRequest<TData, TVariables>(
 
   const json = await parseJsonResponse<TData>(res)
 
-  if (isPinning && json.errors?.length) {
+  if (
+    isPinning &&
+    json.errors?.length &&
+    (!json.data || Object.keys(json.data).length === 0)
+  ) {
     const { message } = json.errors[0]
     throw new Error(message ?? 'Unknown GraphQL error')
   }

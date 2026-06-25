@@ -103,6 +103,9 @@ async function batchCreateAtomsFromThingsWithOptions(
   }
 
   const state = await eventParseAtomCreated(publicClient, txHash)
+  if (state.length === 0) {
+    throw new Error(`No AtomCreated events found for transaction ${txHash}`)
+  }
 
   return {
     uris,

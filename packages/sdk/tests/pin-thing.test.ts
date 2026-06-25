@@ -70,4 +70,13 @@ describe('pinThing', () => {
     await expect(pinThing(thingVariables)).rejects.toThrow('pinApiKey')
     expect(fetchMock).not.toHaveBeenCalled()
   })
+
+  it('throws a clear error when the pin endpoint returns null data', async () => {
+    configureSdk({ pinApiKey: 'sdk-pin-key' })
+    mockFetch({ data: null })
+
+    await expect(pinThing(thingVariables)).rejects.toThrow(
+      'pinThing returned no URI',
+    )
+  })
 })

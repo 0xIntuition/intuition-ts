@@ -19,7 +19,7 @@ export async function requestPinThing(
     PinThingMutationVariables
   >(PinThingDocument, variables, undefined, options)
 
-  const uri = data.pinThing?.uri
+  const uri = data?.pinThing?.uri
   if (!uri) {
     throw new Error('pinThing returned no URI')
   }

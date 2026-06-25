@@ -81,10 +81,15 @@ async function createAtomFromThingWithOptions(
   }
 
   const events = await eventParseAtomCreated(publicClient, txHash)
+  const createdEvent = events[0]
+
+  if (!createdEvent) {
+    throw new Error(`No AtomCreated event found for transaction ${txHash}`)
+  }
 
   return {
     uri: uriRef,
     transactionHash: txHash,
-    state: events[0].args,
+    state: createdEvent.args,
   }
 }

@@ -295,6 +295,18 @@ describe('GraphQL Client', () => {
     )
   })
 
+  it('returns pinning data when the response includes advisory errors', async () => {
+    configureClient({ pinApiKey: 'test-pin-key' })
+    mockFetch({
+      data: { pinThing: { uri: 'ipfs://bafk-test' } },
+      errors: [{ message: 'advisory warning' }],
+    })
+
+    const data = await usePinThingMutation.fetcher(thingVariables)()
+
+    expect(data.pinThing?.uri).toBe('ipfs://bafk-test')
+  })
+
   it('does not crash when GraphQL errors is an empty array', async () => {
     mockFetch({ errors: [] })
 

@@ -82,8 +82,8 @@ export default class BatchStart extends Command {
     // 2. Select atom type
     const atomType = await this.getAtomType()
     const pinningOptions: PinningOptions = {
-      pinApiKey: flags['pin-api-key'] || process.env.INTUITION_PIN_API_KEY,
-      pinApiUrl: flags['pin-api-url'] || process.env.INTUITION_PIN_API_URL,
+      pinApiKey: flags['pin-api-key'] ?? process.env.INTUITION_PIN_API_KEY,
+      pinApiUrl: flags['pin-api-url'] ?? process.env.INTUITION_PIN_API_URL,
     }
 
     if (atomType === 'thing' && !pinningOptions.pinApiKey) {
