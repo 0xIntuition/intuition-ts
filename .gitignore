@@ -21,6 +21,7 @@ act.sh
 # Verdaccio local registry files
 .verdaccio-db.json
 .npmrc
+*.workspace-backup
 
 # Build outputs
 /dist/
