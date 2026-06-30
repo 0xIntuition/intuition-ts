@@ -1,5 +1,11 @@
 ## 2.1.3 (2025-10-30)
 
+## 2.0.3
+
+### Patch Changes
+
+- 393dab8: Build and verify package entrypoints before publish so packages include runnable `dist` artifacts.
+
 ## 2.0.2
 
 ### Patch Changes
