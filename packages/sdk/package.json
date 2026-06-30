@@ -47,7 +47,7 @@
   },
   "dependencies": {
     "@0xintuition/graphql": "workspace:^",
-    "@0xintuition/protocol": "^2.0.3"
+    "@0xintuition/protocol": "workspace:^"
   },
   "peerDependencies": {
     "viem": "^2.0.0"

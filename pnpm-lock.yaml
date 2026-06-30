@@ -470,8 +470,8 @@ importers:
         specifier: workspace:^
         version: link:../graphql
       '@0xintuition/protocol':
-        specifier: ^2.0.2
-        version: 2.0.2(viem@2.31.4(bufferutil@4.0.8)(typescript@5.4.5)(utf-8-validate@6.0.4)(zod@3.25.67))
+        specifier: workspace:^
+        version: link:../protocol
     devDependencies:
       '@viem/anvil':
         specifier: ^0.0.10
@@ -510,11 +510,6 @@ packages:
     peerDependencies:
       graphql: ^15.5.0 || ^16.0.0 || ^17.0.0
       typescript: ^5.0.0
-
-  '@0xintuition/protocol@2.0.2':
-    resolution: {integrity: sha512-BjdBkskuTj5K7KyCd6/33gDkZLh1rEMSGMNfA6iD5jM5TU7OC32ySybBKZ2tQzicnvWGYTSUSh01muBAmILgPw==}
-    peerDependencies:
-      viem: 2.31.4
 
   '@adobe/css-tools@4.4.0':
     resolution: {integrity: sha512-Ff9+ksdQQB3rMncgqDK78uLznstjyfIf2Arnh22pW8kBpLs6rpKDwgnZT46hin5Hl1WzazzK64DOrhSwYpS7bQ==}
@@ -12662,10 +12657,6 @@ snapshots:
       '@gql.tada/internal': 1.0.8(graphql@16.9.0)(typescript@5.4.5)
       graphql: 16.9.0
       typescript: 5.4.5
-
-  '@0xintuition/protocol@2.0.2(viem@2.31.4(bufferutil@4.0.8)(typescript@5.4.5)(utf-8-validate@6.0.4)(zod@3.25.67))':
-    dependencies:
-      viem: 2.31.4(bufferutil@4.0.8)(typescript@5.4.5)(utf-8-validate@6.0.4)(zod@3.25.67)
 
   '@adobe/css-tools@4.4.0': {}
 
