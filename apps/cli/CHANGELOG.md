@@ -1,5 +1,16 @@
 # intuition-cli
 
+## 3.0.1
+
+### Patch Changes
+
+- aebd3d1: Remove public IPFS pinning
+- 393dab8: Build and verify package entrypoints before publish so packages include runnable `dist` artifacts.
+- Updated dependencies [aebd3d1]
+- Updated dependencies [393dab8]
+  - @0xintuition/sdk@3.0.1
+  - @0xintuition/protocol@2.0.3
+
 ## 3.0.0
 
 ### Major Changes

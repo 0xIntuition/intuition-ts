@@ -1,6 +1,6 @@
 {
   "name": "@0xintuition/sdk",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Intuition SDK",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
@@ -47,7 +47,7 @@
   },
   "dependencies": {
     "@0xintuition/graphql": "workspace:^",
-    "@0xintuition/protocol": "^2.0.2"
+    "@0xintuition/protocol": "^2.0.3"
   },
   "peerDependencies": {
     "viem": "^2.0.0"

@@ -1,5 +1,12 @@
 # @0xintuition/graphql
 
+## 3.0.1
+
+### Patch Changes
+
+- aebd3d1: Remove public IPFS pinning
+- 393dab8: Build and verify package entrypoints before publish so packages include runnable `dist` artifacts.
+
 ## 3.0.0
 
 ### Major Changes
