@@ -21,6 +21,8 @@
     "dev": "concurrently \"pnpm codegen:watch\" \"tsup --watch\"",
     "codegen": "NODE_ENV=production graphql-codegen --config codegen.ts",
     "codegen:watch": "NODE_ENV=development dotenv graphql-codegen --config codegen.ts",
+    "pack:verify": "node ../../scripts/verify-package-entrypoints.mjs",
+    "prepack": "pnpm run build && pnpm run pack:verify",
     "test": "vitest run",
     "lint": "eslint",
     "lint:fix": "eslint --fix"

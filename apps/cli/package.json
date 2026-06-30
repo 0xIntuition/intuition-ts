@@ -30,7 +30,8 @@
     "lint:fix": "eslint --fix",
     "postpack": "shx rm -f oclif.manifest.json",
     "posttest": "pnpm run lint",
-    "prepack": "oclif manifest && oclif readme",
+    "pack:verify": "node ../../scripts/verify-package-entrypoints.mjs",
+    "prepack": "pnpm --filter @0xintuition/protocol build && pnpm --filter @0xintuition/graphql build && pnpm --filter @0xintuition/sdk build && pnpm run build && oclif manifest && oclif readme && pnpm run pack:verify",
     "version": "oclif readme && git add README.md",
     "intu": "node bin/run.js"
   },
