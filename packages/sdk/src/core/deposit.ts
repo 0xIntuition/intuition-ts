@@ -13,13 +13,11 @@ import {
  */
 export async function deposit(
   config: WriteConfig,
-  data: DepositInputs['args'],
+  data: DepositInputs,
 ) {
   const { publicClient } = config
 
-  const txHash = await multiVaultDeposit(config, {
-    args: data,
-  })
+  const txHash = await multiVaultDeposit(config, data);
 
   if (!txHash) {
     throw new Error('Failed to deposit')
