@@ -21,6 +21,7 @@
     "dev": "concurrently \"pnpm codegen:watch\" \"tsup --watch\"",
     "codegen": "NODE_ENV=production graphql-codegen --config codegen.ts",
     "codegen:watch": "NODE_ENV=development dotenv graphql-codegen --config codegen.ts",
+    "audit:packed-consumer": "node scripts/packed-consumer-audit.mjs",
     "pack:verify": "node ../../scripts/verify-package-entrypoints.mjs",
     "prepack": "pnpm run build && pnpm run pack:verify",
     "test": "vitest run",
@@ -37,7 +38,6 @@
     "registry": "https://registry.npmjs.org/"
   },
   "dependencies": {
-    "@graphql-codegen/typescript-document-nodes": "^4.0.11",
     "@tanstack/react-query": "^5.32.0",
     "graphql": "^16.9.0",
     "graphql-request": "^7.1.0"
@@ -50,6 +50,7 @@
     "@graphql-codegen/plugin-helpers": "^5.0.4",
     "@graphql-codegen/schema-ast": "^4.1.0",
     "@graphql-codegen/typescript": "^4.1.0",
+    "@graphql-codegen/typescript-document-nodes": "^4.0.11",
     "@graphql-codegen/typescript-operations": "^4.3.0",
     "@graphql-codegen/typescript-react-apollo": "^4.3.2",
     "@graphql-codegen/typescript-react-query": "^6.1.0",
