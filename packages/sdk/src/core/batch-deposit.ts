@@ -19,7 +19,7 @@ export async function batchDeposit(
 
   const txHash = await multiVaultDepositBatch(config, {
     args: data,
-    value: data[4].reduce(
+    value: data[3].reduce(
       (sum: number | bigint, item: number | bigint) =>
         BigInt(sum) + BigInt(item),
       0n,

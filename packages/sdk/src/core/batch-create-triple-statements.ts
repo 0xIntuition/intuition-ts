@@ -1,7 +1,6 @@
 import {
   eventParseTripleCreated,
   multiVaultCreateTriples,
-  multiVaultGetTripleCost,
   type CreateTriplesInputs,
   type WriteConfig,
 } from '@0xintuition/protocol'
@@ -10,7 +9,7 @@ import {
  * Creates triples in batch and returns parsed TripleCreated events.
  * @param config Contract address and viem clients.
  * @param data CreateTriples arguments for the MultiVault contract.
- * @param depositAmount Optional additional deposit amount.
+ * @param depositAmount Deprecated and ignored. Each asset in data is the total value for its triple.
  * @returns Transaction hash and decoded event args.
  */
 export async function batchCreateTripleStatements(
@@ -18,15 +17,12 @@ export async function batchCreateTripleStatements(
   data: CreateTriplesInputs['args'],
   depositAmount?: bigint,
 ) {
-  const { address, publicClient } = config
-  const tripleBaseCost = await multiVaultGetTripleCost({
-    publicClient,
-    address,
-  })
+  const { publicClient } = config
+  void depositAmount
 
   const txHash = await multiVaultCreateTriples(config, {
     args: data,
-    value: tripleBaseCost + BigInt(depositAmount || 0),
+    value: data[3].reduce((sum, assets) => sum + assets, 0n),
   })
 
   if (!txHash) {

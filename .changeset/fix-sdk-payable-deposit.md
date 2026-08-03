@@ -2,4 +2,4 @@
 '@0xintuition/sdk': minor
 ---
 
-Add an optional payable value to the SDK deposit input while preserving bare argument calls.
+Forward the correct payable value when depositing into one or more vaults and when creating triple statements in a batch.
