@@ -5,20 +5,51 @@ import {
   type WriteConfig,
 } from '@0xintuition/protocol'
 
+type BatchCreateTripleStatementsResult = {
+  transactionHash: Awaited<ReturnType<typeof multiVaultCreateTriples>>
+  state: Awaited<ReturnType<typeof eventParseTripleCreated>>[number]['args'][]
+}
+
+let hasWarnedAboutDepositAmount = false
+
 /**
  * Creates triples in batch and returns parsed TripleCreated events.
  * @param config Contract address and viem clients.
- * @param data CreateTriples arguments for the MultiVault contract.
- * @param depositAmount Deprecated and ignored. Each asset in data is the total value for its triple.
+ * @param data CreateTriples arguments. The call value is the sum of the assets array.
  * @returns Transaction hash and decoded event args.
  */
+export function batchCreateTripleStatements(
+  config: WriteConfig,
+  data: CreateTriplesInputs['args'],
+): Promise<BatchCreateTripleStatementsResult>
+
+/**
+ * @deprecated `depositAmount` is ignored because each entry in the `data` assets array already carries that triple's full value. Call with only `config` and `data`.
+ */
+export function batchCreateTripleStatements(
+  config: WriteConfig,
+  data: CreateTriplesInputs['args'],
+  depositAmount: bigint,
+): Promise<BatchCreateTripleStatementsResult>
+
 export async function batchCreateTripleStatements(
   config: WriteConfig,
   data: CreateTriplesInputs['args'],
   depositAmount?: bigint,
-) {
+): Promise<BatchCreateTripleStatementsResult> {
   const { publicClient } = config
-  void depositAmount
+
+  if (
+    depositAmount !== undefined &&
+    depositAmount !== 0n &&
+    !hasWarnedAboutDepositAmount
+  ) {
+    hasWarnedAboutDepositAmount = true
+    console.warn(
+      'batchCreateTripleStatements: depositAmount is deprecated and ignored; ' +
+        "each entry in the data assets array already carries that triple's full value.",
+    )
+  }
 
   const txHash = await multiVaultCreateTriples(config, {
     args: data,

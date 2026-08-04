@@ -5,8 +5,8 @@ import {
   type CreateTriplesInputs,
   type WriteConfig,
 } from '@0xintuition/protocol'
-import { parseEther } from 'viem'
 
+import { parseEther } from 'viem'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { batchCreateTripleStatements } from '../src/core/batch-create-triple-statements'
@@ -51,6 +51,7 @@ const args = [
 
 describe('batchCreateTripleStatements', () => {
   afterEach(() => {
+    vi.restoreAllMocks()
     vi.clearAllMocks()
   })
 
@@ -72,5 +73,48 @@ describe('batchCreateTripleStatements', () => {
       args,
       value: parseEther('250'),
     })
+  })
+
+  it('warns once for nonzero legacy deposit amounts and stays silent otherwise', async () => {
+    // A fresh module makes the once-guard deterministic regardless of prior tests.
+    vi.resetModules()
+    const { multiVaultCreateTriples: freshMultiVaultCreateTriples } =
+      await import('@0xintuition/protocol')
+    const { batchCreateTripleStatements: freshBatchCreateTripleStatements } =
+      await import('../src/core/batch-create-triple-statements')
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
+    const warningCallCounts: number[] = []
+
+    await freshBatchCreateTripleStatements(writeConfig, args)
+    warningCallCounts.push(warnSpy.mock.calls.length)
+
+    await freshBatchCreateTripleStatements(writeConfig, args, 0n)
+    warningCallCounts.push(warnSpy.mock.calls.length)
+
+    await freshBatchCreateTripleStatements(writeConfig, args, parseEther('999'))
+    warningCallCounts.push(warnSpy.mock.calls.length)
+
+    await freshBatchCreateTripleStatements(
+      writeConfig,
+      args,
+      parseEther('1000'),
+    )
+    warningCallCounts.push(warnSpy.mock.calls.length)
+
+    expect(freshMultiVaultCreateTriples).toHaveBeenCalledTimes(4)
+    for (let call = 1; call <= 4; call += 1) {
+      expect(freshMultiVaultCreateTriples).toHaveBeenNthCalledWith(
+        call,
+        writeConfig,
+        {
+          args,
+          value: parseEther('250'),
+        },
+      )
+    }
+    expect(warningCallCounts).toEqual([0, 0, 1, 1])
+    expect(warnSpy).toHaveBeenCalledWith(
+      expect.stringMatching(/deprecated.*ignored/i),
+    )
   })
 })
