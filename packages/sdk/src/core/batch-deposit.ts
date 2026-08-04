@@ -8,7 +8,7 @@ import {
 /**
  * Deposits assets for multiple terms and returns parsed Deposited events.
  * @param config Contract address and viem clients.
- * @param data DepositBatch arguments for the MultiVault contract.
+ * @param data DepositBatch arguments. The call value is the sum of the assets array.
  * @returns Transaction hash and decoded event args.
  */
 export async function batchDeposit(
@@ -19,7 +19,7 @@ export async function batchDeposit(
 
   const txHash = await multiVaultDepositBatch(config, {
     args: data,
-    value: data[4].reduce(
+    value: data[3].reduce(
       (sum: number | bigint, item: number | bigint) =>
         BigInt(sum) + BigInt(item),
       0n,
